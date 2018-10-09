@@ -589,33 +589,48 @@ public class SubmissionController {
             try {
                 ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
+					String submissionName = "submission_" + submission.getId() + "/";
+                    zos.putNextEntry(new ZipEntry(submissionName));
 
+					StringBuilder contentsText = new StringBuilder();
+
+					//METADATA - calls packageExport for metadata files 
                     Map<String, String> metadata = new HashMap<String, String>();
+					//CREATE HashMap Entry
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, metadata);
-                    
                     if (exportPackage.isFile()) {
                         File exportFile = (File) exportPackage.getPayload();
-                        zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                        zos.putNextEntry(new ZipEntry(submissionName + exportFile.getName()));
+						contentsText.append("MD "+exportFile.getName()+"\n");
                         zos.write(Files.readAllBytes(exportFile.toPath()));
                         zos.closeEntry();
                     }
 
+					//LICENSES
                     for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
                         Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
                         byte[] fileBytes = Files.readAllBytes(path);
-                        zos.putNextEntry(new ZipEntry(ldfv.getFileName()));
+                        zos.putNextEntry(new ZipEntry(submissionName+ldfv.getFileName()));
+						contentsText.append(ldfv.getFileName()+" bundle:LICENSE\n");
                         zos.write(fileBytes);
                         zos.closeEntry();
                     }
 
+					//PRIMARY_DOC
                     FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
                     Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
                     byte[] fileBytes = Files.readAllBytes(path);
-                    zos.putNextEntry(new ZipEntry(primaryDoc.getFileName()));
+                    zos.putNextEntry(new ZipEntry(submissionName+primaryDoc.getFileName()));
+					contentsText.append(primaryDoc.getFileName()+"  bundle:CONTENT  primary:true\n");
                     zos.write(fileBytes);
                     zos.closeEntry();
 
+					//CONTENTS_FILE
+                    zos.putNextEntry(new ZipEntry(submissionName+"contents"));
+                    zos.write(contentsText.toString().getBytes());
+                    zos.closeEntry();
 
+                    zos.closeEntry();
                 }
                 zos.close();
 

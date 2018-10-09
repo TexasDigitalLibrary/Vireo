@@ -1,3 +1,57 @@
+QUESTION:
+Should I use submission.getAllDocumentFieldValues() instead of just submission.getPrimaryDocumentFieldValues()?
+
+What in the UI do i need to do to create a sample metadata to test?
+
+
+
+
+
+
+mvn clean spring-boot:run -Drun.arguments=console -X
+Instead of generating data, manually create it
+
+settings > application > Submission Availability
+	Set Submissions to Open
+	Multiple Submissions to Yes
+
+settings > organization
+	use left sidebar to 'create organization'
+
+Go back to main page:
+	Click 'Start your submission'
+	Select the new institution you made
+	Click 'Start [institution] submission
+	
+Enter personal info
+	Click 'continue to license agreement'
+	select licenses
+	Click 'contine to document information'
+	Enter a name
+	Click 'continue to file upload'
+	Enter a dissertation
+	Click 'Confirm &Submit'
+		won't work - need to go to managment page
+
+Go to View page
+	Click on 'In Progress' blue button in sidebar
+	Select 'Submitted'
+
+Go to list page
+	Download Export
+
+
+
+
+start submission
+	click on license
+	select licenses
+
+got to iser
+	click 'in progress' and choose submission
+
+export
+
 #711
 	already export to proquest
 	DSpace Simple Archive Format export
