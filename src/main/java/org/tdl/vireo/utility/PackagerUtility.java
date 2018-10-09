@@ -1,6 +1,7 @@
 package org.tdl.vireo.utility;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -38,6 +39,10 @@ public class PackagerUtility {
 
     public ExportPackage packageExport(Packager<?> packager, Submission submission, List<SubmissionListColumn> columns) {
         return packager.packageExport(submission, columns);
+    }
+
+    public ExportPackage packageExport(Packager<?> packager, Submission submission, Map<String, String> dsDocs) {
+        return packager.packageExport(submission, dsDocs);
     }
 
     public AbstractPackager<?> getPackager(String name) {

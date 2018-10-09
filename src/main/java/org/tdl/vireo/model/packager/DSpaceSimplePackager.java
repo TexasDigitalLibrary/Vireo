@@ -2,7 +2,6 @@ package org.tdl.vireo.model.packager;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -21,9 +20,6 @@ import org.tdl.vireo.service.AssetService;
 
 @Entity
 public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> {
-
-    @Autowired
-    private AssetService assetService;
 
     public DSpaceSimplePackager() {
 
@@ -60,11 +56,6 @@ public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> 
                 pkg_list.add(ff);
             }
             
-            for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
-                Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
-//                File licenseFile = File.createTempFile(ldfv.getValue(), "");
-//                ldfv.getValue();
-            }
 
             /***
              * //Add submitted content String contentsFileName = "contents"; File
