@@ -5,19 +5,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.Map;
+//import java.util.zip.ZipEntry;
+//import java.util.zip.FileOutputStream;
 
 import javax.persistence.Entity;
 
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.export.ZipExportPackage;
+import org.tdl.vireo.model.export.DSpaceSimplePackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
 
 @Entity
-public class DSpaceSimplePackager extends AbstractPackager<ZipExportPackage> {
+public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> {
 
     public DSpaceSimplePackager() {
 
@@ -32,35 +33,28 @@ public class DSpaceSimplePackager extends AbstractPackager<ZipExportPackage> {
         setFormatter(formatter);
     }
 
+    //@Override
+    //public DSpaceSimplePackage packageExport(Submission submission, String manifest){
+	//}
+
     @Override
-    public ZipExportPackage packageExport(Submission submission, String manifest) {
-//System.out.println("SUBMISSION "+submission.getId());
-//System.out.println("MANIFEST"+manifest);
+    public DSpaceSimplePackage packageExport(Submission submission, Map<String,String> ds_docs) {
 
         String packageName = "submission-" + submission.getId() + "-";
-        String manifestName = "manifest.xml";
 
-        File pkg = null;
+        List<File> pkg_list = null;
         try {
+			//Add non submitted content
+			for(Map.Entry<String,String> ds_entry : ds_docs.entrySet()){
+				String docName = ds_entry.getKey();
+				String docContents = ds_entry.getValue();
+				File ff = File.createTempFile(docName,"");
+           		FileUtils.writeStringToFile(ff, docContents, "UTF-8");
+				pkg_list.add(ff);
+			}
 
-            pkg = File.createTempFile(packageName, ".zip");
-
-            FileOutputStream fos = new FileOutputStream(pkg);
-            ZipOutputStream zos = new ZipOutputStream(fos);
-
-            // Copy the manifest
-            File manifestFile = File.createTempFile(manifestName, null);
-            FileUtils.writeStringToFile(manifestFile, manifest, "UTF-8");
-
-            // Add manifest to zip
-            zos.putNextEntry(new ZipEntry(manifestName));
-            zos.write(Files.readAllBytes(manifestFile.toPath()));
-            zos.closeEntry();
-
-            manifestFile.delete();
-
-/***/
-            // Create Contents file
+/***
+			//Add submitted content
 			String contentsFileName = "contents";
             File contentsFile = File.createTempFile(contentsFileName, null);
 System.out.println("AAAA");
@@ -71,15 +65,15 @@ System.out.println("FKEY FFF "+documentFieldValue.getFileName()+" FFF "+submissi
 				System.out.println("BBBB "+documentFieldValue.getFieldPredicate().getValue().equals("_doctype_primary"));
             }
 
-
             // Add manifest to zip
-            zos.putNextEntry(new ZipEntry(contentsFileName));
-            zos.write(Files.readAllBytes(contentsFile.toPath()));
-            zos.closeEntry();
+            //fos.putNextEntry(new FileOutputStream(contentsFileName));
+            fos.write(Files.readAllBytes(contentsFile.toPath()));
+            //fos.closeEntry();
 
             contentsFile.delete();
-/***/
+***/
 
+/***
             List<FieldValue> documentFieldValues = submission.getAllDocumentFieldValues();
             for (FieldValue documentFieldValue : documentFieldValues) {
 
@@ -87,20 +81,20 @@ System.out.println("FKEY FFF "+documentFieldValue.getFileName()+" FFF "+submissi
 
                 File exportFile = getAbsolutePath(documentFieldValue.getValue()).toFile();
 
-                zos.putNextEntry(new ZipEntry(documentFieldValue.getFileName()));
-                zos.write(Files.readAllBytes(exportFile.toPath()));
-                zos.closeEntry();
+                //fos.putNextEntry(new ZipEntry(documentFieldValue.getFileName()));
+                fos.write(Files.readAllBytes(exportFile.toPath()));
+                //fos.closeEntry();
 
             }
-
-            zos.close();
             fos.close();
+***/
+
 
         } catch (IOException ioe) {
             throw new RuntimeException("Unable to generate package", ioe);
         }
 
-        return new ZipExportPackage(submission, "http://purl.org/net/sword-types/METSDSpaceSIP", pkg);
+        return new DSpaceSimplePackage(submission, "http://purl.org/net/sword-types/METSDSpaceSIP", pkg_list);
     }
 
 }
