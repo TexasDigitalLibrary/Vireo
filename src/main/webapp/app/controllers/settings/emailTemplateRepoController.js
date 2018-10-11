@@ -1,4 +1,4 @@
-vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $q, EmailTemplateRepo, DragAndDropListenerFactory, FieldPredicateRepo) {
+vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $q, ApiResponseActions, EmailTemplateRepo, DragAndDropListenerFactory, FieldPredicateRepo) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -31,6 +31,10 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
     EmailTemplateRepo.listen(function (data) {
         $scope.resetEmailTemplates();
+    });
+
+    EmailTemplateRepo.listen(ApiResponseActions.UPDATE, function (data) {
+        EmailTemplateRepo.reset();
     });
 
     $scope.ready = $q.all([EmailTemplateRepo.ready()]);
@@ -94,6 +98,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
         };
 
         $scope.reorderEmailTemplates = function (src, dest) {
+            console.log(EmailTemplateRepo.getAll());
             EmailTemplateRepo.reorder(src, dest);
         };
 
