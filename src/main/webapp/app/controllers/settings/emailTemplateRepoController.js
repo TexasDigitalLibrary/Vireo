@@ -98,7 +98,6 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
         };
 
         $scope.reorderEmailTemplates = function (src, dest) {
-            console.log(EmailTemplateRepo.getAll());
             EmailTemplateRepo.reorder(src, dest);
         };
 
