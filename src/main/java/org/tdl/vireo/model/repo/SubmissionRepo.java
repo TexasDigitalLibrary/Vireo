@@ -25,6 +25,8 @@ public interface SubmissionRepo extends WeaverRepo<Submission>, SubmissionRepoCu
 
     public Submission findByCustomActionValuesDefinitionLabel(String label);
 
+    public Long countByOrganizationId(Long id);
+
     @Override
     public Submission update(Submission submission);
 
