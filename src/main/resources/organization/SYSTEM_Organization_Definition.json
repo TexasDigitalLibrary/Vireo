@@ -468,7 +468,7 @@
           "enabled":true,
           "optional":false,
           "flagged":false,
-          "logged":false,
+          "logged":true,
           "usage":"",
           "help":"By checking here you agree to the above license in its entirety.",
           "gloss": "License Agreement"
@@ -489,7 +489,7 @@
           "enabled":true,
           "optional":false,
           "flagged":false,
-          "logged":false,
+          "logged":true,
           "usage":"",
           "help":"I am requesting that ProQuest provide additional free non-exclusive distribution via the ProQuest Dissertation & Theses Database (PQDT), which reaches 3,000 universities with over 200 million searches annually, and supports discovery through major subject and discipline indexes (SciFinder, MLA, MathSciNet, PsycINFO, etc).  I also will be eligible for a royalty based upon sales of my full-text work. More information is available <a target='_blank' href='http://www.proquest.com/en-US/products/dissertations/authors.shtml'>here</a>.",
           "gloss": "Proquest Publication"
