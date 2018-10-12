@@ -573,12 +573,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "publish": function (state) {
                 $scope.submissionStatusBox.updating = true;
                 state.updating = true;
-                $scope.submission.publish($scope.submissionStatusBox.depositLocation).then(function (response) {
-                    var apiRes = angular.fromJson(response.body);
-                    if(apiRes.meta.status === 'SUCCESS') {
-                        var submission = apiRes.payload.Submission;
-                        angular.extend($scope.submission.submissionStatus, submission.submissionStatus);
-                    }
+                $scope.submission.publish($scope.submissionStatusBox.depositLocation).then(function () {
                     delete state.updating;
                     delete $scope.submissionStatusBox.updating;
                     $scope.submissionStatusBox.resetStatus();
