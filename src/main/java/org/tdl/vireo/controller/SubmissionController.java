@@ -597,6 +597,9 @@ public class SubmissionController {
 					//METADATA - calls packageExport for metadata files 
                     Map<String, String> metadata = new HashMap<String, String>();
 					//CREATE HashMap Entry
+					metadata.put("dublin_core.xml","");
+					metadata.put("metadata_local.xml","");
+					metadata.put("metadata_thesis.xml","");
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, metadata);
                     if (exportPackage.isFile()) {
                         File exportFile = (File) exportPackage.getPayload();
@@ -617,6 +620,7 @@ public class SubmissionController {
                     }
 
 					//PRIMARY_DOC
+		//FieldValue primaryDoc = submission.getAllDocumentFieldValues();
                     FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
                     Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
                     byte[] fileBytes = Files.readAllBytes(path);
