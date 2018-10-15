@@ -1,5 +1,6 @@
 package org.tdl.vireo.model.formatter;
 
+import java.util.HashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,8 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
     public DSpaceMetsFormatter() {
         super();
         setName("DSpaceMETS");
-        setTemplate("dspace_mets");
+        HashMap<String, String> templates = new HashMap<String, String>();
+        templates.put("", "dspace_mets");
     }
 
     @Override

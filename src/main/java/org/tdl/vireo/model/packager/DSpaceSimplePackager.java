@@ -40,15 +40,13 @@ public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> 
     // }
 
     @Override
-    public DSpaceSimplePackage packageExport(Submission submission, Map<String, String> ds_docs) {
-
-        String packageName = "submission-" + submission.getId() + "-";
+    public DSpaceSimplePackage packageExport(Submission submission, Map<String, String> dsDocs) {
 
         // Add templated files
         List<File> pkg_list = new ArrayList<File>();
         try {
             // Add non submitted content
-            for (Map.Entry<String, String> ds_entry : ds_docs.entrySet()) {
+            for (Map.Entry<String, String> ds_entry : dsDocs.entrySet()) {
                 String docName = ds_entry.getKey();
                 String docContents = ds_entry.getValue();
                 File ff = File.createTempFile(docName, "");

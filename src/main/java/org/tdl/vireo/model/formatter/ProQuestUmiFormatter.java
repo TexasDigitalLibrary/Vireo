@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.formatter;
 
+import java.util.HashMap;
+
 import javax.persistence.Entity;
 
 import org.tdl.vireo.model.FieldValue;
@@ -13,7 +15,9 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
     public ProQuestUmiFormatter() {
         super();
         setName("ProQuestUMI");
-        setTemplate("proquest_umi");
+        HashMap<String, String> templates = new HashMap<String, String>();
+        templates.put("", "proquest_umi");
+        setTemplates(templates);
     }
 
     @Override

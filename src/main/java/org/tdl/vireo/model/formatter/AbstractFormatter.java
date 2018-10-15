@@ -2,8 +2,10 @@ package org.tdl.vireo.model.formatter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.Transient;
@@ -25,8 +27,9 @@ public abstract class AbstractFormatter extends BaseEntity implements Formatter 
     @Column(unique = true, nullable = false)
     private String name;
 
+    @ElementCollection
     @Column(nullable = true)
-    private String template;
+    private Map<String, String> templates;
 
     @Transient
     protected SubmissionHelperUtility submissionHelperUtility;
@@ -158,12 +161,12 @@ public abstract class AbstractFormatter extends BaseEntity implements Formatter 
         this.name = name;
     }
 
-    public String getTemplate() {
-        return template;
+    public Map<String, String> getTemplates() {
+        return templates;
     }
 
-    public void setTemplate(String template) {
-        this.template = template;
+    public void setTemplates(Map<String, String> template) {
+        this.templates = template;
     }
 
 }

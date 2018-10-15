@@ -1,6 +1,7 @@
 package org.tdl.vireo.model.export;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 import org.tdl.vireo.model.Submission;
@@ -33,6 +34,10 @@ public abstract class AbstractExportPackage implements ExportPackage {
 
     public boolean isFile() {
         return payload instanceof File;
+    }
+    
+    public boolean isList() {
+        return payload instanceof List;
     }
 
     public boolean isMap() {

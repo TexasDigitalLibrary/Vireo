@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.formatter;
 
+import java.util.Map;
+
 import org.tdl.vireo.model.Submission;
 import org.thymeleaf.context.Context;
 
@@ -11,7 +13,7 @@ public interface Formatter {
 
     public String getName();
 
-    public String getTemplate();
+    public Map<String, String> getTemplates();
 
     public void populateContext(Context context, Submission submission);
 
