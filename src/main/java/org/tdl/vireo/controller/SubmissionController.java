@@ -23,7 +23,6 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -507,6 +506,7 @@ public class SubmissionController {
         processBatchExport(response, user, packagerName, activeFilter);
     }
 
+    @SuppressWarnings("unchecked")
     private void processBatchExport(HttpServletResponse response, User user, String packagerName, NamedSearchFilterGroup filter) throws IOException {
         AbstractPackager<?> packager = packagerUtility.getPackager(packagerName);
 
@@ -589,53 +589,54 @@ public class SubmissionController {
             try {
                 ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
-					String submissionName = "submission_" + submission.getId() + "/";
+                    String submissionName = "submission_" + submission.getId() + "/";
                     zos.putNextEntry(new ZipEntry(submissionName));
 
-					StringBuilder contentsText = new StringBuilder();
+                    StringBuilder contentsText = new StringBuilder();
 
-					//METADATA - calls packageExport for metadata files 
-                    Map<String, String> metadata = new HashMap<String, String>();
-					//CREATE HashMap Entry
-					metadata.put("dublin_core.xml","");
-					//metadata.put("metadata_local.xml","");
-					//metadata.put("metadata_thesis.xml","");
-                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, metadata);
-                    if (exportPackage.isFile()) {
-                        File exportFile = (File) exportPackage.getPayload();
-                        zos.putNextEntry(new ZipEntry(submissionName + exportFile.getName()));
-						contentsText.append("MD "+exportFile.getName()+"\n");
-                        zos.write(Files.readAllBytes(exportFile.toPath()));
-                        zos.closeEntry();
+                    // metadata.put("metadata_local.xml","");
+                    // metadata.put("metadata_thesis.xml","");
+                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+                    
+                    
+                    
+                    if (exportPackage.isList()) {
+                        for (File file : (List<File>) exportPackage.getPayload()) {
+                            zos.putNextEntry(new ZipEntry(submissionName + file.getName()));
+                            contentsText.append("MD " + file.getName() + "\n");
+                            zos.write(Files.readAllBytes(file.toPath()));
+                            zos.closeEntry();
+                        }
+
                     }
 
-					//LICENSES
+                    // LICENSES
                     for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
                         Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
                         byte[] fileBytes = Files.readAllBytes(path);
-                        zos.putNextEntry(new ZipEntry(submissionName+ldfv.getFileName()));
-						contentsText.append(ldfv.getFileName()+" bundle:LICENSE\n");
+                        zos.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
+                        contentsText.append(ldfv.getFileName() + " bundle:LICENSE\n");
                         zos.write(fileBytes);
                         zos.closeEntry();
                     }
 
-					//PRIMARY_DOC
-	//dont want to export archived doc
-	//
-    		//public List<FieldValue> getSupplementalAndSourceDocumentFieldValues() {
-		//supplemental, source, administrative
-		//ask Stephanie about adminsitrative
+                    // PRIMARY_DOC
+                    // dont want to export archived doc
+                    //
+                    // public List<FieldValue> getSupplementalAndSourceDocumentFieldValues() {
+                    // supplemental, source, administrative
+                    // ask Stephanie about adminsitrative
 
                     FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
                     Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
                     byte[] fileBytes = Files.readAllBytes(path);
-                    zos.putNextEntry(new ZipEntry(submissionName+primaryDoc.getFileName()));
-					contentsText.append(primaryDoc.getFileName()+"  bundle:CONTENT  primary:true\n");
+                    zos.putNextEntry(new ZipEntry(submissionName + primaryDoc.getFileName()));
+                    contentsText.append(primaryDoc.getFileName() + "  bundle:CONTENT  primary:true\n");
                     zos.write(fileBytes);
                     zos.closeEntry();
 
-					//CONTENTS_FILE
-                    zos.putNextEntry(new ZipEntry(submissionName+"contents"));
+                    // CONTENTS_FILE
+                    zos.putNextEntry(new ZipEntry(submissionName + "contents"));
                     zos.write(contentsText.toString().getBytes());
                     zos.closeEntry();
 
@@ -650,9 +651,9 @@ public class SubmissionController {
 
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
                 e.printStackTrace();
-//                PrintWriter out = response.getWriter();
-//                out.print(objectMapper.writeValueAsString(apiResponse));
-//                out.close();
+                // PrintWriter out = response.getWriter();
+                // out.print(objectMapper.writeValueAsString(apiResponse));
+                // out.close();
             }
             break;
 
@@ -852,7 +853,7 @@ public class SubmissionController {
         String[] fileNameParts = fileName.split("\\.");
         String fileExtension = fileNameParts.length > 1 ? fileNameParts[1] : "pdf";
 
-        if(documentTypesToRename.contains(documentType)) {
+        if (documentTypesToRename.contains(documentType)) {
             String lastName = user.getLastName().toUpperCase();
             int year = Calendar.getInstance().get(Calendar.YEAR);
             fileName = lastName + "-" + documentType + "-" + String.valueOf(year) + "." + fileExtension;
@@ -926,7 +927,8 @@ public class SubmissionController {
         String subject = templateUtility.compileString(template.getSubject(), submission);
         String content = templateUtility.compileTemplate(template, submission);
 
-        // TODO: this needs to only send email to the advisor not any field value that is contact type
+        // TODO: this needs to only send email to the advisor not any field value that
+        // is contact type
         submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
 
             SimpleMailMessage smm = new SimpleMailMessage();
@@ -951,7 +953,8 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
-    // TODO: rework, anonymous endpoint for advisor approval, no user available for action log
+    // TODO: rework, anonymous endpoint for advisor approval, no user available for
+    // action log
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "/{submissionId}/update-advisor-approval", method = RequestMethod.POST)
     public ApiResponse updateAdvisorApproval(@PathVariable Long submissionId, @RequestBody Map<String, Object> data) {

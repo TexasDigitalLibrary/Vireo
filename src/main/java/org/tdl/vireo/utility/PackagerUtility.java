@@ -28,9 +28,9 @@ public class PackagerUtility {
     private FormatterUtility formatterUtility;
 
     public ExportPackage packageExport(Packager<?> packager, Submission submission) throws Exception {
-        Optional<String> manifest = formatterUtility.renderManifest(packager.getFormatter(), submission);
+        Optional<Map<String, String>> manifest = formatterUtility.renderManifestMap(packager.getFormatter(), submission);
         if (manifest.isPresent()) {
-            logger.debug(manifest.get());
+            logger.debug(manifest.get().toString());
         } else {
             throw new UnsupportedFormatterException("Required manifest not found!");
         }
