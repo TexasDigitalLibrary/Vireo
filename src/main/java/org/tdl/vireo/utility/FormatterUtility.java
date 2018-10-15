@@ -27,4 +27,19 @@ public class FormatterUtility {
         return manifest;
     }
 
+    public Optional<String> renderManifestMap(Formatter formatter, Submission submission) throws Exception {
+		Map<String,String> renderMap = new HashMap();
+        Context context = new Context(Locale.getDefault());
+        formatter.populateContext(context, submission);
+        Optional<String> template = Optional.of(formatter.getTemplate());
+		
+        Optional<String> template = Optional.of(formatter.getTemplate());
+		Option<String> dcContent = Optional.empty();
+        if (template.isPresent()) {
+        	dcContent = Optional.of(templateEngine.process(template.get(), context));
+			renderMap.put("dublin_core.xml",dcContent)
+        }
+        return renderMap;
+    }
+
 }

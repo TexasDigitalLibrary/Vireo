@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--metadata_local.xml-->
+<dublin_core schema="local">
+    <!-- local.embargo.terms and lift-->
+
+    <dcvalue element="embargo" qualifier="terms">
+        2019-08-01
+    </dcvalue>
+    <dcvalue element="embargo" qualifier="lift">
+        2019-08-01
+    </dcvalue>
+
+</dublin_core>
+
