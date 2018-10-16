@@ -726,7 +726,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_CONTACT"
+            "name":"INPUT_STRICT_CONTACT"
           },
           "repeatable":false,
           "overrideable":true,
@@ -735,7 +735,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter the name and email address for your committee chair.",
+          "help":"Select the name and email address for your committee chair.",
           "gloss": "Committee Chair",
           "controlledVocabulary":{
             "name":"Committee Members",

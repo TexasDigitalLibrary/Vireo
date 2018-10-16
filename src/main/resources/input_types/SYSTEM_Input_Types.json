@@ -24,6 +24,21 @@
     }
   },
   {
+    "name": "INPUT_STRICT_CONTACT",
+    "validationPattern": null,
+    "validationMessage": null,
+    "validation": {
+        "name": {
+            "pattern": null,
+            "message": null
+        },
+        "email": {
+            "pattern": null,
+            "message": null
+        }
+    }
+  },
+  {
     "name": "INPUT_PASSWORD",
     "validationPattern": null,
     "validationMessage": null
