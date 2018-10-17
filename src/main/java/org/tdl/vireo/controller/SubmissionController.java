@@ -581,7 +581,6 @@ public class SubmissionController {
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
                 response.setContentType("application/json");
-                e.printStackTrace();
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
                 PrintWriter out = response.getWriter();
                 out.print(objectMapper.writeValueAsString(apiResponse));

@@ -87,7 +87,7 @@
         38    => blank indicating the record has not been modified
         39    => "d" for other cataloging source
     -->
-    <controlfield tag="008">      s${ SUBMITTER_GRADUATION_YEAR }       |||||obm   000 0|eng d</controlfield>
+    <controlfield th:text="${'      s' + SUBMITTER_GRADUATION_YEAR + '       |||||obm   000 0|eng d'}" tag="008"></controlfield>
 
     <!-- 035, System Control Number -->
     <!-- 
@@ -98,7 +98,7 @@
             </marc:datafield>
     -->
     <datafield th:if="${ DEPOSIT_URL != null }" tag="035" ind1=" " ind2=" ">
-        <subfield code="a">${ DEPOSIT_URL }</subfield>
+        <subfield th:text="${ DEPOSIT_URL }" code="a"></subfield>
     </datafield>
     
     <!-- 100, ETD creator -->
@@ -111,7 +111,7 @@
             </marc:datafield>
     -->
     <datafield tag="100" ind1="1" ind2=" ">
-        <subfield code="a">${ STUDENT_FULL_NAME_WITH_BIRTH_YEAR }</subfield>
+        <subfield th:text="${ STUDENT_FULL_NAME_WITH_BIRTH_YEAR }" code="a"></subfield>
         <subfield code="e">author</subfield>
     </datafield>
 
@@ -126,8 +126,8 @@
         Note, we'll try and fill the second indicator appropriately, which should be the number of insignificant characters in the title. 
         We only support A, An, The at the present time. I googled around and couldn't find a list of english articles.
     -->
-    <datafield th:if="${ TITLE != null }" tag="245" ind1="1" ind2="${ TITLE_IND2 }">
-        <subfield code="a">${ TITLE }</subfield>
+    <datafield th:if="${ TITLE != null }" tag="245" ind1="1" th:attr="ind2=${ TITLE_IND2 }">
+        <subfield th:text="${ TITLE }" code="a"></subfield>
     </datafield>
 
     <!-- 260, ETD publisher, use the granting institution as the publisher and the graduation year -->
@@ -140,9 +140,9 @@
             </marc:datafield>
     -->
     <datafield th:if="${ APPLICATION_GRANTOR != null }" tag="260" ind1=" " ind2=" ">
-        <subfield code="b">[${ APPLICATION_GRANTOR }</subfield>
-        <subfield th:if="${ SUBMITTER_GRADUATION_YEAR != null}" code="c">${ SUBMITTER_GRADUATION_YEAR }.]</subfield>
-        <subfield th:if="${ SUBMITTER_GRADUATION_YEAR == null}" code="c">${ #dates.year(#dates.createNow()) }.]</subfield>
+        <subfield th:text="'[' + ${ APPLICATION_GRANTOR }" code="b"></subfield>
+        <subfield th:text="${ SUBMITTER_GRADUATION_YEAR } + '.]'" th:if="${ SUBMITTER_GRADUATION_YEAR != null}" code="c"></subfield>
+        <subfield th:text="${ #dates.year(#dates.createNow()) } + '.]'" th:if="${ SUBMITTER_GRADUATION_YEAR == null}" code="c"></subfield>
     </datafield>
 
     <!-- 502, Dissertation information -->
@@ -160,12 +160,12 @@
         
     -->
     <datafield tag="502" ind1=" " ind2=" ">
-        <subfield th:if="${ DEGREE_LEVEL != null }" code="a">${ DEGREE_LEVEL } thesis.</subfield>
-        <subfield th:if="${ DEGREE_NAME != null }" code="b">${ DEGREE_NAME }</subfield>
-        <subfield th:if="${ APPLICATION_GRANTOR != null }" code="c">${ APPLICATION_GRANTOR }</subfield>
-        <subfield th:if="${ SUBMITTER_GRADUATION_YEAR != null }" code="d">${ SUBMITTER_GRADUATION_YEAR }</subfield>
-        <subfield th:if="${ MAJOR != null }" code="g">${ MAJOR }</subfield>
-        <subfield th:if="${ DEPOSIT_URL != null }" code="o">${ DEPOSIT_URL }</subfield>
+        <subfield th:text="${ DEGREE_LEVEL } + ' thesis.'" th:if="${ DEGREE_LEVEL != null }" code="a"></subfield>
+        <subfield th:text="${ DEGREE_NAME }" th:if="${ DEGREE_NAME != null }" code="b"></subfield>
+        <subfield th:text="${ APPLICATION_GRANTOR }" th:if="${ APPLICATION_GRANTOR != null }" code="c"></subfield>
+        <subfield th:text="${ SUBMITTER_GRADUATION_YEAR }" th:if="${ SUBMITTER_GRADUATION_YEAR != null }" code="d"></subfield>
+        <subfield th:text="${ MAJOR }" th:if="${ MAJOR != null }" code="g"></subfield>
+        <subfield th:text="${ DEPOSIT_URL }" th:if="${ DEPOSIT_URL != null }" code="o"></subfield>
     </datafield>
     
      <!-- 504, static - includes biblograhpic references -->
@@ -206,7 +206,7 @@
              </marc:datafield>
      -->
      <datafield th:if="${ ABSTRACT != null }" tag="520" ind1="3" ind2=" ">
-         <subfield code="a">${ ABSTRACT }</subfield>
+         <subfield th:text="${ ABSTRACT }" code="a"></subfield>
      </datafield>
 
      <!-- 650, ETD discipline index terms -->
@@ -219,7 +219,7 @@
              
      -->
      <datafield th:if="${ MAJOR != null }" tag="650" ind1=" " ind2="4">
-         <subfield code="a">${ MAJOR }</subfield>
+         <subfield th:text="${ MAJOR }" code="a"></subfield>
      </datafield>
 
     <!-- 653, ETD subject/keywords -->
@@ -237,8 +237,8 @@
             </marc:datafield>
         
     -->
-    <datafield th:each="keyword: ${COMMITTEE_MEMBER_FIELD_VALUES}" tag="653" ind1=" " ind2="0">
-        <subfield code="a">${ keyword.getValue() }</subfield>
+    <datafield th:each="keyword: ${KEYWORD_FIELD_VALUES}" tag="653" ind1=" " ind2="0">
+        <subfield th:text="${ keyword.getValue() }" code="a"></subfield>
     </datafield>
     
     <!-- 655, Static field that says this is an ETD -->
@@ -266,8 +266,8 @@
         
     -->
     <datafield th:if="${ APPLICATION_GRANTOR != null }" tag="710" ind1="2" ind2=" ">
-        <subfield code="a">${ APPLICATION_GRANTOR }</subfield>
-        <subfield th:if="${ DEPARTMENT != null }" code="b">${ DEPARTMENT }</subfield>
+        <subfield th:text="${ APPLICATION_GRANTOR }" code="a"></subfield>
+        <subfield th:text="${ DEPARTMENT }" th:if="${ DEPARTMENT != null }" code="b"></subfield>
     </datafield>
 
     <!-- 720, ETD chair or co-chairs contributors -->
@@ -281,7 +281,7 @@
         
     -->
     <datafield tag="720" ind1="1" ind2=" ">
-        <subfield code="a">${ COMMITTEE_CHAIR }</subfield>
+        <subfield th:text="${ COMMITTEE_CHAIR }" code="a"></subfield>
         <subfield code="e">chair</subfield>
     </datafield>
 
@@ -299,7 +299,7 @@
             </marc:datafield>
     -->
     <datafield th:each="member: ${COMMITTEE_MEMBER_FIELD_VALUES}" tag="720" ind1="1" ind2=" ">
-        <subfield code="a">${ member }</subfield>
+        <subfield th:text="${ member }" code="a"></subfield>
         <subfield code="e">committee member</subfield>
     </datafield>
 
@@ -314,8 +314,8 @@
         
     -->
     <datafield th:if="${ DEPOSIT_URL != null }" tag="856" ind1="4" ind2="0">
-        <subfield th:if="${ PRIMARY_DOCUMENT_MIMETYPE != null }" code="q">${ PRIMARY_DOCUMENT_MIMETYPE }</subfield>
-        <subfield code="u">${ DEPOSIT_URL }</subfield>
+        <subfield th:text="${ PRIMARY_DOCUMENT_MIMETYPE }" th:if="${ PRIMARY_DOCUMENT_MIMETYPE != null }" code="q"></subfield>
+        <subfield th:text="${ DEPOSIT_URL }" code="u"></subfield>
     </datafield>
 
 </record>
