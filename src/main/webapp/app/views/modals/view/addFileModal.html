@@ -93,12 +93,15 @@
 
       <div class="form-group">
         <label for="additionalDocumentFileName">New Document Type:</label>
-        <select id="additionalDocumentFileName" class="form-control" ng-model="addFileData.fieldPredicate" ng-options="documentTypePredicate as getFileType(documentTypePredicate) for documentTypePredicate in getDocumentTypePredicates() | filter:{ documentTypePredicate: true } | filter:{value:'!_doctype_primary'} track by documentTypePredicate.value" ng-selected="getPattern(addFileData.fieldPredicate.value)">
+        <select ng-change="removeFiles()" id="additionalDocumentFileName" class="form-control" ng-model="addFileData.fieldPredicate" ng-options="documentTypePredicate as getFileType(documentTypePredicate) for documentTypePredicate in getDocumentTypePredicates() | filter:{ documentTypePredicate: true } | filter:{value:'!_doctype_primary'} track by documentTypePredicate.value" ng-selected="getPattern(addFileData.fieldPredicate.value)">
           <option value="">Select File Type...</option>
         </select>
       </div>
 
-      <dropzone ng-if="!addFileData.files" file-model="files" text="dropZoneText" patterns="getPattern(addFileData.fieldPredicate.value)" drop-method="queueUpload(files)"></dropzone>
+      <dropzone ng-if="!addFileData.files && addFileData.fieldPredicate" file-model="files" text="dropZoneText" patterns="getPattern(addFileData.fieldPredicate.value)" drop-method="queueUpload(files)"></dropzone>
+      <div ng-if="!addFileData.fieldPredicate" class="well">
+        <p>Please select a File Type</p>
+      </div>
 
       <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
       <div ng-if="addFileData.files">
