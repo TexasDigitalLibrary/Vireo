@@ -253,7 +253,7 @@ public class SubmissionHelperUtility {
         String year = "";
         if (graduationYear.isPresent()) {
             try {
-                year = yearFormat.format(dateFormat.parse(graduationYear.get()));
+                year = yearFormat.format(dateTimeFormat.parse(graduationYear.get()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -394,6 +394,11 @@ public class SubmissionHelperUtility {
     public String getSubmitterPermanentAddress() {
         Optional<String> permanentAddress = getFieldValueByPredicateValue("permanent_address");
         return permanentAddress.isPresent() ? permanentAddress.get() : "";
+    }
+
+    public String getMajor() {
+        Optional<String> major = getFieldValueByPredicateValue("thesis.degree.major");
+        return major.isPresent() ? major.get() : "";
     }
 
     public String getStreet(String address) {

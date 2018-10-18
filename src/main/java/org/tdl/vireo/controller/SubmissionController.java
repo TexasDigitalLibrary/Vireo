@@ -510,7 +510,6 @@ public class SubmissionController {
         AbstractPackager<?> packager = packagerUtility.getPackager(packagerName);
 
         List<SubmissionListColumn> columns = filter.getColumnsFlag() ? filter.getSavedColumns() : user.getSubmissionViewColumns();
-
         switch (packagerName.trim()) {
         case "Excel":
             List<Submission> submissions = submissionRepo.batchDynamicSubmissionQuery(filter, columns);
@@ -550,6 +549,7 @@ public class SubmissionController {
             workbook.write(response.getOutputStream());
 
             break;
+        case "MarcXML21":
         case "DSpaceMETS":
         case "ProQuest":
             try {
@@ -565,7 +565,11 @@ public class SubmissionController {
 
                     if (exportPackage.isFile()) {
                         File exportFile = (File) exportPackage.getPayload();
-                        zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                        if (packagerName.equals("MarcXML21")) {
+                            zos.putNextEntry(new ZipEntry("MarcXML21/" + exportFile.getName()));
+                        } else {
+                            zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                        }
                         zos.write(Files.readAllBytes(exportFile.toPath()));
                         zos.closeEntry();
                     }
@@ -577,7 +581,6 @@ public class SubmissionController {
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
                 response.setContentType("application/json");
-
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
                 PrintWriter out = response.getWriter();
                 out.print(objectMapper.writeValueAsString(apiResponse));
