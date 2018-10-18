@@ -257,6 +257,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         }
 
         submission = update(submission);
+        simpMessagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/submissions", new ApiResponse(SUCCESS, UPDATE, submission));
 
         actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
