@@ -503,6 +503,11 @@ var apiMapping = {
             'controller': 'organization',
             'method': 'change-email-workflow-rule-activation'
         },
+        countSubmissions: {
+            'endpoint': '/private/queue',
+            'controller': 'organization',
+            'method': 'count-submisisons'
+        },        
         create: {
             'endpoint': '/private/queue',
             'controller': 'organization'

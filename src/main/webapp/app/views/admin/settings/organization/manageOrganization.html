@@ -5,7 +5,7 @@
 
 	<div class="panel-body">
 
-		<alerts seconds="45" channels="organization/update" types="SUCCESS"></alerts>
+		<alerts seconds="45" channels="organization/update, organization/delete" types="SUCCESS, INVALID"></alerts>
 
 		<form ng-submit="updateOrganization(getSelectedOrganization())" name="forms.update" novalidate>
 
@@ -68,10 +68,11 @@
 					<div class="row">
 						<div class="pull-right">
 							<button
-							  ng-if="getSelectedOrganization().id !== 1"
+							    ng-if="getSelectedOrganization().id !== 1"
 								type="button"
-								class="btn btn-danger"
-                ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
+                                class="btn btn-danger"
+                                ng-disabled="deleteDisabled"
+                                ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
 							<button
 								type="button"
 								class="btn btn-default"
@@ -83,7 +84,7 @@
 								ng-disabled="forms.update.$invalid || updatingOrganization">Save 
 								<span ng-if="updatingOrganization" class="glyphicon glyphicon-refresh spinning"></span>
 							</button>
-						</div>
+                        </div>
 					</div>
 
 				</div>
