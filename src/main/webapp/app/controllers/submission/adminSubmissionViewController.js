@@ -254,14 +254,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         var containsPredicate = function (array, predicate) {
-            var found = false;
-            for (var i in array) {
-                if (array[i].id === predicate.id) {
-                    found = true;
-                    break;
-                }
-            }
-            return found;
+            return array.map(function(p) { return p.id; }).indexOf(predicate.id) >= 0;
         };
 
         $scope.getPattern = function (doctype) {
