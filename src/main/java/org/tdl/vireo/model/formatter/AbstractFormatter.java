@@ -165,8 +165,8 @@ public abstract class AbstractFormatter extends BaseEntity implements Formatter 
         return templates;
     }
 
-    public void setTemplates(Map<String, String> template) {
-        this.templates = template;
+    public void setTemplates(Map<String, String> template_map) {
+        this.templates = template_map;
     }
 
 }
