@@ -596,18 +596,23 @@ public class SubmissionController {
                     zos.putNextEntry(new ZipEntry(submissionName));
 
                     StringBuilder contentsText = new StringBuilder();
-
-                    // metadata.put("metadata_local.xml","");
-                    // metadata.put("metadata_thesis.xml","");
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-                    
-                    
-                    
+                   	/*** 
                     if (exportPackage.isList()) {
                         for (File file : (List<File>) exportPackage.getPayload()) {
                             zos.putNextEntry(new ZipEntry(submissionName + file.getName()));
                             contentsText.append("MD " + file.getName() + "\n");
                             zos.write(Files.readAllBytes(file.toPath()));
+                            zos.closeEntry();
+                        }
+
+                    }
+					***/
+                    if (exportPackage.isMap()) {
+                        for (Map.Entry<String,File> fileEntry : ((Map<String,File>) exportPackage.getPayload()).entrySet()){
+                            zos.putNextEntry(new ZipEntry(submissionName + fileEntry.getKey()));
+                            contentsText.append("MD " + fileEntry.getKey() + "\n");
+                            zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
                             zos.closeEntry();
                         }
 
@@ -624,12 +629,6 @@ public class SubmissionController {
                     }
 
                     // PRIMARY_DOC
-                    // dont want to export archived doc
-                    //
-                    // public List<FieldValue> getSupplementalAndSourceDocumentFieldValues() {
-                    // supplemental, source, administrative
-                    // ask Stephanie about adminsitrative
-
                     FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
                     Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
                     byte[] fileBytes = Files.readAllBytes(path);
@@ -637,6 +636,19 @@ public class SubmissionController {
                     contentsText.append(primaryDoc.getFileName() + "  bundle:CONTENT  primary:true\n");
                     zos.write(fileBytes);
                     zos.closeEntry();
+
+                    // SUPPLEMENTAL_DOCS
+                    // supplemental, source, administrative
+                    // ask Stephanie about administrative
+                    List<FieldValue> supplDocs = submission.getSupplementalAndSourceDocumentFieldValues();
+                    for (FieldValue supplDoc : supplDocs){
+                    	Path supplPath = assetService.getAssetsAbsolutePath(supplDoc.getValue());
+                    	byte[] supplFileBytes = Files.readAllBytes(supplPath);
+                    	zos.putNextEntry(new ZipEntry(submissionName + supplDoc.getFileName()));
+                    	contentsText.append(supplDoc.getFileName() + "  bundle:CONTENT\n");
+                    	zos.write(supplFileBytes);
+                    	zos.closeEntry();
+					}
 
                     // CONTENTS_FILE
                     zos.putNextEntry(new ZipEntry(submissionName + "contents"));

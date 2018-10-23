@@ -3,6 +3,7 @@ package org.tdl.vireo.model.packager;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 //import java.util.zip.ZipEntry;
@@ -43,15 +44,20 @@ public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> 
     public DSpaceSimplePackage packageExport(Submission submission, Map<String, String> dsDocs) {
 
         // Add templated files
-        List<File> pkg_list = new ArrayList<File>();
+//        List<File> pkg_list = new ArrayList<File>();
+        Map<String,File> pkg_list = new HashMap<String,File>();
         try {
             // Add non submitted content
             for (Map.Entry<String, String> ds_entry : dsDocs.entrySet()) {
                 String docName = ds_entry.getKey();
                 String docContents = ds_entry.getValue();
-                File ff = File.createTempFile(docName, "");
+System.out.println("AAA DOCNAME "+docName);
+                File ff = File.createTempFile(docName,"");
+System.out.println("BBB DOCNAME "+ff.getName());
                 FileUtils.writeStringToFile(ff, docContents, "UTF-8");
-                pkg_list.add(ff);
+                //pkg_list.add(ff);
+                pkg_list.put(docName,ff);
+                //ff.delete();
             }
             
 
