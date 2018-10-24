@@ -117,6 +117,9 @@ vireo.directive("triptych", function () {
             };
 
             $scope.selectOrganization = function (organization) {
+                if ($scope.setDeleteDisabled !== undefined) {
+                    $scope.setDeleteDisabled();
+                }
                 var selectedOrganization = $scope.getSelectedOrganization();
                 if (selectedOrganization !== undefined && (organization.id !== selectedOrganization.id || selectedOrganization.id === $scope.organizations[0].id)) {
                     var parent;

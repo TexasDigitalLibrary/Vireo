@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--/*
+    This is an MARC 21 XML format. This format is most useful for ingesting
+    records of submissions into your institutional OPAC for easier searching
+    and discovery of local resources.
+    
+    http://www.loc.gov/standards/Example:xml/
+*/-->
+<record xmlns="http://www.loc.gov/MARC21/slim"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.loc.gov/MARC21/slim http://www.loc.gov/standards/marcxml/schema/MARC21slim.xsd">
+    
+    <!--  
+        MARC Leader Field for a bibliographic notation for a textual monograph. 
+        
+        00-04 => blank for record length
+        05    => "n" for new
+        06    => "a" for textual material
+        07    => "m" for monograph
+        08    => blank for type of control
+        09    => "a" for unicode encoding
+        10    => "2" for date field positions?
+        11    => "2" for sub field positions?
+        12-16 => blank for no base address
+        17    => "u" for unknown encoding level
+        18    => "u" for unknown cataloging form
+        19    => blank for unknown multipart
+        20    => "4" because it always contains a 4
+        21    => "5" because it always contains a 5
+        22    => "0" because it always contains a 0
+        23    => "0" because it always contains a 0 
+    -->
+    <leader>     nam a22     uu 4500</leader>
+    
+    <!-- 
+         MARC 006 Control Field for an electronic resource
+     
+         00    => "m" for electronic resource
+         01-04 => blank for undefined field
+         05    => "f" for specialized target audience
+         06    => blank for unknown form of item
+         07-08 => blank for undefined field
+         09    => "d" for document type of computer file
+         10    => blank for undefined field
+         11    => blank for not a government publication
+         12-17 => blank for undefined field  
+     -->
+     <controlfield tag="006">m    f   d        </controlfield>
+
+    <!-- 
+        MARC 007 Control Field for physical description
+    
+        00    => "c" for electronic resource
+        01    => "r" for remote material
+        02    => blank for undefined field
+        03    => "u" for unknown color
+        04    => "n" for unspecified dimension
+        05    => "u" for unknown sound
+        06-08 => bar for unknown image depth
+        09    => bar for unknown file formats
+        10    => bar for unknown quality assurance 
+        11    => bar for unknown digital source
+        12    => bar for unknown compression
+        13    => bar for unknown reformatting quality
+    -->
+    <controlfield tag="007">cr unu||||||||</controlfield>
+
+    <!-- 
+        MARC 008 Control field for a book/monograph
+    
+        00-05 => blank
+        06    => "s" for single known date
+        07-10 => Year of publication
+        11-14 => blank (secondary date)
+        15-17 => blank (place of publication)
+        18-22 => bar (Illustrations and audience)
+        23    => "o" for online
+        24-27 => "bm  " bibliographies and thesis nature
+        28    => blank (government publication)
+        29    => "0" for not a conference publication
+        30    => "0" for not a festschrift (what ever that is?)
+        31    => "0" for no index
+        32    => blank (position not used)
+        33    => "0" for non-fiction
+        34    => bar for biography
+        35-37 => "eng" for language
+        38    => blank indicating the record has not been modified
+        39    => "d" for other cataloging source
+    -->
+    <controlfield th:text="${'      s' + SUBMITTER_GRADUATION_YEAR + '       |||||obm   000 0|eng d'}" tag="008"></controlfield>
+
+    <!-- 035, System Control Number -->
+    <!-- 
+        Source: depositId()
+        Example:
+            <marc:datafield tag="035" ind1=" " ind2=" ">
+                <marc:subfield code="a">http://hdl.handle.net/123456789/ETD-1969-42</marc:subfield>
+            </marc:datafield>
+    -->
+    <datafield th:if="${ DEPOSIT_URL != null }" tag="035" ind1=" " ind2=" ">
+        <subfield th:text="${ DEPOSIT_URL }" code="a"></subfield>
+    </datafield>
+    
+    <!-- 100, ETD creator -->
+    <!-- 
+        Source: studentLastName, studentFirstName studentMiddleName birthYear-
+        Example:
+            <marc:datafield tag="100" ind1="1" ind2=" ">
+                <marc:subfield code="a">User, Student A</marc:subfield>
+                <marc:subfield code="e">author</marc:subfield>
+            </marc:datafield>
+    -->
+    <datafield tag="100" ind1="1" ind2=" ">
+        <subfield th:text="${ STUDENT_FULL_NAME_WITH_BIRTH_YEAR }" code="a"></subfield>
+        <subfield code="e">author</subfield>
+    </datafield>
+
+    <!-- 245, ETD title -->
+    <!--
+        Source: documentTitle
+        Example:
+            <marc:datafield tag="245" ind1="1" ind2="0">
+                <marc:subfield code="a">A Russian Financial Analysis of the Statistical Probability of Graduating</marc:subfield>
+            </marc:datafield>
+            
+        Note, we'll try and fill the second indicator appropriately, which should be the number of insignificant characters in the title. 
+        We only support A, An, The at the present time. I googled around and couldn't find a list of english articles.
+    -->
+    <datafield th:if="${ TITLE != null }" tag="245" ind1="1" th:attr="ind2=${ TITLE_IND2 }">
+        <subfield th:text="${ TITLE }" code="a"></subfield>
+    </datafield>
+
+    <!-- 260, ETD publisher, use the granting institution as the publisher and the graduation year -->
+    <!--
+        Source: Configured institutional grantor, along with the graduation year.
+        Example:
+            <marc:datafield tag="260" ind1=" " ind2=" ">
+                <marc:subfield code="b">[My University</marc:subfield>
+                <marc:subfield code="c">2011.]</marc:subfield>
+            </marc:datafield>
+    -->
+    <datafield th:if="${ APPLICATION_GRANTOR != null }" tag="260" ind1=" " ind2=" ">
+        <subfield th:text="'[' + ${ APPLICATION_GRANTOR }" code="b"></subfield>
+        <subfield th:text="${ SUBMITTER_GRADUATION_YEAR } + '.]'" th:if="${ SUBMITTER_GRADUATION_YEAR != null}" code="c"></subfield>
+        <subfield th:text="${ #dates.year(#dates.createNow()) } + '.]'" th:if="${ SUBMITTER_GRADUATION_YEAR == null}" code="c"></subfield>
+    </datafield>
+
+    <!-- 502, Dissertation information -->
+    <!--
+        Source: Configured institutional grantor, level, major, graduation year, and deposit id.
+        Example:
+            <marc:datafield tag="502" ind1=" " ind2=" ">
+                <marc:subfield code="a">Masters thesis</marc:subfield>
+                <marc:subfield code="b">Masters of Arts</marc:subfield>
+                <marc:subfield code="c">My University</marc:subfield>
+                <marc:subfield code="d">2011</marc:subfield>
+                <marc:subfield code="g">Finance</marc:subfield>
+                <marc:subfield code="o">http://hdl.handle.net/123456789/ETD-1969-42</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    <datafield tag="502" ind1=" " ind2=" ">
+        <subfield th:text="${ DEGREE_LEVEL } + ' thesis.'" th:if="${ DEGREE_LEVEL != null }" code="a"></subfield>
+        <subfield th:text="${ DEGREE_NAME }" th:if="${ DEGREE_NAME != null }" code="b"></subfield>
+        <subfield th:text="${ APPLICATION_GRANTOR }" th:if="${ APPLICATION_GRANTOR != null }" code="c"></subfield>
+        <subfield th:text="${ SUBMITTER_GRADUATION_YEAR }" th:if="${ SUBMITTER_GRADUATION_YEAR != null }" code="d"></subfield>
+        <subfield th:text="${ MAJOR }" th:if="${ MAJOR != null }" code="g"></subfield>
+        <subfield th:text="${ DEPOSIT_URL }" th:if="${ DEPOSIT_URL != null }" code="o"></subfield>
+    </datafield>
+    
+     <!-- 504, static - includes biblograhpic references -->
+     <!--
+         Source:
+             None, this is statically generated for all records.
+         Example:
+             <marc:datafield tag="504" ind1=" " ind2=" ">
+                 <marc:subfield code="a">Includes bibliographical references.</marc:subfield>
+             </marc:datafield>   
+     -->
+     <datafield tag="504" ind1=" " ind2=" ">
+         <subfield code="a">Includes bibliographical references.</subfield>
+     </datafield>
+
+     <!-- 516, static - Type of computer file -->
+     <!--
+         Source:
+             None, this is statically generated for all records.
+         Example:
+             <marc:datafield tag="516" ind1=" " ind2=" ">
+                 <marc:subfield code="a">Text (Thesis).</marc:subfield>
+             </marc:datafield>
+         
+     -->
+     <datafield tag="516" ind1=" " ind2=" ">
+         <subfield code="a">>Text (Thesis).</subfield>
+     </datafield>
+     
+     <!-- 520, Abstract -->
+     <!-- 
+         Source: documentAbstract
+         Example:
+             <marc:datafield tag="520" ind1="3" ind2=" ">
+                 <marc:subfield code="a">
+                     The probability is asymptotically approching zero.
+                 </marc:subfield>
+             </marc:datafield>
+     -->
+     <datafield th:if="${ ABSTRACT != null }" tag="520" ind1="3" ind2=" ">
+         <subfield th:text="${ ABSTRACT }" code="a"></subfield>
+     </datafield>
+
+     <!-- 650, ETD discipline index terms -->
+     <!--
+         Source: major
+         Example:
+             <marc:datafield tag="650" ind1="4" ind2=" ">
+                 <marc:subfield code="a">Finance</marc:subfield>
+             </marc:datafield>
+             
+     -->
+     <datafield th:if="${ MAJOR != null }" tag="650" ind1=" " ind2="4">
+         <subfield th:text="${ MAJOR }" code="a"></subfield>
+     </datafield>
+
+    <!-- 653, ETD subject/keywords -->
+    <!--
+        Source: documentKeywords
+        Example:
+            <marc:datafield tag="653" ind1=" " ind2="0">
+                <marc:subfield code="a">One</marc:subfield>
+            </marc:datafield>
+            <marc:datafield tag="653" ind1=" " ind2="0">
+                <marc:subfield code="a">Two</marc:subfield>
+            </marc:datafield>
+            <marc:datafield tag="653" ind1=" " ind2="0">
+                <marc:subfield code="a">Three</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    <datafield th:each="keyword: ${KEYWORD_FIELD_VALUES}" tag="653" ind1=" " ind2="0">
+        <subfield th:text="${ keyword.getValue() }" code="a"></subfield>
+    </datafield>
+    
+    <!-- 655, Static field that says this is an ETD -->
+    <!--
+        Source:
+            None, this is statically generated for all records.
+        Example:
+            <marc:datafield tag="655" ind1=" " ind2="4">
+                <marc:subfield code="a">Electronic Thesis or Dissertation</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    <datafield tag="655" ind1=" " ind2="4">
+        <subfield code="a">Electronic Thesis or Dissertation</subfield>
+    </datafield>
+    
+    <!-- 710, ETD Institution -->
+    <!--
+        Source: Configured institutional grantor, and department.
+        Example:
+            <marc:datafield tag="710" ind1="2" ind2=" ">
+                <marc:subfield code="a">My University</marc:subfield>
+                <marc:subfield code="b">Statistics</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    <datafield th:if="${ APPLICATION_GRANTOR != null }" tag="710" ind1="2" ind2=" ">
+        <subfield th:text="${ APPLICATION_GRANTOR }" code="a"></subfield>
+        <subfield th:text="${ DEPARTMENT }" th:if="${ DEPARTMENT != null }" code="b"></subfield>
+    </datafield>
+
+    <!-- 720, ETD chair or co-chairs contributors -->
+    <!--
+        Source: Committee members (who are chairs)
+        Example:
+            <marc:datafield tag="720" ind1="1" ind2=" ">
+                <marc:subfield code="a">Leggett, John</marc:subfield>
+                <marc:subfield code="e">chair</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    <datafield tag="720" ind1="1" ind2=" ">
+        <subfield th:text="${ COMMITTEE_CHAIR }" code="a"></subfield>
+        <subfield code="e">chair</subfield>
+    </datafield>
+
+    <!-- 720, ETD committee members -->
+    <!--
+        Source: committee members (who are not chairs)
+        Example:
+            <marc:datafield tag="720" ind1="1" ind2=" ">
+                <marc:subfield code="a">Shipman, Frank</marc:subfield>
+                <marc:subfield code="e">committee member</marc:subfield>
+            </marc:datafield>
+            <marc:datafield tag="720" ind1="1" ind2=" ">
+                <marc:subfield code="a">Furuta, Richard</marc:subfield>
+                <marc:subfield code="e">committee member</marc:subfield>
+            </marc:datafield>
+    -->
+    <datafield th:each="member: ${COMMITTEE_MEMBER_FIELD_VALUES}" tag="720" ind1="1" ind2=" ">
+        <subfield th:text="${ member }" code="a"></subfield>
+        <subfield code="e">committee member</subfield>
+    </datafield>
+
+    <!-- 856, ETD location and access -->
+    <!--
+        Source: Deposit Id
+        Example:
+            <marc:datafield tag="856" ind1="4" ind2="0">
+                <marc:subfield code="q">application/pdf</marc:subfield>
+                <marc:subfield code="u">http://hdl.handle.net/123456789/ETD-1969-42</marc:subfield>
+            </marc:datafield>
+        
+    -->
+    <datafield th:if="${ DEPOSIT_URL != null }" tag="856" ind1="4" ind2="0">
+        <subfield th:text="${ PRIMARY_DOCUMENT_MIMETYPE }" th:if="${ PRIMARY_DOCUMENT_MIMETYPE != null }" code="q"></subfield>
+        <subfield th:text="${ DEPOSIT_URL }" code="u"></subfield>
+    </datafield>
+
+</record>

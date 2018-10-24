@@ -11,4 +11,6 @@ public interface AbstractPackagerRepoCustom {
 
     public Packager<?> createExcelPackager(String name, AbstractFormatter formatter);
 
+    public Packager<?> createMARC21XMLPackager(String name, AbstractFormatter formatter);
+
 }

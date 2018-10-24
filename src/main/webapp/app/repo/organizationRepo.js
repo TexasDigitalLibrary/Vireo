@@ -142,6 +142,23 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         return promise;
     };
 
+    this.countSubmissions = function (orgId) {
+        angular.extend(this.mapping.countSubmissions, {
+            'method': orgId + '/count-submissions'
+        });
+        var defer = $q(function (resolve, reject) {
+            WsApi.fetch(this.mapping.countSubmissions).then(function (res) {
+                var resObj = angular.fromJson(res.body);
+                if (resObj.meta.status === "SUCCESS") {
+                    resolve(resObj.payload.Long);
+                } else {
+                    reject();
+                }
+            });
+        }.bind(this));
+        return defer;
+    };
+
     return this;
 
 });

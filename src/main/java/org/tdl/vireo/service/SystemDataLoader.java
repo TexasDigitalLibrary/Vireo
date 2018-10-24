@@ -50,6 +50,7 @@ import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
 import org.tdl.vireo.model.formatter.ExcelFormatter;
+import org.tdl.vireo.model.formatter.MarcXML21Formatter;
 import org.tdl.vireo.model.formatter.ProQuestUmiFormatter;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
@@ -1085,6 +1086,9 @@ public class SystemDataLoader {
         }
         if (abstractPackagerRepo.findByName("Excel") == null) {
             abstractPackagerRepo.createExcelPackager("Excel", new ExcelFormatter());
+        }
+        if (abstractPackagerRepo.findByName("MarcXML21") == null) {
+            abstractPackagerRepo.createMARC21XMLPackager("MarcXML21", new MarcXML21Formatter());
         }
     }
 
