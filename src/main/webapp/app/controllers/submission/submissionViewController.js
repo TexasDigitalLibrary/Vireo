@@ -103,6 +103,9 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
         CustomActionDefinitionRepo.listen(function(apiRes) {
             if(apiRes.meta.status === 'SUCCESS') {
                 StudentSubmissionRepo.remove($scope.submission);
+                StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
+                    angular.extend($scope.submission, submission);
+                });
             }
         });
 
