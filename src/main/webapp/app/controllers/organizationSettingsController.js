@@ -45,7 +45,7 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
     $scope.setDeleteDisabled = function () {
         OrganizationRepo.ready().then(function () {
             OrganizationRepo.countSubmissions($scope.getSelectedOrganization().id).then(function (res) {
-                $scope.deleteDisabled = res > 0 ? true : false;
+                $scope.deleteDisabled = res > 0;
             });
         });
     };
