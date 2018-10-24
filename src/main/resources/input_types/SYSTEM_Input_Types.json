@@ -24,7 +24,7 @@
     }
   },
   {
-    "name": "INPUT_STRICT_CONTACT",
+    "name": "INPUT_CONTACT_SELECT",
     "validationPattern": null,
     "validationMessage": null,
     "validation": {
