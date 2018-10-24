@@ -172,6 +172,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     public Submission update(Submission submission) {
         submission = submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend(getChannel() + "/" + submission.getId(), new ApiResponse(SUCCESS, UPDATE, submission));
+        simpMessagingTemplate.convertAndSendToUser(submission.getSubmitter().getUsername(), "/queue/submissions", new ApiResponse(SUCCESS, UPDATE, submission));
         return submission;
     }
 
