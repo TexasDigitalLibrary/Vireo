@@ -33,13 +33,14 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
         // the exporter and extract predicate values from the mapping to define
         // the value to be templated with the given key
         for (DSpaceSimpleKey key : DSpaceSimpleKey.values()) {
-			System.out.println("FSS KEY "+key);
+			System.out.print("FSS KEY "+key);
             switch (key) {
 
 		//DUBLIN_CORE	
             case STUDENT_FULL_NAME_WITH_BIRTH_YEAR:
                 context.setVariable(key.name(), submissionHelperUtility.getStudentFullNameWithBirthYear());
-                break;
+
+                 break;
             case TITLE:
                 context.setVariable(key.name(), submissionHelperUtility.getTitle());
                 break;
@@ -78,10 +79,16 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
             case SUBMISSION_TYPE:
                 context.setVariable(key.name(), submissionHelperUtility.getSubmissionType());
                 break;
+            case DEPOSIT_URL:
+                context.setVariable(key.name(), submission.getDepositURL());
+                break;
             case STUDENT_SHORT_NAME:
                 context.setVariable(key.name(), submissionHelperUtility.getStudentShortName());
                 break;
 		//METADATA_THESIS
+            case PROQUEST_DEGREE_CODE:
+                context.setVariable(key.name(), submissionHelperUtility.getDegreeProQuestCode());
+                break;
             case DEGREE_LEVEL:
                 context.setVariable(key.name(), submissionHelperUtility.getDegreeLevel());
                 break;
@@ -130,6 +137,7 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
 System.out.println("FSS KEY DEFAULT "+key);
                 break;
             }
+			System.out.println("FSS VAL "+context.getVariable(key.name()));
         }
     }
 

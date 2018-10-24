@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dublin_core>
+    <!-- dc.creator = Student -->
+    <dcvalue element="creator" th:text="${STUDENT_FULL_NAME_WITH_BIRTH_YEAR}"></dcvalue>
+
+    <!-- dc.title = Document Title -->
+    <dcvalue element="title" th:text="${TITLE}"></dcvalue>
+        
+    <!-- dc.description.abstract = Document Abstract -->
+    <dcvalue element="description" qualifier="abstract" th:text="${ABSTRACT}"></dcvalue>
+
+    <!-- dc.subject = Document Keywords, split on ";" (multiple) -->
+    <th:block th:each="subjectFieldValue : ${SUBJECT_FIELD_VALUES}">
+        <dcvalue element="subject" th:text="${subjectFieldValue.getValue()}"></dcvalue>
+    </th:block>
+     
+    <!-- dc.contributor.advisor = Committee Memmbers who are flagged as chair (may be multiple) -->
+    <th:block th:if="${(COMMITTEE_CHAIR != null) && (COMMITTEE_CHAIR.length() > 0)}"> 
+    	<dcvalue element="contributor" qualifier="advisor" th:text="${COMMITTEE_CHAIR}"></dcvalue>
+	</th:block>
+    
+    <!-- dc.contributor.committeeMember = Committee Members who are not flagged as chair (likely multiple) -->
+    <th:block th:each="CMFV : ${COMMITTEE_MEMBER_FIELD_VALUES}">
+    	<dcvalue element="contributor" qualifier="committeeMember" th:text="${CMFV.getValue()}"></dcvalue>
+	</th:block>
+        <DISS_cmte_member th:each="committeeMemberFieldValue : ${COMMITTEE_MEMBER_FIELD_VALUES}" th:if="${committeeMemberFieldValue.getValue().length() > 0}">
+            <DISS_name th:with="name=${committeeMemberFieldValue.getValue()}">
+                <DISS_surname th:text="${SUBMISSION_HELPER.getLastName(name)}"></DISS_surname>
+                <DISS_fname th:text="${SUBMISSION_HELPER.getFirstName(name)}"></DISS_fname>
+                <DISS_middle th:text="${SUBMISSION_HELPER.getMiddleName(name)}"></DISS_middle>
+            </DISS_name>
+        </DISS_cmte_member>
+
+    
+    <!-- dc.date.created = Graduation date in "YYYY-MM" format -->
+    <!-- dc.date.submitted = Graduation date in "month YYYY" format -->
+    <dcvalue element="date" qualifier="created" th:text="${SUBMITTER_GRADUATION_DATE}"></dcvalue>
+    <dcvalue element="date" qualifier="submitted" th:text="${SUBMITTER_GRADUATION_DATE}"></dcvalue>
+
+    <!-- dc.date.issued = Approval date in "YYYY-MM-DD" format -->
+    <dcvalue element="date" qualifier="issued" th:text="${FORMATTED_APPROVAL_DATE}"></dcvalue>
+        
+    <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
+    <dcvalue element="format" qualifier="mimetype" th:text="${PRIMARY_DOCUMENT_MIMETYPE}"></dcvalue>
+        
+    <!-- dc.language.iso = Document Language -->
+    <dim:field mdschema="dc" element="language" qualifier="iso" th:text="${PROQUEST_LANGUAGE_CODE}"></dim:field>
+       
+    <!-- dc.type.material = "text" // constant -->
+    <dcvalue element="type" qualifier="material">text</dcvalue>
+    
+    <!-- dc.type = "thesis" // constant -->
+    <dcvalue element="type" th:text="${SUBMISSION_TYPE}"></dcvalue>
+    
+    <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
+        <!-- e.g. http://hdl.handle.net/123456789/11324-->
+    <dcvalue element="identifier" qualifier="uri" th:text="${DEPOSIT_URL}"></dcvalue>
+
+
+    <!-- dc.description.proveance = Embargo Notes -->
+    
+		<!-- dc.description.provenance = License Agreement Date -->
+		<th:block th:if="${ LICENSE_AGREEMENT_DATE != null }">
+       		<dcvalue element="description" qualifier="provenance" th:text="${ 'The student, ' + STUDENT_SHORT_NAME + ', accepted the attached license on ' + FORMATTED_LICENSE_AGREEMENT_DATE + '.' }">               
+			</dcvalue>
+		</th:block>
+ 
+		<!-- dc.description.provenance = Submission Date -->
+		<th:block th:if="${ SUBMISSION_DATE != null }">
+       		<dcvalue element="description" qualifier="provenance" th:text="${ 'The student, ' + STUDENT_SHORT_NAME + ', submitted this ' + SUBMISSION_TYPE+ ' for approval of '+ FORMATTED_SUBMISSION_DATE +'.' }">               
+			</dcvalue>
+		</th:block>
+		
+		<!-- dc.description.provenance = Committee Approval Date -->
+		<th:block th:if="${ COMMITTEE_APPROVAL_DATE != null }">
+       		<dcvalue element="description" qualifier="provenance" th:text="${ 'The committee advisor approved this ' + SUBMISSION_TYPE+ ' on '+ FORMATTED_COMMITTEE_APPROVAL_DATE +'.' }">               
+			</dcvalue>
+		</th:block>
+		
+		<!-- dc.description.provenance = Committee Embargo Approval Date -->
+		<th:block th:if="${ EMBARGO_APPROVAL_DATE != null }">
+       		<dcvalue element="description" qualifier="provenance" th:text="${ 'The committee advisor approved the embargo selection for this ' + SUBMISSION_TYPE+ ' on '+ FORMATTED_EMBARGO_APPROVAL_DATE +'.' }">               
+			</dcvalue>
+		</th:block>
+		
+		<!-- dc.description.provenance = Approval Date -->
+		<th:block th:if="${ APPROVAL_DATE != null }">
+       		<dcvalue element="description" qualifier="provenance" th:text="${ 'This ' + SUBMISSION_TYPE+ ' was approved for publication on '+ FORMATTED_APPROVAL_DATE +'.' }">               
+			</dcvalue>
+		</th:block>
+    
+     <!-- dc.description.provenance = Statement about when this package was generated. -->
+		<dcvalue element="description" qualifier="provenance" th:text="${ 'DSpace Simple Format generated from Vireo submission ' + SUBMISSION_ID + ' on ' + time }">
+		</dcvalue>
+</dublin_core>
