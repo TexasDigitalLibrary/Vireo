@@ -42,6 +42,26 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.ccRecipientEmails = [];
     };
 
+    var surgicalFieldValueUpdate = function(submission) {
+        // remove field values that are document type field predicates
+        for(var i = $scope.submission.fieldValues.length - 1; i >= 0; i--) {
+            var fieldValue = $scope.submission.fieldValues[i];
+            if(fieldValue.fieldPredicate.documentTypePredicate) {
+                $scope.submission.fieldValues.splice(i, 1);
+            }
+        }
+        // add field values of response that are document type field predicates
+        angular.forEach(submission.fieldValues, function (fieldValue) {
+            if(fieldValue.fieldPredicate.documentTypePredicate) {
+                $scope.submission.fieldValues.push(new FieldValue(fieldValue));
+            }
+        });
+        // update current submissions status
+        angular.extend($scope.submission.submissionStatus, submission.submissionStatus);
+        // fetch file info
+        $scope.submission.fetchDocumentTypeFileInfo();
+    };
+
     initializeEmailRecipients();
 
     $scope.loaded = true;
@@ -58,8 +78,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         WsApi.listen("/channel/submission/" + $scope.submission.id).then(null, null, function(res) {
             var apiRes = angular.fromJson(res.body);
-            angular.merge($scope.submission, apiRes.payload.Submission);
-            $route.reload();
+            surgicalFieldValueUpdate(apiRes.payload.Submission);
         });
 
         $scope.title = $scope.submission.submitter.lastName + ', ' + $scope.submission.submitter.firstName + ' (' + $scope.submission.organization.name + ')';
@@ -389,7 +408,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                 else if (response.status !== undefined) {
                     status = response.status;
                 }
-
                 console.log('Error status: ' + status);
                 uploadFailed(fieldValue, reason);
             }, function (progress) {
@@ -548,27 +566,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                 $scope.submissionStatusBox.updating = true;
                 state.updating = true;
                 $scope.submission.changeStatus(state.name).then(function (response) {
-                    var apiRes = angular.fromJson(response.body);
-                    if(apiRes.meta.status === 'SUCCESS') {
-                        // remove field values that are document type field predicates
-                        for(var i = $scope.submission.fieldValues.length - 1; i >= 0; i--) {
-                            var fieldValue = $scope.submission.fieldValues[i];
-                            if(fieldValue.fieldPredicate.documentTypePredicate) {
-                                $scope.submission.fieldValues.splice(i, 1);
-                            }
-                        }
-                        // add field values of response that are document type field predicates
-                        var submission = apiRes.payload.Submission;
-                        angular.forEach(submission.fieldValues, function (fieldValue) {
-                            if(fieldValue.fieldPredicate.documentTypePredicate) {
-                                $scope.submission.fieldValues.push(new FieldValue(fieldValue));
-                            }
-                        });
-                        // update current submissions status
-                        angular.extend($scope.submission.submissionStatus, submission.submissionStatus);
-                        // fetch file info
-                        $scope.submission.fetchDocumentTypeFileInfo();
-                    }
                     delete state.updating;
                     delete $scope.submissionStatusBox.updating;
                     $scope.submissionStatusBox.resetStatus();
