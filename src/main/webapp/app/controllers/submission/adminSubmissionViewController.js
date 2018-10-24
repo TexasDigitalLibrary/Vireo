@@ -263,10 +263,12 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.getDocumentTypePredicates = function () {
             var documentTypePredicates = [];
-            for (var i in $scope.submission.fieldValues) {
-                var fieldValue = $scope.submission.fieldValues[i];
-                if (fieldValue.fieldPredicate.documentTypePredicate && !containsPredicate(documentTypePredicates, fieldValue.fieldPredicate)) {
-                    documentTypePredicates.push(fieldValue.fieldPredicate);
+            for (var i in $scope.submission.submissionWorkflowSteps) {
+                for (var j in $scope.submission.submissionWorkflowSteps[i].aggregateFieldProfiles) {
+                    var fieldProfile = $scope.submission.submissionWorkflowSteps[i].aggregateFieldProfiles[j];
+                    if (fieldProfile.fieldPredicate.documentTypePredicate && !containsPredicate(documentTypePredicates, fieldProfile.fieldPredicate)) {
+                        documentTypePredicates.push(fieldProfile.fieldPredicate);
+                    }
                 }
             }
             return documentTypePredicates;
