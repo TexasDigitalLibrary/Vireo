@@ -274,8 +274,4 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
         }
     });
 
-    StudentSubmissionRepo.listenForChanges().then(null, null, function() {
-        updateScope();
-    });
-
 });

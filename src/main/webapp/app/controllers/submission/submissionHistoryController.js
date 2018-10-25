@@ -18,19 +18,19 @@ vireo.controller('SubmissionHistoryController', function ($controller, $location
         });
     };
 
-    StudentSubmissionRepo.ready().then(function () {
+    var resetTable = function() {
         $scope.tableParams = buildTable();
         $scope.tableParams.reload();
-        angular.forEach($scope.studentsSubmissions, function (submission) {
-            submission.listen(function (res) {
-                var apiRes = angular.fromJson(res.body);
-                angular.extend(submission, apiRes.payload.Submission);
-            });
-        });
+    };
+
+    StudentSubmissionRepo.ready().then(function () {
+        resetTable();
     });
 
     StudentSubmissionRepo.listenForChanges().then(null, null, function() {
-        $scope.tableParams.reload();
+        StudentSubmissionRepo.reset().then(function() {
+            resetTable();
+        });
     });
 
     $scope.getDocumentTitle = function (row) {

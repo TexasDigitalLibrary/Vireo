@@ -69,6 +69,8 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
                     $timeout(function () {
                         AlertService.add(apiRes.meta, 'organization/delete');
                     }, 300);
+                } else {
+                    $scope.closeModal();
                 }
             });
         };

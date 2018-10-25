@@ -32,6 +32,7 @@ import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
+import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
@@ -62,6 +63,9 @@ public class OrganizationController {
 
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
+
+    @Autowired
+    private SubmissionRepo submissionRepo;
 
     @Autowired
     private SubmissionStatusRepo submissionStatusRepo;
@@ -268,6 +272,13 @@ public class OrganizationController {
         organizationRepo.broadcast(requestingOrgId);
 
         return new ApiResponse(SUCCESS);
+    }
+
+    @RequestMapping("/{requestingOrgId}/count-submissions")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse countSubmissions(@PathVariable Long requestingOrgId) {
+
+        return new ApiResponse(SUCCESS, submissionRepo.countByOrganizationId(requestingOrgId));
     }
 
     private EmailRecipient buildRecipient(JsonNode recipientNode) {

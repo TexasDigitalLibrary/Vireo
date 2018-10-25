@@ -42,4 +42,12 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
         $scope.newOrganization.parent = $scope.organizations[0];
     });
 
+    $scope.setDeleteDisabled = function () {
+        OrganizationRepo.ready().then(function () {
+            OrganizationRepo.countSubmissions($scope.getSelectedOrganization().id).then(function (res) {
+                $scope.deleteDisabled = res > 0;
+            });
+        });
+    };
+
 });
