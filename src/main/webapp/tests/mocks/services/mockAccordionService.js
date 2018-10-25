@@ -1,4 +1,4 @@
-angular.module('mock.wsApi', []).service('WsApi', function ($q) {
+angular.module('mock.accordionService', []).service('AccordionService', function ($q) {
     var service = this;
     var defer;
 
@@ -22,16 +22,6 @@ angular.module('mock.wsApi', []).service('WsApi', function ($q) {
                 }
             })
         });
-    };
-
-    service.fetch = function (apiReq) {
-        defer = $q.defer();
-        return defer.promise;
-    };
-
-    service.listen = function (apiReq) {
-        defer = $q.defer();
-        return defer.promise;
     };
 
     return service;

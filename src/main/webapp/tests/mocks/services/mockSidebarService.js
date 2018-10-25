@@ -1,4 +1,4 @@
-angular.module('mock.wsApi', []).service('WsApi', function ($q) {
+angular.module('mock.sidebarService', []).service('service', function($q) {
     var service = this;
     var defer;
 
@@ -24,14 +24,30 @@ angular.module('mock.wsApi', []).service('WsApi', function ($q) {
         });
     };
 
-    service.fetch = function (apiReq) {
-        defer = $q.defer();
-        return defer.promise;
+    service.boxes = [];
+
+    service.getBox = function(target) {
+        return service.boxes[target];
     };
 
-    service.listen = function (apiReq) {
-        defer = $q.defer();
-        return defer.promise;
+    service.getBoxes = function() {
+        return service.boxes;
+    };
+
+    service.addBox = function(box) {
+        service.boxes.push(box);
+    };
+
+    service.addBoxes = function(newBoxes) {
+        angular.extend(service.boxes, newBoxes);
+    };
+
+    service.remove = function(box) {
+        service.boxes.splice(box, 1);
+    };
+
+    service.clear = function() {
+        service.boxes.length = 0;
     };
 
     return service;
