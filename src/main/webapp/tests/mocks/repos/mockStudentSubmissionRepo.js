@@ -1,73 +1,40 @@
-var mockUserRepo1 = {
-    'HashMap': {
-        '0': {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "role": "ROLE_ADMIN"
-        },
-        '1': {
-            "uin": "987654321",
-            "lastName": "Daniels",
-            "firstName": "Jill",
-            "role": "ROLE_USER"
-        },
-        '2': {
-            "uin": "192837465",
-            "lastName": "Smith",
-            "firstName": "Jacob",
-            "role": "ROLE_USER"
-        }
+var mockStudentSubmissionRepo1 = [
+    {
+        "id": 1
+    },
+    {
+        "id": 2
+    },
+    {
+        "id": 3
     }
-};
+];
 
-var mockUserRepo2 = {
-    'HashMap': {
-        '0': {
-            "uin": "321654987",
-            "lastName": "Daniels",
-            "firstName": "John",
-            "role": "ROLE_ADMIN"
-        },
-        '1': {
-            "uin": "789456123",
-            "lastName": "Daniels",
-            "firstName": "Joann",
-            "role": "ROLE_USER"
-        },
-        '2': {
-            "uin": "564738291",
-            "lastName": "Smith",
-            "firstName": "Joseph",
-            "role": "ROLE_USER"
-        }
+var mockStudentSubmissionRepo2 = [
+    {
+        "id": 1
+    },
+    {
+        "id": 2
+    },
+    {
+        "id": 3
     }
-};
+];
 
-var mockUserRepo3 = {
-    'HashMap': {
-        '0': {
-            "uin": "111111111",
-            "lastName": "User1",
-            "firstName": "Test",
-            "role": "ROLE_ADMIN"
-        },
-        '1': {
-            "uin": "222222222",
-            "lastName": "User2",
-            "firstName": "Test",
-            "role": "ROLE_USER"
-        },
-        '2': {
-            "uin": "333333333",
-            "lastName": "User3",
-            "firstName": "Test",
-            "role": "ROLE_USER"
-        }
+var mockStudentSubmissionRepo3 = [
+    {
+        "id": 1
+    },
+    {
+        "id": 2
+    },
+    {
+        "id": 3
     }
-};
+];
 
-angular.module('mock.userRepo', []).service('UserRepo', function ($q) {
+angular.module('mock.studentSubmissionRepo', []).service('StudentSubmissionRepo', function ($q) {
     var repo = this;
     var defer;
     var validations = {};
@@ -103,7 +70,7 @@ angular.module('mock.userRepo', []).service('UserRepo', function ($q) {
         this.originalList = toMock;
     };
 
-    repo.mock(mockSubmissionStatusRepo1);
+    repo.mock(mockStudentSubmissionRepo1);
 
     repo.add = function (modelJson) {
         if (!repo.contains(modelJson)) {
@@ -172,11 +139,20 @@ angular.module('mock.userRepo', []).service('UserRepo', function ($q) {
         repo.list.length = 0;
     };
 
+    repo.fetchSubmissionById = function (id) {
+        var payload = {};
+        defer = $q.defer();
+        // TODO
+        payloadResponse(payload);
+        return defer.promise;
+    };
+
     repo.findById = function (id) {
         var found;
         for (var i in repo.list) {
             if (repo.list[i].id == id) {
                 found = angular.copy(repo.list[i]);
+                break;
             }
         }
         return found;
@@ -184,18 +160,6 @@ angular.module('mock.userRepo', []).service('UserRepo', function ($q) {
 
     repo.getAll = function () {
         return angular.copy(repo.list);
-    };
-
-    repo.getAllByRole = function (role) {
-        var found;
-        for (var i in repo.list) {
-            if (repo.list[i].role == role) {
-                found = angular.copy(repo.list[i]);
-                break;
-            }
-        }
-
-        return found;
     };
 
     repo.getAllFiltered = function(predicate) {
@@ -207,20 +171,12 @@ angular.module('mock.userRepo', []).service('UserRepo', function ($q) {
         return filteredData;
     };
 
-    repo.getAssignableUsers = function (roles) {
-        var payload = {};
-        defer = $q.defer();
-        // TODO
-        payloadResponse(payload);
-        return defer.promise;
-    };
-
     repo.getContents = function () {
         return angular.copy(repo.list);
     };
 
     repo.getEntityName = function () {
-        return "UserRepo";
+        return "StudentSubmissionRepo";
     };
 
     repo.getValidations = function () {
@@ -233,6 +189,12 @@ angular.module('mock.userRepo', []).service('UserRepo', function ($q) {
 
     repo.listen = function (cbOrActionOrActionArray, cb) {
         // TODO
+    };
+
+    repo.listenForChanges = function () {
+        defer = $q.defer();
+        payloadResponse();
+        return defer.promise;
     };
 
     repo.ready = function () {
