@@ -1,35 +1,16 @@
-var mockAssumedControl1 = {
-    'user': {
-        "uin": "123456789",
-        "lastName": "Daniels",
-        "firstName": "Jack",
-        "role": "ROLE_ADMIN"
-    },
-    'netid': '',
-    'button': 'Unassume',
-    'status': ''
+var mockSavedFilter1 = {
+    'id': 1
 };
 
-var mockAssumedControl2 = {
-    'user': {
-        "uin": "987654321",
-        "lastName": "Daniels",
-        "firstName": "Jill",
-        "role": "USER"
-    },
-    'netid': '',
-    'button': 'Unassume',
-    'status': ''
+var mockSavedFilter2 = {
+    'id': 2
 };
 
-var mockAssumedControl3 = {
-    'user': {},
-    'netid': '',
-    'button': 'Assume',
-    'status': ''
+var mockSavedFilter3 = {
+    'id': 3
 };
 
-angular.module('mock.AssumedControl', []).service('AssumedControl', function($q) {
+angular.module('mock.SavedFilter', []).service('SavedFilter', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {
