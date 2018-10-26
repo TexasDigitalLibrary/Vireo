@@ -1,23 +1,28 @@
-describe('controller: AdminController', function () {
+describe('controller: OrganizationSettingsController', function () {
 
     var controller, scope;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.accordionService');
         module('mock.modalService');
+        module('mock.organizationRepo');
         module('mock.restApi');
+        module('mock.sidebarService');
 
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $rootScope, $window, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('AdminController', {
+            controller = $controller('OrganizationSettingsController', {
                 $scope: scope,
-                $location: $location,
                 $window: $window,
+                AccordionService: _AccordionService_,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                OrganizationRepo: _OrganizationRepo_,
+                RestApi: _RestApi_,
+                SidebarService: _SidebarService_
             });
 
             // ensure that the isReady() is called.

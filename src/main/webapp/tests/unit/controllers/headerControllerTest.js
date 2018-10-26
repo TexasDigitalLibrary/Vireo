@@ -1,21 +1,30 @@
-describe('controller: AdminController', function () {
+describe('controller: HeaderController', function () {
 
     var controller, scope;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.abstractAppRepo');
+        module('mock.abstractRepo');
+        module('mock.alertService');
+        module('mock.managedConfigurationRepo');
         module('mock.modalService');
         module('mock.restApi');
 
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $location, $rootScope, $timeout, $window, _AbstractRepo_, _AbstractAppRepo_, _AlertService_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('AdminController', {
+            controller = $controller('HeaderController', {
                 $scope: scope,
                 $location: $location,
+                $timeout: $timeout,
                 $window: $window,
+                AbstractRepo: _AbstractRepo_,
+                AbstractAppRepo: _AbstractAppRepo_,
+                AlertService: _AlertService_,
+                ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_
             });

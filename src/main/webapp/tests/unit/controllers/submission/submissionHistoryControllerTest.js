@@ -1,4 +1,4 @@
-describe('controller: UserRepoController', function () {
+describe('controller: SubmissionHistoryController', function () {
 
     var controller, scope;
 
@@ -6,29 +6,25 @@ describe('controller: UserRepoController', function () {
         module('core');
         module('vireo');
         module('mock.modalService');
+        module('mock.ngTableParams');
         module('mock.restApi');
-        module('mock.storageService');
-        module('mock.user');
-        module('mock.userRepo');
-        module('mock.userService');
+        module('mock.submissionStatuses');
+        module('mock.studentSubmissionRepo');
 
-        inject(function ($controller, $location, $route, $q, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _User_, _UserRepo_, _UserService_) {
+        inject(function ($controller, $location, $rootScope, $timeout, $window, _ModalService_, _NgTableParams_, _RestApi_, _SubmissionStatuses_, _StudentSubmissionRepo_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('UserRepoController', {
+            controller = $controller('SubmissionHistoryController', {
                 $location: $location,
-                $q: $q,
-                $route: $route,
                 $scope: scope,
                 $timeout: $timeout,
                 $window: $window,
                 ModalService: _ModalService_,
+                NgTableParams: _NgTableParams_,
                 RestApi: _RestApi_,
-                StorageService: _StorageService_,
-                User: _User_,
-                UserRepo: _UserRepo_,
-                UserService: _UserService_
+                SubmissionStatuses: _SubmissionStatuses_,
+                StudentSubmissionRepo: _StudentSubmissionRepo_
             });
 
             // ensure that the isReady() is called.

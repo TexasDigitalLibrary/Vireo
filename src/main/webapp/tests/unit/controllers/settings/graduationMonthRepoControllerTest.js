@@ -1,21 +1,24 @@
-describe('controller: AdminController', function () {
+describe('controller: GraduationMonthRepoController', function () {
 
     var controller, scope;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.dragAndDropListenerFactory');
+        module('mock.graduationMonthRepo');
         module('mock.modalService');
         module('mock.restApi');
 
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $q, $rootScope, $window, _DragAndDropListenerFactory_, _GraduationMonthRepo_, _ModalService_, _RestApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('AdminController', {
+            controller = $controller('GraduationMonthRepoController', {
                 $scope: scope,
-                $location: $location,
                 $window: $window,
+                DragAndDropListenerFactory: _DragAndDropListenerFactory_,
+                GraduationMonthRepo: _GraduationMonthRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_
             });

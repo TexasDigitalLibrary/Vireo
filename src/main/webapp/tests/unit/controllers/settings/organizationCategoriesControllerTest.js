@@ -1,22 +1,26 @@
-describe('controller: AdminController', function () {
+describe('controller: OrganizationCategoriesController', function () {
 
     var controller, scope;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.dragAndDropListenerFactory');
         module('mock.modalService');
+        module('mock.organizationCategoryRepo');
         module('mock.restApi');
 
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $q, $rootScope, $window, _DragAndDropListenerFactory_, _ModalService_, _OrganizationCategoryRepo_, _RestApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('AdminController', {
+            controller = $controller('OrganizationCategoriesController', {
+                $q: $q,
                 $scope: scope,
-                $location: $location,
                 $window: $window,
+                DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
+                OrganizationCategoryRepo: _OrganizationCategoryRepo_,
                 RestApi: _RestApi_
             });
 

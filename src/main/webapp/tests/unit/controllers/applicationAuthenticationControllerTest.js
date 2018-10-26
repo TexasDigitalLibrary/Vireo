@@ -1,4 +1,4 @@
-describe('controller: AdminController', function () {
+describe('controller: ApplicationAuthenticationController', function () {
 
     var controller, scope;
 
@@ -8,13 +8,12 @@ describe('controller: AdminController', function () {
         module('mock.modalService');
         module('mock.restApi');
 
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('AdminController', {
+            controller = $controller('ApplicationAuthenticationController', {
                 $scope: scope,
-                $location: $location,
                 $window: $window,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_

@@ -1,21 +1,26 @@
-describe('controller: AdminController', function () {
+describe('controller: EmbargoRepoController', function () {
 
     var controller, scope;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.dragAndDropListenerFactory');
+        module('mock.embargoRepo');
         module('mock.modalService');
         module('mock.restApi');
 
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $filter, $q, $rootScope, $window, _DragAndDropListenerFactory_, _EmbargoRepo_, _ModalService_, _RestApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('AdminController', {
+            controller = $controller('EmbargoRepoController', {
+                $filter: $filter,
+                $q: $q,
                 $scope: scope,
-                $location: $location,
                 $window: $window,
+                DragAndDropListenerFactory: _DragAndDropListenerFactory_,
+                EmbargoRepo: _EmbargoRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_
             });

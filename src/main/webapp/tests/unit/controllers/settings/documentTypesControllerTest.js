@@ -1,21 +1,24 @@
-describe('controller: AdminController', function () {
+describe('controller: DocumentTypesRepoController', function () {
 
     var controller, scope;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.documentTypeRepo');
+        module('mock.dragAndDropListenerFactory');
         module('mock.modalService');
         module('mock.restApi');
 
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $rootScope, $window, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('AdminController', {
+            controller = $controller('DocumentTypesRepoController', {
                 $scope: scope,
-                $location: $location,
                 $window: $window,
+                DocumentTypeRepo: _DocumentTypeRepo_,
+                DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_
             });

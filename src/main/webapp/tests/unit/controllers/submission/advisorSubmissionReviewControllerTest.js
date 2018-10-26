@@ -1,23 +1,26 @@
-describe('controller: AdminController', function () {
+describe('controller: AdvisorSubmissionReviewController', function () {
 
     var controller, scope;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.advisorSubmissionRepo');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.submission');
 
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $rootScope, $window, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _Submission_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('AdminController', {
+            controller = $controller('AdvisorSubmissionReviewController', {
                 $scope: scope,
-                $location: $location,
                 $window: $window,
+                AdvisorSubmissionRepo: _AdvisorSubmissionRepo_,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                Submission: _Submission_
             });
 
             // ensure that the isReady() is called.

@@ -1,23 +1,29 @@
-describe('controller: AdminController', function () {
+describe('controller: DegreeRepoController', function () {
 
     var controller, scope;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.degreeRepo');
+        module('mock.degreeLevelRepo');
+        module('mock.dragAndDropListenerFactory');
         module('mock.modalService');
         module('mock.restApi');
 
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $q, $rootScope, $window, _DegreeRepo_, _DegreeLevelRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('AdminController', {
+            controller = $controller('DegreeRepoController', {
+                $q: $q,
                 $scope: scope,
-                $location: $location,
                 $window: $window,
+                DegreeRepo: _DegreeRepo_,
+                DegreeLevelRepo: _DegreeLevelRepo_,
+                DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
             });
 
             // ensure that the isReady() is called.
