@@ -7,16 +7,25 @@ describe('controller: ApplicationAuthenticationController', function () {
         module('vireo');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.userService');
+        module('mock.validationStore');
+        module('mock.wsApi');
 
-        inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('ApplicationAuthenticationController', {
+                $location: $location,
                 $scope: scope,
                 $window: $window,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                UserService: _UserService_,
+                ValidationStore: _ValidationStore_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

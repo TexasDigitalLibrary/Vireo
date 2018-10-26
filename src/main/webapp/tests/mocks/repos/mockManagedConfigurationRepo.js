@@ -161,7 +161,7 @@ angular.module('mock.managedConfigurationRepo', []).service('ManagedConfiguratio
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

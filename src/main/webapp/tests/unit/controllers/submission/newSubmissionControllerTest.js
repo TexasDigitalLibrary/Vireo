@@ -9,24 +9,27 @@ describe('controller: NewSubmissionController', function () {
         module('mock.modalService');
         module('mock.organizationRepo');
         module('mock.restApi');
+        module('mock.storageService');
         module('mock.studentSubmissionRepo');
-        module('mock.submissionStates');
+        module('mock.wsApi');
 
-        inject(function ($controller, $location, $q, $rootScope, $window, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StudentSubmissionRepo_, _SubmissionStates_) {
+        inject(function ($controller, $location, _$q_, $rootScope, $window, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('NewSubmissionController', {
                 $location: $location,
-                $q: $q,
+                $q: _$q_,
                 $scope: scope,
                 $window: $window,
+                SubmissionStates: SubmissionStates,
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
                 OrganizationRepo: _OrganizationRepo_,
+                StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,
-                SubmissionStates: _SubmissionStates_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

@@ -1,4 +1,4 @@
-angular.module('mock.modalService', []).service('ModalService', function ($q) {
+angular.module('mock.validationStore', []).service('ValidationStore', function ($q) {
     var service = this;
     var defer;
 
@@ -22,12 +22,6 @@ angular.module('mock.modalService', []).service('ModalService', function ($q) {
                 }
             })
         });
-    };
-
-    service.openModal = function (id) {
-    };
-
-    service.closeModal = function () {
     };
 
     return service;

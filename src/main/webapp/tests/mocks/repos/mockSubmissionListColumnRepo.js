@@ -163,7 +163,7 @@ angular.module('mock.submissionListColumnRepo', []).service('SubmissionListColum
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

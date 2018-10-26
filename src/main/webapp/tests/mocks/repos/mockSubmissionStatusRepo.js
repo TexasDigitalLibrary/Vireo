@@ -162,7 +162,7 @@ angular.module('mock.submissionStatusRepo', []).service('SubmissionStatusRepo', 
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

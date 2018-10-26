@@ -179,7 +179,7 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

@@ -9,20 +9,24 @@ describe('controller: EmbargoRepoController', function () {
         module('mock.embargoRepo');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $filter, $q, $rootScope, $window, _DragAndDropListenerFactory_, _EmbargoRepo_, _ModalService_, _RestApi_) {
+        inject(function ($controller, $filter, _$q_, $rootScope, $window, _DragAndDropListenerFactory_, _EmbargoRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('EmbargoRepoController', {
                 $filter: $filter,
-                $q: $q,
+                $q: _$q_,
                 $scope: scope,
                 $window: $window,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 EmbargoRepo: _EmbargoRepo_,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

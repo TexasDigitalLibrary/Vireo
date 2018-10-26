@@ -6,28 +6,28 @@ describe('controller: EmailWorkflowRulesController', function () {
         module('core');
         module('vireo');
         module('mock.submissionStatusRepo');
-        module('mock.emailRecipientType');
         module('mock.emailTemplateRepo');
-        module('mock.inputTypes');
         module('mock.modalService');
         module('mock.organizationRepo');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $q, $rootScope, $window, _SubmissionStatusRepo_, _EmailRecipientType_, _EmailTemplateRepo_, _InputTypes_, _ModalService_, _OrganizationRepo_, _RestApi_) {
+        inject(function ($controller, _$q_, $rootScope, $window, _SubmissionStatusRepo_, _EmailTemplateRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('EmailWorkflowRulesController', {
-                $q: $q,
+                $q: _$q_,
                 $scope: scope,
                 $window: $window,
-                SubmissionStatusRepo: _SubmissionStatusRepo_,
-                EmailRecipientType: _EmailRecipientType_,
                 EmailTemplateRepo: _EmailTemplateRepo_,
-                InputTypes: _InputTypes_,
+                SubmissionStatusRepo: _SubmissionStatusRepo_,
                 ModalService: _ModalService_,
                 OrganizationRepo: _OrganizationRepo_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

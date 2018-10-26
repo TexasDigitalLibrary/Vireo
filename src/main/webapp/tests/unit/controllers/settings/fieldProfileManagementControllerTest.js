@@ -15,15 +15,17 @@ describe('controller: FieldProfileManagementController', function () {
         module('mock.modalService');
         module('mock.organizationRepo');
         module('mock.restApi');
+        module('mock.storageService');
         module('mock.workflowStepRepo');
+        module('mock.wsApi');
 
-        inject(function ($controller, $filter, $q, $rootScope, $window, _ControlledVocabularyRepo_, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _FieldProfileRepo_, _InputTypeRepo_, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _WorkflowStepRepo_) {
+        inject(function ($controller, $filter, _$q_, $rootScope, $window, _ControlledVocabularyRepo_, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _FieldProfileRepo_, _InputTypeRepo_, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('FieldProfileManagementController', {
                 $filter: $filter,
-                $q: $q,
+                $q: _$q_,
                 $scope: scope,
                 $window: $window,
                 ControlledVocabularyRepo: _ControlledVocabularyRepo_,
@@ -36,7 +38,9 @@ describe('controller: FieldProfileManagementController', function () {
                 ModalService: _ModalService_,
                 OrganizationRepo: _OrganizationRepo_,
                 RestApi: _RestApi_,
-                WorkflowStepRepo: _WorkflowStepRepo_
+                StorageService: _StorageService_,
+                WorkflowStepRepo: _WorkflowStepRepo_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

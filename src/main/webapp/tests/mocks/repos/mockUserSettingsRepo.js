@@ -155,7 +155,7 @@ angular.module('mock.userSettingsRepo', []).service('UserSettingsRepo', function
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

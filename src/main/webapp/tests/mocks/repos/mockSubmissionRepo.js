@@ -1,36 +1,108 @@
 var mockSubmissionRepo1 = [
     {
-        "id": 1
+        "id": 1,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 2
+        "id": 2,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 3
+        "id": 3,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     }
 ];
 
 var mockSubmissionRepo2 = [
     {
-        "id": 1
+        "id": 1,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 2
+        "id": 2,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 3
+        "id": 3,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     }
 ];
 
 var mockSubmissionRepo3 = [
     {
-        "id": 1
+        "id": 1,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 2
+        "id": 2,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 3
+        "id": 3,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     }
 ];
 
@@ -184,7 +256,7 @@ angular.module('mock.submissionRepo', []).service('SubmissionRepo', function ($q
     repo.fetchSubmissionById = function (id) {
         var payload = {};
         defer = $q.defer();
-        // TODO
+        paload = repo.findById(id);
         payloadResponse(payload);
         return defer.promise;
     };
@@ -194,7 +266,7 @@ angular.module('mock.submissionRepo', []).service('SubmissionRepo', function ($q
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

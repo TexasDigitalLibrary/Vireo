@@ -10,13 +10,15 @@ describe('controller: DegreeRepoController', function () {
         module('mock.dragAndDropListenerFactory');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $q, $rootScope, $window, _DegreeRepo_, _DegreeLevelRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_) {
+        inject(function ($controller, _$q_, $rootScope, $window, _DegreeRepo_, _DegreeLevelRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('DegreeRepoController', {
-                $q: $q,
+                $q: _$q_,
                 $scope: scope,
                 $window: $window,
                 DegreeRepo: _DegreeRepo_,
@@ -24,6 +26,8 @@ describe('controller: DegreeRepoController', function () {
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

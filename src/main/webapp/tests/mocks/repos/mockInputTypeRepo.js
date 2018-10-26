@@ -155,7 +155,7 @@ angular.module('mock.inputTypeRepo', []).service('InputTypeRepo', function ($q) 
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

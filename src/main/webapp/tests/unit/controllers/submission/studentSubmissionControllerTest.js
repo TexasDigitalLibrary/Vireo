@@ -8,10 +8,12 @@ describe('controller: StudentSubmissionController', function () {
         module('mock.managedConfigurationRepo');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
         module('mock.studentSubmission');
         module('mock.studentSubmissionRepo');
+        module('mock.wsApi');
 
-        inject(function ($anchorScroll, $controller, $location, $rootScope, $routeParams, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_) {
+        inject(function ($anchorScroll, $controller, $location, $rootScope, $routeParams, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmission_, _StudentSubmissionRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -25,8 +27,10 @@ describe('controller: StudentSubmissionController', function () {
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
+                StorageService: _StorageService_,
                 StudentSubmission: _StudentSubmission_,
-                StudentSubmissionRepo: _StudentSubmissionRepo_
+                StudentSubmissionRepo: _StudentSubmissionRepo_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

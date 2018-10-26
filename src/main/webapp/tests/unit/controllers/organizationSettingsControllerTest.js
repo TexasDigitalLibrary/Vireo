@@ -10,8 +10,10 @@ describe('controller: OrganizationSettingsController', function () {
         module('mock.organizationRepo');
         module('mock.restApi');
         module('mock.sidebarService');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $rootScope, $window, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_) {
+        inject(function ($controller, $rootScope, $window, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -22,7 +24,9 @@ describe('controller: OrganizationSettingsController', function () {
                 ModalService: _ModalService_,
                 OrganizationRepo: _OrganizationRepo_,
                 RestApi: _RestApi_,
-                SidebarService: _SidebarService_
+                SidebarService: _SidebarService_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

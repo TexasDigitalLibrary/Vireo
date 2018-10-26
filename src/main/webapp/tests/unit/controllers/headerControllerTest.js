@@ -11,8 +11,10 @@ describe('controller: HeaderController', function () {
         module('mock.managedConfigurationRepo');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $location, $rootScope, $timeout, $window, _AbstractRepo_, _AbstractAppRepo_, _AlertService_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_) {
+        inject(function ($controller, $location, $rootScope, $timeout, $window, _AbstractRepo_, _AbstractAppRepo_, _AlertService_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -26,7 +28,9 @@ describe('controller: HeaderController', function () {
                 AlertService: _AlertService_,
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

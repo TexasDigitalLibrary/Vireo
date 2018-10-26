@@ -7,8 +7,10 @@ describe('controller: AbstractController', function () {
         module('vireo');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_) {
+        inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -16,7 +18,9 @@ describe('controller: AbstractController', function () {
                 $scope: scope,
                 $window: $window,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

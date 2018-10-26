@@ -25,6 +25,8 @@ angular.module('mock.userService', []).service('UserService', function ($q) {
     };
 
     service.currentUser = {
+        clearValidationResults: function () {
+        },
         ready: function() {
             return true;
         }
@@ -47,6 +49,10 @@ angular.module('mock.userService', []).service('UserService', function ($q) {
         }
         service.storage[type][key] = value;
         service.keys[type][key].notify(service.storage[type][key]);
+    };
+
+    service.setCurrentUser = function (user) {
+        return angular.extend(service.currentUser, user);
     };
 
     service.get = function (key, type) {
@@ -76,15 +82,20 @@ angular.module('mock.userService', []).service('UserService', function ($q) {
     };
 
     service.getCurrentUser = function () {
-        return {
-            clearValidationResults: function () {
-            }
-        };
+        return angular.copy(service.currentUser);
+    };
+
+    service.userEvents = function () {
+        var payload = {};
+        defer = $q.defer();
+        payloadResponse(payload);
+        return defer.promise;
     };
 
     service.userReady = function () {
-        return $q(function (resolve) {
-        });
+        defer = $q.defer();
+        payloadResponse();
+        return defer.promise;
     };
 
     service.getCurrentUser = function () {

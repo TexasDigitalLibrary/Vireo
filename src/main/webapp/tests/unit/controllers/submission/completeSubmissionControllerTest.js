@@ -8,8 +8,10 @@ describe('controller: CompleteSubmissionController', function () {
         module('mock.managedConfigurationRepo');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $rootScope, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_) {
+        inject(function ($controller, $rootScope, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -18,7 +20,9 @@ describe('controller: CompleteSubmissionController', function () {
                 $window: $window,
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

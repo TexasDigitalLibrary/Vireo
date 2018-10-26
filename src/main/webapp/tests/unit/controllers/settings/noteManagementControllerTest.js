@@ -11,9 +11,11 @@ describe('controller: NoteManagementController', function () {
         module('mock.noteRepo');
         module('mock.organizationRepo');
         module('mock.restApi');
+        module('mock.storageService');
         module('mock.workflowStepRepo');
+        module('mock.wsApi');
 
-        inject(function ($controller, $rootScope, $window, _DragAndDropListenerFactory_, _ModalService_, _Note_, _NoteRepo_, _OrganizationRepo_, _RestApi_, _WorkflowStepRepo_) {
+        inject(function ($controller, $rootScope, $window, _DragAndDropListenerFactory_, _ModalService_, _Note_, _NoteRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -26,7 +28,9 @@ describe('controller: NoteManagementController', function () {
                 NoteRepo: _NoteRepo_,
                 OrganizationRepo: _OrganizationRepo_,
                 RestApi: _RestApi_,
-                WorkflowStepRepo: _WorkflowStepRepo_
+                StorageService: _StorageService_,
+                WorkflowStepRepo: _WorkflowStepRepo_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

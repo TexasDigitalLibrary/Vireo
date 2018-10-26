@@ -155,7 +155,7 @@ angular.module('mock.abstractAppRepo', []).service('AbstractAppRepo', function (
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

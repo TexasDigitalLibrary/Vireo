@@ -1,36 +1,117 @@
 var mockAdvisorSubmissionRepo1 = [
     {
-        "id": 1
+        "id": 1,
+        "hash": null,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 2
+        "id": 2,
+        "hash": null,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 3
+        "id": 3,
+        "hash": null,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     }
 ];
 
 var mockAdvisorSubmissionRepo2 = [
     {
-        "id": 1
+        "id": 1,
+        "hash": null,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 2
+        "id": 2,
+        "hash": null,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 3
+        "id": 3,
+        "hash": null,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     }
 ];
 
 var mockAdvisorSubmissionRepo3 = [
     {
-        "id": 1
+        "id": 1,
+        "hash": null,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 2
+        "id": 2,
+        "hash": null,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     },
     {
-        "id": 3
+        "id": 3,
+        "hash": null,
+        "submitter": {
+            "uin": "123456789",
+            "lastName": "Daniels",
+            "firstName": "Jack",
+            "name": "jack",
+            "role": "ROLE_ADMIN"
+        },
+        "fetchDocumentTypeFileInfo": function() {}
     }
 ];
 
@@ -153,7 +234,14 @@ angular.module('mock.advisorSubmissionRepo', []).service('AdvisorSubmissionRepo'
     repo.fetchSubmissionByHash = function (hash) {
         var payload = {};
         defer = $q.defer();
-        // TODO
+
+        for (var i in repo.list) {
+            if (repo.list[i].hash == hash) {
+                payload = angular.copy(repo.list[i]);
+                break;
+            }
+        }
+
         payloadResponse(payload);
         return defer.promise;
     };
@@ -163,7 +251,7 @@ angular.module('mock.advisorSubmissionRepo', []).service('AdvisorSubmissionRepo'
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

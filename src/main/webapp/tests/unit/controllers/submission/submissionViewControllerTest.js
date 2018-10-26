@@ -10,15 +10,16 @@ describe('controller: SubmissionViewController', function () {
         module('mock.fileUploadService');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
         module('mock.studentSubmissionRepo');
-        module('mock.submissionStates');
+        module('mock.wsApi');
 
-        inject(function ($controller, $q, $rootScope, $routeParams, $window, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _RestApi_, _StudentSubmissionRepo_, _SubmissionStates_) {
+        inject(function ($controller, _$q_, $rootScope, $routeParams, $window, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmissionRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('SubmissionViewController', {
-                $q: $q,
+                $q: _$q_,
                 $routeParams: $routeParams,
                 $scope: scope,
                 $window: $window,
@@ -27,8 +28,9 @@ describe('controller: SubmissionViewController', function () {
                 FileUploadService: _FileUploadService_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
+                StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,
-                SubmissionStates: _SubmissionStates_
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

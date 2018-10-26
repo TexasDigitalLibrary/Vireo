@@ -171,7 +171,7 @@ angular.module('mock.workflowStepRepo', []).service('WorkflowStepRepo', function
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

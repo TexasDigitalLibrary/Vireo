@@ -8,8 +8,10 @@ describe('controller: SidebarController', function () {
         module('mock.modalService');
         module('mock.restApi');
         module('mock.sidebarService');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_, _SidebarService_) {
+        inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -18,7 +20,9 @@ describe('controller: SidebarController', function () {
                 $window: $window,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
-                SidebarService: _SidebarService_
+                SidebarService: _SidebarService_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

@@ -5,28 +5,30 @@ describe('controller: ControlledVocabularyRepoController', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
-        module('mock.apiResponseActions');
         module('mock.controlledVocabularyRepo');
         module('mock.dragAndDropListenerFactory');
         module('mock.modalService');
         module('mock.ngTableParams');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $q, $rootScope, $timeout, $window, _ApiResponseActions_, _ControlledVocabularyRepo_, _DragAndDropListenerFactory_, _ModalService_, _NgTableParams_, _RestApi_) {
+        inject(function ($controller, _$q_, $rootScope, $timeout, $window, _ControlledVocabularyRepo_, _DragAndDropListenerFactory_, _ModalService_, _NgTableParams_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('ControlledVocabularyRepoController', {
-                $q: $q,
+                $q: _$q_,
                 $scope: scope,
                 $timeout: $timeout,
                 $window: $window,
-                ApiResponseActions: _ApiResponseActions_,
                 ControlledVocabularyRepo: _ControlledVocabularyRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
                 NgTableParams: _NgTableParams_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

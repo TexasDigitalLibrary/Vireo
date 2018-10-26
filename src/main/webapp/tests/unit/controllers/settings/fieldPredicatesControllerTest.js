@@ -10,14 +10,16 @@ describe('controller: FieldPredicatesController', function () {
         module('mock.modalService');
         module('mock.restApi');
         module('mock.sidebarService');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($filter, $q, $controller, $rootScope, $timeout, $window, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _ModalService_, _RestApi_, _SidebarService_) {
+        inject(function ($filter, _$q_, $controller, $rootScope, $timeout, $window, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('FieldPredicatesController', {
                 $filter: $filter,
-                $q: $q,
+                $q: _$q_,
                 $scope: scope,
                 $timeout: $timeout,
                 $window: $window,
@@ -25,7 +27,9 @@ describe('controller: FieldPredicatesController', function () {
                 FieldPredicateRepo: _FieldPredicateRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
-                SidebarService: _SidebarService_
+                SidebarService: _SidebarService_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

@@ -9,8 +9,10 @@ describe('controller: GraduationMonthRepoController', function () {
         module('mock.graduationMonthRepo');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $q, $rootScope, $window, _DragAndDropListenerFactory_, _GraduationMonthRepo_, _ModalService_, _RestApi_) {
+        inject(function ($controller, _$q_, $rootScope, $window, _DragAndDropListenerFactory_, _GraduationMonthRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -20,7 +22,9 @@ describe('controller: GraduationMonthRepoController', function () {
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 GraduationMonthRepo: _GraduationMonthRepo_,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

@@ -9,13 +9,13 @@ describe('controller: SettingsController', function () {
         module('mock.managedConfigurationRepo');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
         module('mock.studentSubmissionRepo');
-        module('mock.submissionStates');
         module('mock.user');
         module('mock.userService');
-        module('mock.userSettings');
+        module('mock.wsApi');
 
-        inject(function ($controller, $injector, $rootScope, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StudentSubmissionRepo_, _SubmissionStates_, _User_, _UserService_, UserSettings) {
+        inject(function ($controller, $injector, $rootScope, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _User_, _UserService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -27,11 +27,11 @@ describe('controller: SettingsController', function () {
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
+                StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,
-                SubmissionStates: _SubmissionStates_,
                 User: _User_,
                 UserService: _UserService_,
-                UserSettings: _UserSettings_
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

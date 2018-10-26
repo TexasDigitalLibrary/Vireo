@@ -1,4 +1,4 @@
-describe('controller: DocumentTypesRepoController', function () {
+describe('controller: DocumentTypesController', function () {
 
     var controller, scope;
 
@@ -9,18 +9,22 @@ describe('controller: DocumentTypesRepoController', function () {
         module('mock.dragAndDropListenerFactory');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $rootScope, $window, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_) {
+        inject(function ($controller, $rootScope, $window, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('DocumentTypesRepoController', {
+            controller = $controller('DocumentTypesController', {
                 $scope: scope,
                 $window: $window,
                 DocumentTypeRepo: _DocumentTypeRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

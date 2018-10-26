@@ -9,7 +9,8 @@ var mockControlledVocabularyRepo1 = [
             "PROQUEST"
         ],
         "enum": true,
-        "entityProperty": true
+        "entityProperty": true,
+        "listen": function() {}
     },
     {
         "id": 2,
@@ -18,7 +19,8 @@ var mockControlledVocabularyRepo1 = [
         "entityName": "Attachment",
         "dictionary": [],
         "enum": false,
-        "entityProperty": true
+        "entityProperty": true,
+        "listen": function() {}
     },
     {
         "id": 3,
@@ -27,7 +29,8 @@ var mockControlledVocabularyRepo1 = [
         "entityName": null,
         "dictionary": [],
         "enum": false,
-        "entityProperty": false
+        "entityProperty": false,
+        "listen": function() {}
     }
 ];
 
@@ -39,7 +42,8 @@ var mockControlledVocabularyRepo2 = [
         "entityName": null,
         "dictionary": [],
         "enum": true,
-        "entityProperty": true
+        "entityProperty": true,
+        "listen": function() {}
     },
     {
         "id": 2,
@@ -48,7 +52,8 @@ var mockControlledVocabularyRepo2 = [
         "entityName": "Attachment",
         "dictionary": [],
         "enum": false,
-        "entityProperty": true
+        "entityProperty": true,
+        "listen": function() {}
     },
     {
         "id": 3,
@@ -57,7 +62,8 @@ var mockControlledVocabularyRepo2 = [
         "entityName": null,
         "dictionary": [],
         "enum": false,
-        "entityProperty": false
+        "entityProperty": false,
+        "listen": function() {}
     }
 ];
 
@@ -72,7 +78,8 @@ var mockControlledVocabularyRepo3 = [
             "PROQUEST"
         ],
         "enum": true,
-        "entityProperty": true
+        "entityProperty": true,
+        "listen": function() {}
     },
     {
         "id": 2,
@@ -81,7 +88,8 @@ var mockControlledVocabularyRepo3 = [
         "entityName": "Attachment",
         "dictionary": [],
         "enum": false,
-        "entityProperty": true
+        "entityProperty": true,
+        "listen": function() {}
     },
     {
         "id": 3,
@@ -90,11 +98,12 @@ var mockControlledVocabularyRepo3 = [
         "entityName": null,
         "dictionary": [],
         "enum": false,
-        "entityProperty": false
+        "entityProperty": false,
+        "listen": function() {}
     }
 ];
 
-angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabularyRepo', function() {
+angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabularyRepo', function($q) {
     var repo = this;
     var defer;
     var validations = {};

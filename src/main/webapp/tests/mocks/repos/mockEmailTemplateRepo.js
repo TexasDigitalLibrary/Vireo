@@ -155,7 +155,7 @@ angular.module('mock.emailTemplateRepo', []).service('EmailTemplateRepo', functi
     };
 
     repo.getAllFiltered = function(predicate) {
-        var data = depositLocationRepo.list;
+        var data = repo.list;
         var filteredData = [];
 
         // TODO

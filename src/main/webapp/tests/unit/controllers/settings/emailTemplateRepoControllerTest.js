@@ -5,27 +5,29 @@ describe('controller: EmailTemplateRepoController', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
-        module('mock.apiResponseActions');
         module('mock.dragAndDropListenerFactory');
         module('mock.emailTemplateRepo');
         module('mock.fieldPredicateRepo');
         module('mock.modalService');
         module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
 
-        inject(function ($controller, $q, $rootScope, $window, _ApiResponseActions_, _DragAndDropListenerFactory_, _EmailTemplateRepo_, _FieldPredicateRepo_, _ModalService_, _RestApi_) {
+        inject(function ($controller, _$q_, $rootScope, $window, _DragAndDropListenerFactory_, _EmailTemplateRepo_, _FieldPredicateRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('EmailTemplateRepoController', {
-                $q: $q,
+                $q: _$q_,
                 $scope: scope,
                 $window: $window,
-                ApiResponseActions: _ApiResponseActions_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 EmailTemplateRepo: _EmailTemplateRepo_,
                 FieldPredicateRepo: _FieldPredicateRepo_,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_
+                RestApi: _RestApi_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
             });
 
             // ensure that the isReady() is called.

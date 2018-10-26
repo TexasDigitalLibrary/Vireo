@@ -23,6 +23,7 @@ describe('controller: SubmissionListController', function () {
         module('mock.restApi');
         module('mock.savedFilterRepo');
         module('mock.sidebarService');
+        module('mock.storageService');
         module('mock.submissionListColumnRepo');
         module('mock.submissionRepo');
         module('mock.submissionStatusRepo');
@@ -30,14 +31,14 @@ describe('controller: SubmissionListController', function () {
         module('mock.userSettings');
         module('mock.wsApi');
 
-        inject(function ($controller, $filter, $location, $q, $rootScope, $window, _ControlledVocabularyRepo_, _CustomActionDefinitionRepo_, _CustomActionValueRepo_, _DepositLocationRepo_, _DocumentTypeRepo_, _EmailTemplateRepo_, _EmbargoRepo_, _ManagerFilterColumnRepo_, _ManagerSubmissionListColumnRepo_, _ModalService_, _NamedSearchFilterGroup_, _NgTableParams_, _OrganizationCategoryRepo_, _OrganizationRepo_, _PackagerRepo_, _RestApi_, _SavedFilterRepo_, _SidebarService_, _SubmissionListColumnRepo_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _UserSettings_, _WsApi_) {
+        inject(function ($controller, $filter, $location, _$q_, $rootScope, $window, _ControlledVocabularyRepo_, _CustomActionDefinitionRepo_, _CustomActionValueRepo_, _DepositLocationRepo_, _DocumentTypeRepo_, _EmailTemplateRepo_, _EmbargoRepo_, _ManagerFilterColumnRepo_, _ManagerSubmissionListColumnRepo_, _ModalService_, _NamedSearchFilterGroup_, _NgTableParams_, _OrganizationCategoryRepo_, _OrganizationRepo_, _PackagerRepo_, _RestApi_, _SavedFilterRepo_, _SidebarService_, _StorageService_, _SubmissionListColumnRepo_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _UserSettings_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             controller = $controller('SubmissionListController', {
                 $filter: $filter,
                 $location: $location,
-                $q: $q,
+                $q: _$q_,
                 $scope: scope,
                 $window: $window,
                 ControlledVocabularyRepo: _ControlledVocabularyRepo_,
@@ -58,6 +59,7 @@ describe('controller: SubmissionListController', function () {
                 RestApi: _RestApi_,
                 SavedFilterRepo: _SavedFilterRepo_,
                 SidebarService: _SidebarService_,
+                StorageService: _StorageService_,
                 SubmissionListColumnRepo: _SubmissionListColumnRepo_,
                 SubmissionRepo: _SubmissionRepo_,
                 SubmissionStatusRepo: _SubmissionStatusRepo_,
