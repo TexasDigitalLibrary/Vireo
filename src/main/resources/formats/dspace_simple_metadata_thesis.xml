@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <dcvalue element="embargo" qualifier="terms" th:text="${SUBMISSION_ID}"></dcvalue>
 <!--metadata_thesis.xml-->
 <dublin_core schema="thesis">
     <!-- thesis.degree.name == Degree -->
-    <dcvalue element="degree" qualifier="name" th:text="${PROQUEST_DEGREE_CODE}"></dcvalue>
+    <dcvalue element="degree" qualifier="name" th:text="${DEGREE_NAME}"></dcvalue>
 
     <!-- thesis.degree.level = Degree Level (Doctoral, Masters, Undergraduate) -->
     <dcvalue element="degree" qualifier="level" th:text="${DEGREE_LEVEL}"></dcvalue>
 
     <!-- thesis.degree.discipline = Major -->
-    <dcvalue element="degree" qualifier="discipline" th:text="${DEGREE_LEVEL}"></dcvalue>
+    <dcvalue element="degree" qualifier="discipline" th:text="${DEGREE_MAJOR}"></dcvalue>
 
     <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
     <dcvalue element="degree" qualifier="grantor" th:text="${APPLICATION_GRANTOR}"></dcvalue>

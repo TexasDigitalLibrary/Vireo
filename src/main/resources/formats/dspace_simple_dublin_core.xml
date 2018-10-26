@@ -23,19 +23,12 @@
     <th:block th:each="CMFV : ${COMMITTEE_MEMBER_FIELD_VALUES}">
     	<dcvalue element="contributor" qualifier="committeeMember" th:text="${CMFV.getValue()}"></dcvalue>
 	</th:block>
-        <DISS_cmte_member th:each="committeeMemberFieldValue : ${COMMITTEE_MEMBER_FIELD_VALUES}" th:if="${committeeMemberFieldValue.getValue().length() > 0}">
-            <DISS_name th:with="name=${committeeMemberFieldValue.getValue()}">
-                <DISS_surname th:text="${SUBMISSION_HELPER.getLastName(name)}"></DISS_surname>
-                <DISS_fname th:text="${SUBMISSION_HELPER.getFirstName(name)}"></DISS_fname>
-                <DISS_middle th:text="${SUBMISSION_HELPER.getMiddleName(name)}"></DISS_middle>
-            </DISS_name>
-        </DISS_cmte_member>
 
     
     <!-- dc.date.created = Graduation date in "YYYY-MM" format -->
+    <dcvalue element="date" qualifier="created" th:text="${GRADUATION_DATE_YEAR_MONTH_STRING}"></dcvalue>
     <!-- dc.date.submitted = Graduation date in "month YYYY" format -->
-    <dcvalue element="date" qualifier="created" th:text="${SUBMITTER_GRADUATION_DATE}"></dcvalue>
-    <dcvalue element="date" qualifier="submitted" th:text="${SUBMITTER_GRADUATION_DATE}"></dcvalue>
+    <dcvalue element="date" qualifier="submitted" th:text="${GRADUATION_DATE_MONTH_YEAR_STRING}"></dcvalue>
 
     <!-- dc.date.issued = Approval date in "YYYY-MM-DD" format -->
     <dcvalue element="date" qualifier="issued" th:text="${FORMATTED_APPROVAL_DATE}"></dcvalue>

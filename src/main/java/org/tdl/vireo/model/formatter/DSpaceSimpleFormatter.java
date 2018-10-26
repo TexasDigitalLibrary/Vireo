@@ -39,8 +39,7 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
 		//DUBLIN_CORE	
             case STUDENT_FULL_NAME_WITH_BIRTH_YEAR:
                 context.setVariable(key.name(), submissionHelperUtility.getStudentFullNameWithBirthYear());
-
-                 break;
+                break;
             case TITLE:
                 context.setVariable(key.name(), submissionHelperUtility.getTitle());
                 break;
@@ -59,8 +58,11 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
             case COMMITTEE_MEMBER_FIELD_VALUES:
                 context.setVariable(key.name(), submissionHelperUtility.getCommitteeMemberFieldValues());
                 break;
-            case SUBMITTER_GRADUATION_DATE:
-                context.setVariable(key.name(), submissionHelperUtility.getGraduationDateString());
+            case GRADUATION_DATE_YEAR_MONTH_STRING:
+                context.setVariable(key.name(), submissionHelperUtility.getGraduationYearMonthString());
+                break;
+            case GRADUATION_DATE_MONTH_YEAR_STRING:
+                context.setVariable(key.name(), submissionHelperUtility.getGraduationMonthYearString());
                 break;
             case PRIMARY_DOCUMENT_MIMETYPE:
                 String primaryDocumentType = "Other";
@@ -86,7 +88,10 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
                 context.setVariable(key.name(), submissionHelperUtility.getStudentShortName());
                 break;
 		//METADATA_THESIS
-            case PROQUEST_DEGREE_CODE:
+            case DEGREE_MAJOR:
+                context.setVariable(key.name(), submissionHelperUtility.getMajor());
+                break;
+            case DEGREE_NAME:
                 context.setVariable(key.name(), submissionHelperUtility.getDegreeProQuestCode());
                 break;
             case DEGREE_LEVEL:
@@ -97,42 +102,10 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
                 break;
 
 		//METADATA_LOCAL
+            case EMBARGO_LIFT_DATE:
+                context.setVariable(key.name(), submissionHelperUtility.getEmbargoApprovalDateString());
+                break;
 
-/****
-            case EMBARGO_CODE:
-                context.setVariable(key.name(), submissionHelperUtility.getEmbargoCode());
-                break;
-            case AGENT:
-                context.setVariable(key.name(), "Vireo DSpace Simple Archive Format packager");
-                break;
-            case LICENSE_DOCUMENT_FIELD_VALUES:
-                context.setVariable(key.name(), submission.getLicenseDocumentFieldValues());
-                break;
-            case PRIMARY_DOCUMENT_FIELD_VALUE:
-                context.setVariable(key.name(), submission.getPrimaryDocumentFieldValue());
-					System.out.println("FSS VAL "+submission.getPrimaryDocumentFieldValue());
-                break;
-            case PRIMARY_DOCUMENT_MIMETYPE:
-                String primaryDocumentType = "application/pdf";
-                FieldValue primaryDocumentFieldValue = submission.getPrimaryDocumentFieldValue();
-                if (primaryDocumentFieldValue != null) {
-                    primaryDocumentType = fileHelperUtility.getMimeType(primaryDocumentFieldValue.getValue());
-                }
-				System.out.println("FP "+fileHelperUtility.getAssetAbsolutePath(""));
-                context.setVariable(key.name(), primaryDocumentType);
-                break;
-            case SUPPLEMENTAL_AND_SOURCE_DOCUMENT_FIELD_VALUES:
-                context.setVariable(key.name(), submission.getSupplementalAndSourceDocumentFieldValues());
-                break;
-            case METS_FIELD_VALUES:
-                context.setVariable(key.name(), submission.getFieldValues().parallelStream().filter(new Predicate<FieldValue>() {
-                    @Override
-                    public boolean test(FieldValue fv) {
-                        return fv.getFieldPredicate().getSchema().equals("dc") || fv.getFieldPredicate().getSchema().equals("thesis") || fv.getFieldPredicate().getSchema().equals("local");
-                    }
-                }).collect(Collectors.toList()));
-                break;
-****/
             default:
 System.out.println("FSS KEY DEFAULT "+key);
                 break;
