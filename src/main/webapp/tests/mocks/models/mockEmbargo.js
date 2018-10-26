@@ -10,7 +10,7 @@ var mockEmbargo3 = {
     'id': 3
 };
 
-angular.module('mock.Embargo', []).service('Embargo', function($q) {
+angular.module('mock.embargo', []).service('Embargo', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

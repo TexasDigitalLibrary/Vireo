@@ -10,7 +10,7 @@ var mockNamedSearchFilterGroup3 = {
     'id': 3
 };
 
-angular.module('mock.NamedSearchFilterGroup', []).service('NamedSearchFilterGroup', function($q) {
+angular.module('mock.namedSearchFilterGroup', []).service('NamedSearchFilterGroup', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

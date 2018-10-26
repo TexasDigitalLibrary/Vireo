@@ -10,7 +10,7 @@ var mockDepositLocation3 = {
     'id': 3
 };
 
-angular.module('mock.DepositLocation', []).service('DepositLocation', function($q) {
+angular.module('mock.depositLocation', []).service('DepositLocation', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

@@ -10,7 +10,7 @@ var mockLanguage3 = {
     'id': 3
 };
 
-angular.module('mock.Language', []).service('Language', function($q) {
+angular.module('mock.language', []).service('Language', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

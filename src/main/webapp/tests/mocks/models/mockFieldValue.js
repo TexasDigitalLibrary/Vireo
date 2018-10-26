@@ -10,7 +10,7 @@ var mockFieldValue3 = {
     'id': 3
 };
 
-angular.module('mock.FieldValue', []).service('FieldValue', function($q) {
+angular.module('mock.fieldValue', []).service('FieldValue', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

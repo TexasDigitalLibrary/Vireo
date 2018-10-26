@@ -10,7 +10,7 @@ var mockControlledVocabulary3 = {
     'id': 3
 };
 
-angular.module('mock.ControlledVocabulary', []).service('ControlledVocabulary', function($q) {
+angular.module('mock.controlledVocabulary', []).service('ControlledVocabulary', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

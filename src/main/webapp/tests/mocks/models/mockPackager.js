@@ -10,7 +10,7 @@ var mockPackager3 = {
     'id': 3
 };
 
-angular.module('mock.Packager', []).service('Packager', function($q) {
+angular.module('mock.packager', []).service('Packager', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

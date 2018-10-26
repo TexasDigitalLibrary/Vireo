@@ -10,7 +10,7 @@ var mockDocumentType3 = {
     'id': 3
 };
 
-angular.module('mock.DocumentType', []).service('DocumentType', function($q) {
+angular.module('mock.documentType', []).service('DocumentType', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

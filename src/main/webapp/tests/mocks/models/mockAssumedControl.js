@@ -29,7 +29,7 @@ var mockAssumedControl3 = {
     'status': ''
 };
 
-angular.module('mock.AssumedControl', []).service('AssumedControl', function($q) {
+angular.module('mock.assumedControl', []).service('AssumedControl', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

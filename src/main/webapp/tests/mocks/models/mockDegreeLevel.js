@@ -10,7 +10,7 @@ var mockDegreeLevel3 = {
     'id': 3
 };
 
-angular.module('mock.DegreeLevel', []).service('DegreeLevel', function($q) {
+angular.module('mock.degreeLevel', []).service('DegreeLevel', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

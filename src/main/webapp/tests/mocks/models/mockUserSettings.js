@@ -10,7 +10,7 @@ var mockUserSettings3 = {
     'id': 3
 };
 
-angular.module('mock.UserSettings', []).service('UserSettings', function($q) {
+angular.module('mock.userSettings', []).service('UserSettings', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

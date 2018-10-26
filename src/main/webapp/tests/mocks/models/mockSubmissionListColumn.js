@@ -10,7 +10,7 @@ var mockSubmissionListColumn3 = {
     'id': 3
 };
 
-angular.module('mock.SubmissionListColumn', []).service('SubmissionListColumn', function($q) {
+angular.module('mock.submissionListColumn', []).service('SubmissionListColumn', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

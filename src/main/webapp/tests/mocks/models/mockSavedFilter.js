@@ -10,7 +10,7 @@ var mockSavedFilter3 = {
     'id': 3
 };
 
-angular.module('mock.SavedFilter', []).service('SavedFilter', function($q) {
+angular.module('mock.savedFilter', []).service('SavedFilter', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

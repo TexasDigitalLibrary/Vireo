@@ -10,7 +10,7 @@ var mockWorkflowStep3 = {
     'id': 3
 };
 
-angular.module('mock.WorkflowStep', []).service('WorkflowStep', function($q) {
+angular.module('mock.workflowStep', []).service('WorkflowStep', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

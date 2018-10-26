@@ -10,7 +10,7 @@ var mockGraduationMonth3 = {
     'id': 3
 };
 
-angular.module('mock.GraduationMonth', []).service('GraduationMonth', function($q) {
+angular.module('mock.graduationMonth', []).service('GraduationMonth', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

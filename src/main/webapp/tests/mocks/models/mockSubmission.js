@@ -10,7 +10,7 @@ var mockSubmission3 = {
     'id': 3
 };
 
-angular.module('mock.Submission', []).service('Submission', function($q) {
+angular.module('mock.submission', []).service('Submission', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

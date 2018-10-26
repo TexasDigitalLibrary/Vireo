@@ -10,7 +10,7 @@ var mockFieldProfile3 = {
     'id': 3
 };
 
-angular.module('mock.FieldProfile', []).service('FieldProfile', function($q) {
+angular.module('mock.fieldProfile', []).service('FieldProfile', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

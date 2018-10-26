@@ -10,7 +10,7 @@ var mockActionLog3 = {
     'id': 3
 };
 
-angular.module('mock.ActionLog', []).service('ActionLog', function($q) {
+angular.module('mock.actionLog', []).service('ActionLog', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

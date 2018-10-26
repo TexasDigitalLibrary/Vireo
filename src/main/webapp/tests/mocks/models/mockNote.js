@@ -10,7 +10,7 @@ var mockNote3 = {
     'id': 3
 };
 
-angular.module('mock.Note', []).service('Note', function($q) {
+angular.module('mock.note', []).service('Note', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

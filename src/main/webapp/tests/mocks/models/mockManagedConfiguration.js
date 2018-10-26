@@ -13,7 +13,7 @@ var mockManagedConfiguration3 = {
     'value': ""
 };
 
-angular.module('mock.ManagedConfiguration', []).service('ManagedConfiguration', function($q) {
+angular.module('mock.managedConfiguration', []).service('ManagedConfiguration', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

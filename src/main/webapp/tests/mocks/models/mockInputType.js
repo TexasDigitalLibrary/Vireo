@@ -10,7 +10,7 @@ var mockInputType3 = {
     'id': 3
 };
 
-angular.module('mock.InputType', []).service('InputType', function($q) {
+angular.module('mock.inputType', []).service('InputType', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

@@ -10,7 +10,7 @@ var mockEmailTemplate3 = {
     'id': 3
 };
 
-angular.module('mock.EmailTemplate', []).service('EmailTemplate', function($q) {
+angular.module('mock.emailTemplate', []).service('EmailTemplate', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {

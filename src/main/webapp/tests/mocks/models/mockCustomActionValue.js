@@ -10,7 +10,7 @@ var mockCustomActionValue3 = {
     'id': 3
 };
 
-angular.module('mock.CustomActionValue', []).service('CustomActionValue', function($q) {
+angular.module('mock.customActionValue', []).service('CustomActionValue', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {
