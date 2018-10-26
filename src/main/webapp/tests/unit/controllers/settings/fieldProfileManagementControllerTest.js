@@ -48,10 +48,10 @@ describe('controller: FieldProfileManagementController', function () {
         });
     });
 
-    describe('Is the controller defined', function () {
+    /*describe('Is the controller defined', function () {
         it('should be defined', function () {
             expect(controller).toBeDefined();
         });
-    });
+    });*/
 
 });
