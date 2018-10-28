@@ -1,4 +1,4 @@
-describe('controller: UserRepoController', function () {
+describe('controller: ApplicationAuthenticationController', function () {
 
     var controller, scope;
 
@@ -8,28 +8,23 @@ describe('controller: UserRepoController', function () {
         module('mock.modalService');
         module('mock.restApi');
         module('mock.storageService');
-        module('mock.user');
-        module('mock.userRepo');
         module('mock.userService');
+        module('mock.validationStore');
         module('mock.wsApi');
 
-        inject(function ($controller, $location, $route, _$q_, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _User_, _UserRepo_, _UserService_, _WsApi_) {
+        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('UserRepoController', {
+            controller = $controller('ApplicationAuthenticationController', {
                 $location: $location,
-                $q: _$q_,
-                $route: $route,
                 $scope: scope,
-                $timeout: $timeout,
                 $window: $window,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                User: _User_,
-                UserRepo: _UserRepo_,
                 UserService: _UserService_,
+                ValidationStore: _ValidationStore_,
                 WsApi: _WsApi_
             });
 

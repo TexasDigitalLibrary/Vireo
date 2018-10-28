@@ -1,35 +1,31 @@
-describe('controller: UserRepoController', function () {
+describe('controller: OrganizationSettingsController', function () {
 
     var controller, scope;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.accordionService');
         module('mock.modalService');
+        module('mock.organizationRepo');
         module('mock.restApi');
+        module('mock.sidebarService');
         module('mock.storageService');
-        module('mock.user');
-        module('mock.userRepo');
-        module('mock.userService');
         module('mock.wsApi');
 
-        inject(function ($controller, $location, $route, _$q_, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _User_, _UserRepo_, _UserService_, _WsApi_) {
+        inject(function ($controller, $rootScope, $window, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('UserRepoController', {
-                $location: $location,
-                $q: _$q_,
-                $route: $route,
+            controller = $controller('OrganizationSettingsController', {
                 $scope: scope,
-                $timeout: $timeout,
                 $window: $window,
+                AccordionService: _AccordionService_,
                 ModalService: _ModalService_,
+                OrganizationRepo: _OrganizationRepo_,
                 RestApi: _RestApi_,
+                SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
-                User: _User_,
-                UserRepo: _UserRepo_,
-                UserService: _UserService_,
                 WsApi: _WsApi_
             });
 

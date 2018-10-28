@@ -1,35 +1,34 @@
-describe('controller: UserRepoController', function () {
+describe('controller: NewSubmissionController', function () {
 
     var controller, scope;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.managedConfigurationRepo');
         module('mock.modalService');
+        module('mock.organizationRepo');
         module('mock.restApi');
         module('mock.storageService');
-        module('mock.user');
-        module('mock.userRepo');
-        module('mock.userService');
+        module('mock.studentSubmissionRepo');
         module('mock.wsApi');
 
-        inject(function ($controller, $location, $route, _$q_, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _User_, _UserRepo_, _UserService_, _WsApi_) {
+        inject(function ($controller, $location, _$q_, $rootScope, $window, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
-            controller = $controller('UserRepoController', {
+            controller = $controller('NewSubmissionController', {
                 $location: $location,
                 $q: _$q_,
-                $route: $route,
                 $scope: scope,
-                $timeout: $timeout,
                 $window: $window,
+                SubmissionStates: SubmissionStates,
+                ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_,
+                OrganizationRepo: _OrganizationRepo_,
                 StorageService: _StorageService_,
-                User: _User_,
-                UserRepo: _UserRepo_,
-                UserService: _UserService_,
+                StudentSubmissionRepo: _StudentSubmissionRepo_,
+                RestApi: _RestApi_,
                 WsApi: _WsApi_
             });
 

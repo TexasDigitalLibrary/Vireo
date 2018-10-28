@@ -1,35 +1,16 @@
-var mockAssumedControl1 = {
-    'user': {
-        "uin": "123456789",
-        "lastName": "Daniels",
-        "firstName": "Jack",
-        "role": "ROLE_ADMIN"
-    },
-    'netid': '',
-    'button': 'Unassume',
-    'status': ''
+var mockOrganization1 = {
+    'id': 1
 };
 
-var mockAssumedControl2 = {
-    'user': {
-        "uin": "987654321",
-        "lastName": "Daniels",
-        "firstName": "Jill",
-        "role": "USER"
-    },
-    'netid': '',
-    'button': 'Unassume',
-    'status': ''
+var mockOrganization2 = {
+    'id': 2
 };
 
-var mockAssumedControl3 = {
-    'user': {},
-    'netid': '',
-    'button': 'Assume',
-    'status': ''
+var mockOrganization3 = {
+    'id': 3
 };
 
-angular.module('mock.assumedControl', []).service('AssumedControl', function($q) {
+angular.module('mock.organization', []).service('Organization', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {
@@ -49,6 +30,18 @@ angular.module('mock.assumedControl', []).service('AssumedControl', function($q)
         model.id = toMock.id;
     };
 
+    model.addEmailWorkflowRule = function(templateId, recipient, submissionStatusId) {
+        defer = $q.defer();
+        payloadResponse();
+        return defer.promise;
+    };
+
+    model.changeEmailWorkflowRuleActivation = function(rule) {
+        defer = $q.defer();
+        payloadResponse();
+        return defer.promise;
+    };
+
     model.clearValidationResults = function () {
     };
 
@@ -62,7 +55,19 @@ angular.module('mock.assumedControl', []).service('AssumedControl', function($q)
         model.isDirty = boolean;
     };
 
+    model.editEmailWorkflowRule = function(rule) {
+        defer = $q.defer();
+        payloadResponse();
+        return defer.promise;
+    };
+
     model.reload = function() {
+    };
+
+    model.removeEmailWorkfowRule = function(rule) {
+        defer = $q.defer();
+        payloadResponse();
+        return defer.promise;
     };
 
     model.save = function() {

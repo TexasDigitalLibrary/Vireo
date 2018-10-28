@@ -1,35 +1,19 @@
-var mockAssumedControl1 = {
-    'user': {
-        "uin": "123456789",
-        "lastName": "Daniels",
-        "firstName": "Jack",
-        "role": "ROLE_ADMIN"
-    },
-    'netid': '',
-    'button': 'Unassume',
-    'status': ''
+var mockManagedConfiguration1 = {
+    'id': 1,
+    'value': ""
 };
 
-var mockAssumedControl2 = {
-    'user': {
-        "uin": "987654321",
-        "lastName": "Daniels",
-        "firstName": "Jill",
-        "role": "USER"
-    },
-    'netid': '',
-    'button': 'Unassume',
-    'status': ''
+var mockManagedConfiguration2 = {
+    'id': 2,
+    'value': ""
 };
 
-var mockAssumedControl3 = {
-    'user': {},
-    'netid': '',
-    'button': 'Assume',
-    'status': ''
+var mockManagedConfiguration3 = {
+    'id': 3,
+    'value': ""
 };
 
-angular.module('mock.assumedControl', []).service('AssumedControl', function($q) {
+angular.module('mock.managedConfiguration', []).service('ManagedConfiguration', function($q) {
     var model = this;
     var defer;
     var payloadResponse = function (payload) {
@@ -47,6 +31,7 @@ angular.module('mock.assumedControl', []).service('AssumedControl', function($q)
 
     model.mock = function(toMock) {
         model.id = toMock.id;
+        model.value = toMock.value;
     };
 
     model.clearValidationResults = function () {
@@ -63,6 +48,12 @@ angular.module('mock.assumedControl', []).service('AssumedControl', function($q)
     };
 
     model.reload = function() {
+    };
+
+    model.reset = function() {
+        defer = $q.defer();
+        payloadResponse();
+        return defer.promise;
     };
 
     model.save = function() {
