@@ -19,7 +19,7 @@ public enum DSpaceSimpleKey {
     DEGREE_NAME,
 	DEGREE_LEVEL,
 	DEGREE_MAJOR,
-	EMBARGO_LIFT_DATE,
+	EMBARGO_CODE,
 	DEPARTMENT
 }
 /**

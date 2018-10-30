@@ -4,7 +4,7 @@
 <dublin_core schema="local">
     <!-- local.embargo.terms and lift-->
     <dcvalue element="embargo" qualifier="terms" th:text="${FORMATTED_EMBARGO_APPROVAL_DATE}"></dcvalue>
-    <dcvalue element="embargo" qualifier="lift" th:text="${EMBARGO_LIFT_DATE}"></dcvalue>
+    <dcvalue element="embargo" qualifier="lift" th:text="${EMBARGO_CODE}"></dcvalue>
 
 </dublin_core>
 

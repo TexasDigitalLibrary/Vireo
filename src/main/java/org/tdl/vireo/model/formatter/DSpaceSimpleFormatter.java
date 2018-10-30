@@ -33,7 +33,6 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
         // the exporter and extract predicate values from the mapping to define
         // the value to be templated with the given key
         for (DSpaceSimpleKey key : DSpaceSimpleKey.values()) {
-			System.out.print("FSS KEY "+key);
             switch (key) {
 
 		//DUBLIN_CORE	
@@ -102,15 +101,16 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
                 break;
 
 		//METADATA_LOCAL
-            case EMBARGO_LIFT_DATE:
-                context.setVariable(key.name(), submissionHelperUtility.getEmbargoApprovalDateString());
+            //case EMBARGO_LIFT_DATE:
+            //    context.setVariable(key.name(), submissionHelperUtility.getEmbargoApprovalDateString());
+            //    break;
+            case EMBARGO_CODE:
+                context.setVariable(key.name(), submissionHelperUtility.getEmbargoCode());
                 break;
 
             default:
-System.out.println("FSS KEY DEFAULT "+key);
                 break;
             }
-			System.out.println("FSS VAL "+context.getVariable(key.name()));
         }
     }
 

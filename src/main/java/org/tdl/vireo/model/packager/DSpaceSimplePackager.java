@@ -51,13 +51,9 @@ public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> 
             for (Map.Entry<String, String> ds_entry : dsDocs.entrySet()) {
                 String docName = ds_entry.getKey();
                 String docContents = ds_entry.getValue();
-System.out.println("AAA DOCNAME "+docName);
                 File ff = File.createTempFile(docName,"");
-System.out.println("BBB DOCNAME "+ff.getName());
                 FileUtils.writeStringToFile(ff, docContents, "UTF-8");
-                //pkg_list.add(ff);
                 pkg_list.put(docName,ff);
-                //ff.delete();
             }
             
 
