@@ -29,6 +29,8 @@ module.exports = function(config){
             'app/node_modules/ng-file-upload/dist/ng-file-upload-shim.js',
             'app/node_modules/ng-file-upload/dist/ng-file-upload.js',
 
+            'app/node_modules/jasmine-promise-matchers/dist/jasmine-promise-matchers.js',
+
             'app/node_modules/tinymce/tinymce.js',
             'app/node_modules/angular-ui-tinymce/dist/tinymce.min.js',
 
@@ -52,6 +54,8 @@ module.exports = function(config){
             'app/app.js',
             
             'app/config/runTime.js',
+
+            'app/constants/**/*.js',
             
             'app/controllers/**/*.js',
 
@@ -61,6 +65,8 @@ module.exports = function(config){
             
             'app/model/**/*.js',
             
+            'app/repo/**/*.js',
+
             'tests/mocks/**/*.js',
             
             'tests/unit/**/*.js'

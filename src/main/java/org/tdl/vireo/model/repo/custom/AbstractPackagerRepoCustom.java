@@ -7,6 +7,8 @@ public interface AbstractPackagerRepoCustom {
 
     public Packager<?> createDSpaceMetsPackager(String name, AbstractFormatter formatter);
 
+    public Packager<?> createDSpaceSimplePackager(String name, AbstractFormatter formatter);
+
     public Packager<?> createProQuestUmiPackager(String name, AbstractFormatter formatter);
 
     public Packager<?> createExcelPackager(String name, AbstractFormatter formatter);

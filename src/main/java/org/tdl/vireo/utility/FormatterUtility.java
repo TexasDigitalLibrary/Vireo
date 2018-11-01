@@ -1,7 +1,8 @@
 package org.tdl.vireo.utility;
 
+import java.util.HashMap;
 import java.util.Locale;
-import java.util.Optional;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,15 @@ public class FormatterUtility {
     @Autowired
     private SpringTemplateEngine templateEngine;
 
-    public Optional<String> renderManifest(Formatter formatter, Submission submission) throws Exception {
+    public Map<String, String> renderManifestMap(Formatter formatter, Submission submission) throws Exception {
+        Map<String, String> renderMap = new HashMap<String, String>();
         Context context = new Context(Locale.getDefault());
         formatter.populateContext(context, submission);
-        Optional<String> template = Optional.of(formatter.getTemplate());
-        Optional<String> manifest = Optional.empty();
-        if (template.isPresent()) {
-            manifest = Optional.of(templateEngine.process(template.get(), context));
+        Map<String, String> templates = formatter.getTemplates();
+        for (Map.Entry<String, String> template : templates.entrySet()) {
+            renderMap.put(template.getKey(), templateEngine.process(template.getValue(), context));
         }
-        return manifest;
+        return renderMap;
     }
 
 }

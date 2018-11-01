@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
 import org.tdl.vireo.model.packager.AbstractPackager;
 import org.tdl.vireo.model.packager.DSpaceMetsPackager;
+import org.tdl.vireo.model.packager.DSpaceSimplePackager;
 import org.tdl.vireo.model.packager.ExcelPackager;
 import org.tdl.vireo.model.packager.MarcXML21Packager;
 import org.tdl.vireo.model.packager.Packager;
@@ -21,6 +22,11 @@ public class AbstractPackagerRepoImpl extends AbstractWeaverRepoImpl<AbstractPac
     @Override
     public Packager<?> createDSpaceMetsPackager(String name, AbstractFormatter formatter) {
         return abstractPackagerRepo.save(new DSpaceMetsPackager(name, formatter));
+    }
+
+    @Override
+    public Packager<?> createDSpaceSimplePackager(String name, AbstractFormatter formatter) {
+        return abstractPackagerRepo.save(new DSpaceSimplePackager(name, formatter));
     }
 
     @Override

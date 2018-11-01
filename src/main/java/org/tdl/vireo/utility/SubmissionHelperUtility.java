@@ -30,7 +30,9 @@ public class SubmissionHelperUtility {
 
     private final static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
-    @SuppressWarnings("unused")
+    private final static SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy-MM");
+    private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMM yyyy");
+
     private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
     private final static PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
@@ -234,7 +236,6 @@ public class SubmissionHelperUtility {
     }
 
     // NOTE: uses hard coded predicate values
-
     public String getGraduationDateString() {
         Optional<String> graduationDate = getFieldValueByPredicateValue("dc.date.created");
         String date = "";
@@ -248,6 +249,7 @@ public class SubmissionHelperUtility {
         return date;
     }
 
+    // NOTE: uses hard coded predicate values
     public String getGraduationYearString() {
         Optional<String> graduationYear = getFieldValueByPredicateValue("dc.date.created");
         String year = "";
@@ -259,6 +261,34 @@ public class SubmissionHelperUtility {
             }
         }
         return year;
+    }
+
+    // NOTE: uses hard coded predicate values
+    public String getGraduationYearMonthString() {
+        Optional<String> graduationYearMonth = getFieldValueByPredicateValue("dc.date.created");
+        String yearMonth = "";
+        if (graduationYearMonth.isPresent()) {
+            try {
+                yearMonth = yearMonthFormat.format(dateTimeFormat.parse(graduationYearMonth.get()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return yearMonth;
+    }
+
+    // NOTE: uses hard coded predicate values
+    public String getGraduationMonthYearString() {
+        Optional<String> graduationMonthYear = getFieldValueByPredicateValue("dc.date.created");
+        String monthYear = "";
+        if (graduationMonthYear.isPresent()) {
+            try {
+                monthYear = monthYearFormat.format(dateTimeFormat.parse(graduationMonthYear.get()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return monthYear;
     }
 
     public String getSubmitterEmail() {
