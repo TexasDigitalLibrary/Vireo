@@ -1,135 +1,62 @@
-var mockDepositLocationRepo1 = [
-    {
-        "id": 1,
-        "position": 1,
-        "name": "Test0",
-        "repository": "Dspace",
-        "collection": null,
-        "username": "test@tdl.org",
-        "password": "abc123",
-        "onBehalfOf": "TDL",
-        "packager": "VireoExport",
-        "depositor": "Sword1Deposit",
-        "timeout": 100
-    },
-    {
-        "id": 2,
-        "position": 2,
-        "name": "Test1",
-        "repository": "Fedora",
-        "collection": null,
-        "username": "test@tdl.org",
-        "password": "abc123",
-        "onBehalfOf": "Texas A&M",
-        "packager": "VireoExport",
-        "depositor": "Sword1Deposit",
-        "timeout": 200
-    },
-    {
-        "id": 3,
-        "position": 3,
-        "name": "Test2",
-        "repository": "Nuxio",
-        "collection": null,
-        "username": "test@tdl.org",
-        "password": "abc123",
-        "onBehalfOf": "Texas A&M",
-        "packager": "VireoExport",
-        "depositor": "FileDeposit",
-        "timeout": 300
-    }
-];
+var mockDepositLocation1 = {
+    'id': 1
+};
 
-var mockDepositLocationRepo2 = [
-    {
-        "id": 1,
-        "position": 1,
-        "name": "Test3",
-        "repository": "Dspace",
-        "collection": null,
-        "username": "test@tdl.org",
-        "password": "abc123",
-        "onBehalfOf": "TDL",
-        "packager": "VireoExport",
-        "depositor": "Sword1Deposit",
-        "timeout": 100
-    },
-    {
-        "id": 2,
-        "position": 2,
-        "name": "Test4",
-        "repository": "Fedora",
-        "collection": null,
-        "username": "test@tdl.org",
-        "password": "abc123",
-        "onBehalfOf": "Texas A&M",
-        "packager": "VireoExport",
-        "depositor": "Sword1Deposit",
-        "timeout": 200
-    },
-    {
-        "id": 3,
-        "position": 3,
-        "name": "Test5",
-        "repository": "Nuxio",
-        "collection": null,
-        "username": "test@tdl.org",
-        "password": "abc123",
-        "onBehalfOf": "Texas A&M",
-        "packager": "VireoExport",
-        "depositor": "FileDeposit",
-        "timeout": 300
-    }
-];
+var mockDepositLocation2 = {
+    'id': 2
+};
 
-var mockDepositLocationRepo3 = [
-    {
-        "id": 1,
-        "position": 1,
-        "name": "Test3",
-        "repository": "Dspace",
-        "collection": null,
-        "username": "test@tdl.org",
-        "password": "abc123",
-        "onBehalfOf": "TDL",
-        "packager": "VireoExport",
-        "depositor": "Sword1Deposit",
-        "timeout": 100
-    },
-    {
-        "id": 2,
-        "position": 2,
-        "name": "Test2",
-        "repository": "Fedora",
-        "collection": null,
-        "username": "test@tdl.org",
-        "password": "abc123",
-        "onBehalfOf": "Texas A&M",
-        "packager": "VireoExport",
-        "depositor": "Sword1Deposit",
-        "timeout": 200
-    },
-    {
-        "id": 3,
-        "position": 3,
-        "name": "Test1",
-        "repository": "Nuxio",
-        "collection": null,
-        "username": "test@tdl.org",
-        "password": "abc123",
-        "onBehalfOf": "Texas A&M",
-        "packager": "VireoExport",
-        "depositor": "FileDeposit",
-        "timeout": 300
-    }
-];
+var mockDepositLocation3 = {
+    'id': 3
+};
 
+angular.module('mock.depositLocation', []).service('DepositLocation', function($q) {
+    var model = this;
+    var defer;
+    var payloadResponse = function (payload) {
+        return defer.resolve({
+            body: angular.toJson({
+                meta: {
+                    status: 'SUCCESS'
+                },
+                payload: payload
+            })
+        });
+    };
 
-angular.module('mock.depositLocationRepo', []).
-    service('DepositLocationRepo', function($q) {
-    	
-    	var self;
-    	
-        
-        return DepositLocationRepo;
+    model.isDirty = false;
+
+    model.mock = function(toMock) {
+        model.id = toMock.id;
+    };
+
+    model.clearValidationResults = function () {
+    };
+
+    model.delete = function() {
+        defer = $q.defer();
+        payloadResponse();
+        return defer.promise;
+    };
+
+    model.dirty = function(boolean) {
+        model.isDirty = boolean;
+    };
+
+    model.reload = function() {
+    };
+
+    model.save = function() {
+        defer = $q.defer();
+        payloadResponse();
+        return defer.promise;
+    };
+
+    model.testConnection = function() {
+        defer = $q.defer();
+        payloadResponse();
+        return defer.promise;
+    };
+
+    return model;
 });
