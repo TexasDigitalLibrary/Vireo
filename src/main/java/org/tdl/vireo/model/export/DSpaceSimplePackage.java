@@ -8,8 +8,7 @@ import org.tdl.vireo.model.Submission;
 
 public class DSpaceSimplePackage extends AbstractExportPackage {
 
-    //public DSpaceSimplePackage(Submission submission, String format, List<File> file) {
-    public DSpaceSimplePackage(Submission submission, String format, Map<String,File> file) {
+    public DSpaceSimplePackage(Submission submission, String format, Map<String, File> file) {
         super(submission, format, file);
     }
 

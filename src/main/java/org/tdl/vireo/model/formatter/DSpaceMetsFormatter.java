@@ -18,7 +18,8 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
         super();
         setName("DSpaceMETS");
         HashMap<String, String> templates = new HashMap<String, String>();
-        templates.put("", "dspace_mets");
+        templates.put(DEFAULT_TEMPLATE_KEY, "dspace_mets");
+        setTemplates(templates);
     }
 
     @Override

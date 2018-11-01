@@ -1,8 +1,6 @@
 package org.tdl.vireo.model.formatter;
 
 import java.util.HashMap;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
 
@@ -35,7 +33,7 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
         for (DSpaceSimpleKey key : DSpaceSimpleKey.values()) {
             switch (key) {
 
-		//DUBLIN_CORE	
+            // DUBLIN_CORE
             case STUDENT_FULL_NAME_WITH_BIRTH_YEAR:
                 context.setVariable(key.name(), submissionHelperUtility.getStudentFullNameWithBirthYear());
                 break;
@@ -68,9 +66,6 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
                 FieldValue primaryDocumentFieldValue = submission.getPrimaryDocumentFieldValue();
                 if (primaryDocumentFieldValue != null) {
                     primaryDocumentType = fileHelperUtility.getMimeTypeOfAsset(primaryDocumentFieldValue.getValue());
-                    //if (primaryDocumentType.equals("application/pdf")) {
-                    //    primaryDocumentType = "PDF";
-                    //}
                 }
                 context.setVariable(key.name(), primaryDocumentType);
                 break;
@@ -86,7 +81,7 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
             case STUDENT_SHORT_NAME:
                 context.setVariable(key.name(), submissionHelperUtility.getStudentShortName());
                 break;
-		//METADATA_THESIS
+            // METADATA_THESIS
             case DEGREE_MAJOR:
                 context.setVariable(key.name(), submissionHelperUtility.getMajor());
                 break;
@@ -100,10 +95,10 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
                 context.setVariable(key.name(), submissionHelperUtility.getDepartment());
                 break;
 
-		//METADATA_LOCAL
-            //case EMBARGO_LIFT_DATE:
-            //    context.setVariable(key.name(), submissionHelperUtility.getEmbargoApprovalDateString());
-            //    break;
+            // METADATA_LOCAL
+            // case EMBARGO_LIFT_DATE:
+            // context.setVariable(key.name(), submissionHelperUtility.getEmbargoApprovalDateString());
+            // break;
             case EMBARGO_CODE:
                 context.setVariable(key.name(), submissionHelperUtility.getEmbargoCode());
                 break;

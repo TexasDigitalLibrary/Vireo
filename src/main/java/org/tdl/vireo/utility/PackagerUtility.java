@@ -2,10 +2,7 @@ package org.tdl.vireo.utility;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.exception.UnsupportedFormatterException;
@@ -19,8 +16,6 @@ import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 @Service
 public class PackagerUtility {
 
-    private static final Logger logger = LoggerFactory.getLogger(PackagerUtility.class);
-
     @Autowired
     private AbstractPackagerRepo abstractPackagerRepo;
 
@@ -28,13 +23,11 @@ public class PackagerUtility {
     private FormatterUtility formatterUtility;
 
     public ExportPackage packageExport(Packager<?> packager, Submission submission) throws Exception {
-        Optional<Map<String, String>> manifest = formatterUtility.renderManifestMap(packager.getFormatter(), submission);
-        if (manifest.isPresent()) {
-            logger.debug(manifest.get().toString());
-        } else {
+        Map<String, String> manifest = formatterUtility.renderManifestMap(packager.getFormatter(), submission);
+        if (manifest.isEmpty()) {
             throw new UnsupportedFormatterException("Required manifest not found!");
         }
-        return packager.packageExport(submission, manifest.get());
+        return packager.packageExport(submission, manifest);
     }
 
     public ExportPackage packageExport(Packager<?> packager, Submission submission, List<SubmissionListColumn> columns) {

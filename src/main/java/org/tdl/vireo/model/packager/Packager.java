@@ -26,6 +26,6 @@ public interface Packager<EP extends ExportPackage> {
 
     public EP packageExport(Submission submission, List<SubmissionListColumn> columns);
 
-    public EP packageExport(Submission submission, Map<String,String> ds_docs);
+    public EP packageExport(Submission submission, Map<String,String> dsDocs);
 
 }

@@ -531,7 +531,6 @@ public class SubmissionController {
             for (Submission submission : submissions) {
                 ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns);
                 if (exportPackage.isMap()) {
-                    @SuppressWarnings({ "unchecked" })
                     Map<String, String> rowData = (Map<String, String>) exportPackage.getPayload();
                     HSSFRow row = worksheet.createRow(rowCount++);
                     for (int i = 0; i < columns.size(); i++) {
@@ -597,25 +596,14 @@ public class SubmissionController {
 
                     StringBuilder contentsText = new StringBuilder();
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-                   	/*** 
-                    if (exportPackage.isList()) {
-                        for (File file : (List<File>) exportPackage.getPayload()) {
-                            zos.putNextEntry(new ZipEntry(submissionName + file.getName()));
-                            contentsText.append("MD " + file.getName() + "\n");
-                            zos.write(Files.readAllBytes(file.toPath()));
-                            zos.closeEntry();
-                        }
 
-                    }
-					***/
                     if (exportPackage.isMap()) {
-                        for (Map.Entry<String,File> fileEntry : ((Map<String,File>) exportPackage.getPayload()).entrySet()){
+                        for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
                             zos.putNextEntry(new ZipEntry(submissionName + fileEntry.getKey()));
                             contentsText.append("MD " + fileEntry.getKey() + "\n");
                             zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
                             zos.closeEntry();
                         }
-
                     }
 
                     // LICENSES
@@ -641,14 +629,14 @@ public class SubmissionController {
                     // supplemental, source, administrative
                     // ask Stephanie about administrative
                     List<FieldValue> supplDocs = submission.getSupplementalAndSourceDocumentFieldValues();
-                    for (FieldValue supplDoc : supplDocs){
-                    	Path supplPath = assetService.getAssetsAbsolutePath(supplDoc.getValue());
-                    	byte[] supplFileBytes = Files.readAllBytes(supplPath);
-                    	zos.putNextEntry(new ZipEntry(submissionName + supplDoc.getFileName()));
-                    	contentsText.append(supplDoc.getFileName() + "  bundle:CONTENT\n");
-                    	zos.write(supplFileBytes);
-                    	zos.closeEntry();
-					}
+                    for (FieldValue supplDoc : supplDocs) {
+                        Path supplPath = assetService.getAssetsAbsolutePath(supplDoc.getValue());
+                        byte[] supplFileBytes = Files.readAllBytes(supplPath);
+                        zos.putNextEntry(new ZipEntry(submissionName + supplDoc.getFileName()));
+                        contentsText.append(supplDoc.getFileName() + "  bundle:CONTENT\n");
+                        zos.write(supplFileBytes);
+                        zos.closeEntry();
+                    }
 
                     // CONTENTS_FILE
                     zos.putNextEntry(new ZipEntry(submissionName + "contents"));
@@ -665,10 +653,10 @@ public class SubmissionController {
                 response.setContentType("application/json");
 
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-                e.printStackTrace();
-                // PrintWriter out = response.getWriter();
-                // out.print(objectMapper.writeValueAsString(apiResponse));
-                // out.close();
+
+                PrintWriter out = response.getWriter();
+                out.print(objectMapper.writeValueAsString(apiResponse));
+                out.close();
             }
             break;
 

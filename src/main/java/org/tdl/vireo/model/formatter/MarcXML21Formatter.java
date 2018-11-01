@@ -1,9 +1,8 @@
 package org.tdl.vireo.model.formatter;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import java.util.HashMap;
 
 import javax.persistence.Entity;
 
@@ -18,7 +17,6 @@ public class MarcXML21Formatter extends AbstractFormatter {
     public MarcXML21Formatter() {
         super();
         setName("MARC21XML");
-        //setTemplate("marc21_xml");
         HashMap<String, String> templates = new HashMap<String, String>();
         templates.put("marc21_xml.xml", "marc21_xml");
         setTemplates(templates);
