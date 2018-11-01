@@ -506,6 +506,7 @@ public class SubmissionController {
         processBatchExport(response, user, packagerName, activeFilter);
     }
 
+    @SuppressWarnings("unchecked")
     private void processBatchExport(HttpServletResponse response, User user, String packagerName, NamedSearchFilterGroup filter) throws IOException {
         AbstractPackager<?> packager = packagerUtility.getPackager(packagerName);
 
@@ -530,7 +531,6 @@ public class SubmissionController {
             for (Submission submission : submissions) {
                 ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns);
                 if (exportPackage.isMap()) {
-                    @SuppressWarnings({ "unchecked" })
                     Map<String, String> rowData = (Map<String, String>) exportPackage.getPayload();
                     HSSFRow row = worksheet.createRow(rowCount++);
                     for (int i = 0; i < columns.size(); i++) {
@@ -587,6 +587,79 @@ public class SubmissionController {
                 out.close();
             }
             break;
+        case "DSpaceSimple":
+            try {
+                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+                for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
+                    String submissionName = "submission_" + submission.getId() + "/";
+                    zos.putNextEntry(new ZipEntry(submissionName));
+
+                    StringBuilder contentsText = new StringBuilder();
+                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+
+                    if (exportPackage.isMap()) {
+                        for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
+                            zos.putNextEntry(new ZipEntry(submissionName + fileEntry.getKey()));
+                            contentsText.append("MD " + fileEntry.getKey() + "\n");
+                            zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
+                            zos.closeEntry();
+                        }
+                    }
+
+                    // LICENSES
+                    for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
+                        Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+                        byte[] fileBytes = Files.readAllBytes(path);
+                        zos.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
+                        contentsText.append(ldfv.getFileName() + " bundle:LICENSE\n");
+                        zos.write(fileBytes);
+                        zos.closeEntry();
+                    }
+
+                    // PRIMARY_DOC
+                    FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
+                    Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
+                    byte[] fileBytes = Files.readAllBytes(path);
+                    zos.putNextEntry(new ZipEntry(submissionName + primaryDoc.getFileName()));
+                    contentsText.append(primaryDoc.getFileName() + "  bundle:CONTENT  primary:true\n");
+                    zos.write(fileBytes);
+                    zos.closeEntry();
+
+                    // SUPPLEMENTAL_DOCS
+                    // supplemental, source, administrative
+                    // ask Stephanie about administrative
+                    List<FieldValue> supplDocs = submission.getSupplementalAndSourceDocumentFieldValues();
+                    for (FieldValue supplDoc : supplDocs) {
+                        Path supplPath = assetService.getAssetsAbsolutePath(supplDoc.getValue());
+                        byte[] supplFileBytes = Files.readAllBytes(supplPath);
+                        zos.putNextEntry(new ZipEntry(submissionName + supplDoc.getFileName()));
+                        contentsText.append(supplDoc.getFileName() + "  bundle:CONTENT\n");
+                        zos.write(supplFileBytes);
+                        zos.closeEntry();
+                    }
+
+                    // CONTENTS_FILE
+                    zos.putNextEntry(new ZipEntry(submissionName + "contents"));
+                    zos.write(contentsText.toString().getBytes());
+                    zos.closeEntry();
+
+                    zos.closeEntry();
+                }
+                zos.close();
+
+                response.setContentType(packager.getMimeType());
+                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+            } catch (Exception e) {
+                response.setContentType("application/json");
+
+                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
+
+                PrintWriter out = response.getWriter();
+                out.print(objectMapper.writeValueAsString(apiResponse));
+                out.close();
+            }
+            break;
+
         default:
             response.setContentType("application/json");
 
@@ -783,7 +856,7 @@ public class SubmissionController {
         String[] fileNameParts = fileName.split("\\.");
         String fileExtension = fileNameParts.length > 1 ? fileNameParts[1] : "pdf";
 
-        if(documentTypesToRename.contains(documentType)) {
+        if (documentTypesToRename.contains(documentType)) {
             String lastName = user.getLastName().toUpperCase();
             int year = Calendar.getInstance().get(Calendar.YEAR);
             fileName = lastName + "-" + documentType + "-" + String.valueOf(year) + "." + fileExtension;
@@ -857,7 +930,8 @@ public class SubmissionController {
         String subject = templateUtility.compileString(template.getSubject(), submission);
         String content = templateUtility.compileTemplate(template, submission);
 
-        // TODO: this needs to only send email to the advisor not any field value that is contact type
+        // TODO: this needs to only send email to the advisor not any field value that
+        // is contact type
         submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
 
             SimpleMailMessage smm = new SimpleMailMessage();
@@ -882,7 +956,8 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS);
     }
 
-    // TODO: rework, anonymous endpoint for advisor approval, no user available for action log
+    // TODO: rework, anonymous endpoint for advisor approval, no user available for
+    // action log
     @SuppressWarnings("unchecked")
     @RequestMapping(value = "/{submissionId}/update-advisor-approval", method = RequestMethod.POST)
     public ApiResponse updateAdvisorApproval(@PathVariable Long submissionId, @RequestBody Map<String, Object> data) {

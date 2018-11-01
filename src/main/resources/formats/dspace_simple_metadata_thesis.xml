@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--metadata_thesis.xml-->
+<dublin_core schema="thesis">
+    <!-- thesis.degree.name == Degree -->
+    <dcvalue element="degree" qualifier="name" th:text="${DEGREE_NAME}"></dcvalue>
+
+    <!-- thesis.degree.level = Degree Level (Doctoral, Masters, Undergraduate) -->
+    <dcvalue element="degree" qualifier="level" th:text="${DEGREE_LEVEL}"></dcvalue>
+
+    <!-- thesis.degree.discipline = Major -->
+    <dcvalue element="degree" qualifier="discipline" th:text="${DEGREE_MAJOR}"></dcvalue>
+
+    <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
+    <dcvalue element="degree" qualifier="grantor" th:text="${APPLICATION_GRANTOR}"></dcvalue>
+
+    <!-- thesis.degree.department = Department -->
+    <dcvalue element="degree" qualifier="department" th:text="${DEPARTMENT}"></dcvalue>
+
+</dublin_core>
+

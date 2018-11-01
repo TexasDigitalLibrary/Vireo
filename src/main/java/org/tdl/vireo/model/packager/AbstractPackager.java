@@ -3,6 +3,7 @@ package org.tdl.vireo.model.packager;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -58,8 +59,16 @@ public abstract class AbstractPackager<EP extends ExportPackage> extends BaseEnt
         return Paths.get(FileHelperUtility.getAssetAbsolutePath(relativePath));
     }
 
+    public EP packageExport(Submission submission, String manifest) throws UnsupportedFormatterException {
+        throw new UnsupportedFormatterException("Exporter does not support manifest file!");
+    }
+
     public EP packageExport(Submission submission, List<SubmissionListColumn> columns) throws UnsupportedFormatterException {
         throw new UnsupportedFormatterException("Exporter does not support submission list columns!");
+    }
+
+    public EP packageExport(Submission submission, Map<String, String> ds_docs) throws UnsupportedFormatterException {
+        throw new UnsupportedFormatterException("Exporter does not support multiple docs !");
     }
 
 }
