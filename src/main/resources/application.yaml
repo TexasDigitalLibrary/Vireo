@@ -58,7 +58,7 @@ spring:
   
     generate-ddl: true
     show-sql: false
-    hibernate.ddl-auto: none
+    hibernate.ddl-auto: create-drop
     properties.hibernate.event.merge.entity_copy_observer: allow
 
   thymeleaf:

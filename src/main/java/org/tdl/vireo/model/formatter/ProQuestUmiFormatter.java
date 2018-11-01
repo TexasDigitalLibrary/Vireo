@@ -16,7 +16,7 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
         super();
         setName("ProQuestUMI");
         HashMap<String, String> templates = new HashMap<String, String>();
-        templates.put("", "proquest_umi");
+        templates.put(DEFAULT_TEMPLATE_KEY, "proquest_umi");
         setTemplates(templates);
     }
 

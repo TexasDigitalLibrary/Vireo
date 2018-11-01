@@ -12,8 +12,6 @@ public interface ExportPackage {
 
     public boolean isFile();
 
-    public boolean isList();
-
     public boolean isMap();
 
 }

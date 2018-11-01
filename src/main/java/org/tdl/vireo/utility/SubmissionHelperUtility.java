@@ -33,7 +33,6 @@ public class SubmissionHelperUtility {
     private final static SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy-MM");
     private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMM yyyy");
 
-    @SuppressWarnings("unused")
     private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
     private final static PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
@@ -237,7 +236,6 @@ public class SubmissionHelperUtility {
     }
 
     // NOTE: uses hard coded predicate values
-
     public String getGraduationDateString() {
         Optional<String> graduationDate = getFieldValueByPredicateValue("dc.date.created");
         String date = "";
@@ -252,7 +250,6 @@ public class SubmissionHelperUtility {
     }
 
     // NOTE: uses hard coded predicate values
-
     public String getGraduationYearString() {
         Optional<String> graduationYear = getFieldValueByPredicateValue("dc.date.created");
         String year = "";

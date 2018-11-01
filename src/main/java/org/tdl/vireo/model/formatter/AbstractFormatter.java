@@ -24,6 +24,8 @@ import edu.tamu.weaver.data.model.BaseEntity;
 @Inheritance
 public abstract class AbstractFormatter extends BaseEntity implements Formatter {
 
+    protected final static String DEFAULT_TEMPLATE_KEY = "template";
+
     @Column(unique = true, nullable = false)
     private String name;
 

@@ -67,7 +67,7 @@ public abstract class AbstractPackager<EP extends ExportPackage> extends BaseEnt
         throw new UnsupportedFormatterException("Exporter does not support submission list columns!");
     }
 
-    public EP packageExport(Submission submission, Map<String,String> ds_docs) throws UnsupportedFormatterException {
+    public EP packageExport(Submission submission, Map<String, String> ds_docs) throws UnsupportedFormatterException {
         throw new UnsupportedFormatterException("Exporter does not support multiple docs !");
     }
 
