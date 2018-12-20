@@ -12,10 +12,9 @@ describe('controller: AdvisorSubmissionReviewController', function () {
         module('mock.submission');
         module('mock.wsApi');
 
-        inject(function ($controller, $rootScope, $window, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_, _Submission_, _WsApi_) {
+        inject(function ($controller, $rootScope, $window, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
-
             controller = $controller('AdvisorSubmissionReviewController', {
                 $scope: scope,
                 $window: $window,
@@ -23,7 +22,7 @@ describe('controller: AdvisorSubmissionReviewController', function () {
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                Submission: _Submission_,
+                Submission: mockSubmission,
                 WsApi: _WsApi_
             });
 
@@ -32,10 +31,10 @@ describe('controller: AdvisorSubmissionReviewController', function () {
         });
     });
 
-    /*describe('Is the controller defined', function () {
+    describe('Is the controller defined', function () {
         it('should be defined', function () {
             expect(controller).toBeDefined();
         });
-    });*/
+    });
 
 });

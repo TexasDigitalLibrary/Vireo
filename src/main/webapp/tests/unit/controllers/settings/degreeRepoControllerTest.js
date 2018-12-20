@@ -5,7 +5,9 @@ describe('controller: DegreeRepoController', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.degree');
         module('mock.degreeRepo');
+        module('mock.degreeLevel');
         module('mock.degreeLevelRepo');
         module('mock.dragAndDropListenerFactory');
         module('mock.modalService');

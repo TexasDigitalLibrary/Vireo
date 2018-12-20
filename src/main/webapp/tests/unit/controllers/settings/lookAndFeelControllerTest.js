@@ -15,6 +15,20 @@ describe('controller: LookAndFeelController', function () {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
+            // TODO: should this instead be initialized in the controller itself?
+            scope.settings = {
+                configurable: {
+                    lookAndFeel: {
+                        left_logo: {
+                            value: ""
+                        },
+                        right_logo: {
+                            value: ""
+                        }
+                    }
+                }
+            };
+
             controller = $controller('LookAndFeelController', {
                 $q: _$q_,
                 $scope: scope,
@@ -31,10 +45,10 @@ describe('controller: LookAndFeelController', function () {
         });
     });
 
-    /*describe('Is the controller defined', function () {
+    describe('Is the controller defined', function () {
         it('should be defined', function () {
             expect(controller).toBeDefined();
         });
-    });*/
+    });
 
 });

@@ -1,10 +1,11 @@
 describe('controller: ControlledVocabularyRepoController', function () {
 
-    var controller, scope;
+    var controller, scope, NgTableParams;
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.controlledVocabulary');
         module('mock.controlledVocabularyRepo');
         module('mock.dragAndDropListenerFactory');
         module('mock.modalService');
@@ -13,7 +14,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
         module('mock.storageService');
         module('mock.wsApi');
 
-        inject(function ($controller, _$q_, $rootScope, $timeout, $window, _ControlledVocabularyRepo_, _DragAndDropListenerFactory_, _ModalService_, _NgTableParams_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, _$q_, $rootScope, $timeout, $window, _ControlledVocabularyRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -25,7 +26,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
                 ControlledVocabularyRepo: _ControlledVocabularyRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
-                NgTableParams: _NgTableParams_,
+                NgTableParams: mockNgTableParams,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 WsApi: _WsApi_

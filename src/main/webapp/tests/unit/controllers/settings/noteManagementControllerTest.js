@@ -9,13 +9,15 @@ describe('controller: NoteManagementController', function () {
         module('mock.modalService');
         module('mock.note');
         module('mock.noteRepo');
+        module('mock.organization');
         module('mock.organizationRepo');
         module('mock.restApi');
         module('mock.storageService');
+        module('mock.workflowStep');
         module('mock.workflowStepRepo');
         module('mock.wsApi');
 
-        inject(function ($controller, $rootScope, $window, _DragAndDropListenerFactory_, _ModalService_, _Note_, _NoteRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
+        inject(function ($controller, $rootScope, $window, _DragAndDropListenerFactory_, _ModalService_, _NoteRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -24,7 +26,7 @@ describe('controller: NoteManagementController', function () {
                 $window: $window,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
-                Note: _Note_,
+                Note: mockNote,
                 NoteRepo: _NoteRepo_,
                 OrganizationRepo: _OrganizationRepo_,
                 RestApi: _RestApi_,
@@ -38,10 +40,10 @@ describe('controller: NoteManagementController', function () {
         });
     });
 
-    /*describe('Is the controller defined', function () {
+    describe('Is the controller defined', function () {
         it('should be defined', function () {
             expect(controller).toBeDefined();
         });
-    });*/
+    });
 
 });

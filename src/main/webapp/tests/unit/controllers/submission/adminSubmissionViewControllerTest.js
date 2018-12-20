@@ -15,12 +15,14 @@ describe('controller: AdminSubmissionViewController', function () {
         module('mock.sidebarService');
         module('mock.storageService');
         module('mock.submissionRepo');
+        module('mock.submissionStatus');
         module('mock.submissionStatusRepo');
+        module('mock.user');
         module('mock.userRepo');
         module('mock.userService');
         module('mock.wsApi');
 
-        inject(function ($anchorScroll, $controller, $location, $route, $routeParams, $rootScope, $window, _DepositLocationRepo_, _EmailTemplateRepo_, _FieldPredicateRepo_, _FieldValue_, _FileUploadService_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionRepo_, _SubmissionStatuses_, _SubmissionStatusRepo_, _UserRepo_, _UserService_, _WsApi_) {
+        inject(function ($anchorScroll, $controller, $location, $q, $route, $routeParams, $rootScope, $window, _DepositLocationRepo_, _EmailTemplateRepo_, _FieldPredicateRepo_, _FieldValue_, _FileUploadService_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _UserService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -41,7 +43,7 @@ describe('controller: AdminSubmissionViewController', function () {
                 SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
                 SubmissionRepo: _SubmissionRepo_,
-                SubmissionStatuses: _SubmissionStatuses_,
+                SubmissionStatus: mockSubmissionStatus,
                 SubmissionStatusRepo: _SubmissionStatusRepo_,
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,
@@ -53,10 +55,10 @@ describe('controller: AdminSubmissionViewController', function () {
         });
     });
 
-    /*describe('Is the controller defined', function () {
+    describe('Is the controller defined', function () {
         it('should be defined', function () {
             expect(controller).toBeDefined();
         });
-    });*/
+    });
 
 });

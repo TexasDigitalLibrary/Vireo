@@ -1,6 +1,6 @@
 describe('controller: SubmissionHistoryController', function () {
 
-    var controller, scope;
+    var controller, scope, NgTableParams;
 
     beforeEach(function() {
         module('core');
@@ -9,10 +9,11 @@ describe('controller: SubmissionHistoryController', function () {
         module('mock.ngTableParams');
         module('mock.restApi');
         module('mock.storageService');
+        module('mock.studentSubmission');
         module('mock.studentSubmissionRepo');
         module('mock.wsApi');
 
-        inject(function ($controller, $location, $rootScope, $timeout, $window, SubmissionStates, _ModalService_, _NgTableParams_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
+        inject(function ($controller, $location, $rootScope, $timeout, $window, SubmissionStates, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -23,7 +24,7 @@ describe('controller: SubmissionHistoryController', function () {
                 $window: $window,
                 SubmissionStates: SubmissionStates,
                 ModalService: _ModalService_,
-                NgTableParams: _NgTableParams_,
+                NgTableParams: mockNgTableParams,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,

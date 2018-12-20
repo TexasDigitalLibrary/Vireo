@@ -6,6 +6,7 @@ describe('controller: FieldPredicatesController', function () {
         module('core');
         module('vireo');
         module('mock.dragAndDropListenerFactory');
+        module('mock.fieldPredicate');
         module('mock.fieldPredicateRepo');
         module('mock.modalService');
         module('mock.restApi');

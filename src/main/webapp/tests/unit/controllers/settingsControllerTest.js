@@ -6,16 +6,18 @@ describe('controller: SettingsController', function () {
         module('core');
         module('vireo');
         module('mock.modalService');
+        module('mock.managedConfiguration');
         module('mock.managedConfigurationRepo');
         module('mock.modalService');
         module('mock.restApi');
         module('mock.storageService');
+        module('mock.studentSubmission');
         module('mock.studentSubmissionRepo');
         module('mock.user');
         module('mock.userService');
         module('mock.wsApi');
 
-        inject(function ($controller, $injector, $rootScope, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _User_, _UserService_, _WsApi_) {
+        inject(function ($controller, $injector, $rootScope, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _UserService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -29,7 +31,7 @@ describe('controller: SettingsController', function () {
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,
-                User: _User_,
+                User: mockUser,
                 UserService: _UserService_,
                 WsApi: _WsApi_
             });

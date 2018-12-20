@@ -10,32 +10,13 @@ var mockSubmission3 = {
     'id': 3
 };
 
-angular.module('mock.submission', []).service('Submission', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var mockSubmission = function($q) {
+    var model = mockModel($q, mockSubmission1);
 
-    model.isDirty = false;
-    model.isValid = false;
     model.actionLogListenPromise = null;
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
-
     model.addComment = function (data) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.addFieldValue = function (fieldPredicate) {
@@ -47,55 +28,30 @@ angular.module('mock.submission', []).service('Submission', function($q) {
     };
 
     model.addMessage = function (message) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.archiveFile = function (fieldValue) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.assign = function (assignee) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.changeStatus = function (submissionStatusName) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
+        return payloadPromise($q.defer());
     };
 
     model.fetchDocumentTypeFileInfo = function () {
     };
 
     model.file = function (uri) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.fileInfo = function (fieldValue) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.findFieldValueById = function (id) {
@@ -107,9 +63,7 @@ angular.module('mock.submission', []).service('Submission', function($q) {
     };
 
     model.getContactEmails = function () {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.getFieldProfileByPredicate = function (predicate) {
@@ -137,15 +91,11 @@ angular.module('mock.submission', []).service('Submission', function($q) {
     };
 
     model.getFileType = function (fieldPredicate) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.getFlaggedFieldProfiles = function () {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.getPrimaryDocumentFieldProfile = function () {
@@ -155,99 +105,65 @@ angular.module('mock.submission', []).service('Submission', function($q) {
     };
 
     model.publish = function (depositLocation) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.needsCorrection = function () {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.removeAllUnsavedFieldValuesByPredicate = function (fieldPredicate) {
     };
 
     model.removeFieldValue = function (fieldValue) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.removeFile = function (fieldValue) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.removeUnsavedFieldValue = function (fieldValue) {
     };
 
     model.renameFile = function (fieldValue) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.saveFieldValue = function (fieldValue, fieldProfile) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.saveReviewerNotes = function (reviewerNotes) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.sendEmail = function (data) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.sendAdvisorEmail = function () {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.setSubmissionDate = function (newDate) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.submit = function () {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.submitCorrections = function () {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.updateAdvisorApproval = function (approval) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.updateCustomActionValue = function (customActionValue) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.validate = function () {
@@ -255,10 +171,11 @@ angular.module('mock.submission', []).service('Submission', function($q) {
     };
 
     model.validateFieldValue = function (fieldValue, fieldProfile) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     return model;
-});
+};
+
+angular.module('mock.submission', []).service('Submission', mockSubmission);
+

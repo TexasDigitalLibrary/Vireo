@@ -10,47 +10,11 @@ var mockWorkflowStep3 = {
     'id': 3
 };
 
-angular.module('mock.workflowStep', []).service('WorkflowStep', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
-
-    model.isDirty = false;
-
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
-
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockWorkflowStep = function($q) {
+    var model = mockModel($q, mockWorkflowStep1);
 
     return model;
-});
+};
+
+angular.module('mock.workflowStep', []).service('WorkflowStep', mockWorkflowStep);
+

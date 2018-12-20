@@ -5,6 +5,7 @@ describe('controller: CompleteSubmissionController', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.managedConfiguration');
         module('mock.managedConfigurationRepo');
         module('mock.modalService');
         module('mock.restApi');

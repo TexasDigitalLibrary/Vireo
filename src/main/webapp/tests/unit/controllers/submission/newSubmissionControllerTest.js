@@ -5,11 +5,14 @@ describe('controller: NewSubmissionController', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.managedConfiguration');
         module('mock.managedConfigurationRepo');
         module('mock.modalService');
+        module('mock.organization');
         module('mock.organizationRepo');
         module('mock.restApi');
         module('mock.storageService');
+        module('mock.studentSubmission');
         module('mock.studentSubmissionRepo');
         module('mock.wsApi');
 

@@ -8,6 +8,7 @@ describe('controller: HeaderController', function () {
         module('mock.abstractAppRepo');
         module('mock.abstractRepo');
         module('mock.alertService');
+        module('mock.managedConfiguration');
         module('mock.managedConfigurationRepo');
         module('mock.modalService');
         module('mock.restApi');
@@ -38,10 +39,10 @@ describe('controller: HeaderController', function () {
         });
     });
 
-    /*describe('Is the controller defined', function () {
+    describe('Is the controller defined', function () {
         it('should be defined', function () {
             expect(controller).toBeDefined();
         });
-    });*/
+    });
 
 });

@@ -6,6 +6,7 @@ describe('controller: LanguagesController', function () {
         module('core');
         module('vireo');
         module('mock.dragAndDropListenerFactory');
+        module('mock.language');
         module('mock.languageRepo');
         module('mock.modalService');
         module('mock.restApi');

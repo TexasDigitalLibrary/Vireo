@@ -9,12 +9,13 @@ describe('controller: DepositLocationRepoController', function () {
         module('mock.depositLocationRepo');
         module('mock.dragAndDropListenerFactory');
         module('mock.modalService');
+        module('mock.packager');
         module('mock.packagerRepo');
         module('mock.restApi');
         module('mock.storageService');
         module('mock.wsApi');
 
-        inject(function ($controller, _$q_, $rootScope, $window, _DepositLocation_, _DepositLocationRepo_, _DragAndDropListenerFactory_, _ModalService_, _PackagerRepo_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, _$q_, $rootScope, $window, _DepositLocationRepo_, _DragAndDropListenerFactory_, _ModalService_, _PackagerRepo_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -22,7 +23,6 @@ describe('controller: DepositLocationRepoController', function () {
                 $q: _$q_,
                 $scope: scope,
                 $window: $window,
-                DepositLocation: _DepositLocation_,
                 DepositLocationRepo: _DepositLocationRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,

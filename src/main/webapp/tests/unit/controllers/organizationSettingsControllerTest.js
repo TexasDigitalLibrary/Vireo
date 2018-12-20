@@ -7,6 +7,7 @@ describe('controller: OrganizationSettingsController', function () {
         module('vireo');
         module('mock.accordionService');
         module('mock.modalService');
+        module('mock.organization');
         module('mock.organizationRepo');
         module('mock.restApi');
         module('mock.sidebarService');

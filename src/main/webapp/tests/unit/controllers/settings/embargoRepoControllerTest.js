@@ -6,6 +6,7 @@ describe('controller: EmbargoRepoController', function () {
         module('core');
         module('vireo');
         module('mock.dragAndDropListenerFactory');
+        module('mock.embargo');
         module('mock.embargoRepo');
         module('mock.modalService');
         module('mock.restApi');

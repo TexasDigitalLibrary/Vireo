@@ -1,27 +1,32 @@
 angular.module('mock.alertService', []).service('AlertService', function ($q) {
-    var service = this;
-    var defer;
+    var service = mockService($q);
 
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
+    service.add = function (meta, channel) {
+        return payloadPromise($q.defer(), null);
     };
 
-    var messageResponse = function (message) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS',
-                    message: message
-                }
-            })
-        });
+    service.addAlertServiceError = function (error) {
+        return payloadPromise($q.defer(), null);
+    };
+
+    service.clearTypeStores = function () {
+        return payloadPromise($q.defer(), null);
+    };
+
+    service.create = function (facet, exclusion) {
+        return payloadPromise($q.defer(), null);
+    };
+
+    service.get = function (facet) {
+        return payloadPromise($q.defer(), null);
+    };
+
+    service.remove = function (alert) {
+        return payloadPromise($q.defer(), null);
+    };
+
+    service.removeAll = function (facet) {
+        return payloadPromise($q.defer(), null);
     };
 
     return service;

@@ -10,47 +10,25 @@ var mockControlledVocabulary3 = {
     'id': 3
 };
 
-angular.module('mock.controlledVocabulary', []).service('ControlledVocabulary', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
+var mockControlledVocabulary = function($q) {
+    var model = mockModel($q, mockControlledVocabulary1);
+
+    model.clearListens = function() {
+        var payload = {};
+        // TODO
+        return payloadPromise($q.defer(), payload);
     };
 
-    model.isDirty = false;
-
-    model.mock = function(toMock) {
-        model.id = toMock.id;
+    model.listen = function() {
+        // TODO
     };
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+    model._syncShadow = function() {
+        // TODO
     };
 
     return model;
-});
+};
+
+angular.module('mock.controlledVocabulary', []).service('ControlledVocabulary', mockControlledVocabulary);
+

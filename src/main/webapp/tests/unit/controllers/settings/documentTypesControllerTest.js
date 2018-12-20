@@ -5,6 +5,7 @@ describe('controller: DocumentTypesController', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.documentType');
         module('mock.documentTypeRepo');
         module('mock.dragAndDropListenerFactory');
         module('mock.modalService');

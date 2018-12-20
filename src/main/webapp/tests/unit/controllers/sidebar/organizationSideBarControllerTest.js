@@ -5,7 +5,9 @@ describe('controller: OrganizationSideBarController', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.organizationCategory');
         module('mock.organizationCategoryRepo');
+        module('mock.organization');
         module('mock.organizationRepo');
         module('mock.modalService');
         module('mock.restApi');

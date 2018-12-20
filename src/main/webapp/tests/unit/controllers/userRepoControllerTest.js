@@ -13,7 +13,7 @@ describe('controller: UserRepoController', function () {
         module('mock.userService');
         module('mock.wsApi');
 
-        inject(function ($controller, $location, $route, _$q_, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _User_, _UserRepo_, _UserService_, _WsApi_) {
+        inject(function ($controller, $location, $route, _$q_, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -27,7 +27,7 @@ describe('controller: UserRepoController', function () {
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                User: _User_,
+                User: mockUser,
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,
                 WsApi: _WsApi_

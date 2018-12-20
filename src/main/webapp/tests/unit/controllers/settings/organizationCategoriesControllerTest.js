@@ -7,6 +7,7 @@ describe('controller: OrganizationCategoriesController', function () {
         module('vireo');
         module('mock.dragAndDropListenerFactory');
         module('mock.modalService');
+        module('mock.organizationCategory');
         module('mock.organizationCategoryRepo');
         module('mock.restApi');
         module('mock.storageService');

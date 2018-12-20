@@ -6,6 +6,7 @@ describe('controller: GraduationMonthRepoController', function () {
         module('core');
         module('vireo');
         module('mock.dragAndDropListenerFactory');
+        module('mock.graduationMonth');
         module('mock.graduationMonthRepo');
         module('mock.modalService');
         module('mock.restApi');

@@ -5,17 +5,25 @@ describe('controller: FieldProfileManagementController', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.controlledVocabulary');
         module('mock.controlledVocabularyRepo');
+        module('mock.documentType');
         module('mock.documentTypeRepo');
         module('mock.dragAndDropListenerFactory');
+        module('mock.fieldPredicate');
         module('mock.fieldPredicateRepo');
+        module('mock.fieldProfile');
         module('mock.fieldProfileRepo');
+        module('mock.inputType');
         module('mock.inputTypeRepo');
+        module('mock.managedConfiguration');
         module('mock.managedConfigurationRepo');
         module('mock.modalService');
+        module('mock.organization');
         module('mock.organizationRepo');
         module('mock.restApi');
         module('mock.storageService');
+        module('mock.workflowStep');
         module('mock.workflowStepRepo');
         module('mock.wsApi');
 
@@ -48,10 +56,10 @@ describe('controller: FieldProfileManagementController', function () {
         });
     });
 
-    /*describe('Is the controller defined', function () {
+    describe('Is the controller defined', function () {
         it('should be defined', function () {
             expect(controller).toBeDefined();
         });
-    });*/
+    });
 
 });

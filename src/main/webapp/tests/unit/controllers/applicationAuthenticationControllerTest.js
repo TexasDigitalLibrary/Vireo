@@ -8,6 +8,7 @@ describe('controller: ApplicationAuthenticationController', function () {
         module('mock.modalService');
         module('mock.restApi');
         module('mock.storageService');
+        module('mock.user');
         module('mock.userService');
         module('mock.validationStore');
         module('mock.wsApi');

@@ -5,6 +5,7 @@ describe('controller: CustomActionSettingsController', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.customActionDefinition');
         module('mock.customActionDefinitionRepo');
         module('mock.dragAndDropListenerFactory');
         module('mock.modalService');

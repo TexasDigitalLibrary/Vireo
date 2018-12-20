@@ -5,15 +5,17 @@ describe('controller: EmailWorkflowRulesController', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
+        module('mock.submissionStatus');
         module('mock.submissionStatusRepo');
         module('mock.emailTemplateRepo');
         module('mock.modalService');
+        module('mock.organization');
         module('mock.organizationRepo');
         module('mock.restApi');
         module('mock.storageService');
         module('mock.wsApi');
 
-        inject(function ($controller, _$q_, $rootScope, $window, _SubmissionStatusRepo_, _EmailTemplateRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, _$q_, $rootScope, $window, _EmailTemplateRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _SubmissionStatusRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -22,11 +24,11 @@ describe('controller: EmailWorkflowRulesController', function () {
                 $scope: scope,
                 $window: $window,
                 EmailTemplateRepo: _EmailTemplateRepo_,
-                SubmissionStatusRepo: _SubmissionStatusRepo_,
                 ModalService: _ModalService_,
                 OrganizationRepo: _OrganizationRepo_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
+                SubmissionStatusRepo: _SubmissionStatusRepo_,
                 WsApi: _WsApi_
             });
 
