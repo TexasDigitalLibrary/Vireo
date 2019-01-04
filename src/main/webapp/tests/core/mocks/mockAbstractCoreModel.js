@@ -27,7 +27,11 @@ var mockModel = function ($q, mockDataObj) {
     };
 
     model.dirty = function(boolean) {
-        model.isDirty = boolean;
+        if (boolean !== undefined) {
+            model.isDirty = boolean;
+        }
+
+        return model.isDirty;
     };
 
     model.reload = function() {
