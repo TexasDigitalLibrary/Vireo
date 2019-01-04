@@ -16,7 +16,7 @@ var mockUser2 = {
     uin: "987654321",
     exp: "1425393875282",
     email: "aggieJill@library.tamu.edu",
-    role: "ROLE_USER",
+    role: "ROLE_STUDENT",
     netId: "aggieJill"
 };
 
@@ -27,7 +27,7 @@ var mockUser3 = {
     uin: "192837465",
     exp: "1425393875282",
     email: "jsmith@library.tamu.edu",
-    role: "ROLE_USER",
+    role: "ROLE_STUDENT",
     netId: "jsmith"
 };
 

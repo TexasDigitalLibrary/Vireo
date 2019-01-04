@@ -10,14 +10,14 @@ var mockUserRepo1 = [
         anonymous: false,
         firstName: "Jill",
         lastName: "Daniels",
-        role: "ROLE_USER",
+        role: "ROLE_STUDENT",
         uin: "987654321"
     },
     {
         anonymous: false,
         firstName: "Jacob",
         lastName: "Smith",
-        role: "ROLE_USER",
+        role: "ROLE_STUDENT",
         uin: "192837465"
     }
 ];
@@ -34,14 +34,14 @@ var mockUserRepo2 = [
         anonymous: false,
         firstName: "Joann",
         lastName: "Daniels",
-        role: "ROLE_USER",
+        role: "ROLE_STUDENT",
         uin: "789456123"
     },
     {
         anonymous: false,
         firstName: "Joseph",
         lastName: "Smith",
-        role: "ROLE_USER",
+        role: "ROLE_STUDENT",
         uin: "564738291"
     }
 ];
@@ -58,14 +58,14 @@ var mockUserRepo3 = [
         anonymous: false,
         firstName: "Test",
         lastName: "User2",
-        role: "ROLE_USER",
+        role: "ROLE_STUDENT",
         uin: "222222222"
     },
     {
         anonymous: false,
         firstName: "Test",
         lastName: "User3",
-        role: "ROLE_USER",
+        role: "ROLE_STUDENT",
         uin: "333333333"
     }
 ];
