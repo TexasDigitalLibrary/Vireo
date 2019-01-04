@@ -1,16 +1,20 @@
 angular.module('mock.userService', []).service('UserService', function ($q) {
-    var service = mockService($q);
+    var service = mockService($q, mockUser);
     var currentUser;
 
     service.mockCurrentUser = function(toMock) {
         delete sessionStorage.role;
 
-        currentUser = angular.extend(mockUser($q), toMock);
-
-        sessionStorage.role = toMock.role;
+        if (toMock === undefined || toMock === null) {
+            currentUser = null;
+        }
+        else {
+            currentUser = service.mockModel(toMock);
+            sessionStorage.role = toMock.role;
+        }
     };
 
-    currentuser = service.mockCurrentUser(mockUser1);
+    service.mockCurrentUser(mockUser1);
 
     service.fetchUser = function () {
         delete sessionStorage.role;
@@ -23,7 +27,9 @@ angular.module('mock.userService', []).service('UserService', function ($q) {
     };
 
     service.setCurrentUser = function (user) {
-        angular.extend(currentUser, user);
+        currentUser = mockModel(user);
+
+        sessionStorage.role = toMock.role;
     };
 
     service.userEvents = function () {
