@@ -24,7 +24,9 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
 
     repo.mockModel = function(toMock) {
         if (typeof mockModelCtor === "function") {
-            return angular.extend(mockModelCtor($q), toMock);
+            var mocked = new mockModelCtor($q);
+            mocked.mock(toMock);
+            return mocked;
         }
 
         return toMock;
@@ -183,9 +185,26 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
         return payloadPromise($q.defer());
     };
 
-    repo.save = function (model) {
-        // TODO
-        return payloadPromise($q.defer(), {});
+    repo.save = function (modelToSave) {
+        if (typeof modelToSave === "object") {
+            var isNew = true;
+            var savedModel = repo.mockModel(modelToSave);
+            for (var i in repo.mockedList) {
+                if (repo.mockedList[i].id === modelToSave.id) {
+                    angular.extend(repo.mockedList[i], savedModel);
+                    isNew = false;
+                    break;
+                }
+            }
+
+            if (isNew) {
+                repo.mockedList[repo.mockedList.length] = savedModel;
+            }
+
+            return payloadPromise($q.defer(), savedModel);
+        }
+
+        return rejectPromise($q.defer());
     };
 
     repo.saveAll = function () {
