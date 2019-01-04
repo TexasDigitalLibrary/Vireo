@@ -2,18 +2,12 @@ describe('controller: LookAndFeelController', function () {
 
     var controller, scope;
 
-    beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.fileService');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.wsApi');
-
+    var initializeController = function(settings) {
         inject(function ($controller, _$q_, $rootScope, $window, _FileService_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
 
             // TODO: should this instead be initialized in the controller itself?
             scope.settings = {
@@ -43,6 +37,19 @@ describe('controller: LookAndFeelController', function () {
             // ensure that the isReady() is called.
             scope.$digest();
         });
+    };
+
+    beforeEach(function() {
+        module('core');
+        module('vireo');
+        module('mock.fileService');
+        module('mock.modalService');
+        module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
+
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {

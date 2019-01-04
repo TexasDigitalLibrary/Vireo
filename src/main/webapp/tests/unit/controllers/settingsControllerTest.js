@@ -2,24 +2,11 @@ describe('controller: SettingsController', function () {
 
     var controller, scope;
 
-    beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.modalService');
-        module('mock.managedConfiguration');
-        module('mock.managedConfigurationRepo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.studentSubmission');
-        module('mock.studentSubmissionRepo');
-        module('mock.user');
-        module('mock.userService');
-        module('mock.wsApi');
-
+    var initializeController = function(settings) {
         inject(function ($controller, $injector, $rootScope, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _UserService_, _WsApi_) {
-            installPromiseMatchers();
             scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
 
             controller = $controller('SettingsController', {
                 $scope: scope,
@@ -39,6 +26,25 @@ describe('controller: SettingsController', function () {
             // ensure that the isReady() is called.
             scope.$digest();
         });
+    };
+
+    beforeEach(function() {
+        module('core');
+        module('vireo');
+        module('mock.modalService');
+        module('mock.managedConfiguration');
+        module('mock.managedConfigurationRepo');
+        module('mock.modalService');
+        module('mock.restApi');
+        module('mock.storageService');
+        module('mock.studentSubmission');
+        module('mock.studentSubmissionRepo');
+        module('mock.user');
+        module('mock.userService');
+        module('mock.wsApi');
+
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {

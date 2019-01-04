@@ -2,20 +2,12 @@ describe('controller: LanguagesController', function () {
 
     var controller, scope;
 
-    beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.dragAndDropListenerFactory');
-        module('mock.language');
-        module('mock.languageRepo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.wsApi');
-
+    var initializeController = function(settings) {
         inject(function ($controller, _$q_, $rootScope, $timeout, $window, _DragAndDropListenerFactory_, _LanguageRepo_, _StorageService_, _ModalService_, _RestApi_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
 
             controller = $controller('LanguagesController', {
                 $q: _$q_,
@@ -33,6 +25,21 @@ describe('controller: LanguagesController', function () {
             // ensure that the isReady() is called.
             scope.$digest();
         });
+    };
+
+    beforeEach(function() {
+        module('core');
+        module('vireo');
+        module('mock.dragAndDropListenerFactory');
+        module('mock.language');
+        module('mock.languageRepo');
+        module('mock.modalService');
+        module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
+
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {

@@ -2,24 +2,13 @@ describe('controller: SubmissionViewController', function () {
 
     var controller, scope;
 
-    beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.customActionDefinition');
-        module('mock.customActionDefinitionRepo');
-        module('mock.fieldPredicate');
-        module('mock.fieldPredicateRepo');
-        module('mock.fileUploadService');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.studentSubmission');
-        module('mock.studentSubmissionRepo');
-        module('mock.wsApi');
-
+    var initializeController = function(settings) {
         inject(function ($controller, _$q_, $rootScope, $routeParams, $window, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
+
             controller = $controller('SubmissionViewController', {
                 $q: _$q_,
                 $routeParams: $routeParams,
@@ -38,6 +27,25 @@ describe('controller: SubmissionViewController', function () {
             // ensure that the isReady() is called.
             scope.$digest();
         });
+    };
+
+    beforeEach(function() {
+        module('core');
+        module('vireo');
+        module('mock.customActionDefinition');
+        module('mock.customActionDefinitionRepo');
+        module('mock.fieldPredicate');
+        module('mock.fieldPredicateRepo');
+        module('mock.fileUploadService');
+        module('mock.modalService');
+        module('mock.restApi');
+        module('mock.storageService');
+        module('mock.studentSubmission');
+        module('mock.studentSubmissionRepo');
+        module('mock.wsApi');
+
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {

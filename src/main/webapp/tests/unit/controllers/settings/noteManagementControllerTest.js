@@ -2,24 +2,12 @@ describe('controller: NoteManagementController', function () {
 
     var controller, scope;
 
-    beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.dragAndDropListenerFactory');
-        module('mock.modalService');
-        module('mock.note');
-        module('mock.noteRepo');
-        module('mock.organization');
-        module('mock.organizationRepo');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.workflowStep');
-        module('mock.workflowStepRepo');
-        module('mock.wsApi');
-
+    var initializeController = function(settings) {
         inject(function ($controller, $rootScope, $window, _DragAndDropListenerFactory_, _ModalService_, _NoteRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
 
             controller = $controller('NoteManagementController', {
                 $scope: scope,
@@ -38,6 +26,25 @@ describe('controller: NoteManagementController', function () {
             // ensure that the isReady() is called.
             scope.$digest();
         });
+    };
+
+    beforeEach(function() {
+        module('core');
+        module('vireo');
+        module('mock.dragAndDropListenerFactory');
+        module('mock.modalService');
+        module('mock.note');
+        module('mock.noteRepo');
+        module('mock.organization');
+        module('mock.organizationRepo');
+        module('mock.restApi');
+        module('mock.storageService');
+        module('mock.workflowStep');
+        module('mock.workflowStepRepo');
+        module('mock.wsApi');
+
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {

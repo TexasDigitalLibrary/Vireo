@@ -2,21 +2,12 @@ describe('controller: ControlledVocabularyRepoController', function () {
 
     var controller, scope, NgTableParams;
 
-    beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.controlledVocabulary');
-        module('mock.controlledVocabularyRepo');
-        module('mock.dragAndDropListenerFactory');
-        module('mock.modalService');
-        module('mock.ngTableParams');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.wsApi');
-
+    var initializeController = function(settings) {
         inject(function ($controller, _$q_, $rootScope, $timeout, $window, _ControlledVocabularyRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
 
             controller = $controller('ControlledVocabularyRepoController', {
                 $q: _$q_,
@@ -35,6 +26,22 @@ describe('controller: ControlledVocabularyRepoController', function () {
             // ensure that the isReady() is called.
             scope.$digest();
         });
+    };
+
+    beforeEach(function() {
+        module('core');
+        module('vireo');
+        module('mock.controlledVocabulary');
+        module('mock.controlledVocabularyRepo');
+        module('mock.dragAndDropListenerFactory');
+        module('mock.modalService');
+        module('mock.ngTableParams');
+        module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
+
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {

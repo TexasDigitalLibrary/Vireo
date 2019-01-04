@@ -2,20 +2,12 @@ describe('controller: ApplicationAuthenticationController', function () {
 
     var controller, scope;
 
-    beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.user');
-        module('mock.userService');
-        module('mock.validationStore');
-        module('mock.wsApi');
-
+    var initializeController = function(settings) {
         inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
 
             controller = $controller('ApplicationAuthenticationController', {
                 $location: $location,
@@ -32,6 +24,21 @@ describe('controller: ApplicationAuthenticationController', function () {
             // ensure that the isReady() is called.
             scope.$digest();
         });
+    };
+
+    beforeEach(function() {
+        module('core');
+        module('vireo');
+        module('mock.modalService');
+        module('mock.restApi');
+        module('mock.storageService');
+        module('mock.user');
+        module('mock.userService');
+        module('mock.validationStore');
+        module('mock.wsApi');
+
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {

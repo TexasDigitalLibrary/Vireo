@@ -2,24 +2,12 @@ describe('controller: OrganizationManagementController', function () {
 
     var controller, scope;
 
-    beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.accordionService');
-        module('mock.alertService');
-        module('mock.modalService');
-        module('mock.organization');
-        module('mock.organizationRepo');
-        module('mock.organizationCategory');
-        module('mock.organizationCategoryRepo');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.workflowStepRepo');
-        module('mock.wsApi');
-
+    var initializeController = function(settings) {
         inject(function ($controller, $location, _$q_, $rootScope, $route, $timeout, $window, _AccordionService_, _AlertService_, _ModalService_, _OrganizationRepo_, _OrganizationCategoryRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
 
             controller = $controller('OrganizationManagementController', {
                 $q: _$q_,
@@ -42,6 +30,25 @@ describe('controller: OrganizationManagementController', function () {
             // ensure that the isReady() is called.
             scope.$digest();
         });
+    };
+
+    beforeEach(function() {
+        module('core');
+        module('vireo');
+        module('mock.accordionService');
+        module('mock.alertService');
+        module('mock.modalService');
+        module('mock.organization');
+        module('mock.organizationRepo');
+        module('mock.organizationCategory');
+        module('mock.organizationCategoryRepo');
+        module('mock.restApi');
+        module('mock.storageService');
+        module('mock.workflowStepRepo');
+        module('mock.wsApi');
+
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {

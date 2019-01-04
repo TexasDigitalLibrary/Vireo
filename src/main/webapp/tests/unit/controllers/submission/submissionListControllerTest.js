@@ -2,6 +2,51 @@ describe('controller: SubmissionListController', function () {
 
     var controller, scope;
 
+    var initializeController = function(settings) {
+        inject(function ($controller, $filter, $location, _$q_, $rootScope, $window, _ControlledVocabularyRepo_, _CustomActionDefinitionRepo_, _CustomActionValueRepo_, _DepositLocationRepo_, _DocumentTypeRepo_, _EmailTemplateRepo_, _EmbargoRepo_, _ManagerFilterColumnRepo_, _ManagerSubmissionListColumnRepo_, _ModalService_, _OrganizationCategory_, _OrganizationCategoryRepo_, _Organization_, _OrganizationRepo_, _Packager_, _PackagerRepo_, _RestApi_, _SavedFilterRepo_, _SidebarService_, _StorageService_, _SubmissionListColumnRepo_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _WsApi_) {
+            installPromiseMatchers();
+            scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
+
+            controller = $controller('SubmissionListController', {
+                $filter: $filter,
+                $location: $location,
+                $q: _$q_,
+                $scope: scope,
+                $window: $window,
+                ControlledVocabularyRepo: _ControlledVocabularyRepo_,
+                CustomActionDefinitionRepo: _CustomActionDefinitionRepo_,
+                CustomActionValueRepo: _CustomActionValueRepo_,
+                DepositLocationRepo: _DepositLocationRepo_,
+                DocumentTypeRepo: _DocumentTypeRepo_,
+                EmailTemplateRepo: _EmailTemplateRepo_,
+                EmbargoRepo: _EmbargoRepo_,
+                ManagerFilterColumnRepo: _ManagerFilterColumnRepo_,
+                ManagerSubmissionListColumnRepo: _ManagerSubmissionListColumnRepo_,
+                ModalService: _ModalService_,
+                NamedSearchFilterGroup: mockNamedSearchFilterGroup,
+                NgTableParams: mockNgTableParams,
+                OrganizationCategoryRepo: _OrganizationCategoryRepo_,
+                OrganizationRepo: _OrganizationRepo_,
+                PackagerRepo: _PackagerRepo_,
+                RestApi: _RestApi_,
+                SavedFilterRepo: _SavedFilterRepo_,
+                SidebarService: _SidebarService_,
+                StorageService: _StorageService_,
+                SubmissionListColumnRepo: _SubmissionListColumnRepo_,
+                SubmissionRepo: _SubmissionRepo_,
+                SubmissionStatusRepo: _SubmissionStatusRepo_,
+                UserRepo: _UserRepo_,
+                UserSettings: mockUserSettings,
+                WsApi: _WsApi_
+            });
+
+            // ensure that the isReady() is called.
+            scope.$digest();
+        });
+    };
+
     beforeEach(function() {
         module('core');
         module('vireo');
@@ -45,46 +90,8 @@ describe('controller: SubmissionListController', function () {
         module('mock.userSettings');
         module('mock.wsApi');
 
-        inject(function ($controller, $filter, $location, _$q_, $rootScope, $window, _ControlledVocabularyRepo_, _CustomActionDefinitionRepo_, _CustomActionValueRepo_, _DepositLocationRepo_, _DocumentTypeRepo_, _EmailTemplateRepo_, _EmbargoRepo_, _ManagerFilterColumnRepo_, _ManagerSubmissionListColumnRepo_, _ModalService_, _OrganizationCategory_, _OrganizationCategoryRepo_, _Organization_, _OrganizationRepo_, _Packager_, _PackagerRepo_, _RestApi_, _SavedFilterRepo_, _SidebarService_, _StorageService_, _SubmissionListColumnRepo_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _WsApi_) {
-            installPromiseMatchers();
-            scope = $rootScope.$new();
-
-            controller = $controller('SubmissionListController', {
-                $filter: $filter,
-                $location: $location,
-                $q: _$q_,
-                $scope: scope,
-                $window: $window,
-                ControlledVocabularyRepo: _ControlledVocabularyRepo_,
-                CustomActionDefinitionRepo: _CustomActionDefinitionRepo_,
-                CustomActionValueRepo: _CustomActionValueRepo_,
-                DepositLocationRepo: _DepositLocationRepo_,
-                DocumentTypeRepo: _DocumentTypeRepo_,
-                EmailTemplateRepo: _EmailTemplateRepo_,
-                EmbargoRepo: _EmbargoRepo_,
-                ManagerFilterColumnRepo: _ManagerFilterColumnRepo_,
-                ManagerSubmissionListColumnRepo: _ManagerSubmissionListColumnRepo_,
-                ModalService: _ModalService_,
-                NamedSearchFilterGroup: mockNamedSearchFilterGroup,
-                NgTableParams: mockNgTableParams,
-                OrganizationCategoryRepo: _OrganizationCategoryRepo_,
-                OrganizationRepo: _OrganizationRepo_,
-                PackagerRepo: _PackagerRepo_,
-                RestApi: _RestApi_,
-                SavedFilterRepo: _SavedFilterRepo_,
-                SidebarService: _SidebarService_,
-                StorageService: _StorageService_,
-                SubmissionListColumnRepo: _SubmissionListColumnRepo_,
-                SubmissionRepo: _SubmissionRepo_,
-                SubmissionStatusRepo: _SubmissionStatusRepo_,
-                UserRepo: _UserRepo_,
-                UserSettings: mockUserSettings,
-                WsApi: _WsApi_
-            });
-
-            // ensure that the isReady() is called.
-            scope.$digest();
-        });
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {

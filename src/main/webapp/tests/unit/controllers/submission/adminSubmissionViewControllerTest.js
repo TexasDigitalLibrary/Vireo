@@ -2,29 +2,12 @@ describe('controller: AdminSubmissionViewController', function () {
 
     var controller, scope;
 
-    beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.depositLocationRepo');
-        module('mock.emailTemplateRepo');
-        module('mock.fieldPredicateRepo');
-        module('mock.fieldValue');
-        module('mock.fileUploadService');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.sidebarService');
-        module('mock.storageService');
-        module('mock.submissionRepo');
-        module('mock.submissionStatus');
-        module('mock.submissionStatusRepo');
-        module('mock.user');
-        module('mock.userRepo');
-        module('mock.userService');
-        module('mock.wsApi');
-
+    var initializeController = function(settings) {
         inject(function ($anchorScroll, $controller, $location, $q, $route, $routeParams, $rootScope, $window, _DepositLocationRepo_, _EmailTemplateRepo_, _FieldPredicateRepo_, _FieldValue_, _FileUploadService_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _UserService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
 
             controller = $controller('AdminSubmissionViewController', {
                 $anchorScroll: $anchorScroll,
@@ -53,6 +36,30 @@ describe('controller: AdminSubmissionViewController', function () {
             // ensure that the isReady() is called.
             scope.$digest();
         });
+    };
+
+    beforeEach(function() {
+        module('core');
+        module('vireo');
+        module('mock.depositLocationRepo');
+        module('mock.emailTemplateRepo');
+        module('mock.fieldPredicateRepo');
+        module('mock.fieldValue');
+        module('mock.fileUploadService');
+        module('mock.modalService');
+        module('mock.restApi');
+        module('mock.sidebarService');
+        module('mock.storageService');
+        module('mock.submissionRepo');
+        module('mock.submissionStatus');
+        module('mock.submissionStatusRepo');
+        module('mock.user');
+        module('mock.userRepo');
+        module('mock.userService');
+        module('mock.wsApi');
+
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {
