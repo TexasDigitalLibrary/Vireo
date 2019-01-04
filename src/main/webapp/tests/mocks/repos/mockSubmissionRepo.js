@@ -1,108 +1,126 @@
 var mockSubmissionRepo1 = [
     {
-        "id": 1,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 1,
+        submissionStatus: {
+            submissionState: "IN_PROGRESS"
         },
-        "fetchDocumentTypeFileInfo": function() {}
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
     },
     {
-        "id": 2,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 2,
+        submissionStatus: {
+            submissionState: "IN_PROGRESS"
         },
-        "fetchDocumentTypeFileInfo": function() {}
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
     },
     {
-        "id": 3,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 3,
+        submissionStatus: {
+            submissionState: "IN_PROGRESS"
         },
-        "fetchDocumentTypeFileInfo": function() {}
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
     }
 ];
 
 var mockSubmissionRepo2 = [
     {
-        "id": 1,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 1,
+        submissionStatus: {
+            submissionState: "IN_PROGRESS"
         },
-        "fetchDocumentTypeFileInfo": function() {}
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
     },
     {
-        "id": 2,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 2,
+        submissionStatus: {
+            submissionState: "SUBMITTED"
         },
-        "fetchDocumentTypeFileInfo": function() {}
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
     },
     {
-        "id": 3,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 3,
+        submissionStatus: {
+            submissionState: "SUBMITTED"
         },
-        "fetchDocumentTypeFileInfo": function() {}
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
     }
 ];
 
 var mockSubmissionRepo3 = [
     {
-        "id": 1,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 1,
+        submissionStatus: {
+            submissionState: "UNDER_REVIEW"
         },
-        "fetchDocumentTypeFileInfo": function() {}
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
     },
     {
-        "id": 2,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 2,
+        submissionStatus: {
+            submissionState: "ON_HOLD"
         },
-        "fetchDocumentTypeFileInfo": function() {}
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
     },
     {
-        "id": 3,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 3,
+        submissionStatus: {
+            submissionState: "CANCELLED"
         },
-        "fetchDocumentTypeFileInfo": function() {}
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
     }
 ];
 

@@ -1,108 +1,126 @@
 var mockAdvisorSubmissionRepo1 = [
     {
-        "id": 1,
-        "hash": null,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 1,
+        submissionStatus: {
+            submissionState: "IN_PROGRESS"
+        },
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
         }
     },
     {
-        "id": 2,
-        "hash": null,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 2,
+        submissionStatus: {
+            submissionState: "IN_PROGRESS"
+        },
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
         }
     },
     {
-        "id": 3,
-        "hash": null,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 3,
+        submissionStatus: {
+            submissionState: "IN_PROGRESS"
+        },
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
         }
     }
 ];
 
 var mockAdvisorSubmissionRepo2 = [
     {
-        "id": 1,
-        "hash": null,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 1,
+        submissionStatus: {
+            submissionState: "IN_PROGRESS"
+        },
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
         }
     },
     {
-        "id": 2,
-        "hash": null,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 2,
+        submissionStatus: {
+            submissionState: "SUBMITTED"
+        },
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
         }
     },
     {
-        "id": 3,
-        "hash": null,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 3,
+        submissionStatus: {
+            submissionState: "SUBMITTED"
+        },
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
         }
     }
 ];
 
 var mockAdvisorSubmissionRepo3 = [
     {
-        "id": 1,
-        "hash": null,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        }
-    },
-    {
-        "id": 2,
-        "hash": null,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        }
-    },
-    {
-        "id": 3,
-        "hash": null,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
+        id: 1,
+        submissionStatus: {
+            submissionState: "UNDER_REVIEW"
         },
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
+    },
+    {
+        id: 2,
+        submissionStatus: {
+            submissionState: "ON_HOLD"
+        },
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
+    },
+    {
+        id: 3,
+        submissionStatus: {
+            submissionState: "CANCELLED"
+        },
+        submitter: {
+            uin: "123456789",
+            lastName: "Daniels",
+            firstName: "Jack",
+            name: "jack",
+            role: "ROLE_ADMIN"
+        }
     }
 ];
 
