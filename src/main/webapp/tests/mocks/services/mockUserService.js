@@ -33,7 +33,9 @@ angular.module('mock.userService', []).service('UserService', function ($q) {
     };
 
     service.userEvents = function () {
-        return payloadPromise($q.defer(), null);
+        var defer = $q.defer();
+        defer.notify("RECEIVED");
+        return payloadPromise(defer);
     };
 
     service.userReady = function () {
