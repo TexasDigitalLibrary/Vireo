@@ -8,6 +8,7 @@ describe('controller: LookAndFeelController', function () {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
+            sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             // TODO: should this instead be initialized in the controller itself?
             scope.settings = {

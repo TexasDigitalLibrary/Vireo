@@ -8,6 +8,7 @@ describe('controller: UserRepoController', function () {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
+            sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('UserRepoController', {
                 $location: $location,
@@ -46,7 +47,23 @@ describe('controller: UserRepoController', function () {
     });
 
     describe('Is the controller defined', function () {
-        it('should be defined', function () {
+        it('should be defined for admin', function () {
+            expect(controller).toBeDefined();
+        });
+        it('should be defined for manager', function () {
+            initializeController({role: "ROLE_MANAGER"});
+            expect(controller).toBeDefined();
+        });
+        it('should be defined for reviewer', function () {
+            initializeController({role: "ROLE_REVIEWER"});
+            expect(controller).toBeDefined();
+        });
+        it('should be defined for student', function () {
+            initializeController({role: "ROLE_STUDENT"});
+            expect(controller).toBeDefined();
+        });
+        it('should be defined for anonymous', function () {
+            initializeController({role: "ROLE_ANONYMOUS"});
             expect(controller).toBeDefined();
         });
     });

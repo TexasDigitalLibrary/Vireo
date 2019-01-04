@@ -8,6 +8,7 @@ describe('controller: DocumentTypesController', function () {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
+            sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('DocumentTypesController', {
                 $scope: scope,

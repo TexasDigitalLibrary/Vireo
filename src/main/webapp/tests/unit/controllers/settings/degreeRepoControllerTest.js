@@ -8,6 +8,7 @@ describe('controller: DegreeRepoController', function () {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
+            sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('DegreeRepoController', {
                 $q: _$q_,
