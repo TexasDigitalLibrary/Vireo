@@ -1,13 +1,13 @@
 var mockUserSettings1 = {
-    'id': 1
+    id: 1
 };
 
 var mockUserSettings2 = {
-    'id': 2
+    id: 2
 };
 
 var mockUserSettings3 = {
-    'id': 3
+    id: 3
 };
 
 var mockUserSettings = function($q) {

@@ -1,45 +1,45 @@
 var mockSubmissionListColumnRepo1 = [
     {
-        "id": 1,
-        "title": null
+        id: 1,
+        title: null
     },
     {
-        "id": 2,
-        "title": null
+        id: 2,
+        title: null
     },
     {
-        "id": 3,
-        "title": null
+        id: 3,
+        title: null
     }
 ];
 
 var mockSubmissionListColumnRepo2 = [
     {
-        "id": 1,
-        "title": null
+        id: 1,
+        title: null
     },
     {
-        "id": 2,
-        "title": null
+        id: 2,
+        title: null
     },
     {
-        "id": 3,
-        "title": null
+        id: 3,
+        title: null
     }
 ];
 
 var mockSubmissionListColumnRepo3 = [
     {
-        "id": 1,
-        "title": null
+        id: 1,
+        title: null
     },
     {
-        "id": 2,
-        "title": null
+        id: 2,
+        title: null
     },
     {
-        "id": 3,
-        "title": null
+        id: 3,
+        title: null
     }
 ];
 

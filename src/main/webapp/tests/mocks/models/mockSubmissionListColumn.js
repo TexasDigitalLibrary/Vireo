@@ -1,13 +1,13 @@
 var mockSubmissionListColumn1 = {
-    'id': 1
+    id: 1
 };
 
 var mockSubmissionListColumn2 = {
-    'id': 2
+    id: 2
 };
 
 var mockSubmissionListColumn3 = {
-    'id': 3
+    id: 3
 };
 
 var mockSubmissionListColumn = function($q) {

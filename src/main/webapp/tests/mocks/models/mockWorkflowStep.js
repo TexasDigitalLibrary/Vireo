@@ -1,13 +1,13 @@
 var mockWorkflowStep1 = {
-    'id': 1
+    id: 1
 };
 
 var mockWorkflowStep2 = {
-    'id': 2
+    id: 2
 };
 
 var mockWorkflowStep3 = {
-    'id': 3
+    id: 3
 };
 
 var mockWorkflowStep = function($q) {

@@ -1,36 +1,36 @@
 var mockOrganizationCategoryRepo1 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 
 var mockOrganizationCategoryRepo2 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 
 var mockOrganizationCategoryRepo3 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 

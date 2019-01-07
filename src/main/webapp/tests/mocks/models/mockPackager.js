@@ -1,13 +1,13 @@
 var mockPackager1 = {
-    'id': 1
+    id: 1
 };
 
 var mockPackager2 = {
-    'id': 2
+    id: 2
 };
 
 var mockPackager3 = {
-    'id': 3
+    id: 3
 };
 
 var mockPackager = function($q) {

@@ -1,45 +1,45 @@
 var mockSubmissionStatusRepo1 = [
     {
-        "id": 1,
-        "name": null
+        id: 1,
+        name: null
     },
     {
-        "id": 2,
-        "name": null
+        id: 2,
+        name: null
     },
     {
-        "id": 3,
-        "name": null
+        id: 3,
+        name: null
     }
 ];
 
 var mockSubmissionStatusRepo2 = [
     {
-        "id": 1,
-        "name": null
+        id: 1,
+        name: null
     },
     {
-        "id": 2,
-        "name": null
+        id: 2,
+        name: null
     },
     {
-        "id": 3,
-        "name": null
+        id: 3,
+        name: null
     }
 ];
 
 var mockSubmissionStatusRepo3 = [
     {
-        "id": 1,
-        "name": null
+        id: 1,
+        name: null
     },
     {
-        "id": 2,
-        "name": null
+        id: 2,
+        name: null
     },
     {
-        "id": 3,
-        "name": null
+        id: 3,
+        name: null
     }
 ];
 

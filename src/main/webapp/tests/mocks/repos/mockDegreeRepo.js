@@ -1,36 +1,36 @@
 var mockDegreeRepo1 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 
 var mockDegreeRepo2 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 
 var mockDegreeRepo3 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 

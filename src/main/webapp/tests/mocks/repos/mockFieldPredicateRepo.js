@@ -1,36 +1,36 @@
 var mockFieldPredicateRepo1 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 
 var mockFieldPredicateRepo2 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 
 var mockFieldPredicateRepo3 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 

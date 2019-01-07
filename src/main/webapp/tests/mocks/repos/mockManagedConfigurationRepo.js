@@ -1,54 +1,54 @@
 var mockManagedConfigurationRepo1 = [
     {
-        "id": 1,
-        "name": null,
-        "type": null
+        id: 1,
+        name: null,
+        type: null
     },
     {
-        "id": 2,
-        "name": null,
-        "type": null
+        id: 2,
+        name: null,
+        type: null
     },
     {
-        "id": 3,
-        "name": null,
-        "type": null
+        id: 3,
+        name: null,
+        type: null
     }
 ];
 
 var mockManagedConfigurationRepo2 = [
     {
-        "id": 1,
-        "name": null,
-        "type": null
+        id: 1,
+        name: null,
+        type: null
     },
     {
-        "id": 2,
-        "name": null,
-        "type": null
+        id: 2,
+        name: null,
+        type: null
     },
     {
-        "id": 3,
-        "name": null,
-        "type": null
+        id: 3,
+        name: null,
+        type: null
     }
 ];
 
 var mockManagedConfigurationRepo3 = [
     {
-        "id": 1,
-        "name": null,
-        "type": null
+        id: 1,
+        name: null,
+        type: null
     },
     {
-        "id": 2,
-        "name": null,
-        "type": null
+        id: 2,
+        name: null,
+        type: null
     },
     {
-        "id": 3,
-        "name": null,
-        "type": null
+        id: 3,
+        name: null,
+        type: null
     }
 ];
 

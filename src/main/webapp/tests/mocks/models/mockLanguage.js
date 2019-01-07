@@ -1,13 +1,13 @@
 var mockLanguage1 = {
-    'id': 1
+    id: 1
 };
 
 var mockLanguage2 = {
-    'id': 2
+    id: 2
 };
 
 var mockLanguage3 = {
-    'id': 3
+    id: 3
 };
 
 var mockLanguage = function($q) {

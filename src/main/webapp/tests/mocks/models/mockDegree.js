@@ -1,13 +1,13 @@
 var mockDegree1 = {
-    'id': 1
+    id: 1
 };
 
 var mockDegree2 = {
-    'id': 2
+    id: 2
 };
 
 var mockDegree3 = {
-    'id': 3
+    id: 3
 };
 
 var mockDegree = function($q) {

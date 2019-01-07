@@ -1,13 +1,13 @@
 var mockGraduationMonth1 = {
-    'id': 1
+    id: 1
 };
 
 var mockGraduationMonth2 = {
-    'id': 2
+    id: 2
 };
 
 var mockGraduationMonth3 = {
-    'id': 3
+    id: 3
 };
 
 var mockGraduationMonth = function($q) {

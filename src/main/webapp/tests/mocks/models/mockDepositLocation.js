@@ -1,13 +1,13 @@
 var mockDepositLocation1 = {
-    'id': 1
+    id: 1
 };
 
 var mockDepositLocation2 = {
-    'id': 2
+    id: 2
 };
 
 var mockDepositLocation3 = {
-    'id': 3
+    id: 3
 };
 
 var mockDepositLocation = function($q) {

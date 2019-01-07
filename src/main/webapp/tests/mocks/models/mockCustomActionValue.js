@@ -1,13 +1,13 @@
 var mockCustomActionValue1 = {
-    'id': 1
+    id: 1
 };
 
 var mockCustomActionValue2 = {
-    'id': 2
+    id: 2
 };
 
 var mockCustomActionValue3 = {
-    'id': 3
+    id: 3
 };
 
 var mockCustomActionValue = function($q) {

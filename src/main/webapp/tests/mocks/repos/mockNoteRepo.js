@@ -1,36 +1,36 @@
 var mockNoteRepo1 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 
 var mockNoteRepo2 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 
 var mockNoteRepo3 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 

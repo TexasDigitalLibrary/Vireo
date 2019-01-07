@@ -1,13 +1,13 @@
 var mockSavedFilter1 = {
-    'id': 1
+    id: 1
 };
 
 var mockSavedFilter2 = {
-    'id': 2
+    id: 2
 };
 
 var mockSavedFilter3 = {
-    'id': 3
+    id: 3
 };
 
 var mockSavedFilter = function($q) {

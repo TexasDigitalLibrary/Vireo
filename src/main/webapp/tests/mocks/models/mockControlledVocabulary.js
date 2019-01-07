@@ -1,13 +1,13 @@
 var mockControlledVocabulary1 = {
-    'id': 1
+    id: 1
 };
 
 var mockControlledVocabulary2 = {
-    'id': 2
+    id: 2
 };
 
 var mockControlledVocabulary3 = {
-    'id': 3
+    id: 3
 };
 
 var mockControlledVocabulary = function($q) {

@@ -1,36 +1,36 @@
 var mockManagerFilterColumnRepo1 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 
 var mockManagerFilterColumnRepo2 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 
 var mockManagerFilterColumnRepo3 = [
     {
-        "id": 1
+        id: 1
     },
     {
-        "id": 2
+        id: 2
     },
     {
-        "id": 3
+        id: 3
     }
 ];
 

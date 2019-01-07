@@ -1,13 +1,13 @@
 var mockNamedSearchFilterGroup1 = {
-    'id': 1
+    id: 1
 };
 
 var mockNamedSearchFilterGroup2 = {
-    'id': 2
+    id: 2
 };
 
 var mockNamedSearchFilterGroup3 = {
-    'id': 3
+    id: 3
 };
 
 var mockNamedSearchFilterGroup = function($q) {

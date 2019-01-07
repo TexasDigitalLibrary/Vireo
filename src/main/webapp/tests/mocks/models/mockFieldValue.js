@@ -1,13 +1,13 @@
 var mockFieldValue1 = {
-    'id': 1
+    id: 1
 };
 
 var mockFieldValue2 = {
-    'id': 2
+    id: 2
 };
 
 var mockFieldValue3 = {
-    'id': 3
+    id: 3
 };
 
 var mockFieldValue = function($q) {

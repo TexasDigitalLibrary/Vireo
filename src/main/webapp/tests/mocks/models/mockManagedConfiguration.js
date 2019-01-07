@@ -1,16 +1,16 @@
 var mockManagedConfiguration1 = {
-    'id': 1,
-    'value': ""
+    id: 1,
+    value: ""
 };
 
 var mockManagedConfiguration2 = {
-    'id': 2,
-    'value': ""
+    id: 2,
+    value: ""
 };
 
 var mockManagedConfiguration3 = {
-    'id': 3,
-    'value': ""
+    id: 3,
+    value: ""
 };
 
 var mockManagedConfiguration = function($q) {
