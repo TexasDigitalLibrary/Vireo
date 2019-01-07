@@ -2,21 +2,27 @@ var mockSubmission1 = {
     id: 1,
     submissionStatus: {
         submissionState: "IN_PROGRESS"
-    }
+    },
+    submissionWorkflowSteps: [
+    ]
 };
 
 var mockSubmission2 = {
     id: 2,
     submissionStatus: {
         submissionState: "SUBMITTED"
-    }
+    },
+    submissionWorkflowSteps: [
+    ]
 };
 
 var mockSubmission3 = {
     id: 3,
     submissionStatus: {
         submissionState: "WITHDRAWN"
-    }
+    },
+    submissionWorkflowSteps: [
+    ]
 };
 
 var mockSubmission = function($q) {

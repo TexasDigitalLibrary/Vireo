@@ -4,6 +4,8 @@ var mockSubmissionRepo1 = [
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
+        submissionWorkflowSteps: [
+        ],
         submitter: {
             uin: "123456789",
             lastName: "Daniels",
@@ -17,6 +19,8 @@ var mockSubmissionRepo1 = [
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
+        submissionWorkflowSteps: [
+        ],
         submitter: {
             uin: "123456789",
             lastName: "Daniels",
@@ -30,6 +34,8 @@ var mockSubmissionRepo1 = [
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
+        submissionWorkflowSteps: [
+        ],
         submitter: {
             uin: "123456789",
             lastName: "Daniels",
@@ -46,6 +52,8 @@ var mockSubmissionRepo2 = [
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
+        submissionWorkflowSteps: [
+        ],
         submitter: {
             uin: "123456789",
             lastName: "Daniels",
@@ -59,6 +67,8 @@ var mockSubmissionRepo2 = [
         submissionStatus: {
             submissionState: "SUBMITTED"
         },
+        submissionWorkflowSteps: [
+        ],
         submitter: {
             uin: "123456789",
             lastName: "Daniels",
@@ -72,6 +82,8 @@ var mockSubmissionRepo2 = [
         submissionStatus: {
             submissionState: "SUBMITTED"
         },
+        submissionWorkflowSteps: [
+        ],
         submitter: {
             uin: "123456789",
             lastName: "Daniels",
@@ -88,6 +100,8 @@ var mockSubmissionRepo3 = [
         submissionStatus: {
             submissionState: "UNDER_REVIEW"
         },
+        submissionWorkflowSteps: [
+        ],
         submitter: {
             uin: "123456789",
             lastName: "Daniels",
@@ -101,6 +115,8 @@ var mockSubmissionRepo3 = [
         submissionStatus: {
             submissionState: "ON_HOLD"
         },
+        submissionWorkflowSteps: [
+        ],
         submitter: {
             uin: "123456789",
             lastName: "Daniels",
@@ -114,6 +130,8 @@ var mockSubmissionRepo3 = [
         submissionStatus: {
             submissionState: "CANCELLED"
         },
+        submissionWorkflowSteps: [
+        ],
         submitter: {
             uin: "123456789",
             lastName: "Daniels",
