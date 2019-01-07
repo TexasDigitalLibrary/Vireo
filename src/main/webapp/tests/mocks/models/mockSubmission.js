@@ -1,5 +1,8 @@
 var mockSubmission1 = {
     id: 1,
+    organization: {
+        name: "organization 1"
+    },
     submissionStatus: {
         submissionState: "IN_PROGRESS"
     },
@@ -9,6 +12,9 @@ var mockSubmission1 = {
 
 var mockSubmission2 = {
     id: 2,
+    organization: {
+        name: "organization 1"
+    },
     submissionStatus: {
         submissionState: "SUBMITTED"
     },
@@ -18,6 +24,9 @@ var mockSubmission2 = {
 
 var mockSubmission3 = {
     id: 3,
+    organization: {
+        name: "organization 2"
+    },
     submissionStatus: {
         submissionState: "WITHDRAWN"
     },

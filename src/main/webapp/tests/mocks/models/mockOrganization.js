@@ -1,13 +1,16 @@
 var mockOrganization1 = {
-    'id': 1
+    id: 1,
+    name: "organization 1"
 };
 
 var mockOrganization2 = {
-    'id': 2
+    id: 2,
+    name: "organization 2"
 };
 
 var mockOrganization3 = {
-    'id': 3
+    id: 3,
+    name: "organization 3"
 };
 
 var mockOrganization = function($q) {

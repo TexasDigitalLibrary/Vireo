@@ -1,6 +1,9 @@
 var mockAdvisorSubmissionRepo1 = [
     {
         id: 1,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
@@ -16,6 +19,9 @@ var mockAdvisorSubmissionRepo1 = [
     },
     {
         id: 2,
+        organization: {
+            name: "organization 2"
+        },
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
@@ -31,6 +37,9 @@ var mockAdvisorSubmissionRepo1 = [
     },
     {
         id: 3,
+        organization: {
+            name: "organization 3"
+        },
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
@@ -49,6 +58,9 @@ var mockAdvisorSubmissionRepo1 = [
 var mockAdvisorSubmissionRepo2 = [
     {
         id: 1,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
@@ -64,6 +76,9 @@ var mockAdvisorSubmissionRepo2 = [
     },
     {
         id: 2,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "SUBMITTED"
         },
@@ -79,6 +94,9 @@ var mockAdvisorSubmissionRepo2 = [
     },
     {
         id: 3,
+        organization: {
+            name: "organization 2"
+        },
         submissionStatus: {
             submissionState: "SUBMITTED"
         },
@@ -97,6 +115,9 @@ var mockAdvisorSubmissionRepo2 = [
 var mockAdvisorSubmissionRepo3 = [
     {
         id: 1,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "UNDER_REVIEW"
         },
@@ -112,6 +133,9 @@ var mockAdvisorSubmissionRepo3 = [
     },
     {
         id: 2,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "ON_HOLD"
         },
@@ -127,6 +151,9 @@ var mockAdvisorSubmissionRepo3 = [
     },
     {
         id: 3,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "CANCELLED"
         },

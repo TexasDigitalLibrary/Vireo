@@ -1,6 +1,9 @@
 var mockSubmissionRepo1 = [
     {
         id: 1,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
@@ -16,6 +19,9 @@ var mockSubmissionRepo1 = [
     },
     {
         id: 2,
+        organization: {
+            name: "organization 2"
+        },
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
@@ -31,6 +37,9 @@ var mockSubmissionRepo1 = [
     },
     {
         id: 3,
+        organization: {
+            name: "organization 3"
+        },
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
@@ -49,6 +58,9 @@ var mockSubmissionRepo1 = [
 var mockSubmissionRepo2 = [
     {
         id: 1,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "IN_PROGRESS"
         },
@@ -64,6 +76,9 @@ var mockSubmissionRepo2 = [
     },
     {
         id: 2,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "SUBMITTED"
         },
@@ -79,6 +94,9 @@ var mockSubmissionRepo2 = [
     },
     {
         id: 3,
+        organization: {
+            name: "organization 2"
+        },
         submissionStatus: {
             submissionState: "SUBMITTED"
         },
@@ -97,6 +115,9 @@ var mockSubmissionRepo2 = [
 var mockSubmissionRepo3 = [
     {
         id: 1,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "UNDER_REVIEW"
         },
@@ -112,6 +133,9 @@ var mockSubmissionRepo3 = [
     },
     {
         id: 2,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "ON_HOLD"
         },
@@ -127,6 +151,9 @@ var mockSubmissionRepo3 = [
     },
     {
         id: 3,
+        organization: {
+            name: "organization 1"
+        },
         submissionStatus: {
             submissionState: "CANCELLED"
         },
@@ -173,7 +200,10 @@ angular.module('mock.submissionRepo', []).service('SubmissionRepo', function($q)
         var payload = repo.findById(id);
 
         if (payload === undefined) {
-            return rejectPromise($q.defer());
+            // FIXME: callers, such as AdminSubmissionViewController, are not handling the reject case.
+            // return a default payload as a work-around.
+            payload = mockSubmissionRepo1[0];
+            //return rejectPromise($q.defer());
         }
 
         return modelPromise($q.defer(), repo.mockModel(payload));
