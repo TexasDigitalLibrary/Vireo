@@ -22,7 +22,9 @@ describe('controller: AdvisorSubmissionReviewController', function () {
             });
 
             // ensure that the isReady() is called.
-            scope.$digest();
+            if (!scope.$$phase) {
+                scope.$digest();
+            }
         });
     };
 
