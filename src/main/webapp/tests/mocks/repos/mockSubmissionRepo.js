@@ -206,7 +206,7 @@ angular.module('mock.submissionRepo', []).service('SubmissionRepo', function($q)
             //return rejectPromise($q.defer());
         }
 
-        return modelPromise($q.defer(), repo.mockModel(payload));
+        return valuePromise($q.defer(), repo.mockModel(payload));
     };
 
     repo.query = function (columns, page, size) {

@@ -174,7 +174,7 @@ angular.module('mock.advisorSubmissionRepo', []).service('AdvisorSubmissionRepo'
 
     repo.fetchDocumentTypeFileInfo = function() {
         // TODO
-        return modelPromise($q.defer(), repo.mockModel(mockAdvisorSubmissionRepo1));
+        return valuePromise($q.defer(), repo.mockModel(mockAdvisorSubmissionRepo1));
     };
 
     repo.fetchSubmissionByHash = function (hash) {
@@ -194,7 +194,7 @@ angular.module('mock.advisorSubmissionRepo', []).service('AdvisorSubmissionRepo'
         }
         */
 
-        return modelPromise($q.defer(), repo.mockModel(payload));
+        return valuePromise($q.defer(), repo.mockModel(payload));
     };
 
     return repo;

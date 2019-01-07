@@ -1,11 +1,16 @@
 describe('controller: OrganizationSettingsController', function () {
 
-    var controller, scope;
+    var controller, q, scope, AccordionService, OrganizationRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, $window, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, $window, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            q = $q;
+
+            AccordionService = _AccordionService_;
+            OrganizationRepo = _OrganizationRepo_;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -48,6 +53,88 @@ describe('controller: OrganizationSettingsController', function () {
     describe('Is the controller defined', function () {
         it('should be defined', function () {
             expect(controller).toBeDefined();
+        });
+    });
+
+    describe('Are the scope methods defined', function () {
+        it('activateManagementPane should be defined', function () {
+            expect(scope.activateManagementPane).toBeDefined();
+            expect(typeof scope.activateManagementPane).toEqual("function");
+        });
+        it('getSelectedOrganization should be defined', function () {
+            expect(scope.getSelectedOrganization).toBeDefined();
+            expect(typeof scope.getSelectedOrganization).toEqual("function");
+        });
+        it('managementPaneIsActive should be defined', function () {
+            expect(scope.managementPaneIsActive).toBeDefined();
+            expect(typeof scope.managementPaneIsActive).toEqual("function");
+        });
+        it('setDeleteDisabled should be defined', function () {
+            expect(scope.setDeleteDisabled).toBeDefined();
+            expect(typeof scope.setDeleteDisabled).toEqual("function");
+        });
+        it('setSelectedOrganization should be defined', function () {
+            expect(scope.setSelectedOrganization).toBeDefined();
+            expect(typeof scope.setSelectedOrganization).toEqual("function");
+        });
+    });
+
+    describe('Do the scope methods work as expected', function () {
+        it('activateManagementPane should activate the pane', function () {
+            scope.activeManagementPane = null;
+            scope.activateManagementPane(true);
+
+            expect(scope.activeManagementPane).toBe(true);
+        });
+        it('getSelectedOrganization should get the selected organization', function () {
+            var response = scope.getSelectedOrganization();
+
+            expect(response).not.toBeDefined();
+
+            OrganizationRepo.setSelectedOrganization(mockOrganization2);
+
+            response = scope.getSelectedOrganization();
+            expect(response.id).toBe(mockOrganization2.id);
+        });
+        it('managementPaneIsActive should return a boolean', function () {
+            var response = scope.managementPaneIsActive("test");
+
+            expect(response).toBe(false);
+
+            scope.activateManagementPane("test");
+
+            response = scope.managementPaneIsActive("test");
+            expect(response).toBe(true);
+        });
+        it('setDeleteDisabled should assign delete disabled', function () {
+            var organization = new mockOrganization(q);
+            scope.deleteDisabled  = null;
+
+            OrganizationRepo.setSelectedOrganization(organization);
+
+            scope.setDeleteDisabled(organization.id);
+            scope.$digest();
+            expect(scope.deleteDisabled).toBe(false);
+
+            OrganizationRepo.submissionsCount[organization.id] = 2;
+
+            scope.setDeleteDisabled(organization.id);
+            scope.$digest();
+            expect(scope.deleteDisabled).toBe(true);
+        });
+        it('setSelectedOrganization should assign selected organization', function () {
+            var organization = new mockOrganization(q);
+
+            scope.setSelectedOrganization(organization);
+
+            expect(OrganizationRepo.getSelectedOrganization().id).toBe(organization.id);
+
+            spyOn(AccordionService, "closeAll");
+
+            organization.mock(mockOrganization2);
+            scope.setSelectedOrganization(organization);
+
+            expect(AccordionService.closeAll).toHaveBeenCalled();
         });
     });
 

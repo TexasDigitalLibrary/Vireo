@@ -1,36 +1,45 @@
 var mockOrganizationRepo1 = [
     {
-        "id": 1
+        id: 1,
+        name: "organization 1"
     },
     {
-        "id": 2
+        id: 2,
+        name: "organization 2"
     },
     {
-        "id": 3
+        id: 3,
+        name: "organization 3"
     }
 ];
 
 var mockOrganizationRepo2 = [
     {
-        "id": 1
+        id: 1,
+        name: "organization 1"
     },
     {
-        "id": 2
+        id: 2,
+        name: "organization 2"
     },
     {
-        "id": 3
+        id: 3,
+        name: "organization 3"
     }
 ];
 
 var mockOrganizationRepo3 = [
     {
-        "id": 1
+        id: 1,
+        name: "organization 1"
     },
     {
-        "id": 2
+        id: 2,
+        name: "organization 2"
     },
     {
-        "id": 3
+        id: 3,
+        name: "organization 3"
     }
 ];
 
@@ -52,11 +61,13 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
     };
 
     repo.countSubmissions = function (orgId) {
-        var payload = {};
+        var payload = 0;
+
         if (repo.submissionsCount.hasOwnProperty(orgId)) {
             payload = repo.submissionsCount[orgId];
         }
-        return payloadPromise($q.defer(), payload);
+
+        return valuePromise($q.defer(), payload);
     };
 
     repo.create = function (model) {

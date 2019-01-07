@@ -155,7 +155,7 @@ angular.module('mock.studentSubmissionRepo', []).service('StudentSubmissionRepo'
         }
         */
 
-        return modelPromise($q.defer(), repo.mockModel(payload));
+        return valuePromise($q.defer(), repo.mockModel(payload));
     };
 
     repo.listenForChanges = function () {

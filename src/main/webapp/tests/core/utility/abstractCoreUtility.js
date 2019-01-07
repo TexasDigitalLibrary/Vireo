@@ -13,7 +13,7 @@ var messagePromise = function (defer, message, jsonEncode, messageStatus, httpSt
     return defer.promise;
 };
 
-var modelPromise = function (defer, model) {
+var valuePromise = function (defer, model) {
     defer.resolve(model);
     return defer.promise;
 };

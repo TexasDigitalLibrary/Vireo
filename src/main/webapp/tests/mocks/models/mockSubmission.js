@@ -1,6 +1,7 @@
 var mockSubmission1 = {
     id: 1,
     organization: {
+        id: 1,
         name: "organization 1"
     },
     submissionStatus: {
@@ -13,6 +14,7 @@ var mockSubmission1 = {
 var mockSubmission2 = {
     id: 2,
     organization: {
+        id: 1,
         name: "organization 1"
     },
     submissionStatus: {
@@ -25,6 +27,7 @@ var mockSubmission2 = {
 var mockSubmission3 = {
     id: 3,
     organization: {
+        id: 2,
         name: "organization 2"
     },
     submissionStatus: {
