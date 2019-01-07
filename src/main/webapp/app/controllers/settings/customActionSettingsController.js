@@ -8,10 +8,6 @@ vireo.controller("CustomActionSettingsController", function ($controller, $scope
 
     $scope.customActions = CustomActionDefinitionRepo.getAll();
 
-    CustomActionDefinitionRepo.listen(function (data) {
-        $scope.resetCustomAction();
-    });
-
     $scope.ready = $q.all([CustomActionDefinitionRepo.ready()]);
 
     $scope.dragging = false;
@@ -77,6 +73,10 @@ vireo.controller("CustomActionSettingsController", function ($controller, $scope
                 reorder: $scope.reorderCustomAction,
                 container: '#custom-actions'
             });
+
+        CustomActionDefinitionRepo.listen(function (data) {
+            $scope.resetCustomAction();
+        });
 
     });
 });

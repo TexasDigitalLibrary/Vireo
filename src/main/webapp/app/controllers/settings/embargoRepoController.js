@@ -5,10 +5,6 @@ vireo.controller("EmbargoRepoController", function ($controller, $scope, $q, Emb
 
 	$scope.embargoes = EmbargoRepo.getAll();
 
-	EmbargoRepo.listen(function(data) {
-        $scope.resetEmbargo();
-	});
-
 	$scope.ready = $q.all([EmbargoRepo.ready()]);
 
 	$scope.dragging = false;
@@ -118,6 +114,10 @@ vireo.controller("EmbargoRepoController", function ($controller, $scope, $q, Emb
 			sortLabel: $scope.sortLabel,
 			container: '#embargoes'
 		});
+
+                EmbargoRepo.listen(function(data) {
+                    $scope.resetEmbargo();
+                });
 
 	});
 });

@@ -6,10 +6,6 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
 
     $scope.organizationCategories = OrganizationCategoryRepo.getAll();
 
-    OrganizationCategoryRepo.listen(function(data) {
-        $scope.resetOrganizationCategories();
-    });
-
     $scope.ready = $q.all([OrganizationCategoryRepo.ready()]);
 
     $scope.dragging = false;
@@ -85,6 +81,10 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
         };
 
         $scope.dragControlListeners.orderChanged = function (event) {};
+
+        OrganizationCategoryRepo.listen(function(data) {
+            $scope.resetOrganizationCategories();
+        });
 
     });
 

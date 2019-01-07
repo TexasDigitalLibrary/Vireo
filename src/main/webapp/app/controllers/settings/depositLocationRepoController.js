@@ -8,10 +8,6 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
 
     $scope.depositLocations = DepositLocationRepo.getAll();
 
-    DepositLocationRepo.listen(function (data) {
-        $scope.resetDepositLocation();
-    });
-
     $scope.protocols = {
         "SWORDv1Depositor": "SWORDv1Depositor",
         "FileDeposit": "File Deposit"
@@ -121,6 +117,10 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
             confirm: '#depositLocationConfirmRemoveModal',
             reorder: $scope.reorderDepositLocation,
             container: '#deposit-locations'
+        });
+
+        DepositLocationRepo.listen(function (data) {
+            $scope.resetDepositLocation();
         });
 
     });

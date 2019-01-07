@@ -6,10 +6,6 @@ vireo.controller("DocumentTypesController", function($controller, $scope, Docume
 
     $scope.documentTypes = DocumentTypeRepo.getAll();
 
-    DocumentTypeRepo.listen(function(data) {
-        $scope.resetDocumentTypes();
-    });
-
     $scope.ready = DocumentTypeRepo.ready();
 
     $scope.dragging = false;
@@ -89,6 +85,10 @@ vireo.controller("DocumentTypesController", function($controller, $scope, Docume
             confirm: '#documentTypesConfirmRemoveModal',
             reorder: $scope.reorderDocumentTypes,
             container: '#document-types'
+        });
+
+        DocumentTypeRepo.listen(function(data) {
+            $scope.resetDocumentTypes();
         });
 
     });

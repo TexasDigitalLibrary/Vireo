@@ -8,13 +8,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
 
     $scope.controlledVocabularies = ControlledVocabularyRepo.getAll();
 
-    ControlledVocabularyRepo.listen(function (data) {
-        // do not reset on change action because change is repeated immediately after another, more explicit, action.
-        if (data.meta.action !== ApiResponseActions.CHANGE) {
-            $scope.refreshControlledVocabulary();
-        }
-    });
-
     $scope.ready = $q.all([ControlledVocabularyRepo.ready()]);
 
     $scope.dragging = false;
@@ -338,15 +331,6 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             return found;
         };
 
-        ControlledVocabularyRepo.listen(ApiResponseActions.CHANGE, function () {
-            if ($scope.uploadAction != "process") {
-                $scope.uploadStatus();
-                $scope.uploadModalData = {
-                    cv: $scope.controlledVocabularies[getDefaultIndex()]
-                };
-            }
-        });
-
         $scope.refreshControlledVocabulary = function () {
             $scope.controlledVocabularyRepo.clearValidationResults();
             for (var key in $scope.forms) {
@@ -553,6 +537,22 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             confirm: '#controlledVocabularyConfirmRemoveModal',
             reorder: $scope.reorderControlledVocabulary,
             container: '#controlled-vocabularies'
+        });
+
+        ControlledVocabularyRepo.listen(ApiResponseActions.CHANGE, function () {
+            if ($scope.uploadAction != "process") {
+                $scope.uploadStatus();
+                $scope.uploadModalData = {
+                    cv: $scope.controlledVocabularies[getDefaultIndex()]
+                };
+            }
+        });
+
+        ControlledVocabularyRepo.listen(function (data) {
+            // do not reset on change action because change is repeated immediately after another, more explicit, action.
+            if (data.meta.action !== ApiResponseActions.CHANGE) {
+                $scope.refreshControlledVocabulary();
+            }
         });
 
     });

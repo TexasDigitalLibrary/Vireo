@@ -26,6 +26,8 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.sortAction = "confirm";
 
+    $scope.step = {aggregateFieldProfiles: {}};
+
     $scope.uploadAction = "confirm";
 
     $scope.filteredPredicates = {};
@@ -66,14 +68,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             $scope.dragControlListeners.getListener().model = $scope.step.aggregateFieldProfiles;
             $scope.dragControlListeners.getListener().trash.id = 'field-profile-trash-' + $scope.step.id;
             $scope.dragControlListeners.getListener().confirm.remove.modal = '#fieldProfilesConfirmRemoveModal-' + $scope.step.id;
-        });
-
-        FieldPredicateRepo.ready().then(function () {
-            $scope.buildFilteredPredicateList();
-        });
-
-        FieldPredicateRepo.listen(function () {
-            $scope.buildFilteredPredicateList();
         });
 
         $scope.inputTypeChanged = function () {
@@ -232,6 +226,14 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 return !predicate.documentTypePredicate;
             });
         };
+
+        FieldPredicateRepo.ready().then(function () {
+            $scope.buildFilteredPredicateList();
+        });
+
+        FieldPredicateRepo.listen(function () {
+            $scope.buildFilteredPredicateList();
+        });
 
     });
 
