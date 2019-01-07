@@ -1,6 +1,6 @@
 describe('controller: AbstractController', function () {
 
-    var controller, scope, window;
+    var controller, scope, window, RestApi;
 
     var initializeController = function(settings) {
         inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
@@ -8,6 +8,8 @@ describe('controller: AbstractController', function () {
             scope = $rootScope.$new();
 
             window = $window;
+
+            RestApi = _RestApi_;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -159,18 +161,18 @@ describe('controller: AbstractController', function () {
             expect(result).toBe(true);
         });
         it('reportError should report an error', function () {
-            // TODO: test reportError while preventing window.location.href from performing a redirect.
-            /*
             var alert = {
+                channel: "test",
                 time: 0,
                 type: "",
                 message: ""
             };
 
+            spyOn(RestApi, "post").and.callThrough();
+
             scope.reportError(alert);
 
-            expect(window.location.href).toContain("mailto:");
-            */
+            expect(RestApi.post).toHaveBeenCalled();
         });
     });
 
