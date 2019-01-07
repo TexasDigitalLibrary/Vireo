@@ -7,7 +7,9 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 	$scope.logoPath = "";
 
 	ManagedConfigurationRepo.ready().then(function() {
-		$scope.logoPath = $scope.configurable.lookAndFeel.left_logo;
+		if ($scope.configurable.lookAndFeel) {
+			$scope.logoPath = $scope.configurable.lookAndFeel.left_logo.value;
+		}
 
 		$scope.logoImage = function() {
 
