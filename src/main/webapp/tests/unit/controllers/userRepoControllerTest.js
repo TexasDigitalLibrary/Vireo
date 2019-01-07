@@ -1,18 +1,20 @@
 describe('controller: UserRepoController', function () {
 
-    var controller, scope;
+    var controller, q, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $route, _$q_, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_, _WsApi_) {
+        inject(function ($controller, $location, $route, $q, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            q = $q;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('UserRepoController', {
                 $location: $location,
-                $q: _$q_,
+                $q: $q,
                 $route: $route,
                 $scope: scope,
                 $timeout: $timeout,
@@ -67,6 +69,94 @@ describe('controller: UserRepoController', function () {
         it('should be defined for anonymous', function () {
             initializeController({role: "ROLE_ANONYMOUS"});
             expect(controller).toBeDefined();
+        });
+    });
+
+    describe('Are the scope methods defined', function () {
+        it('allowableRoles should be defined', function () {
+            expect(scope.allowableRoles).toBeDefined();
+            expect(typeof scope.allowableRoles).toEqual("function");
+        });
+        it('disableUpdateRole should be defined', function () {
+            expect(scope.disableUpdateRole).toBeDefined();
+            expect(typeof scope.disableUpdateRole).toEqual("function");
+        });
+        it('setRole should be defined', function () {
+            expect(scope.setRole).toBeDefined();
+            expect(typeof scope.setRole).toEqual("function");
+        });
+        it('updateRole should be defined', function () {
+            expect(scope.updateRole).toBeDefined();
+            expect(typeof scope.updateRole).toEqual("function");
+        });
+    });
+
+    describe('Do the scope methods work as expected', function () {
+        it('allowableRoles should return allowed roles', function () {
+            var response;
+
+            response = scope.allowableRoles("ROLE_ADMIN");
+            expect(response.length).toBe(5);
+
+            response = scope.allowableRoles("ROLE_ANONYMOUS");
+            expect(response.length).toBe(5);
+
+            initializeController({role: "ROLE_MANAGER"});
+
+            response = scope.allowableRoles("ROLE_ADMIN");
+            expect(response.length).toBe(1);
+
+            response = scope.allowableRoles("ROLE_ANONYMOUS");
+            expect(response.length).toBe(4);
+
+            initializeController({role: "ROLE_USER"});
+
+            response = scope.allowableRoles("ROLE_ADMIN");
+            expect(response.length).toBe(1);
+
+            response = scope.allowableRoles("ROLE_ANONYMOUS");
+            expect(response.length).toBe(1);
+
+            initializeController({role: "ROLE_ANONYMOUS"});
+        });
+        it('disableUpdateRole should return a boolean', function () {
+            var user = mockUser(q);
+            var response;
+
+            user.mock(mockUser2);
+
+            response = scope.disableUpdateRole(user);
+            expect(response).toBe(false);
+
+            initializeController({role: "ROLE_MANAGER"});
+
+            response = scope.disableUpdateRole(user);
+            expect(response).toBe(true);
+
+            user.mock(mockUser1);
+
+            response = scope.disableUpdateRole(user);
+            expect(response).toBe(true);
+        });
+        it('setRole should assign the role', function () {
+            var user = mockUser(q);
+
+            scope.roles = [];
+            scope.setRole(user);
+            expect(scope.roles[mockUser1.email]).toBeDefined();
+        });
+        it('updateRole should update the role', function () {
+            var user = mockUser(q);
+            delete user.role;
+
+            spyOn(user, "save");
+
+            scope.updateRole(user);
+            expect(user.save).toHaveBeenCalled();
+            expect(user.role).not.toBeDefined();
+
+            scope.updateRole(user, "test");
+            expect(user.role).toBe("test");
         });
     });
 
