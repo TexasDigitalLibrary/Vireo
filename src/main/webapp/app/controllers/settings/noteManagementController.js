@@ -2,6 +2,8 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
 
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
+    $scope.step = {aggregateNotes: {}};
+
     $scope.workflowStepRepo = WorkflowStepRepo;
 
     $scope.noteRepo = NoteRepo;
@@ -39,10 +41,12 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
 
         var position = 1;
 
-        angular.forEach($scope.step.aggregateNotes, function(note) {
-            note.position = position;
-            position++;
-        });
+        if ($scope.step) {
+            angular.forEach($scope.step.aggregateNotes, function(note) {
+                note.position = position;
+                position++;
+            });
+        }
 
         if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
 			$scope.modalData.refresh();
