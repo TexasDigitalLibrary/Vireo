@@ -193,12 +193,6 @@ angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabular
         return payloadPromise($q.defer(), payload);
     };
 
-    repo.reorder = function (src, dest) {
-        var payload = {};
-        // TODO
-        return payloadPromise($q.defer(), payload);
-    };
-
     repo.sort = function () {
         var payload = {};
         // TODO

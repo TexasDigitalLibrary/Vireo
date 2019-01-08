@@ -34,6 +34,9 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
 
     repo.mock(mockDataArray);
 
+    repo.acceptChangesPending = function () {
+    };
+
     repo.add = function (modelJson) {
         if (!repo.contains(modelJson)) {
             repo.mockedList.push(modelJson);
@@ -44,6 +47,10 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
         for (var i in modelJsons) {
             repo.add(modelJsons[i]);
         }
+    };
+
+    repo.changesPending = function () {
+        return false;
     };
 
     repo.clearValidationResults = function () {
@@ -180,6 +187,12 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
         }
     };
 
+    repo.reorder = function (src, dest) {
+        var payload = {};
+        // TODO
+        return payloadPromise($q.defer(), payload);
+    };
+
     repo.reset = function () {
         repo.mockedList = repo.originalList;
         return payloadPromise($q.defer());
@@ -216,8 +229,15 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
     repo.setToDelete = function (id) {
         // TODO
     };
+
     repo.setToUpdate = function (id) {
         // TODO
+    };
+
+    repo.sort = function (guarantor, facet) {
+        var payload = {};
+        // TODO
+        return payloadPromise($q.defer(), payload);
     };
 
     repo.unshift = function (modelJson) {
