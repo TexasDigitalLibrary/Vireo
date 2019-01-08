@@ -296,7 +296,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         }
 
         if (e.keyCode === 13) {
-            $scope.updateCv($scope.editableVW);
+            $scope.updateControlledVocabulary($scope.editableVW);
         }
 
         if (e.keyCode === 27) {
