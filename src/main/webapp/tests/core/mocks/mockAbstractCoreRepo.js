@@ -58,6 +58,10 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
     };
 
     repo.create = function (model) {
+        if (repo.mockedList === undefined) {
+            repo.mockedList = [];
+        }
+
         model.id = repo.mockedList.length + 1;
         repo.mockedList.push(angular.copy(model));
         return payloadPromise($q.defer(), model);
