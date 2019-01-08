@@ -19,10 +19,6 @@ var mockCustomActionDefinition3 = {
 var mockCustomActionDefinition = function($q) {
     var model = mockModel($q, mockCustomActionDefinition1);
 
-    model.refresh = function() {
-        // TODO
-    };
-
     return model;
 };
 

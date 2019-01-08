@@ -141,24 +141,6 @@ var mockControlledVocabulary3 = [
 var mockControlledVocabulary = function($q) {
     var model = mockModel($q, mockControlledVocabulary1);
 
-    model.clearListens = function() {
-        var payload = {};
-        // TODO
-        return payloadPromise($q.defer(), payload);
-    };
-
-    model.listen = function() {
-        // TODO
-    };
-
-    model.refresh = function() {
-        // TODO
-    };
-
-    model._syncShadow = function() {
-        // TODO
-    };
-
     return model;
 };
 
