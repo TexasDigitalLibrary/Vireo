@@ -5,8 +5,30 @@ var mockControlledVocabularyRepo1 = [
         name: "guarantor",
         entityName: "Embargo",
         dictionary: [
-            "DEFAULT",
-            "PROQUEST"
+            {
+                id: 1,
+                adding: false,
+                beginAdd: false,
+                clickedCell: false,
+                contacts: "a,b",
+                definition: "",
+                editing: false,
+                identifier: "vw1",
+                moving: false,
+                name: "DEFAULT"
+            },
+            {
+                id: 2,
+                adding: false,
+                beginAdd: false,
+                clickedCell: false,
+                contacts: ["a", "c"],
+                definition: "",
+                editing: false,
+                identifier: "vw2",
+                moving: false,
+                name: "PROQUEST"
+            },
         ],
         enum: true,
         entityProperty: true
@@ -68,8 +90,30 @@ var mockControlledVocabularyRepo3 = [
         name: "guarantor",
         entityName: "Embargo",
         dictionary: [
-            "DEFAULT",
-            "PROQUEST"
+            {
+                id: 1,
+                adding: false,
+                beginAdd: false,
+                clickedCell: false,
+                contacts: "a,b",
+                definition: "",
+                editing: false,
+                identifier: "vw1",
+                moving: false,
+                name: "DEFAULT"
+            },
+            {
+                id: 2,
+                adding: false,
+                beginAdd: false,
+                clickedCell: false,
+                contacts: ["a", "c"],
+                definition: "",
+                editing: false,
+                identifier: "vw2",
+                moving: false,
+                name: "PROQUEST"
+            },
         ],
         enum: true,
         entityProperty: true
@@ -99,6 +143,7 @@ angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabular
 
     repo.addVocabularyWord = function (cv, vw) {
         var payload = {};
+        payload.VocabularyWord = vw;
         // TODO
         return payloadPromise($q.defer(), payload);
     };
@@ -109,25 +154,61 @@ angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabular
         return payloadPromise($q.defer(), payload);
     };
 
-    repo.confirmCSV = function (controlledVocabulary) {
-        var payload = {};
+    repo.confirmCSV = function (file, name) {
+        var payload = {
+            HashMap: {
+            }
+        };
+
         // TODO
-        return payloadPromise($q.defer(), payload);
+
+        // ControlledVocabularyRepo.confirmCSV() return result appears to be inconsistent with the project.
+        var response = {
+            data: {
+                meta: {
+                    status: 'SUCCESS',
+                },
+                payload: payload,
+                status: 200
+            }
+        };
+        return valuePromise($q.defer(), response);
     };
 
     repo.downloadCSV = function (controlledVocabulary) {
+        var payload = {
+            HashMap: {
+                headers: {},
+                rows: 0
+            }
+        };
+
         // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.removeVocabularyWord = function (cv, vw) {
+        var payload = {};
+        // TODO
+        return payloadPromise($q.defer(), payload);
+    };
+
+    repo.reorder = function (src, dest) {
+        var payload = {};
+        // TODO
+        return payloadPromise($q.defer(), payload);
+    };
+
+    repo.sort = function () {
+        var payload = {};
         // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.status = function (controlledVocabulary) {
-        var payload = {};
-        // TODO
+        var payload = {
+            Boolean: false
+        };
         return payloadPromise($q.defer(), payload);
     };
 
@@ -137,7 +218,7 @@ angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabular
         return payloadPromise($q.defer(), payload);
     };
 
-    repo.uploadCSV = function (controlledVocabulary) {
+    repo.uploadCSV = function (name) {
         var payload = {};
         // TODO
         return payloadPromise($q.defer(), payload);
