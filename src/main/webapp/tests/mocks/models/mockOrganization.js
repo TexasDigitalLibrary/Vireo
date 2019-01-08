@@ -28,7 +28,7 @@ var mockOrganization = function($q) {
         return payloadPromise($q.defer());
     };
 
-    model.removeEmailWorkfowRule = function(rule) {
+    model.removeEmailWorkflowRule = function(rule) {
         return payloadPromise($q.defer());
     };
 
