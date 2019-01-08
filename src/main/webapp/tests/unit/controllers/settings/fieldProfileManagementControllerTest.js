@@ -10,6 +10,11 @@ describe('controller: FieldProfileManagementController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
+            // ensure scope.step is defined.
+            if (!scope.step) {
+                scope.step = {aggregateFieldProfiles: {}};
+            }
+
             controller = $controller('FieldProfileManagementController', {
                 $filter: $filter,
                 $q: _$q_,
