@@ -37,5 +37,11 @@ var mockCustomActionDefinitionRepo3 = [
 angular.module('mock.customActionDefinitionRepo', []).service('CustomActionDefinitionRepo', function($q) {
     var repo = mockRepo('CustomActionDefinitionRepo', $q, mockCustomActionDefinition, mockCustomActionDefinitionRepo1);
 
+    repo.reorder = function (src, dest) {
+        var payload = {};
+        // TODO
+        return payloadPromise($q.defer(), payload);
+    };
+
     return repo;
 });
