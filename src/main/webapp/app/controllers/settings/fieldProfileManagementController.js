@@ -26,8 +26,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
 
     $scope.sortAction = "confirm";
 
-    $scope.step = {aggregateFieldProfiles: {}};
-
     $scope.uploadAction = "confirm";
 
     $scope.filteredPredicates = {};
