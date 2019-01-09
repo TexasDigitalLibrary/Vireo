@@ -1,17 +1,17 @@
-var mockActionLog1 = {
+var dataActionLog1 = {
     id: 1
 };
 
-var mockActionLog2 = {
+var dataActionLog2 = {
     id: 2
 };
 
-var mockActionLog3 = {
+var dataActionLog3 = {
     id: 3
 };
 
 var mockActionLog = function($q) {
-    var model = mockModel($q, mockActionLog1);
+    var model = mockModel($q, dataActionLog1);
 
     return model;
 };

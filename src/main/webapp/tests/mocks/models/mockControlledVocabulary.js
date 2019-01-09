@@ -1,4 +1,4 @@
-var mockControlledVocabulary1 = [
+var dataControlledVocabulary1 = [
     {
         id: 1,
         position: 1,
@@ -53,7 +53,7 @@ var mockControlledVocabulary1 = [
     }
 ];
 
-var mockControlledVocabulary2 = [
+var dataControlledVocabulary2 = [
     {
         id: 1,
         position: 1,
@@ -83,7 +83,7 @@ var mockControlledVocabulary2 = [
     }
 ];
 
-var mockControlledVocabulary3 = [
+var dataControlledVocabulary3 = [
     {
         id: 1,
         position: 1,
@@ -139,7 +139,7 @@ var mockControlledVocabulary3 = [
 ];
 
 var mockControlledVocabulary = function($q) {
-    var model = mockModel($q, mockControlledVocabulary1);
+    var model = mockModel($q, dataControlledVocabulary1);
 
     return model;
 };

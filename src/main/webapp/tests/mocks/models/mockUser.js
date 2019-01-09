@@ -1,4 +1,4 @@
-var mockUser1 = {
+var dataUser1 = {
     anonymous: false,
     lastName: "Daniels",
     firstName: "Jack",
@@ -9,7 +9,7 @@ var mockUser1 = {
     netId: "aggieJack"
 };
 
-var mockUser2 = {
+var dataUser2 = {
     anonymous: false,
     lastName: "Daniels",
     firstName: "Jill",
@@ -20,7 +20,7 @@ var mockUser2 = {
     netId: "aggieJill"
 };
 
-var mockUser3 = {
+var dataUser3 = {
     anonymous: false,
     lastName: "Smith",
     firstName: "Jacob",
@@ -32,7 +32,7 @@ var mockUser3 = {
 };
 
 var mockUser = function($q) {
-    var model = mockModel($q, mockUser1);
+    var model = mockModel($q, dataUser1);
 
     return model;
 };

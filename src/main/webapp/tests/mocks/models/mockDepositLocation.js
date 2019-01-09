@@ -1,17 +1,17 @@
-var mockDepositLocation1 = {
+var dataDepositLocation1 = {
     id: 1
 };
 
-var mockDepositLocation2 = {
+var dataDepositLocation2 = {
     id: 2
 };
 
-var mockDepositLocation3 = {
+var dataDepositLocation3 = {
     id: 3
 };
 
 var mockDepositLocation = function($q) {
-    var model = mockModel($q, mockDepositLocation1);
+    var model = mockModel($q, dataDepositLocation1);
 
     model.testConnection = function() {
         return payloadPromise($q.defer());

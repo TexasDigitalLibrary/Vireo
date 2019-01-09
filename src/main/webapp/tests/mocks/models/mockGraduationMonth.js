@@ -1,17 +1,17 @@
-var mockGraduationMonth1 = {
+var dataGraduationMonth1 = {
     id: 1
 };
 
-var mockGraduationMonth2 = {
+var dataGraduationMonth2 = {
     id: 2
 };
 
-var mockGraduationMonth3 = {
+var dataGraduationMonth3 = {
     id: 3
 };
 
 var mockGraduationMonth = function($q) {
-    var model = mockModel($q, mockGraduationMonth1);
+    var model = mockModel($q, dataGraduationMonth1);
 
     return model;
 };

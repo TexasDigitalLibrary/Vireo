@@ -1,17 +1,17 @@
-var mockEmbargo1 = {
+var dataEmbargo1 = {
     id: 1
 };
 
-var mockEmbargo2 = {
+var dataEmbargo2 = {
     id: 2
 };
 
-var mockEmbargo3 = {
+var dataEmbargo3 = {
     id: 3
 };
 
 var mockEmbargo = function($q) {
-    var model = mockModel($q, mockEmbargo1);
+    var model = mockModel($q, dataEmbargo1);
 
     return model;
 };

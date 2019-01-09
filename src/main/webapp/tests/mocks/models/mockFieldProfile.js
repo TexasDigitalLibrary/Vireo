@@ -1,4 +1,4 @@
-var mockFieldProfile1 = {
+var dataFieldProfile1 = {
     id: 1,
     controlledVocabulary: {
         id: 1,
@@ -59,7 +59,7 @@ var mockFieldProfile1 = {
     repeatable: false
 };
 
-var mockFieldProfile2 = {
+var dataFieldProfile2 = {
     id: 2,
     controlledVocabulary: {
         id: 1,
@@ -120,7 +120,7 @@ var mockFieldProfile2 = {
     repeatable: false
 };
 
-var mockFieldProfile3 = {
+var dataFieldProfile3 = {
     id: 3,
     controlledVocabulary: {
         id: 2,
@@ -157,7 +157,7 @@ var mockFieldProfile3 = {
 };
 
 var mockFieldProfile = function($q) {
-    var model = mockModel($q, mockFieldProfile1);
+    var model = mockModel($q, dataFieldProfile1);
 
     return model;
 };

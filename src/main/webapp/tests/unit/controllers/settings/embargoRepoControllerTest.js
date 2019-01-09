@@ -167,7 +167,7 @@ describe('controller: EmbargoRepoController', function () {
                 new mockEmbargo(q),
                 new mockEmbargo(q)
             ];
-            scope.embargos[1].mock(mockEmbargo2);
+            scope.embargos[1].mock(dataEmbargo2);
 
             // FIXME: the implementation of this is different from other similar implementations in that this selects an ID instead of an index.
             scope.selectEmbargo(2);

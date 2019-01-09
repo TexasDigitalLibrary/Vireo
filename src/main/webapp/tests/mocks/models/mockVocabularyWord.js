@@ -1,4 +1,4 @@
-var mockVocabularyWord1 = {
+var dataVocabularyWord1 = {
     id: 1,
     identifier: "vw1",
     adding: false,
@@ -11,7 +11,7 @@ var mockVocabularyWord1 = {
     name: "DEFAULT"
 };
 
-var mockVocabularyWord2 = {
+var dataVocabularyWord2 = {
     id: 2,
     identifier: "vw2",
     adding: false,
@@ -24,7 +24,7 @@ var mockVocabularyWord2 = {
     name: "PROQUEST"
 };
 
-var mockVocabularyWord3 = {
+var dataVocabularyWord3 = {
     id: 3,
     identifier: "vw3",
     adding: false,
@@ -38,7 +38,7 @@ var mockVocabularyWord3 = {
 };
 
 var mockVocabularyWord = function($q) {
-    var model = mockModel($q, mockVocabularyWord1);
+    var model = mockModel($q, dataVocabularyWord1);
 
     return model;
 };

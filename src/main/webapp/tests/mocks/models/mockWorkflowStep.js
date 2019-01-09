@@ -1,17 +1,17 @@
-var mockWorkflowStep1 = {
+var dataWorkflowStep1 = {
     id: 1
 };
 
-var mockWorkflowStep2 = {
+var dataWorkflowStep2 = {
     id: 2
 };
 
-var mockWorkflowStep3 = {
+var dataWorkflowStep3 = {
     id: 3
 };
 
 var mockWorkflowStep = function($q) {
-    var model = mockModel($q, mockWorkflowStep1);
+    var model = mockModel($q, dataWorkflowStep1);
 
     return model;
 };

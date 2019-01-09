@@ -1,17 +1,17 @@
-var mockLanguage1 = {
+var dataLanguage1 = {
     id: 1
 };
 
-var mockLanguage2 = {
+var dataLanguage2 = {
     id: 2
 };
 
-var mockLanguage3 = {
+var dataLanguage3 = {
     id: 3
 };
 
 var mockLanguage = function($q) {
-    var model = mockModel($q, mockLanguage1);
+    var model = mockModel($q, dataLanguage1);
 
     return model;
 };

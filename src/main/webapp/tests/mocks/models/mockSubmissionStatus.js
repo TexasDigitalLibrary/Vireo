@@ -1,20 +1,20 @@
-var mockSubmissionStatus1 = {
+var dataSubmissionStatus1 = {
     id: 1,
     submissionState: "IN_PROGRESS"
 };
 
-var mockSubmissionStatus2 = {
+var dataSubmissionStatus2 = {
     id: 2,
     submissionState: "SUBMITTED"
 };
 
-var mockSubmissionStatus3 = {
+var dataSubmissionStatus3 = {
     id: 3,
     submissionState: "WITHDRAWN"
 };
 
 var mockSubmissionStatus = function($q) {
-    var model = mockModel($q, mockSubmissionStatus1);
+    var model = mockModel($q, dataSubmissionStatus1);
 
     return model;
 };

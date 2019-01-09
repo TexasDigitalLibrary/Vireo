@@ -1,17 +1,17 @@
-var mockOrganizationCategory1 = {
+var dataOrganizationCategory1 = {
     id: 1
 };
 
-var mockOrganizationCategory2 = {
+var dataOrganizationCategory2 = {
     id: 2
 };
 
-var mockOrganizationCategory3 = {
+var dataOrganizationCategory3 = {
     id: 3
 };
 
 var mockOrganizationCategory = function($q) {
-    var model = mockModel($q, mockOrganizationCategory1);
+    var model = mockModel($q, dataOrganizationCategory1);
 
     return model;
 };

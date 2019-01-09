@@ -1,8 +1,8 @@
-var mockAbstractAppModel1 = {
+var dataAbstractAppModel1 = {
     id: 1
 };
 
-var mockAbstractAppModel2 = {
+var dataAbstractAppModel2 = {
     id: 2
 };
 
@@ -11,7 +11,7 @@ var mockAbstractAppModel3 = {
 };
 
 var mockAbstractAppModel = function($q) {
-    var model = mockModel($q, mockAbstractAppModel1);
+    var model = mockModel($q, dataAbstractAppModel1);
 
     return model;
 };

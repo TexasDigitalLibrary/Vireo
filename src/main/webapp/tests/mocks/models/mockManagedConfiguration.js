@@ -1,20 +1,20 @@
-var mockManagedConfiguration1 = {
+var dataManagedConfiguration1 = {
     id: 1,
     value: ""
 };
 
-var mockManagedConfiguration2 = {
+var dataManagedConfiguration2 = {
     id: 2,
     value: ""
 };
 
-var mockManagedConfiguration3 = {
+var dataManagedConfiguration3 = {
     id: 3,
     value: ""
 };
 
 var mockManagedConfiguration = function($q) {
-    var model = mockModel($q, mockManagedConfiguration1);
+    var model = mockModel($q, dataManagedConfiguration1);
 
     model.reset = function() {
         return payloadPromise($q.defer());

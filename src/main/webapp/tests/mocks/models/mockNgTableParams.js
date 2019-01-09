@@ -1,17 +1,17 @@
-var mockNgTableParams1 = {
+var dataNgTableParams1 = {
     data: []
 };
 
-var mockNgTableParams2 = {
+var dataNgTableParams2 = {
     data: []
 };
 
-var mockNgTableParams3 = {
+var dataNgTableParams3 = {
     data: []
 };
 
 var mockNgTableParams = function($q) {
-    var model = mockModel($q, mockNgTableParams1);
+    var model = mockModel($q, dataNgTableParams1);
 
     model.count = function() {
         var total = 0;

@@ -145,7 +145,7 @@ describe('controller: DepositLocationRepoController', function () {
                 new mockDepositLocation(q),
                 new mockDepositLocation(q)
             ];
-            scope.depositLocations[1].mock(mockDepositLocation2);
+            scope.depositLocations[1].mock(dataDepositLocation2);
 
             scope.selectDepositLocation(1);
 

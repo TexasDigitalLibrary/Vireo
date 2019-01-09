@@ -14,7 +14,7 @@ angular.module('mock.userService', []).service('UserService', function ($q) {
         }
     };
 
-    service.mockCurrentUser(mockUser1);
+    service.mockCurrentUser(dataUser1);
 
     service.fetchUser = function () {
         delete sessionStorage.role;

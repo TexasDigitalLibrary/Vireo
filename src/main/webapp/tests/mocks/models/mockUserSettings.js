@@ -1,17 +1,17 @@
-var mockUserSettings1 = {
+var dataUserSettings1 = {
     id: 1
 };
 
-var mockUserSettings2 = {
+var dataUserSettings2 = {
     id: 2
 };
 
-var mockUserSettings3 = {
+var dataUserSettings3 = {
     id: 3
 };
 
 var mockUserSettings = function($q) {
-    var model = mockModel($q, mockUserSettings1);
+    var model = mockModel($q, dataUserSettings1);
 
     return model;
 };

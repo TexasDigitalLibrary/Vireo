@@ -262,7 +262,7 @@ describe('controller: SettingsController', function () {
         });
         it('saveDegree should save a degree', function () {
             var degree = new mockDegree(q);
-            degree.mock(mockDegree1);
+            degree.mock(dataDegree1);
 
             scope.inProgress[degree.id] = null;
 

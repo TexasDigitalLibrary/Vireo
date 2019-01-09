@@ -1,17 +1,17 @@
-var mockSavedFilter1 = {
+var dataSavedFilter1 = {
     id: 1
 };
 
-var mockSavedFilter2 = {
+var dataSavedFilter2 = {
     id: 2
 };
 
-var mockSavedFilter3 = {
+var dataSavedFilter3 = {
     id: 3
 };
 
 var mockSavedFilter = function($q) {
-    var model = mockModel($q, mockSavedFilter1);
+    var model = mockModel($q, dataSavedFilter1);
 
     return model;
 };

@@ -1,17 +1,17 @@
-var mockCustomActionValue1 = {
+var dataCustomActionValue1 = {
     id: 1
 };
 
-var mockCustomActionValue2 = {
+var dataCustomActionValue2 = {
     id: 2
 };
 
-var mockCustomActionValue3 = {
+var dataCustomActionValue3 = {
     id: 3
 };
 
 var mockCustomActionValue = function($q) {
-    var model = mockModel($q, mockCustomActionValue1);
+    var model = mockModel($q, dataCustomActionValue1);
 
     return model;
 };

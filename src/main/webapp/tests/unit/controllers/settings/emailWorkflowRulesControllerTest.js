@@ -110,7 +110,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             var template = {id: 1};
             var recipient = {};
             var submissionStatus = mockSubmissionStatus(q);
-            OrganizationRepo.selectedId = mockOrganization1.id;
+            OrganizationRepo.selectedId = dataOrganization1.id;
 
             spyOn(scope, "resetEmailWorkflowRule");
 
@@ -120,7 +120,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             expect(scope.resetEmailWorkflowRule).toHaveBeenCalled();
         });
         it('buildRecipients should build the recipients', function () {
-            OrganizationRepo.selectedId = mockOrganization1.id;
+            OrganizationRepo.selectedId = dataOrganization1.id;
             scope.recipients = null;
 
             scope.buildRecipients();
@@ -139,7 +139,7 @@ describe('controller: EmailWorkflowRulesController', function () {
         });
         it('changeEmailWorkflowRuleActivation should change the email', function () {
             var working = null;
-            OrganizationRepo.selectedId = mockOrganization1.id;
+            OrganizationRepo.selectedId = dataOrganization1.id;
 
             scope.changeEmailWorkflowRuleActivation("rule", working);
             scope.$digest();
@@ -159,7 +159,7 @@ describe('controller: EmailWorkflowRulesController', function () {
         });
         it('deleteEmailWorkflowRule should delete the rule', function () {
             scope.emailWorkflowRuleDeleteWorking = null;
-            OrganizationRepo.selectedId = mockOrganization1.id;
+            OrganizationRepo.selectedId = dataOrganization1.id;
 
             scope.deleteEmailWorkflowRule("rule");
             scope.$digest();
@@ -167,7 +167,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             expect(scope.emailWorkflowRuleDeleteWorking).toBe(false);
         });
         it('editEmailWorkflowRule should reset the rule', function () {
-            OrganizationRepo.selectedId = mockOrganization1.id;
+            OrganizationRepo.selectedId = dataOrganization1.id;
             scope.emailWorkflowRuleToEdit = {
                 emailRecipient: {
                     type: "ORGANIZATION",

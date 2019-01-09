@@ -292,7 +292,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             result = scope.editMode(vw);
             expect(result).toBe(false);
 
-            vw.mock(mockVocabularyWord2);
+            vw.mock(dataVocabularyWord2);
             scope.editableVW.editing = true;
             result = scope.editMode(vw);
             expect(result).toBe(false);
@@ -441,7 +441,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             var cv2 = new mockControlledVocabulary(q);
             scope.selectedCv = cv1;
 
-            cv2.mock(mockControlledVocabulary2);
+            cv2.mock(dataControlledVocabulary2);
 
             spyOn(cv1, "clearListens");
             spyOn(cv2, "listen");
@@ -470,7 +470,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
         it('startEditVWMode should assign the editable vocabulary word', function () {
             var vw1 = new mockVocabularyWord(q);
             var vw2 = new mockVocabularyWord(q);
-            vw2.mock(mockVocabularyWord2);
+            vw2.mock(dataVocabularyWord2);
             scope.editableVW = null;
 
             scope.startEditVWMode(vw1, true);
@@ -526,7 +526,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
                 preventDefault: function() {}
             };
 
-            vw2.mock(mockVocabularyWord2);
+            vw2.mock(dataVocabularyWord2);
             scope.cvTableParams = new mockNgTableParams(q);
             scope.cvTableParams.data.push(vw1);
             scope.cvTableParams.data.push(vw2);

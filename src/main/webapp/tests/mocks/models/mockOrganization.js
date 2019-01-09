@@ -1,20 +1,20 @@
-var mockOrganization1 = {
+var dataOrganization1 = {
     id: 1,
     name: "organization 1"
 };
 
-var mockOrganization2 = {
+var dataOrganization2 = {
     id: 2,
     name: "organization 2"
 };
 
-var mockOrganization3 = {
+var dataOrganization3 = {
     id: 3,
     name: "organization 3"
 };
 
 var mockOrganization = function($q) {
-    var model = mockModel($q, mockOrganization1);
+    var model = mockModel($q, dataOrganization1);
 
     model.addEmailWorkflowRule = function(templateId, recipient, submissionStatusId) {
         return payloadPromise($q.defer());

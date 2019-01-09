@@ -123,7 +123,7 @@ describe('controller: UserRepoController', function () {
             var user = mockUser(q);
             var response;
 
-            user.mock(mockUser2);
+            user.mock(dataUser2);
 
             response = scope.disableUpdateRole(user);
             expect(response).toBe(false);
@@ -133,7 +133,7 @@ describe('controller: UserRepoController', function () {
             response = scope.disableUpdateRole(user);
             expect(response).toBe(true);
 
-            user.mock(mockUser1);
+            user.mock(dataUser1);
 
             response = scope.disableUpdateRole(user);
             expect(response).toBe(true);
@@ -143,7 +143,7 @@ describe('controller: UserRepoController', function () {
 
             scope.roles = [];
             scope.setRole(user);
-            expect(scope.roles[mockUser1.email]).toBeDefined();
+            expect(scope.roles[dataUser1.email]).toBeDefined();
         });
         it('updateRole should update the role', function () {
             var user = mockUser(q);

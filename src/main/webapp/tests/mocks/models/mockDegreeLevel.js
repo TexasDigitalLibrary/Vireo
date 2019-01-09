@@ -1,17 +1,17 @@
-var mockDegreeLevel1 = {
+var dataDegreeLevel1 = {
     id: 1
 };
 
-var mockDegreeLevel2 = {
+var dataDegreeLevel2 = {
     id: 2
 };
 
-var mockDegreeLevel3 = {
+var dataDegreeLevel3 = {
     id: 3
 };
 
 var mockDegreeLevel = function($q) {
-    var model = mockModel($q, mockDegreeLevel1);
+    var model = mockModel($q, dataDegreeLevel1);
 
     return model;
 };

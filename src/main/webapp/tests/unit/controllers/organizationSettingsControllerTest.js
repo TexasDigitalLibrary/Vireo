@@ -91,10 +91,10 @@ describe('controller: OrganizationSettingsController', function () {
 
             expect(response).not.toBeDefined();
 
-            OrganizationRepo.setSelectedOrganization(mockOrganization2);
+            OrganizationRepo.setSelectedOrganization(dataOrganization2);
 
             response = scope.getSelectedOrganization();
-            expect(response.id).toBe(mockOrganization2.id);
+            expect(response.id).toBe(dataOrganization2.id);
         });
         it('managementPaneIsActive should return a boolean', function () {
             var response = scope.managementPaneIsActive("test");
@@ -131,7 +131,7 @@ describe('controller: OrganizationSettingsController', function () {
 
             spyOn(AccordionService, "closeAll");
 
-            organization.mock(mockOrganization2);
+            organization.mock(dataOrganization2);
             scope.setSelectedOrganization(organization);
 
             expect(AccordionService.closeAll).toHaveBeenCalled();

@@ -1,4 +1,4 @@
-var mockSubmission1 = {
+var dataSubmission1 = {
     id: 1,
     organization: {
         id: 1,
@@ -11,7 +11,7 @@ var mockSubmission1 = {
     ]
 };
 
-var mockSubmission2 = {
+var dataSubmission2 = {
     id: 2,
     organization: {
         id: 1,
@@ -24,7 +24,7 @@ var mockSubmission2 = {
     ]
 };
 
-var mockSubmission3 = {
+var dataSubmission3 = {
     id: 3,
     organization: {
         id: 2,
@@ -38,7 +38,7 @@ var mockSubmission3 = {
 };
 
 var mockSubmission = function($q) {
-    var model = mockModel($q, mockSubmission1);
+    var model = mockModel($q, dataSubmission1);
 
     model.actionLogListenPromise = null;
 

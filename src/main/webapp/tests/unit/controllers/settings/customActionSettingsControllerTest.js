@@ -143,7 +143,7 @@ describe('controller: CustomActionSettingsController', function () {
                 new mockCustomActionDefinition(q),
                 new mockCustomActionDefinition(q)
             ];
-            scope.customActions[1].mock(mockCustomActionDefinition2);
+            scope.customActions[1].mock(dataCustomActionDefinition2);
 
             scope.selectCustomAction(1);
 

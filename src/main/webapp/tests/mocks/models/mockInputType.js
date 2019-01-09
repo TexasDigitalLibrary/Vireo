@@ -1,17 +1,17 @@
-var mockInputType1 = {
+var dataInputType1 = {
     id: 1
 };
 
-var mockInputType2 = {
+var dataInputType2 = {
     id: 2
 };
 
-var mockInputType3 = {
+var dataInputType3 = {
     id: 3
 };
 
 var mockInputType = function($q) {
-    var model = mockModel($q, mockInputType1);
+    var model = mockModel($q, dataInputType1);
 
     return model;
 };

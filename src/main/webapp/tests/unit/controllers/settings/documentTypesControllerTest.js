@@ -150,7 +150,7 @@ describe('controller: DocumentTypesController', function () {
                 new mockDocumentType(q),
                 new mockDocumentType(q)
             ];
-            scope.documentTypes[1].mock(mockDocumentType2);
+            scope.documentTypes[1].mock(dataDocumentType2);
 
             scope.selectDocumentType(1);
 

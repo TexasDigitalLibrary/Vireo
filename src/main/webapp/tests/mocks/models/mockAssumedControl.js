@@ -1,4 +1,4 @@
-var mockAssumedControl1 = {
+var dataAssumedControl1 = {
     user: {
         "uin": "123456789",
         "lastName": "Daniels",
@@ -10,7 +10,7 @@ var mockAssumedControl1 = {
     status: ''
 };
 
-var mockAssumedControl2 = {
+var dataAssumedControl2 = {
     user: {
         "uin": "987654321",
         "lastName": "Daniels",
@@ -22,7 +22,7 @@ var mockAssumedControl2 = {
     status: ''
 };
 
-var mockAssumedControl3 = {
+var dataAssumedControl3 = {
     user: {},
     netid: '',
     button: 'Assume',
@@ -30,7 +30,7 @@ var mockAssumedControl3 = {
 };
 
 var mockAssumedControl = function($q) {
-    var model = mockModel($q, mockAssumedControl1);
+    var model = mockModel($q, dataAssumedControl1);
 
     return model;
 };

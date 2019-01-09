@@ -146,7 +146,7 @@ describe('controller: DegreeRepoController', function () {
                 new mockDegree(q),
                 new mockDegree(q)
             ];
-            scope.degrees[1].mock(mockDegree2);
+            scope.degrees[1].mock(dataDegree2);
 
             scope.selectDegree(1);
 

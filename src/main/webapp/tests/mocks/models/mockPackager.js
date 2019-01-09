@@ -1,17 +1,17 @@
-var mockPackager1 = {
+var dataPackager1 = {
     id: 1
 };
 
-var mockPackager2 = {
+var dataPackager2 = {
     id: 2
 };
 
-var mockPackager3 = {
+var dataPackager3 = {
     id: 3
 };
 
 var mockPackager = function($q) {
-    var model = mockModel($q, mockPackager1);
+    var model = mockModel($q, dataPackager1);
 
     return model;
 };

@@ -1,17 +1,17 @@
-var mockEmailTemplate1 = {
+var dataEmailTemplate1 = {
     id: 1
 };
 
-var mockEmailTemplate2 = {
+var dataEmailTemplate2 = {
     id: 2
 };
 
-var mockEmailTemplate3 = {
+var dataEmailTemplate3 = {
     id: 3
 };
 
 var mockEmailTemplate = function($q) {
-    var model = mockModel($q, mockEmailTemplate1);
+    var model = mockModel($q, dataEmailTemplate1);
 
     return model;
 };

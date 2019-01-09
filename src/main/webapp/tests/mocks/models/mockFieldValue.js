@@ -1,17 +1,17 @@
-var mockFieldValue1 = {
+var dataFieldValue1 = {
     id: 1
 };
 
-var mockFieldValue2 = {
+var dataFieldValue2 = {
     id: 2
 };
 
-var mockFieldValue3 = {
+var dataFieldValue3 = {
     id: 3
 };
 
 var mockFieldValue = function($q) {
-    var model = mockModel($q, mockFieldValue1);
+    var model = mockModel($q, dataFieldValue1);
     var isValid =  false;
     var validationMessages = [];
 

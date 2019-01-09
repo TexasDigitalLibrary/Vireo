@@ -1,17 +1,17 @@
-var mockDocumentType1 = {
+var dataDocumentType1 = {
     id: 1
 };
 
-var mockDocumentType2 = {
+var dataDocumentType2 = {
     id: 2
 };
 
-var mockDocumentType3 = {
+var dataDocumentType3 = {
     id: 3
 };
 
 var mockDocumentType = function($q) {
-    var model = mockModel($q, mockDocumentType1);
+    var model = mockModel($q, dataDocumentType1);
 
     return model;
 };

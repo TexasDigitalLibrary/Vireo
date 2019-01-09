@@ -352,15 +352,15 @@ describe('controller: FieldProfileManagementController', function () {
                     new mockFieldProfile(q)
                 ]
             };
-            scope.step.aggregateFieldProfiles[1].mock(mockFieldProfile2);
+            scope.step.aggregateFieldProfiles[1].mock(dataFieldProfile2);
             scope.documentTypes = [
                 new mockDocumentType(q),
                 new mockDocumentType(q)
             ];
             scope.documentTypes[0].fieldPredicate = new mockFieldPredicate(q);
-            scope.documentTypes[1].mock(mockDocumentType2);
+            scope.documentTypes[1].mock(dataDocumentType2);
             scope.documentTypes[1].fieldPredicate = new mockFieldPredicate(q);
-            scope.documentTypes[1].fieldPredicate.mock(mockFieldPredicate2);
+            scope.documentTypes[1].fieldPredicate.mock(dataFieldPredicate2);
 
             spyOn(scope, "inputTypeChanged");
 

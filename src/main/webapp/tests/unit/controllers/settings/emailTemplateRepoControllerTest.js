@@ -171,7 +171,7 @@ describe('controller: EmailTemplateRepoController', function () {
                 new mockEmailTemplate(q),
                 new mockEmailTemplate(q)
             ];
-            scope.emailTemplates[1].mock(mockEmailTemplate2);
+            scope.emailTemplates[1].mock(dataEmailTemplate2);
 
             scope.selectEmailTemplate(1);
 
