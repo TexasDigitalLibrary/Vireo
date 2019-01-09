@@ -1,11 +1,14 @@
 describe('controller: LookAndFeelController', function () {
 
-    var controller, scope;
+    var controller, q, scope, window;
 
     var initializeController = function(settings) {
-        inject(function ($controller, _$q_, $rootScope, $window, _FileService_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, $window, _FileService_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            q = $q;
+            window = $window;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -25,7 +28,7 @@ describe('controller: LookAndFeelController', function () {
             };
 
             controller = $controller('LookAndFeelController', {
-                $q: _$q_,
+                $q: $q,
                 $scope: scope,
                 $window: $window,
                 FileService: _FileService_,
@@ -60,5 +63,52 @@ describe('controller: LookAndFeelController', function () {
             expect(controller).toBeDefined();
         });
     });
+
+    describe('Are the scope methods defined', function () {
+        it('previewLogo should be defined', function () {
+            expect(scope.previewLogo).toBeDefined();
+            expect(typeof scope.previewLogo).toEqual("function");
+        });
+        it('resetModalData should be defined', function () {
+            expect(scope.resetModalData).toBeDefined();
+            expect(typeof scope.resetModalData).toEqual("function");
+        });
+    });
+
+    describe('Do the scope methods work as expected', function () {
+        // TODO: more reasearch and work needed to get this test working.
+        /*
+        it('previewLogo should open a modal', function () {
+            var mockEventListener = jasmine.createSpy();
+            var mockReadAsDataURL = jasmine.createSpy();
+            var mockFileReader = {
+                addEventListener: mockEventListener,
+                readAsDataURL: mockReadAsDataURL
+            };
+
+            spyOn(window, "FileReader").and.returnValue(mockFileReader)
+            spyOn(angular, "element").and.callThrough();
+
+            scope.previewLogo([{}]);
+            scope.$digest();
+
+            expect(angular.element).toHaveBeenCalled();
+            expect(mockReadAsDataURL).toHaveBeenCalled();
+        });
+        */
+        it('resetModalData should reset the modal data', function () {
+            scope.modalData = {
+                newLogo: null
+            };
+
+            scope.resetModalData();
+
+            expect(scope.modalData.newLogo.setting).toBeDefined();
+        });
+    });
+
+    // FIXME: there are methods not on the scope that are added in the controller that may need to be tested.
+    // scope.modalData.confirmLogoUpload()
+    // scope.modalData.cancelLogoUpload()
 
 });
