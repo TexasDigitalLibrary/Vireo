@@ -97,7 +97,7 @@ describe('controller: EmailTemplateRepoController', function () {
     });
 
     describe('Do the scope methods work as expected', function () {
-        it('createEmailTemplate should create a new custom action', function () {
+        it('createEmailTemplate should create a new email template', function () {
             scope.modalData = new mockEmailTemplate(q);
             scope.modalData.mockedList = []; // FIXME: this is somehow not being defined when created above.
 
@@ -132,7 +132,7 @@ describe('controller: EmailTemplateRepoController', function () {
             expect(scope.modalData).toBe(emailTemplate);
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('removeEmailTemplate should delete a custom action', function () {
+        it('removeEmailTemplate should delete an email template', function () {
             scope.modalData = new mockEmailTemplate(q);
 
             spyOn(scope.modalData, "delete");
@@ -141,14 +141,14 @@ describe('controller: EmailTemplateRepoController', function () {
 
             expect(scope.modalData.delete).toHaveBeenCalled();
         });
-        it('reorderEmailTemplates should reorder a custom action', function () {
+        it('reorderEmailTemplates should reorder an email template', function () {
             spyOn(EmailTemplateRepo, "reorder");
 
             scope.reorderEmailTemplates("a", "b");
 
             expect(EmailTemplateRepo.reorder).toHaveBeenCalled();
         });
-        it('resetEmailTemplates should reset the custom action', function () {
+        it('resetEmailTemplates should reset the email template', function () {
             var emailTemplate = new mockEmailTemplate(q);
             scope.forms = [];
             scope.modalData = emailTemplate;
@@ -165,7 +165,7 @@ describe('controller: EmailTemplateRepoController', function () {
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData).toBeDefined();
         });
-        it('selectEmailTemplate should select a custom action', function () {
+        it('selectEmailTemplate should select an email template', function () {
             scope.modalData = null;
             scope.emailTemplates = [
                 new mockEmailTemplate(q),
@@ -189,7 +189,7 @@ describe('controller: EmailTemplateRepoController', function () {
 
             expect(angular.element).toHaveBeenCalled();
         });
-        it('updateEmailTemplate should should save a custom action', function () {
+        it('updateEmailTemplate should should save an email template', function () {
             scope.modalData = new mockEmailTemplate(q);
 
             spyOn(scope.modalData, "save");
