@@ -1,41 +1,23 @@
-var mockManagerSubmissionListColumnRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataManagerSubmissionListColumnRepo1 = [
+    dataSubmissionListColumn1,
+    dataSubmissionListColumn2,
+    dataSubmissionListColumn3
 ];
 
-var mockManagerSubmissionListColumnRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataManagerSubmissionListColumnRepo2 = [
+    dataSubmissionListColumn3,
+    dataSubmissionListColumn2,
+    dataSubmissionListColumn1
 ];
 
-var mockManagerSubmissionListColumnRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataManagerSubmissionListColumnRepo3 = [
+    dataSubmissionListColumn4,
+    dataSubmissionListColumn5,
+    dataSubmissionListColumn6
 ];
 
 angular.module('mock.managerSubmissionListColumnRepo', []).service('ManagerSubmissionListColumnRepo', function($q) {
-    var repo = mockRepo('ManagerSubmissionListColumnRepo', $q, null, mockManagerSubmissionListColumnRepo1);
+    var repo = mockRepo('ManagerSubmissionListColumnRepo', $q, mockSubmissionListColumn, dataManagerSubmissionListColumnRepo1);
 
     repo.resetSubmissionListColumns = function (cv) {
         var payload = {};

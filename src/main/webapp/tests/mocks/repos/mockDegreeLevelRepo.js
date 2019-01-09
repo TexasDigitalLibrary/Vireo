@@ -1,41 +1,23 @@
-var mockDegreeLevelRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataDegreeLevelRepo1 = [
+    dataDegreeLevel1,
+    dataDegreeLevel2,
+    dataDegreeLevel3
 ];
 
-var mockDegreeLevelRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataDegreeLevelRepo2 = [
+    dataDegreeLevel3,
+    dataDegreeLevel2,
+    dataDegreeLevel1
 ];
 
-var mockDegreeLevelRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataDegreeLevelRepo3 = [
+    dataDegreeLevel4,
+    dataDegreeLevel5,
+    dataDegreeLevel6
 ];
 
 angular.module('mock.degreeLevelRepo', []).service('DegreeLevelRepo', function($q) {
-    var repo = mockRepo('DegreeLevelRepo', $q, mockDegreeLevel, mockDegreeLevelRepo1);
+    var repo = mockRepo('DegreeLevelRepo', $q, mockDegreeLevel, dataDegreeLevelRepo1);
 
     return repo;
 });

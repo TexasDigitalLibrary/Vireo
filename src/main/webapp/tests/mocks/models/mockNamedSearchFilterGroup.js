@@ -10,6 +10,18 @@ var dataNamedSearchFilterGroup3 = {
     id: 3
 };
 
+var dataNamedSearchFilterGroup4 = {
+    id: 4
+};
+
+var dataNamedSearchFilterGroup5 = {
+    id: 5
+};
+
+var dataNamedSearchFilterGroup6 = {
+    id: 6
+};
+
 var mockNamedSearchFilterGroup = function($q) {
     var model = mockModel($q, dataNamedSearchFilterGroup1);
 

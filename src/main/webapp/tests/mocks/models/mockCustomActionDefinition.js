@@ -16,6 +16,24 @@ var dataCustomActionDefinition3 = {
     label: "custom action 3"
 };
 
+var dataCustomActionDefinition4 = {
+    id: 4,
+    isStudentVisible: true,
+    label: "custom action 4"
+};
+
+var dataCustomActionDefinition5 = {
+    id: 5,
+    isStudentVisible: true,
+    label: "custom action 5"
+};
+
+var dataCustomActionDefinition6 = {
+    id: 6,
+    isStudentVisible: false,
+    label: "custom action 6"
+};
+
 var mockCustomActionDefinition = function($q) {
     var model = mockModel($q, dataCustomActionDefinition1);
 

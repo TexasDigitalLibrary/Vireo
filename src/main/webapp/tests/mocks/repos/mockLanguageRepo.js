@@ -1,59 +1,23 @@
-var mockLanguageRepo1 = [
-    {
-        id: 1,
-        position: null,
-        name: "English"
-    },
-    {
-        id: 2,
-        position: null,
-        name: "Spanish"
-    },
-    {
-        id: 3,
-        position: null,
-        name: "French"
-    }
+var dataLanguageRepo1 = [
+    dataLanguage1,
+    dataLanguage2,
+    dataLanguage3
 ];
 
-var mockLanguageRepo2 = [
-    {
-        id: 1,
-        position: null,
-        name: "English"
-    },
-    {
-        id: 2,
-        position: null,
-        name: "Chinese"
-    },
-    {
-        id: 3,
-        position: null,
-        name: "French"
-    }
+var dataLanguageRepo2 = [
+    dataLanguage3,
+    dataLanguage2,
+    dataLanguage1
 ];
 
-var mockLanguageRepo3 = [
-    {
-        id: 1,
-        position: null,
-        name: "English"
-    },
-    {
-        id: 2,
-        position: null,
-        name: "Spanish"
-    },
-    {
-        id: 3,
-        position: null,
-        name: "German"
-    }
+var dataLanguageRepo3 = [
+    dataLanguage4,
+    dataLanguage5,
+    dataLanguage6
 ];
 
 angular.module('mock.languageRepo', []).service('LanguageRepo', function($q) {
-    var repo = mockRepo('LanguageRepo', $q, mockLanguage, mockLanguageRepo1);
+    var repo = mockRepo('LanguageRepo', $q, mockLanguage, dataLanguageRepo1);
 
     repo.getProquestLanguageCodes = function () {
         var payload = {};

@@ -10,6 +10,18 @@ var dataEmailTemplate3 = {
     id: 3
 };
 
+var dataEmailTemplate4 = {
+    id: 4
+};
+
+var dataEmailTemplate5 = {
+    id: 5
+};
+
+var dataEmailTemplate6 = {
+    id: 6
+};
+
 var mockEmailTemplate = function($q) {
     var model = mockModel($q, dataEmailTemplate1);
 

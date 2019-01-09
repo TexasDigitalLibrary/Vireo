@@ -1,12 +1,30 @@
 var dataNgTableParams1 = {
+    id: 1,
     data: []
 };
 
 var dataNgTableParams2 = {
+    id: 2,
     data: []
 };
 
 var dataNgTableParams3 = {
+    id: 3,
+    data: []
+};
+
+var dataNgTableParams4 = {
+    id: 4,
+    data: []
+};
+
+var dataNgTableParams5 = {
+    id: 5,
+    data: []
+};
+
+var dataNgTableParams6 = {
+    id: 6,
     data: []
 };
 

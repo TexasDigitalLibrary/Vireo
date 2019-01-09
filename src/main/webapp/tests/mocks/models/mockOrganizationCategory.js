@@ -10,6 +10,18 @@ var dataOrganizationCategory3 = {
     id: 3
 };
 
+var dataOrganizationCategory4 = {
+    id: 4
+};
+
+var dataOrganizationCategory5 = {
+    id: 5
+};
+
+var dataOrganizationCategory6 = {
+    id: 6
+};
+
 var mockOrganizationCategory = function($q) {
     var model = mockModel($q, dataOrganizationCategory1);
 

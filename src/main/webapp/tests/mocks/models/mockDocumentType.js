@@ -10,6 +10,18 @@ var dataDocumentType3 = {
     id: 3
 };
 
+var dataDocumentType4 = {
+    id: 4
+};
+
+var dataDocumentType5 = {
+    id: 5
+};
+
+var dataDocumentType6 = {
+    id: 6
+};
+
 var mockDocumentType = function($q) {
     var model = mockModel($q, dataDocumentType1);
 

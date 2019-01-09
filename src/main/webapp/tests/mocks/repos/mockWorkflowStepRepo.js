@@ -1,41 +1,23 @@
-var mockWorkflowStepRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataWorkflowStepRepo1 = [
+    dataWorkflowStep1,
+    dataWorkflowStep2,
+    dataWorkflowStep3
 ];
 
-var mockWorkflowStepRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataWorkflowStepRepo2 = [
+    dataWorkflowStep3,
+    dataWorkflowStep2,
+    dataWorkflowStep1
 ];
 
-var mockWorkflowStepRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataWorkflowStepRepo3 = [
+    dataWorkflowStep4,
+    dataWorkflowStep5,
+    dataWorkflowStep6
 ];
 
 angular.module('mock.workflowStepRepo', []).service('WorkflowStepRepo', function($q) {
-    var repo = mockRepo('WorkflowStepRepo', $q, mockWorkflowStep, mockWorkflowStepRepo1);
+    var repo = mockRepo('WorkflowStepRepo', $q, mockWorkflowStep, dataWorkflowStepRepo1);
 
     repo.addFieldProfile = function (workflowStep, fieldProfile) {
         var payload = {};

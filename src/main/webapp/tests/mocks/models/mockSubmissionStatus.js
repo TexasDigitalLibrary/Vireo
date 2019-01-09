@@ -13,6 +13,21 @@ var dataSubmissionStatus3 = {
     submissionState: "WITHDRAWN"
 };
 
+var dataSubmissionStatus4 = {
+    id: 4,
+    submissionState: "IN_PROGRESS"
+};
+
+var dataSubmissionStatus5 = {
+    id: 5,
+    submissionState: "SUBMITTED"
+};
+
+var dataSubmissionStatus6 = {
+    id: 6,
+    submissionState: "WITHDRAWN"
+};
+
 var mockSubmissionStatus = function($q) {
     var model = mockModel($q, dataSubmissionStatus1);
 

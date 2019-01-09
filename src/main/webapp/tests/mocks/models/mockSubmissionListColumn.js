@@ -10,6 +10,18 @@ var dataSubmissionListColumn3 = {
     id: 3
 };
 
+var dataSubmissionListColumn4 = {
+    id: 4
+};
+
+var dataSubmissionListColumn5 = {
+    id: 5
+};
+
+var dataSubmissionListColumn6 = {
+    id: 6
+};
+
 var mockSubmissionListColumn = function($q) {
     var model = mockModel($q, dataSubmissionListColumn1);
 

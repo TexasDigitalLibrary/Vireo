@@ -1,50 +1,23 @@
-var mockSubmissionListColumnRepo1 = [
-    {
-        id: 1,
-        title: null
-    },
-    {
-        id: 2,
-        title: null
-    },
-    {
-        id: 3,
-        title: null
-    }
+var dataSubmissionListColumnRepo1 = [
+    dataSubmissionListColumn1,
+    dataSubmissionListColumn2,
+    dataSubmissionListColumn3
 ];
 
-var mockSubmissionListColumnRepo2 = [
-    {
-        id: 1,
-        title: null
-    },
-    {
-        id: 2,
-        title: null
-    },
-    {
-        id: 3,
-        title: null
-    }
+var dataSubmissionListColumnRepo2 = [
+    dataSubmissionListColumn3,
+    dataSubmissionListColumn2,
+    dataSubmissionListColumn1
 ];
 
-var mockSubmissionListColumnRepo3 = [
-    {
-        id: 1,
-        title: null
-    },
-    {
-        id: 2,
-        title: null
-    },
-    {
-        id: 3,
-        title: null
-    }
+var dataSubmissionListColumnRepo3 = [
+    dataSubmissionListColumn4,
+    dataSubmissionListColumn5,
+    dataSubmissionListColumn6
 ];
 
 angular.module('mock.submissionListColumnRepo', []).service('SubmissionListColumnRepo', function($q) {
-    var repo = mockRepo('SubmissionListColumnRepo', $q, mockSubmissionListColumn, mockSubmissionListColumnRepo1);
+    var repo = mockRepo('SubmissionListColumnRepo', $q, mockSubmissionListColumn, dataSubmissionListColumnRepo1);
 
     repo.findByTitle = function (title) {
         var found;

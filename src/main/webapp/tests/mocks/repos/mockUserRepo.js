@@ -1,77 +1,23 @@
-var mockUserRepo1 = [
-    {
-        anonymous: false,
-        firstName: "Jack",
-        lastName: "Daniels",
-        role: "ROLE_ADMIN",
-        uin: "123456789"
-    },
-    {
-        anonymous: false,
-        firstName: "Jill",
-        lastName: "Daniels",
-        role: "ROLE_STUDENT",
-        uin: "987654321"
-    },
-    {
-        anonymous: false,
-        firstName: "Jacob",
-        lastName: "Smith",
-        role: "ROLE_STUDENT",
-        uin: "192837465"
-    }
+var dataUserRepo1 = [
+    dataUser1,
+    dataUser2,
+    dataUser3
 ];
 
-var mockUserRepo2 = [
-    {
-        anonymous: false,
-        firstName: "John",
-        lastName: "Daniels",
-        role: "ROLE_ADMIN",
-        uin: "321654987"
-    },
-    {
-        anonymous: false,
-        firstName: "Joann",
-        lastName: "Daniels",
-        role: "ROLE_STUDENT",
-        uin: "789456123"
-    },
-    {
-        anonymous: false,
-        firstName: "Joseph",
-        lastName: "Smith",
-        role: "ROLE_STUDENT",
-        uin: "564738291"
-    }
+var dataUserRepo2 = [
+    dataUser3,
+    dataUser2,
+    dataUser1
 ];
 
-var mockUserRepo3 = [
-    {
-        anonymous: false,
-        firstName: "Test",
-        lastName: "User1",
-        role: "ROLE_ADMIN",
-        uin: "111111111"
-    },
-    {
-        anonymous: false,
-        firstName: "Test",
-        lastName: "User2",
-        role: "ROLE_STUDENT",
-        uin: "222222222"
-    },
-    {
-        anonymous: false,
-        firstName: "Test",
-        lastName: "User3",
-        role: "ROLE_STUDENT",
-        uin: "333333333"
-    }
+var dataUserRepo3 = [
+    dataUser4,
+    dataUser5,
+    dataUser6
 ];
 
 angular.module('mock.userRepo', []).service('UserRepo', function($q) {
-    var repo = mockRepo('UserRepo', $q, mockUser, mockUserRepo1);
+    var repo = mockRepo('UserRepo', $q, mockUser, dataUserRepo1);
 
     repo.getAllByRole = function (roles) {
         var found;

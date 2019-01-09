@@ -1,180 +1,27 @@
-var mockAdvisorSubmissionRepo1 = [
-    {
-        id: 1,
-        organization: {
-            name: "organization 1"
-        },
-        submissionStatus: {
-            submissionState: "IN_PROGRESS"
-        },
-        submissionWorkflowSteps: [
-        ],
-        submitter: {
-            uin: "123456789",
-            lastName: "Daniels",
-            firstName: "Jack",
-            name: "jack",
-            role: "ROLE_ADMIN"
-        }
-    },
-    {
-        id: 2,
-        organization: {
-            name: "organization 2"
-        },
-        submissionStatus: {
-            submissionState: "IN_PROGRESS"
-        },
-        submissionWorkflowSteps: [
-        ],
-        submitter: {
-            uin: "123456789",
-            lastName: "Daniels",
-            firstName: "Jack",
-            name: "jack",
-            role: "ROLE_ADMIN"
-        }
-    },
-    {
-        id: 3,
-        organization: {
-            name: "organization 3"
-        },
-        submissionStatus: {
-            submissionState: "IN_PROGRESS"
-        },
-        submissionWorkflowSteps: [
-        ],
-        submitter: {
-            uin: "123456789",
-            lastName: "Daniels",
-            firstName: "Jack",
-            name: "jack",
-            role: "ROLE_ADMIN"
-        }
-    }
+var dataAdvisorSubmissionRepo1 = [
+    dataSubmission1,
+    dataSubmission2,
+    dataSubmission3
 ];
 
-var mockAdvisorSubmissionRepo2 = [
-    {
-        id: 1,
-        organization: {
-            name: "organization 1"
-        },
-        submissionStatus: {
-            submissionState: "IN_PROGRESS"
-        },
-        submissionWorkflowSteps: [
-        ],
-        submitter: {
-            uin: "123456789",
-            lastName: "Daniels",
-            firstName: "Jack",
-            name: "jack",
-            role: "ROLE_ADMIN"
-        }
-    },
-    {
-        id: 2,
-        organization: {
-            name: "organization 1"
-        },
-        submissionStatus: {
-            submissionState: "SUBMITTED"
-        },
-        submissionWorkflowSteps: [
-        ],
-        submitter: {
-            uin: "123456789",
-            lastName: "Daniels",
-            firstName: "Jack",
-            name: "jack",
-            role: "ROLE_ADMIN"
-        }
-    },
-    {
-        id: 3,
-        organization: {
-            name: "organization 2"
-        },
-        submissionStatus: {
-            submissionState: "SUBMITTED"
-        },
-        submissionWorkflowSteps: [
-        ],
-        submitter: {
-            uin: "123456789",
-            lastName: "Daniels",
-            firstName: "Jack",
-            name: "jack",
-            role: "ROLE_ADMIN"
-        }
-    }
+var dataAdvisorSubmissionRepo2 = [
+    dataSubmission3,
+    dataSubmission2,
+    dataSubmission1
 ];
 
-var mockAdvisorSubmissionRepo3 = [
-    {
-        id: 1,
-        organization: {
-            name: "organization 1"
-        },
-        submissionStatus: {
-            submissionState: "UNDER_REVIEW"
-        },
-        submissionWorkflowSteps: [
-        ],
-        submitter: {
-            uin: "123456789",
-            lastName: "Daniels",
-            firstName: "Jack",
-            name: "jack",
-            role: "ROLE_ADMIN"
-        }
-    },
-    {
-        id: 2,
-        organization: {
-            name: "organization 1"
-        },
-        submissionStatus: {
-            submissionState: "ON_HOLD"
-        },
-        submissionWorkflowSteps: [
-        ],
-        submitter: {
-            uin: "123456789",
-            lastName: "Daniels",
-            firstName: "Jack",
-            name: "jack",
-            role: "ROLE_ADMIN"
-        }
-    },
-    {
-        id: 3,
-        organization: {
-            name: "organization 1"
-        },
-        submissionStatus: {
-            submissionState: "CANCELLED"
-        },
-        submissionWorkflowSteps: [
-        ],
-        submitter: {
-            uin: "123456789",
-            lastName: "Daniels",
-            firstName: "Jack",
-            name: "jack",
-            role: "ROLE_ADMIN"
-        }
-    }
+var dataAdvisorSubmissionRepo3 = [
+    dataSubmission4,
+    dataSubmission5,
+    dataSubmission6
 ];
 
 angular.module('mock.advisorSubmissionRepo', []).service('AdvisorSubmissionRepo', function($q) {
-    var repo = mockRepo('AdvisorSubmissionRepo', $q, mockSubmission, mockAdvisorSubmissionRepo1);
+    var repo = mockRepo('AdvisorSubmissionRepo', $q, mockSubmission, dataAdvisorSubmissionRepo1);
 
     repo.fetchDocumentTypeFileInfo = function() {
         // TODO
-        return valuePromise($q.defer(), repo.mockModel(mockAdvisorSubmissionRepo1));
+        return valuePromise($q.defer(), repo.mockModel(dataAdvisorSubmissionRepo1));
     };
 
     repo.fetchSubmissionByHash = function (hash) {

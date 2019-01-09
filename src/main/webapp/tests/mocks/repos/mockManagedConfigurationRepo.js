@@ -1,59 +1,23 @@
-var mockManagedConfigurationRepo1 = [
-    {
-        id: 1,
-        name: null,
-        type: null
-    },
-    {
-        id: 2,
-        name: null,
-        type: null
-    },
-    {
-        id: 3,
-        name: null,
-        type: null
-    }
+var dataManagedConfigurationRepo1 = [
+    dataManagedConfiguration1,
+    dataManagedConfiguration2,
+    dataManagedConfiguration3
 ];
 
-var mockManagedConfigurationRepo2 = [
-    {
-        id: 1,
-        name: null,
-        type: null
-    },
-    {
-        id: 2,
-        name: null,
-        type: null
-    },
-    {
-        id: 3,
-        name: null,
-        type: null
-    }
+var dataManagedConfigurationRepo2 = [
+    dataManagedConfiguration3,
+    dataManagedConfiguration2,
+    dataManagedConfiguration1
 ];
 
-var mockManagedConfigurationRepo3 = [
-    {
-        id: 1,
-        name: null,
-        type: null
-    },
-    {
-        id: 2,
-        name: null,
-        type: null
-    },
-    {
-        id: 3,
-        name: null,
-        type: null
-    }
+var dataManagedConfigurationRepo3 = [
+    dataManagedConfiguration4,
+    dataManagedConfiguration5,
+    dataManagedConfiguration6
 ];
 
 angular.module('mock.managedConfigurationRepo', []).service('ManagedConfigurationRepo', function($q) {
-    var repo = mockRepo('ManagedConfigurationRepo', $q, mockManagedConfiguration, mockManagedConfigurationRepo1);
+    var repo = mockRepo('ManagedConfigurationRepo', $q, mockManagedConfiguration, dataManagedConfigurationRepo1);
 
     repo.build = function (data) {
         var payload = {};

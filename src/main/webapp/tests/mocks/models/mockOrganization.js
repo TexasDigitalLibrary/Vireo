@@ -13,6 +13,21 @@ var dataOrganization3 = {
     name: "organization 3"
 };
 
+var dataOrganization4 = {
+    id: 4,
+    name: "organization 4"
+};
+
+var dataOrganization5 = {
+    id: 5,
+    name: "organization 5"
+};
+
+var dataOrganization6 = {
+    id: 6,
+    name: "organization 6"
+};
+
 var mockOrganization = function($q) {
     var model = mockModel($q, dataOrganization1);
 

@@ -1,40 +1,106 @@
 var dataStudentSubmission1 = {
     id: 1,
-    organization: {
-        id: 1,
-        name: "organization 1"
-    },
     submissionStatus: {
         submissionState: "IN_PROGRESS"
     },
     submissionWorkflowSteps: [
-    ]
+    ],
+    submitter: {
+        uin: "123456789",
+        lastName: "Daniels",
+        firstName: "Jack",
+        name: "jack",
+        role: "ROLE_ADMIN"
+    }
 };
 
 var dataStudentSubmission2 = {
     id: 2,
-    organization: {
-        id: 1,
-        name: "organization 1"
-    },
     submissionStatus: {
-        submissionState: "SUBMITTED"
+        submissionState: "IN_PROGRESS"
     },
     submissionWorkflowSteps: [
-    ]
+    ],
+    submitter: {
+        uin: "123456789",
+        lastName: "Daniels",
+        firstName: "Jack",
+        name: "jack",
+        role: "ROLE_ADMIN"
+    }
 };
 
 var dataStudentSubmission3 = {
     id: 3,
-    organization: {
-        id: 2,
-        name: "organization 2"
-    },
     submissionStatus: {
-        submissionState: "WITHDRAWN"
+        submissionState: "IN_PROGRESS"
     },
     submissionWorkflowSteps: [
-    ]
+    ],
+    submitter: {
+        uin: "123456789",
+        lastName: "Daniels",
+        firstName: "Jack",
+        name: "jack",
+        role: "ROLE_ADMIN"
+    }
+};
+
+var dataStudentSubmission4 = {
+    id: 4,
+    organization: {
+        name: "organization 4"
+    },
+    submissionStatus: {
+        submissionState: "UNDER_REVIEW"
+    },
+    submissionWorkflowSteps: [
+    ],
+    submitter: {
+        uin: "123456789",
+        lastName: "Daniels",
+        firstName: "Jack",
+        name: "jack",
+        role: "ROLE_ADMIN"
+    }
+};
+
+var dataStudentSubmission5 = {
+    id: 5,
+    organization: {
+        name: "organization 5"
+    },
+    submissionStatus: {
+        submissionState: "ON_HOLD"
+    },
+    submissionWorkflowSteps: [
+    ],
+    submitter: {
+        uin: "123456789",
+        lastName: "Daniels",
+        firstName: "Jack",
+        name: "jack",
+        role: "ROLE_ADMIN"
+    }
+};
+
+var dataStudentSubmission6 = {
+    id: 6,
+    organization: {
+        name: "organization 6"
+    },
+    submissionStatus: {
+        submissionState: "CANCELLED"
+    },
+    submissionWorkflowSteps: [
+    ],
+    submitter: {
+        uin: "123456789",
+        lastName: "Daniels",
+        firstName: "Jack",
+        name: "jack",
+        role: "ROLE_ADMIN"
+    }
 };
 
 var mockStudentSubmission = function($q) {

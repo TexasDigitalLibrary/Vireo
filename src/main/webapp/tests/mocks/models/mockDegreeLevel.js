@@ -10,6 +10,18 @@ var dataDegreeLevel3 = {
     id: 3
 };
 
+var dataDegreeLevel4 = {
+    id: 4
+};
+
+var dataDegreeLevel5 = {
+    id: 5
+};
+
+var dataDegreeLevel6 = {
+    id: 6
+};
+
 var mockDegreeLevel = function($q) {
     var model = mockModel($q, dataDegreeLevel1);
 

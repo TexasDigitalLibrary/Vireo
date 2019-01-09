@@ -1,8 +1,65 @@
 var dataSubmission1 = {
     id: 1,
     organization: {
-        id: 1,
         name: "organization 1"
+    },
+    submissionStatus: {
+        submissionState: "IN_PROGRESS"
+    },
+    submissionWorkflowSteps: [
+    ],
+    submitter: {
+        uin: "123456789",
+        lastName: "Daniels",
+        firstName: "Jack",
+        name: "jack",
+        role: "ROLE_ADMIN"
+    }
+};
+
+var dataSubmission2 = {
+    id: 2,
+    organization: {
+        name: "organization 2"
+    },
+    submissionStatus: {
+        submissionState: "IN_PROGRESS"
+    },
+    submissionWorkflowSteps: [
+    ],
+    submitter: {
+        uin: "123456789",
+        lastName: "Daniels",
+        firstName: "Jack",
+        name: "jack",
+        role: "ROLE_ADMIN"
+    }
+};
+
+var dataSubmission3 = {
+    id: 3,
+    organization: {
+        name: "organization 3"
+    },
+    submissionStatus: {
+        submissionState: "IN_PROGRESS"
+    },
+    submissionWorkflowSteps: [
+    ],
+    submitter: {
+        uin: "123456789",
+        lastName: "Daniels",
+        firstName: "Jack",
+        name: "jack",
+        role: "ROLE_ADMIN"
+    }
+}
+
+var dataSubmission4 = {
+    id: 4,
+    organization: {
+        id: 1,
+        name: "organization 4"
     },
     submissionStatus: {
         submissionState: "IN_PROGRESS"
@@ -11,11 +68,11 @@ var dataSubmission1 = {
     ]
 };
 
-var dataSubmission2 = {
-    id: 2,
+var dataSubmission5 = {
+    id: 5,
     organization: {
         id: 1,
-        name: "organization 1"
+        name: "organization 5"
     },
     submissionStatus: {
         submissionState: "SUBMITTED"
@@ -24,11 +81,11 @@ var dataSubmission2 = {
     ]
 };
 
-var dataSubmission3 = {
-    id: 3,
+var dataSubmission6 = {
+    id: 6,
     organization: {
         id: 2,
-        name: "organization 2"
+        name: "organization 6"
     },
     submissionStatus: {
         submissionState: "WITHDRAWN"

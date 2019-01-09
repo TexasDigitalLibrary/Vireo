@@ -1,41 +1,23 @@
-var mockDocumentTypeRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataDocumentTypeRepo1 = [
+    dataDocumentType1,
+    dataDocumentType2,
+    dataDocumentType3
 ];
 
-var mockDocumentTypeRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataDocumentTypeRepo2 = [
+    dataDocumentType3,
+    dataDocumentType2,
+    dataDocumentType1
 ];
 
-var mockDocumentTypeRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataDocumentTypeRepo3 = [
+    dataDocumentType4,
+    dataDocumentType5,
+    dataDocumentType6
 ];
 
 angular.module('mock.documentTypeRepo', []).service('DocumentTypeRepo', function($q) {
-    var repo = mockRepo('DocumentTypeRepo', $q, mockDocumentType, mockDocumentTypeRepo1);
+    var repo = mockRepo('DocumentTypeRepo', $q, mockDocumentType, dataDocumentTypeRepo1);
 
     return repo;
 });

@@ -1,50 +1,23 @@
-var mockSubmissionStatusRepo1 = [
-    {
-        id: 1,
-        name: null
-    },
-    {
-        id: 2,
-        name: null
-    },
-    {
-        id: 3,
-        name: null
-    }
+var dataSubmissionStatusRepo1 = [
+    dataSubmissionStatus1,
+    dataSubmissionStatus2,
+    dataSubmissionStatus3
 ];
 
-var mockSubmissionStatusRepo2 = [
-    {
-        id: 1,
-        name: null
-    },
-    {
-        id: 2,
-        name: null
-    },
-    {
-        id: 3,
-        name: null
-    }
+var dataSubmissionStatusRepo2 = [
+    dataSubmissionStatus3,
+    dataSubmissionStatus2,
+    dataSubmissionStatus1
 ];
 
-var mockSubmissionStatusRepo3 = [
-    {
-        id: 1,
-        name: null
-    },
-    {
-        id: 2,
-        name: null
-    },
-    {
-        id: 3,
-        name: null
-    }
+var dataSubmissionStatusRepo3 = [
+    dataSubmissionStatus4,
+    dataSubmissionStatus5,
+    dataSubmissionStatus6
 ];
 
 angular.module('mock.submissionStatusRepo', []).service('SubmissionStatusRepo', function($q) {
-    var repo = mockRepo('SubmissionStatusRepo', $q, mockSubmissionStatus, mockSubmissionStatusRepo1);
+    var repo = mockRepo('SubmissionStatusRepo', $q, mockSubmissionStatus, dataSubmissionStatusRepo1);
 
     repo.findById = function (id) {
         var found;

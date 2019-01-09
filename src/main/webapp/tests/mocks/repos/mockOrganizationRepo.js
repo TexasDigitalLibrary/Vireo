@@ -1,50 +1,23 @@
-var mockOrganizationRepo1 = [
-    {
-        id: 1,
-        name: "organization 1"
-    },
-    {
-        id: 2,
-        name: "organization 2"
-    },
-    {
-        id: 3,
-        name: "organization 3"
-    }
+var dataOrganizationRepo1 = [
+    dataOrganization1,
+    dataOrganization2,
+    dataOrganization3
 ];
 
-var mockOrganizationRepo2 = [
-    {
-        id: 1,
-        name: "organization 1"
-    },
-    {
-        id: 2,
-        name: "organization 2"
-    },
-    {
-        id: 3,
-        name: "organization 3"
-    }
+var dataOrganizationRepo2 = [
+    dataOrganization3,
+    dataOrganization2,
+    dataOrganization1
 ];
 
-var mockOrganizationRepo3 = [
-    {
-        id: 1,
-        name: "organization 1"
-    },
-    {
-        id: 2,
-        name: "organization 2"
-    },
-    {
-        id: 3,
-        name: "organization 3"
-    }
+var dataOrganizationRepo3 = [
+    dataOrganization4,
+    dataOrganization5,
+    dataOrganization6
 ];
 
 angular.module('mock.organizationRepo', []).service('OrganizationRepo', function($q) {
-    var repo = mockRepo('OrganizationRepo', $q, mockOrganization, mockOrganizationRepo1);
+    var repo = mockRepo('OrganizationRepo', $q, mockOrganization, dataOrganizationRepo1);
 
     repo.newOrganization = {};
     repo.selectedId = null;

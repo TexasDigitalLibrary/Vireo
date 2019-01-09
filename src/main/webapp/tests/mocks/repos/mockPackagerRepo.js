@@ -1,41 +1,23 @@
-var mockPackagerRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataPackagerRepo1 = [
+    dataPackager1,
+    dataPackager2,
+    dataPackager3
 ];
 
-var mockPackagerRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataPackagerRepo2 = [
+    dataPackager3,
+    dataPackager2,
+    dataPackager1
 ];
 
-var mockPackagerRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataPackagerRepo3 = [
+    dataPackager4,
+    dataPackager5,
+    dataPackager6
 ];
 
 angular.module('mock.packagerRepo', []).service('PackagerRepo', function($q) {
-    var repo = mockRepo('PackagerRepo', $q, mockPackager, mockPackagerRepo1);
+    var repo = mockRepo('PackagerRepo', $q, mockPackager, dataPackagerRepo1);
 
     return repo;
 });

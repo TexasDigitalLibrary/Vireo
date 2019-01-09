@@ -1,41 +1,23 @@
-var mockDegreeRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataDegreeRepo1 = [
+    dataDegree1,
+    dataDegree2,
+    dataDegree3
 ];
 
-var mockDegreeRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataDegreeRepo2 = [
+    dataDegree3,
+    dataDegree2,
+    dataDegree1
 ];
 
-var mockDegreeRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataDegreeRepo3 = [
+    dataDegree4,
+    dataDegree5,
+    dataDegree6
 ];
 
 angular.module('mock.degreeRepo', []).service('DegreeRepo', function($q) {
-    var repo = mockRepo('DegreeRepo', $q, mockDegree, mockDegreeRepo1);
+    var repo = mockRepo('DegreeRepo', $q, mockDegree, dataDegreeRepo1);
 
     repo.getProquestDegreeCodes = function (cv) {
         var payload = {};

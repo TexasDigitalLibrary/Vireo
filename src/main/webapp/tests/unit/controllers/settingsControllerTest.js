@@ -279,7 +279,7 @@ describe('controller: SettingsController', function () {
             expect(result).toBe(true);
 
             // re-initialize the controller using a student submission repo stack without any IN_PROGRESS assigned.
-            StudentSubmissionRepo.mock(mockStudentSubmissionRepo3);
+            StudentSubmissionRepo.mock(dataStudentSubmissionRepo3);
             initializeController({StudentSubmissionRepo: StudentSubmissionRepo});
 
             result = scope.submissionInProgress();
@@ -290,8 +290,8 @@ describe('controller: SettingsController', function () {
             expect(result).toBe(false);
 
             // re-initialize the controller using a student submission repo stack without any NEEDS_CORRECTIONS assigned.
-            mockStudentSubmissionRepo3[0].submissionStatus.submissionState = SubmissionStates.NEEDS_CORRECTIONS;
-            StudentSubmissionRepo.mock(mockStudentSubmissionRepo3);
+            dataStudentSubmissionRepo3[0].submissionStatus.submissionState = SubmissionStates.NEEDS_CORRECTIONS;
+            StudentSubmissionRepo.mock(dataStudentSubmissionRepo3);
             initializeController({StudentSubmissionRepo: StudentSubmissionRepo});
 
             result = scope.submissionNeedsCorrections();

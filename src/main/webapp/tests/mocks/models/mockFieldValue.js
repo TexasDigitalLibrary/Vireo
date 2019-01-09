@@ -10,6 +10,19 @@ var dataFieldValue3 = {
     id: 3
 };
 
+var dataFieldValue4 = {
+    id: 4
+};
+
+var dataFieldValue5 = {
+    id: 5
+};
+
+var dataFieldValue6 = {
+    id: 6
+};
+
+
 var mockFieldValue = function($q) {
     var model = mockModel($q, dataFieldValue1);
     var isValid =  false;

@@ -1,41 +1,23 @@
-var mockGraduationMonthRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataGraduationMonthRepo1 = [
+    dataGraduationMonth1,
+    dataGraduationMonth2,
+    dataGraduationMonth3
 ];
 
-var mockGraduationMonthRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataGraduationMonthRepo2 = [
+    dataGraduationMonth3,
+    dataGraduationMonth2,
+    dataGraduationMonth1
 ];
 
-var mockGraduationMonthRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataGraduationMonthRepo3 = [
+    dataGraduationMonth4,
+    dataGraduationMonth5,
+    dataGraduationMonth6
 ];
 
 angular.module('mock.graduationMonthRepo', []).service('GraduationMonthRepo', function($q) {
-    var repo = mockRepo('GraduationMonthRepo', $q, mockGraduationMonth, mockGraduationMonthRepo1);
+    var repo = mockRepo('GraduationMonthRepo', $q, mockGraduationMonth, dataGraduationMonthRepo1);
 
     return repo;
 });

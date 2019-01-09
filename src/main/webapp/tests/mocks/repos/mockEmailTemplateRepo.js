@@ -1,41 +1,23 @@
-var mockEmailTemplateRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataEmailTemplateRepo1 = [
+    dataEmailTemplate1,
+    dataEmailTemplate2,
+    dataEmailTemplate3
 ];
 
-var mockEmailTemplateRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataEmailTemplateRepo2 = [
+    dataEmailTemplate3,
+    dataEmailTemplate2,
+    dataEmailTemplate1
 ];
 
-var mockEmailTemplateRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataEmailTemplateRepo3 = [
+    dataEmailTemplate4,
+    dataEmailTemplate5,
+    dataEmailTemplate6
 ];
 
 angular.module('mock.emailTemplateRepo', []).service('EmailTemplateRepo', function($q) {
-    var repo = mockRepo('EmailTemplateRepo', $q, mockEmailTemplate, mockEmailTemplateRepo1);
+    var repo = mockRepo('EmailTemplateRepo', $q, mockEmailTemplate, dataEmailTemplateRepo1);
 
     return repo;
 });

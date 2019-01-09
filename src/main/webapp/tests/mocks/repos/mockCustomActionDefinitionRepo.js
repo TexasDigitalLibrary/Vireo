@@ -1,41 +1,23 @@
-var mockCustomActionDefinitionRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataCustomActionDefinitionRepo1 = [
+    dataCustomActionDefinition1,
+    dataCustomActionDefinition2,
+    dataCustomActionDefinition3
 ];
 
-var mockCustomActionDefinitionRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataCustomActionDefinitionRepo2 = [
+    dataCustomActionDefinition3,
+    dataCustomActionDefinition2,
+    dataCustomActionDefinition1
 ];
 
-var mockCustomActionDefinitionRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataCustomActionDefinitionRepo3 = [
+    dataCustomActionDefinition4,
+    dataCustomActionDefinition5,
+    dataCustomActionDefinition6
 ];
 
 angular.module('mock.customActionDefinitionRepo', []).service('CustomActionDefinitionRepo', function($q) {
-    var repo = mockRepo('CustomActionDefinitionRepo', $q, mockCustomActionDefinition, mockCustomActionDefinitionRepo1);
+    var repo = mockRepo('CustomActionDefinitionRepo', $q, mockCustomActionDefinition, dataCustomActionDefinitionRepo1);
 
     return repo;
 });

@@ -1,41 +1,23 @@
-var mockSavedFilterRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataSavedFilterRepo1 = [
+    dataSavedFilter1,
+    dataSavedFilter2,
+    dataSavedFilter3
 ];
 
-var mockSavedFilterRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataSavedFilterRepo2 = [
+    dataSavedFilter3,
+    dataSavedFilter2,
+    dataSavedFilter1
 ];
 
-var mockSavedFilterRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataSavedFilterRepo3 = [
+    dataSavedFilter4,
+    dataSavedFilter5,
+    dataSavedFilter6
 ];
 
 angular.module('mock.savedFilterRepo', []).service('SavedFilterRepo', function($q) {
-    var repo = mockRepo('SavedFilterRepo', $q, mockSavedFilter, mockSavedFilterRepo1);
+    var repo = mockRepo('SavedFilterRepo', $q, mockSavedFilter, dataSavedFilterRepo1);
 
     return repo;
 });

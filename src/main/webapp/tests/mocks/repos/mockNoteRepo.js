@@ -1,41 +1,23 @@
-var mockNoteRepo1 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataNoteRepo1 = [
+    dataNote1,
+    dataNote2,
+    dataNote3
 ];
 
-var mockNoteRepo2 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataNoteRepo2 = [
+    dataNote3,
+    dataNote2,
+    dataNote1
 ];
 
-var mockNoteRepo3 = [
-    {
-        id: 1
-    },
-    {
-        id: 2
-    },
-    {
-        id: 3
-    }
+var dataNoteRepo3 = [
+    dataNote4,
+    dataNote5,
+    dataNote6
 ];
 
 angular.module('mock.noteRepo', []).service('NoteRepo', function($q) {
-    var repo = mockRepo('NoteRepo', $q, mockNote, mockNoteRepo1);
+    var repo = mockRepo('NoteRepo', $q, mockNote, dataNoteRepo1);
 
     return repo;
 });
