@@ -1,6 +1,13 @@
 module.exports = function(config){
     config.set({
 
+        preprocessors : {
+            "app/!(node_modules)/**/*.js": "coverage",
+            '**/*.html': ['ng-html2js']
+        },
+
+        reporters : ['progress', 'coverage'],
+
         basePath : '../',
 
         files : [
@@ -89,10 +96,12 @@ module.exports = function(config){
         },
 
         plugins : [
-            'karma-jasmine',
             'karma-chrome-launcher',
+            'karma-coverage',
             'karma-firefox-launcher',
-            'karma-junit-reporter'
+            'karma-jasmine',
+            'karma-junit-reporter',
+            'karma-ng-html2js-preprocessor'
         ],
 
         junitReporter : {
