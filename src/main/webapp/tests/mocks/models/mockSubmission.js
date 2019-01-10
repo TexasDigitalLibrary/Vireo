@@ -53,7 +53,7 @@ var dataSubmission3 = {
         name: "jack",
         role: "ROLE_ADMIN"
     }
-}
+};
 
 var dataSubmission4 = {
     id: 4,

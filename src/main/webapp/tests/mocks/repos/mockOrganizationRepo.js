@@ -52,8 +52,17 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
     repo.deleteWorkflowStep = function (workflowStep) {
         var payload = {};
         repo.clearValidationResults();
-        // TODO
-        return payloadPromise($q.defer(), payload);
+
+        // FIXME: $scope.deleteWorkflowStep of organizationManagementController is expecting a different response structure.
+        var response = {
+            meta: {
+                status: 'SUCCESS',
+            },
+            payload: payload,
+            status: 200
+        };
+
+        return valuePromise($q.defer(), response);
     };
 
     repo.getNewOrganization = function () {
@@ -87,8 +96,17 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
 
     repo.restoreDefaults = function (organization) {
         var payload = {};
-        // TODO
-        return payloadPromise($q.defer(), payload);
+
+        // FIXME: $scope.deleteWorkflowStep of organizationManagementController is expecting a different response structure.
+        var response = {
+            meta: {
+                status: 'SUCCESS',
+            },
+            payload: payload,
+            status: 200
+        };
+
+        return valuePromise($q.defer(), response);
     };
 
     repo.setSelectedOrganization = function (organization) {
@@ -96,7 +114,7 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
         return organization;
     };
 
-    repo.updateWorflowStep = function (workflowStep) {
+    repo.updateWorkflowStep = function (workflowStep) {
         var payload = {};
         // TODO
         return payloadPromise($q.defer(), payload);
