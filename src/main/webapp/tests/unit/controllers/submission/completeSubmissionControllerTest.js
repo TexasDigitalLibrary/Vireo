@@ -46,5 +46,4 @@ describe('controller: CompleteSubmissionController', function () {
             expect(controller).toBeDefined();
         });
     });
-
 });

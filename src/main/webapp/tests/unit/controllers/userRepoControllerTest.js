@@ -14,7 +14,7 @@ describe('controller: UserRepoController', function () {
 
             controller = $controller('UserRepoController', {
                 $location: $location,
-                $q: $q,
+                $q: q,
                 $route: $route,
                 $scope: scope,
                 $timeout: $timeout,
@@ -22,7 +22,7 @@ describe('controller: UserRepoController', function () {
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                User: mockUser,
+                User: mockParameterModel(q, mockUser),
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,
                 WsApi: _WsApi_

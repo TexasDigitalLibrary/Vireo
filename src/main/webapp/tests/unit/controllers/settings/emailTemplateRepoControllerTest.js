@@ -15,7 +15,7 @@ describe('controller: EmailTemplateRepoController', function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('EmailTemplateRepoController', {
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $window: $window,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
@@ -181,7 +181,7 @@ describe('controller: EmailTemplateRepoController', function () {
             // TODO: improve this test.
             var event = {
                 target: {}
-            }
+            };
 
             spyOn(angular, "element").and.callThrough();
 

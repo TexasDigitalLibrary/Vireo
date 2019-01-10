@@ -15,7 +15,7 @@ describe('controller: OrganizationSideBarController', function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('OrganizationSideBarController', {
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $window: $window,
                 ModalService: _ModalService_,

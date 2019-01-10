@@ -1,11 +1,13 @@
 describe('controller: AdminSubmissionViewController', function () {
 
-    var controller, scope;
+    var controller, q, scope;
 
     var initializeController = function(settings) {
         inject(function ($anchorScroll, $controller, $location, $q, $route, $routeParams, $rootScope, $window, _DepositLocationRepo_, _EmailTemplateRepo_, _FieldPredicateRepo_, _FieldValue_, _FileUploadService_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _UserService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            q = $q;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -27,7 +29,7 @@ describe('controller: AdminSubmissionViewController', function () {
                 SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
                 SubmissionRepo: _SubmissionRepo_,
-                SubmissionStatus: mockSubmissionStatus,
+                SubmissionStatus: mockParameterModel(q, mockSubmissionStatus),
                 SubmissionStatusRepo: _SubmissionStatusRepo_,
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,
@@ -83,6 +85,12 @@ describe('controller: AdminSubmissionViewController', function () {
         });
         it('should be defined for anonymous', function () {
             initializeController({role: "ROLE_ANONYMOUS"});
+            expect(controller).toBeDefined();
+        });
+    });
+
+    describe('Is the controller defined', function () {
+        it('should be defined', function () {
             expect(controller).toBeDefined();
         });
     });

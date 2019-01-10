@@ -15,7 +15,7 @@ describe('controller: LanguagesController', function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('LanguagesController', {
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $timeout: $timeout,
                 $window: $window,

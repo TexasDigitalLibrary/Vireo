@@ -16,7 +16,7 @@ describe('controller: EmbargoRepoController', function () {
 
             controller = $controller('EmbargoRepoController', {
                 $filter: $filter,
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $window: $window,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,

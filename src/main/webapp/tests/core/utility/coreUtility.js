@@ -43,3 +43,11 @@ var rejectPromise = function (defer, payload, messageStatus, httpStatus) {
     });
     return defer.promise;
 };
+
+var mockParameterModel = function($q, mockModel) {
+    return function(toMock) {
+        var model = new mockModel($q);
+        model.mock(toMock);
+        return model;
+    };
+};

@@ -51,5 +51,4 @@ describe('controller: SubmissionHistoryController', function () {
             expect(controller).toBeDefined();
         });
     });
-
 });

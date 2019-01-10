@@ -1,17 +1,19 @@
 describe('controller: SubmissionViewController', function () {
 
-    var controller, scope;
+    var controller, q, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, _$q_, $rootScope, $routeParams, $window, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, $routeParams, $window, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            q = $q;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('SubmissionViewController', {
-                $q: _$q_,
+                $q: q,
                 $routeParams: $routeParams,
                 $scope: scope,
                 $window: $window,
@@ -56,5 +58,4 @@ describe('controller: SubmissionViewController', function () {
             expect(controller).toBeDefined();
         });
     });
-
 });

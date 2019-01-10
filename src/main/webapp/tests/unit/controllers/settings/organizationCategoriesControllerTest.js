@@ -15,7 +15,7 @@ describe('controller: OrganizationCategoriesController', function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('OrganizationCategoriesController', {
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $window: $window,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,

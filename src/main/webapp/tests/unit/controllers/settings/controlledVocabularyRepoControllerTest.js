@@ -15,7 +15,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('ControlledVocabularyRepoController', {
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $timeout: $timeout,
                 $window: $window,

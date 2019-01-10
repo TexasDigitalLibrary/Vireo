@@ -1,11 +1,13 @@
 describe('controller: AdvisorSubmissionReviewController', function () {
 
-    var controller, scope;
+    var controller, q, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, $window, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, $window, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
+
+            q = $q;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -17,7 +19,7 @@ describe('controller: AdvisorSubmissionReviewController', function () {
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                Submission: mockSubmission,
+                Submission: mockParameterModel(q, mockSubmission),
                 WsApi: _WsApi_
             });
 
@@ -47,5 +49,4 @@ describe('controller: AdvisorSubmissionReviewController', function () {
             expect(controller).toBeDefined();
         });
     });
-
 });

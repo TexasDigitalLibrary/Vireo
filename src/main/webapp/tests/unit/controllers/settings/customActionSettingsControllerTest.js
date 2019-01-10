@@ -15,7 +15,7 @@ describe('controller: CustomActionSettingsController', function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('CustomActionSettingsController', {
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $timeout: $timeout,
                 $window: $window,

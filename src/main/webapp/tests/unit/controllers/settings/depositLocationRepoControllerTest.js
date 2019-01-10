@@ -15,7 +15,7 @@ describe('controller: DepositLocationRepoController', function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('DepositLocationRepoController', {
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $window: $window,
                 DepositLocationRepo: _DepositLocationRepo_,

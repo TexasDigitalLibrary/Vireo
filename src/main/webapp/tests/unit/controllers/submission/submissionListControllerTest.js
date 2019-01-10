@@ -1,19 +1,21 @@
 describe('controller: SubmissionListController', function () {
 
-    var controller, scope;
+    var controller, q, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $filter, $location, _$q_, $rootScope, $window, _ControlledVocabularyRepo_, _CustomActionDefinitionRepo_, _CustomActionValueRepo_, _DepositLocationRepo_, _DocumentTypeRepo_, _EmailTemplateRepo_, _EmbargoRepo_, _ManagerFilterColumnRepo_, _ManagerSubmissionListColumnRepo_, _ModalService_, _OrganizationCategory_, _OrganizationCategoryRepo_, _Organization_, _OrganizationRepo_, _Packager_, _PackagerRepo_, _RestApi_, _SavedFilterRepo_, _SidebarService_, _StorageService_, _SubmissionListColumnRepo_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _WsApi_) {
+        inject(function ($controller, $filter, $location, $q, $rootScope, $window, _ControlledVocabularyRepo_, _CustomActionDefinitionRepo_, _CustomActionValueRepo_, _DepositLocationRepo_, _DocumentTypeRepo_, _EmailTemplateRepo_, _EmbargoRepo_, _ManagerFilterColumnRepo_, _ManagerSubmissionListColumnRepo_, _ModalService_, _OrganizationCategory_, _OrganizationCategoryRepo_, _Organization_, _OrganizationRepo_, _Packager_, _PackagerRepo_, _RestApi_, _SavedFilterRepo_, _SidebarService_, _StorageService_, _SubmissionListColumnRepo_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
+            q = $q;
+
             controller = $controller('SubmissionListController', {
                 $filter: $filter,
                 $location: $location,
-                $q: _$q_,
+                $q: q,
                 $scope: scope,
                 $window: $window,
                 ControlledVocabularyRepo: _ControlledVocabularyRepo_,
@@ -26,7 +28,7 @@ describe('controller: SubmissionListController', function () {
                 ManagerFilterColumnRepo: _ManagerFilterColumnRepo_,
                 ManagerSubmissionListColumnRepo: _ManagerSubmissionListColumnRepo_,
                 ModalService: _ModalService_,
-                NamedSearchFilterGroup: mockNamedSearchFilterGroup,
+                NamedSearchFilterGroup: mockParameterModel(q, mockNamedSearchFilterGroup),
                 NgTableParams: mockNgTableParams,
                 OrganizationCategoryRepo: _OrganizationCategoryRepo_,
                 OrganizationRepo: _OrganizationRepo_,
@@ -39,7 +41,7 @@ describe('controller: SubmissionListController', function () {
                 SubmissionRepo: _SubmissionRepo_,
                 SubmissionStatusRepo: _SubmissionStatusRepo_,
                 UserRepo: _UserRepo_,
-                UserSettings: mockUserSettings,
+                UserSettings: mockParameterModel(q, mockUserSettings),
                 WsApi: _WsApi_
             });
 
@@ -102,5 +104,4 @@ describe('controller: SubmissionListController', function () {
             expect(controller).toBeDefined();
         });
     });
-
 });

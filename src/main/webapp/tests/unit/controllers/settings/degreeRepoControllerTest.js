@@ -15,7 +15,7 @@ describe('controller: DegreeRepoController', function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('DegreeRepoController', {
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $window: $window,
                 DegreeRepo: _DegreeRepo_,

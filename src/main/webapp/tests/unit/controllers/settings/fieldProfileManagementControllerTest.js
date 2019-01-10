@@ -23,7 +23,7 @@ describe('controller: FieldProfileManagementController', function () {
 
             controller = $controller('FieldProfileManagementController', {
                 $filter: $filter,
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $window: $window,
                 ControlledVocabularyRepo: _ControlledVocabularyRepo_,

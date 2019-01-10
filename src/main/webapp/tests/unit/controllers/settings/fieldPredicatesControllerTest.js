@@ -16,7 +16,7 @@ describe('controller: FieldPredicatesController', function () {
 
             controller = $controller('FieldPredicatesController', {
                 $filter: $filter,
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $timeout: $timeout,
                 $window: $window,

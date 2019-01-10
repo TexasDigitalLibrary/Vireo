@@ -24,7 +24,7 @@ describe('controller: SettingsController', function () {
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 StudentSubmissionRepo: settings && settings.StudentSubmissionRepo ? settings.StudentSubmissionRepo :  _StudentSubmissionRepo_,
-                User: mockUser,
+                User: mockParameterModel(q, mockUser),
                 UserService: _UserService_,
                 WsApi: _WsApi_
             });

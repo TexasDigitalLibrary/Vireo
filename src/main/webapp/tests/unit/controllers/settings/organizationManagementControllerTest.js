@@ -18,7 +18,7 @@ describe('controller: OrganizationManagementController', function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('OrganizationManagementController', {
-                $q: $q,
+                $q: q,
                 $location: $location,
                 $route: $route,
                 $scope: scope,

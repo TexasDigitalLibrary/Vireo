@@ -15,7 +15,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('EmailWorkflowRulesController', {
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $window: $window,
                 EmailTemplateRepo: _EmailTemplateRepo_,
@@ -175,7 +175,7 @@ describe('controller: EmailWorkflowRulesController', function () {
                         id: 7
                     }
                 }
-            }
+            };
 
             spyOn(scope, "resetEditEmailWorkflowRule");
 

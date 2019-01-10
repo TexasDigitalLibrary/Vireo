@@ -28,7 +28,7 @@ describe('controller: LookAndFeelController', function () {
             };
 
             controller = $controller('LookAndFeelController', {
-                $q: $q,
+                $q: q,
                 $scope: scope,
                 $window: $window,
                 FileService: _FileService_,

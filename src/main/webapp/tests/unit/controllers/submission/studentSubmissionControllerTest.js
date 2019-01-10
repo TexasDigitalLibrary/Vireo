@@ -53,5 +53,4 @@ describe('controller: StudentSubmissionController', function () {
             expect(controller).toBeDefined();
         });
     });
-
 });

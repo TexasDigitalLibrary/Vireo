@@ -15,19 +15,12 @@ describe('controller: NoteManagementController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            // Required to ensure that a new Note(argument) will work such that argument is a new note.
-            var customMockNote = function(toMock) {
-                var note = new mockNote($q);
-                note.mock(toMock);
-                return note;
-            };
-
             controller = $controller('NoteManagementController', {
                 $scope: scope,
                 $window: $window,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
-                Note: customMockNote,
+                Note: mockParameterModel(q, mockNote),
                 NoteRepo: _NoteRepo_,
                 OrganizationRepo: _OrganizationRepo_,
                 RestApi: _RestApi_,
