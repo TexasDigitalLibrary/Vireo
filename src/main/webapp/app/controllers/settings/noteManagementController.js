@@ -2,8 +2,6 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
 
     angular.extend(this, $controller("AbstractController", {$scope: $scope}));
 
-    $scope.step = {aggregateNotes: {}};
-
     $scope.workflowStepRepo = WorkflowStepRepo;
 
     $scope.noteRepo = NoteRepo;
