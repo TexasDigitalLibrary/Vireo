@@ -23,7 +23,7 @@ angular.module('mock.submissionStatusRepo', []).service('SubmissionStatusRepo', 
         var found;
         for (var i in repo.list) {
             if (repo.list[i].id === id) {
-                found = angular.copy(repo.list[i]);
+                found = repo.mockCopy(repo.list[i]);
             }
         }
         return found;
@@ -32,7 +32,7 @@ angular.module('mock.submissionStatusRepo', []).service('SubmissionStatusRepo', 
     repo.findByName = function (name) {
         for (var i in repo.list) {
             if (repo.list[i].name === name) {
-                return angular.copy(repo.list[i]);
+                return repo.mockCopy(repo.list[i]);
             }
         }
     };

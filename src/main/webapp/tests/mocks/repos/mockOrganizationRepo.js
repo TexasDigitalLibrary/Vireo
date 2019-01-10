@@ -45,7 +45,7 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
 
     repo.create = function (model) {
         model.id = repo.list.length + 1;
-        repo.list.push(angular.copy(model));
+        repo.list.push(repo.mockCopy(model));
         return payloadPromise($q.defer(), model);
     };
 
@@ -64,7 +64,7 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
         var found;
         for (var i in repo.mockedList) {
             if (repo.mockedList[i].id === repo.selectedId) {
-                found = angular.copy(repo.mockedList[i]);
+                found = repo.mockCopy(repo.mockedList[i]);
             }
         }
         return found;

@@ -23,7 +23,7 @@ angular.module('mock.userRepo', []).service('UserRepo', function($q) {
         var found;
         for (var i in repo.list) {
             if (roles.indexOf(repo.list[i].role) !== -1) {
-                found = angular.copy(repo.list[i]);
+                found = repo.mockCopy(repo.list[i]);
                 break;
             }
         }

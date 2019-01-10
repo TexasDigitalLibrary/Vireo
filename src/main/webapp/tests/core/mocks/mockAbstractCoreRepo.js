@@ -7,6 +7,9 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
 
     var originalList;
 
+    // set to TRUE to enable mocked models to be returned as the original object instead of a copy.
+    repo.mockSpyAssist = false;
+
     repo.mockedList = [];
 
     repo.mock = function(toMock) {
@@ -20,6 +23,14 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
                 originalList.push(model);
             }
         }
+    };
+
+    repo.mockCopy = function(toCopy) {
+        if (repo.mockSpyAssist) {
+            return toCopy;
+        }
+
+        return angular.copy(toCopy);
     };
 
     repo.mockModel = function(toMock) {
@@ -63,7 +74,7 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
         }
 
         model.id = repo.mockedList.length + 1;
-        repo.mockedList.push(angular.copy(model));
+        repo.mockedList.push(repo.mockCopy(model));
         return payloadPromise($q.defer(), model);
     };
 
@@ -114,14 +125,14 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
         var found;
         for (var i in repo.mockedList) {
             if (repo.mockedList[i].id == id) {
-                found = angular.copy(repo.mockedList[i]);
+                found = repo.mockCopy(repo.mockedList[i]);
             }
         }
         return found;
     };
 
     repo.getAll = function () {
-        return angular.copy(repo.mockedList);
+        return repo.mockCopy(repo.mockedList);
     };
 
     repo.getAllFiltered = function(predicate) {
@@ -137,7 +148,7 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
     };
 
     repo.getContents = function () {
-        return angular.copy(repo.mockedList);
+        return repo.mockCopy(repo.mockedList);
     };
 
     repo.getEntityName = function () {
@@ -145,11 +156,11 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
     };
 
     repo.getValidations = function () {
-        return angular.copy(validations);
+        return repo.mockCopy(validations);
     };
 
     repo.getValidationResults = function () {
-        return angular.copy(validationResults);
+        return repo.mockCopy(validationResults);
     };
 
     repo.listen = function (cbOrActionOrActionArray, cb) {
@@ -252,7 +263,7 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
         var updated;
         for (var i in repo.mockedList) {
             if (repo.mockedList[i].id === model.id) {
-                updated = angular.copy(repo.mockedList[i]);
+                updated = repo.mockCopy(repo.mockedList[i]);
                 angular.extend(updated, model);
                 break;
             }

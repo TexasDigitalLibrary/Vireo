@@ -23,7 +23,7 @@ angular.module('mock.submissionListColumnRepo', []).service('SubmissionListColum
         var found;
         for (var i in repo.mockedList) {
             if (repo.mockedList[i].title == title) {
-                found = angular.copy(repo.mockedList[i]);
+                found = repo.mockCopy(repo.mockedList[i]);
             }
         }
         return found;

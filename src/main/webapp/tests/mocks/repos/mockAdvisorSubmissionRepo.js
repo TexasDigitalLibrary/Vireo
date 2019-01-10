@@ -29,7 +29,7 @@ angular.module('mock.advisorSubmissionRepo', []).service('AdvisorSubmissionRepo'
 
         for (var i in repo.list) {
             if (repo.list[i].hash === hash) {
-                payload = angular.copy(repo.list[i]);
+                payload = repo.mockCopy(repo.list[i]);
                 break;
             }
         }

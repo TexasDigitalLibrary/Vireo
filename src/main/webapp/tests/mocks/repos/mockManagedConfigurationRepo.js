@@ -29,7 +29,7 @@ angular.module('mock.managedConfigurationRepo', []).service('ManagedConfiguratio
         var found;
         for (var i in repo.mockedList) {
             if (repo.mockedList[i].type == type && repo.mockedList[i].name == name) {
-                found = angular.copy(repo.mockedList[i]);
+                found = repo.mockCopy(repo.mockedList[i]);
             }
         }
         return found;
