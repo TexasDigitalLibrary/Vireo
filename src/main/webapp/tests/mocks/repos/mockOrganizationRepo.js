@@ -44,8 +44,8 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
     };
 
     repo.create = function (model) {
-        model.id = repo.list.length + 1;
-        repo.list.push(repo.mockCopy(model));
+        model.id = repo.mockedList.length + 1;
+        repo.mockedList.push(repo.mockCopy(model));
         return payloadPromise($q.defer(), model);
     };
 
