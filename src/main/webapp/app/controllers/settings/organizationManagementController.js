@@ -84,10 +84,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
             $scope.getSelectedOrganization().clearValidationResults();
         };
 
-        $scope.getSelectedOrganization = function () {
-            return OrganizationRepo.getSelectedOrganization();
-        };
-
         $scope.addWorkflowStep = function () {
             var name = $scope.modalData.name;
             OrganizationRepo.addWorkflowStep($scope.modalData);
