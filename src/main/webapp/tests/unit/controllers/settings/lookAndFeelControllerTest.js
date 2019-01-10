@@ -76,7 +76,7 @@ describe('controller: LookAndFeelController', function () {
     });
 
     describe('Do the scope methods work as expected', function () {
-        // TODO: more reasearch and work needed to get this test working.
+        // TODO: more research and work needed to get this test working.
         /*
         it('previewLogo should open a modal', function () {
             var mockEventListener = jasmine.createSpy();
