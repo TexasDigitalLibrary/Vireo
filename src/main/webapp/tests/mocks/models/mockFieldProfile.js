@@ -40,7 +40,7 @@ var dataFieldProfile1 = {
     fieldPredicate: {
         id: 1,
         documentTypePredicate: false,
-        value: "Field Predicate 1"
+        value: ""
     },
     gloss: "",
     help: "",
@@ -137,7 +137,7 @@ var dataFieldProfile3 = {
     fieldPredicate: {
         id: 3,
         documentTypePredicate: true,
-        value: "Field Predicate 3"
+        value: "text/plain"
     },
     gloss: "Field Gloss",
     help: "This is help text.",
@@ -245,7 +245,7 @@ var dataFieldProfile6 = {
     fieldPredicate: {
         id: 3,
         documentTypePredicate: true,
-        value: "Field Predicate 3"
+        value: "text/plain"
     },
     gloss: "Field Gloss",
     help: "This is help text.",

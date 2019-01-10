@@ -2,9 +2,9 @@ angular.module('mock.fileUploadService', []).service('FileUploadService', functi
     var service = mockService($q);
 
     service.archiveFile = function (submission, fieldValue, removeFieldValue) {
-        return $q(function (resolve) {
-            // TODO
-        });
+        var payload = {};
+        // TODO
+        return payloadPromise($q.defer(), payload);
     };
 
     service.download = function (submission, fieldValue) {
@@ -25,9 +25,9 @@ angular.module('mock.fileUploadService', []).service('FileUploadService', functi
     };
 
     service.removeFile = function (submission, fieldValue) {
-        return $q(function (resolve) {
-            // TODO
-        });
+        var payload = {};
+        // TODO
+        return payloadPromise($q.defer(), payload);
     };
 
     service.uploadFile = function (submission, fieldValue) {

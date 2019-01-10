@@ -1,37 +1,37 @@
 var dataFieldPredicate1 = {
     id: 1,
     documentTypePredicate: false,
-    value: "Field Predicate 1"
+    value: ""
 };
 
 var dataFieldPredicate2 = {
     id: 2,
     documentTypePredicate: false,
-    value: "Field Predicate 2"
+    value: ""
 };
 
 var dataFieldPredicate3 = {
     id: 3,
     documentTypePredicate: true,
-    value: "Field Predicate 3"
+    value: "text/plain"
 };
 
 var dataFieldPredicate4 = {
     id: 4,
     documentTypePredicate: true,
-    value: "Field Predicate 4"
+    value: "application/pdf"
 };
 
 var dataFieldPredicate5 = {
     id: 5,
     documentTypePredicate: true,
-    value: "Field Predicate 5"
+    value: "text/csv"
 };
 
 var dataFieldPredicate6 = {
     id: 6,
     documentTypePredicate: true,
-    value: "Field Predicate 6"
+    value: "image/png"
 };
 
 var mockFieldPredicate = function($q) {

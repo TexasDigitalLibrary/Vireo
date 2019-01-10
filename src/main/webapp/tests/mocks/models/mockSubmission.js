@@ -97,6 +97,8 @@ var dataSubmission6 = {
 var mockSubmission = function($q) {
     var model = mockModel($q, dataSubmission1);
 
+    model.mockWorkflowSteps = null;
+
     model.actionLogListenPromise = null;
 
     model.addComment = function (data) {
@@ -152,7 +154,17 @@ var mockSubmission = function($q) {
 
     model.getFieldProfileByPredicate = function (predicate) {
         var fieldProfile = null;
-        // TODO
+
+        if (model.mockWorkflowSteps) {
+            for (var i in model.mockWorkflowSteps.aggregateFieldProfiles) {
+                var currentFieldProfile = model.mockWorkflowSteps.aggregateFieldProfiles[i];
+                if (currentFieldProfile.fieldPredicate.id === predicate.id) {
+                    fieldProfile = currentFieldProfile;
+                    break;
+                }
+            }
+        }
+
         return fieldProfile;
     };
 
