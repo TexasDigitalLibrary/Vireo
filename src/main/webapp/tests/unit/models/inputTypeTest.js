@@ -1,5 +1,5 @@
 describe('model: InputType', function () {
-    var rootScope, scope, WsApi, InputType;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: InputType', function () {
 
             WsApi = _WsApi_;
 
-            InputType = _InputType_;
+            model = _InputType_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(InputType).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

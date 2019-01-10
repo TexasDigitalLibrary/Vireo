@@ -1,5 +1,5 @@
 describe('model: ManagedConfiguration', function () {
-    var rootScope, sanitize, scope, WsApi, ManagedConfiguration;
+    var rootScope, model, sanitize, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -13,13 +13,13 @@ describe('model: ManagedConfiguration', function () {
 
             WsApi = _WsApi_;
 
-            ManagedConfiguration = _ManagedConfiguration_;
+            model = _ManagedConfiguration_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(ManagedConfiguration).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

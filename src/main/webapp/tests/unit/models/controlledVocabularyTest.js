@@ -1,5 +1,5 @@
 describe('model: ControlledVocabulary', function () {
-    var rootScope, scope, WsApi, ControlledVocabulary;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: ControlledVocabulary', function () {
 
             WsApi = _WsApi_;
 
-            ControlledVocabulary = _ControlledVocabulary_;
+            model = _ControlledVocabulary_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(ControlledVocabulary).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

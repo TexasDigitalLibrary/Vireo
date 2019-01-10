@@ -1,5 +1,5 @@
 describe('model: SubmissionStatus', function () {
-    var rootScope, scope, WsApi, SubmissionStatus;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: SubmissionStatus', function () {
 
             WsApi = _WsApi_;
 
-            SubmissionStatus = _SubmissionStatus_;
+            model = _SubmissionStatus_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(SubmissionStatus).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

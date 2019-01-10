@@ -1,5 +1,5 @@
 describe('model: Embargo', function () {
-    var rootScope, scope, WsApi, Embargo;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: Embargo', function () {
 
             WsApi = _WsApi_;
 
-            Embargo = _Embargo_;
+            model = _Embargo_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(Embargo).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

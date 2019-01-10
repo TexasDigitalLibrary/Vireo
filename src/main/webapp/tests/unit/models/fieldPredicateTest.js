@@ -1,5 +1,5 @@
 describe('model: FieldPredicate', function () {
-    var rootScope, scope, WsApi, FieldPredicate;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: FieldPredicate', function () {
 
             WsApi = _WsApi_;
 
-            FieldPredicate = _FieldPredicate_;
+            model = _FieldPredicate_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(FieldPredicate).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

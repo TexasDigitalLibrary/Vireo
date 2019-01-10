@@ -1,5 +1,5 @@
 describe('model: NamedSearchFilterGroup', function () {
-    var rootScope, scope, WsApi, NamedSearchFilterGroup;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: NamedSearchFilterGroup', function () {
 
             WsApi = _WsApi_;
 
-            NamedSearchFilterGroup = _NamedSearchFilterGroup_;
+            model = _NamedSearchFilterGroup_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(NamedSearchFilterGroup).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

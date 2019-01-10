@@ -1,5 +1,5 @@
 describe('model: EmailTemplate', function () {
-    var rootScope, scope, WsApi, EmailTemplate;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: EmailTemplate', function () {
 
             WsApi = _WsApi_;
 
-            EmailTemplate = _EmailTemplate_;
+            model = _EmailTemplate_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(EmailTemplate).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

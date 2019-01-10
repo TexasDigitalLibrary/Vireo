@@ -1,5 +1,5 @@
 describe('model: Language', function () {
-    var rootScope, scope, WsApi, Language;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: Language', function () {
 
             WsApi = _WsApi_;
 
-            Language = _Language_;
+            model = _Language_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(Language).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

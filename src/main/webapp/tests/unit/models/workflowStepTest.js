@@ -1,5 +1,5 @@
 describe('model: WorkflowStep', function () {
-    var rootScope, scope, WsApi, WorkflowStep;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: WorkflowStep', function () {
 
             WsApi = _WsApi_;
 
-            WorkflowStep = _WorkflowStep_;
+            model = _WorkflowStep_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(WorkflowStep).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

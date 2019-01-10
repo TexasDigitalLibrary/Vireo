@@ -1,5 +1,5 @@
 describe('model: ActionLog', function () {
-    var rootScope, scope, WsApi, ActionLog;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: ActionLog', function () {
 
             WsApi = _WsApi_;
 
-            ActionLog = _ActionLog_;
+            model = _ActionLog_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(ActionLog).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

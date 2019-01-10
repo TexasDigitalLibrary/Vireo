@@ -1,5 +1,5 @@
 describe('model: GraduationMonth', function () {
-    var rootScope, scope, WsApi, GraduationMonth;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: GraduationMonth', function () {
 
             WsApi = _WsApi_;
 
-            GraduationMonth = _GraduationMonth_;
+            model = _GraduationMonth_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(GraduationMonth).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

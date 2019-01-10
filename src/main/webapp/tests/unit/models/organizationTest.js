@@ -1,5 +1,5 @@
 describe('model: Organization', function () {
-    var rootScope, q, scope, WsApi, Organization, RestApi;
+    var rootScope, q, model, scope, WsApi, RestApi;
 
     beforeEach(function() {
         module('core');
@@ -15,13 +15,13 @@ describe('model: Organization', function () {
             RestApi = _RestApi_;
             WsApi = _WsApi_;
 
-            Organization = _Organization_;
+            model = _Organization_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(Organization).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

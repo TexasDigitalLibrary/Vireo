@@ -1,5 +1,5 @@
 describe('model: SubmissionListColumn', function () {
-    var rootScope, scope, WsApi, SubmissionListColumn;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: SubmissionListColumn', function () {
 
             WsApi = _WsApi_;
 
-            SubmissionListColumn = _SubmissionListColumn_;
+            model = _SubmissionListColumn_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(SubmissionListColumn).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });
