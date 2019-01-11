@@ -19,6 +19,16 @@ var dataStudentSubmissionRepo3 = [
 angular.module('mock.studentSubmissionRepo', []).service('StudentSubmissionRepo', function($q) {
     var repo = mockRepo('StudentSubmissionRepo', $q, mockStudentSubmission, dataStudentSubmissionRepo1);
 
+    repo.create = function (model) {
+        if (repo.mockedList === undefined) {
+            repo.mockedList = [];
+        }
+
+        model.id = repo.mockedList.length + 1;
+        repo.mockedList.push(repo.mockCopy(model));
+        return payloadPromise($q.defer(), { Submission: model });
+    };
+
     repo.fetchSubmissionById = function (id) {
         var payload = repo.findById(id);
 
