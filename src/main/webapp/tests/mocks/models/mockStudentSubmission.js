@@ -192,8 +192,7 @@ var mockStudentSubmission = function($q) {
     };
 
     model.getPrimaryDocumentFieldProfile = function () {
-        var fieldProfile = null;
-        // TODO
+        var fieldProfile = new mockFieldProfile($q);
         return fieldProfile;
     };
 

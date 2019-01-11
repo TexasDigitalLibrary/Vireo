@@ -15,13 +15,14 @@ angular.module('mock.fileUploadService', []).service('FileUploadService', functi
 
     service.getFileType = function (fieldPredicate) {
         var fileType = "";
-        // TODO
+        if (fieldPredicate.value) {
+            fileType = fieldPredicate.value;
+        }
         return fileType;
     };
 
     service.isPrimaryDocument = function (fieldPredicate) {
-        // TODO
-        return true;
+        return fieldPredicate.value && fieldPredicate.value == "PRIMARY";
     };
 
     service.removeFile = function (submission, fieldValue) {
