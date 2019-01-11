@@ -92,7 +92,7 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
             '_doctype_archived'
         ];
 
-        $scope.removibleDocuments = function(fieldValue) {
+        $scope.removableDocuments = function(fieldValue) {
             return fieldValue.id && fieldValue.fieldPredicate.documentTypePredicate && protectedDocTypes.indexOf(fieldValue.fieldPredicate.value) < 0;
         };
 
