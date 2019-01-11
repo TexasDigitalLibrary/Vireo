@@ -1,10 +1,8 @@
 angular.module('mock.managerFilterColumnRepo', []).service('ManagerFilterColumnRepo', function($q) {
-    var repo = mockRepo('ManagerFilterColumnRepo', $q);
+    var repo = mockRepo('ManagerFilterColumnRepo', $q, mockSavedFilter, dataSavedFilter1);
 
     repo.updateFilterColumns = function (filterColumns) {
-        var payload = {};
-        // TODO
-        return payloadPromise($q.defer(), payload);
+        return payloadPromise($q.defer(), angular.copy(repo.mockedList));
     };
 
     return repo;
