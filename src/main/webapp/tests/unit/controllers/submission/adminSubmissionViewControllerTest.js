@@ -24,7 +24,7 @@ describe('controller: AdminSubmissionViewController', function () {
                 DepositLocationRepo: _DepositLocationRepo_,
                 EmailTemplateRepo: _EmailTemplateRepo_,
                 FieldPredicateRepo: _FieldPredicateRepo_,
-                FieldValue: _FieldValue_,
+                FieldValue: mockParameterModel(q, mockFieldValue),
                 FileUploadService: _FileUploadService_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
@@ -467,11 +467,86 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.showTab(workflowStep);
             expect(response).toBe(true);
         });
-        // TODO: implement this.
-        /*
-        it('submitAddFile should ', function () {
+        it('submitAddFile should submit a file', function () {
+            scope.fieldPredicates = [ new mockFieldPredicate(q), new mockFieldPredicate(q) ];
+            scope.fieldPredicates[1].mock(dataFieldPredicate3);
+            scope.submission = mockSubmission(q);
+            scope.submission.primaryDocumentFieldValue = new mockFieldValue(q);
+            scope.addFileData = {};
+            scope.addFileData.addFileSelection = "replace";
+            scope.addFileData.sendEmailToRecipient = true;
+            scope.addFileData.sendEmailToCCRecipient = true;
+            scope.addFileData.files = [ {} ];
+            scope.recipientEmails = [ "a" ];
+            scope.ccRecipientEmails = [ "b" ];
+            scope.addFileData.uploading = null;
+
             scope.submitAddFile();
-        });*/
+            scope.$digest();
+
+            scope.addFileData.addFileSelection = "replace";
+            scope.addFileData.files = [ {} ];
+            delete scope.submission.primaryDocumentFieldValue;
+
+            scope.submitAddFile();
+            scope.$digest();
+
+            scope.addFileData.files = [ {} ];
+            scope.addFileData.addFileSelection = null;
+
+            scope.submitAddFile();
+            scope.$digest();
+
+            scope.addFileData.files = [ {} ];
+            scope.submission.saveFieldValue = function (fieldValue, fieldProfile) {
+                return messagePromise(q.defer(), "This is an accept response sending a INVALID status", "INVALID");
+            };
+
+            scope.submitAddFile();
+            scope.$digest();
+
+            scope.addFileData.files = [ {} ];
+            scope.submission.saveFieldValue = function (fieldValue, fieldProfile) {
+                return messagePromise(q.defer(), undefined, "INVALID");
+            };
+
+            scope.submitAddFile();
+            scope.$digest();
+
+            scope.addFileData.files = [ {} ];
+            FileUploadService.uploadFile = function (submission, fieldValue) {
+                var response = {
+                    data: {
+                        meta: {
+                            status: "INVALID",
+                        },
+                        payload: {},
+                        status: 200
+                    }
+                };
+                return valuePromise(q.defer(), response);
+            };
+
+            scope.submitAddFile();
+            scope.$digest();
+
+            scope.addFileData.needsCorrection = true;
+            scope.addFileData.files = [ {} ];
+            FileUploadService.uploadFile = function (submission, fieldValue) {
+                var defer = q.defer();
+                var response = {
+                    meta: {
+                        status: "INVALID",
+                    },
+                    status: 200
+                };
+                defer.reject(response);
+                return defer.promise;
+            };
+
+            scope.submitAddFile();
+            scope.$digest();
+        });
         it('toggleConfirm should toggle a boolean', function () {
             scope.confirm = false;
 
@@ -493,8 +568,6 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.updateActionLogLimit();
             expect(scope.actionLogCurrentLimit).toBe(100);
         });
-        // TODO: finish implementing this.
-        /*
         it('disableSubmitAddFile should return a boolean', function () {
             var response;
             scope.addFileData = {};
@@ -502,6 +575,9 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.addFileData.sendEmailToRecipient = true;
             scope.addFileData.sendEmailToCCRecipient = true;
             scope.addFileData.files = [ {} ];
+            scope.recipientEmails = [ "a" ];
+            scope.ccRecipientEmails = [ "b" ];
+            scope.addFileData.uploading = false;
 
             response = scope.disableSubmitAddFile();
             expect(typeof response).toBe("boolean");
@@ -531,7 +607,6 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.disableSubmitAddFile();
             expect(typeof response).toBe("boolean");
         });
-        */
     });
 
 });

@@ -31,9 +31,17 @@ angular.module('mock.fileUploadService', []).service('FileUploadService', functi
     };
 
     service.uploadFile = function (submission, fieldValue) {
-        var upload = {};
+        var response = {
+            data: {
+                meta: {
+                    status: "SUCCESS",
+                },
+                payload: {},
+                status: 200
+            }
+        };
         // TODO
-        return upload;
+        return valuePromise($q.defer(), response);
     };
 
     return service;

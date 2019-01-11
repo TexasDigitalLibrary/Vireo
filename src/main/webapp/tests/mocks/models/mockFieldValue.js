@@ -1,25 +1,75 @@
 var dataFieldValue1 = {
-    id: 1
+    id: 1,
+    contacts: [],
+    definition: "",
+    fieldPredicate: {
+        id: 1,
+        documentTypePredicate: false,
+        value: "_doctype_primary"
+    },
+    identifier: "",
+    value: ""
 };
 
 var dataFieldValue2 = {
-    id: 2
+    id: 2,
+    contacts: [],
+    definition: "",
+    fieldPredicate: {
+        id: 2,
+        documentTypePredicate: false,
+        value: "_doctype_archived"
+    },
+    identifier: "",
+    value: ""
 };
 
 var dataFieldValue3 = {
-    id: 3
+    id: 3,
+    contacts: [],
+    definition: "",
+    fieldPredicate: null,
+    identifier: "",
+    value: ""
 };
 
 var dataFieldValue4 = {
-    id: 4
+    id: 4,
+    contacts: [],
+    definition: "",
+    fieldPredicate: {
+        id: 3,
+        documentTypePredicate: true,
+        value: "text/plain"
+    },
+    identifier: "",
+    value: ""
 };
 
 var dataFieldValue5 = {
-    id: 5
+    id: 5,
+    contacts: [],
+    definition: "",
+    fieldPredicate: {
+        id: 4,
+        documentTypePredicate: true,
+        value: "application/pdf"
+    },
+    identifier: "",
+    value: ""
 };
 
 var dataFieldValue6 = {
-    id: 6
+    id: 6,
+    contacts: [],
+    definition: "",
+    fieldPredicate: {
+        id: 5,
+        documentTypePredicate: true,
+        value: "text/csv"
+    },
+    identifier: "",
+    value: ""
 };
 
 
@@ -36,7 +86,7 @@ var mockFieldValue = function($q) {
         return angular.copy(validationMessages);
     };
 
-    model.setIsvalid = function(valid) {
+    model.setIsValid = function(valid) {
         isValid = valid ? true : false;
     };
 

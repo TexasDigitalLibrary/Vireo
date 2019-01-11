@@ -1,13 +1,13 @@
 var dataFieldPredicate1 = {
     id: 1,
     documentTypePredicate: false,
-    value: ""
+    value: "_doctype_primary"
 };
 
 var dataFieldPredicate2 = {
     id: 2,
     documentTypePredicate: false,
-    value: ""
+    value: "_doctype_archived"
 };
 
 var dataFieldPredicate3 = {
