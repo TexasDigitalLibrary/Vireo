@@ -252,7 +252,10 @@ var mockStudentSubmission = function($q) {
     };
 
     model.updateAdvisorApproval = function (approval) {
-        return payloadPromise($q.defer());
+        var payload = {
+            Submission: angular.copy(model)
+        }
+        return payloadPromise($q.defer(), payload);
     };
 
     model.updateCustomActionValue = function (customActionValue) {

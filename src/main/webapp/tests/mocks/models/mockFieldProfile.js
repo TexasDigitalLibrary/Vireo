@@ -40,7 +40,7 @@ var dataFieldProfile1 = {
     fieldPredicate: {
         id: 1,
         documentTypePredicate: false,
-        value: ""
+        value: "_doctype_primary"
     },
     gloss: "",
     help: "",
@@ -99,9 +99,9 @@ var dataFieldProfile2 = {
     enabled: false,
     flagged: true,
     fieldPredicate: {
-        id: 1,
-        documentTypePredicate: false,
-        value: "Field Predicate 1"
+        id: 3,
+        documentTypePredicate: true,
+        value: "text/plain"
     },
     gloss: "",
     help: "",
@@ -171,9 +171,9 @@ var dataFieldProfile4 = {
     enabled: false,
     flagged: false,
     fieldPredicate: {
-        id: 1,
+        id: 2,
         documentTypePredicate: false,
-        value: "Field Predicate 1"
+        value: "_doctype_archived"
     },
     gloss: "",
     help: "",
@@ -209,7 +209,7 @@ var dataFieldProfile5 = {
     fieldPredicate: {
         id: 1,
         documentTypePredicate: false,
-        value: "Field Predicate 1"
+        value: "_doctype_primary"
     },
     gloss: "",
     help: "",
