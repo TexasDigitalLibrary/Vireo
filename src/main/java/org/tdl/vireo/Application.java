@@ -15,11 +15,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.core.io.Resource;
 import org.tdl.vireo.model.converter.CryptoConverter;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "edu.tamu.*", "org.tdl.*" })
+@ComponentScan(basePackages = { "edu.tamu.*", "org.tdl.*" }, excludeFilters = {@Filter(type = FilterType.REGEX, pattern="edu.tamu.weaver.wro.service.*")})
 public class Application extends SpringBootServletInitializer {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
