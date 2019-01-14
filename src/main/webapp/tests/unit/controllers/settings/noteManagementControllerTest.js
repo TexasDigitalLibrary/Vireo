@@ -15,6 +15,9 @@ describe('controller: NoteManagementController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
+            // step is not defined/initialized in the controller.
+            scope.step = {aggregateNotes: {}};
+
             controller = $controller('NoteManagementController', {
                 $scope: scope,
                 $window: $window,
