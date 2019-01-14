@@ -6,14 +6,14 @@ describe('model: ManagedConfiguration', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, $sanitize, _WsApi_, _ManagedConfiguration_) {
+        inject(function ($rootScope, $sanitize, ManagedConfiguration, _WsApi_) {
             rootScope = $rootScope;
             sanitize = $sanitize;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _ManagedConfiguration_();
+            model = ManagedConfiguration();
         });
     });
 

@@ -6,13 +6,13 @@ describe('model: ControlledVocabulary', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _ControlledVocabulary_) {
+        inject(function ($rootScope, ControlledVocabulary, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _ControlledVocabulary_();
+            model = ControlledVocabulary();
         });
     });
 

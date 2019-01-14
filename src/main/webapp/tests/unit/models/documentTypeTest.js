@@ -6,13 +6,13 @@ describe('model: DocumentType', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _DocumentType_) {
+        inject(function ($rootScope, DocumentType, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _DocumentType_();
+            model = DocumentType();
         });
     });
 

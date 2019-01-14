@@ -6,13 +6,13 @@ describe('model: GraduationMonth', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _GraduationMonth_) {
+        inject(function ($rootScope, GraduationMonth, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _GraduationMonth_();
+            model = GraduationMonth();
         });
     });
 

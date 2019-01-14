@@ -6,13 +6,13 @@ describe('model: AbstractAppModel', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _AbstractAppModel_) {
+        inject(function ($rootScope, AbstractAppModel, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _AbstractAppModel_();
+            model = AbstractAppModel();
         });
     });
 

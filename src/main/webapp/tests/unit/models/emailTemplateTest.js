@@ -6,13 +6,13 @@ describe('model: EmailTemplate', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _EmailTemplate_) {
+        inject(function ($rootScope, EmailTemplate, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _EmailTemplate_();
+            model = EmailTemplate();
         });
     });
 

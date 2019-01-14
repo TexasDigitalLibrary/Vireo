@@ -6,13 +6,13 @@ describe('model: DegreeLevel', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _DegreeLevel_) {
+        inject(function ($rootScope, DegreeLevel, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _DegreeLevel_();
+            model = DegreeLevel();
         });
     });
 

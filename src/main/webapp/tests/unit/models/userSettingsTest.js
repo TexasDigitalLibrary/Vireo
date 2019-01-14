@@ -7,14 +7,14 @@ describe('model: UserSettings', function () {
         module('mock.userService');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _UserService_, _WsApi_, _UserSettings_) {
+        inject(function ($rootScope, UserSettings, _UserService_, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             UserService = _UserService_;
             WsApi = _WsApi_;
 
-            model = _UserSettings_();
+            model = UserSettings();
         });
     });
 

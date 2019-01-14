@@ -6,13 +6,13 @@ describe('model: Language', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _Language_) {
+        inject(function ($rootScope, Language, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _Language_();
+            model = Language();
         });
     });
 

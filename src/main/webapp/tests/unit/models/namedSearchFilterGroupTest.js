@@ -6,13 +6,13 @@ describe('model: NamedSearchFilterGroup', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _NamedSearchFilterGroup_) {
+        inject(function ($rootScope, NamedSearchFilterGroup, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _NamedSearchFilterGroup_();
+            model = NamedSearchFilterGroup();
         });
     });
 

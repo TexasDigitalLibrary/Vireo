@@ -9,7 +9,7 @@ describe('model: Submission', function () {
         module('mock.fileService');
         module('mock.wsApi');
 
-        inject(function ($q, $rootScope, _ActionLog_, _FieldValue_, _FileService_, _WsApi_, _Submission_) {
+        inject(function ($q, $rootScope, Submission, _ActionLog_, _FieldValue_, _FileService_, _WsApi_) {
             q = $q;
             rootScope = $rootScope;
             scope = $rootScope.$new();
@@ -20,7 +20,7 @@ describe('model: Submission', function () {
 
             WsApi = _WsApi_;
 
-            model = _Submission_();
+            model = Submission();
         });
     });
 

@@ -6,13 +6,13 @@ describe('model: CustomActionDefinition', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _CustomActionDefinition_) {
+        inject(function ($rootScope, CustomActionDefinition, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _CustomActionDefinition_();
+            model = CustomActionDefinition();
         });
     });
 

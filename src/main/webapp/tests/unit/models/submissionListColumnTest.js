@@ -6,13 +6,13 @@ describe('model: SubmissionListColumn', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _SubmissionListColumn_) {
+        inject(function ($rootScope, SubmissionListColumn, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _SubmissionListColumn_();
+            model = SubmissionListColumn();
         });
     });
 

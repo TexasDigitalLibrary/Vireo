@@ -1,18 +1,19 @@
 describe('model: SavedFilter', function () {
-    var rootScope, model, scope, WsApi;
+    var rootScope, model, scope, SavedFilter, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _SavedFilter_) {
+        inject(function ($rootScope, _SavedFilter_, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
+            SavedFilter = _SavedFilter_;
             WsApi = _WsApi_;
 
-            model = _SavedFilter_();
+            model = SavedFilter();
         });
     });
 

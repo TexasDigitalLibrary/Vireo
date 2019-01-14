@@ -6,13 +6,13 @@ describe('model: DepositLocation', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _DepositLocation_) {
+        inject(function ($rootScope, DepositLocation, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _DepositLocation_();
+            model = DepositLocation();
         });
     });
 

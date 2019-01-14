@@ -6,13 +6,13 @@ describe('model: FieldPredicate', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _FieldPredicate_) {
+        inject(function ($rootScope, FieldPredicate, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _FieldPredicate_();
+            model = FieldPredicate();
         });
     });
 

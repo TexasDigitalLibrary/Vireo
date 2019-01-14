@@ -6,13 +6,13 @@ describe('model: FieldValue', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _FieldValue_) {
+        inject(function ($rootScope, FieldValue, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _FieldValue_();
+            model = FieldValue();
         });
     });
 

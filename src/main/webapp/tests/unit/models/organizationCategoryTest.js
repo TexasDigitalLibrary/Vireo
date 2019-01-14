@@ -6,13 +6,13 @@ describe('model: OrganizationCategory', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _OrganizationCategory_) {
+        inject(function ($rootScope, OrganizationCategory, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _OrganizationCategory_();
+            model = OrganizationCategory();
         });
     });
 

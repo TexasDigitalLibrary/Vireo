@@ -6,13 +6,13 @@ describe('model: InputType', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _InputType_) {
+        inject(function ($rootScope, InputType, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _InputType_();
+            model = InputType();
         });
     });
 

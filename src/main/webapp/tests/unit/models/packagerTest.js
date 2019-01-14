@@ -6,13 +6,13 @@ describe('model: Packager', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _Packager_) {
+        inject(function ($rootScope, Packager, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _Packager_();
+            model = Packager();
         });
     });
 

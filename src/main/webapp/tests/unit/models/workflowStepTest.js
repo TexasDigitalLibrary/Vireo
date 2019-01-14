@@ -6,13 +6,13 @@ describe('model: WorkflowStep', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _WorkflowStep_) {
+        inject(function ($rootScope, WorkflowStep, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _WorkflowStep_();
+            model = WorkflowStep();
         });
     });
 

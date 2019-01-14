@@ -6,13 +6,13 @@ describe('model: ActionLog', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _ActionLog_) {
+        inject(function ($rootScope, ActionLog, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            model = _ActionLog_();
+            model = ActionLog();
         });
     });
 
