@@ -104,6 +104,11 @@ module.exports = function(config){
             'karma-ng-html2js-preprocessor'
         ],
 
+        coverageReporter: {
+          type: "lcov",
+          dir: "coverage/"
+        },
+
         junitReporter : {
             outputFile: 'test_out/unit.xml',
             suite: 'unit'

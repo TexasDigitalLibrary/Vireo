@@ -15,10 +15,14 @@
     "grunt:develop": "grunt develop",
     "grunt:deploy": "grunt deploy",
     "test": "node node_modules/karma/bin/karma start src/main/webapp/tests/karma.conf.js --single-run --browsers ChromeHeadlessNoSandbox,Firefox",
+    "test-ci": "node node_modules/karma/bin/karma start src/main/webapp/tests/karma.conf.js --no-auto-watch --single-run --browsers=Firefox",
     "preupdate-webdriver": "npm install",
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
-    "protractor": "protractor src/main/webapp/tests/protractor.conf.js"
+    "protractor": "protractor src/main/webapp/tests/protractor.conf.js",
+    "stop": "wvr server --stop",
+    "start": "wvr server -b /vireo --prod --uid vireo-webserver",
+    "start-dev": "wvr server -b /vireo --uid vireo-webserver"
   },
   "dependencies": {
     "angular-ui-tinymce": "0.0.19",
