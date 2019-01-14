@@ -22,4 +22,22 @@ describe('model: ManagedConfiguration', function () {
             expect(model).toBeDefined();
         });
     });
+
+    describe('Are the model methods defined', function () {
+        it('reset should be defined', function () {
+            expect(model.reset).toBeDefined();
+            expect(typeof model.reset).toEqual("function");
+        });
+    });
+
+    describe('Are the model methods working as expected', function () {
+        it('reset should call WsApi', function () {
+            spyOn(WsApi, 'fetch').and.callThrough();
+
+            model.reset();
+            scope.$digest();
+
+            expect(WsApi.fetch).toHaveBeenCalled();
+        });
+    });
 });
