@@ -3,7 +3,7 @@ describe('controller: OrganizationManagementController', function () {
     var controller, q, scope, timeout, AccordionService, AlertService, OrganizationRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $q, $rootScope, $route, $timeout, $window, _AccordionService_, _AlertService_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
+        inject(function ($controller, $location, $q, $rootScope, $route, $timeout, $window, _AccordionService_, _AlertService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             installPromiseMatchers();
             scope = $rootScope.$new();
 
@@ -16,6 +16,20 @@ describe('controller: OrganizationManagementController', function () {
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
+
+            // OrganizationManagementController is included inside of a OrganizationSettingsController scope.
+            // This results in having additional methods on the scope that OrganizationManagementController requires.
+            $controller('OrganizationSettingsController', {
+                $scope: scope,
+                $window: $window,
+                AccordionService: _AccordionService_,
+                ModalService: _ModalService_,
+                OrganizationRepo: _OrganizationRepo_,
+                RestApi: _RestApi_,
+                SidebarService: _SidebarService_,
+                StorageService: _StorageService_,
+                WsApi: _WsApi_
+            });
 
             controller = $controller('OrganizationManagementController', {
                 $q: q,
