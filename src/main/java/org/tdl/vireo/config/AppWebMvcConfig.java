@@ -29,8 +29,8 @@ import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 
 @EnableWebMvc
 @Configuration
-@EntityScan(basePackages = { "org.tdl.vireo.model", "edu.tamu.weaver.wro.model" })
-@EnableJpaRepositories(basePackages = { "org.tdl.vireo.model.repo", "edu.tamu.weaver.wro.model.repo" })
+@EntityScan(basePackages = { "org.tdl.vireo.model" })
+@EnableJpaRepositories(basePackages = { "org.tdl.vireo.model.repo" })
 public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(AppWebMvcConfig.class);
