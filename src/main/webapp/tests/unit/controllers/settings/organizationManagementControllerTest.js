@@ -85,10 +85,6 @@ describe('controller: OrganizationManagementController', function () {
             expect(scope.deleteWorkflowStep).toBeDefined();
             expect(typeof scope.deleteWorkflowStep).toEqual("function");
         });
-        it('getSelectedOrganization should be defined', function () {
-            expect(scope.getSelectedOrganization).toBeDefined();
-            expect(typeof scope.getSelectedOrganization).toEqual("function");
-        });
         it('openConfirmDeleteModal should be defined', function () {
             expect(scope.openConfirmDeleteModal).toBeDefined();
             expect(typeof scope.openConfirmDeleteModal).toEqual("function");
@@ -256,13 +252,6 @@ describe('controller: OrganizationManagementController', function () {
 
             expect(scope.closeModal).toHaveBeenCalled();
             expect(AlertService.add).toHaveBeenCalled();
-        });
-        it('getSelectedOrganization should return an organization', function () {
-            spyOn(OrganizationRepo, "getSelectedOrganization");
-
-            scope.getSelectedOrganization();
-
-            expect(OrganizationRepo.getSelectedOrganization).toHaveBeenCalled();
         });
         it('showOrganizationManagement should return a boolean', function () {
             var response
