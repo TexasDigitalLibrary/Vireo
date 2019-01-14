@@ -1,5 +1,5 @@
 describe('model: DocumentType', function () {
-    var rootScope, scope, WsApi, DocumentType;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: DocumentType', function () {
 
             WsApi = _WsApi_;
 
-            DocumentType = _DocumentType_;
+            model = _DocumentType_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(DocumentType).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

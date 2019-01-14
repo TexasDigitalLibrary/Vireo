@@ -1,5 +1,5 @@
 describe('model: CustomActionValue', function () {
-    var rootScope, scope, WsApi, CustomActionValue;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: CustomActionValue', function () {
 
             WsApi = _WsApi_;
 
-            CustomActionValue = _CustomActionValue_;
+            model = _CustomActionValue_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(CustomActionValue).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

@@ -1,54 +1,54 @@
-var mockNgTableParams1 = {
+var dataNgTableParams1 = {
+    id: 1,
+    data: []
 };
 
-var mockNgTableParams2 = {
+var dataNgTableParams2 = {
+    id: 2,
+    data: []
 };
 
-var mockNgTableParams3 = {
+var dataNgTableParams3 = {
+    id: 3,
+    data: []
 };
 
-angular.module('mock.ngTableParams', []).service('NgTableParams', function ($q) {
-    return function () {
-        var model = this;
-        var defer;
-        var payloadResponse = function (payload) {
-            return defer.resolve({
-                body: angular.toJson({
-                    meta: {
-                        status: 'SUCCESS'
-                    },
-                    payload: payload
-                })
-            });
-        };
+var dataNgTableParams4 = {
+    id: 4,
+    data: []
+};
 
-        this.isDirty = false;
+var dataNgTableParams5 = {
+    id: 5,
+    data: []
+};
 
-        this.mock = function(toMock) {
-        };
+var dataNgTableParams6 = {
+    id: 6,
+    data: []
+};
 
-        this.delete = function() {
-            defer = $q.defer();
-            payloadResponse();
-            return defer.promise;
-        };
+var mockNgTableParams = function($q) {
+    var model = mockModel($q, dataNgTableParams1);
 
-        this.dirty = function(boolean) {
-                this.isDirty = boolean;
-        };
-
-        this.reload = function() {
-        };
-
-        this.save = function() {
-            defer = $q.defer();
-            payloadResponse();
-            return defer.promise;
-        };
-
-        this.clearValidationResults = function () {
-        };
-
-        return this;
+    model.count = function() {
+        var total = 0;
+        // TODO
+        return total;
     };
-});
+
+    model.sorting = function(sort) {
+        // TODO
+        return {};
+    };
+
+    model.page = function(sort) {
+        // TODO
+        return {};
+    };
+
+    return model;
+};
+
+angular.module('mock.ngTableParams', []).service('NgTableParams', mockNgTableParams);
+

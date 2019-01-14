@@ -1,56 +1,32 @@
-var mockDegree1 = {
-    'id': 1
+var dataDegree1 = {
+    id: 1
 };
 
-var mockDegree2 = {
-    'id': 2
+var dataDegree2 = {
+    id: 2
 };
 
-var mockDegree3 = {
-    'id': 3
+var dataDegree3 = {
+    id: 3
 };
 
-angular.module('mock.degree', []).service('Degree', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataDegree4 = {
+    id: 4
+};
 
-    model.isDirty = false;
+var dataDegree5 = {
+    id: 5
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataDegree6 = {
+    id: 6
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockDegree = function($q) {
+    var model = mockModel($q, dataDegree1);
 
     return model;
-});
+};
+
+angular.module('mock.degree', []).service('Degree', mockDegree);
+

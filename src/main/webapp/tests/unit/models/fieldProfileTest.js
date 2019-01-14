@@ -1,5 +1,5 @@
 describe('model: FieldProfile', function () {
-    var rootScope, scope, WsApi, FieldProfile;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: FieldProfile', function () {
 
             WsApi = _WsApi_;
 
-            FieldProfile = _FieldProfile_;
+            model = _FieldProfile_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(FieldProfile).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

@@ -1,5 +1,5 @@
 describe('model: Packager', function () {
-    var rootScope, scope, WsApi, Packager;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: Packager', function () {
 
             WsApi = _WsApi_;
 
-            Packager = _Packager_;
+            model = _Packager_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(Packager).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

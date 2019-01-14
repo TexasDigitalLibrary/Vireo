@@ -1,5 +1,5 @@
 describe('model: AbstractAppModel', function () {
-    var rootScope, scope, WsApi, AbstractAppModel;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: AbstractAppModel', function () {
 
             WsApi = _WsApi_;
 
-            AbstractAppModel = _AbstractAppModel_;
+            model = _AbstractAppModel_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(AbstractAppModel).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

@@ -1,5 +1,5 @@
 describe('model: Note', function () {
-    var rootScope, scope, WsApi, Note;
+    var rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: Note', function () {
 
             WsApi = _WsApi_;
 
-            Note = _Note_;
+            model = _Note_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(Note).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

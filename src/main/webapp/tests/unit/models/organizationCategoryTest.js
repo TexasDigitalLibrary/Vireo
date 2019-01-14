@@ -1,5 +1,5 @@
 describe('model: OrganizationCategory', function () {
-    var rootScope, scope, WsApi, OrganizationCategory;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: OrganizationCategory', function () {
 
             WsApi = _WsApi_;
 
-            OrganizationCategory = _OrganizationCategory_;
+            model = _OrganizationCategory_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(OrganizationCategory).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

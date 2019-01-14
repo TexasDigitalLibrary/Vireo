@@ -1,5 +1,5 @@
 describe('model: UserSettings', function () {
-    var rootScope, scope, UserService, WsApi, UserSettings;
+    var rootScope, model, scope, UserService, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -14,13 +14,13 @@ describe('model: UserSettings', function () {
             UserService = _UserService_;
             WsApi = _WsApi_;
 
-            UserSettings = _UserSettings_;
+            model = _UserSettings_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(UserSettings).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

@@ -1,56 +1,32 @@
-var mockEmailTemplate1 = {
-    'id': 1
+var dataEmailTemplate1 = {
+    id: 1
 };
 
-var mockEmailTemplate2 = {
-    'id': 2
+var dataEmailTemplate2 = {
+    id: 2
 };
 
-var mockEmailTemplate3 = {
-    'id': 3
+var dataEmailTemplate3 = {
+    id: 3
 };
 
-angular.module('mock.emailTemplate', []).service('EmailTemplate', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataEmailTemplate4 = {
+    id: 4
+};
 
-    model.isDirty = false;
+var dataEmailTemplate5 = {
+    id: 5
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataEmailTemplate6 = {
+    id: 6
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockEmailTemplate = function($q) {
+    var model = mockModel($q, dataEmailTemplate1);
 
     return model;
-});
+};
+
+angular.module('mock.emailTemplate', []).service('EmailTemplate', mockEmailTemplate);
+

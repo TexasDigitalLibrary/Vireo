@@ -1,5 +1,5 @@
 describe('model: SavedFilter', function () {
-    var rootScope, scope, WsApi, SavedFilter;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: SavedFilter', function () {
 
             WsApi = _WsApi_;
 
-            SavedFilter = _SavedFilter_;
+            model = _SavedFilter_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(SavedFilter).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

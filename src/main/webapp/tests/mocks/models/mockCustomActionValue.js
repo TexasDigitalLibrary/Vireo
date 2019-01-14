@@ -1,56 +1,32 @@
-var mockCustomActionValue1 = {
-    'id': 1
+var dataCustomActionValue1 = {
+    id: 1
 };
 
-var mockCustomActionValue2 = {
-    'id': 2
+var dataCustomActionValue2 = {
+    id: 2
 };
 
-var mockCustomActionValue3 = {
-    'id': 3
+var dataCustomActionValue3 = {
+    id: 3
 };
 
-angular.module('mock.customActionValue', []).service('CustomActionValue', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataCustomActionValue4 = {
+    id: 4
+};
 
-    model.isDirty = false;
+var dataCustomActionValue5 = {
+    id: 5
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataCustomActionValue6 = {
+    id: 6
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockCustomActionValue = function($q) {
+    var model = mockModel($q, dataCustomActionValue1);
 
     return model;
-});
+};
+
+angular.module('mock.customActionValue', []).service('CustomActionValue', mockCustomActionValue);
+

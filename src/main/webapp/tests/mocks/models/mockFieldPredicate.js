@@ -1,56 +1,44 @@
-var mockFieldPredicate1 = {
-    'id': 1
+var dataFieldPredicate1 = {
+    id: 1,
+    documentTypePredicate: false,
+    value: "_doctype_primary"
 };
 
-var mockFieldPredicate2 = {
-    'id': 2
+var dataFieldPredicate2 = {
+    id: 2,
+    documentTypePredicate: false,
+    value: "_doctype_archived"
 };
 
-var mockFieldPredicate3 = {
-    'id': 3
+var dataFieldPredicate3 = {
+    id: 3,
+    documentTypePredicate: true,
+    value: "text/plain"
 };
 
-angular.module('mock.fieldPredicate', []).service('FieldPredicate', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataFieldPredicate4 = {
+    id: 4,
+    documentTypePredicate: true,
+    value: "application/pdf"
+};
 
-    model.isDirty = false;
+var dataFieldPredicate5 = {
+    id: 5,
+    documentTypePredicate: true,
+    value: "text/csv"
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataFieldPredicate6 = {
+    id: 6,
+    documentTypePredicate: true,
+    value: "image/png"
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockFieldPredicate = function($q) {
+    var model = mockModel($q, dataFieldPredicate1);
 
     return model;
-});
+};
+
+angular.module('mock.fieldPredicate', []).service('FieldPredicate', mockFieldPredicate);
+

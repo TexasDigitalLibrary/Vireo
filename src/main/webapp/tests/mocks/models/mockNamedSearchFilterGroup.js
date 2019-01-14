@@ -1,80 +1,48 @@
-var mockNamedSearchFilterGroup1 = {
-    'id': 1
+var dataNamedSearchFilterGroup1 = {
+    id: 1
 };
 
-var mockNamedSearchFilterGroup2 = {
-    'id': 2
+var dataNamedSearchFilterGroup2 = {
+    id: 2
 };
 
-var mockNamedSearchFilterGroup3 = {
-    'id': 3
+var dataNamedSearchFilterGroup3 = {
+    id: 3
 };
 
-angular.module('mock.namedSearchFilterGroup', []).service('NamedSearchFilterGroup', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataNamedSearchFilterGroup4 = {
+    id: 4
+};
 
-    model.isDirty = false;
+var dataNamedSearchFilterGroup5 = {
+    id: 5
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataNamedSearchFilterGroup6 = {
+    id: 6
+};
+
+var mockNamedSearchFilterGroup = function($q) {
+    var model = mockModel($q, dataNamedSearchFilterGroup1);
 
     model.addFilter = function(criterionName, filterValue, filterGloss, exactMatch) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.clearFilters = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
+        return payloadPromise($q.defer());
     };
 
     model.removeFilter = function(namedSearchFilterName, filterCriterion) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.set = function(filter) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     return model;
-});
+};
+
+angular.module('mock.namedSearchFilterGroup', []).service('NamedSearchFilterGroup', mockNamedSearchFilterGroup);
+

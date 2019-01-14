@@ -1,5 +1,5 @@
 describe('model: DegreeLevel', function () {
-    var rootScope, scope, WsApi, DegreeLevel;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: DegreeLevel', function () {
 
             WsApi = _WsApi_;
 
-            DegreeLevel = _DegreeLevel_;
+            model = _DegreeLevel_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(DegreeLevel).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

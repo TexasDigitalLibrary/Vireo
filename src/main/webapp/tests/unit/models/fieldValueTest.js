@@ -1,5 +1,5 @@
 describe('model: FieldValue', function () {
-    var rootScope, scope, WsApi, FieldValue;
+    var rootScope, model, scope, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -12,13 +12,13 @@ describe('model: FieldValue', function () {
 
             WsApi = _WsApi_;
 
-            FieldValue = _FieldValue_;
+            model = _FieldValue_();
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(FieldValue).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });
