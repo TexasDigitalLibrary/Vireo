@@ -21,4 +21,22 @@ describe('model: DepositLocation', function () {
             expect(model).toBeDefined();
         });
     });
+
+    describe('Are the model methods defined', function () {
+        it('testConnection should be defined', function () {
+            expect(model.testConnection).toBeDefined();
+            expect(typeof model.testConnection).toEqual("function");
+        });
+    });
+
+    describe('Are the model methods working as expected', function () {
+        it('testConnection should call WsApi', function () {
+            spyOn(WsApi, 'fetch');
+
+            model.testConnection();
+            scope.$digest();
+
+            expect(WsApi.fetch).toHaveBeenCalled();
+        });
+    });
 });
