@@ -515,16 +515,8 @@ describe('controller: AdminSubmissionViewController', function () {
 
             scope.addFileData.files = [ {} ];
             FileUploadService.uploadFile = function (submission, fieldValue) {
-                var response = {
-                    data: {
-                        meta: {
-                            status: "INVALID",
-                        },
-                        payload: {},
-                        status: 200
-                    }
-                };
-                return valuePromise(q.defer(), response);
+                var payload = {};
+                return dataPromise(q.defer(), payload);
             };
 
             scope.submitAddFile();

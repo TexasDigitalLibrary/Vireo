@@ -39,18 +39,7 @@ angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabular
         };
 
         // TODO
-
-        // ControlledVocabularyRepo.confirmCSV() return result appears to be inconsistent with the project.
-        var response = {
-            data: {
-                meta: {
-                    status: 'SUCCESS',
-                },
-                payload: payload,
-                status: 200
-            }
-        };
-        return valuePromise($q.defer(), response);
+        return dataPromise($q.defer(), payload);
     };
 
     repo.downloadCSV = function (controlledVocabulary) {
