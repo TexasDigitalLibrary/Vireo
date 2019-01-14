@@ -117,7 +117,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             addCommentModal.adding = true;
             if ($scope.addCommentModal.sendEmailToRecipient) {
                 $scope.addCommentModal.recipientEmail = $scope.recipientEmails.join(';');
-                if ($scope.addCommentModal.sendEmailToRecipient) {
+                if ($scope.addCommentModal.sendEmailToCCRecipient) {
                     $scope.addCommentModal.ccRecipientEmail = $scope.ccRecipientEmails.join(';');
                 }
             }

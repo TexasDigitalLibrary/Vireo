@@ -8,10 +8,6 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
 
     $scope.languages = LanguageRepo.getAll();
 
-    LanguageRepo.listen(function () {
-        $scope.resetLanguages();
-    });
-
     var proquestPromise = LanguageRepo.getProquestLanguageCodes().then(function (data) {
         $scope.proquestLanguageCodes = angular.fromJson(data.body).payload.HashMap;
     });
@@ -108,6 +104,10 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
             confirm: '#languagesConfirmRemoveModal',
             reorder: $scope.reorderLanguages,
             container: '#languages-container'
+        });
+
+        LanguageRepo.listen(function () {
+            $scope.resetLanguages();
         });
 
     });

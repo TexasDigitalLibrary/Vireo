@@ -39,10 +39,12 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
 
         var position = 1;
 
-        angular.forEach($scope.step.aggregateNotes, function(note) {
-            note.position = position;
-            position++;
-        });
+        if ($scope.step) {
+            angular.forEach($scope.step.aggregateNotes, function(note) {
+                note.position = position;
+                position++;
+            });
+        }
 
         if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
 			$scope.modalData.refresh();

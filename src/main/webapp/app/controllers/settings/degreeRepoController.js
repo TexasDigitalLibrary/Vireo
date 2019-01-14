@@ -10,10 +10,6 @@ vireo.controller("DegreeRepoController", function ($controller, $scope, $q, Degr
 
     $scope.degreeLevels = DegreeLevelRepo.getAll();
 
-    DegreeRepo.listen(function (data) {
-        $scope.resetDegree();
-    });
-
     $scope.ready = $q.all([DegreeLevelRepo.ready(), DegreeRepo.ready()]);
 
     $scope.dragging = false;
@@ -90,6 +86,10 @@ vireo.controller("DegreeRepoController", function ($controller, $scope, $q, Degr
             confirm: '#degreeConfirmRemoveModal',
             reorder: $scope.reorderDegree,
             container: '#degrees-container'
+        });
+
+        DegreeRepo.listen(function (data) {
+            $scope.resetDegree();
         });
 
     });
