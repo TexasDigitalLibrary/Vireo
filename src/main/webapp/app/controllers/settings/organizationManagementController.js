@@ -4,18 +4,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
         $scope: $scope
     }));
 
-    OrganizationRepo.listen(function () {
-        $scope.resetWorkflowSteps();
-    });
-
-    OrganizationRepo.listen(ApiResponseActions.READ, function () {
-        $scope.resetManageOrganization();
-    });
-
-    OrganizationRepo.listen(ApiResponseActions.BROADCAST, function () {
-        $scope.resetManageOrganization();
-    });
-
     $scope.organizationRepo = OrganizationRepo;
 
     $scope.workflowStepRepo = WorkflowStepRepo;
@@ -138,6 +126,18 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
         };
 
         $scope.testBoolean = true;
+
+        OrganizationRepo.listen(function () {
+            $scope.resetWorkflowSteps();
+        });
+
+        OrganizationRepo.listen(ApiResponseActions.READ, function () {
+            $scope.resetManageOrganization();
+        });
+
+        OrganizationRepo.listen(ApiResponseActions.BROADCAST, function () {
+            $scope.resetManageOrganization();
+        });
 
     });
 

@@ -54,7 +54,7 @@
                 </span>
                 <span ng-show="documentFieldValues.length > 0">
                   <ul class="list-unstyled">
-                    <li ng-repeat="documentFieldValue in documentFieldValues = (submission.fieldValues | filter:removibleDocuments)">
+                    <li ng-repeat="documentFieldValue in documentFieldValues = (submission.fieldValues | filter:removableDocuments)">
                       <input type="checkbox" ng-model="fileSelected" ng-click="queueRemove(documentFieldValue)"/>
                       <span>{{documentFieldValue.fileInfo.name}}
                         <strong>({{getFileType(documentFieldValue.fieldPredicate)}}
