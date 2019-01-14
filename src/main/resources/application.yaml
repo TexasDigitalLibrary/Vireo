@@ -174,7 +174,10 @@ wro:
 theme:
   managerService: org.tdl.vireo.service.VireoThemeManagerService
   # define the location of sass/css files 
-  default.css: sass/app.scss
+  default:
+    css: sass/app.scss
+    location: config/theme-defaults.json
+  defaults.location: config/theme-defaults.json
   cacheReloadUrl: ${app.url}/wro/wroAPI/reloadCache
 
 

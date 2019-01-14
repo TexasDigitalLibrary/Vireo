@@ -123,15 +123,24 @@ auth:
   # edu.tamu.weaver.token.provider.controller.TokenController
   path: /auth
 
+
 # WRO Configuration
 wro:
+  managerFactoryClassName: org.tdl.vireo.wro.manager.factory.VireoConfigurableWroManagerFactory
   # define which preProcessors should be used to process SASS
-  preProcessors: cssUrlRewriting
+  preProcessors: lessCssImport
   # define which postProcessors should be used to process SASS
-  postProcessors: repoPostProcessor,rubySassCss,cssMin
+  postProcessors: vireoPostProcessor,rubySassCss
 
-# edu.tamu.weaver.wro.service.ThemeManagerService
+
+# ThemeManagerService implementation
+# NOTE: weaver-wro dependency will not be able to access class when deployed as jar
 theme:
-  manager: false
-  default.css:
-  defaults.location:
+  managerService: org.tdl.vireo.service.VireoThemeManagerService
+  # define the location of sass/css files 
+  default:
+    css: sass/app.scss
+    location: config/theme-defaults.json
+  # TODO: remove when corrected in Weaver-Webservice-Core
+  defaults.location: config/theme-defaults.json
+  cacheReloadUrl: ${app.url}/wro/wroAPI/reloadCache
