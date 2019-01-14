@@ -9,7 +9,7 @@ describe('controller: OrganizationCategoriesController', function () {
 
             q = $q;
 
-            OrganizationCategoryRepo = _OrganizationCategoryRepo_
+            OrganizationCategoryRepo = _OrganizationCategoryRepo_;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";

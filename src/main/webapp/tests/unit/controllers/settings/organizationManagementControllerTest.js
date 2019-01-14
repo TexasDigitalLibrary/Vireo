@@ -254,7 +254,7 @@ describe('controller: OrganizationManagementController', function () {
             expect(AlertService.add).toHaveBeenCalled();
         });
         it('showOrganizationManagement should return a boolean', function () {
-            var response
+            var response;
 
             response = scope.showOrganizationManagement();
             expect(response).toBe(false);
