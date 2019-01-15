@@ -20,6 +20,9 @@ var dataFieldValue2 = {
         documentTypePredicate: false,
         value: "_doctype_archived"
     },
+    fileInfo: {
+        name: "test"
+    },
     identifier: "",
     value: ""
 };
@@ -68,6 +71,9 @@ var dataFieldValue6 = {
         documentTypePredicate: true,
         value: "text/csv"
     },
+    fileInfo: {
+        name: "test.csv"
+    },
     identifier: "",
     value: ""
 };
@@ -84,6 +90,10 @@ var mockFieldValue = function($q) {
 
     model.getValidationMessages = function() {
         return angular.copy(validationMessages);
+    };
+
+    model.isValid = function() {
+        return isValid;
     };
 
     model.setIsValid = function(valid) {
