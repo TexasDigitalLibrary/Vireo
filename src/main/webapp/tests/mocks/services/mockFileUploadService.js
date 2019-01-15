@@ -3,13 +3,11 @@ angular.module('mock.fileUploadService', []).service('FileUploadService', functi
 
     service.archiveFile = function (submission, fieldValue, removeFieldValue) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     service.download = function (submission, fieldValue) {
         var download = {};
-        // TODO
         return download;
     };
 
@@ -27,13 +25,11 @@ angular.module('mock.fileUploadService', []).service('FileUploadService', functi
 
     service.removeFile = function (submission, fieldValue) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     service.uploadFile = function (submission, fieldValue) {
         var response = {};
-        // TODO
         return dataPromise($q.defer(), response);
     };
 

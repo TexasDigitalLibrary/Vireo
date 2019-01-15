@@ -21,7 +21,6 @@ angular.module('mock.languageRepo', []).service('LanguageRepo', function($q) {
 
     repo.getProquestLanguageCodes = function () {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 

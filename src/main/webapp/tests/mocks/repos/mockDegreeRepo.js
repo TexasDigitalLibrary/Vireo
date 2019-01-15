@@ -21,7 +21,6 @@ angular.module('mock.degreeRepo', []).service('DegreeRepo', function($q) {
 
     repo.getProquestDegreeCodes = function (cv) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 

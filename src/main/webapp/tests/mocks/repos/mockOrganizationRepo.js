@@ -25,7 +25,6 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
 
     repo.addWorkflowStep = function (workflowStep) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
@@ -81,7 +80,6 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
 
     repo.reorderWorkflowStep = function (upOrDown, workflowStepID) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
@@ -116,7 +114,6 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
 
     repo.updateWorkflowStep = function (workflowStep) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 

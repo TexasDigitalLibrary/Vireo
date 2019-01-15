@@ -22,13 +22,11 @@ angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabular
     repo.addVocabularyWord = function (cv, vw) {
         var payload = {};
         payload.VocabularyWord = vw;
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.cancel = function (controlledVocabulary) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
@@ -38,7 +36,6 @@ angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabular
             }
         };
 
-        // TODO
         return dataPromise($q.defer(), payload);
     };
 
@@ -50,19 +47,16 @@ angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabular
             }
         };
 
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.removeVocabularyWord = function (cv, vw) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.sort = function () {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
@@ -75,13 +69,11 @@ angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabular
 
     repo.updateVocabularyWord = function (cv, vw) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.uploadCSV = function (name) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 

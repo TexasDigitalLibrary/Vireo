@@ -21,25 +21,21 @@ angular.module('mock.submissionRepo', []).service('SubmissionRepo', function($q)
 
     repo.batchAssignTo = function (assignee) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.batchExport = function (packager, filterId) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.batchPublish = function (depositLocation) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.batchUpdateStatus = function (submissionStatus) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
@@ -58,7 +54,6 @@ angular.module('mock.submissionRepo', []).service('SubmissionRepo', function($q)
 
     repo.query = function (columns, page, size) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 

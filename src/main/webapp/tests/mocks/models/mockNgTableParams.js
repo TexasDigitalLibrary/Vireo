@@ -33,17 +33,14 @@ var mockNgTableParams = function($q) {
 
     model.count = function() {
         var total = 0;
-        // TODO
         return total;
     };
 
     model.sorting = function(sort) {
-        // TODO
         return {};
     };
 
     model.page = function(sort) {
-        // TODO
         return {};
     };
 

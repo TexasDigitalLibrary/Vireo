@@ -30,7 +30,6 @@ var mockModel = function ($q, mockDataObj) {
 
     model.clearListens = function() {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 

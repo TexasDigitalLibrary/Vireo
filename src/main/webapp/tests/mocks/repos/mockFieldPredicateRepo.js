@@ -21,7 +21,6 @@ angular.module('mock.fieldPredicateRepo', []).service('FieldPredicateRepo', func
 
     repo.findByValue = function (value) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 

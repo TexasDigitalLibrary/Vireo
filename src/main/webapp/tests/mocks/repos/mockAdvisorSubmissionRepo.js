@@ -20,7 +20,6 @@ angular.module('mock.advisorSubmissionRepo', []).service('AdvisorSubmissionRepo'
     var repo = mockRepo('AdvisorSubmissionRepo', $q, mockSubmission, dataAdvisorSubmissionRepo1);
 
     repo.fetchDocumentTypeFileInfo = function() {
-        // TODO
         return valuePromise($q.defer(), repo.mockModel(dataAdvisorSubmissionRepo1));
     };
 

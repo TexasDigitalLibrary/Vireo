@@ -21,19 +21,16 @@ angular.module('mock.managerSubmissionListColumnRepo', []).service('ManagerSubmi
 
     repo.resetSubmissionListColumns = function (cv) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.submissionListPageSize = function () {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.updateSubmissionListColumns = function (columns, pageSize) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 

@@ -204,7 +204,6 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
 
     repo.reorder = function (src, dest) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
@@ -242,21 +241,17 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
     };
 
     repo.setToDelete = function (id) {
-        // TODO
     };
 
     repo.setToUpdate = function (id) {
-        // TODO
     };
 
     repo.sort = function (guarantor, facet) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.unshift = function (modelJson) {
-        // TODO
     };
 
     repo.update = function (model) {

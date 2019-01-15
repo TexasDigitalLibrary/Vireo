@@ -161,25 +161,21 @@ var mockStudentSubmission = function($q) {
 
     model.getFieldProfileByPredicate = function (predicate) {
         var fieldProfile = null;
-        // TODO
         return fieldProfile;
     };
 
     model.getFieldProfileByPredicateName = function (predicateValue) {
         var fieldProfile = null;
-        // TODO
         return fieldProfile;
     };
 
     model.getFieldValuesByFieldPredicate = function (fieldPredicate) {
         var fieldValues = [];
-        // TODO
         return fieldValues;
     };
 
     model.getFieldValuesByInputType = function (inputType) {
         var fieldValues = [];
-        // TODO
         return fieldValues;
     };
 

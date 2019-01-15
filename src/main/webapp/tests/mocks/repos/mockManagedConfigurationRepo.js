@@ -21,7 +21,6 @@ angular.module('mock.managedConfigurationRepo', []).service('ManagedConfiguratio
 
     repo.build = function (data) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
@@ -37,13 +36,11 @@ angular.module('mock.managedConfigurationRepo', []).service('ManagedConfiguratio
 
     repo.getAllShibbolethConfigurations = function () {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 
     repo.unwrap = function (res) {
         var payload = {};
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 

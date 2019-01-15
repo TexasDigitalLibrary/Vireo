@@ -33,7 +33,6 @@ angular.module('mock.userRepo', []).service('UserRepo', function($q) {
 
     repo.getAssignableUsers = function (roles) {
         var payload = repo.fetch();
-        // TODO
         return payloadPromise($q.defer(), payload);
     };
 

@@ -3,7 +3,6 @@ angular.module('mock.fileService', []).service('FileService', function ($q) {
 
     service.download = function (submission, fieldValue) {
         var download = {};
-        // TODO
         return download;
     };
 
