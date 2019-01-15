@@ -12,7 +12,7 @@ describe('model: AbstractAppModel', function () {
 
             WsApi = _WsApi_;
 
-            model = AbstractAppModel();
+            model = angular.extend(new AbstractAppModel());
         });
     });
 

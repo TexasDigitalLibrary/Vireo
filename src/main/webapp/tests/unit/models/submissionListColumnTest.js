@@ -12,7 +12,7 @@ describe('model: SubmissionListColumn', function () {
 
             WsApi = _WsApi_;
 
-            model = SubmissionListColumn();
+            model = angular.extend(new SubmissionListColumn(), dataSubmissionListColumn1);
         });
     });
 

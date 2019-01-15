@@ -12,7 +12,7 @@ describe('model: CustomActionValue', function () {
 
             WsApi = _WsApi_;
 
-            model = CustomActionValue();
+            model = angular.extend(new CustomActionValue(), dataCustomActionValue1);
         });
     });
 

@@ -14,7 +14,7 @@ describe('model: UserSettings', function () {
             UserService = _UserService_;
             WsApi = _WsApi_;
 
-            model = UserSettings();
+            model = angular.extend(new UserSettings(), dataUserSettings1);
         });
     });
 

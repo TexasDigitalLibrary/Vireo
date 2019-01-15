@@ -12,7 +12,7 @@ describe('model: FieldProfile', function () {
 
             WsApi = _WsApi_;
 
-            model = FieldProfile();
+            model = angular.extend(new FieldProfile(), dataFieldProfile1);
         });
     });
 

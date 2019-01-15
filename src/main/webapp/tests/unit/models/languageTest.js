@@ -12,7 +12,7 @@ describe('model: Language', function () {
 
             WsApi = _WsApi_;
 
-            model = Language();
+            model = angular.extend(new Language(), dataLanguage1);
         });
     });
 

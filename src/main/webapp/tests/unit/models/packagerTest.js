@@ -12,7 +12,7 @@ describe('model: Packager', function () {
 
             WsApi = _WsApi_;
 
-            model = Packager();
+            model = angular.extend(new Packager(), dataPackager1);
         });
     });
 

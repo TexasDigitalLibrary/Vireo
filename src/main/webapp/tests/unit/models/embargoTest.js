@@ -12,7 +12,7 @@ describe('model: Embargo', function () {
 
             WsApi = _WsApi_;
 
-            model = Embargo();
+            model = angular.extend(new Embargo(), dataEmbargo1);
         });
     });
 

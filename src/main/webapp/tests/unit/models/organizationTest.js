@@ -16,7 +16,7 @@ describe('model: Organization', function () {
             RestApi = _RestApi_;
             WsApi = _WsApi_;
 
-            model = Organization();
+            model = angular.extend(new Organization(), dataOrganization1);
         });
     });
 

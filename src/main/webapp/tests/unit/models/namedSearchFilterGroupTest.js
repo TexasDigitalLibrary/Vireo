@@ -12,7 +12,7 @@ describe('model: NamedSearchFilterGroup', function () {
 
             WsApi = _WsApi_;
 
-            model = NamedSearchFilterGroup();
+            model = angular.extend(new NamedSearchFilterGroup(), dataNamedSearchFilterGroup1);
         });
     });
 

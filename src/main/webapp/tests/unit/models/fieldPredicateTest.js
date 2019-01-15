@@ -12,7 +12,7 @@ describe('model: FieldPredicate', function () {
 
             WsApi = _WsApi_;
 
-            model = FieldPredicate();
+            model = angular.extend(new FieldPredicate(), dataFieldPredicate1);
         });
     });
 

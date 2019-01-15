@@ -12,7 +12,7 @@ describe('model: DepositLocation', function () {
 
             WsApi = _WsApi_;
 
-            model = DepositLocation();
+            model = angular.extend(new DepositLocation(), dataDepositLocation1);
         });
     });
 

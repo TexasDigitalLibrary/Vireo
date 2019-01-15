@@ -12,7 +12,7 @@ describe('model: EmailTemplate', function () {
 
             WsApi = _WsApi_;
 
-            model = EmailTemplate();
+            model = angular.extend(new EmailTemplate(), dataEmailTemplate1);
         });
     });
 

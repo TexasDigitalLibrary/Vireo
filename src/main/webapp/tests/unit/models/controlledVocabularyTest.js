@@ -12,7 +12,7 @@ describe('model: ControlledVocabulary', function () {
 
             WsApi = _WsApi_;
 
-            model = ControlledVocabulary();
+            model = angular.extend(new ControlledVocabulary(), dataControlledVocabulary1);
         });
     });
 

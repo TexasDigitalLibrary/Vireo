@@ -13,7 +13,7 @@ describe('model: SavedFilter', function () {
             SavedFilter = _SavedFilter_;
             WsApi = _WsApi_;
 
-            model = SavedFilter();
+            model = angular.extend(new SavedFilter(), dataSavedFilter1);
         });
     });
 

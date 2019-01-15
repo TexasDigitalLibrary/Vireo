@@ -12,7 +12,7 @@ describe('model: Note', function () {
 
             WsApi = _WsApi_;
 
-            model = Note();
+            model = angular.extend(new Note(), dataNote1);
         });
     });
 

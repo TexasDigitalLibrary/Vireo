@@ -12,7 +12,7 @@ describe('model: DegreeLevel', function () {
 
             WsApi = _WsApi_;
 
-            model = DegreeLevel();
+            model = angular.extend(new DegreeLevel(), dataDegreeLevel1);
         });
     });
 

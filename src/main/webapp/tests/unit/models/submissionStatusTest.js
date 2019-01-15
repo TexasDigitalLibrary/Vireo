@@ -12,7 +12,7 @@ describe('model: SubmissionStatus', function () {
 
             WsApi = _WsApi_;
 
-            model = SubmissionStatus();
+            model = angular.extend(new SubmissionStatus(), dataSubmissionStatus1);
         });
     });
 

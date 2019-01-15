@@ -12,7 +12,7 @@ describe('model: InputType', function () {
 
             WsApi = _WsApi_;
 
-            model = InputType();
+            model = angular.extend(new InputType(), dataInputType1);
         });
     });
 

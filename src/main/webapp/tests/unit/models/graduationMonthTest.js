@@ -12,7 +12,7 @@ describe('model: GraduationMonth', function () {
 
             WsApi = _WsApi_;
 
-            model = GraduationMonth();
+            model = angular.extend(new GraduationMonth(), dataGraduationMonth1);
         });
     });
 

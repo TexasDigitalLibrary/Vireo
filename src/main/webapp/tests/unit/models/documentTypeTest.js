@@ -12,7 +12,7 @@ describe('model: DocumentType', function () {
 
             WsApi = _WsApi_;
 
-            model = DocumentType();
+            model = angular.extend(new DocumentType(), dataDocumentType1);
         });
     });
 

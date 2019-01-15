@@ -12,7 +12,7 @@ describe('model: WorkflowStep', function () {
 
             WsApi = _WsApi_;
 
-            model = WorkflowStep();
+            model = angular.extend(new WorkflowStep(), dataWorkflowStep1);
         });
     });
 

@@ -12,7 +12,7 @@ describe('model: ActionLog', function () {
 
             WsApi = _WsApi_;
 
-            model = ActionLog();
+            model = angular.extend(new ActionLog(), dataActionLog1);
         });
     });
 

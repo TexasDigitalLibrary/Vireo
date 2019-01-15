@@ -12,7 +12,7 @@ describe('model: FieldValue', function () {
 
             WsApi = _WsApi_;
 
-            model = FieldValue();
+            model = angular.extend(new FieldValue(), dataFieldValue1);
         });
     });
 

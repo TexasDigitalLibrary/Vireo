@@ -12,7 +12,7 @@ describe('model: OrganizationCategory', function () {
 
             WsApi = _WsApi_;
 
-            model = OrganizationCategory();
+            model = angular.extend(new OrganizationCategory(), dataOrganizationCategory1);
         });
     });
 

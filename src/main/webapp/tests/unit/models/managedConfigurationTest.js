@@ -13,7 +13,7 @@ describe('model: ManagedConfiguration', function () {
 
             WsApi = _WsApi_;
 
-            model = ManagedConfiguration();
+            model = angular.extend(new ManagedConfiguration(), dataManagedConfiguration1);
         });
     });
 
