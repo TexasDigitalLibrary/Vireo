@@ -23,7 +23,7 @@ var dataUserSettings6 = {
 };
 
 var mockUserSettings = function($q) {
-    var model = mockModel($q, dataUserSettings1);
+    var model = mockModel("UserSettings", $q, dataUserSettings1);
 
     return model;
 };

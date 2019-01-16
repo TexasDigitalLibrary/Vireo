@@ -29,7 +29,7 @@ var dataGraduationMonth6 = {
 };
 
 var mockGraduationMonth = function($q) {
-    var model = mockModel($q, dataGraduationMonth1);
+    var model = mockModel("GraduationMonth", $q, dataGraduationMonth1);
 
     return model;
 };

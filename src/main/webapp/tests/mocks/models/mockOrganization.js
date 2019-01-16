@@ -29,7 +29,7 @@ var dataOrganization6 = {
 };
 
 var mockOrganization = function($q) {
-    var model = mockModel($q, dataOrganization1);
+    var model = mockModel("Organization", $q, dataOrganization1);
 
     model.addEmailWorkflowRule = function(templateId, recipient, submissionStatusId) {
         return payloadPromise($q.defer());

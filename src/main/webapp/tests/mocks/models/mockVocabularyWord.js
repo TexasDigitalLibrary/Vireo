@@ -78,7 +78,7 @@ var dataVocabularyWord6 = {
 
 
 var mockVocabularyWord = function($q) {
-    var model = mockModel($q, dataVocabularyWord1);
+    var model = mockModel("VocabularyWord", $q, dataVocabularyWord1);
 
     return model;
 };

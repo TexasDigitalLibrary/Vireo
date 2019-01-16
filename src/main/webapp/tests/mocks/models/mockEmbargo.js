@@ -23,7 +23,7 @@ var dataEmbargo6 = {
 };
 
 var mockEmbargo = function($q) {
-    var model = mockModel($q, dataEmbargo1);
+    var model = mockModel("Embargo", $q, dataEmbargo1);
 
     return model;
 };

@@ -29,7 +29,7 @@ var dataSubmissionStatus6 = {
 };
 
 var mockSubmissionStatus = function($q) {
-    var model = mockModel($q, dataSubmissionStatus1);
+    var model = mockModel("SubmissionStatus", $q, dataSubmissionStatus1);
 
     return model;
 };

@@ -23,7 +23,7 @@ var dataNamedSearchFilterGroup6 = {
 };
 
 var mockNamedSearchFilterGroup = function($q) {
-    var model = mockModel($q, dataNamedSearchFilterGroup1);
+    var model = mockModel("NamedSearchFilterGroup", $q, dataNamedSearchFilterGroup1);
 
     model.addFilter = function(criterionName, filterValue, filterGloss, exactMatch) {
         return payloadPromise($q.defer());

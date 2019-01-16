@@ -23,7 +23,7 @@ var dataDegreeLevel6 = {
 };
 
 var mockDegreeLevel = function($q) {
-    var model = mockModel($q, dataDegreeLevel1);
+    var model = mockModel("DegreeLevel", $q, dataDegreeLevel1);
 
     return model;
 };

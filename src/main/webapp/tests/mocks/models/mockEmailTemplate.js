@@ -23,7 +23,7 @@ var dataEmailTemplate6 = {
 };
 
 var mockEmailTemplate = function($q) {
-    var model = mockModel($q, dataEmailTemplate1);
+    var model = mockModel("EmailTemplate", $q, dataEmailTemplate1);
 
     return model;
 };

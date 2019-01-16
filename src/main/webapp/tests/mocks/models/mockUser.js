@@ -65,7 +65,7 @@ var dataUser6 = {
 };
 
 var mockUser = function($q) {
-    var model = mockModel($q, dataUser1);
+    var model = mockModel("User", $q, dataUser1);
 
     return model;
 };

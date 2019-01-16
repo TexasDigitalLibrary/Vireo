@@ -109,7 +109,7 @@ var dataControlledVocabulary6 = {
 };
 
 var mockControlledVocabulary = function($q) {
-    var model = mockModel($q, dataControlledVocabulary1);
+    var model = mockModel("ControlledVocabulary", $q, dataControlledVocabulary1);
 
     return model;
 };

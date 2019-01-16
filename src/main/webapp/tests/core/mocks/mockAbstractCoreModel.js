@@ -1,4 +1,4 @@
-var mockModel = function ($q, mockDataObj) {
+var mockModel = function (modelName, $q, mockDataObj) {
     var model = {};
     var combinationOperation = "";
 
@@ -65,7 +65,7 @@ var mockModel = function ($q, mockDataObj) {
     };
 
     model.getEntityName = function () {
-        return "";
+        return modelName;
     };
 
     model.getValidations = function () {

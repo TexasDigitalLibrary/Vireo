@@ -23,7 +23,7 @@ var dataDocumentType6 = {
 };
 
 var mockDocumentType = function($q) {
-    var model = mockModel($q, dataDocumentType1);
+    var model = mockModel("DocumentType", $q, dataDocumentType1);
 
     return model;
 };

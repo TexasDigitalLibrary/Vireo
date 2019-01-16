@@ -85,7 +85,7 @@ var dataWorkflowStep6 = {
 };
 
 var mockWorkflowStep = function($q) {
-    var model = mockModel($q, dataWorkflowStep1);
+    var model = mockModel("WorkflowStep", $q, dataWorkflowStep1);
 
     return model;
 };

@@ -23,7 +23,7 @@ var dataPackager6 = {
 };
 
 var mockPackager = function($q) {
-    var model = mockModel($q, dataPackager1);
+    var model = mockModel("Packager", $q, dataPackager1);
 
     return model;
 };

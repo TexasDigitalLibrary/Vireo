@@ -23,7 +23,7 @@ var dataActionLog6 = {
 };
 
 var mockActionLog = function($q) {
-    var model = mockModel($q, dataActionLog1);
+    var model = mockModel("ActionLog", $q, dataActionLog1);
 
     return model;
 };

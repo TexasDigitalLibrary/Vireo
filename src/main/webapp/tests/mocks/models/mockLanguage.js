@@ -35,7 +35,7 @@ var dataLanguage6 = {
 };
 
 var mockLanguage = function($q) {
-    var model = mockModel($q, dataLanguage1);
+    var model = mockModel("Language", $q, dataLanguage1);
 
     return model;
 };

@@ -23,7 +23,7 @@ var dataOrganizationCategory6 = {
 };
 
 var mockOrganizationCategory = function($q) {
-    var model = mockModel($q, dataOrganizationCategory1);
+    var model = mockModel("OrganizationCategory", $q, dataOrganizationCategory1);
 
     return model;
 };

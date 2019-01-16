@@ -29,7 +29,7 @@ var dataNgTableParams6 = {
 };
 
 var mockNgTableParams = function($q) {
-    var model = mockModel($q, dataNgTableParams1);
+    var model = mockModel("NgTableParams", $q, dataNgTableParams1);
 
     model.count = function() {
         var total = 0;

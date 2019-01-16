@@ -35,7 +35,7 @@ var dataFieldPredicate6 = {
 };
 
 var mockFieldPredicate = function($q) {
-    var model = mockModel($q, dataFieldPredicate1);
+    var model = mockModel("FieldPredicate", $q, dataFieldPredicate1);
 
     return model;
 };

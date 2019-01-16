@@ -104,7 +104,7 @@ var dataStudentSubmission6 = {
 };
 
 var mockStudentSubmission = function($q) {
-    var model = mockModel($q, dataStudentSubmission1);
+    var model = mockModel("StudentSubmission", $q, dataStudentSubmission1);
 
     model.actionLogListenPromise = null;
 

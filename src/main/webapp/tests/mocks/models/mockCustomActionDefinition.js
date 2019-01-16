@@ -35,7 +35,7 @@ var dataCustomActionDefinition6 = {
 };
 
 var mockCustomActionDefinition = function($q) {
-    var model = mockModel($q, dataCustomActionDefinition1);
+    var model = mockModel("CustomActionDefinition", $q, dataCustomActionDefinition1);
 
     return model;
 };

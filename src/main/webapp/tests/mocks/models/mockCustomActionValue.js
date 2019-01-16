@@ -23,7 +23,7 @@ var dataCustomActionValue6 = {
 };
 
 var mockCustomActionValue = function($q) {
-    var model = mockModel($q, dataCustomActionValue1);
+    var model = mockModel("CustomActionValue", $q, dataCustomActionValue1);
 
     return model;
 };

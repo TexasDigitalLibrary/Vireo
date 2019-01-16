@@ -23,7 +23,7 @@ var dataInputType6 = {
 };
 
 var mockInputType = function($q) {
-    var model = mockModel($q, dataInputType1);
+    var model = mockModel("InputType", $q, dataInputType1);
 
     return model;
 };

@@ -23,7 +23,7 @@ var dataNote6 = {
 };
 
 var mockNote = function($q) {
-    var model = mockModel($q, dataNote1);
+    var model = mockModel("Note", $q, dataNote1);
 
     return model;
 };

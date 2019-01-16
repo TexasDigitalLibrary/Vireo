@@ -41,7 +41,7 @@ var dataManagedConfiguration6 = {
 };
 
 var mockManagedConfiguration = function($q) {
-    var model = mockModel($q, dataManagedConfiguration1);
+    var model = mockModel("ManagedConfiguration", $q, dataManagedConfiguration1);
 
     model.reset = function() {
         return payloadPromise($q.defer());

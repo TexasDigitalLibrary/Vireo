@@ -23,7 +23,7 @@ var dataSubmissionListColumn6 = {
 };
 
 var mockSubmissionListColumn = function($q) {
-    var model = mockModel($q, dataSubmissionListColumn1);
+    var model = mockModel("SubmissionListColumn", $q, dataSubmissionListColumn1);
 
     return model;
 };

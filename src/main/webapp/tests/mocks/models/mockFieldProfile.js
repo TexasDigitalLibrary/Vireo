@@ -265,7 +265,7 @@ var dataFieldProfile6 = {
 };
 
 var mockFieldProfile = function($q) {
-    var model = mockModel($q, dataFieldProfile1);
+    var model = mockModel("FieldProfile", $q, dataFieldProfile1);
 
     return model;
 };

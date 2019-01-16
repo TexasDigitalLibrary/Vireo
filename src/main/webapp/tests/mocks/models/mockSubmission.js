@@ -95,7 +95,7 @@ var dataSubmission6 = {
 };
 
 var mockSubmission = function($q) {
-    var model = mockModel($q, dataSubmission1);
+    var model = mockModel("Submission", $q, dataSubmission1);
 
     model.mockWorkflowSteps = null;
 

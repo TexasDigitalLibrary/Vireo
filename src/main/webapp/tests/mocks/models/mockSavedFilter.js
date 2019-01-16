@@ -23,7 +23,7 @@ var dataSavedFilter6 = {
 };
 
 var mockSavedFilter = function($q) {
-    var model = mockModel($q, dataSavedFilter1);
+    var model = mockModel("SavedFilter", $q, dataSavedFilter1);
 
     return model;
 };

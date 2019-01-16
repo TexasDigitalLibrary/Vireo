@@ -80,7 +80,7 @@ var dataFieldValue6 = {
 
 
 var mockFieldValue = function($q) {
-    var model = mockModel($q, dataFieldValue1);
+    var model = mockModel("FieldValue", $q, dataFieldValue1);
     var isValid =  false;
     var validationMessages = [];
 

@@ -67,7 +67,7 @@ var dataAssumedControl6 = {
 };
 
 var mockAssumedControl = function($q) {
-    var model = mockModel($q, dataAssumedControl1);
+    var model = mockModel("AssumedControl", $q, dataAssumedControl1);
 
     return model;
 };

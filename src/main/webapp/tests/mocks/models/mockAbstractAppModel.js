@@ -23,7 +23,7 @@ var mockAbstractAppModel6 = {
 };
 
 var mockAbstractAppModel = function($q) {
-    var model = mockModel($q, dataAbstractAppModel1);
+    var model = mockModel("AbstractAppModel", $q, dataAbstractAppModel1);
 
     return model;
 };
