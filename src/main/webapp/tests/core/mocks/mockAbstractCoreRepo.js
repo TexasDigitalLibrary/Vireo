@@ -1,4 +1,4 @@
-var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
+var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
     var repo = {};
 
     var validations = {};
@@ -152,7 +152,7 @@ var mockRepo = function (RepoName, $q, mockModelCtor, mockDataArray) {
     };
 
     repo.getEntityName = function () {
-        return RepoName;
+        return repoName;
     };
 
     repo.getValidations = function () {
