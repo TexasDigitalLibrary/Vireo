@@ -4,8 +4,6 @@ describe('controller: OrganizationSideBarController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $window, _ModalService_, _OrganizationCategoryRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WsApi_) {
-            installPromiseMatchers();
-
             q = $q;
             scope = $rootScope.$new();
 

@@ -4,8 +4,6 @@ describe('controller: DocumentTypesController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $window, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            installPromiseMatchers();
-
             q = $q;
             scope = $rootScope.$new();
 

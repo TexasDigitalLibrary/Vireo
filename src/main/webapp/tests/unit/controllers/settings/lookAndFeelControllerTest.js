@@ -4,8 +4,6 @@ describe('controller: LookAndFeelController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $window, _FileService_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            installPromiseMatchers();
-
             q = $q;
             scope = $rootScope.$new();
             window = $window;

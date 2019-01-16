@@ -4,8 +4,6 @@ describe('controller: HeaderController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $location, $rootScope, $timeout, $window, _AbstractRepo_, _AbstractAppRepo_, _AlertService_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            installPromiseMatchers();
-
             location = $location;
             scope = $rootScope.$new();
 

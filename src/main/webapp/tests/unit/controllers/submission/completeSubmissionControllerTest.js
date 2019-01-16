@@ -4,8 +4,6 @@ describe('controller: CompleteSubmissionController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $rootScope, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            installPromiseMatchers();
-
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";

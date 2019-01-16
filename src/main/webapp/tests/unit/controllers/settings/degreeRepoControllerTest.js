@@ -4,8 +4,6 @@ describe('controller: DegreeRepoController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $window, _DegreeRepo_, _DegreeLevelRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            installPromiseMatchers();
-
             q = $q;
             scope = $rootScope.$new();
 

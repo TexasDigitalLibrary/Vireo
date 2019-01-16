@@ -4,8 +4,6 @@ describe('controller: EmbargoRepoController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $filter, $q, $rootScope, $window, _DragAndDropListenerFactory_, _EmbargoRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            installPromiseMatchers();
-
             q = $q;
             scope = $rootScope.$new();
 

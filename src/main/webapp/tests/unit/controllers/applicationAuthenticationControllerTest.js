@@ -4,8 +4,6 @@ describe('controller: ApplicationAuthenticationController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_, _WsApi_) {
-            installPromiseMatchers();
-
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";

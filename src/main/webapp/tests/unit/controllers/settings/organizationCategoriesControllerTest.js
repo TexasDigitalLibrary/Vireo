@@ -4,8 +4,6 @@ describe('controller: OrganizationCategoriesController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $window, _DragAndDropListenerFactory_, _ModalService_, _OrganizationCategoryRepo_, _RestApi_, _StorageService_, _WsApi_) {
-            installPromiseMatchers();
-
             q = $q;
             scope = $rootScope.$new();
 

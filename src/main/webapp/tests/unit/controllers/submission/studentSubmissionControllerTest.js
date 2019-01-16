@@ -4,8 +4,6 @@ describe('controller: StudentSubmissionController', function () {
 
     var initializeController = function(settings) {
         inject(function ($anchorScroll, $controller, $location, $q, $rootScope, $routeParams, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
-            installPromiseMatchers();
-
             location = $location;
             q = $q;
             routeParams = $routeParams;

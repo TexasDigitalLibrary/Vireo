@@ -4,8 +4,6 @@ describe('controller: SubmissionViewController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $routeParams, $window, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_, _WsApi_) {
-            installPromiseMatchers();
-
             q = $q;
             scope = $rootScope.$new();
 
