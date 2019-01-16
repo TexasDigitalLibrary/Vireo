@@ -5,9 +5,9 @@ describe('controller: FieldPredicatesController', function () {
     var initializeController = function(settings) {
         inject(function ($filter, $q, $controller, $rootScope, $timeout, $window, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             q = $q;
+            scope = $rootScope.$new();
 
             FieldPredicateRepo = _FieldPredicateRepo_;
 

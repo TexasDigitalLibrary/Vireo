@@ -5,9 +5,9 @@ describe('controller: LookAndFeelController', function () {
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $window, _FileService_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             q = $q;
+            scope = $rootScope.$new();
             window = $window;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";

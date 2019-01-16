@@ -5,9 +5,9 @@ describe('controller: NoteManagementController', function () {
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $window, _DragAndDropListenerFactory_, _ModalService_, _NoteRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             q = $q;
+            scope = $rootScope.$new();
 
             NoteRepo = _NoteRepo_;
             WorkflowStepRepo = _WorkflowStepRepo_;

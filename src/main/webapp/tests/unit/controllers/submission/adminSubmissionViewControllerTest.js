@@ -5,9 +5,9 @@ describe('controller: AdminSubmissionViewController', function () {
     var initializeController = function(settings) {
         inject(function ($anchorScroll, $controller, $location, $q, $route, $routeParams, $rootScope, $window, _DepositLocationRepo_, _EmailTemplateRepo_, _FieldPredicateRepo_, _FieldValue_, _FileUploadService_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _UserService_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             q = $q;
+            scope = $rootScope.$new();
 
             FileUploadService = _FileUploadService_;
 

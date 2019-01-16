@@ -5,9 +5,9 @@ describe('controller: LanguagesController', function () {
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $timeout, $window, _DragAndDropListenerFactory_, _LanguageRepo_, _StorageService_, _ModalService_, _RestApi_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             q = $q;
+            scope = $rootScope.$new();
 
             LanguageRepo = _LanguageRepo_;
 

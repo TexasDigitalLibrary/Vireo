@@ -5,10 +5,10 @@ describe('controller: SubmissionHistoryController', function () {
     var initializeController = function(settings) {
         inject(function ($controller, $location, $q, $rootScope, $timeout, $window, SubmissionStates, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             location = $location;
             q = $q;
+            scope = $rootScope.$new();
             timeout = $timeout;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";

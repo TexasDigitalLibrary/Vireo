@@ -5,9 +5,9 @@ describe('controller: OrganizationManagementController', function () {
     var initializeController = function(settings) {
         inject(function ($controller, $location, $q, $rootScope, $route, $timeout, $window, _AccordionService_, _AlertService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             q = $q;
+            scope = $rootScope.$new();
             timeout = $timeout;
 
             AccordionService = _AccordionService_;

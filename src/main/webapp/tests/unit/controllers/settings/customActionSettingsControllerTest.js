@@ -5,9 +5,9 @@ describe('controller: CustomActionSettingsController', function () {
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $timeout, $window, _CustomActionDefinitionRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             q = $q;
+            scope = $rootScope.$new();
 
             CustomActionDefinitionRepo = _CustomActionDefinitionRepo_;
 

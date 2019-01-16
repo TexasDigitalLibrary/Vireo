@@ -5,9 +5,9 @@ describe('controller: ControlledVocabularyRepoController', function () {
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, $timeout, $window, _ControlledVocabularyRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             q = $q;
+            scope = $rootScope.$new();
 
             ControlledVocabularyRepo = _ControlledVocabularyRepo_;
 

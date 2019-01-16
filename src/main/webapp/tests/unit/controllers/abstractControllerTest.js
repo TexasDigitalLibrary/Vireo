@@ -5,8 +5,8 @@ describe('controller: AbstractController', function () {
     var initializeController = function(settings) {
         inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
+            scope = $rootScope.$new();
             window = $window;
 
             RestApi = _RestApi_;

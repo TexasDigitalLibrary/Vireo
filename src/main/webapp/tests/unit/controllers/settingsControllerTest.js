@@ -4,6 +4,8 @@ describe('controller: SettingsController', function () {
 
     var initializeController = function(settings) {
         inject(function ($controller, $injector, $q, $rootScope, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _SubmissionStates_, _UserService_, _WsApi_) {
+            installPromiseMatchers();
+
             q = $q;
             scope = $rootScope.$new();
             timeout = $timeout;

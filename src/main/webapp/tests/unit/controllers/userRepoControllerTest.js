@@ -5,9 +5,9 @@ describe('controller: UserRepoController', function () {
     var initializeController = function(settings) {
         inject(function ($controller, $location, $route, $q, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             q = $q;
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";

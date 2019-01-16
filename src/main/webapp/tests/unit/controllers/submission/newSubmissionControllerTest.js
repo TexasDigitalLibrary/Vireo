@@ -5,10 +5,10 @@ describe('controller: NewSubmissionController', function () {
     var initializeController = function(settings) {
         inject(function ($controller, $location, $q, $rootScope, $window, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
             installPromiseMatchers();
-            scope = $rootScope.$new();
 
             location = $location;
             q = $q;
+            scope = $rootScope.$new();
 
             OrganizationRepo = _OrganizationRepo_;
 
