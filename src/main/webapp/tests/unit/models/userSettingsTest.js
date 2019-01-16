@@ -1,5 +1,5 @@
 describe('model: UserSettings', function () {
-    var rootScope, model, scope, UserService, WsApi;
+    var model, rootScope, scope, UserService, WsApi;
 
     beforeEach(function() {
         module('core');

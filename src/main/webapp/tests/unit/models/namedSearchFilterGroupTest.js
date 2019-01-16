@@ -1,5 +1,5 @@
 describe('model: NamedSearchFilterGroup', function () {
-    var rootScope, model, scope, WsApi;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');

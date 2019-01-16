@@ -1,5 +1,5 @@
 describe('model: ManagedConfiguration', function () {
-    var rootScope, model, sanitize, scope, WsApi;
+    var model, rootScope, sanitize, scope, WsApi;
 
     beforeEach(function() {
         module('core');

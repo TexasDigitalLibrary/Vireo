@@ -1,5 +1,5 @@
 describe('model: Submission', function () {
-    var q, rootScope, model, scope, ActionLog, FieldValue, FileService, WsApi;
+    var model, q, rootScope, scope, ActionLog, FieldValue, FileService, WsApi;
 
     beforeEach(function() {
         module('core');

@@ -1,5 +1,5 @@
 describe('model: Organization', function () {
-    var rootScope, q, model, scope, RestApi, WsApi;
+    var model, rootScope, q, scope, RestApi, WsApi;
 
     beforeEach(function() {
         module('core');

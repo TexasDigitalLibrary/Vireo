@@ -1,5 +1,5 @@
 describe('model: Note', function () {
-    var rootScope, scope, WsApi;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');

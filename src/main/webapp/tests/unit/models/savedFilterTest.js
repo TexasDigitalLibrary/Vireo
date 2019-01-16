@@ -1,5 +1,5 @@
 describe('model: SavedFilter', function () {
-    var rootScope, model, scope, SavedFilter, WsApi;
+    var model, rootScope, scope, SavedFilter, WsApi;
 
     beforeEach(function() {
         module('core');
