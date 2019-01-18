@@ -1,24 +1,24 @@
 describe('model: DocumentType', function () {
-    var rootScope, scope, WsApi, DocumentType;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _DocumentType_) {
+        inject(function ($rootScope, DocumentType, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            DocumentType = _DocumentType_;
+            model = angular.extend(new DocumentType(), dataDocumentType1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(DocumentType).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

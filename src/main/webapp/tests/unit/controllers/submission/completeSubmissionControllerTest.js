@@ -2,18 +2,12 @@ describe('controller: CompleteSubmissionController', function () {
 
     var controller, scope;
 
-    beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.managedConfigurationRepo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.wsApi');
-
+    var initializeController = function(settings) {
         inject(function ($controller, $rootScope, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            installPromiseMatchers();
             scope = $rootScope.$new();
+
+            sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
+            sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('CompleteSubmissionController', {
                 $scope: scope,
@@ -26,8 +20,24 @@ describe('controller: CompleteSubmissionController', function () {
             });
 
             // ensure that the isReady() is called.
-            scope.$digest();
+            if (!scope.$$phase) {
+                scope.$digest();
+            }
         });
+    };
+
+    beforeEach(function() {
+        module('core');
+        module('vireo');
+        module('mock.managedConfiguration');
+        module('mock.managedConfigurationRepo');
+        module('mock.modalService');
+        module('mock.restApi');
+        module('mock.storageService');
+        module('mock.wsApi');
+
+        installPromiseMatchers();
+        initializeController();
     });
 
     describe('Is the controller defined', function () {
@@ -35,5 +45,4 @@ describe('controller: CompleteSubmissionController', function () {
             expect(controller).toBeDefined();
         });
     });
-
 });

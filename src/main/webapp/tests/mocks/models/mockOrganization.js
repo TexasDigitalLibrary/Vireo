@@ -1,80 +1,54 @@
-var mockOrganization1 = {
-    'id': 1
+var dataOrganization1 = {
+    id: 1,
+    name: "organization 1"
 };
 
-var mockOrganization2 = {
-    'id': 2
+var dataOrganization2 = {
+    id: 2,
+    name: "organization 2"
 };
 
-var mockOrganization3 = {
-    'id': 3
+var dataOrganization3 = {
+    id: 3,
+    name: "organization 3"
 };
 
-angular.module('mock.organization', []).service('Organization', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataOrganization4 = {
+    id: 4,
+    name: "organization 4"
+};
 
-    model.isDirty = false;
+var dataOrganization5 = {
+    id: 5,
+    name: "organization 5"
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataOrganization6 = {
+    id: 6,
+    name: "organization 6"
+};
+
+var mockOrganization = function($q) {
+    var model = mockModel("Organization", $q, dataOrganization1);
 
     model.addEmailWorkflowRule = function(templateId, recipient, submissionStatusId) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     model.changeEmailWorkflowRuleActivation = function(rule) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
+        return payloadPromise($q.defer());
     };
 
     model.editEmailWorkflowRule = function(rule) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
-    model.reload = function() {
-    };
-
-    model.removeEmailWorkfowRule = function(rule) {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+    model.removeEmailWorkflowRule = function(rule) {
+        return payloadPromise($q.defer());
     };
 
     return model;
-});
+};
+
+angular.module('mock.organization', []).service('Organization', mockOrganization);
+

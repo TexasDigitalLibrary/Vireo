@@ -1,24 +1,24 @@
 describe('model: SubmissionStatus', function () {
-    var rootScope, scope, WsApi, SubmissionStatus;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _SubmissionStatus_) {
+        inject(function ($rootScope, SubmissionStatus, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            SubmissionStatus = _SubmissionStatus_;
+            model = angular.extend(new SubmissionStatus(), dataSubmissionStatus1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(SubmissionStatus).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

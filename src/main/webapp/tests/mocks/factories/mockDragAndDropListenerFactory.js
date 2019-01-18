@@ -1,16 +1,6 @@
 angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListenerFactory', function($q, ModalService) {
     var factory = this;
     var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
 
     var listener = {
 

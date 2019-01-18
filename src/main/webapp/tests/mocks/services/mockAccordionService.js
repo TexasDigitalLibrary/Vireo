@@ -1,27 +1,12 @@
 angular.module('mock.accordionService', []).service('AccordionService', function ($q) {
-    var service = this;
-    var defer;
+    var service = mockService($q);
 
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
+    service.close = function () {
+        return payloadPromise($q.defer());
     };
 
-    var messageResponse = function (message) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS',
-                    message: message
-                }
-            })
-        });
+    service.closeAll = function () {
+        return payloadPromise($q.defer());
     };
 
     return service;

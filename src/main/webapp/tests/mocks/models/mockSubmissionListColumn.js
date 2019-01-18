@@ -1,56 +1,32 @@
-var mockSubmissionListColumn1 = {
-    'id': 1
+var dataSubmissionListColumn1 = {
+    id: 1
 };
 
-var mockSubmissionListColumn2 = {
-    'id': 2
+var dataSubmissionListColumn2 = {
+    id: 2
 };
 
-var mockSubmissionListColumn3 = {
-    'id': 3
+var dataSubmissionListColumn3 = {
+    id: 3
 };
 
-angular.module('mock.submissionListColumn', []).service('SubmissionListColumn', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataSubmissionListColumn4 = {
+    id: 4
+};
 
-    model.isDirty = false;
+var dataSubmissionListColumn5 = {
+    id: 5
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataSubmissionListColumn6 = {
+    id: 6
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockSubmissionListColumn = function($q) {
+    var model = mockModel("SubmissionListColumn", $q, dataSubmissionListColumn1);
 
     return model;
-});
+};
+
+angular.module('mock.submissionListColumn', []).service('SubmissionListColumn', mockSubmissionListColumn);
+

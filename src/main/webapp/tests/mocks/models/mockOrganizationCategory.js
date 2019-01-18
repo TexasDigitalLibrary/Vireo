@@ -1,56 +1,32 @@
-var mockOrganizationCategory1 = {
-    'id': 1
+var dataOrganizationCategory1 = {
+    id: 1
 };
 
-var mockOrganizationCategory2 = {
-    'id': 2
+var dataOrganizationCategory2 = {
+    id: 2
 };
 
-var mockOrganizationCategory3 = {
-    'id': 3
+var dataOrganizationCategory3 = {
+    id: 3
 };
 
-angular.module('mock.organizationCategory', []).service('OrganizationCategory', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataOrganizationCategory4 = {
+    id: 4
+};
 
-    model.isDirty = false;
+var dataOrganizationCategory5 = {
+    id: 5
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataOrganizationCategory6 = {
+    id: 6
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockOrganizationCategory = function($q) {
+    var model = mockModel("OrganizationCategory", $q, dataOrganizationCategory1);
 
     return model;
-});
+};
+
+angular.module('mock.organizationCategory', []).service('OrganizationCategory', mockOrganizationCategory);
+

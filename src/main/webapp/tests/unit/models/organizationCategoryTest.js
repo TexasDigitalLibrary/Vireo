@@ -1,24 +1,24 @@
 describe('model: OrganizationCategory', function () {
-    var rootScope, scope, WsApi, OrganizationCategory;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _OrganizationCategory_) {
+        inject(function ($rootScope, OrganizationCategory, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            OrganizationCategory = _OrganizationCategory_;
+            model = angular.extend(new OrganizationCategory(), dataOrganizationCategory1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(OrganizationCategory).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

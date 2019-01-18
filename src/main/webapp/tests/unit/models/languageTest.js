@@ -1,24 +1,24 @@
 describe('model: Language', function () {
-    var rootScope, scope, WsApi, Language;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _Language_) {
+        inject(function ($rootScope, Language, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            Language = _Language_;
+            model = angular.extend(new Language(), dataLanguage1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(Language).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

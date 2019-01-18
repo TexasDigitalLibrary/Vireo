@@ -1,333 +1,49 @@
-var mockStudentSubmissionRepo1 = [
-    {
-        "id": 1,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        },
-        "fetchDocumentTypeFileInfo": function() {}
-    },
-    {
-        "id": 2,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        },
-        "fetchDocumentTypeFileInfo": function() {}
-    },
-    {
-        "id": 3,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        },
-        "fetchDocumentTypeFileInfo": function() {}
-    }
+var dataStudentSubmissionRepo1 = [
+    dataStudentSubmission1,
+    dataStudentSubmission2,
+    dataStudentSubmission3
 ];
 
-var mockStudentSubmissionRepo2 = [
-    {
-        "id": 1,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        },
-        "fetchDocumentTypeFileInfo": function() {}
-    },
-    {
-        "id": 2,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        },
-        "fetchDocumentTypeFileInfo": function() {}
-    },
-    {
-        "id": 3,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        },
-        "fetchDocumentTypeFileInfo": function() {}
-    }
+var dataStudentSubmissionRepo2 = [
+    dataStudentSubmission3,
+    dataStudentSubmission2,
+    dataStudentSubmission1
 ];
 
-var mockStudentSubmissionRepo3 = [
-    {
-        "id": 1,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        },
-        "fetchDocumentTypeFileInfo": function() {}
-    },
-    {
-        "id": 2,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        },
-        "fetchDocumentTypeFileInfo": function() {}
-    },
-    {
-        "id": 3,
-        "submitter": {
-            "uin": "123456789",
-            "lastName": "Daniels",
-            "firstName": "Jack",
-            "name": "jack",
-            "role": "ROLE_ADMIN"
-        },
-        "fetchDocumentTypeFileInfo": function() {}
-    }
+var dataStudentSubmissionRepo3 = [
+    dataStudentSubmission4,
+    dataStudentSubmission5,
+    dataStudentSubmission6
 ];
 
-angular.module('mock.studentSubmissionRepo', []).service('StudentSubmissionRepo', function ($q) {
-    var repo = this;
-    var defer;
-    var validations = {};
-    var validationResults = {};
-    var originalList;
-
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
-
-    var messageResponse = function (message) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS',
-                    message: message
-                }
-            })
-        });
-    };
-
-    repo.list = [];
-
-    repo.mock = function(toMock) {
-        repo.list = toMock;
-        this.originalList = toMock;
-    };
-
-    repo.mock(mockStudentSubmissionRepo1);
-
-    repo.add = function (modelJson) {
-        if (!repo.contains(modelJson)) {
-            this.list.push(modelJson);
-        }
-    };
-
-    repo.addAll = function (modelJsons) {
-        for (var i in modelJsons) {
-            repo.add(modelJsons[i]);
-        }
-    };
-
-    repo.clearValidationResults = function () {
-        validationResults = {};
-    };
+angular.module('mock.studentSubmissionRepo', []).service('StudentSubmissionRepo', function($q) {
+    var repo = mockRepo('StudentSubmissionRepo', $q, mockStudentSubmission, dataStudentSubmissionRepo1);
 
     repo.create = function (model) {
-        defer = $q.defer();
-        model.id = repo.list.length + 1;
-        repo.list.push(angular.copy(model));
-        payloadResponse(model);
-        return defer.promise;
-    };
-
-    repo.contains = function (model) {
-        var found = false;
-        for (var i in repo.list) {
-            if (repo.list[i].id === model.id) {
-                found = true;
-                break;
-            }
+        if (repo.mockedList === undefined) {
+            repo.mockedList = [];
         }
-        return found;
-    };
 
-    repo.count = function () {
-        return this.list.length;
-    };
-
-    repo.delete = function (model) {
-        defer = $q.defer();
-        for (var i in repo.list) {
-            if (repo.list[i].id === model.id) {
-                repo.list.splice(i, 1);
-                break;
-            }
-        }
-        payloadResponse();
-        return defer.promise;
-    };
-
-    repo.deleteById = function (id) {
-        defer = $q.defer();
-        for (var i in repo.list) {
-            if (repo.list[i].id === id) {
-                repo.list.splice(i, 1);
-                break;
-            }
-        }
-        payloadResponse();
-        return defer.promise;
-    };
-
-    repo.empty = function () {
-        repo.list.length = 0;
+        model.id = repo.mockedList.length + 1;
+        repo.mockedList.push(repo.mockCopy(model));
+        return payloadPromise($q.defer(), { Submission: model });
     };
 
     repo.fetchSubmissionById = function (id) {
-        var payload = {};
-        defer = $q.defer();
-        paload = repo.findById(id);
-        payloadResponse(payload);
-        return defer.promise;
-    };
+        var payload = repo.findById(id);
 
-    repo.findById = function (id) {
-        var found;
-        for (var i in repo.list) {
-            if (repo.list[i].id == id) {
-                found = angular.copy(repo.list[i]);
-                break;
-            }
+        // TODO
+        /*
+        if (payload === undefined) {
+            return rejectPromise($q.defer());
         }
-        return found;
-    };
+        */
 
-    repo.getAll = function () {
-        return angular.copy(repo.list);
-    };
-
-    repo.getAllFiltered = function(predicate) {
-        var data = repo.list;
-        var filteredData = [];
-
-        // TODO
-
-        return filteredData;
-    };
-
-    repo.getContents = function () {
-        return angular.copy(repo.list);
-    };
-
-    repo.getEntityName = function () {
-        return "StudentSubmissionRepo";
-    };
-
-    repo.getValidations = function () {
-        return angular.copy(validations);
-    };
-
-    repo.getValidationResults = function () {
-        return angular.copy(validationResults);
-    };
-
-    repo.listen = function (cbOrActionOrActionArray, cb) {
-        // TODO
+        return valuePromise($q.defer(), repo.mockModel(payload));
     };
 
     repo.listenForChanges = function () {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    repo.ready = function () {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    repo.remove = function (modelToRemove) {
-        for (var i in repo.list) {
-            if (repo.list[i].id === modelToRemove.id) {
-                repo.list.splice(i, 1);
-                break;
-            }
-        }
-    };
-
-    repo.reset = function () {
-        defer = $q.defer();
-        repo.list = repo.originalList;
-        payloadResponse();
-        return defer.promise;
-    };
-
-    repo.save = function (model) {
-        defer = $q.defer();
-        // TODO
-        payloadResponse({});
-        return defer.promise;
-    };
-
-    repo.saveAll = function () {
-        angular.forEach(repo.list, function (model) {
-            repo.save(model);
-        });
-    };
-
-    repo.setToDelete = function (id) {
-        // TODO
-    };
-
-    repo.setToUpdate = function (id) {
-        // TODO
-    };
-
-    repo.unshift = function (modelJson) {
-        // TODO
-    };
-
-    repo.update = function (model) {
-        defer = $q.defer();
-        var updated;
-        for (var i in repo.list) {
-            if (repo.list[i].id === model.id) {
-                updated = angular.copy(repo.list[i]);
-                angular.extend(updated, model);
-                break;
-            }
-        }
-        payloadResponse(updated);
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     return repo;

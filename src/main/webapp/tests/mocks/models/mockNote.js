@@ -1,56 +1,32 @@
-var mockNote1 = {
-    'id': 1
+var dataNote1 = {
+    id: 1
 };
 
-var mockNote2 = {
-    'id': 2
+var dataNote2 = {
+    id: 2
 };
 
-var mockNote3 = {
-    'id': 3
+var dataNote3 = {
+    id: 3
 };
 
-angular.module('mock.note', []).service('Note', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataNote4 = {
+    id: 4
+};
 
-    model.isDirty = false;
+var dataNote5 = {
+    id: 5
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataNote6 = {
+    id: 6
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockNote = function($q) {
+    var model = mockModel("Note", $q, dataNote1);
 
     return model;
-});
+};
+
+angular.module('mock.note', []).service('Note', mockNote);
+

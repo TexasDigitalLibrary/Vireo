@@ -1,24 +1,24 @@
 describe('model: EmailTemplate', function () {
-    var rootScope, scope, WsApi, EmailTemplate;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _EmailTemplate_) {
+        inject(function ($rootScope, EmailTemplate, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            EmailTemplate = _EmailTemplate_;
+            model = angular.extend(new EmailTemplate(), dataEmailTemplate1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(EmailTemplate).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

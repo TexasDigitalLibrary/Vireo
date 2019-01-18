@@ -1,24 +1,24 @@
 describe('model: Degree', function () {
-    var rootScope, scope, WsApi, Degree;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _Degree_) {
+        inject(function ($rootScope, Degree, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            Degree = _Degree_;
+            model = angular.extend(new Degree(), dataDegree1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(Degree).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });
