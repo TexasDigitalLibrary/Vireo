@@ -1,24 +1,24 @@
 describe('model: ControlledVocabulary', function () {
-    var rootScope, scope, WsApi, ControlledVocabulary;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _ControlledVocabulary_) {
+        inject(function ($rootScope, ControlledVocabulary, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            ControlledVocabulary = _ControlledVocabulary_;
+            model = angular.extend(new ControlledVocabulary(), dataControlledVocabulary1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(ControlledVocabulary).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

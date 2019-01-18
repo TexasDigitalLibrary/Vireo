@@ -1,55 +1,44 @@
-var mockCustomActionDefinition1 = {
-    'id': 1
+var dataCustomActionDefinition1 = {
+    id: 1,
+    isStudentVisible: false,
+    label: "custom action 1"
 };
 
-var mockCustomActionDefinition2 = {
-    'id': 2
+var dataCustomActionDefinition2 = {
+    id: 2,
+    isStudentVisible: false,
+    label: "custom action 2"
 };
 
-var mockCustomActionDefinition3 = {
-    'id': 3
+var dataCustomActionDefinition3 = {
+    id: 3,
+    isStudentVisible: true,
+    label: "custom action 3"
 };
 
-angular.module('mock.customActionDefinition', []).service('CustomActionDefinition', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataCustomActionDefinition4 = {
+    id: 4,
+    isStudentVisible: true,
+    label: "custom action 4"
+};
 
-    model.isDirty = false;
+var dataCustomActionDefinition5 = {
+    id: 5,
+    isStudentVisible: true,
+    label: "custom action 5"
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataCustomActionDefinition6 = {
+    id: 6,
+    isStudentVisible: false,
+    label: "custom action 6"
+};
 
-    model.clearValidationResults = function () {
-    };
+var mockCustomActionDefinition = function($q) {
+    var model = mockModel("CustomActionDefinition", $q, dataCustomActionDefinition1);
 
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
     return model;
-});
+};
+
+angular.module('mock.customActionDefinition', []).service('CustomActionDefinition', mockCustomActionDefinition);
+

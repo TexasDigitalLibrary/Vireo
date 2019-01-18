@@ -1,56 +1,38 @@
-var mockSubmissionStatus1 = {
-    'id': 1
+var dataSubmissionStatus1 = {
+    id: 1,
+    submissionState: "IN_PROGRESS"
 };
 
-var mockSubmissionStatus2 = {
-    'id': 2
+var dataSubmissionStatus2 = {
+    id: 2,
+    submissionState: "SUBMITTED"
 };
 
-var mockSubmissionStatus3 = {
-    'id': 3
+var dataSubmissionStatus3 = {
+    id: 3,
+    submissionState: "WITHDRAWN"
 };
 
-angular.module('mock.submissionStatus', []).service('SubmissionStatus', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataSubmissionStatus4 = {
+    id: 4,
+    submissionState: "IN_PROGRESS"
+};
 
-    model.isDirty = false;
+var dataSubmissionStatus5 = {
+    id: 5,
+    submissionState: "SUBMITTED"
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataSubmissionStatus6 = {
+    id: 6,
+    submissionState: "WITHDRAWN"
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockSubmissionStatus = function($q) {
+    var model = mockModel("SubmissionStatus", $q, dataSubmissionStatus1);
 
     return model;
-});
+};
+
+angular.module('mock.submissionStatus', []).service('SubmissionStatus', mockSubmissionStatus);
+

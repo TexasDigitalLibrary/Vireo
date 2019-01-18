@@ -498,7 +498,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : allColumnSearchFilters) {
                         sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
-
+                    
+                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
+                    }
+                    
                     n++;
 
                     break;
@@ -511,6 +517,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         sqlWheresBuilder.append(" s").append(".id = ").append(filterString).append(" OR");
+                    }
+                    
+                    if(submissionListColumn.getFilters().size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
                     }
 
                     break;
@@ -537,6 +549,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : allColumnSearchFilters) {
                         sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
+                    
+                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
+                    }
+
 
                     break;
 
@@ -563,6 +582,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
                         sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    }
+                    
+                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
                     }
 
                     break;
@@ -593,6 +618,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
 
+                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
+                    }
+
                     break;
 
                 case "assignee.email":
@@ -616,6 +647,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
                         sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                    }
+
+                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
                     }
 
                     break;
@@ -647,6 +684,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
                     }
 
+                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
+                    }
+
                     break;
 
                 case "lastEvent":
@@ -661,6 +704,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                                    .append("\n   ON action_logs_id = s.submission_status_id");
                     // @formatter:on
 
+                    // TODO:
                     // @todo finish sqlWheresBuilder.
 
                     break;
@@ -691,6 +735,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         filterString.replaceAll("[TZ:.\\-]", " ");
                         sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
                     }
+                    
+                    if(submissionListColumn.getFilters().size() > 0 && allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
+                    }
 
                     break;
                 case "approveApplicationDate":
@@ -702,6 +752,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
                         sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
+                    }
+
+                    if(submissionListColumn.getFilters().size() > 0 && allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
                     }
 
                     break;
@@ -716,6 +772,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
                     }
 
+                    if(submissionListColumn.getFilters().size() > 0 && allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
+                    }
+
                     break;
                 case "approveEmbargoDate":
 
@@ -728,6 +790,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
                     }
 
+                    if(submissionListColumn.getFilters().size() > 0 && allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
+                    }
+                    
                     break;
                 case "customActionValues":
 
@@ -742,6 +810,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         sqlWheresBuilder.append(" (scavcavcad.value = true AND scavcavcad.label = '" + filterString + "') OR ");
+                    }
+
+                    if(submissionListColumn.getFilters().size() > 0 && allColumnSearchFilters.size() > 0) {
+	                    //Strip the trailing OR and add an AND for across columns
+	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+	                    sqlWheresBuilder.append(" AND ");
                     }
 
                     break;
@@ -762,10 +836,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             sqlOrderBysBuilder.setLength(sqlOrderBysBuilder.length() - 1);
         }
 
-        // if where, complete where clause and strip the tailing OR
+        // if where, complete where clause and strip the tailing AND
         if (sqlWheresBuilder.length() > 0) {
             sqlWheresBuilder.insert(0, "\nWHERE (");
-            sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
+            sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 4);
             sqlWheresBuilder.append(" )");
             // append excluded submissions
             if (sqlWheresExcludeBuilder.length() > 0) {

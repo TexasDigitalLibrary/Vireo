@@ -5,10 +5,6 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 
 	$scope.graduationMonths = GraduationMonthRepo.getAll();
 
-	GraduationMonthRepo.listen(function(data) {
-        $scope.resetGraduationMonth();
-	});
-
 	$scope.ready = $q.all([GraduationMonthRepo.ready()]);
 
 	$scope.dragging = false;
@@ -116,6 +112,10 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			reorder: $scope.reorderGraduationMonth,
 			container: '#graduation-months'
 		});
+
+        GraduationMonthRepo.listen(function(data) {
+            $scope.resetGraduationMonth();
+        });
 
 	});
 

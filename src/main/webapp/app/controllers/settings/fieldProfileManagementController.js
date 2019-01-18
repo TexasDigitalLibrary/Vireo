@@ -68,14 +68,6 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             $scope.dragControlListeners.getListener().confirm.remove.modal = '#fieldProfilesConfirmRemoveModal-' + $scope.step.id;
         });
 
-        FieldPredicateRepo.ready().then(function () {
-            $scope.buildFilteredPredicateList();
-        });
-
-        FieldPredicateRepo.listen(function () {
-            $scope.buildFilteredPredicateList();
-        });
-
         $scope.inputTypeChanged = function () {
             if ($scope.modalData.inputType.name === "INPUT_FILE") {
                 $scope.inputFile = true;
@@ -232,6 +224,14 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 return !predicate.documentTypePredicate;
             });
         };
+
+        FieldPredicateRepo.ready().then(function () {
+            $scope.buildFilteredPredicateList();
+        });
+
+        FieldPredicateRepo.listen(function () {
+            $scope.buildFilteredPredicateList();
+        });
 
     });
 

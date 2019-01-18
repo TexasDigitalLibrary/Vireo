@@ -1,56 +1,94 @@
-var mockWorkflowStep1 = {
-    'id': 1
+var dataWorkflowStep1 = {
+    id: 1
 };
 
-var mockWorkflowStep2 = {
-    'id': 2
+var dataWorkflowStep2 = {
+    id: 2,
+    aggregateFieldProfiles: [
+        {
+            id: 1,
+            controlledVocabulary: {
+                id: 1,
+                position: 1,
+                name: "guarantor",
+                entityName: "Embargo",
+                dictionary: [
+                    {
+                        id: 1,
+                        adding: false,
+                        beginAdd: false,
+                        clickedCell: false,
+                        contacts: "a,b",
+                        definition: "",
+                        editing: false,
+                        identifier: "vw1",
+                        moving: false,
+                        name: "DEFAULT"
+                    },
+                    {
+                        id: 2,
+                        adding: false,
+                        beginAdd: false,
+                        clickedCell: false,
+                        contacts: ["a", "c"],
+                        definition: "",
+                        editing: false,
+                        identifier: "vw2",
+                        moving: false,
+                        name: "PROQUEST"
+                    },
+                ],
+                enum: true,
+                entityProperty: true
+            },
+            defaultValue: null,
+            enabled: true,
+            flagged: false,
+            fieldPredicate: {
+                id: 1,
+                documentTypePredicate: false,
+                value: "_doctype_primary"
+            },
+            gloss: "",
+            help: "",
+            hidden: false,
+            inputType: {
+                id: 1,
+                name: "INPUT_TEXT"
+            },
+            logged: false,
+            managedConfiguration: {
+                id: 1,
+                value: ""
+            },
+            optional: true,
+            overrideable: true,
+            repeatable: false
+        }
+    ]
 };
 
-var mockWorkflowStep3 = {
-    'id': 3
+var dataWorkflowStep3 = {
+    id: 3
 };
 
-angular.module('mock.workflowStep', []).service('WorkflowStep', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataWorkflowStep4 = {
+    id: 4
+};
 
-    model.isDirty = false;
+var dataWorkflowStep5 = {
+    id: 5
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataWorkflowStep6 = {
+    id: 6
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockWorkflowStep = function($q) {
+    var model = mockModel("WorkflowStep", $q, dataWorkflowStep1);
 
     return model;
-});
+};
+
+angular.module('mock.workflowStep', []).service('WorkflowStep', mockWorkflowStep);
+

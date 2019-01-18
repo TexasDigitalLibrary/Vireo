@@ -6,10 +6,6 @@ vireo.controller('FieldPredicatesController', function ($controller, $timeout, $
 
     $scope.fieldPredicateRepo = FieldPredicateRepo;
 
-    FieldPredicateRepo.listen(function(res) {
-        $scope.resetFieldPredicates();
-    });
-
     $scope.fieldPredicates = FieldPredicateRepo.getAllFiltered(function(fp) {
         return !fp.documentTypePredicate;
     });
@@ -92,6 +88,10 @@ vireo.controller('FieldPredicatesController', function ($controller, $timeout, $
         };
 
         $scope.dragControlListeners.orderChanged = function () {};
+
+        FieldPredicateRepo.listen(function(res) {
+            $scope.resetFieldPredicates();
+        });
 
     });
 

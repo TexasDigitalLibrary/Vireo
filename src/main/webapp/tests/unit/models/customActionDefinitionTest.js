@@ -1,24 +1,24 @@
 describe('model: CustomActionDefinition', function () {
-    var rootScope, scope, WsApi, CustomActionDefinition;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _CustomActionDefinition_) {
+        inject(function ($rootScope, CustomActionDefinition, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            CustomActionDefinition = _CustomActionDefinition_;
+            model = angular.extend(new CustomActionDefinition(), dataCustomActionDefinition1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(CustomActionDefinition).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

@@ -29,14 +29,6 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
 
     };
 
-    EmailTemplateRepo.listen(function (data) {
-        $scope.resetEmailTemplates();
-    });
-
-    EmailTemplateRepo.listen(ApiResponseActions.UPDATE, function (data) {
-        EmailTemplateRepo.reset();
-    });
-
     $scope.ready = $q.all([EmailTemplateRepo.ready()]);
 
     $scope.dragging = false;
@@ -118,6 +110,14 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
             confirm: '#emailTemplatesConfirmRemoveModal',
             reorder: $scope.reorderEmailTemplates,
             container: '#email-templates'
+        });
+
+        EmailTemplateRepo.listen(function (data) {
+            $scope.resetEmailTemplates();
+        });
+
+        EmailTemplateRepo.listen(ApiResponseActions.UPDATE, function (data) {
+            EmailTemplateRepo.reset();
         });
 
     });

@@ -1,66 +1,54 @@
-var mockManagedConfiguration1 = {
-    'id': 1,
-    'value': ""
+var dataManagedConfiguration1 = {
+    id: 1,
+    name: "mc1",
+    type: null,
+    value: ""
 };
 
-var mockManagedConfiguration2 = {
-    'id': 2,
-    'value': ""
+var dataManagedConfiguration2 = {
+    id: 2,
+    name: "mc2",
+    type: null,
+    value: ""
 };
 
-var mockManagedConfiguration3 = {
-    'id': 3,
-    'value': ""
+var dataManagedConfiguration3 = {
+    id: 3,
+    name: "mc3",
+    type: null,
+    value: ""
 };
 
-angular.module('mock.managedConfiguration', []).service('ManagedConfiguration', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataManagedConfiguration4 = {
+    id: 4,
+    name: "mc4",
+    type: null,
+    value: ""
+};
 
-    model.isDirty = false;
+var dataManagedConfiguration5 = {
+    id: 5,
+    name: "mc5",
+    type: null,
+    value: ""
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-        model.value = toMock.value;
-    };
+var dataManagedConfiguration6 = {
+    id: 6,
+    name: "mc6",
+    type: null,
+    value: ""
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
+var mockManagedConfiguration = function($q) {
+    var model = mockModel("ManagedConfiguration", $q, dataManagedConfiguration1);
 
     model.reset = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     return model;
-});
+};
+
+angular.module('mock.managedConfiguration', []).service('ManagedConfiguration', mockManagedConfiguration);
+

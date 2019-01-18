@@ -1,27 +1,9 @@
 angular.module('mock.fileService', []).service('FileService', function ($q) {
-    var service = this;
-    var defer;
+    var service = mockService($q);
 
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
-
-    var messageResponse = function (message) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS',
-                    message: message
-                }
-            })
-        });
+    service.download = function (submission, fieldValue) {
+        var download = {};
+        return download;
     };
 
     return service;

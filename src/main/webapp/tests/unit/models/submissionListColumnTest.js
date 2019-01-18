@@ -1,24 +1,24 @@
 describe('model: SubmissionListColumn', function () {
-    var rootScope, scope, WsApi, SubmissionListColumn;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _SubmissionListColumn_) {
+        inject(function ($rootScope, SubmissionListColumn, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            SubmissionListColumn = _SubmissionListColumn_;
+            model = angular.extend(new SubmissionListColumn(), dataSubmissionListColumn1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(SubmissionListColumn).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

@@ -1,56 +1,44 @@
-var mockLanguage1 = {
-    'id': 1
+var dataLanguage1 = {
+    id: 1,
+    position: null,
+    name: "English"
 };
 
-var mockLanguage2 = {
-    'id': 2
+var dataLanguage2 = {
+    id: 2,
+    position: null,
+    name: "Spanish"
 };
 
-var mockLanguage3 = {
-    'id': 3
+var dataLanguage3 = {
+    id: 3,
+    position: null,
+    name: "French"
 };
 
-angular.module('mock.language', []).service('Language', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataLanguage4 = {
+    id: 4,
+    position: null,
+    name: "Chinese"
+};
 
-    model.isDirty = false;
+var dataLanguage5 = {
+    id: 5,
+    position: null,
+    name: "Deutsch"
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataLanguage6 = {
+    id: 6,
+    position: null,
+    name: "Arabic"
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockLanguage = function($q) {
+    var model = mockModel("Language", $q, dataLanguage1);
 
     return model;
-});
+};
+
+angular.module('mock.language', []).service('Language', mockLanguage);
+

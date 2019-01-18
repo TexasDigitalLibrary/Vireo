@@ -1,24 +1,24 @@
 describe('model: GraduationMonth', function () {
-    var rootScope, scope, WsApi, GraduationMonth;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _GraduationMonth_) {
+        inject(function ($rootScope, GraduationMonth, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            GraduationMonth = _GraduationMonth_;
+            model = angular.extend(new GraduationMonth(), dataGraduationMonth1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(GraduationMonth).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

@@ -1,37 +1,30 @@
 angular.module('mock.wsApi', []).service('WsApi', function ($q) {
-    var service = this;
-    var defer;
+    var service = mockService($q);
+    var mapping;
 
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
-
-    var messageResponse = function (message) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS',
-                    message: message
-                }
-            })
-        });
+    service.mockMapping = function(toMock) {
+        mapping = {};
+        for (var key in toMock) {
+            mapping[key] = toMock[key];
+        }
     };
 
     service.fetch = function (apiReq) {
-        defer = $q.defer();
-        return defer.promise;
+        var payload = {};
+
+        // TODO
+        //switch (apiReq.method) {
+        //}
+
+        return payloadPromise($q.defer(), payload);
+    };
+
+    service.getMapping = function () {
+        return mapping;
     };
 
     service.listen = function (apiReq) {
-        defer = $q.defer();
-        return defer.promise;
+        return payloadPromise($q.defer());
     };
 
     return service;
