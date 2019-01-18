@@ -1,114 +1,46 @@
 angular.module('mock.userService', []).service('UserService', function ($q) {
-    var service = this;
-    var defer;
+    var service = mockService($q, mockUser);
+    var currentUser;
 
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+    service.mockCurrentUser = function(toMock) {
+        delete sessionStorage.role;
 
-    var messageResponse = function (message) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS',
-                    message: message
-                }
-            })
-        });
-    };
-
-    service.currentUser = {
-        clearValidationResults: function () {
-        },
-        ready: function() {
-            return true;
+        if (toMock === undefined || toMock === null) {
+            currentUser = null;
+        }
+        else {
+            currentUser = service.mockModel(toMock);
+            sessionStorage.role = toMock.role;
         }
     };
 
-    service.storage = {
-        'session': {},
-        'local': {}
+    service.mockCurrentUser(dataUser1);
+
+    service.fetchUser = function () {
+        delete sessionStorage.role;
+        sessionStorage.role = currentUser.role;
+        return payloadPromise($q.defer(), currentUser);
     };
 
-    service.keys = {
-        'session': {},
-        'local': {}
-    };
-
-    service.set = function (key, value, type) {
-        type = (type !== undefined) ? type : appConfig.storageType;
-        if (service.keys[type][key] === undefined) {
-            service.keys[type][key] = $q.defer();
-        }
-        service.storage[type][key] = value;
-        service.keys[type][key].notify(service.storage[type][key]);
+    service.getCurrentUser = function () {
+        return currentUser;
     };
 
     service.setCurrentUser = function (user) {
-        return angular.extend(service.currentUser, user);
-    };
+        currentUser = mockModel(user);
 
-    service.get = function (key, type) {
-        type = (type !== undefined) ? type : appConfig.storageType;
-        return service.storage[type][key];
-    };
-
-    service.listen = function (key, type) {
-        type = (type !== undefined) ? type : appConfig.storageType;
-        if (service.keys[type][key] === undefined) {
-            service.keys[type][key] = $q.defer();
-        }
-        var data = {};
-        service.keys[type][key].promise.then(null, null, function (promisedData) {
-            angular.extend(data, promisedData);
-        });
-        return data;
-    };
-
-    service.delete = function (key, type) {
-        type = (type !== undefined) ? type : appConfig.storageType;
-        if (service.keys[type][key] !== undefined) {
-            service.keys[type][key].notify(null);
-        }
-        delete service.keys[type][key];
-        delete service.storage[type][key];
-    };
-
-    service.getCurrentUser = function () {
-        return angular.copy(service.currentUser);
+        sessionStorage.role = toMock.role;
     };
 
     service.userEvents = function () {
-        var payload = {};
-        defer = $q.defer();
-        payloadResponse(payload);
-        return defer.promise;
+        var defer = $q.defer();
+        defer.notify("RECEIVED");
+        return payloadPromise(defer);
     };
 
     service.userReady = function () {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
+        return payloadPromise($q.defer(), currentUser);
     };
-
-    service.getCurrentUser = function () {
-        return angular.copy(service.currentUser);
-    };
-
-    for (var type in {'session': '0', 'local': '1'}) {
-        for (var key in service.storage[type]) {
-            service.keys[type][key] = $q.defer();
-            service.keys[type][key].notify(service.storage[type][key]);
-            service.set(key, service.storage[type][key], type);
-        }
-    }
 
     return service;
 });

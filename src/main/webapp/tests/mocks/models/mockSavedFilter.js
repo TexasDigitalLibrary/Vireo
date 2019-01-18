@@ -1,56 +1,32 @@
-var mockSavedFilter1 = {
-    'id': 1
+var dataSavedFilter1 = {
+    id: 1
 };
 
-var mockSavedFilter2 = {
-    'id': 2
+var dataSavedFilter2 = {
+    id: 2
 };
 
-var mockSavedFilter3 = {
-    'id': 3
+var dataSavedFilter3 = {
+    id: 3
 };
 
-angular.module('mock.savedFilter', []).service('SavedFilter', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataSavedFilter4 = {
+    id: 4
+};
 
-    model.isDirty = false;
+var dataSavedFilter5 = {
+    id: 5
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataSavedFilter6 = {
+    id: 6
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockSavedFilter = function($q) {
+    var model = mockModel("SavedFilter", $q, dataSavedFilter1);
 
     return model;
-});
+};
+
+angular.module('mock.savedFilter', []).service('SavedFilter', mockSavedFilter);
+

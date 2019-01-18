@@ -22,3 +22,5 @@ node_modules/
 *.log*
 
 *.db*
+
+src/main/webapp/coverage/

@@ -1,5 +1,5 @@
 describe('model: UserSettings', function () {
-    var rootScope, scope, UserService, WsApi, UserSettings;
+    var model, rootScope, scope, UserService, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -7,20 +7,20 @@ describe('model: UserSettings', function () {
         module('mock.userService');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _UserService_, _WsApi_, _UserSettings_) {
+        inject(function ($rootScope, UserSettings, _UserService_, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             UserService = _UserService_;
             WsApi = _WsApi_;
 
-            UserSettings = _UserSettings_;
+            model = angular.extend(new UserSettings(), dataUserSettings1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(UserSettings).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

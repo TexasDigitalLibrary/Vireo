@@ -1,25 +1,36 @@
-sudo: required
-dist: trusty
-addons:
-  - chrome: stable
+# Send final notification to coveralls after all jobs have been completed.
+notifications:
+  webhooks: https://coveralls.io/webhook
 
-language: java
+matrix:
+  include:
+  - name: "Java Tests"
+    sudo: required
+    language: java
+    jdk: oraclejdk8
+    before_script:
+      - export COVERALLS_PARALLEL=true
+    install:
+      - mvn clean package -Dproduction -DskipTests=true
+      - mvn test-compile -Dclient -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    after_success:
+      - mvn clean test cobertura:cobertura jacoco:report coveralls:report -DserviceName="travis-ci" -DserviceBuildNumber=$TRAVIS_BUILD_NUMBER
 
-jdk:
-  - oraclejdk8
-  - openjdk8
-
-node_js:
-  - "6"
-  - "5"
-
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - npm start > /dev/null &
-  - npm run update-webdriver
-  - sleep 5
-
-script:
-  - mvn clean package -Dproduction -DskipTests=true
-  - mvn clean test -Dclient
+  - name: "Node/Javascript Tests"
+    language: node_js
+    node_js: "6"
+    addons:
+      - chrome: stable
+    before_script:
+      - export DISPLAY=:99.0
+      - export COVERALLS_PARALLEL=true
+      - export CI_NAME="travis-ci"
+      - export CI_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
+      - sh -e /etc/init.d/xvfb start
+      - npm start > /dev/null &
+      - npm run update-webdriver
+      - sleep 1 # give server time to start
+      - grunt coverage-preprocess
+    script:
+      - npm run test-ci
+      - grunt coverage

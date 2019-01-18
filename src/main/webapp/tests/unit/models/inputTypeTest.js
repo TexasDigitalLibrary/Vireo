@@ -1,24 +1,24 @@
 describe('model: InputType', function () {
-    var rootScope, scope, WsApi, InputType;
+    var model, rootScope, scope, WsApi;
 
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, _WsApi_, _InputType_) {
+        inject(function ($rootScope, InputType, _WsApi_) {
             rootScope = $rootScope;
             scope = $rootScope.$new();
 
             WsApi = _WsApi_;
 
-            InputType = _InputType_;
+            model = angular.extend(new InputType(), dataInputType1);
         });
     });
 
     describe('Is the model defined', function () {
         it('should be defined', function () {
-            expect(InputType).toBeDefined();
+            expect(model).toBeDefined();
         });
     });
 });

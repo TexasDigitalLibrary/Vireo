@@ -1,62 +1,36 @@
 angular.module('mock.fileUploadService', []).service('FileUploadService', function($q) {
-    var service = this;
-    var defer;
-
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
-
-    var messageResponse = function (message) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS',
-                    message: message
-                }
-            })
-        });
-    };
+    var service = mockService($q);
 
     service.archiveFile = function (submission, fieldValue, removeFieldValue) {
-        return $q(function (resolve) {
-            // TODO
-        });
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
     };
 
     service.download = function (submission, fieldValue) {
         var download = {};
-        // TODO
         return download;
     };
 
     service.getFileType = function (fieldPredicate) {
         var fileType = "";
-        // TODO
+        if (fieldPredicate.value) {
+            fileType = fieldPredicate.value;
+        }
         return fileType;
     };
 
     service.isPrimaryDocument = function (fieldPredicate) {
-        // TODO
-        return true;
+        return fieldPredicate.value && fieldPredicate.value == "PRIMARY";
     };
 
     service.removeFile = function (submission, fieldValue) {
-        return $q(function (resolve) {
-            // TODO
-        });
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
     };
 
     service.uploadFile = function (submission, fieldValue) {
-        var upload = {};
-        // TODO
-        return upload;
+        var response = {};
+        return dataPromise($q.defer(), response);
     };
 
     return service;

@@ -1,56 +1,32 @@
-var mockUserSettings1 = {
-    'id': 1
+var dataUserSettings1 = {
+    id: 1
 };
 
-var mockUserSettings2 = {
-    'id': 2
+var dataUserSettings2 = {
+    id: 2
 };
 
-var mockUserSettings3 = {
-    'id': 3
+var dataUserSettings3 = {
+    id: 3
 };
 
-angular.module('mock.userSettings', []).service('UserSettings', function($q) {
-    var model = this;
-    var defer;
-    var payloadResponse = function (payload) {
-        return defer.resolve({
-            body: angular.toJson({
-                meta: {
-                    status: 'SUCCESS'
-                },
-                payload: payload
-            })
-        });
-    };
+var dataUserSettings4 = {
+    id: 4
+};
 
-    model.isDirty = false;
+var dataUserSettings5 = {
+    id: 5
+};
 
-    model.mock = function(toMock) {
-        model.id = toMock.id;
-    };
+var dataUserSettings6 = {
+    id: 6
+};
 
-    model.clearValidationResults = function () {
-    };
-
-    model.delete = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
-
-    model.dirty = function(boolean) {
-        model.isDirty = boolean;
-    };
-
-    model.reload = function() {
-    };
-
-    model.save = function() {
-        defer = $q.defer();
-        payloadResponse();
-        return defer.promise;
-    };
+var mockUserSettings = function($q) {
+    var model = mockModel("UserSettings", $q, dataUserSettings1);
 
     return model;
-});
+};
+
+angular.module('mock.userSettings', []).service('UserSettings', mockUserSettings);
+
