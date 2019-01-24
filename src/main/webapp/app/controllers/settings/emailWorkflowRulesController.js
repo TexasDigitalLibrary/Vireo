@@ -29,14 +29,14 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
             }
         ];
 
-        var resipientInputTypes = [
+        var recipientInputTypes = [
           InputTypes.INPUT_CONTACT,
           InputTypes.INPUT_CONTACT_SELECT
         ];
 
         angular.forEach(OrganizationRepo.getSelectedOrganization().aggregateWorkflowSteps, function (aggregateWorkflowStep) {
             angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function (aggregateFieldProfile) {
-                if (resipientInputTypes.indexOf(aggregateFieldProfile.inputType.name) !== -1) {
+                if (recipientInputTypes.indexOf(aggregateFieldProfile.inputType.name) !== -1) {
                     $scope.recipients.push({
                         name: aggregateFieldProfile.gloss,
                         type: EmailRecipientType.CONTACT,
