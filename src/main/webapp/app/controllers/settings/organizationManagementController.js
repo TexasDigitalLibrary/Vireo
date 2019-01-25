@@ -15,7 +15,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
     $scope.forms = {};
 
     $scope.ready.then(function () {
-
         $scope.resetWorkflowSteps = function () {
             $scope.organizationRepo.clearValidationResults();
             for (var key in $scope.forms) {
@@ -123,6 +122,14 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
                 $scope.getSelectedOrganization().clearValidationResults();
                 $scope.getSelectedOrganization().refresh();
             }
+        };
+
+        $scope.isPrimaryOrganization = function() {
+            return $scope.getSelectedOrganization().id == 1;
+        };
+
+        $scope.canManageOrganization = function() {
+            return (!$scope.isPrimaryOrganization() || ($scope.isPrimaryOrganization() && $scope.isAdmin()));
         };
 
         $scope.testBoolean = true;
