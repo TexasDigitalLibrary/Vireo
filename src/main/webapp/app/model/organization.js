@@ -1,6 +1,8 @@
-vireo.model("Organization", function Organization($q, WsApi, RestApi) {
+vireo.model("Organization", function Organization($q, WsApi, InputTypes, EmailRecipientType) {
 
     return function Organization() {
+
+        var organization = this;
 
         this.addEmailWorkflowRule = function (templateId, recipient, submissionStatusId) {
             var organization = this;
@@ -42,6 +44,30 @@ vireo.model("Organization", function Organization($q, WsApi, RestApi) {
             var promise = WsApi.fetch(apiMapping.Organization.editEmailWorkflowRule);
 
             return promise;
+        };
+
+        this.getWorkflowEmailContacts = function() {
+
+          var recipients = [];
+
+          var recipientInputTypes = [
+            InputTypes.INPUT_CONTACT,
+            InputTypes.INPUT_CONTACT_SELECT
+          ];
+  
+          angular.forEach(organization.aggregateWorkflowSteps, function (aggregateWorkflowStep) {
+              angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function (aggregateFieldProfile) {
+                  if (recipientInputTypes.indexOf(aggregateFieldProfile.inputType.name) !== -1) {
+                      recipients.push({
+                          name: aggregateFieldProfile.gloss,
+                          type: EmailRecipientType.CONTACT,
+                          data: aggregateFieldProfile.fieldPredicate.id
+                      });
+                  }
+              });
+          });
+          
+          return recipients;
         };
 
         this.changeEmailWorkflowRuleActivation = function (rule) {
