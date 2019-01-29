@@ -420,7 +420,7 @@ public class SubmissionController {
     }
 
     @RequestMapping("/{submissionId}/change-status/{submissionStatusName}")
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse changeStatus(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String submissionStatusName) {
         Submission submission = submissionRepo.read(submissionId);
         ApiResponse response;
