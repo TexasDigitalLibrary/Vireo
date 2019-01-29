@@ -75,7 +75,7 @@ module.exports = function (grunt) {
 
                     'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
 
-                    'node_modules/file-saver/dist/FileSaver.min.js'
+                    'node_modules/file-saver/src/FileSaver.min.js'
                 ],
                 dest: '<%= build.app %>/resources/scripts/vendor_concat.js'
             },
