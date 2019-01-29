@@ -43,7 +43,7 @@ module.exports = function(config){
 
             'app/node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
 
-            'app/node_modules/file-saver/FileSaver.js',
+            'app/node_modules/file-saver/dist/FileSaver.js',
 
             'app/node_modules/weaver-ui-core/app/config/coreConfig.js',
 
