@@ -181,7 +181,6 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
         });
 
         submission.addComment = function (data) {
-          console.log(data.ccRecipientEmails);
           angular.extend(apiMapping.Submission.addComment, {
               'method': submission.id + "/add-comment",
               'data': data

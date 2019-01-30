@@ -182,8 +182,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
       $scope.emailValidationPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 
-        $scope.resetCommentModal($scope.addCommentModal);
-
         $scope.showTab = function (workflowStep) {
             var show = false;
             for (var i in workflowStep.aggregateFieldProfiles) {
