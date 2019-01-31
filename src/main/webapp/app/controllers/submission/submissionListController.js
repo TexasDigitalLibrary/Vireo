@@ -66,7 +66,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                         $scope.page.count = params.count();
                         sessionStorage.setItem("list-page-size", $scope.page.count);
                         sessionStorage.setItem("list-page-number", $scope.page.number + 1);
-                        console.log("Queried", $scope.page.content);
                         return $scope.page.content;
                     });
                 }.bind(start)
