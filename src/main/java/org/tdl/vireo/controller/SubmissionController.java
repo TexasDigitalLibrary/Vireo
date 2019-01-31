@@ -21,6 +21,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -552,8 +553,10 @@ public class SubmissionController {
         case "MarcXML21":
         case "DSpaceMETS":
         case "ProQuest":
+            ServletOutputStream sos = response.getOutputStream();
+
             try {
-                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+                ZipOutputStream zos = new ZipOutputStream(sos);
 
                 // TODO: need a more dynamic way to achieve this
                 if (packagerName.equals("ProQuest")) {
@@ -561,30 +564,32 @@ public class SubmissionController {
                 }
 
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
+
+                    StringBuilder contentsText = new StringBuilder();
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-
-                    if (exportPackage.isFile()) {
-                        File exportFile = (File) exportPackage.getPayload();
-                        if (packagerName.equals("MarcXML21")) {
-                            zos.putNextEntry(new ZipEntry("MarcXML21/" + exportFile.getName()));
-                        } else {
-                            zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                    if (exportPackage.isMap()) {
+                        for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
+                            if (packagerName.equals("MarcXML21")) {
+                                zos.putNextEntry(new ZipEntry("MarcXML21/" + fileEntry.getKey()));
+                            } else {
+                                zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
+                            }
+                            contentsText.append("MD " + fileEntry.getKey() + "\n");
+                            zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
+                            zos.closeEntry();
                         }
-                        zos.write(Files.readAllBytes(exportFile.toPath()));
-                        zos.closeEntry();
                     }
-
                 }
                 zos.close();
 
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
+                LOG.info("Error With Export",e);
                 response.setContentType("application/json");
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-                PrintWriter out = response.getWriter();
-                out.print(objectMapper.writeValueAsString(apiResponse));
-                out.close();
+                sos.print(objectMapper.writeValueAsString(apiResponse));
+                sos.close();
             }
             break;
         case "DSpaceSimple":

@@ -1,9 +1,9 @@
 package org.tdl.vireo.model.packager;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.Entity;
 
@@ -29,27 +29,22 @@ public class MarcXML21Packager extends AbstractPackager<ZipExportPackage> {
     }
 
     @Override
-    public ZipExportPackage packageExport(Submission submission, String manifest) {
+    public ZipExportPackage packageExport(Submission submission, Map<String, String> dsDocs) {
 
-        String packageName = "submission_" + submission.getId().toString();
-        File pkg = null;
-
+        Map<String, File> pkgs = new HashMap<String, File>();
         try {
-            pkg = File.createTempFile(packageName, ".xml");
-
-            FileOutputStream fos = new FileOutputStream(pkg);
-
-            File submissionFile = File.createTempFile(packageName, null);
-            FileUtils.writeStringToFile(submissionFile, manifest, "UTF-8");
-
-            fos.write(Files.readAllBytes(submissionFile.toPath()));
-            submissionFile.delete();
-            fos.close();
-
+            // Add non submitted content
+            for (Map.Entry<String, String> ds_entry : dsDocs.entrySet()) {
+                String docName = ds_entry.getKey();
+                String docContents = ds_entry.getValue();
+                File ff = File.createTempFile(docName, "");
+                FileUtils.writeStringToFile(ff, docContents, "UTF-8");
+                pkgs.put(docName, ff);
+            }
         } catch (IOException ioe) {
             throw new RuntimeException("Unable to generate package", ioe);
         }
 
-        return new ZipExportPackage(submission, "http://www.loc.gov/MARC21/slim", pkg);
+        return new ZipExportPackage(submission, "http://www.loc.gov/MARC21/slim", pkgs);
     }
 }
