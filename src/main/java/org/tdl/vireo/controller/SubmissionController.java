@@ -307,7 +307,7 @@ public class SubmissionController {
 
             if (sendCCRecipientEmail) {
               @SuppressWarnings("unchecked")
-              List<HashMap<String,Object>> ccRecipientEmailAddressesList = (List<HashMap<String,Object>>) data.get("recipientEmails");
+              List<HashMap<String,Object>> ccRecipientEmailAddressesList = (List<HashMap<String,Object>>) data.get("ccRecipientEmails");
               List<String> ccRecipientEmailAddresses = new ArrayList<String>();
               ccRecipientEmailAddressesList.forEach(emailRecipientNode->{
                   String type = (String) emailRecipientNode.get("type");
