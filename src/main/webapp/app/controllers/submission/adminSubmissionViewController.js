@@ -37,11 +37,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     });
 
-    // var 
-    //     $scope.recipientEmails = [];
-    //     $scope.ccRecipientEmails = [];
-    // };
-
     var surgicalFieldValueUpdate = function(submission) {
         // remove field values that are document type field predicates
         for(var i = $scope.submission.fieldValues.length - 1; i >= 0; i--) {
