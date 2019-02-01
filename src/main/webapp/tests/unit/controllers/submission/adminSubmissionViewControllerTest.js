@@ -164,10 +164,6 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(scope.removeFiles).toBeDefined();
             expect(typeof scope.removeFiles).toEqual("function");
         });
-        it('resetAddCommentModal should be defined', function () {
-            expect(scope.resetAddCommentModal).toBeDefined();
-            expect(typeof scope.resetAddCommentModal).toEqual("function");
-        });
         it('resetAddFile should be defined', function () {
             expect(scope.resetAddFile).toBeDefined();
             expect(typeof scope.resetAddFile).toEqual("function");
@@ -387,13 +383,6 @@ describe('controller: AdminSubmissionViewController', function () {
 
             expect(typeof scope.errorMessage).toBe("string");
             expect(scope.addFileData.files.length).toBe(1);
-        });
-        it('resetAddCommentModal should close a modal', function () {
-            spyOn(scope, "closeModal");
-
-            scope.resetAddCommentModal();
-
-            expect(scope.closeModal).toHaveBeenCalled();
         });
         it('resetAddFile should close a modal', function () {
             scope.errorMessage = null;

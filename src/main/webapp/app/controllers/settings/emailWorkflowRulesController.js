@@ -1,4 +1,4 @@
-vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, $q, SubmissionStatusRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType, InputTypes) {
+vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, $q, SubmissionStatusRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -12,7 +12,7 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
     $scope.stateRules = {};
 
     $scope.buildRecipients = function () {
-        $scope.recipients = [{
+        var recipients = [{
                 name: "Submitter",
                 type: EmailRecipientType.SUBMITTER,
                 data: "Submitter"
@@ -29,22 +29,11 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
             }
         ];
 
-        var recipientInputTypes = [
-          InputTypes.INPUT_CONTACT,
-          InputTypes.INPUT_CONTACT_SELECT
-        ];
-
-        angular.forEach(OrganizationRepo.getSelectedOrganization().aggregateWorkflowSteps, function (aggregateWorkflowStep) {
-            angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function (aggregateFieldProfile) {
-                if (recipientInputTypes.indexOf(aggregateFieldProfile.inputType.name) !== -1) {
-                    $scope.recipients.push({
-                        name: aggregateFieldProfile.gloss,
-                        type: EmailRecipientType.CONTACT,
-                        data: aggregateFieldProfile.fieldPredicate.id
-                    });
-                }
-            });
-        });
+        var organization = OrganizationRepo.getSelectedOrganization();
+        var workflowRecipients = organization ? organization.getWorkflowEmailContacts() : [];
+        
+        $scope.recipients = recipients.concat(workflowRecipients);
+        
     };
 
     $q.all([SubmissionStatusRepo.ready(), EmailTemplateRepo.ready(), OrganizationRepo.ready()]).then(function () {
