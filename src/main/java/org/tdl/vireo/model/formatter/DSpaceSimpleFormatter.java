@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javax.persistence.Entity;
 
 import org.tdl.vireo.model.FieldValue;
+//import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.export.enums.DSpaceSimpleKey;
 import org.thymeleaf.context.Context;
@@ -86,7 +87,7 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
                 context.setVariable(key.name(), submissionHelperUtility.getMajor());
                 break;
             case DEGREE_NAME:
-                context.setVariable(key.name(), submissionHelperUtility.getDegreeProQuestCode());
+                context.setVariable(key.name(), submissionHelperUtility.getDegreeName());
                 break;
             case DEGREE_LEVEL:
                 context.setVariable(key.name(), submissionHelperUtility.getDegreeLevel());
