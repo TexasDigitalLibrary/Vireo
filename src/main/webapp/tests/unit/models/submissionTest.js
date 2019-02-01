@@ -1,5 +1,5 @@
 describe('model: Submission', function () {
-    var model, q, rootScope, scope, ActionLog, FieldValue, FileService, WsApi;
+    var model, q, rootScope, scope, ActionLog, FieldValue, FileService, Organization, WsApi;
 
     beforeEach(function() {
         module('core');
@@ -8,10 +8,11 @@ describe('model: Submission', function () {
         module('mock.fieldPredicate');
         module('mock.fieldValue');
         module('mock.fileService');
+        //module('mock.organization');
         module('mock.user');
         module('mock.wsApi');
 
-        inject(function ($q, $rootScope, Submission, _ActionLog_, _FieldValue_, _FileService_, _WsApi_) {
+        inject(function ($q, $rootScope, Submission, _ActionLog_, _FieldValue_, _FileService_ /*, _Organization_*/, _WsApi_) {
             q = $q;
             rootScope = $rootScope;
             scope = $rootScope.$new();
@@ -19,6 +20,7 @@ describe('model: Submission', function () {
             ActionLog = _ActionLog_;
             FieldValue = _FieldValue_;
             FileService = _FileService_;
+            // Organization = _Organization_;
             WsApi = _WsApi_;
 
             model = angular.extend(new Submission(), dataSubmission1);
@@ -312,14 +314,9 @@ describe('model: Submission', function () {
             var response;
             var fieldValues = [ new mockFieldValue(q), new mockFieldValue(q) ];
             fieldValues[1].mock(dataFieldValue2);
+            model.organization = new mockOrganization(q);
 
             spyOn(model, "getFieldValuesByInputType").and.returnValue(fieldValues);
-
-            response = model.getContactEmails();
-            expect(response.length).toBe(0);
-
-            fieldValues[0].contacts = ["a"];
-            fieldValues[1].contacts = ["b", "c"];
 
             response = model.getContactEmails();
             expect(response.length).toBe(3);

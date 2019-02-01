@@ -4,6 +4,23 @@ vireo.model("Organization", function Organization($q, WsApi, InputTypes, EmailRe
 
       var organization = this;
 
+      organization.defaultRecipients = [{
+          name: "Submitter",
+          type: EmailRecipientType.SUBMITTER,
+          data: "Submitter"
+        },
+        {
+          name: "Assignee",
+          type: EmailRecipientType.ASSIGNEE,
+          data: "Assignee"
+        },
+        {
+          name: "Organization",
+          type: EmailRecipientType.ORGANIZATION,
+          data: null
+        }
+      ];
+
       organization.addEmailWorkflowRule = function (templateId, recipient, submissionStatusId) {
             angular.extend(apiMapping.Organization.addEmailWorkflowRule, {
                 'method': organization.id + "/add-email-workflow-rule",
@@ -80,7 +97,7 @@ vireo.model("Organization", function Organization($q, WsApi, InputTypes, EmailRe
               });
           });
           
-          return assumedRecipients.concat(dynamicRecipients);
+          return angular.copy(defaultRecipients).assumedRecipients.concat(dynamicRecipients);
         };
 
         organization.changeEmailWorkflowRuleActivation = function (rule) {
