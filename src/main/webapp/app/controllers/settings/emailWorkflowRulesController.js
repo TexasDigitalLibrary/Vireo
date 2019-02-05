@@ -12,28 +12,8 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
     $scope.stateRules = {};
 
     $scope.buildRecipients = function () {
-        var recipients = [{
-                name: "Submitter",
-                type: EmailRecipientType.SUBMITTER,
-                data: "Submitter"
-            },
-            {
-                name: "Assignee",
-                type: EmailRecipientType.ASSIGNEE,
-                data: "Assignee"
-            },
-            {
-                name: "Organization",
-                type: EmailRecipientType.ORGANIZATION,
-                data: null
-            }
-        ];
-
-        var organization = OrganizationRepo.getSelectedOrganization();
-        var workflowRecipients = organization ? organization.getWorkflowEmailContacts() : [];
-        
-        $scope.recipients = recipients.concat(workflowRecipients);
-        
+        var organization = OrganizationRepo.getSelectedOrganization();        
+        $scope.recipients = organization ? organization.getWorkflowEmailContacts() : [];
     };
 
     $q.all([SubmissionStatusRepo.ready(), EmailTemplateRepo.ready(), OrganizationRepo.ready()]).then(function () {

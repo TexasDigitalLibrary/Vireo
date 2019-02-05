@@ -61,23 +61,6 @@ vireo.model("Organization", function Organization($q, WsApi, InputTypes, EmailRe
         };
 
         organization.getWorkflowEmailContacts = function() {
-          var assumedRecipients = [{
-              name: "Submitter",
-              type: EmailRecipientType.SUBMITTER,
-              data: "Submitter"
-            },
-            {
-              name: "Assignee",
-              type: EmailRecipientType.ASSIGNEE,
-              data: "Assignee"
-            },
-            {
-              name: "Organization",
-              type: EmailRecipientType.ORGANIZATION,
-              data: null
-            }
-          ];
-
           var recipientInputTypes = [
             InputTypes.INPUT_CONTACT,
             InputTypes.INPUT_CONTACT_SELECT
@@ -97,7 +80,7 @@ vireo.model("Organization", function Organization($q, WsApi, InputTypes, EmailRe
               });
           });
           
-          return angular.copy(defaultRecipients).assumedRecipients.concat(dynamicRecipients);
+          return angular.copy(organization.defaultRecipients).concat(dynamicRecipients);
         };
 
         organization.changeEmailWorkflowRuleActivation = function (rule) {
