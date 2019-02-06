@@ -554,8 +554,8 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.addFileData.sendEmailToRecipient = true;
             scope.addFileData.sendEmailToCCRecipient = true;
             scope.addFileData.files = [ {} ];
-            scope.recipientEmails = [ "a" ];
-            scope.ccRecipientEmails = [ "b" ];
+            scope.addFileData.recipientEmails = [ "a" ];
+            scope.addFileData.ccRecipientEmails = [ "b" ];
             scope.addFileData.uploading = false;
 
             response = scope.disableSubmitAddFile();

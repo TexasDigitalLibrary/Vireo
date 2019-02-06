@@ -268,9 +268,9 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             $scope.addFileData = {
                 selectedTemplate: $scope.emailTemplates[0],
                 sendEmailToRecipient: (userSettings.attachment_email_student_by_default === "true") || (userSettings.attachment_cc_student_advisor_by_default === "true"),
-                recipientEmails: userSettings.attachment_email_student_by_default === "true" ? $scope.submission.submitter.email : "",
+                recipientEmails: userSettings.attachment_email_student_by_default === "true" ? [$scope.submission.submitter.email] : [],
                 sendEmailToCCRecipient: userSettings.attachment_cc_student_advisor_by_default === "true",
-                ccRecipientEmails: userSettings.attachment_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails().join(",") : "",
+                ccRecipientEmails: userSettings.attachment_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails() : [],
                 needsCorrection: userSettings.attachment_flag_submission_as_needs_corrections_by_default === "true"
             };
         };
@@ -394,8 +394,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                                 $scope.submission.sendEmail({
                                     subject: $scope.addFileData.subject,
                                     message: $scope.addFileData.message,
-                                    recipientEmails: $scope.recipientEmails.join(';'),
-                                    ccRecipientEmails: $scope.ccRecipientEmails.join(';'),
+                                    recipientEmails: $scope.addFileData.recipientEmails,
+                                    ccRecipientEmails: $scope.addFileData.ccRecipientEmails,
                                     sendEmailToRecipient: $scope.addFileData.sendEmailToRecipient,
                                     sendEmailToCCRecipient: $scope.addFileData.sendEmailToCCRecipient
                                 }).then(function () {
@@ -451,8 +451,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                     if ($scope.addFileData.sendEmailToCCRecipient) {
                         disable = $scope.addFileData.files === undefined ||
                                   $scope.addFileData.uploading ||
-                                  $scope.recipientEmails.length === 0 ||
-                                  $scope.ccRecipientEmails.length === 0 ||
+                                  $scope.addFileData.recipientEmails.length === 0 ||
+                                  $scope.addFileData.ccRecipientEmails.length === 0 ||
                                   $scope.addFileData.subject === undefined ||
                                   $scope.addFileData.subject === "" ||
                                   $scope.addFileData.message === undefined ||
@@ -460,7 +460,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                     } else {
                         disable = $scope.addFileData.files === undefined ||
                                   $scope.addFileData.uploading ||
-                                  $scope.recipientEmails.length === 0 ||
+                                  $scope.addFileData.recipientEmails.length === 0 ||
                                   $scope.addFileData.subject === undefined ||
                                   $scope.addFileData.subject === "" ||
                                   $scope.addFileData.message === undefined ||
@@ -476,8 +476,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                         disable = $scope.addFileData.files === undefined ||
                                   $scope.addFileData.fieldPredicate == undefined ||
                                   $scope.addFileData.uploading ||
-                                  $scope.recipientEmails.length === 0 ||
-                                  $scope.ccRecipientEmails.length === 0 ||
+                                  $scope.addFileData.recipientEmails.length === 0 ||
+                                  $scope.addFileData.ccRecipientEmails.length === 0 ||
                                   $scope.addFileData.subject === undefined ||
                                   $scope.addFileData.subject === "" ||
                                   $scope.addFileData.message === undefined ||
@@ -486,7 +486,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                         disable = $scope.addFileData.files === undefined ||
                                   $scope.addFileData.fieldPredicate == undefined ||
                                   $scope.addFileData.uploading ||
-                                  $scope.recipientEmails.length === 0 ||
+                                  $scope.addFileData.recipientEmails.length === 0 ||
                                   $scope.addFileData.subject === undefined ||
                                   $scope.addFileData.subject === "" ||
                                   $scope.addFileData.message === undefined ||
