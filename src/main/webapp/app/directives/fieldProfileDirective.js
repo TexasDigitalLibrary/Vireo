@@ -59,7 +59,6 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             };
 
             $scope.saveContacts = function (fieldValue, noResults) {
-                console.log(noResults);
                 if (noResults) {
                     fieldValue.updating = true;
                     if (typeof fieldValue.contacts === 'string') {
