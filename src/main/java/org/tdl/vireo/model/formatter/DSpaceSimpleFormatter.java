@@ -5,7 +5,6 @@ import java.util.HashMap;
 import javax.persistence.Entity;
 
 import org.tdl.vireo.model.FieldValue;
-//import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.export.enums.DSpaceSimpleKey;
 import org.thymeleaf.context.Context;
