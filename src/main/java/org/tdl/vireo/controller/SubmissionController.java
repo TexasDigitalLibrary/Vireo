@@ -12,8 +12,10 @@ import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -21,6 +23,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -48,8 +51,16 @@ import org.tdl.vireo.exception.DepositException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.EmailRecipient;
+import org.tdl.vireo.model.EmailRecipientAssignee;
+import org.tdl.vireo.model.EmailRecipientContact;
+import org.tdl.vireo.model.EmailRecipientOrganization;
+import org.tdl.vireo.model.EmailRecipientPlainAddress;
+import org.tdl.vireo.model.EmailRecipientSubmitter;
+import org.tdl.vireo.model.EmailRecipientType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
@@ -68,6 +79,7 @@ import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
+import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -83,6 +95,7 @@ import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -99,169 +112,178 @@ import edu.tamu.weaver.validation.results.ValidationResults;
 @RequestMapping("/submission")
 public class SubmissionController {
 
-    private Logger LOG = LoggerFactory.getLogger(this.getClass());
+  private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
+  private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
 
-    private static final String NEEDS_CORRECTION_SUBMISSION_STATUS_NAME = "Needs Correction";
+  private static final String NEEDS_CORRECTION_SUBMISSION_STATUS_NAME = "Needs Correction";
 
-    private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME = "Corrections Received";
+  private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME = "Corrections Received";
 
-    @Autowired
-    private UserRepo userRepo;
+  @Autowired
+  private UserRepo userRepo;
 
-    @Autowired
-    private SubmissionRepo submissionRepo;
+  @Autowired
+  private SubmissionRepo submissionRepo;
 
-    @Autowired
-    private FieldValueRepo fieldValueRepo;
+  @Autowired
+  private FieldValueRepo fieldValueRepo;
 
-    @Autowired
-    private SubmissionFieldProfileRepo submissionFieldProfileRepo;
+  @Autowired
+  private FieldPredicateRepo fieldPredicateRepo;
 
-    @Autowired
-    private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
+  @Autowired
+  private SubmissionFieldProfileRepo submissionFieldProfileRepo;
 
-    @Autowired
-    private OrganizationRepo organizationRepo;
+  @Autowired
+  private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
 
-    @Autowired
-    private InputTypeRepo inputTypeRepo;
+  @Autowired
+  private OrganizationRepo organizationRepo;
 
-    @Autowired
-    private SubmissionStatusRepo submissionStatusRepo;
+  @Autowired
+  private InputTypeRepo inputTypeRepo;
 
-    @Autowired
-    private EmailSender emailSender;
+  @Autowired
+  private SubmissionStatusRepo submissionStatusRepo;
 
-    @Autowired
-    private EmailTemplateRepo emailTemplateRepo;
+  @Autowired
+  private EmailSender emailSender;
 
-    @Autowired
-    private TemplateUtility templateUtility;
+  @Autowired
+  private EmailTemplateRepo emailTemplateRepo;
 
-    @Autowired
-    private AssetService assetService;
+  @Autowired
+  private TemplateUtility templateUtility;
 
-    @Autowired
-    private ConfigurationRepo configurationRepo;
+  @Autowired
+  private AssetService assetService;
 
-    @Autowired
-    private ActionLogRepo actionLogRepo;
+  @Autowired
+  private ConfigurationRepo configurationRepo;
 
-    @Autowired
-    private DepositLocationRepo depositLocationRepo;
+  @Autowired
+  private ActionLogRepo actionLogRepo;
 
-    @Autowired
-    private DepositorService depositorService;
+  @Autowired
+  private DepositLocationRepo depositLocationRepo;
 
-    @Autowired
-    private PackagerUtility packagerUtility;
+  @Autowired
+  private DepositorService depositorService;
 
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
+  @Autowired
+  private PackagerUtility packagerUtility;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired
+  private SimpMessagingTemplate simpMessagingTemplate;
 
-    @Autowired
-    private CustomActionValueRepo customActionValueRepo;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-    @Value("${app.document.folder:private}")
-    private String documentFolder;
+  @Autowired
+  private CustomActionValueRepo customActionValueRepo;
 
-    @Value("${app.documentType.rename:}")
-    private String documentTypesToRename;
+  @Value("${app.document.folder:private}")
+  private String documentFolder;
 
-    @RequestMapping("/all")
-    @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse getAll() {
-        return new ApiResponse(SUCCESS, submissionRepo.findAll());
+  @Value("${app.documentType.rename:}")
+  private String documentTypesToRename;
+
+  @RequestMapping("/all")
+  @PreAuthorize("hasRole('REVIEWER')")
+  public ApiResponse getAll() {
+    return new ApiResponse(SUCCESS, submissionRepo.findAll());
+  }
+
+  @RequestMapping("/all-by-user")
+  @PreAuthorize("hasRole('STUDENT')")
+  public ApiResponse getAllByUser(@WeaverUser User user) {
+    return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitter(user));
+  }
+
+  @RequestMapping("/get-one/{submissionId}")
+  @PreAuthorize("hasRole('STUDENT')")
+  public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
+    Submission submission = null;
+    if (user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
+      submission = submissionRepo.read(submissionId);
+    } else {
+      submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
+    }
+    if (submission == null) {
+      return new ApiResponse(ERROR, "Submission not found");
+    }
+    return new ApiResponse(SUCCESS, submission);
+  }
+
+  @RequestMapping("/advisor-review/{submissionHash}")
+  public ApiResponse getOne(@PathVariable String submissionHash) {
+    Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
+    return new ApiResponse(SUCCESS, submission);
+  }
+
+  @RequestMapping(value = "/create", method = RequestMethod.POST)
+  @PreAuthorize("hasRole('STUDENT')")
+  public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials,
+      @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsExcception {
+    Submission submission = submissionRepo.create(user, organizationRepo.read(Long.valueOf(data.get("organizationId"))),
+        submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME), credentials);
+    actionLogRepo.createPublicLog(submission, user, "Submission created.");
+    return new ApiResponse(SUCCESS, submission);
+  }
+
+  @RequestMapping("/delete/{submissionId}")
+  @PreAuthorize("hasRole('STUDENT')")
+  public ApiResponse deleteSubmission(@WeaverUser User user, @PathVariable Long submissionId) {
+    Submission submissionToDelete = submissionRepo.read(submissionId);
+
+    ApiResponse response = new ApiResponse(SUCCESS);
+    if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail())
+        || user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
+      submissionRepo.delete(submissionToDelete);
+    } else {
+      response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
     }
 
-    @RequestMapping("/all-by-user")
-    @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse getAllByUser(@WeaverUser User user) {
-        return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitter(user));
+    return response;
+  }
+
+  @RequestMapping(value = "/{submissionId}/add-comment", method = RequestMethod.POST)
+  @PreAuthorize("hasRole('STUDENT')")
+  public ApiResponse addComment(@WeaverUser User user, @PathVariable Long submissionId,
+      @RequestBody Map<String, Object> data) throws JsonProcessingException, IOException {
+
+    Submission submission = submissionRepo.read(submissionId);
+
+    String commentVisibility = data.get("commentVisiblity") != null ? (String) data.get("commentVisiblity") : "public";
+
+    if (commentVisibility.equals("public")) {
+      sendEmail(user, submission, data);
+    } else {
+      String subject = (String) data.get("subject");
+      String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
+      actionLogRepo.createPrivateLog(submission, user, subject + ": " + templatedMessage);
     }
 
-    @RequestMapping("/get-one/{submissionId}")
-    @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
-        Submission submission = null;
-        if (user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
-            submission = submissionRepo.read(submissionId);
-        } else {
-            submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
-        }
-        if (submission == null) {
-            return new ApiResponse(ERROR, "Submission not found");
-        }
-        return new ApiResponse(SUCCESS, submission);
-    }
+    return new ApiResponse(SUCCESS);
+  }
 
-    @RequestMapping("/advisor-review/{submissionHash}")
-    public ApiResponse getOne(@PathVariable String submissionHash) {
-        Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
-        return new ApiResponse(SUCCESS, submission);
-    }
+  @RequestMapping(value = "/{submissionId}/send-email", method = RequestMethod.POST)
+  @PreAuthorize("hasRole('REVIEWER')")
+  public ApiResponse sendEmail(@WeaverUser User user, @PathVariable Long submissionId,
+      @RequestBody Map<String, Object> data) throws JsonProcessingException, IOException {
+    sendEmail(user, submissionRepo.read(submissionId), data);
+    return new ApiResponse(SUCCESS);
+  }
 
-    @RequestMapping(value = "/create", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials, @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsExcception {
-        Submission submission = submissionRepo.create(user, organizationRepo.read(Long.valueOf(data.get("organizationId"))), submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME), credentials);
-        actionLogRepo.createPublicLog(submission, user, "Submission created.");
-        return new ApiResponse(SUCCESS, submission);
-    }
-
-    @RequestMapping("/delete/{submissionId}")
-    @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse deleteSubmission(@WeaverUser User user, @PathVariable Long submissionId) {
-        Submission submissionToDelete = submissionRepo.read(submissionId);
-
-        ApiResponse response = new ApiResponse(SUCCESS);
-        if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail()) || user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
-            submissionRepo.delete(submissionToDelete);
-        } else {
-            response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
-        }
-
-        return response;
-    }
-
-    @RequestMapping(value = "/{submissionId}/add-comment", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('STUDENT')")
-    public ApiResponse addComment(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
-
-        Submission submission = submissionRepo.read(submissionId);
-
-        String commentVisibility = data.get("commentVisiblity") != null ? (String) data.get("commentVisiblity") : "public";
-
-        if (commentVisibility.equals("public")) {
-            sendEmail(user, submission, data);
-        } else {
-            String subject = (String) data.get("subject");
-            String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-            actionLogRepo.createPrivateLog(submission, user, subject + ": " + templatedMessage);
-        }
-
-        return new ApiResponse(SUCCESS);
-    }
-
-    @RequestMapping(value = "/{submissionId}/send-email", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('REVIEWER')")
-    public ApiResponse sendEmail(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody Map<String, Object> data) {
-        sendEmail(user, submissionRepo.read(submissionId), data);
-        return new ApiResponse(SUCCESS);
-    }
-
-    private void sendEmail(User user, Submission submission, Map<String, Object> data) {
+  private void sendEmail(User user, Submission submission, Map<String, Object> data)
+      throws JsonProcessingException, IOException {
 
         String subject = (String) data.get("subject");
 
         String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
 
-        String recipientEmails = new String();
+        StringBuilder recipientEmails = new StringBuilder();
 
         boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
 
@@ -270,17 +292,37 @@ public class SubmissionController {
 
             SimpleMailMessage smm = new SimpleMailMessage();
 
-            String recipientEmail = (String) data.get("recipientEmail");
-
-            recipientEmails = "Email sent to: [ " + recipientEmail + " ]; ";
-
-            smm.setTo(recipientEmail.split(";"));
+            @SuppressWarnings("unchecked")
+            List<HashMap<String,Object>> recipientEmailAddressesList = (List<HashMap<String,Object>>) data.get("recipientEmails");
+            List<String> recipientEmailAddresses = new ArrayList<String>();
+            recipientEmailAddressesList.forEach(emailRecipientNode->{
+                String type = (String) emailRecipientNode.get("type");
+                EmailRecipient recipient = buildEmailRecipient(type, emailRecipientNode, submission);
+                if(recipient != null) {
+                  recipientEmailAddresses.addAll(recipient.getEmails(submission));
+                }
+            });
+            
+            smm.setTo(recipientEmailAddresses.toArray(new String[0]));
+            recipientEmails.append("Email sent to: [ " + String.join(";",recipientEmailAddresses) + " ]; "); 
 
             if (sendCCRecipientEmail) {
-                String ccRecipientEmail = (String) data.get("ccRecipientEmail");
-                smm.setCc(ccRecipientEmail.split(";"));
-                recipientEmails = "Email sent to: [ " + recipientEmail + " ] " + " and cc to: [ " + ccRecipientEmail + " ]; ";
-            }
+              @SuppressWarnings("unchecked")
+              List<HashMap<String,Object>> ccRecipientEmailAddressesList = (List<HashMap<String,Object>>) data.get("ccRecipientEmails");
+              List<String> ccRecipientEmailAddresses = new ArrayList<String>();
+              ccRecipientEmailAddressesList.forEach(emailRecipientNode->{
+                  String type = (String) emailRecipientNode.get("type");
+                  EmailRecipient recipient = buildEmailRecipient(type, emailRecipientNode, submission);
+                  if(recipient != null) {
+                    ccRecipientEmailAddresses.addAll(recipient.getEmails(submission));
+                  }
+              });
+
+              smm.setCc(ccRecipientEmailAddresses.toArray(new String[0]));
+              recipientEmails.append(" and cc to: [ " + String.join(";", ccRecipientEmailAddresses) + " ]; ");   
+            } else {
+              recipientEmails.append(";");
+            }     
 
             String preferredEmail = user.getSetting("preferedEmail");
 
@@ -292,10 +334,41 @@ public class SubmissionController {
             smm.setText(templatedMessage);
 
             emailSender.send(smm);
-
         }
 
-        actionLogRepo.createPublicLog(submission, user, recipientEmails + subject + ": " + templatedMessage);
+        actionLogRepo.createPublicLog(submission, user, recipientEmails.toString() + subject + ": " + templatedMessage);
+    }
+
+    private EmailRecipient buildEmailRecipient(String type, HashMap<String, Object> emailRecipientMap, Submission submission) {
+      EmailRecipient recipient = null;
+
+      switch(EmailRecipientType.valueOf(type)) {
+        case ASSIGNEE: {
+          recipient = new EmailRecipientAssignee();
+          break;
+        }
+        case CONTACT: {
+          String label = (String) emailRecipientMap.get("name");
+          FieldPredicate fp = fieldPredicateRepo.getOne(new Long((Integer)emailRecipientMap.get("data")));
+          if(label!=null & fp != null) {
+            recipient = new EmailRecipientContact(label, fp);
+          }
+          break;
+        }
+        case PLAIN_ADDRESS: {
+          recipient = new EmailRecipientPlainAddress((String) emailRecipientMap.get("name"));
+          break;
+        }
+        case ORGANIZATION: {
+          recipient = new EmailRecipientOrganization(submission.getOrganization());
+          break;
+        }
+        case SUBMITTER: {
+          recipient = new EmailRecipientSubmitter();
+          break;
+        }
+      }
+      return recipient;
     }
 
     @RequestMapping(value = "/batch-comment")
@@ -307,8 +380,11 @@ public class SubmissionController {
                 subMessage.put("recipientEmail", findEmailValue(sub, subMessage.get("recipientEmail").toString()));
                 subMessage.put("ccRecipientEmail", findEmailValue(sub, subMessage.get("ccRecipientEmail").toString()));
             }
-
-            addComment(user, sub.getId(), subMessage);
+            try {
+              addComment(user, sub.getId(), subMessage);
+            } catch (IOException e) {
+              e.printStackTrace();
+            }
         });
         return new ApiResponse(SUCCESS);
 
@@ -420,7 +496,7 @@ public class SubmissionController {
     }
 
     @RequestMapping("/{submissionId}/change-status/{submissionStatusName}")
-    @PreAuthorize("hasRole('REVIEWER')")
+    @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse changeStatus(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String submissionStatusName) {
         Submission submission = submissionRepo.read(submissionId);
         ApiResponse response;
@@ -552,8 +628,10 @@ public class SubmissionController {
         case "MarcXML21":
         case "DSpaceMETS":
         case "ProQuest":
+            ServletOutputStream sos = response.getOutputStream();
+
             try {
-                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+                ZipOutputStream zos = new ZipOutputStream(sos);
 
                 // TODO: need a more dynamic way to achieve this
                 if (packagerName.equals("ProQuest")) {
@@ -561,30 +639,32 @@ public class SubmissionController {
                 }
 
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
+
+                    StringBuilder contentsText = new StringBuilder();
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-
-                    if (exportPackage.isFile()) {
-                        File exportFile = (File) exportPackage.getPayload();
-                        if (packagerName.equals("MarcXML21")) {
-                            zos.putNextEntry(new ZipEntry("MarcXML21/" + exportFile.getName()));
-                        } else {
-                            zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                    if (exportPackage.isMap()) {
+                        for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
+                            if (packagerName.equals("MarcXML21")) {
+                                zos.putNextEntry(new ZipEntry("MarcXML21/" + fileEntry.getKey()));
+                            } else {
+                                zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
+                            }
+                            contentsText.append("MD " + fileEntry.getKey() + "\n");
+                            zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
+                            zos.closeEntry();
                         }
-                        zos.write(Files.readAllBytes(exportFile.toPath()));
-                        zos.closeEntry();
                     }
-
                 }
                 zos.close();
 
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
+                LOG.info("Error With Export",e);
                 response.setContentType("application/json");
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-                PrintWriter out = response.getWriter();
-                out.print(objectMapper.writeValueAsString(apiResponse));
-                out.close();
+                sos.print(objectMapper.writeValueAsString(apiResponse));
+                sos.close();
             }
             break;
         case "DSpaceSimple":
@@ -595,6 +675,8 @@ public class SubmissionController {
                     zos.putNextEntry(new ZipEntry(submissionName));
 
                     StringBuilder contentsText = new StringBuilder();
+
+					submission.setConfigurationRepo(configurationRepo);
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
 
                     if (exportPackage.isMap()) {

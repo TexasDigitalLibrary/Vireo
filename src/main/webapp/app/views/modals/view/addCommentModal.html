@@ -12,19 +12,19 @@
 
                 <div class="form-group email-element email-to" ng-class="{'email-active':addCommentModal.sendEmailToRecipient&&addCommentModal.commentVisiblity==='public'}">
                     <label>To:</label>
-                    <span class="label-remove-hover" ng-click="removeEmailAddressee(email,recipientEmails)" ng-repeat="email in recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
+                    <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addCommentModal.recipientEmails)" ng-repeat="email in addCommentModal.recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
                     <div class="input-group">
-                        <input type="email" class="form-control" ng-model="recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
-                        <span title="Add Email" ng-class="{disabled: !recipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(recipientEmail,recipientEmails);recipientEmail=''"></span>
+                        <input type="email" class="form-control" ng-model="recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" autocomplete="true" />
+                        <span title="Add Email" ng-class="{disabled: !recipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(recipientEmail,addCommentModal.recipientEmails);recipientEmail=''"></span>
                     </div>
                 </div>
 
                 <div class="form-group email-element email-cc" ng-class="{'email-active': addCommentModal.sendEmailToCCRecipient&&addCommentModal.commentVisiblity==='public'}">
                     <label>CC:</label>
-                    <span class="label-remove-hover" ng-click="removeEmailAddressee(email,ccRecipientEmails)" ng-repeat="email in ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email}} </span>
+                    <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addCommentModal.ccRecipientEmails)" ng-repeat="email in addCommentModal.ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
                     <div class="input-group">
-                        <input type="email" class="form-control" ng-model="ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry for entry in submission.getContactEmails() | filter:$viewValue" />
-                        <span title="Add Email" ng-class="{disabled: !ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(ccRecipientEmail,ccRecipientEmails);ccRecipientEmail=''"></span>
+                        <input type="email" class="form-control" ng-model="ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" autocomplete="true" />
+                        <span title="Add Email" ng-class="{disabled: !ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(ccRecipientEmail,addCommentModal.ccRecipientEmails);ccRecipientEmail=''"></span>
                     </div>
                 </div>
 

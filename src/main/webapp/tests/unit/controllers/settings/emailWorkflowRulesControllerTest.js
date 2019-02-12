@@ -120,9 +120,10 @@ describe('controller: EmailWorkflowRulesController', function () {
         it('buildRecipients should build the recipients', function () {
             OrganizationRepo.selectedId = dataOrganization1.id;
             scope.recipients = null;
+            scope.$digest();
 
             scope.buildRecipients();
-
+            
             expect(typeof scope.recipients).toBe("object");
         });
         it('cancelDeleteEmailWorkflowRule should close a modal', function () {

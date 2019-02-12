@@ -327,6 +327,10 @@ var apiMapping = {
             'controller': 'settings/email-template'
         }
     },
+    EmailRecipient: {
+      lazy: true,
+      validations: true,
+    },
     FieldPredicate: {
         validations: true,
         channel: '/channel/field-predicate',
