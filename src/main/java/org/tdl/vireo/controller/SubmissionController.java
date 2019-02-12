@@ -675,6 +675,8 @@ public class SubmissionController {
                     zos.putNextEntry(new ZipEntry(submissionName));
 
                     StringBuilder contentsText = new StringBuilder();
+
+					submission.setConfigurationRepo(configurationRepo);
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
 
                     if (exportPackage.isMap()) {

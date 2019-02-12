@@ -466,6 +466,11 @@ public class SubmissionHelperUtility {
         return descAbstract.length() > 0 ? descAbstract.split("\n") : new String[] {};
     }
 
+    public String getDegreeName() {
+        Optional<String> degreeName = getFieldValueByPredicateValue("thesis.degree.name");
+        return degreeName.isPresent() ? degreeName.get() : "";
+    }
+
     public String getDegreeLevel() {
         Optional<String> degreeLevel = getFieldValueIdentifierByPredicateValue("thesis.degree.name");
         return degreeLevel.isPresent() ? degreeLevel.get() : "";
@@ -561,8 +566,10 @@ public class SubmissionHelperUtility {
 
     // NOTE: these come from the settings service
 
+
     public String getGrantor() {
-        String grantor = getSettingByNameAndType("grantor", "application").getValue();
+        //String grantor = getSettingByNameAndType("grantor", "application").getValue();
+		String grantor = submission.getConfigurationRepo().getValueByName("grantor");
         return grantor != null ? grantor : "";
     }
 
