@@ -568,8 +568,10 @@ public class SubmissionHelperUtility {
 
 
     public String getGrantor() {
-        //String grantor = getSettingByNameAndType("grantor", "application").getValue();
-		String grantor = submission.getConfigurationRepo().getValueByName("grantor");
+        String grantor = null;
+        if(submission.getConfigurationRepo()!=null){
+            grantor = submission.getConfigurationRepo().getValueByName("grantor");
+        }
         return grantor != null ? grantor : "";
     }
 
