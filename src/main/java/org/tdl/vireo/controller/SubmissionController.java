@@ -726,6 +726,7 @@ public class SubmissionController {
                     zos.closeEntry();
 
                     zos.closeEntry();
+					submission.setConfigurationRepo(null);
                 }
                 zos.close();
 
