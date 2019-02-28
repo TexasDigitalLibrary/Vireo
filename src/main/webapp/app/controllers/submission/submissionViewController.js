@@ -113,6 +113,10 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
             return fieldPredicate.documentTypePredicate && protectedDocTypes.indexOf(fieldPredicate.value) < 0;
         };
 
+        $scope.feedbackDocuments = function(fieldValue) {
+            return fieldValue.id && fieldValue.fieldPredicate.documentTypePredicate && fieldValue.fieldPredicate.value == '_doctype_feedback';
+        };
+
         CustomActionDefinitionRepo.listen(function(apiRes) {
             if(apiRes.meta.status === 'SUCCESS') {
                 StudentSubmissionRepo.remove($scope.submission);

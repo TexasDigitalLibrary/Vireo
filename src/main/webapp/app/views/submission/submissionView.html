@@ -23,7 +23,7 @@
       <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="loaded"></reviewsubmissionsfields>
       <div id="upload-files" class="row" ng-if="loaded && submission.submissionStatus.submissionState === SubmissionStates.NEEDS_CORRECTIONS">
         <span class="text-danger">
-          <h3>Upload Files</h3>
+          <h3>Upload/Remove Files</h3>
           <hr class="submission-view-upload-files-hr"/>
         </span>
         <div>
@@ -56,8 +56,7 @@
                   <ul class="list-unstyled">
                     <li ng-repeat="documentFieldValue in documentFieldValues = (submission.fieldValues | filter:removableDocuments)">
                       <input type="checkbox" ng-model="fileSelected" ng-click="queueRemove(documentFieldValue)"/>
-                      <span>
-                        <a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a>
+                      <span>{{documentFieldValue.fileInfo.name}}
                         <strong>({{getFileType(documentFieldValue.fieldPredicate)}}
                           -
                           {{documentFieldValue.fileInfo.size}}
@@ -87,6 +86,20 @@
             <div class="form-group">
               <div class="col-sm-9 col-sm-offset-1 dialog-content" ng-class="{'dialog-open': fieldProfile, 'dialog-closed': !fieldProfile}">
                 <field ng-if="fieldProfile" profile="fieldProfile"></field>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-3" for="manuscript">Feedback Documents:</label>
+              <div class="col-sm-6">
+                <span ng-show="feedbackDocumentFieldValues.length === 0">
+                  <i>No feedback documents uploaded</i>
+                </span>
+                <span ng-show="feedbackDocumentFieldValues.length > 0">
+                  <div ng-repeat="feedbackDocumentFieldValue in feedbackDocumentFieldValues = (submission.fieldValues | filter:feedbackDocuments) | orderBy: '-fileInfo.time'">
+                    <a href ng-click="getFile(feedbackDocumentFieldValue)">{{feedbackDocumentFieldValue.fileInfo.name}}</a>
+                      <strong>({{feedbackDocumentFieldValue.fileInfo.size}} KB)</strong>
+                  </div>
+                </span>
               </div>
             </div>
           </form>
