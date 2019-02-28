@@ -101,6 +101,7 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
         var protectedDocTypes = [
             '_doctype_primary',
             '_doctype_license',
+            '_doctype_feedback',
             '_doctype_archived'
         ];
 
