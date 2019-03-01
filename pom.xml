@@ -525,23 +525,6 @@
             <version>${exec-maven-plugin-version}</version>
             <executions>
 
-              <!-- NPM Unlink -->
-              <execution>
-                <id>exec-npm-unlink</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>unlink</argument>
-                    <argument>${link}</argument>
-                    <argument>--no-save</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
-
               <!-- NPM Install -->
               <execution>
                 <id>exec-npm-install</id>
@@ -573,22 +556,6 @@
                 </goals>
               </execution>
 
-              <!-- NPM Link -->
-              <execution>
-                <id>exec-npm-link</id>
-                <phase>process-classes</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>link</argument>
-                    <argument>${link}</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
-
             </executions>
           </plugin>
         </plugins>
@@ -612,23 +579,6 @@
             <artifactId>exec-maven-plugin</artifactId>
             <version>${exec-maven-plugin-version}</version>
             <executions>
-
-              <!-- NPM Unlink -->
-              <execution>
-                <id>exec-npm-unlink</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <executable>npm${npm-extension}</executable>
-                  <arguments>
-                    <argument>unlink</argument>
-                    <argument>${link}</argument>
-                    <argument>--no-save</argument>
-                  </arguments>
-                </configuration>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-              </execution>
 
               <!-- NPM Install -->
               <execution>
