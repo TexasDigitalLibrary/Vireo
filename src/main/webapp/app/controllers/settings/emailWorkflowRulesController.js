@@ -1,4 +1,4 @@
-vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, $q, SubmissionStatusRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType, InputTypes) {
+vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, $q, SubmissionStatusRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -12,34 +12,8 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
     $scope.stateRules = {};
 
     $scope.buildRecipients = function () {
-        $scope.recipients = [{
-                name: "Submitter",
-                type: EmailRecipientType.SUBMITTER,
-                data: "Submitter"
-            },
-            {
-                name: "Assignee",
-                type: EmailRecipientType.ASSIGNEE,
-                data: "Assignee"
-            },
-            {
-                name: "Organization",
-                type: EmailRecipientType.ORGANIZATION,
-                data: null
-            }
-        ];
-
-        angular.forEach(OrganizationRepo.getSelectedOrganization().aggregateWorkflowSteps, function (aggregateWorkflowStep) {
-            angular.forEach(aggregateWorkflowStep.aggregateFieldProfiles, function (aggregateFieldProfile) {
-                if (aggregateFieldProfile.inputType.name === InputTypes.INPUT_CONTACT) {
-                    $scope.recipients.push({
-                        name: aggregateFieldProfile.gloss,
-                        type: EmailRecipientType.CONTACT,
-                        data: aggregateFieldProfile.fieldPredicate.id
-                    });
-                }
-            });
-        });
+        var organization = OrganizationRepo.getSelectedOrganization();        
+        $scope.recipients = organization ? organization.getWorkflowEmailContacts() : [];
     };
 
     $q.all([SubmissionStatusRepo.ready(), EmailTemplateRepo.ready(), OrganizationRepo.ready()]).then(function () {

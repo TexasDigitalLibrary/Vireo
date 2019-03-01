@@ -25,6 +25,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import javax.persistence.Transient;
+
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.model.validation.SubmissionValidator;
@@ -35,6 +37,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
+
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 
 @Entity
 @JsonIgnoreProperties(value = { "organization" }, allowGetters = true)
@@ -123,6 +127,9 @@ public class Submission extends ValidatingBaseEntity {
     @Column(nullable = true)
     private String depositURL;
 
+	@Transient
+    private static ConfigurationRepo configurationRepo;
+
     public Submission() {
         setModelValidator(new SubmissionValidator());
         setFieldValues(new HashSet<FieldValue>());
@@ -152,6 +159,20 @@ public class Submission extends ValidatingBaseEntity {
         this(submitter, organization);
         setSubmissionStatus(submissionStatus);
     }
+
+    /**
+     * @return the configurationRepo 
+    */
+    public ConfigurationRepo getConfigurationRepo() {
+        return configurationRepo;
+	}
+
+    /**
+     * @param configurationRepo
+    */
+	public void setConfigurationRepo(ConfigurationRepo configurationRepo){
+		this.configurationRepo = configurationRepo;
+	}
 
     /**
      * @return the submitter
