@@ -43,15 +43,11 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
             return FileUploadService.getFileType(fieldPredicate);
         };
 
-        $scope.getFile = function (documentFieldValue) {
-            $scope.submission.fileInfo(documentFieldValue).then(function (data) {
-                documentFieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
-                $scope.submission.file(documentFieldValue.value).then(function (data) {
-                    saveAs(new Blob([data], {
-                        type: documentFieldValue.fileInfo.type
-                    }), documentFieldValue.fileInfo.name);
-                });
-
+        $scope.getFile = function (fieldValue) {
+            $scope.submission.file(fieldValue.value).then(function (data) {
+                saveAs(new Blob([data], {
+                    type: fieldValue.fileInfo.type
+                }), fieldValue.fileInfo.name);
             });
         };
 
