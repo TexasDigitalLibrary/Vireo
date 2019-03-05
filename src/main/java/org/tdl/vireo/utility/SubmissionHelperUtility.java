@@ -11,9 +11,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.tdl.vireo.model.Address;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DefaultConfiguration;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.service.DefaultSettingsService;
 import org.tdl.vireo.service.ProquestCodesService;
 
@@ -614,9 +616,9 @@ public class SubmissionHelperUtility {
 
     // NOTE: used context to get the default settings service
 
-    public DefaultConfiguration getSettingByNameAndType(String name, String type) {
-        DefaultSettingsService defaultSettingsService = SpringContext.bean(DefaultSettingsService.class);
-        return defaultSettingsService.getSettingByNameAndType(name, type);
+    public Configuration getSettingByNameAndType(String name, String type) {
+        ConfigurationRepo configurationRepo = SpringContext.bean(ConfigurationRepo.class);
+        return configurationRepo.getByNameAndType(name, type);
     }
 
     public Optional<String> getProQuestCodeByNameAndType(String name, String type) {
