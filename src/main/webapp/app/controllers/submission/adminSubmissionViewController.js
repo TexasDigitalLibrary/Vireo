@@ -18,8 +18,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     $scope.emailTemplates = EmailTemplateRepo.getAll();
 
-    
-
     EmailTemplateRepo.ready().then(function() {
 
         var addDefaultTemplate = true;
@@ -58,8 +56,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         // fetch file info
         $scope.submission.fetchDocumentTypeFileInfo();
     };
-
-    
 
     $scope.loaded = true;
 
@@ -184,7 +180,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
       };
 
-      $scope.isEmailAddresseeInValid = function(formField) {
+      $scope.isEmailAddresseeInvalid = function(formField) {
         return formField.$invalid && $scope[formField.$$attr.name+"Invalid"];
       };
 
