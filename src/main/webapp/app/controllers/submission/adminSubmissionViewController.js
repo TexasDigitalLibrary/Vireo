@@ -18,6 +18,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     $scope.emailTemplates = EmailTemplateRepo.getAll();
 
+    
+
     EmailTemplateRepo.ready().then(function() {
 
         var addDefaultTemplate = true;
@@ -68,6 +70,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     $scope.dropZoneText = "Drop a file or click arrow";
 
     SubmissionRepo.fetchSubmissionById($routeParams.id).then(function(submission) {
+      
 
         $scope.submission = submission;
 
@@ -156,18 +159,33 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           return disable;
       };
 
-      $scope.addEmailAddressee = function (emailAddress,destinationModel) {
+      $scope.addEmailAddressee = function (emails, formField) {
 
-        if (emailAddress) {
-          if(typeof emailAddress === 'string') {
-            emailAddress = new EmailRecipient({
-              name: emailAddress,
-              type: EmailRecipientType.PLAIN_ADDRESS,
-              data: emailAddress
-            });
+        var recipient = formField.$$rawModelValue;
+        
+        if (recipient) {
+          if(typeof recipient === 'string') {
+            if(formField.$invalid) {
+              $scope[formField.$$attr.name+"Invalid"] = true;
+              return;
+            } else {
+              recipient = new EmailRecipient({
+                name: recipient,
+                type: EmailRecipientType.PLAIN_ADDRESS,
+                data: recipient
+              });
+            }
           }
-          destinationModel.push(emailAddress);
+          emails.push(recipient);
+          $scope[formField.$$attr.name+"Invalid"] = false;
+          //This is not ideal, as it assumes the attr name and attr ngModel are the same.
+          $scope.addCommentModal[formField.$$attr.name] = "";
         }
+
+      };
+
+      $scope.isEmailAddresseeInValid = function(formField) {
+        return formField.$invalid && $scope[formField.$$attr.name+"Invalid"];
       };
 
       $scope.removeEmailAddressee = function (email,destinationModel) {
