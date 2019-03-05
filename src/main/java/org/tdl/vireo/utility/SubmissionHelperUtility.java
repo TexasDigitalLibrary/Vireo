@@ -570,7 +570,7 @@ public class SubmissionHelperUtility {
 
 
     public String getGrantor() {        
-      return getSettingByNameAndType("application", "grantor").getValue();
+      return getSettingByNameAndType("grantor","application").getValue();
     }
 
     public boolean getReleaseStudentContactInformation() {
