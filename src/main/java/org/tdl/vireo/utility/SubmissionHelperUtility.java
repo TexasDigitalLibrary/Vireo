@@ -567,12 +567,8 @@ public class SubmissionHelperUtility {
     // NOTE: these come from the settings service
 
 
-    public String getGrantor() {
-        String grantor = null;
-        if(submission.getConfigurationRepo()!=null){
-            grantor = submission.getConfigurationRepo().getValueByName("grantor");
-        }
-        return grantor != null ? grantor : "";
+    public String getGrantor() {        
+      return getSettingByNameAndType("application", "grantor").getValue();
     }
 
     public boolean getReleaseStudentContactInformation() {
