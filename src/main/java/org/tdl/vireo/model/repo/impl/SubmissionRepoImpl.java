@@ -31,6 +31,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -114,6 +115,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     }
 
     @Override
+    @Transactional
     public Submission create(User submitter, Organization organization, SubmissionStatus startingStatus, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
         if (organization.getAcceptsSubmissions().equals(false)) {
             throw new OrganizationDoesNotAcceptSubmissionsExcception();
