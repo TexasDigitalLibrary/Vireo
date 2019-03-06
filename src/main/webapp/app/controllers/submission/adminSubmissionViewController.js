@@ -158,26 +158,38 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
       $scope.addEmailAddressee = function (emails, formField) {
 
         var recipient = formField.$$rawModelValue;
-        
+
         if (recipient) {
           if(typeof recipient === 'string') {
-            if(formField.$invalid) {
-              $scope[formField.$$attr.name+"Invalid"] = true;
-              return;
-            } else {
-              recipient = new EmailRecipient({
-                name: recipient,
-                type: EmailRecipientType.PLAIN_ADDRESS,
-                data: recipient
-              });
-            }
+            if($scope.isEmailAddresseeInvalid) return;            
+            recipient = new EmailRecipient({
+              name: recipient,
+              type: EmailRecipientType.PLAIN_ADDRESS,
+              data: recipient
+            });
           }
+          
           emails.push(recipient);
-          $scope[formField.$$attr.name+"Invalid"] = false;
+
           //This is not ideal, as it assumes the attr name and attr ngModel are the same.
+          $scope[formField.$$attr.name+"Invalid"] = false;
           $scope.addCommentModal[formField.$$attr.name] = "";
         }
+      };
 
+      $scope.validateEmailAddressee = function(formField) {
+        var valueIsContact = false;
+        if(typeof formField.$$rawModelValue !== 'string') {
+          var allContacts = submission.getContactEmails();
+          for(var i in allContacts) {
+            var contact = allContacts[i];
+            if(formField.$$rawModelValue.type === contact.type) {
+              valueIsContact = true;
+              break;
+            }
+          }
+        }        
+        $scope[formField.$$attr.name+"Invalid"] = formField.$invalid && !valueIsContact;
       };
 
       $scope.isEmailAddresseeInvalid = function(formField) {
