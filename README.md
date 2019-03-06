@@ -184,7 +184,7 @@ $ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 
 **if not specifying config.uri during build the application.yaml will be under the Vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes/application.yaml**
 
-**if deplyoed from default WAR package and would like to externalize the config, you will have to edit /opt/tomcat/webapps/vireo/META-INF/context.xml***
+**if deployed from default WAR package and would like to externalize the config, you will have to edit /opt/tomcat/webapps/vireo/META-INF/context.xml***
 
 
 ## Running WAR as a stand-alone Spring Boot application
