@@ -32,7 +32,7 @@
               <label class="control-label col-sm-3" for="manuscript">Manuscript in PDF:</label>
               <div class="col-sm-6" ng-if="submission.primaryDocumentFieldValue">
                 <div>{{submission.primaryDocumentFieldValue.fileInfo.name}}
-                  <strong>({{submission.primaryDocumentFieldValue.fileInfo.size}} KB)</strong>
+                  <strong>({{submission.primaryDocumentFieldValue.fileInfo.size | readableFileSize}})</strong>
                 </div>
               </div>
               <div class="col-sm-2" ng-if="submission.primaryDocumentFieldValue">
@@ -59,8 +59,8 @@
                       <span>{{documentFieldValue.fileInfo.name}}
                         <strong>({{getFileType(documentFieldValue.fieldPredicate)}}
                           -
-                          {{documentFieldValue.fileInfo.size}}
-                          KB)</strong>
+                          {{documentFieldValue.fileInfo.size | readableFileSize}})
+                        </strong>
                         <span ng-if="documentFieldValue.removing" class="glyphicon glyphicon-refresh spinning"></span>
                       </span>
                     </li>
