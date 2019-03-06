@@ -676,7 +676,6 @@ public class SubmissionController {
 
                     StringBuilder contentsText = new StringBuilder();
 
-					submission.setConfigurationRepo(configurationRepo);
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
 
                     if (exportPackage.isMap()) {
@@ -726,7 +725,7 @@ public class SubmissionController {
                     zos.closeEntry();
 
                     zos.closeEntry();
-                    submission.setConfigurationRepo(null);
+                    
                 }
                 zos.close();
 
