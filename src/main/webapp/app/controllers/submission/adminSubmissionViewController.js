@@ -156,12 +156,14 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
       };
 
       $scope.addEmailAddressee = function (emails, formField) {
-
+        
         var recipient = formField.$$rawModelValue;
 
         if (recipient) {
+          
           if(typeof recipient === 'string') {
-            if($scope.isEmailAddresseeInvalid) return;            
+            if(!$scope.validateEmailAddressee(formField)) return;            
+            console.log(formField);
             recipient = new EmailRecipient({
               name: recipient,
               type: EmailRecipientType.PLAIN_ADDRESS,
@@ -190,6 +192,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           }
         }        
         $scope[formField.$$attr.name+"Invalid"] = formField.$invalid && !valueIsContact;
+        return  !$scope[formField.$$attr.name+"Invalid"];
       };
 
       $scope.isEmailAddresseeInvalid = function(formField) {
