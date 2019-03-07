@@ -225,11 +225,15 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(scope.resetCommentModal).toHaveBeenCalled();
         });
         it('addEmailAddressee should update the destination', function () {
-            var destination = { push: jasmine.createSpy() };
+            var mockEmails = { push: jasmine.createSpy() };
+            var mockFormField =  {
+              $$rawModelValue: {}, 
+              $$attr: {name:""}
+            };
 
-            scope.addEmailAddressee(true, destination);
+            scope.addEmailAddressee(mockEmails,mockFormField);
 
-            expect(destination.push).toHaveBeenCalled();
+            expect(mockEmails.push).toHaveBeenCalled();
         });
         it('cancel should open a modal close a modal', function () {
             var fieldValue = { refresh: jasmine.createSpy() };
