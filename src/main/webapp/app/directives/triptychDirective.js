@@ -210,7 +210,7 @@ vireo.directive("triptych", function () {
                         open(panel.parent, closingPromise);
                     }
                 }
-                if (panel.parent ? panel.parent.selected.organization.id === panel.organization.id && !panel.visible && visible : !panel.visible && visible) {
+                if ((panel.parent && panel.parent.selected) ? panel.parent.selected.organization.id === panel.organization.id && !panel.visible && visible : !panel.visible && visible) {
                     open(panel, closingPromise);
                 }
             };
