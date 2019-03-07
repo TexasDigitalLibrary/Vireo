@@ -57,8 +57,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.submission.fetchDocumentTypeFileInfo();
     };
 
-    
-
     $scope.loaded = true;
 
     $scope.addCommentModal = {};
@@ -68,6 +66,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     $scope.dropZoneText = "Drop a file or click arrow";
 
     SubmissionRepo.fetchSubmissionById($routeParams.id).then(function(submission) {
+      
 
         $scope.submission = submission;
 
@@ -156,18 +155,48 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           return disable;
       };
 
-      $scope.addEmailAddressee = function (emailAddress,destinationModel) {
+      $scope.addEmailAddressee = function (emails, formField) {
+        
+        var recipient = formField.$$rawModelValue;
 
-        if (emailAddress) {
-          if(typeof emailAddress === 'string') {
-            emailAddress = new EmailRecipient({
-              name: emailAddress,
+        if (recipient) {
+          
+          if(typeof recipient === 'string') {
+            if(!$scope.validateEmailAddressee(formField)) return;            
+            console.log(formField);
+            recipient = new EmailRecipient({
+              name: recipient,
               type: EmailRecipientType.PLAIN_ADDRESS,
-              data: emailAddress
+              data: recipient
             });
           }
-          destinationModel.push(emailAddress);
+          
+          emails.push(recipient);
+
+          //This is not ideal, as it assumes the attr name and attr ngModel are the same.
+          $scope[formField.$$attr.name+"Invalid"] = false;
+          $scope.addCommentModal[formField.$$attr.name] = "";
         }
+      };
+
+      $scope.validateEmailAddressee = function(formField) {
+        var valueIsContact = false;
+        if(typeof formField.$$rawModelValue !== 'string') {
+          var allContacts = submission.getContactEmails();
+          for(var i in allContacts) {
+            var contact = allContacts[i];
+            if(formField.$$rawModelValue.type === contact.type) {
+              valueIsContact = true;
+              break;
+            }
+          }
+        }        
+        $scope[formField.$$attr.name+"Invalid"] = formField.$invalid && !valueIsContact;
+        return  !$scope[formField.$$attr.name+"Invalid"];
+      };
+
+      $scope.isEmailAddresseeInvalid = function(formField) {
+        return formField.$invalid && $scope[formField.$$attr.name+"Invalid"];
       };
 
       $scope.removeEmailAddressee = function (email,destinationModel) {
