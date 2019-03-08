@@ -53,6 +53,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         });
         // update current submissions status
         angular.extend($scope.submission.submissionStatus, submission.submissionStatus);
+        // update current submission date
+        $scope.submission.submissionDate = $scope.submission.submissionDate ? angular.copy($scope.submission.submissionDate, submission.submissionDate) : $scope.submission.submissionDate = submission.submissionDate;
         // fetch file info
         $scope.submission.fetchDocumentTypeFileInfo();
     };
