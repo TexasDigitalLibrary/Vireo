@@ -6,6 +6,7 @@ import org.tdl.vireo.model.packager.AbstractPackager;
 import org.tdl.vireo.model.packager.DSpaceMetsPackager;
 import org.tdl.vireo.model.packager.DSpaceSimplePackager;
 import org.tdl.vireo.model.packager.ExcelPackager;
+import org.tdl.vireo.model.packager.Marc21Packager;
 import org.tdl.vireo.model.packager.MarcXML21Packager;
 import org.tdl.vireo.model.packager.Packager;
 import org.tdl.vireo.model.packager.ProQuestUmiPackager;
@@ -42,6 +43,11 @@ public class AbstractPackagerRepoImpl extends AbstractWeaverRepoImpl<AbstractPac
     @Override
     public Packager<?> createMARC21XMLPackager(String name, AbstractFormatter formatter) {
         return abstractPackagerRepo.save(new MarcXML21Packager(name, formatter));
+    }
+
+    @Override
+    public Packager<?> createMARC21Packager(String name, AbstractFormatter formatter) {
+        return abstractPackagerRepo.save(new Marc21Packager(name, formatter));
     }
 
     @Override

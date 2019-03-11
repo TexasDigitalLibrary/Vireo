@@ -13,6 +13,12 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -51,6 +57,7 @@ import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
 import org.tdl.vireo.model.formatter.DSpaceSimpleFormatter;
 import org.tdl.vireo.model.formatter.ExcelFormatter;
+import org.tdl.vireo.model.formatter.Marc21Formatter;
 import org.tdl.vireo.model.formatter.MarcXML21Formatter;
 import org.tdl.vireo.model.formatter.ProQuestUmiFormatter;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
@@ -75,12 +82,6 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class SystemDataLoader {
@@ -1093,6 +1094,9 @@ public class SystemDataLoader {
         }
         if (abstractPackagerRepo.findByName("MarcXML21") == null) {
             abstractPackagerRepo.createMARC21XMLPackager("MarcXML21", new MarcXML21Formatter());
+        }
+        if (abstractPackagerRepo.findByName("Marc21") == null) {
+            abstractPackagerRepo.createMARC21Packager("Marc21", new Marc21Formatter());
         }
     }
 

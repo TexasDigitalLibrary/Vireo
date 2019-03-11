@@ -626,6 +626,7 @@ public class SubmissionController {
 
             break;
         case "MarcXML21":
+        case "Marc21":
         case "DSpaceMETS":
         case "ProQuest":
             ServletOutputStream sos = response.getOutputStream();
