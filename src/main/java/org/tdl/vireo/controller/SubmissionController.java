@@ -640,6 +640,7 @@ public class SubmissionController {
 
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
 
+                    String submissionName = "submission_" + submission.getId() + "/";
                     StringBuilder contentsText = new StringBuilder();
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                     if (exportPackage.isMap()) {
@@ -647,6 +648,7 @@ public class SubmissionController {
                             if (packagerName.equals("MarcXML21")) {
                                 zos.putNextEntry(new ZipEntry("MarcXML21/" + fileEntry.getKey()));
                             } else {
+
                                 zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
                             }
                             contentsText.append("MD " + fileEntry.getKey() + "\n");
@@ -654,6 +656,24 @@ public class SubmissionController {
                             zos.closeEntry();
                         }
                     }
+                    // LICENSES
+                    for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
+                        Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+                        byte[] fileBytes = Files.readAllBytes(path);
+                        zos.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
+                        contentsText.append(ldfv.getFileName() + " bundle:LICENSE\n");
+                        zos.write(fileBytes);
+                        zos.closeEntry();
+                    }
+
+                    // PRIMARY_DOC
+                    FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
+                    Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
+                    byte[] fileBytes = Files.readAllBytes(path);
+                    zos.putNextEntry(new ZipEntry(submissionName + primaryDoc.getFileName()));
+                    contentsText.append(primaryDoc.getFileName() + "  bundle:CONTENT  primary:true\n");
+                    zos.write(fileBytes);
+                    zos.closeEntry();
                 }
                 zos.close();
 
