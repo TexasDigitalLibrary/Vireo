@@ -109,4 +109,14 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
         }
     }
 
+    @Override
+    public String getSuffix() {
+        return ".xml";
+    }
+
+    @Override
+    public String getTemplateMode() {
+        return "XML";
+    }
+
 }
