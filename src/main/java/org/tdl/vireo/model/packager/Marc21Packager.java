@@ -35,7 +35,7 @@ public class Marc21Packager extends AbstractPackager<ZipExportPackage> {
         try {
             // Add non submitted content
             for (Map.Entry<String, String> ds_entry : dsDocs.entrySet()) {
-                String docName = submission.getId()+"_"+ds_entry.getKey();
+                String docName = "Marc21/"+ds_entry.getKey()+"_"+submission.getId()+".xml";
                 String docContents = ds_entry.getValue();
                 docContents = docContents.replace(System.lineSeparator(), "");
                 File ff = File.createTempFile(docName, "");
@@ -46,6 +46,6 @@ public class Marc21Packager extends AbstractPackager<ZipExportPackage> {
             throw new RuntimeException("Unable to generate package", ioe);
         }
 
-        return new ZipExportPackage(submission, "http://www.loc.gov/MARC21/slim", pkgs);
+        return new ZipExportPackage(submission, "text", pkgs);
     }
 }
