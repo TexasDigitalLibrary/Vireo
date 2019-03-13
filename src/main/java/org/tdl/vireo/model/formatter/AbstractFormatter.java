@@ -117,9 +117,6 @@ public abstract class AbstractFormatter extends BaseEntity implements Formatter 
             case ADVISOR_APPROVAL_DATE:
                 context.setVariable(key.name(), submission.getApproveAdvisorDate());
                 break;
-            case FORMATTED_APPLICATION_APPROVAL_DATE:
-                context.setVariable(key.name(), submission.getApproveApplicationDate());
-                break;
             case FORMATTED_APPROVAL_DATE:
                 context.setVariable(key.name(), submissionHelperUtility.getAdvisorApprovalDateString());
                 break;
@@ -134,6 +131,9 @@ public abstract class AbstractFormatter extends BaseEntity implements Formatter 
                 break;
             case FORMATTED_SUBMISSION_DATE:
                 context.setVariable(key.name(), submissionHelperUtility.getSubmissionDateString());
+                break;
+            case FORMATTED_APPLICATION_APPROVAL_DATE:
+                context.setVariable(key.name(), submissionHelperUtility.getApproveApplicationDate());
                 break;
             case COMMITTEE_APPROVAL_DATE:
                 // TODO: no committee approval date available
