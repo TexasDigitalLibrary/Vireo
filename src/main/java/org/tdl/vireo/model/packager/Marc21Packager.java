@@ -35,7 +35,7 @@ public class Marc21Packager extends AbstractPackager<ZipExportPackage> {
         try {
             // Add non submitted content
             for (Map.Entry<String, String> ds_entry : dsDocs.entrySet()) {
-                String docName = "Marc21/"+ds_entry.getKey()+"_"+submission.getId()+".xml";
+                String docName = "Marc21/"+ds_entry.getKey()+"_"+submission.getId()+".mrc";
                 String docContents = ds_entry.getValue();
                 docContents = docContents.replace(System.lineSeparator(), "");
                 File ff = File.createTempFile(docName, "");

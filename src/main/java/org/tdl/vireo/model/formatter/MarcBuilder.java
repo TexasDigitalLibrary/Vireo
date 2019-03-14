@@ -1,6 +1,5 @@
 package org.tdl.vireo.model.formatter;
 
-import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,7 +30,7 @@ public class MarcBuilder {
     }
 
     public String toString() {
-        String text = leader + directoryBuilder.toString() + fieldBuilder.toString() + "\u001E";
+        String text = leader + directoryBuilder.toString() + "\u001E" + fieldBuilder.toString();
         text = text.replaceAll("RLXXX", pad(String.valueOf(text.length()), 5));
         text = text.replaceAll("BADXX", pad(String.valueOf((leader + directoryBuilder.toString()).length()), 5));
         return text;

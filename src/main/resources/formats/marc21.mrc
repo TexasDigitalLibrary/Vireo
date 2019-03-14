@@ -5,7 +5,6 @@
 
     If adding additional control fields or data fields use the following format.	
     *********************************************************************************
-    /*[- Control Field 040 -]*/
     [(${marcBuilder.addField("040", "  \u001FaTXA\u001FcTXA\u001E")})]
     *********************************************************************************
 
@@ -13,7 +12,6 @@
 
     For repeated fields use the following format.
     *********************************************************************************
-    /*[- Control Field 653 -]*/
     [# th:each="kw : ${KEYWORDS}"]
     [(${marcBuilder.addField("653", "  \u001Fa" + kw.getValue() + "\u001E")})]
     [/]
@@ -87,7 +85,7 @@
 [/]
 
 /*[- Control Field 856 -]*/
-[(${marcBuilder.addField("856", "40\u001Fu" + DEPOSIT_URL + "\u001FzConnect to the full text of this online resource.\u001E")})]
+[(${marcBuilder.addField("856", "40\u001Fu" + DEPOSIT_URL + "\u001FzConnect to the full text of this online resource.\u001E\u001D")})]
 
 
 /*[- Output record. Do not modify -]*/
