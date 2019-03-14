@@ -298,7 +298,7 @@
           "repeatable":false,
           "overrideable":true,
           "enabled":true,
-          "optional":true,
+          "optional":false,
           "flagged":false,
           "logged":false,
           "usage":"",
