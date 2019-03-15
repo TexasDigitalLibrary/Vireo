@@ -648,7 +648,6 @@ public class SubmissionController {
                             if (packagerName.equals("MarcXML21")) {
                                 zos.putNextEntry(new ZipEntry("MarcXML21/" + fileEntry.getKey()));
                             } else {
-
                                 zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
                             }
                             contentsText.append("MD " + fileEntry.getKey() + "\n");
