@@ -1,0 +1,29 @@
+<div ng-init="init()">
+
+  <div ng-repeat="field in submission.fieldValues | filter: fieldPredicateFilter">
+
+    <li>{{label}}:</li>
+
+    <li class="font-weight-bold">
+      <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
+      <span ng-if="inputLicense() || inputProquest()">{{field.value === 'true' ? 'yes' : 'no'}}</span>
+      <span ng-if="inputTel()">
+        <a ng-if="field.value" href="tel:{{field.value}}">{{field.value}}</a>
+        <span ng-if="!field.value" class="info-empty">none</span>
+      </span>
+      <span ng-if="inputUrl()">
+        <a ng-if="field.value" href="http://{{field.value}}">{{field.value}}</a>
+        <span ng-if="!field.value" class="info-empty">none</span>
+      </span>
+      <span ng-if="inputDegreeDate() && !field.value" class="info-empty">none</span>
+      <span ng-if="inputDegreeDate() && field.value">{{field.value | date:'MMMM yyyy'}}</span>
+      <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
+      <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
+      <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
+      <span ng-if="inputContactChair() && field.value"><span class="span-block">{{field.value}}</span>
+        <span>{{field.contacts[0]}}</span>
+      </span>
+      <span ng-if="inputFile()" ng-class="{'info-empty': !field.value}">{{field.fileInfo.name || 'none'}}</span>
+    </li>
+
+  </div>
