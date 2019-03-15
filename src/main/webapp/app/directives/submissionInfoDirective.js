@@ -1,6 +1,8 @@
-vireo.directive("submissioninfo", function () {
+vireo.directive("submissionInfo", function () {
     return {
-        templateUrl: 'views/admin/info/submissionInfo.html',
+        templateUrl: function(elem, attr) {
+            return 'views/directives/' + attr.type + 'SubmissionInfo.html';
+          },
         restrict: 'E',
         replace: true,
         transclude: true,
@@ -12,10 +14,12 @@ vireo.directive("submissioninfo", function () {
             stacked: '=?'
         },
         link: function ($scope, element, attr) {
-            $scope.edit = "views/admin/info/edit/" + $scope.fieldProfile.inputType.name.replace('_', '-').toLowerCase() + ".html";
+            if (attr.type == 'view') {
+                $scope.edit = "views/admin/info/edit/" + $scope.fieldProfile.inputType.name.replace('_', '-').toLowerCase() + ".html";
+            }
         },
         controller: function ($scope, $element, $timeout) {
-            
+
             $scope.refreshFieldValue = function (fieldValue) {
                 fieldValue.refresh();
                 fieldValue.setIsValid(true);
@@ -148,8 +152,12 @@ vireo.directive("submissioninfo", function () {
                 return $scope.fieldProfile.fieldPredicate.value == 'dc.contributor.advisor';
             };
 
+            $scope.inputFile = function () {
+                return $scope.fieldProfile.inputType.name == 'INPUT_FILE';
+            };
+
             $scope.standardInput = function () {
-                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDegreeDate() && !$scope.inputDateTime() && !$scope.inputContactChair();
+                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDegreeDate() && !$scope.inputDateTime() && !$scope.inputContactChair() && !$scope.inputFile();
             };
 
             $scope.setConditionalTextArea = function (fieldValue, checked) {

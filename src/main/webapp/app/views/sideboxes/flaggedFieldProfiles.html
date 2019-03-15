@@ -1,7 +1,9 @@
 <div class="flagged-field-profiles">
 
   <ul class="sidebox-list info-list">
-    <li ng-repeat="fieldProfile in box.submission.getFlaggedFieldProfiles()"><info submission="box.submission" field-profile="fieldProfile" label="{{fieldProfile.gloss}}" stacked="true"></info></li>
+    <li ng-repeat="fieldProfile in box.submission.getFlaggedFieldProfiles()">
+      <submission-info type="flagged" submission="box.submission" field-profile="fieldProfile" label="{{fieldProfile.gloss=='Proquest Publication' ? 'Proquest Release' : fieldProfile.gloss}}" stacked="true"></submission-info>
+    </li>
   </ul>
 
 </div>
