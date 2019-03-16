@@ -10,7 +10,7 @@
       <div class="row">
             <div class="col-xs-12">
 
-                <div class="form-group email-element email-to" ng-class="{'email-active':addCommentModal.sendEmailToRecipient&&addCommentModal.commentVisiblity==='public', 'has-error': isEmailAddresseeInvalid(addCommentModalForm.recipientEmail)}">
+                <div class="form-group email-element email-to" ng-class="{'email-active':addCommentModal.sendEmailToRecipient&&addCommentModal.commentVisibility==='public', 'has-error': isEmailAddresseeInvalid(addCommentModalForm.recipientEmail)}">
                     <label>To:</label>
                     <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addCommentModal.recipientEmails)" ng-repeat="email in addCommentModal.recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
                     <div class="input-group">
@@ -22,7 +22,7 @@
                     </div>
                 </div>
 
-                <div class="form-group email-element email-cc" ng-class="{'email-active': addCommentModal.sendEmailToCCRecipient&&addCommentModal.commentVisiblity==='public', 'has-error': isEmailAddresseeInvalid(addCommentModalForm.ccRecipientEmail)}">
+                <div class="form-group email-element email-cc" ng-class="{'email-active': addCommentModal.sendEmailToCCRecipient&&addCommentModal.commentVisibility==='public', 'has-error': isEmailAddresseeInvalid(addCommentModalForm.ccRecipientEmail)}">
                     <label>CC:</label>
                     <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addCommentModal.ccRecipientEmails)" ng-repeat="email in addCommentModal.ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
                     <div class="input-group">
@@ -51,10 +51,10 @@
                 <div class="form-group public-private">
 
                     <div class="radio">
-                      <label><input type="radio" name="optradio" value="public" ng-model="addCommentModal.commentVisiblity" ng-click="addCommentModal.sendEmailToRecipient=true">Comment is public</label>
+                      <label><input type="radio" name="optradio" value="public" ng-model="addCommentModal.commentVisibility" ng-click="addCommentModal.sendEmailToRecipient=true">Comment is public</label>
                     </div>
 
-                    <div class="recipient-options email-element" ng-class="{'email-active': addCommentModal.commentVisiblity==='public'}">
+                    <div class="recipient-options email-element" ng-class="{'email-active': addCommentModal.commentVisibility==='public'}">
                         <div class="checkbox">
                           <label><input type="checkbox" ng-model="addCommentModal.sendEmailToRecipient" ng-change="!addCommentModal.sendEmailToRecipient?addCommentModal.sendEmailToCCRecipient=sendEmailToRecipient:addCommentModal.sendEmailToCCRecipient=addCommentModal.sendEmailToCCRecipient">Add Email Recipients</label>
                         </div>
@@ -64,7 +64,7 @@
                     </div>
 
                     <div class="radio">
-                      <label><input type="radio" name="optradio" value="private" ng-model="addCommentModal.commentVisiblity" ng-click="addCommentModal.sendEmailToRecipient=false;addCommentModal.sendEmailToCCRecipient=false">Comment is private</label>
+                      <label><input type="radio" name="optradio" value="private" ng-model="addCommentModal.commentVisibility" ng-click="addCommentModal.sendEmailToRecipient=false;addCommentModal.sendEmailToCCRecipient=false">Comment is private</label>
                     </div>
                 </div>
 

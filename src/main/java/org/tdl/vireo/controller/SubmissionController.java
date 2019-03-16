@@ -255,7 +255,7 @@ public class SubmissionController {
 
     Submission submission = submissionRepo.read(submissionId);
 
-    String commentVisibility = data.get("commentVisiblity") != null ? (String) data.get("commentVisiblity") : "public";
+    String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
 
     if (commentVisibility.equals("public")) {
       sendEmail(user, submission, data);

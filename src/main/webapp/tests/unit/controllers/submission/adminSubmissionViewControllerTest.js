@@ -271,7 +271,7 @@ describe('controller: AdminSubmissionViewController', function () {
             var response;
             scope.addCommentModal = {};
             scope.resetCommentModal(scope.addCommentModal);
-            scope.addCommentModal.commentVisiblity = 'public';
+            scope.addCommentModal.commentVisibility = 'public';
             scope.addCommentModal.sendEmailToRecipient = true;
             scope.addCommentModal.sendEmailToCCRecipient = true;
 
@@ -283,7 +283,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.disableAddComment();
             expect(typeof response).toBe("boolean");
 
-            scope.addCommentModal.commentVisiblity = 'private';
+            scope.addCommentModal.commentVisibility = 'private';
 
             response = scope.disableAddComment();
             expect(typeof response).toBe("boolean");

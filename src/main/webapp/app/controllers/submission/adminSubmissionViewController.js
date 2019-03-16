@@ -95,7 +95,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           $scope.closeModal();
           
           addCommentModal.adding = false;
-          addCommentModal.commentVisiblity = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
+          addCommentModal.commentVisibility = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
           addCommentModal.recipientEmail = '';
           addCommentModal.recipientEmails = userSettings.notes_email_student_by_default === "true" ? [new EmailRecipient({
             name: "Submitter",
@@ -104,7 +104,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           })] : [];
           addCommentModal.ccRecipientEmail = '';
           addCommentModal.ccRecipientEmails = userSettings.notes_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails() : [];
-          addCommentModal.sendEmailToRecipient = (addCommentModal.commentVisiblity === "public" || userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
+          addCommentModal.sendEmailToRecipient = (addCommentModal.commentVisibility === "public" || userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
           addCommentModal.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default === "true";
           addCommentModal.subject = "";
           addCommentModal.message = "";
@@ -127,7 +127,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
       $scope.disableAddComment = function () {
           var disable = true;
-          if ($scope.addCommentModal.commentVisiblity == 'public') {
+          if ($scope.addCommentModal.commentVisibility == 'public') {
               if ($scope.addCommentModal.sendEmailToRecipient) {
                   if ($scope.addCommentModal.sendEmailToCCRecipient) {
                       disable = $scope.addCommentModal.recipientEmails.length === 0 || 
@@ -145,7 +145,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                   }
               }
           } else {
-              if ($scope.addCommentModal.commentVisiblity == 'private') {
+              if ($scope.addCommentModal.commentVisibility == 'private') {
                   disable = $scope.addCommentModal.subject === undefined || 
                           $scope.addCommentModal.subject === "" || 
                           $scope.addCommentModal.message === undefined ||
