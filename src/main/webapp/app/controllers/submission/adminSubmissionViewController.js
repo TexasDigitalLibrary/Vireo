@@ -104,7 +104,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           })] : [];
           addCommentModal.ccRecipientEmail = '';
           addCommentModal.ccRecipientEmails = userSettings.notes_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails() : [];
-          addCommentModal.sendEmailToRecipient = (userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
+          addCommentModal.sendEmailToRecipient = (addCommentModal.commentVisiblity === "public" || userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
           addCommentModal.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default === "true";
           addCommentModal.subject = "";
           addCommentModal.message = "";
