@@ -268,10 +268,13 @@ describe('controller: OrganizationManagementController', function () {
         it('showOrganizationManagement should return a boolean', function () {
             var response;
 
+            OrganizationRepo.selectedId = 1;
+            sessionStorage.role = "ROLE_MANAGER";
+
             response = scope.showOrganizationManagement();
             expect(response).toBe(false);
 
-            OrganizationRepo.selectedId = 1;
+            sessionStorage.role = "ROLE_ADMIN";
 
             response = scope.showOrganizationManagement();
             expect(response).toBe(true);
