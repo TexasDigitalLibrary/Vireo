@@ -12,7 +12,7 @@
         <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
         <span ng-if="inputLicense() || inputProquest()">{{field.value === 'true' ? 'yes' : 'no'}}</span>
         <span ng-if="inputTel()">
-          <a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
+          <a ng-if="field.value" href="tel:{{field.value}}">{{field.value}}</a>
           <span ng-if="!field.value" class="info-empty">none</span>
         </span>
         <span ng-if="inputUrl()">
@@ -45,7 +45,7 @@
         <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
         <span ng-if="inputLicense() || inputProquest()">{{field.value === 'true' ? 'yes' : 'no'}}</span>
         <span ng-if="inputTel()">
-          <a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
+          <a ng-if="field.value" href="tel:{{field.value}}">{{field.value}}</a>
           <span ng-if="!field.value" class="info-empty">none</span>
         </span>
         <span ng-if="inputUrl()">
