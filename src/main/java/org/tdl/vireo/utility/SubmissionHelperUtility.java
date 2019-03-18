@@ -207,6 +207,10 @@ public class SubmissionHelperUtility {
         return submission.getApproveAdvisorDate() != null ? dateFormat.format(submission.getApproveAdvisorDate().getTime()) : "";
     }
 
+    public String getApproveApplicationDate() {
+        return submission.getApproveApplicationDate() != null ? dateFormat.format(submission.getApproveApplicationDate().getTime()) : "";
+    }
+
     public List<FieldValue> getLicenseAgreementFieldValues() {
         List<FieldValue> fieldValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : submission.getFieldValues()) {
