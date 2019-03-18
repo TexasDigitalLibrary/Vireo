@@ -53,7 +53,7 @@ public class UserController {
     }
 
     @RequestMapping("/assignable")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
+    @PreAuthorize("hasRole('ROLE_REVIEWER')")
     public ApiResponse allAssignableUsers() {
         List<User> assignable = new ArrayList<User>();
         assignable.addAll(userRepo.findAllByRole(Role.ROLE_ADMIN));

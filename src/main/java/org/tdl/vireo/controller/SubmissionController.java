@@ -206,7 +206,7 @@ public class SubmissionController {
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
     Submission submission = null;
-    if (user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
+    if (user.getRole().ordinal() <= Role.ROLE_REVIEWER.ordinal()) {
       submission = submissionRepo.read(submissionId);
     } else {
       submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);

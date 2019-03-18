@@ -67,7 +67,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse with all controlled vocabulary
      */
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse getAllControlledVocabulary() {
         return new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc());
     }
