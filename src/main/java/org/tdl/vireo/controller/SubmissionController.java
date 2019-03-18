@@ -668,10 +668,10 @@ public class SubmissionController {
             }
             break;
         case "DSpaceMETS":
-            ServletOutputStream sos = response.getOutputStream();
+            ServletOutputStream sos_mets = response.getOutputStream();
 
             try {
-                ZipOutputStream zos = new ZipOutputStream(sos);
+                ZipOutputStream zos = new ZipOutputStream(sos_mets);
 
                 // TODO: need a more dynamic way to achieve this
                 if (packagerName.equals("ProQuest")) {
@@ -722,8 +722,8 @@ public class SubmissionController {
                 LOG.info("Error With Export",e);
                 response.setContentType("application/json");
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-                sos.print(objectMapper.writeValueAsString(apiResponse));
-                sos.close();
+                sos_mets.print(objectMapper.writeValueAsString(apiResponse));
+                sos_mets.close();
             }
             break;
         case "DSpaceSimple":
