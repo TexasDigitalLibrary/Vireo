@@ -760,7 +760,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter the names and select role of your non-chairing committee members",
+          "help":"Enter the names and email addresses of your non-chairing committee members.",
           "gloss": "Non-Chairing Committee Members",
           "controlledVocabulary":{
             "name":"Committee Members",
