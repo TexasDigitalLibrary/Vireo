@@ -26,6 +26,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -935,8 +936,7 @@ public class SubmissionController {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
 
-        String[] fileNameParts = fileName.split("\\.");
-        String fileExtension = fileNameParts.length > 1 ? fileNameParts[1] : "pdf";
+        String fileExtension = FilenameUtils.getExtension(fileName).equals("pdf") ? FilenameUtils.getExtension(fileName) : "pdf";
 
         if (documentTypesToRename.contains(documentType)) {
             String lastName = user.getLastName().toUpperCase();
