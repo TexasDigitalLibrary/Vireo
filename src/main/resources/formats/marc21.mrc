@@ -84,7 +84,7 @@
 [(${marcBuilder.addField("653", "  \u001Fa" + kw.getValue() + "\u001E")})]
 [/]
 
-/*[- Control Field 856 -]*/
+/*[- Control Field 856: Last field must end with \u001E\u001D -]*/
 [(${marcBuilder.addField("856", "40\u001Fu" + DEPOSIT_URL + "\u001FzConnect to the full text of this online resource.\u001E\u001D")})]
 
 

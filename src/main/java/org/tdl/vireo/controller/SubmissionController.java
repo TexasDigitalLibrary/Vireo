@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -26,6 +25,11 @@ import java.util.zip.ZipOutputStream;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -79,8 +83,8 @@ import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
-import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
+import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -94,11 +98,6 @@ import org.tdl.vireo.service.DepositorService;
 import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
-
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.weaver.auth.annotation.WeaverCredentials;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
@@ -633,7 +632,7 @@ public class SubmissionController {
             ServletOutputStream sos = response.getOutputStream();
 
             try {
-                ZipOutputStream zos = new ZipOutputStream(sos);
+                ZipOutputStream zos = new ZipOutputStream(sos, StandardCharsets.UTF_8);
 
                 // TODO: need a more dynamic way to achieve this
                 if (packagerName.equals("ProQuest")) {

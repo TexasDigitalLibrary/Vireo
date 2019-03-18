@@ -2,6 +2,7 @@ package org.tdl.vireo.model.packager;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,7 +40,7 @@ public class Marc21Packager extends AbstractPackager<ZipExportPackage> {
                 String docContents = ds_entry.getValue();
                 docContents = docContents.replace(System.lineSeparator(), "");
                 File ff = File.createTempFile(docName, "");
-                FileUtils.writeStringToFile(ff, docContents, "UTF-8");
+                FileUtils.writeStringToFile(ff, docContents, StandardCharsets.UTF_8);
                 pkgs.put(docName, ff);
             }
         } catch (IOException ioe) {
