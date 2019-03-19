@@ -1,8 +1,6 @@
 vireo.directive("submissionInfo", function () {
     return {
-        templateUrl: function(elem, attr) {
-            return 'views/directives/' + attr.type + 'SubmissionInfo.html';
-          },
+        templateUrl: 'views/directives/submissionInfo.html',
         restrict: 'E',
         replace: true,
         transclude: true,
@@ -11,7 +9,8 @@ vireo.directive("submissionInfo", function () {
             fieldProfile: '=',
             fields: '=',
             label: '@',
-            stacked: '=?'
+            stacked: '=?',
+            type: '@'
         },
         link: function ($scope, element, attr) {
             if (attr.type == 'view') {
@@ -19,7 +18,7 @@ vireo.directive("submissionInfo", function () {
             }
         },
         controller: function ($scope, $element, $timeout) {
-
+            
             $scope.refreshFieldValue = function (fieldValue) {
                 fieldValue.refresh();
                 fieldValue.setIsValid(true);
