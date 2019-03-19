@@ -26,6 +26,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -205,7 +206,7 @@ public class SubmissionController {
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
     Submission submission = null;
-    if (user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
+    if (user.getRole().ordinal() <= Role.ROLE_REVIEWER.ordinal()) {
       submission = submissionRepo.read(submissionId);
     } else {
       submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
@@ -255,7 +256,7 @@ public class SubmissionController {
 
     Submission submission = submissionRepo.read(submissionId);
 
-    String commentVisibility = data.get("commentVisiblity") != null ? (String) data.get("commentVisiblity") : "public";
+    String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
 
     if (commentVisibility.equals("public")) {
       sendEmail(user, submission, data);
@@ -935,8 +936,7 @@ public class SubmissionController {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
 
-        String[] fileNameParts = fileName.split("\\.");
-        String fileExtension = fileNameParts.length > 1 ? fileNameParts[1] : "pdf";
+        String fileExtension = FilenameUtils.getExtension(fileName).equals("pdf") ? FilenameUtils.getExtension(fileName) : "pdf";
 
         if (documentTypesToRename.contains(documentType)) {
             String lastName = user.getLastName().toUpperCase();
@@ -947,7 +947,7 @@ public class SubmissionController {
         String uri = documentFolder + File.separator + hash + File.separator + System.currentTimeMillis() + "-" + fileName;
         assetService.write(file.getBytes(), uri);
         JsonNode fileInfo = assetService.getAssetFileInfo(uri);
-        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) uploaded");
+        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") uploaded");
         return new ApiResponse(SUCCESS, uri);
     }
 
@@ -960,7 +960,7 @@ public class SubmissionController {
         assetService.copy(oldUri, newUri);
         assetService.delete(oldUri);
         JsonNode fileInfo = assetService.getAssetFileInfo(newUri);
-        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) renamed");
+        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") renamed");
         return new ApiResponse(SUCCESS, newUri);
     }
 
@@ -978,7 +978,7 @@ public class SubmissionController {
             if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
                 JsonNode fileInfo = assetService.getAssetFileInfo(uri);
                 assetService.delete(uri);
-                actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
+                actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") removed");
             } else {
                 apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
             }
@@ -995,7 +995,7 @@ public class SubmissionController {
         assetService.copy(oldUri, newUri);
         assetService.delete(oldUri);
         JsonNode fileInfo = assetService.getAssetFileInfo(newUri);
-        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
+        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") archived");
         return new ApiResponse(SUCCESS, newUri);
     }
 

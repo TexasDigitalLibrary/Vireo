@@ -61,8 +61,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.submission.fetchDocumentTypeFileInfo();
     };
 
-    
-
     $scope.loaded = true;
 
     $scope.addCommentModal = {};
@@ -72,6 +70,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     $scope.dropZoneText = "Drop a file or click arrow";
 
     SubmissionRepo.fetchSubmissionById($routeParams.id).then(function(submission) {
+      
 
         $scope.submission = submission;
 
@@ -100,7 +99,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           $scope.closeModal();
           
           addCommentModal.adding = false;
-          addCommentModal.commentVisiblity = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
+          addCommentModal.commentVisibility = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
           addCommentModal.recipientEmail = '';
           addCommentModal.recipientEmails = userSettings.notes_email_student_by_default === "true" ? [new EmailRecipient({
             name: "Submitter",
@@ -109,7 +108,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           })] : [];
           addCommentModal.ccRecipientEmail = '';
           addCommentModal.ccRecipientEmails = userSettings.notes_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails() : [];
-          addCommentModal.sendEmailToRecipient = (userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
+          addCommentModal.sendEmailToRecipient = (addCommentModal.commentVisibility === "public" || userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
           addCommentModal.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default === "true";
           addCommentModal.subject = "";
           addCommentModal.message = "";
@@ -132,7 +131,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
       $scope.disableAddComment = function () {
           var disable = true;
-          if ($scope.addCommentModal.commentVisiblity == 'public') {
+          if ($scope.addCommentModal.commentVisibility == 'public') {
               if ($scope.addCommentModal.sendEmailToRecipient) {
                   if ($scope.addCommentModal.sendEmailToCCRecipient) {
                       disable = $scope.addCommentModal.recipientEmails.length === 0 || 
@@ -150,7 +149,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                   }
               }
           } else {
-              if ($scope.addCommentModal.commentVisiblity == 'private') {
+              if ($scope.addCommentModal.commentVisibility == 'private') {
                   disable = $scope.addCommentModal.subject === undefined || 
                           $scope.addCommentModal.subject === "" || 
                           $scope.addCommentModal.message === undefined ||
@@ -160,18 +159,48 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           return disable;
       };
 
-      $scope.addEmailAddressee = function (emailAddress,destinationModel) {
+      $scope.addEmailAddressee = function (emails, formField) {
+        
+        var recipient = formField.$$rawModelValue;
 
-        if (emailAddress) {
-          if(typeof emailAddress === 'string') {
-            emailAddress = new EmailRecipient({
-              name: emailAddress,
+        if (recipient) {
+          
+          if(typeof recipient === 'string') {
+            if(!$scope.validateEmailAddressee(formField)) return;            
+            console.log(formField);
+            recipient = new EmailRecipient({
+              name: recipient,
               type: EmailRecipientType.PLAIN_ADDRESS,
-              data: emailAddress
+              data: recipient
             });
           }
-          destinationModel.push(emailAddress);
+          
+          emails.push(recipient);
+
+          //This is not ideal, as it assumes the attr name and attr ngModel are the same.
+          $scope[formField.$$attr.name+"Invalid"] = false;
+          $scope.addCommentModal[formField.$$attr.name] = "";
         }
+      };
+
+      $scope.validateEmailAddressee = function(formField) {
+        var valueIsContact = false;
+        if(typeof formField.$$rawModelValue !== 'string') {
+          var allContacts = submission.getContactEmails();
+          for(var i in allContacts) {
+            var contact = allContacts[i];
+            if(formField.$$rawModelValue.type === contact.type) {
+              valueIsContact = true;
+              break;
+            }
+          }
+        }        
+        $scope[formField.$$attr.name+"Invalid"] = formField.$invalid && !valueIsContact;
+        return  !$scope[formField.$$attr.name+"Invalid"];
+      };
+
+      $scope.isEmailAddresseeInvalid = function(formField) {
+        return formField.$invalid && $scope[formField.$$attr.name+"Invalid"];
       };
 
       $scope.removeEmailAddressee = function (email,destinationModel) {

@@ -46,7 +46,6 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
             if (fieldValue.fileInfo === undefined && fieldValue.value !== undefined && fieldValue.value.length > 0) {
                 submission.fileInfo(fieldValue).then(function (response) {
                     fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
-                    fieldValue.fileInfo.size = Math.round(fieldValue.fileInfo.size / 1024);
                 });
             }
             if (fieldValue.value.length > 0 && submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
