@@ -97,7 +97,7 @@
                 <span ng-show="feedbackDocumentFieldValues.length > 0">
                   <div ng-repeat="feedbackDocumentFieldValue in feedbackDocumentFieldValues = (submission.fieldValues | filter:feedbackDocuments) | orderBy: '-fileInfo.time'">
                     <a href ng-click="getFile(feedbackDocumentFieldValue)">{{feedbackDocumentFieldValue.fileInfo.name}}</a>
-                      <strong>({{feedbackDocumentFieldValue.fileInfo.size}} KB)</strong>
+                      <strong>({{feedbackDocumentFieldValue.fileInfo.size | readableFileSize}})</strong>
                   </div>
                 </span>
               </div>
