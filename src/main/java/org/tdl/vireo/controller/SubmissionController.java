@@ -627,6 +627,7 @@ public class SubmissionController {
 
             break;
         case "MarcXML21":
+        case "DSpaceMETS":
         case "ProQuest":
             ServletOutputStream sos = response.getOutputStream();
 
@@ -665,65 +666,6 @@ public class SubmissionController {
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
                 sos.print(objectMapper.writeValueAsString(apiResponse));
                 sos.close();
-            }
-            break;
-        case "DSpaceMETS":
-            ServletOutputStream sos_mets = response.getOutputStream();
-
-            try {
-                ZipOutputStream zos = new ZipOutputStream(sos_mets);
-
-                // TODO: need a more dynamic way to achieve this
-                if (packagerName.equals("ProQuest")) {
-                    // TODO: add filter for UMI Publication true
-                }
-
-                for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
-
-                    String submissionName = "submission_" + submission.getId() + "/";
-                    StringBuilder contentsText = new StringBuilder();
-                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-                    if (exportPackage.isMap()) {
-                        for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
-                            if (packagerName.equals("MarcXML21")) {
-                                zos.putNextEntry(new ZipEntry("MarcXML21/" + fileEntry.getKey()));
-                            } else {
-                                zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
-                            }
-                            contentsText.append("MD " + fileEntry.getKey() + "\n");
-                            zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
-                            zos.closeEntry();
-                        }
-                    }
-                    // LICENSES
-                    for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
-                        Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
-                        byte[] fileBytes = Files.readAllBytes(path);
-                        zos.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
-                        contentsText.append(ldfv.getFileName() + " bundle:LICENSE\n");
-                        zos.write(fileBytes);
-                        zos.closeEntry();
-                    }
-
-                    // PRIMARY_DOC
-                    FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
-                    Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
-                    byte[] fileBytes = Files.readAllBytes(path);
-                    zos.putNextEntry(new ZipEntry(submissionName + primaryDoc.getFileName()));
-                    contentsText.append(primaryDoc.getFileName() + "  bundle:CONTENT  primary:true\n");
-                    zos.write(fileBytes);
-                    zos.closeEntry();
-                }
-                zos.close();
-
-                response.setContentType(packager.getMimeType());
-                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
-            } catch (Exception e) {
-                LOG.info("Error With Export",e);
-                response.setContentType("application/json");
-                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-                sos_mets.print(objectMapper.writeValueAsString(apiResponse));
-                sos_mets.close();
             }
             break;
         case "DSpaceSimple":

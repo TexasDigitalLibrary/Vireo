@@ -75,6 +75,7 @@
                     <!-- TODO: complete the following with adding accessor methods to submission -->
                 
                     <!-- dc.description.provenance = License Agreement Date -->
+                    <!--/*
                     <dim:field
                       th:if="${ LICENSE_AGREEMENT_DATE != null }"
                       mdschema="dc"
@@ -82,6 +83,7 @@
                       qualifier="provenance"
                       th:text="${ 'The student, ' + STUDENT_SHORT_NAME + ', accepted the attached license on ' + FORMATTED_LICENSE_AGREEMENT_DATE + '.' }">                         
                     </dim:field>
+                    */-->
                      
                     <!-- dc.description.provenance = Submission Date -->
                     <dim:field
@@ -93,6 +95,7 @@
                     </dim:field>
                     
                     <!-- dc.description.provenance = Committee Approval Date -->
+                    <!--/*
                     <dim:field
                       th:if="${ COMMITTEE_APPROVAL_DATE != null }"
                       mdschema="dc"
@@ -100,14 +103,15 @@
                       qualifier="provenance"
                       th:text="${ 'The committee advisor approved this ' + SUBMISSION_TYPE + ' on ' + FORMATTED_COMMITTEE_APPROVAL_DATE + '.' }">                         
                     </dim:field>
+                    */-->
                     
                     <!-- dc.description.provenance = Committee Embargo Approval Date -->
                     <dim:field
-                      th:if="${ COMMITTEE_EMBARGO_APPROVAL_DATE != null }"
+                      th:if="${ EMBARGO_APPROVAL_DATE != null }"
                       mdschema="dc"
                       element="description"
                       qualifier="provenance"
-                      th:text="${ 'The committee advisor approved the embargo selection for this ' + SUBMISSION_TYPE + ' on ' + FORMATTED_COMMITTEE_EMBARGO_APPROVAL_DATE + '.' }">                         
+                      th:text="${ 'The committee advisor approved the embargo selection for this ' + SUBMISSION_TYPE + ' on ' + FORMATTED_EMBARGO_APPROVAL_DATE + '.' }">                         
                     </dim:field> 
                     
                     <!-- dc.description.provenance = Approval Date -->
@@ -126,7 +130,7 @@
                         mdschema="dc"
                         element="description"
                         qualifier="provenance"
-                        th:text="${ 'DSpace METS Submission Ingestion Package generated from Vireo submission ' + SUBMISSION_ID + ' on ' + TIME }">
+                        th:text="${ 'DSpace METS Submission Ingestion Package generated from Vireo submission ' + SUBMISSION_ID + ' on ' + time }">
                     </dim:field>
                     
                 </dim:dim>

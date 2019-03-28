@@ -114,67 +114,43 @@ public abstract class AbstractFormatter extends BaseEntity implements Formatter 
             case FIELD_VALUES:
                 context.setVariable(key.name(), submission.getFieldValues());
                 break;
-
-            case FORMATTED_APPLICATION_APPROVAL_DATE:
-				//dspace_simple_dublin_core:dc.date.issued
-                context.setVariable(key.name(), submissionHelperUtility.getApproveApplicationDate());
-                break;
-
-            case LICENSE_AGREEMENT_DATE:
-                //dc.description.provenance = License Agreement Date : no license agreement date available so approximate with SubmissionDate
-                context.setVariable(key.name(), submission.getSubmissionDate());
-                break;
-            case FORMATTED_LICENSE_AGREEMENT_DATE:
-                //dc.description.provenance = License Agreement Date : no license agreement date available so approximate with SubmissionDate
-                context.setVariable(key.name(), submissionHelperUtility.getSubmissionDateString());
-                break;
-
-            case SUBMISSION_DATE:
-                //dc.description.provenance = Submission Date
-                context.setVariable(key.name(), submission.getSubmissionDate());
-                break;
-            case FORMATTED_SUBMISSION_DATE:
-                //dc.description.provenance = Submission Date
-                context.setVariable(key.name(), submissionHelperUtility.getSubmissionDateString());
-                break;
-
-            case COMMITTEE_APPROVAL_DATE:
-                //dc.description.provenance = Committee Approval Date
-                context.setVariable(key.name(), submission.getApproveAdvisorDate());
-                break;
-            case FORMATTED_COMMITTEE_APPROVAL_DATE:
-                //dc.description.provenance = Committee Approval Date
-                context.setVariable(key.name(), submissionHelperUtility.getAdvisorApprovalDateString());
-                break;
-
-            case COMMITTEE_EMBARGO_APPROVAL_DATE:
-                //dc.description.provenance = Committee Embargo Approval Date
-                context.setVariable(key.name(), submission.getApproveEmbargoDate());
-                break;
-            case FORMATTED_COMMITTEE_EMBARGO_APPROVAL_DATE:
-                //dc.description.provenance = Committee Embargo Approval Date
-                context.setVariable(key.name(), submissionHelperUtility.getEmbargoApprovalDateString());
-                break;
-
-            case APPROVAL_DATE:
+            case ADVISOR_APPROVAL_DATE:
                 context.setVariable(key.name(), submission.getApproveAdvisorDate());
                 break;
             case FORMATTED_APPROVAL_DATE:
                 context.setVariable(key.name(), submissionHelperUtility.getAdvisorApprovalDateString());
                 break;
-
-
-/***
-            case ADVISOR_APPROVAL_DATE:
-                context.setVariable(key.name(), submission.getApproveAdvisorDate());
+            case EMBARGO_APPROVAL_DATE:
+                context.setVariable(key.name(), submission.getApproveEmbargoDate());
                 break;
-            case FORMATTED_ADVISOR_APPROVAL_DATE:
-                context.setVariable(key.name(), submissionHelperUtility.getAdvisorApprovalDateString());
+            case FORMATTED_EMBARGO_APPROVAL_DATE:
+                context.setVariable(key.name(), submissionHelperUtility.getEmbargoApprovalDateString());
                 break;
-***/
-
-
-
+            case SUBMISSION_DATE:
+                context.setVariable(key.name(), submission.getSubmissionDate());
+                break;
+            case FORMATTED_SUBMISSION_DATE:
+                context.setVariable(key.name(), submissionHelperUtility.getSubmissionDateString());
+                break;
+            case FORMATTED_APPLICATION_APPROVAL_DATE:
+                context.setVariable(key.name(), submissionHelperUtility.getApproveApplicationDate());
+                break;
+            case COMMITTEE_APPROVAL_DATE:
+                // TODO: no committee approval date available
+                context.setVariable(key.name(), null);
+                break;
+            case FORMATTED_COMMITTEE_APPROVAL_DATE:
+                // TODO: no committee approval date available
+                context.setVariable(key.name(), "");
+                break;
+            case LICENSE_AGREEMENT_DATE:
+                // TODO: no license agreement date available
+                context.setVariable(key.name(), null);
+                break;
+            case FORMATTED_LICENSE_AGREEMENT_DATE:
+                // TODO: no license agreement date available
+                context.setVariable(key.name(), "");
+                break;
             default:
                 break;
             }

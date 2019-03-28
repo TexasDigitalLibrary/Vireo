@@ -83,6 +83,6 @@
 		</th:block>
     
      <!-- dc.description.provenance = Statement about when this package was generated. -->
-		<dcvalue element="description" qualifier="provenance" th:text="${ 'DSpace Simple Format generated from Vireo submission ' + SUBMISSION_ID + ' on ' + TIME }">
+		<dcvalue element="description" qualifier="provenance" th:text="${ 'DSpace Simple Format generated from Vireo submission ' + SUBMISSION_ID + ' on ' + time }">
 		</dcvalue>
 </dublin_core>
