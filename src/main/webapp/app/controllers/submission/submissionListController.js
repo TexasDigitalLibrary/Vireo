@@ -425,7 +425,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.isDateColumn = function (col) {
-            return (col.inputType.name == 'INPUT_DATE' || col.inputType.name == 'INPUT_DATETIME' || col.inputType.name == 'INPUT_DEGREEDATE');
+            return (col.inputType.name == 'INPUT_DATETIME' || col.inputType.name == 'INPUT_DEGREEDATE');
         };
 
         $scope.getUserById = function (userId) {
