@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import javax.persistence.Entity;
 
 import org.apache.commons.io.FileUtils;
@@ -78,6 +81,26 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
         }
 
         return new ZipExportPackage(submission, "http://purl.org/net/sword-types/METSDSpaceSIP", pkg);
+    }
+
+    @Override
+    public ZipExportPackage packageExport(Submission submission, Map<String, String> dsDocs) {
+        String packageName = "submission_" + submission.getId()+ "/mets.xml";
+        Map<String, File> pkgs = new HashMap<String, File>();
+        try {
+            // Add non submitted content
+            for (Map.Entry<String, String> ds_entry : dsDocs.entrySet()) {
+                String docName = ds_entry.getKey();
+                String docContents = ds_entry.getValue();
+                File ff = File.createTempFile(packageName, "");
+                FileUtils.writeStringToFile(ff, docContents, "UTF-8");
+                pkgs.put(packageName, ff);
+            }
+        } catch (IOException ioe) {
+            throw new RuntimeException("Unable to generate package", ioe);
+        }
+
+        return new ZipExportPackage(submission, "http://purl.org/net/sword-types/METSDSpaceSIP", pkgs);
     }
 
 }
