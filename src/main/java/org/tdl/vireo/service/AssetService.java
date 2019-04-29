@@ -131,7 +131,7 @@ public class AssetService {
         Resource resource = getResource(resourceDirectory);
         URI uri = resource.getURI();
         if (uri.getScheme().equals("jar")) {
-            String directory = resourceDirectory.replace("classpath:", "/WEB-INF/classes").replace("file:", "/");
+            String directory = resourceDirectory.replace("classpath:", "/BOOT-INF/classes").replace("file:", "/");
             FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, String>emptyMap());
             Path directoryPath = fileSystem.getPath(directory);
             Iterator<Path> it = Files.walk(directoryPath, 1).filter(Files::isRegularFile).iterator();
