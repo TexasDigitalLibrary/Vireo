@@ -49,7 +49,7 @@
     "valuePath": ["submissionDate"],
     "status": null,
     "inputType": {
-      "name": "INPUT_DATE"
+      "name": "INPUT_DATETIME"
     }
   },
   {
@@ -58,7 +58,7 @@
     "valuePath": ["approveApplicationDate"],
     "status": null,
     "inputType": {
-      "name": "INPUT_DATE"
+      "name": "INPUT_DATETIME"
     }
   },
   {
@@ -67,7 +67,7 @@
     "valuePath": ["submissionDate"],
     "status": null,
     "inputType": {
-      "name": "INPUT_DATE"
+      "name": "INPUT_DATETIME"
     }
   },
   {
@@ -76,7 +76,7 @@
     "valuePath": ["approveAdvisorDate"],
     "status": null,
     "inputType": {
-      "name": "INPUT_DATE"
+      "name": "INPUT_DATETIME"
     }
   },
   {
@@ -85,7 +85,7 @@
     "valuePath": ["approveEmbargoDate"],
     "status": null,
     "inputType": {
-      "name": "INPUT_DATE"
+      "name": "INPUT_DATETIME"
     }
   },
   {
