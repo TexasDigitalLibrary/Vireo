@@ -4,7 +4,7 @@
     <dcvalue element="creator" th:text="${STUDENT_FULL_NAME_WITH_BIRTH_YEAR}"></dcvalue>
 
     <!-- dc.identifier.orcid 0000-0000-0000-0000 -->
-    <dcvalue element=”identifier” qualifier=”orcid” th:text="${TITLE}"></dcvalue>
+    <dcvalue element="identifier" qualifier="orcid" th:text="${USER_ORCID}"></dcvalue>
 
     <!-- dc.title = Document Title -->
     <dcvalue element="title" th:text="${TITLE}"></dcvalue>

@@ -8,14 +8,23 @@
     <!-- thesis.degree.level = Degree Level (Doctoral, Masters, Undergraduate) -->
     <dcvalue element="degree" qualifier="level" th:text="${DEGREE_LEVEL}"></dcvalue>
 
-    <!-- thesis.degree.discipline = Major -->
-    <dcvalue element="degree" qualifier="discipline" th:text="${DEGREE_MAJOR}"></dcvalue>
+    <!-- thesis.degree.major = Major -->
+    <dcvalue element="degree" qualifier="major" th:text="${DEGREE_MAJOR}"></dcvalue>
 
     <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
     <dcvalue element="degree" qualifier="grantor" th:text="${APPLICATION_GRANTOR}"></dcvalue>
 
     <!-- thesis.degree.department = Department -->
     <dcvalue element="degree" qualifier="department" th:text="${DEPARTMENT}"></dcvalue>
+
+    <!-- thesis.degree.college = College -->
+    <dcvalue element="degree" qualifier="college" th:text="${DEGREE_COLLEGE}"></dcvalue>
+
+    <!-- thesis.degree.school = School -->
+    <dcvalue element="degree" qualifier="school" th:text="${DEGREE_SCHOOL}"></dcvalue>
+
+    <!-- thesis.degree.program = Program -->
+    <dcvalue element="degree" qualifier="program" th:text="${DEGREE_PROGRAM}"></dcvalue>
 
 </dublin_core>
 

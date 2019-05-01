@@ -163,7 +163,6 @@ public abstract class AbstractFormatter extends BaseEntity implements Formatter 
                 context.setVariable(key.name(), submissionHelperUtility.getAdvisorApprovalDateString());
                 break;
 
-
 /***
             case ADVISOR_APPROVAL_DATE:
                 context.setVariable(key.name(), submission.getApproveAdvisorDate());
