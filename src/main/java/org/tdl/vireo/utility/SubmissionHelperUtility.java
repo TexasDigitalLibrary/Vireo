@@ -495,13 +495,11 @@ public class SubmissionHelperUtility {
 
     public String getDegreeSchool() {
         Optional<String> degreeSchool = getFieldValueIdentifierByPredicateValue("thesis.degree.school");
-		System.out.println("DEG SCHOOL "+degreeSchool.get()+"\n");
         return degreeSchool.isPresent() ? degreeSchool.get() : "";
     }
 
     public String getDegreeProgram() {
         Optional<String> degreeProgram = getFieldValueIdentifierByPredicateValue("thesis.degree.program");
-		System.out.println("DEG PROGRAM "+degreeProgram.get()+"\n");
         return degreeProgram.isPresent() ? degreeProgram.get() : "";
     }
 
