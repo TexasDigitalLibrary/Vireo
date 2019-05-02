@@ -30,6 +30,9 @@ import org.tdl.vireo.model.repo.UserRepo;
 
 import edu.tamu.weaver.auth.model.Credentials;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+
 /**
  * Activate the Vireo command line interface by passing the console argument to Maven 
  *
@@ -60,6 +63,9 @@ public class Cli implements CommandLineRunner {
 
     @Autowired
     private ActionLogRepo actionLogRepo;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... arg0) throws Exception {
@@ -108,6 +114,23 @@ public class Cli implements CommandLineRunner {
                     System.out.println("\nGoodbye.");
                     running = false;
                     break;
+
+                case "accounts":
+                    int acct = 0;
+                    if (commandArgs.size() > 0) {
+                        try {
+                            acct = Integer.parseInt(commandArgs.get(0));
+                        } catch (Exception e) {
+                            System.err.println("unable to parse as a number of items: " + commandArgs.get(0));
+                        }
+                    }
+                    for (int i = 0; i < acct; i++) {
+                        String enc_pwd = passwordEncoder.encode("password");
+                        User submitter = userRepo.create("test" + (i + 1) + "@example.com", "test", "example", enc_pwd, Role.ROLE_STUDENT);
+                        userRepo.saveAndFlush(submitter);
+                    }
+                    break;
+
                 case "generate":
 
                     Organization org = organizationRepo.findAll().get(0);
