@@ -43,6 +43,14 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
             return FileUploadService.getFileType(fieldPredicate);
         };
 
+        $scope.getFile = function (fieldValue) {
+            $scope.submission.file(fieldValue.value).then(function (data) {
+                saveAs(new Blob([data], {
+                    type: fieldValue.fileInfo.type
+                }), fieldValue.fileInfo.name);
+            });
+        };
+
         $scope.isPrimaryDocument = function (fieldPredicate) {
             return $scope.getFileType(fieldPredicate) == 'PRIMARY';
         };
@@ -89,6 +97,7 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
         var protectedDocTypes = [
             '_doctype_primary',
             '_doctype_license',
+            '_doctype_feedback',
             '_doctype_archived'
         ];
 
@@ -98,6 +107,10 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
 
         $scope.uploadableFieldPredicates = function(fieldPredicate) {
             return fieldPredicate.documentTypePredicate && protectedDocTypes.indexOf(fieldPredicate.value) < 0;
+        };
+
+        $scope.feedbackDocuments = function(fieldValue) {
+            return fieldValue.id && fieldValue.fieldPredicate.documentTypePredicate && fieldValue.fieldPredicate.value == '_doctype_feedback';
         };
 
         CustomActionDefinitionRepo.listen(function(apiRes) {

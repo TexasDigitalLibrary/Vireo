@@ -157,7 +157,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var resetBatchCommentEmailModal = function (batchCommentEmail) {
             $scope.closeModal();
             batchCommentEmail.adding = false;
-            batchCommentEmail.commentVisiblity = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
+            batchCommentEmail.commentVisibility = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
             batchCommentEmail.recipientEmail = userSettings.notes_email_student_by_default === "true" ? $scope.submission.submitter.email : "";
             batchCommentEmail.ccRecipientEmail = userSettings.notes_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails().join(",") : "";
             batchCommentEmail.sendEmailToRecipient = (userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
@@ -425,7 +425,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.isDateColumn = function (col) {
-            return (col.inputType.name == 'INPUT_DATE' || col.inputType.name == 'INPUT_DATETIME' || col.inputType.name == 'INPUT_DEGREEDATE');
+            return (col.inputType.name == 'INPUT_DATETIME' || col.inputType.name == 'INPUT_DEGREEDATE');
         };
 
         $scope.getUserById = function (userId) {

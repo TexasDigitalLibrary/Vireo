@@ -36,7 +36,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
 
         $scope.showOrganizationManagement = function () {
             var selectedOrg = $scope.getSelectedOrganization();
-            return selectedOrg !== undefined && selectedOrg.id !== undefined;
+            return selectedOrg !== undefined && selectedOrg.id !== undefined && selectedOrg.id !== 1 || (selectedOrg.id == 1 && $scope.isAdmin());
         };
 
         $scope.updateOrganization = function (organization) {
@@ -122,14 +122,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
                 $scope.getSelectedOrganization().clearValidationResults();
                 $scope.getSelectedOrganization().refresh();
             }
-        };
-
-        $scope.isPrimaryOrganization = function() {
-            return $scope.getSelectedOrganization().id == 1;
-        };
-
-        $scope.canManageOrganization = function() {
-            return (!$scope.isPrimaryOrganization() || ($scope.isPrimaryOrganization() && $scope.isAdmin()));
         };
 
         $scope.testBoolean = true;

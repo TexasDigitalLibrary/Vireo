@@ -127,9 +127,6 @@ public class Submission extends ValidatingBaseEntity {
     @Column(nullable = true)
     private String depositURL;
 
-	@Transient
-    private static ConfigurationRepo configurationRepo;
-
     public Submission() {
         setModelValidator(new SubmissionValidator());
         setFieldValues(new HashSet<FieldValue>());
@@ -159,20 +156,6 @@ public class Submission extends ValidatingBaseEntity {
         this(submitter, organization);
         setSubmissionStatus(submissionStatus);
     }
-
-    /**
-     * @return the configurationRepo 
-    */
-    public ConfigurationRepo getConfigurationRepo() {
-        return configurationRepo;
-	}
-
-    /**
-     * @param configurationRepo
-    */
-	public void setConfigurationRepo(ConfigurationRepo configurationRepo){
-		this.configurationRepo = configurationRepo;
-	}
 
     /**
      * @return the submitter

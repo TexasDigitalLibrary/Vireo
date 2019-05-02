@@ -26,6 +26,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -205,7 +206,7 @@ public class SubmissionController {
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
     Submission submission = null;
-    if (user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
+    if (user.getRole().ordinal() <= Role.ROLE_REVIEWER.ordinal()) {
       submission = submissionRepo.read(submissionId);
     } else {
       submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
@@ -255,7 +256,7 @@ public class SubmissionController {
 
     Submission submission = submissionRepo.read(submissionId);
 
-    String commentVisibility = data.get("commentVisiblity") != null ? (String) data.get("commentVisiblity") : "public";
+    String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
 
     if (commentVisibility.equals("public")) {
       sendEmail(user, submission, data);
@@ -626,7 +627,6 @@ public class SubmissionController {
 
             break;
         case "MarcXML21":
-        case "DSpaceMETS":
         case "ProQuest":
             ServletOutputStream sos = response.getOutputStream();
 
@@ -667,6 +667,65 @@ public class SubmissionController {
                 sos.close();
             }
             break;
+        case "DSpaceMETS":
+            ServletOutputStream sos_mets = response.getOutputStream();
+
+            try {
+                ZipOutputStream zos = new ZipOutputStream(sos_mets);
+
+                // TODO: need a more dynamic way to achieve this
+                if (packagerName.equals("ProQuest")) {
+                    // TODO: add filter for UMI Publication true
+                }
+
+                for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
+
+                    String submissionName = "submission_" + submission.getId() + "/";
+                    StringBuilder contentsText = new StringBuilder();
+                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+                    if (exportPackage.isMap()) {
+                        for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
+                            if (packagerName.equals("MarcXML21")) {
+                                zos.putNextEntry(new ZipEntry("MarcXML21/" + fileEntry.getKey()));
+                            } else {
+                                zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
+                            }
+                            contentsText.append("MD " + fileEntry.getKey() + "\n");
+                            zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
+                            zos.closeEntry();
+                        }
+                    }
+                    // LICENSES
+                    for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
+                        Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+                        byte[] fileBytes = Files.readAllBytes(path);
+                        zos.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
+                        contentsText.append(ldfv.getFileName() + " bundle:LICENSE\n");
+                        zos.write(fileBytes);
+                        zos.closeEntry();
+                    }
+
+                    // PRIMARY_DOC
+                    FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
+                    Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
+                    byte[] fileBytes = Files.readAllBytes(path);
+                    zos.putNextEntry(new ZipEntry(submissionName + primaryDoc.getFileName()));
+                    contentsText.append(primaryDoc.getFileName() + "  bundle:CONTENT  primary:true\n");
+                    zos.write(fileBytes);
+                    zos.closeEntry();
+                }
+                zos.close();
+
+                response.setContentType(packager.getMimeType());
+                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+            } catch (Exception e) {
+                LOG.info("Error With Export",e);
+                response.setContentType("application/json");
+                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
+                sos_mets.print(objectMapper.writeValueAsString(apiResponse));
+                sos_mets.close();
+            }
+            break;
         case "DSpaceSimple":
             try {
                 ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
@@ -676,7 +735,6 @@ public class SubmissionController {
 
                     StringBuilder contentsText = new StringBuilder();
 
-					submission.setConfigurationRepo(configurationRepo);
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
 
                     if (exportPackage.isMap()) {
@@ -726,7 +784,7 @@ public class SubmissionController {
                     zos.closeEntry();
 
                     zos.closeEntry();
-                    submission.setConfigurationRepo(null);
+                    
                 }
                 zos.close();
 
@@ -936,8 +994,7 @@ public class SubmissionController {
         int hash = user.getEmail().hashCode();
         String fileName = file.getOriginalFilename();
 
-        String[] fileNameParts = fileName.split("\\.");
-        String fileExtension = fileNameParts.length > 1 ? fileNameParts[1] : "pdf";
+        String fileExtension = FilenameUtils.getExtension(fileName).equals("pdf") ? FilenameUtils.getExtension(fileName) : "pdf";
 
         if (documentTypesToRename.contains(documentType)) {
             String lastName = user.getLastName().toUpperCase();
@@ -948,7 +1005,7 @@ public class SubmissionController {
         String uri = documentFolder + File.separator + hash + File.separator + System.currentTimeMillis() + "-" + fileName;
         assetService.write(file.getBytes(), uri);
         JsonNode fileInfo = assetService.getAssetFileInfo(uri);
-        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) uploaded");
+        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") uploaded");
         return new ApiResponse(SUCCESS, uri);
     }
 
@@ -961,7 +1018,7 @@ public class SubmissionController {
         assetService.copy(oldUri, newUri);
         assetService.delete(oldUri);
         JsonNode fileInfo = assetService.getAssetFileInfo(newUri);
-        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) renamed");
+        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") renamed");
         return new ApiResponse(SUCCESS, newUri);
     }
 
@@ -979,7 +1036,7 @@ public class SubmissionController {
             if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
                 JsonNode fileInfo = assetService.getAssetFileInfo(uri);
                 assetService.delete(uri);
-                actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) removed");
+                actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") removed");
             } else {
                 apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
             }
@@ -996,7 +1053,7 @@ public class SubmissionController {
         assetService.copy(oldUri, newUri);
         assetService.delete(oldUri);
         JsonNode fileInfo = assetService.getAssetFileInfo(newUri);
-        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + (fileInfo.get("size").asInt() / 1024) + " KB) archived");
+        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") archived");
         return new ApiResponse(SUCCESS, newUri);
     }
 

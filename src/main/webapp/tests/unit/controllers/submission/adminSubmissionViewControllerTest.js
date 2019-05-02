@@ -225,11 +225,15 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(scope.resetCommentModal).toHaveBeenCalled();
         });
         it('addEmailAddressee should update the destination', function () {
-            var destination = { push: jasmine.createSpy() };
+            var mockEmails = { push: jasmine.createSpy() };
+            var mockFormField =  {
+              $$rawModelValue: {}, 
+              $$attr: {name:""}
+            };
 
-            scope.addEmailAddressee(true, destination);
+            scope.addEmailAddressee(mockEmails,mockFormField);
 
-            expect(destination.push).toHaveBeenCalled();
+            expect(mockEmails.push).toHaveBeenCalled();
         });
         it('cancel should open a modal close a modal', function () {
             var fieldValue = { refresh: jasmine.createSpy() };
@@ -267,7 +271,7 @@ describe('controller: AdminSubmissionViewController', function () {
             var response;
             scope.addCommentModal = {};
             scope.resetCommentModal(scope.addCommentModal);
-            scope.addCommentModal.commentVisiblity = 'public';
+            scope.addCommentModal.commentVisibility = 'public';
             scope.addCommentModal.sendEmailToRecipient = true;
             scope.addCommentModal.sendEmailToCCRecipient = true;
 
@@ -279,7 +283,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.disableAddComment();
             expect(typeof response).toBe("boolean");
 
-            scope.addCommentModal.commentVisiblity = 'private';
+            scope.addCommentModal.commentVisibility = 'private';
 
             response = scope.disableAddComment();
             expect(typeof response).toBe("boolean");

@@ -14,15 +14,8 @@
       <div class="col-md-12">
         <div class="row">
           <div class="col-xs-6">
-            <div class="form-group" ng-if="!canManageOrganization()">
-              <div>
-                <label ng-if="label" for="name-input">Name</label>
-                <input class="form-control" type="text" readonly value="{{getSelectedOrganization().name}}" />
-              </div>
-            </div>
 
             <validatedinput
-              ng-if="canManageOrganization()"
               no-id="true"
               label="Name"
               model="getSelectedOrganization()"
@@ -33,15 +26,7 @@
               results="getSelectedOrganization().getValidationResults()">
             </validatedinput>
 
-            <div class="form-group" ng-if="!canManageOrganization()">
-              <div>
-                <label ng-if="label" for="category-input">Category</label>
-                <input class="form-control" type="text" readonly value="{{getSelectedOrganization().category.name}}" />
-              </div>
-            </div>
-
             <validatedselect
-              ng-if="canManageOrganization()"
               no-id="true"
               label="Category"
               options="organizationCategories"
@@ -53,17 +38,7 @@
               results="getSelectedOrganization().getValidationResults()">
             </validatedselect>
 
-            <div class="form-group" ng-if="!canManageOrganization()">
-              <div class="col-sm-6">
-                <span class="toggle-button-heading">Organization accepts Submissions?</span>
-              </div>
-              <div class="col-sm-2">
-                <input type="text" readonly class="form-control" value="{{organizationRepo.getSelectedOrganization().acceptsSubmissions ? acceptsSubmissions[0]['true']:acceptsSubmissions[1]['false']}}"/>
-              </div>
-            </div>
-
             <toggleButton
-              ng-if="canManageOrganization()"
               label="Organization accepts Submissions?"
               scope-value="organizationRepo.getSelectedOrganization().acceptsSubmissions"
               toggle-options="{{acceptsSubmissions}}">
@@ -73,17 +48,7 @@
 
           <div class="col-xs-6">
 
-            <div class="form-group" ng-if="!canManageOrganization()">
-              <div>
-                <label ng-if="label" for="emails-input">Email Contact</label>
-                <div class="validated-input-repeatable" ng-repeat="email in getSelectedOrganization().emails">
-                  <input class="form-control" type="text" readonly value="{{email}}" />
-                </div>
-              </div>
-            </div>
-
             <validatedinput
-              ng-if="canManageOrganization()"
               no-id="true"
               label="Email Contact"
               model="getSelectedOrganization()"
@@ -104,7 +69,7 @@
           <div class="pull-right">
             <span uib-popover="This organization contains submissions and cannot be deleted." popover-trigger="'mouseenter'" popover-enable="deleteDisabled">
               <button
-                ng-if="!isPrimaryOrganization()"
+                ng-if="getSelectedOrganization().id !== 1"
                 type="button"
                 class="btn btn-danger"
                 ng-style="{'pointer-events':deleteDisabled ? 'none' : ''}"
@@ -115,11 +80,11 @@
               type="button"
               class="btn btn-default"
               ng-click="resetManageOrganization()"
-              ng-disabled="!canManageOrganization() || updatingOrganization">Cancel</button>
+              ng-disabled="updatingOrganization">Cancel</button>
             <button
               type="submit"
               class="btn btn-primary"
-              ng-disabled="!canManageOrganization() || forms.update.$invalid || updatingOrganization">Save
+              ng-disabled="forms.update.$invalid || updatingOrganization">Save
               <span ng-if="updatingOrganization" class="glyphicon glyphicon-refresh spinning"></span>
             </button>
           </div>
