@@ -212,19 +212,9 @@ public class SubmissionHelperUtility {
     }
 
     public String getUserOrcid() {
-        Optional<String> orcid = getFieldValueByPredicateValue("dc.identifier.orcid");
-		if(orcid.isPresent()){
-        	System.out.println("FSS ORCID "+orcid.get()+"\n");
-		}else{
-        	System.out.println("FSS ORCID NULL \n");
-		}
-		if(submission.getSubmitter()!=null){
-        	System.out.println("FSS SUB "+submission.getSubmitter().getEmail()+"\n");
-		}else{
-        	System.out.println("FSS SUB NULL \n");
-		}
-        return orcid.isPresent() ? orcid.get() : "";
         //return submission.getSubmitter() != null ? submission.getSubmitter().getOrcid() : "";
+        Optional<String> orcid = getFieldValueByPredicateValue("dc.identifier.orcid");
+        return orcid.isPresent() ? orcid.get() : "";
     }
 
     public List<FieldValue> getLicenseAgreementFieldValues() {
@@ -500,28 +490,19 @@ public class SubmissionHelperUtility {
 
     public String getDegreeCollege() {
         Optional<String> degreeCollege = getFieldValueIdentifierByPredicateValue("thesis.degree.college");
-		//System.out.println("DEG COLLEGE "+degreeCollege.get()+"\n");
-        //return degreeCollege.isPresent() ? degreeCollege.get() : "";
-		if(degreeCollege.isPresent()){
-        	System.out.println("FSS COLLEGE "+degreeCollege.get()+"\n");
-		}else{
-        	System.out.println("FSS COLLEGE NULL \n");
-		}
-        return "DEG COLLEGE";
+        return degreeCollege.isPresent() ? degreeCollege.get() : "";
     }
 
     public String getDegreeSchool() {
-        //Optional<String> degreeSchool = getFieldValueIdentifierByPredicateValue("thesis.degree.school");
-		//System.out.println("DEG SCHOOL "+degreeSchool.get()+"\n");
-        //return degreeSchool.isPresent() ? degreeSchool.get() : "";
-        return "DEG SCHOOL";
+        Optional<String> degreeSchool = getFieldValueIdentifierByPredicateValue("thesis.degree.school");
+		System.out.println("DEG SCHOOL "+degreeSchool.get()+"\n");
+        return degreeSchool.isPresent() ? degreeSchool.get() : "";
     }
 
     public String getDegreeProgram() {
-        //Optional<String> degreeProgram = getFieldValueIdentifierByPredicateValue("thesis.degree.program");
-		//System.out.println("DEG PROGRAM "+degreeProgram.get()+"\n");
-        //return degreeProgram.isPresent() ? degreeProgram.get() : "";
-        return "DEG PROGRAM";
+        Optional<String> degreeProgram = getFieldValueIdentifierByPredicateValue("thesis.degree.program");
+		System.out.println("DEG PROGRAM "+degreeProgram.get()+"\n");
+        return degreeProgram.isPresent() ? degreeProgram.get() : "";
     }
 
     public String getTitle() {
