@@ -211,6 +211,12 @@ public class SubmissionHelperUtility {
         return submission.getApproveApplicationDate() != null ? dateFormat.format(submission.getApproveApplicationDate().getTime()) : "";
     }
 
+    public String getUserOrcid() {
+        //return submission.getSubmitter() != null ? submission.getSubmitter().getOrcid() : "";
+        Optional<String> orcid = getFieldValueByPredicateValue("dc.identifier.orcid");
+        return orcid.isPresent() ? orcid.get() : "";
+    }
+
     public List<FieldValue> getLicenseAgreementFieldValues() {
         List<FieldValue> fieldValues = new ArrayList<FieldValue>();
         for (FieldValue fieldValue : submission.getFieldValues()) {
@@ -480,6 +486,21 @@ public class SubmissionHelperUtility {
     public String getDegreeLevel() {
         Optional<String> degreeLevel = getFieldValueIdentifierByPredicateValue("thesis.degree.name");
         return degreeLevel.isPresent() ? degreeLevel.get() : "";
+    }
+
+    public String getDegreeCollege() {
+        Optional<String> degreeCollege = getFieldValueIdentifierByPredicateValue("thesis.degree.college");
+        return degreeCollege.isPresent() ? degreeCollege.get() : "";
+    }
+
+    public String getDegreeSchool() {
+        Optional<String> degreeSchool = getFieldValueIdentifierByPredicateValue("thesis.degree.school");
+        return degreeSchool.isPresent() ? degreeSchool.get() : "";
+    }
+
+    public String getDegreeProgram() {
+        Optional<String> degreeProgram = getFieldValueIdentifierByPredicateValue("thesis.degree.program");
+        return degreeProgram.isPresent() ? degreeProgram.get() : "";
     }
 
     public String getTitle() {
