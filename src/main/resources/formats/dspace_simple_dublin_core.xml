@@ -3,6 +3,9 @@
     <!-- dc.creator = Student -->
     <dcvalue element="creator" th:text="${STUDENT_FULL_NAME_WITH_BIRTH_YEAR}"></dcvalue>
 
+    <!-- dc.identifier.orcid 0000-0000-0000-0000 -->
+    <dcvalue element="identifier" qualifier="orcid" th:text="${USER_ORCID}"></dcvalue>
+
     <!-- dc.title = Document Title -->
     <dcvalue element="title" th:text="${TITLE}"></dcvalue>
         
@@ -31,7 +34,7 @@
     <dcvalue element="date" qualifier="submitted" th:text="${GRADUATION_DATE_MONTH_YEAR_STRING}"></dcvalue>
 
     <!-- dc.date.issued = Approval date in "YYYY-MM-DD" format -->
-    <dcvalue element="date" qualifier="issued" th:text="${FORMATTED_APPROVAL_DATE}"></dcvalue>
+    <dcvalue element="date" qualifier="issued" th:text="${FORMATTED_APPLICATION_APPROVAL_DATE}"></dcvalue>
         
     <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
     <dcvalue element="format" qualifier="mimetype" th:text="${PRIMARY_DOCUMENT_MIMETYPE}"></dcvalue>
@@ -83,6 +86,6 @@
 		</th:block>
     
      <!-- dc.description.provenance = Statement about when this package was generated. -->
-		<dcvalue element="description" qualifier="provenance" th:text="${ 'DSpace Simple Format generated from Vireo submission ' + SUBMISSION_ID + ' on ' + time }">
+		<dcvalue element="description" qualifier="provenance" th:text="${ 'DSpace Simple Format generated from Vireo submission ' + SUBMISSION_ID + ' on ' + TIME }">
 		</dcvalue>
 </dublin_core>

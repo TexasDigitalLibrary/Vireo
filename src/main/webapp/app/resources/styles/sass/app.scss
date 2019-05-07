@@ -502,7 +502,8 @@ sidebox ul.sidebox-list {
   list-style-type: none;
 }
 
-sidebox ul.sidebox-list li {
+sidebox ul.sidebox-list li,
+sidebox .flagged-fields  {
   padding: 3px;
   overflow-wrap: break-word;
   word-wrap: break-word;

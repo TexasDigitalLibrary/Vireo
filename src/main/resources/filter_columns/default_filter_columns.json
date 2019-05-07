@@ -22,7 +22,7 @@
   },
   {
     "inputType": {
-      "name": "INPUT_DATE"
+      "name": "INPUT_DEGREEDATE"
     },
     "title": "Graduation semester",
     "predicate": null

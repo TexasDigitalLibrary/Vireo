@@ -15,7 +15,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
     $scope.forms = {};
 
     $scope.ready.then(function () {
-
         $scope.resetWorkflowSteps = function () {
             $scope.organizationRepo.clearValidationResults();
             for (var key in $scope.forms) {
@@ -37,7 +36,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
 
         $scope.showOrganizationManagement = function () {
             var selectedOrg = $scope.getSelectedOrganization();
-            return selectedOrg !== undefined && selectedOrg.id !== undefined;
+            return selectedOrg !== undefined && selectedOrg.id !== undefined && selectedOrg.id !== 1 || (selectedOrg.id == 1 && $scope.isAdmin());
         };
 
         $scope.updateOrganization = function (organization) {

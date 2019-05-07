@@ -164,10 +164,6 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(scope.removeFiles).toBeDefined();
             expect(typeof scope.removeFiles).toEqual("function");
         });
-        it('resetAddCommentModal should be defined', function () {
-            expect(scope.resetAddCommentModal).toBeDefined();
-            expect(typeof scope.resetAddCommentModal).toEqual("function");
-        });
         it('resetAddFile should be defined', function () {
             expect(scope.resetAddFile).toBeDefined();
             expect(typeof scope.resetAddFile).toEqual("function");
@@ -229,11 +225,15 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(scope.resetCommentModal).toHaveBeenCalled();
         });
         it('addEmailAddressee should update the destination', function () {
-            var destination = { push: jasmine.createSpy() };
+            var mockEmails = { push: jasmine.createSpy() };
+            var mockFormField =  {
+              $$rawModelValue: {}, 
+              $$attr: {name:""}
+            };
 
-            scope.addEmailAddressee(true, destination);
+            scope.addEmailAddressee(mockEmails,mockFormField);
 
-            expect(destination.push).toHaveBeenCalled();
+            expect(mockEmails.push).toHaveBeenCalled();
         });
         it('cancel should open a modal close a modal', function () {
             var fieldValue = { refresh: jasmine.createSpy() };
@@ -271,7 +271,7 @@ describe('controller: AdminSubmissionViewController', function () {
             var response;
             scope.addCommentModal = {};
             scope.resetCommentModal(scope.addCommentModal);
-            scope.addCommentModal.commentVisiblity = 'public';
+            scope.addCommentModal.commentVisibility = 'public';
             scope.addCommentModal.sendEmailToRecipient = true;
             scope.addCommentModal.sendEmailToCCRecipient = true;
 
@@ -283,7 +283,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.disableAddComment();
             expect(typeof response).toBe("boolean");
 
-            scope.addCommentModal.commentVisiblity = 'private';
+            scope.addCommentModal.commentVisibility = 'private';
 
             response = scope.disableAddComment();
             expect(typeof response).toBe("boolean");
@@ -387,13 +387,6 @@ describe('controller: AdminSubmissionViewController', function () {
 
             expect(typeof scope.errorMessage).toBe("string");
             expect(scope.addFileData.files.length).toBe(1);
-        });
-        it('resetAddCommentModal should close a modal', function () {
-            spyOn(scope, "closeModal");
-
-            scope.resetAddCommentModal();
-
-            expect(scope.closeModal).toHaveBeenCalled();
         });
         it('resetAddFile should close a modal', function () {
             scope.errorMessage = null;
@@ -565,8 +558,8 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.addFileData.sendEmailToRecipient = true;
             scope.addFileData.sendEmailToCCRecipient = true;
             scope.addFileData.files = [ {} ];
-            scope.recipientEmails = [ "a" ];
-            scope.ccRecipientEmails = [ "b" ];
+            scope.addFileData.recipientEmails = [ "a" ];
+            scope.addFileData.ccRecipientEmails = [ "b" ];
             scope.addFileData.uploading = false;
 
             response = scope.disableSubmitAddFile();

@@ -11,9 +11,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.tdl.vireo.model.Address;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DefaultConfiguration;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.service.DefaultSettingsService;
 import org.tdl.vireo.service.ProquestCodesService;
 
@@ -203,6 +205,16 @@ public class SubmissionHelperUtility {
 
     public String getAdvisorApprovalDateString() {
         return submission.getApproveAdvisorDate() != null ? dateFormat.format(submission.getApproveAdvisorDate().getTime()) : "";
+    }
+
+    public String getApproveApplicationDate() {
+        return submission.getApproveApplicationDate() != null ? dateFormat.format(submission.getApproveApplicationDate().getTime()) : "";
+    }
+
+    public String getUserOrcid() {
+        //return submission.getSubmitter() != null ? submission.getSubmitter().getOrcid() : "";
+        Optional<String> orcid = getFieldValueByPredicateValue("dc.identifier.orcid");
+        return orcid.isPresent() ? orcid.get() : "";
     }
 
     public List<FieldValue> getLicenseAgreementFieldValues() {
@@ -466,9 +478,29 @@ public class SubmissionHelperUtility {
         return descAbstract.length() > 0 ? descAbstract.split("\n") : new String[] {};
     }
 
+    public String getDegreeName() {
+        Optional<String> degreeName = getFieldValueByPredicateValue("thesis.degree.name");
+        return degreeName.isPresent() ? degreeName.get() : "";
+    }
+
     public String getDegreeLevel() {
         Optional<String> degreeLevel = getFieldValueIdentifierByPredicateValue("thesis.degree.name");
         return degreeLevel.isPresent() ? degreeLevel.get() : "";
+    }
+
+    public String getDegreeCollege() {
+        Optional<String> degreeCollege = getFieldValueIdentifierByPredicateValue("thesis.degree.college");
+        return degreeCollege.isPresent() ? degreeCollege.get() : "";
+    }
+
+    public String getDegreeSchool() {
+        Optional<String> degreeSchool = getFieldValueIdentifierByPredicateValue("thesis.degree.school");
+        return degreeSchool.isPresent() ? degreeSchool.get() : "";
+    }
+
+    public String getDegreeProgram() {
+        Optional<String> degreeProgram = getFieldValueIdentifierByPredicateValue("thesis.degree.program");
+        return degreeProgram.isPresent() ? degreeProgram.get() : "";
     }
 
     public String getTitle() {
@@ -561,9 +593,9 @@ public class SubmissionHelperUtility {
 
     // NOTE: these come from the settings service
 
-    public String getGrantor() {
-        String grantor = getSettingByNameAndType("grantor", "application").getValue();
-        return grantor != null ? grantor : "";
+
+    public String getGrantor() {        
+      return getSettingByNameAndType("grantor","application").getValue();
     }
 
     public boolean getReleaseStudentContactInformation() {
@@ -609,9 +641,9 @@ public class SubmissionHelperUtility {
 
     // NOTE: used context to get the default settings service
 
-    public DefaultConfiguration getSettingByNameAndType(String name, String type) {
-        DefaultSettingsService defaultSettingsService = SpringContext.bean(DefaultSettingsService.class);
-        return defaultSettingsService.getSettingByNameAndType(name, type);
+    public Configuration getSettingByNameAndType(String name, String type) {
+        ConfigurationRepo configurationRepo = SpringContext.bean(ConfigurationRepo.class);
+        return configurationRepo.getByNameAndType(name, type);
     }
 
     public Optional<String> getProQuestCodeByNameAndType(String name, String type) {

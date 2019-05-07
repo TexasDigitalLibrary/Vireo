@@ -67,7 +67,7 @@ public class ControlledVocabularyController {
      * @return ApiResponse with all controlled vocabulary
      */
     @RequestMapping("/all")
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse getAllControlledVocabulary() {
         return new ApiResponse(SUCCESS, controlledVocabularyRepo.findAllByOrderByPositionAsc());
     }
@@ -129,7 +129,7 @@ public class ControlledVocabularyController {
      */
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabularies", "id" }), @WeaverValidation.Business(value = DELETE, path = { "isEntityProperty" }, restrict = "true") })
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { AbstractFieldProfile.class }, path = { "controlledVocabulary", "id" }), @WeaverValidation.Business(value = DELETE, path = { "isEntityProperty" }, restrict = "true") })
     public ApiResponse removeControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         logger.info("Removing Controlled Vocabulary with name " + controlledVocabulary.getName());
         controlledVocabularyRepo.remove(controlledVocabulary);

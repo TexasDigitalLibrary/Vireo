@@ -1,4 +1,4 @@
-var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
+var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organization, EmailRecipient, EmailRecipientType, WsApi) {
 
     return function Submission() {
 
@@ -46,7 +46,6 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
             if (fieldValue.fileInfo === undefined && fieldValue.value !== undefined && fieldValue.value.length > 0) {
                 submission.fileInfo(fieldValue).then(function (response) {
                     fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
-                    fieldValue.fileInfo.size = Math.round(fieldValue.fileInfo.size / 1024);
                 });
             }
             if (fieldValue.value.length > 0 && submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
@@ -67,6 +66,10 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
             instantiateActionLogs();
         });
 
+        submission.before(function() {
+          submission.organization = new Organization(submission.organization);
+        });
+
         submission.before(function () {
             instantiateFieldValues();
 
@@ -82,18 +85,19 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         });
 
         submission.before(function () {
-            instantiateActionLogs();
 
-            angular.extend(apiMapping.Submission.actionLogListen, {
-                'method': submission.id + '/action-logs'
-            });
+          instantiateActionLogs();
 
-            submission.actionLogListenPromise = WsApi.listen(apiMapping.Submission.actionLogListen);
+          angular.extend(apiMapping.Submission.actionLogListen, {
+            'method': submission.id + '/action-logs'
+          });
 
-            submission.actionLogListenPromise.then(null, null, function (response) {
-                var newActionLog = angular.fromJson(response.body).payload.ActionLog;
-                submission.actionLogs.push(new ActionLog(newActionLog));
-            });
+          submission.actionLogListenPromise = WsApi.listen(apiMapping.Submission.actionLogListen);
+
+          submission.actionLogListenPromise.then(null, null, function (response) {
+            var newActionLog = angular.fromJson(response.body).payload.ActionLog;
+            submission.actionLogs.push(new ActionLog(newActionLog));
+          });
         });
 
         submission.before(function () {
@@ -176,17 +180,17 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         });
 
         submission.addComment = function (data) {
-            angular.extend(apiMapping.Submission.addComment, {
-                'method': submission.id + "/add-comment",
-                'data': data
-            });
-            var promise = WsApi.fetch(apiMapping.Submission.addComment);
-            promise.then(function (res) {
-                if (res.meta && res.meta.status == "INVALID") {
-                    submission.setValidationResults(res.payload.ValidationResults);
-                }
-            });
-            return promise;
+          angular.extend(apiMapping.Submission.addComment, {
+              'method': submission.id + "/add-comment",
+              'data': data
+          });
+          var promise = WsApi.fetch(apiMapping.Submission.addComment);
+          promise.then(function (res) {
+              if (res.meta && res.meta.status == "INVALID") {
+                  submission.setValidationResults(res.payload.ValidationResults);
+              }
+          });
+          return promise;
         };
 
         submission.sendEmail = function (data) {
@@ -625,14 +629,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, WsApi) {
         };
 
         submission.getContactEmails = function () {
-            var fieldValues = submission.getFieldValuesByInputType("INPUT_CONTACT");
-            var emails = [];
-            angular.forEach(fieldValues, function (fv) {
-                angular.forEach(fv.contacts, function (contact) {
-                    emails.push(contact);
-                });
-            });
-            return emails;
+          return submission.organization.getWorkflowEmailContacts();
         };
 
         submission.addMessage = function (message) {

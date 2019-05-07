@@ -37,6 +37,9 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
             case STUDENT_FULL_NAME_WITH_BIRTH_YEAR:
                 context.setVariable(key.name(), submissionHelperUtility.getStudentFullNameWithBirthYear());
                 break;
+            case USER_ORCID:
+                context.setVariable(key.name(), submissionHelperUtility.getUserOrcid());
+                break;
             case TITLE:
                 context.setVariable(key.name(), submissionHelperUtility.getTitle());
                 break;
@@ -86,13 +89,22 @@ public class DSpaceSimpleFormatter extends AbstractFormatter {
                 context.setVariable(key.name(), submissionHelperUtility.getMajor());
                 break;
             case DEGREE_NAME:
-                context.setVariable(key.name(), submissionHelperUtility.getDegreeProQuestCode());
+                context.setVariable(key.name(), submissionHelperUtility.getDegreeName());
                 break;
             case DEGREE_LEVEL:
                 context.setVariable(key.name(), submissionHelperUtility.getDegreeLevel());
                 break;
             case DEPARTMENT:
                 context.setVariable(key.name(), submissionHelperUtility.getDepartment());
+                break;
+            case DEGREE_COLLEGE:
+                context.setVariable(key.name(), submissionHelperUtility.getDegreeCollege());
+                break;
+            case DEGREE_SCHOOL:
+                context.setVariable(key.name(), submissionHelperUtility.getDegreeSchool());
+                break;
+            case DEGREE_PROGRAM:
+                context.setVariable(key.name(), submissionHelperUtility.getDegreeProgram());
                 break;
 
             // METADATA_LOCAL

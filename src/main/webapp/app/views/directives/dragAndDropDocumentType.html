@@ -1,5 +1,6 @@
 <div class="document-type" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
   <span>{{ item.position }}.</span>
+  <span ng-if="item.fieldPredicate.documentTypePredicate" class="glyphicon glyphicon-globe"></span>
   <span ng-repeat="property in properties" class="repeated-span">
     <span>{{item[property]}}</span>
   </span>

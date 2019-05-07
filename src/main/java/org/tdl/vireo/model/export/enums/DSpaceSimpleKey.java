@@ -2,6 +2,7 @@ package org.tdl.vireo.model.export.enums;
 
 public enum DSpaceSimpleKey {
     STUDENT_FULL_NAME_WITH_BIRTH_YEAR,
+    USER_ORCID,
     TITLE,
     ABSTRACT,
     ABSTRACT_LINES,
@@ -19,6 +20,9 @@ public enum DSpaceSimpleKey {
     DEGREE_NAME,
     DEGREE_LEVEL,
     DEGREE_MAJOR,
-    EMBARGO_CODE,
-    DEPARTMENT
+    DEPARTMENT,
+    DEGREE_COLLEGE,
+    DEGREE_SCHOOL,
+    DEGREE_PROGRAM,
+    EMBARGO_CODE
 }

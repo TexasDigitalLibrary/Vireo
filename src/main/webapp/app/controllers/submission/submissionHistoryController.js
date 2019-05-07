@@ -1,4 +1,4 @@
-vireo.controller('SubmissionHistoryController', function ($controller, $location, $scope, $timeout, NgTableParams, StudentSubmissionRepo, SubmissionStatuses) {
+vireo.controller('SubmissionHistoryController', function ($controller, $location, $scope, $timeout, NgTableParams, StudentSubmissionRepo, SubmissionStatuses, ManagedConfigurationRepo) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -9,6 +9,8 @@ vireo.controller('SubmissionHistoryController', function ($controller, $location
     $scope.submissionToDelete = {};
 
     $scope.studentsSubmissions = StudentSubmissionRepo.getAll();
+
+    $scope.configuration = ManagedConfigurationRepo.getAll();
 
     var buildTable = function () {
         return new NgTableParams({}, {
