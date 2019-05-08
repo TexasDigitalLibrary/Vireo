@@ -214,7 +214,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var addDateFilter = function (column) {
             var dateValue = $scope.furtherFilterBy[column.title.split(" ").join("")].d1.toISOString();
-            var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, column.title==="Degree Date" ? "MMMM yyyy" : "MM/dd/yyyy");
+            var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, column.title==="Graduation Semester" ? "MMMM yyyy" : "MM/dd/yyyy");
             dateValue += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? "|" + $scope.furtherFilterBy[column.title.split(" ").join("")].d2.toISOString() : "";
             dateGloss += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? " to " + $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d2, "MM/dd/yyyy") : "";
             $scope.activeFilters.addFilter(column.title, dateValue, dateGloss, false).then(function () {
