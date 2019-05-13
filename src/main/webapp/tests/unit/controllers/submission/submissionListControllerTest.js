@@ -274,6 +274,30 @@ describe('controller: SubmissionListController', function () {
             expect(scope.advancedfeaturesBox.addBatchCommentEmail).toBeDefined();
             expect(typeof scope.advancedfeaturesBox.addBatchCommentEmail).toEqual("function");
         });
+        it('getBatchContactEmails should be defined', function () {
+            expect(scope.advancedfeaturesBox.getBatchContactEmails).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.getBatchContactEmails).toEqual("function");
+        });
+        it('addBatchEmailAddressee should be defined', function () {
+            expect(scope.advancedfeaturesBox.addBatchEmailAddressee).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.addBatchEmailAddressee).toEqual("function");
+        });
+        it('validateBatchEmailAddressee should be defined', function () {
+            expect(scope.advancedfeaturesBox.validateBatchEmailAddressee).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.validateBatchEmailAddressee).toEqual("function");
+        });
+        it('isBatchEmailAddresseeInvalid should be defined', function () {
+            expect(scope.advancedfeaturesBox.isBatchEmailAddresseeInvalid).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.isBatchEmailAddresseeInvalid).toEqual("function");
+        });
+        it('removeBatchEmailAddressee should be defined', function () {
+            expect(scope.advancedfeaturesBox.removeBatchEmailAddressee).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.removeBatchEmailAddressee).toEqual("function");
+        });
+        it('disableAddBatchComment should be defined', function () {
+            expect(scope.advancedfeaturesBox.disableAddBatchComment).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.disableAddBatchComment).toEqual("function");
+        });
         it('updateTemplate should be defined', function () {
             expect(scope.advancedfeaturesBox.updateTemplate).toBeDefined();
             expect(typeof scope.advancedfeaturesBox.updateTemplate).toEqual("function");
@@ -621,6 +645,104 @@ describe('controller: SubmissionListController', function () {
             scope.advancedfeaturesBox.addBatchCommentEmail();
         });
         */
+        it('getBatchContactEmails should return an emails array', function () {
+            var emails = scope.advancedfeaturesBox.getBatchContactEmails();
+            expect(Array.isArray(emails)).toBe(true);
+        });
+        it('addBatchEmailAddressee should add emails', function () {
+            var emails = [];
+            var formField = angular.element('<input>');
+            formField.$$rawModelValue = "example@localhost";
+            formField.$$attr = {name: "test"};
+
+            scope.advancedfeaturesBox.addBatchEmailAddressee(emails, formField);
+
+            expect(emails.length).toBe(1);
+        });
+        it('validateBatchEmailAddressee should validate emails', function () {
+            var response;
+            var emails = scope.advancedfeaturesBox.getBatchContactEmails();
+            var formField = angular.element('<input>');
+            formField.$$rawModelValue = "example@localhost";
+            formField.$$attr = {name: "test"};
+            formField.$invalid = false;
+
+            response = scope.advancedfeaturesBox.validateBatchEmailAddressee(formField);
+            expect(response).toBe(true);
+
+            formField.$invalid = true;
+
+            response = scope.advancedfeaturesBox.validateBatchEmailAddressee(formField);
+            expect(response).toBe(false);
+
+            formField.$invalid = false;
+            formField.$$rawModelValue = emails[0];
+
+            response = scope.advancedfeaturesBox.validateBatchEmailAddressee(formField);
+            expect(response).toBe(true);
+        });
+        it('isBatchEmailAddresseeInvalid should validate emails', function () {
+            var response;
+            var emails = scope.advancedfeaturesBox.getBatchContactEmails();
+            var formField = angular.element('<input>');
+            formField.$$rawModelValue = "example@localhost";
+            formField.$$attr = {name: "test"};
+            formField.$invalid = false;
+
+            response = scope.advancedfeaturesBox.isBatchEmailAddresseeInvalid(formField);
+            expect(response).toBe(false);
+        });
+        it('removeBatchEmailAddressee should remove an email', function () {
+            var emails = [];
+            var formField = angular.element('<input>');
+            var originalLength = 0;
+            formField.$$rawModelValue = "example@localhost";
+            formField.$$attr = {name: "test"};
+
+            scope.advancedfeaturesBox.addBatchEmailAddressee(emails, formField);
+            originalLength = emails.length;
+
+            scope.advancedfeaturesBox.removeBatchEmailAddressee(emails[0], emails);
+            expect(emails.length).toBe(originalLength - 1);
+        });
+        it('disableAddBatchComment should disable functionality', function () {
+            var response;
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(true);
+
+            scope.advancedfeaturesBox.batchCommentEmail.subject = "mock subject";
+            scope.advancedfeaturesBox.batchCommentEmail.message = "mock message";
+            scope.advancedfeaturesBox.batchCommentEmail.commentVisibility = "private";
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(false);
+
+            scope.advancedfeaturesBox.batchCommentEmail.commentVisibility = "public";
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(false);
+
+            scope.advancedfeaturesBox.batchCommentEmail.sendEmailToRecipient = true;
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(true);
+
+            scope.advancedfeaturesBox.batchCommentEmail.recipientEmails.push("example@localhost");
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(false);
+
+            scope.advancedfeaturesBox.batchCommentEmail.sendEmailToCCRecipient = true;
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(true);
+
+            scope.advancedfeaturesBox.batchCommentEmail.ccRecipientEmails.push("example@localhost");
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(false);
+        });
         // TODO: more work needed for this method.
         /*
         it('updateTemplate should update the template', function () {
