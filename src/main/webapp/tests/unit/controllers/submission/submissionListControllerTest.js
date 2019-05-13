@@ -535,6 +535,7 @@ describe('controller: SubmissionListController', function () {
                 d2: new Date()
             };
             scope.furtherFilterBy.addFilter(mockColumn, "gloss");
+            scope.$digest();
         });
         it('addExactMatchFilter should filter by', function () {
             var mockColumn = new mockSubmissionListColumn(q);
@@ -543,6 +544,7 @@ describe('controller: SubmissionListController', function () {
                 d2: new Date()
             };
             scope.furtherFilterBy.addExactMatchFilter(mockColumn, "gloss");
+            scope.$digest();
         });
         it('addDateFilter should add a date filter', function () {
             var mockColumn = new mockSubmissionListColumn(q);
@@ -551,6 +553,7 @@ describe('controller: SubmissionListController', function () {
                 d2: new Date()
             };
             scope.furtherFilterBy.addDateFilter(mockColumn);
+            scope.$digest();
         });
         it('getTypeAheadByPredicateName should perform type ahead', function () {
             scope.furtherFilterBy.getTypeAheadByPredicateName("predicate value");
