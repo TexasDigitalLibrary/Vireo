@@ -3,7 +3,7 @@ describe('controller: AdminSubmissionViewController', function () {
     var controller, q, scope, FileUploadService;
 
     var initializeController = function(settings) {
-        inject(function ($anchorScroll, $controller, $location, $q, $route, $routeParams, $rootScope, $window, _DepositLocationRepo_, _EmailTemplateRepo_, _FieldPredicateRepo_, _FieldValue_, _FileUploadService_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _UserService_, _WsApi_) {
+        inject(function ($anchorScroll, $controller, $location, $q, $route, $routeParams, $rootScope, $window, _DepositLocationRepo_, _EmailRecipient_, _EmailTemplateRepo_, _FieldPredicateRepo_, _FieldValue_, _FileUploadService_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _UserService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -20,6 +20,7 @@ describe('controller: AdminSubmissionViewController', function () {
                 $scope: scope,
                 $window: $window,
                 DepositLocationRepo: _DepositLocationRepo_,
+                EmailRecipient: _EmailRecipient_,
                 EmailTemplateRepo: _EmailTemplateRepo_,
                 FieldPredicateRepo: _FieldPredicateRepo_,
                 FieldValue: mockParameterModel(q, mockFieldValue),
@@ -47,6 +48,7 @@ describe('controller: AdminSubmissionViewController', function () {
         module('core');
         module('vireo');
         module('mock.depositLocationRepo');
+        module('mock.emailRecipient');
         module('mock.emailTemplateRepo');
         module('mock.fieldPredicateRepo');
         module('mock.fieldValue');
@@ -227,7 +229,7 @@ describe('controller: AdminSubmissionViewController', function () {
         it('addEmailAddressee should update the destination', function () {
             var mockEmails = { push: jasmine.createSpy() };
             var mockFormField =  {
-              $$rawModelValue: {}, 
+              $$rawModelValue: {},
               $$attr: {name:""}
             };
 
