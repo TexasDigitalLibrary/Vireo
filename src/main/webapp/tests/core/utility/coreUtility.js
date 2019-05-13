@@ -57,6 +57,19 @@ var rejectPromise = function (defer, payload, messageStatus, httpStatus) {
     return defer.promise;
 };
 
+var failurePromise = function (defer, payload, messageStatus, httpStatus) {
+    defer.reject({
+        data: {
+            meta: {
+                status: messageStatus ? messageStatus : 'INVALID',
+            },
+            payload: payload,
+            status: httpStatus ? httpStatus : 500
+        }
+    });
+    return defer.promise;
+};
+
 var mockParameterModel = function($q, mockModel) {
     return function(toMock) {
         var model = new mockModel($q);
