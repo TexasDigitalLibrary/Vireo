@@ -3,7 +3,7 @@ describe('controller: FieldPredicatesController', function () {
     var controller, q, scope, FieldPredicateRepo;
 
     var initializeController = function(settings) {
-        inject(function ($filter, $q, $controller, $rootScope, $timeout, $window, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
+        inject(function ($filter, $q, $controller, $rootScope, $timeout, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -17,7 +17,7 @@ describe('controller: FieldPredicatesController', function () {
                 $q: q,
                 $scope: scope,
                 $timeout: $timeout,
-                $window: $window,
+                $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 FieldPredicateRepo: _FieldPredicateRepo_,
                 ModalService: _ModalService_,

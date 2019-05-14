@@ -3,7 +3,7 @@ describe('controller: OrganizationManagementController', function () {
     var controller, q, scope, timeout, AccordionService, AlertService, OrganizationRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $q, $rootScope, $route, $timeout, $window, _AccordionService_, _AlertService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
+        inject(function ($controller, $location, $q, $rootScope, $route, $timeout, _AccordionService_, _AlertService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
             timeout = $timeout;
@@ -19,7 +19,7 @@ describe('controller: OrganizationManagementController', function () {
             // This results in having additional methods on the scope that OrganizationManagementController requires.
             $controller('OrganizationSettingsController', {
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 AccordionService: _AccordionService_,
                 ModalService: _ModalService_,
                 OrganizationRepo: _OrganizationRepo_,
@@ -35,7 +35,7 @@ describe('controller: OrganizationManagementController', function () {
                 $route: $route,
                 $scope: scope,
                 $timeout: $timeout,
-                $window: $window,
+                $window: mockWindow(),
                 AccordionService: _AccordionService_,
                 AlertService: _AlertService_,
                 ModalService: _ModalService_,

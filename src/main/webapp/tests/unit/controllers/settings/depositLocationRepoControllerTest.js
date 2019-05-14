@@ -3,7 +3,7 @@ describe('controller: DepositLocationRepoController', function () {
     var controller, q, scope, DepositLocationRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _DepositLocationRepo_, _DragAndDropListenerFactory_, _ModalService_, _PackagerRepo_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _DepositLocationRepo_, _DragAndDropListenerFactory_, _ModalService_, _PackagerRepo_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -15,7 +15,7 @@ describe('controller: DepositLocationRepoController', function () {
             controller = $controller('DepositLocationRepoController', {
                 $q: q,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 DepositLocationRepo: _DepositLocationRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,

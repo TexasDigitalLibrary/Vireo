@@ -1,11 +1,12 @@
 describe('controller: AbstractController', function () {
 
-    var controller, scope, window, RestApi;
+    var controller, q, scope, window, RestApi;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+            q = $q;
             scope = $rootScope.$new();
-            window = $window;
+            window = mockWindow();
 
             RestApi = _RestApi_;
 
@@ -14,7 +15,7 @@ describe('controller: AbstractController', function () {
 
             controller = $controller('AbstractController', {
                 $scope: scope,
-                $window: $window,
+                $window: window,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,

@@ -3,7 +3,7 @@ describe('controller: HeaderController', function () {
     var controller, location, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $rootScope, $timeout, $window, _AbstractRepo_, _AbstractAppRepo_, _AlertService_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $location, $rootScope, $timeout, _AbstractRepo_, _AbstractAppRepo_, _AlertService_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             location = $location;
             scope = $rootScope.$new();
 
@@ -14,7 +14,7 @@ describe('controller: HeaderController', function () {
                 $scope: scope,
                 $location: $location,
                 $timeout: $timeout,
-                $window: $window,
+                $window: mockWindow(),
                 AbstractRepo: _AbstractRepo_,
                 AbstractAppRepo: _AbstractAppRepo_,
                 AlertService: _AlertService_,

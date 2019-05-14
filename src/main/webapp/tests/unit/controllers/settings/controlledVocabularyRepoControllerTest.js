@@ -3,7 +3,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
     var controller, q, scope, ControlledVocabularyRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $timeout, $window, _ControlledVocabularyRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, $timeout, _ControlledVocabularyRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -16,7 +16,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
                 $q: q,
                 $scope: scope,
                 $timeout: $timeout,
-                $window: $window,
+                $window: mockWindow(),
                 ControlledVocabularyRepo: _ControlledVocabularyRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,

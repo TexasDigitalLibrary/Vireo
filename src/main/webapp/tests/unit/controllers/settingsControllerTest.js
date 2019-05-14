@@ -3,7 +3,7 @@ describe('controller: SettingsController', function () {
     var controller, q, scope, timeout, StudentSubmissionRepo, SubmissionStates;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $injector, $q, $rootScope, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _SubmissionStates_, _UserService_, _WsApi_) {
+        inject(function ($controller, $injector, $q, $rootScope, $timeout, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _SubmissionStates_, _UserService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
             timeout = $timeout;
@@ -18,7 +18,7 @@ describe('controller: SettingsController', function () {
                 $scope: scope,
                 $injector: $injector,
                 $timeout: $timeout,
-                $window: $window,
+                $window: mockWindow(),
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,

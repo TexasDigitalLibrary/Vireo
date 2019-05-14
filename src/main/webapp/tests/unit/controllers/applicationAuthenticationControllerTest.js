@@ -3,7 +3,7 @@ describe('controller: ApplicationAuthenticationController', function () {
     var controller, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_, _WsApi_) {
+        inject(function ($controller, $location, $rootScope, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_, _WsApi_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -12,7 +12,7 @@ describe('controller: ApplicationAuthenticationController', function () {
             controller = $controller('ApplicationAuthenticationController', {
                 $location: $location,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,

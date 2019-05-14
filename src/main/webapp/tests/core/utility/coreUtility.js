@@ -77,3 +77,12 @@ var mockParameterModel = function($q, mockModel) {
         return model;
     };
 };
+
+var mockWindow = function() {
+    return {
+        location: {
+            href: '',
+            replace: function() {}
+        }
+    };
+}

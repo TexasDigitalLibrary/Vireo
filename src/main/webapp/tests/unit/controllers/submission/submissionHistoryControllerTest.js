@@ -3,7 +3,7 @@ describe('controller: SubmissionHistoryController', function () {
     var controller, location, q, scope, timeout, NgTableParams;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $q, $rootScope, $timeout, $window, SubmissionStates, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
+        inject(function ($controller, $location, $q, $rootScope, $timeout, SubmissionStates, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
             location = $location;
             q = $q;
             scope = $rootScope.$new();
@@ -16,7 +16,7 @@ describe('controller: SubmissionHistoryController', function () {
                 $location: $location,
                 $scope: scope,
                 $timeout: $timeout,
-                $window: $window,
+                $window: mockWindow(),
                 SubmissionStates: SubmissionStates,
                 ModalService: _ModalService_,
                 NgTableParams: mockNgTableParams,
