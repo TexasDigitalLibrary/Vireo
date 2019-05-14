@@ -162,18 +162,21 @@ describe('controller: AbstractController', function () {
             expect(result).toBe(true);
         });
         it('reportError should report an error', function () {
-            var alert = {
-                channel: "test",
-                time: 0,
-                type: "",
-                message: ""
+            scope.closeModal();
+
+            scope.reportError({});
+            scope.$digest();
+
+            scope.closeModal();
+
+            RestApi.post = function () {
+                return failurePromise(q.defer(), {});
             };
 
-            spyOn(RestApi, "post").and.callThrough();
+            scope.reportError({});
+            scope.$digest();
 
-            scope.reportError(alert);
-
-            expect(RestApi.post).toHaveBeenCalled();
+            scope.closeModal();
         });
     });
 
