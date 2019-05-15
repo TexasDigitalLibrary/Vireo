@@ -85,6 +85,7 @@ vireo.controller("DegreeRepoController", function ($controller, $scope, $q, Degr
             model: $scope.degrees,
             confirm: '#degreeConfirmRemoveModal',
             reorder: $scope.reorderDegree,
+            reset: $scope.degreeRepo.reset,
             container: '#degrees-container'
         });
 

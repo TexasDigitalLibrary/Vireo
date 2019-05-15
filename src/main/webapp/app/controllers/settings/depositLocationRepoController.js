@@ -60,7 +60,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
                                     "uri": uri
                                 });
                             });
-                        }                        
+                        }
                         isTestDepositing = false;
                     });
                 },
@@ -116,6 +116,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
             model: $scope.depositLocations,
             confirm: '#depositLocationConfirmRemoveModal',
             reorder: $scope.reorderDepositLocation,
+            reset: $scope.depositLocationRepo.reset,
             container: '#deposit-locations'
         });
 

@@ -536,6 +536,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
             model: $scope.controlledVocabularies,
             confirm: '#controlledVocabularyConfirmRemoveModal',
             reorder: $scope.reorderControlledVocabulary,
+            reset: $scope.controlledVocabularyRepo.reset,
             container: '#controlled-vocabularies'
         });
 

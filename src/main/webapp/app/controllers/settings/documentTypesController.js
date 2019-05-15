@@ -84,6 +84,7 @@ vireo.controller("DocumentTypesController", function($controller, $scope, Docume
             model: $scope.documentTypes,
             confirm: '#documentTypesConfirmRemoveModal',
             reorder: $scope.reorderDocumentTypes,
+            reset: $scope.documentTypeRepo.reset,
             container: '#document-types'
         });
 

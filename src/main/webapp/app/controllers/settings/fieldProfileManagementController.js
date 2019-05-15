@@ -127,11 +127,11 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 delete $scope.modalData.fieldPredicate;
             }
         };
-        
+
         $scope.mustCreateFieldPredicate = function () {
             return typeof $scope.modalData.fieldPredicate === 'string';
         };
-        
+
         $scope.canCreateFieldPredicate = function () {
             return $scope.mustCreateFieldPredicate() && $scope.modalData.fieldPredicate.length > 0;
         };
@@ -154,7 +154,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 }
             });
         };
-        
+
         $scope.createFieldProfile = function () {
             $scope.createFieldPredicate().then(function() {
                 WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData).then(function() {
@@ -216,6 +216,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             model: $scope.step.aggregateFieldProfiles,
             confirm: '#fieldProfilesConfirmRemoveModal-' + $scope.step.id,
             reorder: $scope.reorderFieldProfiles,
+            reset: $scope.fieldProfileRepo.reset,
             container: '#field-profiles'
         });
 

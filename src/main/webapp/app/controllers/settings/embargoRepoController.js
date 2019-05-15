@@ -100,6 +100,7 @@ vireo.controller("EmbargoRepoController", function ($controller, $scope, $q, Emb
             model: $scope.embargoes,
             confirm: '#embargoConfirmRemoveModal',
             reorder: $scope.reorderEmbargoDefault,
+            reset: $scope.embargoRepo.reset,
             sortLabel: $scope.sortLabel,
             container: '#embargoes'
         });
@@ -111,6 +112,7 @@ vireo.controller("EmbargoRepoController", function ($controller, $scope, $q, Emb
             model: $scope.embargoes,
             confirm: '#embargoConfirmRemoveModal',
             reorder: $scope.reorderEmbargoProquest,
+            reset: $scope.embargoRepo.reset,
             sortLabel: $scope.sortLabel,
             container: '#embargoes'
         });

@@ -20,7 +20,8 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
 				}
 			},
 
-			'reorder': function(src, dest) {}
+            'reorder': function(src, dest) {},
+            'reset': function() {}
 		};
 
 		if(typeof drag == 'object') {
@@ -30,18 +31,21 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
 			listener.model = drag.model;
 			listener.confirm.remove.modal = drag.confirm;
 			listener.reorder = drag.reorder;
+            listener.reset = drag.reset;
 		}
 		else {
 			console.log('ensure configured');
 		}
 
 		var startingObj;
+        var inbound;
 
 		var dragControls = {
 			getListener: function () {
 				return listener;
 			},
 			dragStart: function(event) {
+                inbound = true;
 				startingObj = event.source.sortableScope.modelValue[0];
 				listener.dragging = true;
 				listener.select(event.source.index);
@@ -68,8 +72,14 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
 					}
 				}
 				listener.dragging = false;
+
+                if (!inbound) {
+                    if (listener.reset) {
+                        listener.reset();
+                    }
+                }
 			},
-		    accept: function (sourceItemHandleScope, destSortableScope) {
+            accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
 		    	var currentElement = destSortableScope.element;
 		    	if(listener.dragging && currentElement[0].id == listener.trash.id) {
 		    		listener.trash.hover = true;
@@ -79,10 +89,15 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
 	     		else {
 	     			listener.trash.hover = false;
 	     		}
-		     	return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
+
+                inbound = sourceItemHandleScope.itemScope.sortableScope.$parent.$id === destSortableScope.$parent.$id;
+                if (inbound) {
+                    return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
+                }
+                return false;
 		    },
-		    orderChanged: function(event) {
-		    	if(!listener.trash.hover) {
+            orderChanged: function(event) {
+                if (inbound) {
 		    		var isSingleSorted = (listener.model.length == event.source.sortableScope.modelValue.length);
 		    		var src = event.source.index + 1;
 		    		var dest = event.dest.index + 1;
@@ -99,7 +114,7 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
 		    		}
 		    		listener.reorder(src, dest);
 		    	}
-		    },
+            },
             containerPositioning: 'relative',
 		    containment: drag.container
 		};

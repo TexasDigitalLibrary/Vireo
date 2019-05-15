@@ -103,6 +103,7 @@ vireo.controller("LanguagesController", function ($timeout, $controller, $q, $sc
             model: $scope.languages,
             confirm: '#languagesConfirmRemoveModal',
             reorder: $scope.reorderLanguages,
+            reset: $scope.languageRepo.reset,
             container: '#languages-container'
         });
 

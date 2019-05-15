@@ -105,6 +105,7 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
         model: $scope.step.aggregateNotes,
         confirm: '#notesConfirmRemoveModal-' + $scope.step.id,
         reorder: $scope.reorderNotes,
+        reset: $scope.noteRepo.reset,
         container: '#notes'
     });
 

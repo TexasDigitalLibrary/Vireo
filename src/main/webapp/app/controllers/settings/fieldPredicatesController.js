@@ -69,6 +69,7 @@ vireo.controller('FieldPredicatesController', function ($controller, $timeout, $
             model: $scope.fieldPredicates,
             confirm: '#fieldPredicateConfirmRemoveModal',
             reorder: null,
+            reset: $scope.fieldPredicateRepo.reset,
             container: '#field-predicates'
         });
 

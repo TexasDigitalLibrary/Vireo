@@ -71,6 +71,7 @@ vireo.controller("CustomActionSettingsController", function ($controller, $scope
                 model: $scope.customActions,
                 confirm: '#customActionConfirmRemoveModal',
                 reorder: $scope.reorderCustomAction,
+                reset: $scope.customActionRepo.reset,
                 container: '#custom-actions'
             });
 

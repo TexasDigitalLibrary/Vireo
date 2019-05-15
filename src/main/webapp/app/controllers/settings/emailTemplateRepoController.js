@@ -109,6 +109,7 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
             model: $scope.emailTemplates,
             confirm: '#emailTemplatesConfirmRemoveModal',
             reorder: $scope.reorderEmailTemplates,
+            reset: $scope.emailTemplateRepo.reset,
             container: '#email-templates'
         });
 

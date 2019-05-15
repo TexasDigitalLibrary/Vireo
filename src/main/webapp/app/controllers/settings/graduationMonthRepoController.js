@@ -110,6 +110,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 			model: $scope.graduationMonths,
 			confirm: '#graduationMonthConfirmRemoveModal',
 			reorder: $scope.reorderGraduationMonth,
+            reset: $scope.graduationMonthRepo.reset,
 			container: '#graduation-months'
 		});
 
