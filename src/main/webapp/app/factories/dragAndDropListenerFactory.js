@@ -1,126 +1,126 @@
 vireo.factory('DragAndDropListenerFactory', function(ModalService) {
 
-	this.buildDragControls = function(drag) {
+    this.buildDragControls = function(drag) {
 
-		var listener = {
+        var listener = {
 
-			'trash': {
-				hover: false,
-				element: null,
-				id: ''
-			},
+            'trash': {
+                hover: false,
+                element: null,
+                id: ''
+            },
 
-			'select': null,
+            'select': null,
 
-			'dragging': null,
+            'dragging': null,
 
-			'confirm': {
-				'remove': {
-					'modal': ''
-				}
-			},
+            'confirm': {
+                'remove': {
+                    'modal': ''
+                }
+            },
 
             'reorder': function(src, dest) {},
             'reset': function() {}
-		};
+        };
 
-		if(typeof drag == 'object') {
-			listener.trash.id = drag.trashId;
-			listener.dragging = drag.dragging;
-			listener.select = drag.select;
-			listener.model = drag.model;
-			listener.confirm.remove.modal = drag.confirm;
-			listener.reorder = drag.reorder;
+        if(typeof drag == 'object') {
+            listener.trash.id = drag.trashId;
+            listener.dragging = drag.dragging;
+            listener.select = drag.select;
+            listener.model = drag.model;
+            listener.confirm.remove.modal = drag.confirm;
+            listener.reorder = drag.reorder;
             listener.reset = drag.reset;
-		}
-		else {
-			console.log('ensure configured');
-		}
+        }
+        else {
+            console.log('ensure configured');
+        }
 
-		var startingObj;
+        var startingObj;
         var inbound;
 
-		var dragControls = {
-			getListener: function () {
-				return listener;
-			},
-			dragStart: function(event) {
+        var dragControls = {
+            getListener: function () {
+                return listener;
+            },
+            dragStart: function(event) {
                 inbound = true;
-				startingObj = event.source.sortableScope.modelValue[0];
-				listener.dragging = true;
-				listener.select(event.source.index);
-				angular.element('.as-sortable-drag').css('display', 'none');
-			},
-			dragMove: function(event) {
-				var dragging = angular.element('.as-sortable-drag');
-				dragging.css('display', 'block');
+                startingObj = event.source.sortableScope.modelValue[0];
+                listener.dragging = true;
+                listener.select(event.source.index);
+                angular.element('.as-sortable-drag').css('display', 'none');
+            },
+            dragMove: function(event) {
+                var dragging = angular.element('.as-sortable-drag');
+                dragging.css('display', 'block');
                 dragging.css('margin-top', angular.element(drag.container).offset().top - angular.element('html').scrollTop());
                 dragging.css('margin-left', '250px');
-				if(listener.trash.hover) {
-					listener.trash.hover = false;
-					listener.trash.element.removeClass('dragging');
-				}
-			},
-			dragEnd: function(event) {
-				if(listener.dragging) {
-					if(listener.trash.hover) {
-						ModalService.openModal(listener.confirm.remove.modal);
-						listener.trash.element.removeClass('dragging');
-					}
-					else {
-						// do nothing
-					}
-				}
-				listener.dragging = false;
+                if(listener.trash.hover) {
+                    listener.trash.hover = false;
+                    listener.trash.element.removeClass('dragging');
+                }
+            },
+            dragEnd: function(event) {
+                if(listener.dragging) {
+                    if(listener.trash.hover) {
+                        ModalService.openModal(listener.confirm.remove.modal);
+                        listener.trash.element.removeClass('dragging');
+                    }
+                    else {
+                        // do nothing
+                    }
+                }
+                listener.dragging = false;
 
                 if (!inbound) {
                     if (listener.reset) {
                         listener.reset();
                     }
                 }
-			},
+            },
             accept: function (sourceItemHandleScope, destSortableScope, destItemScope) {
-		    	var currentElement = destSortableScope.element;
-		    	if(listener.dragging && currentElement[0].id == listener.trash.id) {
-		    		listener.trash.hover = true;
-		    		listener.trash.element = currentElement;
-		    		listener.trash.element.addClass('dragging');
-	     		}
-	     		else {
-	     			listener.trash.hover = false;
-	     		}
+                var currentElement = destSortableScope.element;
+                if(listener.dragging && currentElement[0].id == listener.trash.id) {
+                    listener.trash.hover = true;
+                    listener.trash.element = currentElement;
+                    listener.trash.element.addClass('dragging');
+                }
+                else {
+                    listener.trash.hover = false;
+                }
 
                 inbound = sourceItemHandleScope.itemScope.sortableScope.$parent.$id === destSortableScope.$parent.$id;
                 if (inbound) {
                     return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
                 }
                 return false;
-		    },
+            },
             orderChanged: function(event) {
                 if (inbound) {
-		    		var isSingleSorted = (listener.model.length == event.source.sortableScope.modelValue.length);
-		    		var src = event.source.index + 1;
-		    		var dest = event.dest.index + 1;
-		    		if(!isSingleSorted) {
-		    			var offset = 0;
-			    		for(var i in listener.model) {
-			    			if(listener.model[i].id == startingObj.id) {
-			    				offset = i;
-			    				break;
-			    			}
-			    		}
-			    		src = listener.model[parseInt(event.source.index) + parseInt(offset)].position;
-			    		dest = listener.model[parseInt(event.dest.index) + parseInt(offset)].position;
-		    		}
-		    		listener.reorder(src, dest);
-		    	}
+                    var isSingleSorted = (listener.model.length == event.source.sortableScope.modelValue.length);
+                    var src = event.source.index + 1;
+                    var dest = event.dest.index + 1;
+                    if(!isSingleSorted) {
+                        var offset = 0;
+                        for(var i in listener.model) {
+                            if(listener.model[i].id == startingObj.id) {
+                                offset = i;
+                                break;
+                            }
+                        }
+                        src = listener.model[parseInt(event.source.index) + parseInt(offset)].position;
+                        dest = listener.model[parseInt(event.dest.index) + parseInt(offset)].position;
+                    }
+                    listener.reorder(src, dest);
+                }
             },
             containerPositioning: 'relative',
-		    containment: drag.container
-		};
+            containment: drag.container
+        };
 
-		return dragControls;
-	};
+        return dragControls;
+    };
 
-	return this;
+    return this;
 });
