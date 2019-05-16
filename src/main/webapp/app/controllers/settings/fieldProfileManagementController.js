@@ -216,7 +216,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
             model: $scope.step.aggregateFieldProfiles,
             confirm: '#fieldProfilesConfirmRemoveModal-' + $scope.step.id,
             reorder: $scope.reorderFieldProfiles,
-            reset: $scope.fieldProfileRepo.reset,
+            reset: null,
             container: '#field-profiles'
         });
 
