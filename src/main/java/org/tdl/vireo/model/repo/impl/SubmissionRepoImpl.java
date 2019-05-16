@@ -433,6 +433,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         StringBuilder sqlOrderBysBuilder = new StringBuilder();
 
         ArrayList<StringBuilder> sqlWhereBuilderList;
+        ArrayList<StringBuilder> sqlAllColumnsWhereBuilderList = new ArrayList<StringBuilder>();
 
         int n = 0;
 
@@ -519,7 +520,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : allColumnSearchFilters) {
                         sqlWhereBuilder = new StringBuilder();
                         sqlWhereBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     n++;
@@ -565,7 +566,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : allColumnSearchFilters) {
                         sqlWhereBuilder = new StringBuilder();
                         sqlWhereBuilder.append("LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -598,7 +599,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : allColumnSearchFilters) {
                         sqlWhereBuilder = new StringBuilder();
                         sqlWhereBuilder.append("LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -631,7 +632,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : allColumnSearchFilters) {
                         sqlWhereBuilder = new StringBuilder();
                         sqlWhereBuilder.append("LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -662,7 +663,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : allColumnSearchFilters) {
                         sqlWhereBuilder = new StringBuilder();
                         sqlWhereBuilder.append("LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -699,7 +700,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : allColumnSearchFilters) {
                         sqlWhereBuilder = new StringBuilder();
                         sqlWhereBuilder.append("LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -836,13 +837,26 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         // build WHERE query such that OR is used for conditions inside a column and AND is used across each different column.
         sqlWhereBuilder = new StringBuilder();
-        if (sqlColumnsBuilders.size() > 0 || sqlWheresExcludeBuilder.length() > 0) {
+        if (sqlColumnsBuilders.size() > 0 || sqlAllColumnsWhereBuilderList.size() > 0 || sqlWheresExcludeBuilder.length() > 0) {
             sqlWhereBuilder.append("\nWHERE ");
 
             for (Entry<Long, ArrayList<StringBuilder>> list : sqlColumnsBuilders.entrySet()) {
                 sqlWhereBuilder.append("(");
 
                 for (StringBuilder builder : list.getValue()) {
+                    sqlWhereBuilder.append("(").append(builder).append(") OR ");
+                }
+
+                // remove last " OR".
+                sqlWhereBuilder.setLength(sqlWhereBuilder.length() - 4);
+
+                sqlWhereBuilder.append(") AND ");
+            }
+
+            if (sqlAllColumnsWhereBuilderList.size() > 0) {
+                sqlWhereBuilder.append("(");
+
+                for (StringBuilder builder : sqlAllColumnsWhereBuilderList) {
                     sqlWhereBuilder.append("(").append(builder).append(") OR ");
                 }
 
