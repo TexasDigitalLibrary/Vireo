@@ -30,7 +30,6 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
             listener.model = drag.model;
             listener.confirm.remove.modal = drag.confirm;
             listener.reorder = drag.reorder;
-            listener.container = drag.container;
         }
         else {
             console.log('ensure configured');
