@@ -75,6 +75,7 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
                     }
                 }
                 listener.dragging = false;
+                listener.select(-1);
             },
             accept: function (sourceItemHandleScope, destSortableScope) {
                 var currentElement = destSortableScope.element;
