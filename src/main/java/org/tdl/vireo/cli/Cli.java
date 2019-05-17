@@ -126,7 +126,15 @@ public class Cli implements CommandLineRunner {
                     }
                     for (int i = 0; i < acct; i++) {
                         String enc_pwd = passwordEncoder.encode("password");
-                        User submitter = userRepo.create("test" + (i + 1) + "@example.com", "test", "example", enc_pwd, Role.ROLE_STUDENT);
+                        User submitter = userRepo.create("anonymous" + (i + 1) + "@example.com", "anonymous", "example", enc_pwd, Role.ROLE_ANONYMOUS);
+                        userRepo.saveAndFlush(submitter);
+                        submitter = userRepo.create("student" + (i + 1) + "@example.com", "student", "example", enc_pwd, Role.ROLE_STUDENT);
+                        userRepo.saveAndFlush(submitter);
+                        submitter = userRepo.create("reviewer" + (i + 1) + "@example.com", "reviewer", "example", enc_pwd, Role.ROLE_REVIEWER);
+                        userRepo.saveAndFlush(submitter);
+                        submitter = userRepo.create("manager" + (i + 1) + "@example.com", "", "manager", enc_pwd, Role.ROLE_MANAGER);
+                        userRepo.saveAndFlush(submitter);
+                        submitter = userRepo.create("admin" + (i + 1) + "@example.com", "", "admin", enc_pwd, Role.ROLE_ADMIN);
                         userRepo.saveAndFlush(submitter);
                     }
                     break;
