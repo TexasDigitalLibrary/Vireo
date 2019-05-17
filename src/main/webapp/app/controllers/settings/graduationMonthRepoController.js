@@ -22,7 +22,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 
 	var getMonthIndex = function(month) {
 		return months.indexOf(month);
-	}
+	};
 
 	$scope.toMonthString = function(month) {
 		return months[month];
