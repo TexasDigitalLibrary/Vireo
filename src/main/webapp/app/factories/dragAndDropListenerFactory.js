@@ -64,7 +64,7 @@ vireo.factory('DragAndDropListenerFactory', function($q, ModalService) {
                 angular.element('.as-sortable-drag').css('display', 'none');
             },
             dragMove: function(movement, containment, event) {
-                inbounds = angular.element(event.target).is('ol');
+                inbounds = angular.element(event.target).parents('.list-wrapper').length > 0;
                 var dragging = angular.element('.as-sortable-drag');
                 dragging.css('display', 'block');
                 dragging.css('margin-top', angular.element(drag.container).offset().top - angular.element('html').scrollTop());
