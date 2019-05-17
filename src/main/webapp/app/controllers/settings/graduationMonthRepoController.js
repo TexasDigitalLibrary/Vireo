@@ -73,7 +73,9 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		$scope.selectGraduationMonth = function(index) {
 			$scope.resetMonthOptions();
 			$scope.modalData = $scope.graduationMonths[index];
-			$scope.modalData.month = $scope.modalData.month.toString();
+			if ($scope.modalData) {
+				$scope.modalData.month = $scope.modalData.month.toString();
+			}
 		};
 
 		$scope.editGraduationMonth = function(index) {
@@ -90,7 +92,7 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		};
 
 		$scope.reorderGraduationMonth = function(src, dest) {
-	    	GraduationMonthRepo.reorder(src, dest);
+	    	return GraduationMonthRepo.reorder(src, dest);
 		};
 
 		$scope.sortGraduationMonths = function(column) {

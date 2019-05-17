@@ -1,4 +1,4 @@
-vireo.factory('DragAndDropListenerFactory', function(ModalService) {
+vireo.factory('DragAndDropListenerFactory', function($q, ModalService) {
 
     this.buildDragControls = function(drag) {
 
@@ -20,7 +20,11 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
                 }
             },
 
-            'reorder': function(src, dest) {}
+            'reorder': function(src, dest) {
+                return $q(function(resolve) {
+                    resolve();
+                });
+            }
         };
 
         if(typeof drag == 'object') {
@@ -110,7 +114,12 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
                     angular.forEach(listener.model, function(model) {
                         model.updateRequested = true;
                     });
-                    listener.reorder(src, dest);
+                    listener.reorder(src, dest).then(function(res) {
+                        var message = angular.fromJson(res.body);
+                        if (message.meta.status !== "SUCCESS") {
+                            angular.extend(listener.model, original);
+                        }
+                    });
                 }
             },
             containerPositioning: 'relative',

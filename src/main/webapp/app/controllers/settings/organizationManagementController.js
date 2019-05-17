@@ -103,12 +103,12 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
 
         $scope.reorderWorkflowStepUp = function (workflowStepID) {
             AccordionService.closeAll();
-            OrganizationRepo.reorderWorkflowStep("up", workflowStepID);
+            return OrganizationRepo.reorderWorkflowSteps("up", workflowStepID);
         };
 
         $scope.reorderWorkflowStepDown = function (workflowStepID) {
             AccordionService.closeAll();
-            OrganizationRepo.reorderWorkflowStep("down", workflowStepID);
+            return OrganizationRepo.reorderWorkflowSteps("down", workflowStepID);
         };
 
         $scope.openConfirmDeleteModal = function (step) {
