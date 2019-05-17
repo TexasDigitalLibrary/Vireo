@@ -39,12 +39,12 @@ angular.module('mock.workflowStepRepo', []).service('WorkflowStepRepo', function
         return payloadPromise($q.defer(), payload);
     };
 
-    repo.reorderFieldProfile = function (workflowStep, src, dest) {
+    repo.reorderFieldProfiles = function (workflowStep, src, dest) {
         var payload = {};
         return payloadPromise($q.defer(), payload);
     };
 
-    repo.reorderNote = function (workflowStep, src, dest) {
+    repo.reorderNotes = function (workflowStep, src, dest) {
         var payload = {};
         return payloadPromise($q.defer(), payload);
     };

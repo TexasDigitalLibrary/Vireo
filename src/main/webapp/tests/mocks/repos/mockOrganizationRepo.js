@@ -78,7 +78,7 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
         return found;
     };
 
-    repo.reorderWorkflowStep = function (upOrDown, workflowStepID) {
+    repo.reorderWorkflowSteps = function (upOrDown, workflowStepID) {
         var payload = {};
         return payloadPromise($q.defer(), payload);
     };

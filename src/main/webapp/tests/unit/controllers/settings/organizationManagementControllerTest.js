@@ -207,21 +207,21 @@ describe('controller: OrganizationManagementController', function () {
         });
         it('reorderWorkflowStepDown should reorder a workflow step', function () {
             spyOn(AccordionService, "closeAll");
-            spyOn(OrganizationRepo, "reorderWorkflowStep");
+            spyOn(OrganizationRepo, "reorderWorkflowSteps");
 
             scope.reorderWorkflowStepDown(1);
 
             expect(AccordionService.closeAll).toHaveBeenCalled();
-            expect(OrganizationRepo.reorderWorkflowStep).toHaveBeenCalled();
+            expect(OrganizationRepo.reorderWorkflowSteps).toHaveBeenCalled();
         });
         it('reorderWorkflowStepUp should reorder a workflow step', function () {
             spyOn(AccordionService, "closeAll");
-            spyOn(OrganizationRepo, "reorderWorkflowStep");
+            spyOn(OrganizationRepo, "reorderWorkflowSteps");
 
             scope.reorderWorkflowStepUp(1);
 
             expect(AccordionService.closeAll).toHaveBeenCalled();
-            expect(OrganizationRepo.reorderWorkflowStep).toHaveBeenCalled();
+            expect(OrganizationRepo.reorderWorkflowSteps).toHaveBeenCalled();
         });
         // FIXME: this test cannot be performed because OrganizationManagementController.setSelectedOrganization() is not defined.
         /*
