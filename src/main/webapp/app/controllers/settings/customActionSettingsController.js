@@ -60,7 +60,7 @@ vireo.controller("CustomActionSettingsController", function ($controller, $scope
         };
 
         $scope.reorderCustomAction = function (src, dest) {
-            CustomActionDefinitionRepo.reorder(src, dest);
+            return CustomActionDefinitionRepo.reorder(src, dest);
         };
 
         $scope.dragControlListeners =

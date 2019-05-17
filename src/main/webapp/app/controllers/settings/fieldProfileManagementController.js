@@ -194,7 +194,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         };
 
         $scope.reorderFieldProfiles = function (src, dest) {
-            WorkflowStepRepo.reorderFieldProfile($scope.step, src, dest);
+            return WorkflowStepRepo.reorderFieldProfiles($scope.step, src, dest);
         };
 
         $scope.isEditable = function (fieldProfile) {

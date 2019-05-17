@@ -162,11 +162,11 @@ describe('controller: NoteManagementController', function () {
             expect(WorkflowStepRepo.removeNote).toHaveBeenCalled();
         });
         it('reorderNotes should reorder a note', function () {
-            spyOn(WorkflowStepRepo, "reorderNote");
+            spyOn(WorkflowStepRepo, "reorderNotes");
 
             scope.reorderNotes("a", "b");
 
-            expect(WorkflowStepRepo.reorderNote).toHaveBeenCalled();
+            expect(WorkflowStepRepo.reorderNotes).toHaveBeenCalled();
         });
         it('resetNotes should reset the note', function () {
             var note = new mockNote(q);

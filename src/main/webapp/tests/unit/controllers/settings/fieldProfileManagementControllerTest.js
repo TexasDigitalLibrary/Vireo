@@ -315,11 +315,11 @@ describe('controller: FieldProfileManagementController', function () {
             expect(WorkflowStepRepo.removeFieldProfile).toHaveBeenCalled();
         });
         it('reorderFieldProfiles should reorder a field profile', function () {
-            spyOn(WorkflowStepRepo, "reorderFieldProfile");
+            spyOn(WorkflowStepRepo, "reorderFieldProfiles");
 
             scope.reorderFieldProfiles("a", "b");
 
-            expect(WorkflowStepRepo.reorderFieldProfile).toHaveBeenCalled();
+            expect(WorkflowStepRepo.reorderFieldProfiles).toHaveBeenCalled();
         });
         it('resetFieldProfiles should reset the field profile', function () {
             var fieldProfile = new mockFieldProfile(q);
