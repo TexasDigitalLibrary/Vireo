@@ -72,10 +72,11 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
                     if(listener.trash.hover) {
                         ModalService.openModal(listener.confirm.remove.modal);
                         listener.trash.element.removeClass('dragging');
+                    } else {
+                        listener.select(-1);
                     }
                 }
                 listener.dragging = false;
-                listener.select(-1);
             },
             accept: function (sourceItemHandleScope, destSortableScope) {
                 var currentElement = destSortableScope.element;
