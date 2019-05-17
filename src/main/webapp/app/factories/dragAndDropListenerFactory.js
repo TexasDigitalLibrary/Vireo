@@ -37,15 +37,17 @@ vireo.factory('DragAndDropListenerFactory', function(ModalService) {
 
         var startingObj;
 
-        var inbounds = true;
+        var inbounds;
 
-        var original = angular.copy(listener.model);
+        var original;
 
         var dragControls = {
             getListener: function () {
                 return listener;
             },
             dragStart: function(event) {
+                inbounds = true;
+                original = angular.copy(listener.model);
                 startingObj = event.source.sortableScope.modelValue[0];
                 listener.dragging = true;
                 listener.select(event.source.index);
