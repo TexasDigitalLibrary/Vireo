@@ -51,7 +51,7 @@
                 <div class="form-group public-private">
 
                     <div class="radio">
-                    <label><input type="radio" name="optradio" value="public" ng-model="box.batchCommentEmail.commentVisibility">Comment is public</label>
+                    <label><input type="radio" name="optradio" value="public" ng-model="box.batchCommentEmail.commentVisibility" ng-click="box.batchCommentEmail.sendEmailToRecipient=true">Comment is public</label>
                     </div>
 
                     <div class="recipient-options email-element" ng-class="{'email-active': box.batchCommentEmail.commentVisibility==='public'}">
