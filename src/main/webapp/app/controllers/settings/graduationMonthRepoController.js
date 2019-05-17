@@ -91,7 +91,6 @@ vireo.controller("GraduationMonthRepoController", function ($controller, $scope,
 		};
 
 		$scope.removeGraduationMonth = function() {
-			$scope.modalData.month = getMonthIndex($scope.modalData.month);
 			$scope.modalData.delete();
 		};
 
