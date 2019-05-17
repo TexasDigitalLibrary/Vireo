@@ -3,7 +3,7 @@ describe('controller: EmailWorkflowRulesController', function () {
     var controller, q, scope, OrganizationRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _EmailTemplateRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _SubmissionStatusRepo_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _EmailTemplateRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _SubmissionStatusRepo_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -15,7 +15,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             controller = $controller('EmailWorkflowRulesController', {
                 $q: q,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 EmailTemplateRepo: _EmailTemplateRepo_,
                 ModalService: _ModalService_,
                 OrganizationRepo: _OrganizationRepo_,
@@ -123,7 +123,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             scope.$digest();
 
             scope.buildRecipients();
-            
+
             expect(typeof scope.recipients).toBe("object");
         });
         it('cancelDeleteEmailWorkflowRule should close a modal', function () {

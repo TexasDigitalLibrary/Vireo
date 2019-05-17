@@ -3,7 +3,7 @@ describe('controller: StudentSubmissionController', function () {
     var controller, q, location, routeParams, scope, timeout;
 
     var initializeController = function(settings) {
-        inject(function ($anchorScroll, $controller, $location, $q, $rootScope, $routeParams, $timeout, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
+        inject(function ($anchorScroll, $controller, $location, $q, $rootScope, $routeParams, $timeout, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
             location = $location;
             q = $q;
             routeParams = $routeParams;
@@ -23,7 +23,7 @@ describe('controller: StudentSubmissionController', function () {
                 $routeParams: $routeParams,
                 $scope: scope,
                 $timeout: $timeout,
-                $window: $window,
+                $window: mockWindow(),
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,

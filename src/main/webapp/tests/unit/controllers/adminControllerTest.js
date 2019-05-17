@@ -3,7 +3,7 @@ describe('controller: AdminController', function () {
     var controller, scope, location;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $location, $rootScope, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             location = $location;
             scope = $rootScope.$new();
 
@@ -13,7 +13,7 @@ describe('controller: AdminController', function () {
             controller = $controller('AdminController', {
                 $scope: scope,
                 $location: $location,
-                $window: $window,
+                $window: mockWindow(),
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,

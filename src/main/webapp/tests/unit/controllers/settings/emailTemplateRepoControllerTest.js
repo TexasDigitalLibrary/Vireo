@@ -3,7 +3,7 @@ describe('controller: EmailTemplateRepoController', function () {
     var controller, q, scope, EmailTemplateRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _DragAndDropListenerFactory_, _EmailTemplateRepo_, _FieldPredicateRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _DragAndDropListenerFactory_, _EmailTemplateRepo_, _FieldPredicateRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -15,7 +15,7 @@ describe('controller: EmailTemplateRepoController', function () {
             controller = $controller('EmailTemplateRepoController', {
                 $q: q,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 EmailTemplateRepo: _EmailTemplateRepo_,
                 FieldPredicateRepo: _FieldPredicateRepo_,

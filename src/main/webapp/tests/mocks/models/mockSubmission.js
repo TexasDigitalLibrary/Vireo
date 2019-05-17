@@ -253,7 +253,7 @@ var mockSubmission = function($q) {
     model.updateAdvisorApproval = function (approval) {
         var payload = {
             Submission: angular.copy(model)
-        }
+        };
         return payloadPromise($q.defer(), payload);
     };
 

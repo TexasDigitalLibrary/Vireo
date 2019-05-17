@@ -3,7 +3,7 @@ describe('controller: LanguagesController', function () {
     var controller, q, scope, LanguageRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $timeout, $window, _DragAndDropListenerFactory_, _LanguageRepo_, _StorageService_, _ModalService_, _RestApi_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, $timeout, _DragAndDropListenerFactory_, _LanguageRepo_, _StorageService_, _ModalService_, _RestApi_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -16,7 +16,7 @@ describe('controller: LanguagesController', function () {
                 $q: q,
                 $scope: scope,
                 $timeout: $timeout,
-                $window: $window,
+                $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 LanguageRepo: _LanguageRepo_,
                 ModalService: _ModalService_,
