@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -201,6 +202,31 @@ public class SubmissionHelperUtility {
 
     public String getEmbargoApprovalDateString() {
         return submission.getApproveEmbargoDate() != null ? dateFormat.format(submission.getApproveEmbargoDate().getTime()) : "";
+    }
+
+    public String getFormattedCommitteeApprovedEmbargoLiftDateString() {
+        Calendar appEmbDate = submission.getApproveEmbargoDate();
+        if(appEmbDate==null){
+            return "";
+        }
+        Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
+        int monthIncr = 0;
+        if(defaultEmbargo.isPresent()){
+            String defEmbStr = defaultEmbargo.get().getValue();
+            if(defEmbStr==null){
+            }else if(defEmbStr.equals("None")){
+            }else if(defEmbStr.equals("Journal Hold")){
+                monthIncr = 12;
+            }else if(defEmbStr.equals("Patent Hold")){
+                monthIncr = 24;
+            }else if(defEmbStr.equals("Other Embargo Period")){
+                monthIncr = 24;//max?
+            }
+        }
+        if(monthIncr>0){
+            appEmbDate.add(Calendar.MONTH,monthIncr);
+        }
+        return dateFormat.format(appEmbDate.getTime());
     }
 
     public String getAdvisorApprovalDateString() {
@@ -557,14 +583,10 @@ public class SubmissionHelperUtility {
     }
 
     public int getEmbargoCode() {
-
         int embargoCode = 0;
-
         Optional<FieldValue> proquestEmbargo = getFirstFieldValueByPredicateValue("proquest_embargos");
         Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
-
         Optional<FieldValue> embargo = proquestEmbargo.isPresent() ? proquestEmbargo : defaultEmbargo.isPresent() ? defaultEmbargo : Optional.empty();
-
         if (embargo.isPresent()) {
             String duration = embargo.get().getIdentifier();
             if (duration != null) {
