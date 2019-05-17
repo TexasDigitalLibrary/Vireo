@@ -45,6 +45,12 @@ vireo.factory('DragAndDropListenerFactory', function($q, ModalService) {
 
         var original;
 
+        var updateRequest = function() {
+            angular.forEach(listener.model, function(model) {
+                model.updateRequested = true;
+            });
+        };
+
         var dragControls = {
             getListener: function () {
                 return listener;
@@ -74,6 +80,7 @@ vireo.factory('DragAndDropListenerFactory', function($q, ModalService) {
                         angular.extend(listener.model, original);
                     }
                     if(listener.trash.hover) {
+                        updateRequest();
                         ModalService.openModal(listener.confirm.remove.modal);
                         listener.trash.element.removeClass('dragging');
                     } else {
@@ -111,9 +118,7 @@ vireo.factory('DragAndDropListenerFactory', function($q, ModalService) {
                         src = listener.model[parseInt(event.source.index) + parseInt(offset)].position;
                         dest = listener.model[parseInt(event.dest.index) + parseInt(offset)].position;
                     }
-                    angular.forEach(listener.model, function(model) {
-                        model.updateRequested = true;
-                    });
+                    updateRequest();
                     listener.reorder(src, dest).then(function(res) {
                         var message = angular.fromJson(res.body);
                         if (message.meta.status !== "SUCCESS") {
