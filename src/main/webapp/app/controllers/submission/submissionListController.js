@@ -164,7 +164,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 data: "Submitter"
             })] : [];
             batchCommentEmail.ccRecipientEmails = [];
-            batchCommentEmail.sendEmailToRecipient = (userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
+            batchCommentEmail.sendEmailToRecipient = (batchCommentEmail.commentVisibility === "public" || userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
             batchCommentEmail.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default === "true";
             batchCommentEmail.subject = "";
             batchCommentEmail.message = "";

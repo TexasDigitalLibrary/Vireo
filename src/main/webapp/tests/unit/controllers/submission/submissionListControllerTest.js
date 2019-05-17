@@ -721,12 +721,14 @@ describe('controller: SubmissionListController', function () {
             scope.advancedfeaturesBox.batchCommentEmail.commentVisibility = "public";
 
             response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(true);
+
+            scope.advancedfeaturesBox.batchCommentEmail.sendEmailToRecipient = false;
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
             expect(response).toBe(false);
 
             scope.advancedfeaturesBox.batchCommentEmail.sendEmailToRecipient = true;
-
-            response = scope.advancedfeaturesBox.disableAddBatchComment();
-            expect(response).toBe(true);
 
             scope.advancedfeaturesBox.batchCommentEmail.recipientEmails.push("example@localhost");
 
