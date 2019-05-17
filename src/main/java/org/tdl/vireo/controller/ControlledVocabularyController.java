@@ -110,7 +110,7 @@ public class ControlledVocabularyController {
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/update", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
-    public ApiResponse updateControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {        
+    public ApiResponse updateControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         String name = controlledVocabulary.getName();
         Long id = controlledVocabulary.getId();
         controlledVocabulary = controlledVocabularyRepo.findOne(id);
@@ -187,7 +187,7 @@ public class ControlledVocabularyController {
         List<List<Object>> rows = new ArrayList<List<Object>>();
         cv.getDictionary().forEach(vocabularyWord -> {
             List<Object> row = new ArrayList<Object>();
-            VocabularyWord actualVocabularyWord = (VocabularyWord) vocabularyWord;
+            VocabularyWord actualVocabularyWord = vocabularyWord;
             row.add(actualVocabularyWord.getName());
             row.add(actualVocabularyWord.getDefinition());
             row.add(actualVocabularyWord.getIdentifier());
@@ -256,7 +256,7 @@ public class ControlledVocabularyController {
     @RequestMapping(value = "/import/{name}")
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse importControlledVocabulary(@PathVariable String name) {
-        logger.info("Inporting controlled vocabulary " + name);
+        logger.info("Importing controlled vocabulary " + name);
         ControlledVocabulary controlledVocabulary = controlledVocabularyRepo.findByName(name);
         ControlledVocabularyCache cvCache = controlledVocabularyCachingService.getControlledVocabularyCache(controlledVocabulary.getName());
         logger.info("Comparing controlled vocabulary " + name);
@@ -270,6 +270,10 @@ public class ControlledVocabularyController {
             updatedVocabularyWord.setIdentifier(updatingVocabularyWord[1].getIdentifier());
             updatedVocabularyWord.setContacts(updatingVocabularyWord[1].getContacts());
             updatedVocabularyWord = vocabularyWordRepo.save(updatedVocabularyWord);
+        }
+        for (VocabularyWord removedVocabularyWord : cvCache.getRemovedVocabularyWords()) {
+            removeVocabularyWord(controlledVocabulary.getId(), removedVocabularyWord.getId());
+            controlledVocabulary = controlledVocabularyRepo.findByName(name);
         }
         ControlledVocabulary savedControlledVocabulary = controlledVocabularyRepo.update(controlledVocabulary);
         controlledVocabularyCachingService.removeControlledVocabularyCache(controlledVocabulary.getName());
@@ -333,8 +337,11 @@ public class ControlledVocabularyController {
         List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
         List<VocabularyWord> repeatedWords = new ArrayList<VocabularyWord>();
         List<VocabularyWord[]> updatingWords = new ArrayList<VocabularyWord[]>();
+        List<VocabularyWord> removedWords = new ArrayList<VocabularyWord>();
 
         List<VocabularyWord> words = controlledVocabulary.getDictionary();
+
+        List<String> importedNames = new ArrayList<String>();
 
         Boolean headerPass = true;
 
@@ -346,6 +353,8 @@ public class ControlledVocabularyController {
             }
 
             VocabularyWord currentVocabularyWord = new VocabularyWord(record.get("name"), record.get("definition"), record.get("identifier"), new ArrayList<String>(Arrays.asList(record.get("contacts").split(","))));
+
+            importedNames.add(currentVocabularyWord.getName());
 
             boolean isRepeat = false;
             for (VocabularyWord newWord : newWords) {
@@ -403,15 +412,23 @@ public class ControlledVocabularyController {
             }
         }
 
+        for (VocabularyWord existingVocabularyWord : words) {
+            if (!importedNames.contains(existingVocabularyWord.getName())) {
+                removedWords.add(existingVocabularyWord);
+            }
+        }
+
         Map<String, Object> wordsMap = new HashMap<String, Object>();
         wordsMap.put("new", newWords);
         wordsMap.put("repeats", repeatedWords);
         wordsMap.put("updating", updatingWords);
+        wordsMap.put("removed", removedWords);
 
         ControlledVocabularyCache cvCache = new ControlledVocabularyCache(new Date().getTime(), controlledVocabulary.getName());
         cvCache.setNewVocabularyWords(newWords);
         cvCache.setDuplicateVocabularyWords(repeatedWords);
         cvCache.setUpdatingVocabularyWords(updatingWords);
+        cvCache.setRemovedVocabularyWords(removedWords);
         controlledVocabularyCachingService.addControlledVocabularyCache(cvCache);
 
         return wordsMap;
