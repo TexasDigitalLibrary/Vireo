@@ -27,7 +27,7 @@
   </div>
 
   <div class="list-wrapper">
-    <ol data-as-sortable="listeners" data-ng-model="scopeValue">
+    <ol class="list-dragdrop" data-as-sortable="listeners" data-ng-model="scopeValue">
       <li data-ng-repeat="item in scopeValue | filter:textFilterValue | filter:passiveFilter" data-as-sortable-item>
         <div data-as-sortable-item-handle>
           <span ng-include src="itemView" draggable="true"></span>
