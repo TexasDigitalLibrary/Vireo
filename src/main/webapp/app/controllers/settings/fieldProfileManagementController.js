@@ -166,7 +166,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         $scope.selectFieldProfile = function (index) {
             var fieldProfile = $scope.step.aggregateFieldProfiles[index];
             resetModalData(fieldProfile);
-            if ($scope.modalData.fieldPredicate.documentTypePredicate) {
+            if ($scope.modalData && $scope.modalData.fieldPredicate && $scope.modalData.fieldPredicate.documentTypePredicate) {
                 angular.forEach($scope.documentTypes, function (documentType) {
                     if (documentType.fieldPredicate.id == $scope.modalData.fieldPredicate.id) {
                         angular.extend($scope.documentData.documentType, documentType);
