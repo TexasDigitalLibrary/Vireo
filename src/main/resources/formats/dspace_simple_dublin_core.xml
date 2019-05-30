@@ -74,8 +74,8 @@
 		</th:block>
 		
 		<!-- dc.description.provenance = Committee Embargo Approval Date -->
-		<th:block th:if="${ EMBARGO_APPROVAL_DATE != null }">
-       		<dcvalue element="description" qualifier="provenance" th:text="${ 'The committee advisor approved the embargo selection for this ' + SUBMISSION_TYPE+ ' on '+ FORMATTED_EMBARGO_APPROVAL_DATE +'.' }">               
+		<th:block th:if="${ COMMITTEE_EMBARGO_APPROVAL_DATE != null }">
+       		<dcvalue element="description" qualifier="provenance" th:text="${ 'The committee advisor approved the embargo selection for this ' + SUBMISSION_TYPE+ ' on '+ FORMATTED_COMMITTEE_EMBARGO_APPROVAL_DATE +'.' }">               
 			</dcvalue>
 		</th:block>
 		

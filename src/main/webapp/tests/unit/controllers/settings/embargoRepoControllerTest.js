@@ -3,7 +3,7 @@ describe('controller: EmbargoRepoController', function () {
     var controller, q, scope, EmbargoRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $filter, $q, $rootScope, $window, _DragAndDropListenerFactory_, _EmbargoRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $filter, $q, $rootScope, _DragAndDropListenerFactory_, _EmbargoRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -16,7 +16,7 @@ describe('controller: EmbargoRepoController', function () {
                 $filter: $filter,
                 $q: q,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 EmbargoRepo: _EmbargoRepo_,
                 ModalService: _ModalService_,

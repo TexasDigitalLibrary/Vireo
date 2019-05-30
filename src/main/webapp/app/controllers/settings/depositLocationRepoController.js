@@ -106,7 +106,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
         };
 
         $scope.reorderDepositLocation = function (src, dest) {
-            DepositLocationRepo.reorder(src, dest);
+            return DepositLocationRepo.reorder(src, dest);
         };
 
         $scope.dragControlListeners = DragAndDropListenerFactory.buildDragControls({

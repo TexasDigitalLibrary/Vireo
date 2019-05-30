@@ -1,11 +1,12 @@
 describe('controller: AbstractController', function () {
 
-    var controller, scope, window, RestApi;
+    var controller, q, scope, window, RestApi;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+            q = $q;
             scope = $rootScope.$new();
-            window = $window;
+            window = mockWindow();
 
             RestApi = _RestApi_;
 
@@ -14,7 +15,7 @@ describe('controller: AbstractController', function () {
 
             controller = $controller('AbstractController', {
                 $scope: scope,
-                $window: $window,
+                $window: window,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
@@ -161,18 +162,21 @@ describe('controller: AbstractController', function () {
             expect(result).toBe(true);
         });
         it('reportError should report an error', function () {
-            var alert = {
-                channel: "test",
-                time: 0,
-                type: "",
-                message: ""
+            scope.closeModal();
+
+            scope.reportError({});
+            scope.$digest();
+
+            scope.closeModal();
+
+            RestApi.post = function () {
+                return failurePromise(q.defer(), {});
             };
 
-            spyOn(RestApi, "post").and.callThrough();
+            scope.reportError({});
+            scope.$digest();
 
-            scope.reportError(alert);
-
-            expect(RestApi.post).toHaveBeenCalled();
+            scope.closeModal();
         });
     });
 

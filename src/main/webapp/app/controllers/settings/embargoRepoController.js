@@ -66,11 +66,11 @@ vireo.controller("EmbargoRepoController", function ($controller, $scope, $q, Emb
         };
 
         $scope.reorderEmbargoDefault = function(src, dest) {
-            EmbargoRepo.reorder("DEFAULT", src, dest);
+            return EmbargoRepo.reorder("DEFAULT", src, dest);
         };
 
         $scope.reorderEmbargoProquest = function(src, dest) {
-            EmbargoRepo.reorder("PROQUEST", src, dest);
+            return EmbargoRepo.reorder("PROQUEST", src, dest);
         };
 
         $scope.sortEmbargoesDefault = function(column) {

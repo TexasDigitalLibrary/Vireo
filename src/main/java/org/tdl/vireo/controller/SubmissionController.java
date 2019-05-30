@@ -303,9 +303,9 @@ public class SubmissionController {
                   recipientEmailAddresses.addAll(recipient.getEmails(submission));
                 }
             });
-            
+
             smm.setTo(recipientEmailAddresses.toArray(new String[0]));
-            recipientEmails.append("Email sent to: [ " + String.join(";",recipientEmailAddresses) + " ]; "); 
+            recipientEmails.append("Email sent to: [ " + String.join(";",recipientEmailAddresses) + " ]; ");
 
             if (sendCCRecipientEmail) {
               @SuppressWarnings("unchecked")
@@ -320,10 +320,10 @@ public class SubmissionController {
               });
 
               smm.setCc(ccRecipientEmailAddresses.toArray(new String[0]));
-              recipientEmails.append(" and cc to: [ " + String.join(";", ccRecipientEmailAddresses) + " ]; ");   
+              recipientEmails.append(" and cc to: [ " + String.join(";", ccRecipientEmailAddresses) + " ]; ");
             } else {
               recipientEmails.append(";");
-            }     
+            }
 
             String preferredEmail = user.getSetting("preferedEmail");
 
@@ -377,9 +377,13 @@ public class SubmissionController {
     public ApiResponse batchComment(@WeaverUser User user, @RequestBody Map<String, Object> data) {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             Map<String, Object> subMessage = new HashMap<String, Object>(data);
-            if ((boolean) data.get("sendEmailToRecipient") || (boolean) data.get("sendEmailToCCRecipient")) {
-                subMessage.put("recipientEmail", findEmailValue(sub, subMessage.get("recipientEmail").toString()));
-                subMessage.put("ccRecipientEmail", findEmailValue(sub, subMessage.get("ccRecipientEmail").toString()));
+            if (data.get("commentVisibility").toString().equalsIgnoreCase("public")) {
+                if ((boolean) data.get("sendEmailToRecipient")) {
+                    subMessage.put("recipientEmail", subMessage.get("recipientEmail"));
+                }
+                if ((boolean) data.get("sendEmailToCCRecipient")) {
+                    subMessage.put("ccRecipientEmail", subMessage.get("ccRecipientEmail"));
+                }
             }
             try {
               addComment(user, sub.getId(), subMessage);
@@ -389,18 +393,6 @@ public class SubmissionController {
         });
         return new ApiResponse(SUCCESS);
 
-    }
-
-    private String findEmailValue(Submission submission, String recipient) {
-        if (recipient.equals("student")) {
-            // data.put("recipientEmail", )
-            return submission.getSubmitter().getSetting("preferedEmail");
-
-        } else if (recipient.equals("advisor")) {
-            return submission.getFieldValuesByInputType(inputTypeRepo.findByName("INPUT_CONTACT")).get(0).getContacts().get(0);
-        } else {
-            return "";
-        }
     }
 
     @RequestMapping(value = "/{submissionId}/update-field-value/{fieldProfileId}", method = RequestMethod.POST)
@@ -784,7 +776,7 @@ public class SubmissionController {
                     zos.closeEntry();
 
                     zos.closeEntry();
-                    
+
                 }
                 zos.close();
 

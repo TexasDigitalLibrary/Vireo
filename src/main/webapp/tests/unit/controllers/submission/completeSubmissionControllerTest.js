@@ -3,7 +3,7 @@ describe('controller: CompleteSubmissionController', function () {
     var controller, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, $window, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $rootScope, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -11,7 +11,7 @@ describe('controller: CompleteSubmissionController', function () {
 
             controller = $controller('CompleteSubmissionController', {
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,

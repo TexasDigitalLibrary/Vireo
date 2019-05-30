@@ -3,7 +3,7 @@ describe('controller: OrganizationSettingsController', function () {
     var controller, q, scope, AccordionService, OrganizationRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -15,7 +15,7 @@ describe('controller: OrganizationSettingsController', function () {
 
             controller = $controller('OrganizationSettingsController', {
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 AccordionService: _AccordionService_,
                 ModalService: _ModalService_,
                 OrganizationRepo: _OrganizationRepo_,

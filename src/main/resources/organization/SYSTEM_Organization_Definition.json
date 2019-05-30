@@ -509,7 +509,7 @@
       "originalNotes":[
         {
           "name":"degreeDate",
-          "text":"For the degree date, enter the semester in which your degree will be conferred (typically your graduation semester).",
+          "text":"For the graduation semester, enter the semester in which your degree will be conferred.",
           "originatingWorkflowStep":{
             "name":"Verify Personal Information"
           }
@@ -577,7 +577,7 @@
           "logged":false,
           "usage":"",
           "help":"Example: May 2008",
-          "gloss": "Degree Date",
+          "gloss": "Graduation Semester",
           "controlledVocabulary":{
             "name":"Graduation Months",
             "isEntityProperty":true

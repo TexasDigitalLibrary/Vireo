@@ -3,7 +3,7 @@ describe('controller: ApplicationSettingsController', function () {
     var controller, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, $window, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $rootScope, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -11,7 +11,7 @@ describe('controller: ApplicationSettingsController', function () {
 
             controller = $controller('ApplicationSettingsController', {
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 SidebarService: _SidebarService_,

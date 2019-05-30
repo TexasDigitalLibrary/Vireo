@@ -3,7 +3,7 @@ describe('controller: GraduationMonthRepoController', function () {
     var controller, q, scope, GraduationMonthRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _DragAndDropListenerFactory_, _GraduationMonthRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _DragAndDropListenerFactory_, _GraduationMonthRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -14,7 +14,7 @@ describe('controller: GraduationMonthRepoController', function () {
 
             controller = $controller('GraduationMonthRepoController', {
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 GraduationMonthRepo: _GraduationMonthRepo_,
                 ModalService: _ModalService_,

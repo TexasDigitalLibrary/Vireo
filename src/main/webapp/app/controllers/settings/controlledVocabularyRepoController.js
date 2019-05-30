@@ -427,7 +427,7 @@ vireo.controller("ControlledVocabularyRepoController", function ($controller, $q
         };
 
         $scope.reorderControlledVocabulary = function (src, dest) {
-            ControlledVocabularyRepo.reorder(src, dest);
+            return ControlledVocabularyRepo.reorder(src, dest);
         };
 
         $scope.sortControlledVocabulary = function (column) {

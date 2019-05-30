@@ -3,7 +3,7 @@ describe('controller: NoteManagementController', function () {
     var controller, q, scope, NoteRepo, WorkflowStepRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _DragAndDropListenerFactory_, _ModalService_, _NoteRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _NoteRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -18,7 +18,7 @@ describe('controller: NoteManagementController', function () {
 
             controller = $controller('NoteManagementController', {
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
                 Note: mockParameterModel(q, mockNote),
@@ -162,11 +162,11 @@ describe('controller: NoteManagementController', function () {
             expect(WorkflowStepRepo.removeNote).toHaveBeenCalled();
         });
         it('reorderNotes should reorder a note', function () {
-            spyOn(WorkflowStepRepo, "reorderNote");
+            spyOn(WorkflowStepRepo, "reorderNotes");
 
             scope.reorderNotes("a", "b");
 
-            expect(WorkflowStepRepo.reorderNote).toHaveBeenCalled();
+            expect(WorkflowStepRepo.reorderNotes).toHaveBeenCalled();
         });
         it('resetNotes should reset the note', function () {
             var note = new mockNote(q);

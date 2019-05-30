@@ -3,7 +3,7 @@ describe('controller: AdvisorSubmissionReviewController', function () {
     var controller, q, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -12,7 +12,7 @@ describe('controller: AdvisorSubmissionReviewController', function () {
 
             controller = $controller('AdvisorSubmissionReviewController', {
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 AdvisorSubmissionRepo: _AdvisorSubmissionRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,

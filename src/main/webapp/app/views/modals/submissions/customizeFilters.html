@@ -13,7 +13,7 @@
     		<h4>Displayed Filters</h4>
     		<div class="column-background">
     		<ul class="displayed-column-container" as-sortable="box.displayedFilterColumnOptions" ng-model="box.filterColumns.userFilterColumns">
-    			<li ng-class="{'displayed-column': !column.status, 'disabled-column': column.status === 'previouslyDisabled'}" ng-repeat="column in box.filterColumns.userFilterColumns" ng-click="box.disableFilter(column)" as-sortable-item>
+    			<li ng-class="{'displayed-column': !column.status, 'disabled-column': column.status === 'previouslyDisabled'}" ng-repeat="column in box.filterColumns.userFilterColumns | filter: {title: '!Search Box'}" ng-click="box.disableFilter(column)" as-sortable-item>
 						<div as-sortable-item-handle>{{column.title}}<span class="glyphicon glyphicon-arrow-right pull-right"></span></div>
     			</li>
     		</ul>
@@ -23,7 +23,7 @@
   		<h4>Disabled Filters</h4>
   		<div class="column-background">
     		<ul class="disabled-column-container" as-sortable="box.disabledFilterColumnOptions" ng-model="box.filterColumns.inactiveFilterColumns">
-    			<li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status === 'previouslyDisplayed'}" ng-repeat="column in box.filterColumns.inactiveFilterColumns" ng-click="box.enableFilter(column)" as-sortable-item>
+    			<li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status === 'previouslyDisplayed'}" ng-repeat="column in box.filterColumns.inactiveFilterColumns | filter: {title: '!Search Box'}" ng-click="box.enableFilter(column)" as-sortable-item>
 						<div as-sortable-item-handle><span class="glyphicon glyphicon-arrow-left pull-left"></span>&nbsp;{{column.title}}</div>
     			</li>
     		</ul>

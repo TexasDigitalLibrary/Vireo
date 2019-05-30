@@ -3,7 +3,7 @@ describe('controller: FieldProfileManagementController', function () {
     var controller, q, scope, FieldPredicateRepo, FieldProfileRepo, WorkflowStepRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $filter, $q, $rootScope, $window, _ControlledVocabularyRepo_, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _FieldProfileRepo_, _InputTypeRepo_, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
+        inject(function ($controller, $filter, $q, $rootScope, _ControlledVocabularyRepo_, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _FieldProfileRepo_, _InputTypeRepo_, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -23,7 +23,7 @@ describe('controller: FieldProfileManagementController', function () {
                 $filter: $filter,
                 $q: q,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 ControlledVocabularyRepo: _ControlledVocabularyRepo_,
                 DocumentTypeRepo: _DocumentTypeRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
@@ -315,11 +315,11 @@ describe('controller: FieldProfileManagementController', function () {
             expect(WorkflowStepRepo.removeFieldProfile).toHaveBeenCalled();
         });
         it('reorderFieldProfiles should reorder a field profile', function () {
-            spyOn(WorkflowStepRepo, "reorderFieldProfile");
+            spyOn(WorkflowStepRepo, "reorderFieldProfiles");
 
             scope.reorderFieldProfiles("a", "b");
 
-            expect(WorkflowStepRepo.reorderFieldProfile).toHaveBeenCalled();
+            expect(WorkflowStepRepo.reorderFieldProfiles).toHaveBeenCalled();
         });
         it('resetFieldProfiles should reset the field profile', function () {
             var fieldProfile = new mockFieldProfile(q);

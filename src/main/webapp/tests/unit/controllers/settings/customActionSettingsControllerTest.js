@@ -3,7 +3,7 @@ describe('controller: CustomActionSettingsController', function () {
     var controller, q, scope, CustomActionDefinitionRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $timeout, $window, _CustomActionDefinitionRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, $timeout, _CustomActionDefinitionRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -16,7 +16,7 @@ describe('controller: CustomActionSettingsController', function () {
                 $q: q,
                 $scope: scope,
                 $timeout: $timeout,
-                $window: $window,
+                $window: mockWindow(),
                 CustomActionDefinitionRepo: _CustomActionDefinitionRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,

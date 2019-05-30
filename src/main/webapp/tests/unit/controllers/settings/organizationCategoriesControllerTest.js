@@ -3,7 +3,7 @@ describe('controller: OrganizationCategoriesController', function () {
     var controller, q, scope, OrganizationCategoryRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _DragAndDropListenerFactory_, _ModalService_, _OrganizationCategoryRepo_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _OrganizationCategoryRepo_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -15,7 +15,7 @@ describe('controller: OrganizationCategoriesController', function () {
             controller = $controller('OrganizationCategoriesController', {
                 $q: q,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
                 OrganizationCategoryRepo: _OrganizationCategoryRepo_,

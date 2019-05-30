@@ -3,7 +3,7 @@ describe('controller: UserRepoController', function () {
     var controller, q, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $route, $q, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_, _WsApi_) {
+        inject(function ($controller, $location, $route, $q, $rootScope, $timeout, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -16,7 +16,7 @@ describe('controller: UserRepoController', function () {
                 $route: $route,
                 $scope: scope,
                 $timeout: $timeout,
-                $window: $window,
+                $window: mockWindow(),
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,

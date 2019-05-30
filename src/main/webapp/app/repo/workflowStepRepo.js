@@ -55,7 +55,7 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         return promise;
     };
 
-    this.reorderFieldProfile = function (workflowStep, src, dest) {
+    this.reorderFieldProfiles = function (workflowStep, src, dest) {
         workflowStepRepo.clearValidationResults();
         OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
         angular.extend(this.mapping.reorderFieldProfile, {
@@ -122,7 +122,7 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         return promise;
     };
 
-    this.reorderNote = function (workflowStep, src, dest) {
+    this.reorderNotes = function (workflowStep, src, dest) {
         workflowStepRepo.clearValidationResults();
         OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
         angular.extend(this.mapping.reorderNote, {

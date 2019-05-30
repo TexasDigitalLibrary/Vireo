@@ -3,7 +3,7 @@ describe('controller: NewSubmissionController', function () {
     var controller, location, q, scope, OrganizationRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $q, $rootScope, $window, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
+        inject(function ($controller, $location, $q, $rootScope, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
             location = $location;
             q = $q;
             scope = $rootScope.$new();
@@ -17,7 +17,7 @@ describe('controller: NewSubmissionController', function () {
                 $location: $location,
                 $q: q,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 SubmissionStates: SubmissionStates,
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,

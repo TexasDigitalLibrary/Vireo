@@ -3,10 +3,10 @@ describe('controller: LookAndFeelController', function () {
     var controller, q, scope, window;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _FileService_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _FileService_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
-            window = $window;
+            window = mockWindow();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -28,7 +28,7 @@ describe('controller: LookAndFeelController', function () {
             controller = $controller('LookAndFeelController', {
                 $q: q,
                 $scope: scope,
-                $window: $window,
+                $window: window,
                 FileService: _FileService_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
@@ -84,6 +84,7 @@ describe('controller: LookAndFeelController', function () {
                 readAsDataURL: mockReadAsDataURL
             };
 
+            window.FileReader = function() {};
             spyOn(window, "FileReader").and.returnValue(mockFileReader)
             spyOn(angular, "element").and.callThrough();
 

@@ -127,7 +127,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         return promise;
     };
 
-    this.reorderWorkflowStep = function (upOrDown, workflowStepID) {
+    this.reorderWorkflowSteps = function (upOrDown, workflowStepID) {
         organizationRepo.clearValidationResults();
         angular.extend(this.mapping.reorderWorkflowStep, {
             'method': this.getSelectedOrganization().id + '/shift-workflow-step-' + upOrDown + '/' + workflowStepID

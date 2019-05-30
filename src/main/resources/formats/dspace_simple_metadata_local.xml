@@ -3,8 +3,8 @@
 <!--metadata_local.xml-->
 <dublin_core schema="local">
     <!-- local.embargo.terms and lift-->
-    <dcvalue element="embargo" qualifier="terms" th:text="${FORMATTED_EMBARGO_APPROVAL_DATE}"></dcvalue>
-    <dcvalue element="embargo" qualifier="lift" th:text="${EMBARGO_CODE}"></dcvalue>
+    <dcvalue element="embargo" qualifier="terms" th:text="${FORMATTED_COMMITTEE_APPROVED_EMBARGO_LIFT_DATE}"></dcvalue>
+    <dcvalue element="embargo" qualifier="lift" th:text="${FORMATTED_COMMITTEE_APPROVED_EMBARGO_LIFT_DATE}"></dcvalue>
 
 </dublin_core>
 

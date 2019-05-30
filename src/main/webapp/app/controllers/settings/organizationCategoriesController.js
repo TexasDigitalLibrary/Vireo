@@ -61,7 +61,6 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
             select: $scope.selectOrganizationCategory,
             model: $scope.organizationCategories,
             confirm: '#organizationCategoryConfirmRemoveModal',
-            reorder: null,
             container: '#organization-settings'
         });
 

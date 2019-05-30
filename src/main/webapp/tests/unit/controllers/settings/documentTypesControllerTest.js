@@ -3,7 +3,7 @@ describe('controller: DocumentTypesController', function () {
     var controller, q, scope, DocumentTypeRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -14,7 +14,7 @@ describe('controller: DocumentTypesController', function () {
 
             controller = $controller('DocumentTypesController', {
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 DocumentTypeRepo: _DocumentTypeRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,

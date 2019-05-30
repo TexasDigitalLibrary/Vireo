@@ -1,4 +1,4 @@
-<div class="further-filter-by" ng-repeat="column in box.filterColumns.userFilterColumns">
+<div class="further-filter-by" ng-repeat="column in box.filterColumns.userFilterColumns | filter: {title: '!Search Box'}">
 	<sideboxsub>{{column.title}}</sideboxsub>
 
 	<div ng-switch on="column.title">
@@ -35,7 +35,7 @@
 	     	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByUmiPublication.html'"></div>
 	  </div>
 
-		<div ng-switch-when="Degree Date">
+		<div ng-switch-when="Graduation Semester">
 			<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDegreeDate.html'"></div>
 	    </div>
 

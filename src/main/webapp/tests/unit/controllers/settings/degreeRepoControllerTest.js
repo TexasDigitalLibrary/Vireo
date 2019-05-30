@@ -3,7 +3,7 @@ describe('controller: DegreeRepoController', function () {
     var controller, q, scope, DegreeRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _DegreeRepo_, _DegreeLevelRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _DegreeRepo_, _DegreeLevelRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -15,7 +15,7 @@ describe('controller: DegreeRepoController', function () {
             controller = $controller('DegreeRepoController', {
                 $q: q,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 DegreeRepo: _DegreeRepo_,
                 DegreeLevelRepo: _DegreeLevelRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,

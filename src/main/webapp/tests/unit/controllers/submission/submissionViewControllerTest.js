@@ -3,7 +3,7 @@ describe('controller: SubmissionViewController', function () {
     var controller, q, scope;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $routeParams, $window, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, $routeParams, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -14,7 +14,7 @@ describe('controller: SubmissionViewController', function () {
                 $q: q,
                 $routeParams: $routeParams,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 CustomActionDefinitionRepo: _CustomActionDefinitionRepo_,
                 FieldPredicateRepo: _FieldPredicateRepo_,
                 FileUploadService: _FileUploadService_,

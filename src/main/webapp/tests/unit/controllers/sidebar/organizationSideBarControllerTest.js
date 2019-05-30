@@ -3,7 +3,7 @@ describe('controller: OrganizationSideBarController', function () {
     var controller, q, scope, OrganizationRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $window, _ModalService_, _OrganizationCategoryRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _ModalService_, _OrganizationCategoryRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
 
@@ -15,7 +15,7 @@ describe('controller: OrganizationSideBarController', function () {
             controller = $controller('OrganizationSideBarController', {
                 $q: q,
                 $scope: scope,
-                $window: $window,
+                $window: mockWindow(),
                 ModalService: _ModalService_,
                 OrganizationCategoryRepo: _OrganizationCategoryRepo_,
                 OrganizationRepo: _OrganizationRepo_,
