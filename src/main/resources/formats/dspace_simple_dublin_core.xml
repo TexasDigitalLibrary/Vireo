@@ -34,8 +34,11 @@
     <dcvalue element="date" qualifier="submitted" th:text="${GRADUATION_DATE_MONTH_YEAR_STRING}"></dcvalue>
 
     <!-- dc.date.issued = Approval date in "YYYY-MM-DD" format -->
+    <dcvalue element="date" qualifier="issued" th:text="${GRADUATION_DATE_YEAR_MONTH_STRING}"></dcvalue>
+    <!--
     <dcvalue element="date" qualifier="issued" th:text="${FORMATTED_APPLICATION_APPROVAL_DATE}"></dcvalue>
-        
+    -->
+
     <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
     <dcvalue element="format" qualifier="mimetype" th:text="${PRIMARY_DOCUMENT_MIMETYPE}"></dcvalue>
         
