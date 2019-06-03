@@ -194,7 +194,7 @@
         },
         {
           "fieldPredicate":{
-            "value":"school",
+            "value":"thesis.degree.school",
             "documentTypePredicate":false
           },
           "originatingWorkflowStep":{
