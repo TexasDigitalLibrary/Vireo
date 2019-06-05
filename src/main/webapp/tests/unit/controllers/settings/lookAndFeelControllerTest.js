@@ -74,27 +74,28 @@ describe('controller: LookAndFeelController', function () {
     });
 
     describe('Do the scope methods work as expected', function () {
-        // TODO: more research and work needed to get this test working.
-        /*
         it('previewLogo should open a modal', function () {
-            var mockEventListener = jasmine.createSpy();
-            var mockReadAsDataURL = jasmine.createSpy();
-            var mockFileReader = {
-                addEventListener: mockEventListener,
-                readAsDataURL: mockReadAsDataURL
+            var mockData = "body { color: #000000; }";
+            var mockBlob = new Blob([mockData], {type: "text/css"});
+            var mockFile = new File([mockBlob], "mocked.css", {type:"text/css"});
+
+            FileReader = function() {
+                return {
+                  result: mockData,
+                  readAsDataURL: function (data) {
+                      this.onload();
+                    return mockFile;
+                  }
+              };
             };
 
-            window.FileReader = function() {};
-            spyOn(window, "FileReader").and.returnValue(mockFileReader)
-            spyOn(angular, "element").and.callThrough();
-
-            scope.previewLogo([{}]);
+            scope.previewLogo([]);
             scope.$digest();
 
-            expect(angular.element).toHaveBeenCalled();
-            expect(mockReadAsDataURL).toHaveBeenCalled();
+            scope.previewLogo([mockFile]);
+            scope.$digest();
         });
-        */
+
         it('resetModalData should reset the modal data', function () {
             scope.modalData = {
                 newLogo: null
