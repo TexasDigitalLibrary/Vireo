@@ -13,8 +13,15 @@ var messagePromise = function (defer, message, messageStatus, httpStatus) {
     return defer.promise;
 };
 
-var valuePromise = function (defer, model) {
-    defer.resolve(model);
+var valuePromise = function (defer, model, type) {
+    if (type === 'reject') {
+        defer.reject(model);
+    } else if (type === 'notify') {
+        defer.notify(model);
+    } else {
+        defer.resolve(model);
+    }
+
     return defer.promise;
 };
 
@@ -85,4 +92,4 @@ var mockWindow = function() {
             replace: function() {}
         }
     };
-}
+};
