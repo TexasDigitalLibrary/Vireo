@@ -28,10 +28,8 @@
 	</th:block>
 
     
-    <!-- dc.date.created = Graduation date in "YYYY-MM" format -->
-    <dcvalue element="date" qualifier="created" th:text="${GRADUATION_DATE_YEAR_MONTH_STRING}"></dcvalue>
-    <!-- dc.date.submitted = Graduation date in "month YYYY" format -->
-    <dcvalue element="date" qualifier="submitted" th:text="${GRADUATION_DATE_MONTH_YEAR_STRING}"></dcvalue>
+    <!-- dc.date.created = Graduation date in "Month YYYY" format -->
+    <dcvalue element="date" qualifier="created" th:text="${GRADUATION_DATE_MONTH_YEAR_STRING}"></dcvalue>
 
     <!-- dc.date.issued = Approval date in "YYYY-MM" format -->
     <dcvalue element="date" qualifier="issued" th:text="${GRADUATION_DATE_YEAR_MONTH_STRING}"></dcvalue>
