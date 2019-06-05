@@ -238,7 +238,7 @@
         },
         {
           "fieldPredicate":{
-            "value":"thesis.degree.discipline",
+            "value":"thesis.degree.program",
             "documentTypePredicate":false
           },
           "originatingWorkflowStep":{
