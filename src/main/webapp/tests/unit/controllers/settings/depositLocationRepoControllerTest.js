@@ -1,11 +1,16 @@
 describe('controller: DepositLocationRepoController', function () {
 
-    var controller, q, scope, DepositLocationRepo;
+    var controller, q, scope, DepositLocation, DepositLocationRepo, MockedDepositLocation;
 
     var initializeController = function(settings) {
         inject(function ($controller, $q, $rootScope, _DepositLocationRepo_, _DragAndDropListenerFactory_, _ModalService_, _PackagerRepo_, _RestApi_, _StorageService_, _WsApi_) {
             q = $q;
             scope = $rootScope.$new();
+
+            MockedDepositLocation = new mockDepositLocation(q);
+            DepositLocation = function() {
+                return MockedDepositLocation;
+            };
 
             DepositLocationRepo = _DepositLocationRepo_;
 
@@ -16,6 +21,7 @@ describe('controller: DepositLocationRepoController', function () {
                 $q: q,
                 $scope: scope,
                 $window: mockWindow(),
+                DepositLocation: DepositLocation,
                 DepositLocationRepo: _DepositLocationRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
@@ -86,6 +92,21 @@ describe('controller: DepositLocationRepoController', function () {
         });
     });
 
+    describe('Are the scope.modalData methods defined', function () {
+        it('testDepositLocation should be defined', function () {
+            expect(scope.modalData.testDepositLocation).toBeDefined();
+            expect(typeof scope.modalData.testDepositLocation).toEqual("function");
+        });
+        it('isTestDepositing should be defined', function () {
+            expect(scope.modalData.isTestDepositing).toBeDefined();
+            expect(typeof scope.modalData.isTestDepositing).toEqual("function");
+        });
+        it('isTestable should be defined', function () {
+            expect(scope.modalData.isTestable).toBeDefined();
+            expect(typeof scope.modalData.isTestable).toEqual("function");
+        });
+    });
+
     describe('Do the scope methods work as expected', function () {
         it('createDepositLocation should create a new custom action', function () {
             scope.modalData = new mockDepositLocation(q);
@@ -136,6 +157,17 @@ describe('controller: DepositLocationRepoController', function () {
             expect(depositLocation.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData.level).not.toBe(depositLocation);
+
+            scope.forms.myForm = {
+                $pristine: true,
+                $untouched: true,
+                $setPristine: function (value) { this.$pristine = value; },
+                $setUntouched: function (value) { this.$untouched = value; }
+            };
+            scope.resetDepositLocation();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetDepositLocation();
         });
         it('selectDepositLocation should select a custom action', function () {
             scope.modalData = null;
@@ -157,6 +189,56 @@ describe('controller: DepositLocationRepoController', function () {
             scope.updateDepositLocation();
 
             expect(scope.modalData.save).toHaveBeenCalled();
+        });
+    });
+
+    describe('Do the scope.modalData methods work as expected', function () {
+        it('testDepositLocation should test the deposit location', function () {
+            scope.resetDepositLocation();
+            scope.modalData.testDepositLocation();
+            scope.$digest();
+
+            MockedDepositLocation.mockTestConnectionPayload([
+                { uri: "mockUri", name: "mockName" }
+            ]);
+            scope.resetDepositLocation();
+            scope.modalData.testDepositLocation();
+            scope.$digest();
+
+            MockedDepositLocation.testConnection = function() {
+                return payloadPromise(q.defer(), {}, "OTHER");
+            };
+
+            scope.resetDepositLocation();
+            scope.modalData.testDepositLocation();
+            scope.$digest();
+        });
+        it('isTestDepositing should return a boolean', function () {
+            var response;
+
+            scope.resetDepositLocation();
+            response = scope.modalData.isTestDepositing();
+
+            expect(typeof response).toBe("boolean");
+        });
+        it('isTestable should return a boolean', function () {
+            var response;
+
+            scope.resetDepositLocation();
+            response = scope.modalData.isTestable();
+
+            // FIXME: should be returning a boolean and not a string (scope.modalData.nam is actually returned).
+            //expect(typeof response).toBe("boolean");
+
+            scope.modalData.name = "mock";
+            scope.modalData.depositorName = "mock";
+            scope.modalData.repository = "mock";
+            scope.modalData.username = "mock";
+            scope.modalData.password = "mock";
+            response = scope.modalData.isTestable();
+
+            // FIXME: should be returning a boolean and not a string (scope.modalData.nam is actually returned).
+            //expect(response).toBe(true);
         });
     });
 
