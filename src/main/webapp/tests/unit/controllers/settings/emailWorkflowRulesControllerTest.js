@@ -18,7 +18,7 @@ describe('controller: EmailWorkflowRulesController', function () {
                 $window: mockWindow(),
                 EmailTemplateRepo: _EmailTemplateRepo_,
                 ModalService: _ModalService_,
-                OrganizationRepo: _OrganizationRepo_,
+                OrganizationRepo: OrganizationRepo,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 SubmissionStatusRepo: _SubmissionStatusRepo_,
@@ -106,16 +106,21 @@ describe('controller: EmailWorkflowRulesController', function () {
     describe('Do the scope methods work as expected', function () {
         it('addEmailWorkflowRule should ', function () {
             var template = {id: 1};
-            var recipient = {};
+            var emailRecipient = mockEmailRecipient(q);
             var submissionStatus = mockSubmissionStatus(q);
             OrganizationRepo.selectedId = dataOrganization1.id;
 
             spyOn(scope, "resetEmailWorkflowRule");
 
-            scope.addEmailWorkflowRule(template, recipient, submissionStatus);
+            scope.addEmailWorkflowRule(template, emailRecipient, submissionStatus);
             scope.$digest();
 
             expect(scope.resetEmailWorkflowRule).toHaveBeenCalled();
+
+            emailRecipient.mock(dataEmailRecipient3);
+
+            scope.addEmailWorkflowRule(template, emailRecipient, submissionStatus);
+            scope.$digest();
         });
         it('buildRecipients should build the recipients', function () {
             OrganizationRepo.selectedId = dataOrganization1.id;
@@ -166,14 +171,14 @@ describe('controller: EmailWorkflowRulesController', function () {
             expect(scope.emailWorkflowRuleDeleteWorking).toBe(false);
         });
         it('editEmailWorkflowRule should reset the rule', function () {
+            var emailRecipient = new mockEmailRecipient(q);
+
+            emailRecipient.mock(dataEmailRecipient3);
+            emailRecipient.data.id = 7;
+
             OrganizationRepo.selectedId = dataOrganization1.id;
             scope.emailWorkflowRuleToEdit = {
-                emailRecipient: {
-                    type: "ORGANIZATION",
-                    data: {
-                        id: 7
-                    }
-                }
+                emailRecipient: emailRecipient
             };
 
             spyOn(scope, "resetEditEmailWorkflowRule");
@@ -183,16 +188,19 @@ describe('controller: EmailWorkflowRulesController', function () {
 
             expect(scope.resetEditEmailWorkflowRule).toHaveBeenCalled();
             expect(scope.emailWorkflowRuleToEdit.emailRecipient.data).toEqual(7);
+
+            emailRecipient.mock(dataEmailRecipient1);
+            scope.editEmailWorkflowRule();
+            scope.$digest();
         });
         it('openAddEmailWorkflowRuleModal should open a modal', function () {
+            var emailRecipient = mockEmailRecipient(q);
+
+            emailRecipient.mock(dataEmailRecipient3);
+
             scope.newTemplate = null;
             scope.newRecipient = null;
-            scope.recipients = [{
-                type: "ORGANIZATION",
-                data: {
-                    id: 7
-                }
-            }];
+            scope.recipients = [emailRecipient];
 
             spyOn(scope, "buildRecipients");
             spyOn(scope, "openModal");
@@ -205,25 +213,25 @@ describe('controller: EmailWorkflowRulesController', function () {
             expect(scope.openModal).toHaveBeenCalled();
         });
         it('openEditEmailWorkflowRule should open a modal', function () {
+            var emailRecipient = new mockEmailRecipient(q);
+            var emailRecipient2 = new mockEmailRecipient(q);
+            var emailTemplate = new mockEmailTemplate(q);
+            var emailTemplate2 = new mockEmailTemplate(q);
+
+            emailRecipient.mock(dataEmailRecipient3);
+            emailRecipient2.mock(dataEmailRecipient2);
+
+            emailTemplate2.mock(dataEmailTemplate2);
+
             var rule = {
-                emailRecipient: {
-                    type: "ORGANIZATION",
-                    data: {
-                        id: 7
-                    }
-                },
-                emailTemplate: new mockEmailTemplate(q)
+                emailRecipient: emailRecipient,
+                emailTemplate: emailTemplate
             };
 
             scope.emailWorkflowRuleToEdit = null;
             scope.newTemplate = null;
             scope.newRecipient = null;
-            scope.recipients = [{
-                type: "ORGANIZATION",
-                data: {
-                    id: 7
-                }
-            }];
+            scope.recipients = [emailRecipient];
 
             spyOn(scope, "buildRecipients");
             spyOn(scope, "openModal");
@@ -235,6 +243,12 @@ describe('controller: EmailWorkflowRulesController', function () {
             expect(scope.emailWorkflowRuleToEdit).toBeDefined();
             expect(scope.buildRecipients).toHaveBeenCalled();
             expect(scope.openModal).toHaveBeenCalled();
+
+            scope.recipients = [ emailRecipient2 ];
+            scope.emailTemplates = [ emailRecipient2 ];
+            scope.emailWorkflowRuleToEdit = emailRecipient;
+            scope.emailWorkflowRuleToEdit.emailTemplate = emailTemplate;
+            scope.openEditEmailWorkflowRule(rule);
         });
         it('resetEditEmailWorkflowRule should close a modal', function () {
             spyOn(scope, "closeModal");
@@ -244,12 +258,17 @@ describe('controller: EmailWorkflowRulesController', function () {
             expect(scope.closeModal).toHaveBeenCalled();
         });
         it('resetEmailWorkflowRule should close a modal', function () {
+            var emailRecipient = mockEmailRecipient(q);
+
+            emailRecipient.mock(dataEmailRecipient3);
+
             scope.newTemplate = null;
             scope.newRecipient = null;
+            scope.recipients = [emailRecipient];
 
             spyOn(scope, "closeModal");
 
-            scope.resetEditEmailWorkflowRule({});
+            scope.resetEmailWorkflowRule();
 
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.newTemplate).toBeDefined();
