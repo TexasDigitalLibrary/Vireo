@@ -17,7 +17,7 @@ describe('controller: EmailTemplateRepoController', function () {
                 $scope: scope,
                 $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
-                EmailTemplateRepo: _EmailTemplateRepo_,
+                EmailTemplateRepo: EmailTemplateRepo,
                 FieldPredicateRepo: _FieldPredicateRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
@@ -88,6 +88,14 @@ describe('controller: EmailTemplateRepoController', function () {
             expect(scope.setCursorLocation).toBeDefined();
             expect(typeof scope.setCursorLocation).toEqual("function");
         });
+        it('sortEmailTemplates should be defined', function () {
+            expect(scope.sortEmailTemplates).toBeDefined();
+            expect(typeof scope.sortEmailTemplates).toEqual("function");
+        });
+        it('templateToString should be defined', function () {
+            expect(scope.templateToString).toBeDefined();
+            expect(typeof scope.templateToString).toEqual("function");
+        });
         it('updateEmailTemplate should be defined', function () {
             expect(scope.updateEmailTemplate).toBeDefined();
             expect(typeof scope.updateEmailTemplate).toEqual("function");
@@ -102,6 +110,7 @@ describe('controller: EmailTemplateRepoController', function () {
             spyOn(EmailTemplateRepo, "create").and.callThrough();
 
             scope.createEmailTemplate();
+            scope.$digest();
 
             expect(EmailTemplateRepo.create).toHaveBeenCalled();
         });
@@ -116,6 +125,9 @@ describe('controller: EmailTemplateRepoController', function () {
 
             expect(scope.modalData.message).toEqual(" {test} ");
             expect(scope.cursorLocation).toBe(" {test} ".length);
+
+            scope.modalData.message = "already defined";
+            scope.insertText("test");
         });
         it('launchEditModal should open a modal', function () {
             var emailTemplate = new mockEmailTemplate(q);
@@ -162,6 +174,17 @@ describe('controller: EmailTemplateRepoController', function () {
             expect(emailTemplate.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData).toBeDefined();
+
+            scope.forms.myForm = {
+                $pristine: true,
+                $untouched: true,
+                $setPristine: function (value) { this.$pristine = value; },
+                $setUntouched: function (value) { this.$untouched = value; }
+            };
+            scope.resetEmailTemplates();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetEmailTemplates();
         });
         it('selectEmailTemplate should select an email template', function () {
             scope.modalData = null;
@@ -186,6 +209,32 @@ describe('controller: EmailTemplateRepoController', function () {
             scope.setCursorLocation(event);
 
             expect(angular.element).toHaveBeenCalled();
+        });
+        it('sortEmailTemplates should select a sort action', function () {
+            scope.sortAction = "confirm";
+
+            spyOn(EmailTemplateRepo, "sort");
+
+            scope.sortEmailTemplates("column");
+            expect(scope.sortAction).toEqual("sort");
+            expect(EmailTemplateRepo.sort).not.toHaveBeenCalled();
+
+            scope.sortAction = "sort";
+            scope.sortEmailTemplates("column");
+            expect(scope.sortAction).toEqual("confirm");
+            expect(EmailTemplateRepo.sort).toHaveBeenCalled();
+
+            scope.sortAction = "unknown";
+            scope.sortEmailTemplates("column");
+            expect(scope.sortAction).toEqual("unknown");
+        });
+        it('templateToString should convert a template to a string', function () {
+            var emailTemplate = new mockEmailTemplate(q);
+            var response;
+
+            response = scope.templateToString(emailTemplate);
+
+            expect(response).toBe(emailTemplate.name);
         });
         it('updateEmailTemplate should should save an email template', function () {
             scope.modalData = new mockEmailTemplate(q);
