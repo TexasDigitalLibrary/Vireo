@@ -20,9 +20,9 @@ describe('controller: OrganizationManagementController', function () {
             $controller('OrganizationSettingsController', {
                 $scope: scope,
                 $window: mockWindow(),
-                AccordionService: _AccordionService_,
+                AccordionService: AccordionService,
                 ModalService: _ModalService_,
-                OrganizationRepo: _OrganizationRepo_,
+                OrganizationRepo: OrganizationRepo,
                 RestApi: _RestApi_,
                 SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
@@ -36,10 +36,10 @@ describe('controller: OrganizationManagementController', function () {
                 $scope: scope,
                 $timeout: $timeout,
                 $window: mockWindow(),
-                AccordionService: _AccordionService_,
-                AlertService: _AlertService_,
+                AccordionService: AccordionService,
+                AlertService: AlertService,
                 ModalService: _ModalService_,
-                OrganizationRepo: _OrganizationRepo_,
+                OrganizationRepo: OrganizationRepo,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 WorkflowStepRepo: _WorkflowStepRepo_,
@@ -197,6 +197,23 @@ describe('controller: OrganizationManagementController', function () {
             scope.$digest();
 
             expect(AccordionService.close).toHaveBeenCalled();
+
+            OrganizationRepo.deleteWorkflowStep = function() {
+                // FIXME: $scope.deleteWorkflowStep of organizationManagementController is expecting a different response structure.
+                var response = {
+                    meta: {
+                        status: 'INVALID',
+                    },
+                    payload: {},
+                    status: 200
+                };
+
+                return valuePromise(q.defer(), response);
+            };
+
+            scope.deleteWorkflowStep(new mockWorkflowStep(q));
+            scope.$digest();
+            timeout.flush();
         });
         it('openConfirmDeleteModal should open a modal', function () {
             spyOn(scope, "openModal");
@@ -223,8 +240,6 @@ describe('controller: OrganizationManagementController', function () {
             expect(AccordionService.closeAll).toHaveBeenCalled();
             expect(OrganizationRepo.reorderWorkflowSteps).toHaveBeenCalled();
         });
-        // FIXME: this test cannot be performed because OrganizationManagementController.setSelectedOrganization() is not defined.
-        /*
         it('resetManageOrganization should reset the selected organization', function () {
             var organization;
             OrganizationRepo.selectedId = 1;
@@ -236,7 +251,7 @@ describe('controller: OrganizationManagementController', function () {
             scope.resetManageOrganization();
 
             expect(organization.refresh).toHaveBeenCalled();
-        });*/
+        });
         it('resetWorkflowSteps should reset the workflow steps', function () {
             var organization = new mockOrganization(q);
             scope.forms = [];
@@ -270,6 +285,23 @@ describe('controller: OrganizationManagementController', function () {
 
             expect(scope.closeModal).toHaveBeenCalled();
             expect(AlertService.add).toHaveBeenCalled();
+
+            OrganizationRepo.restoreDefaults = function() {
+                // FIXME: $scope.restoreOrganizationDefaults of organizationManagementController is expecting a different response structure.
+                var response = {
+                    meta: {
+                        status: 'INVALID',
+                    },
+                    payload: {},
+                    status: 200
+                };
+
+                return valuePromise(q.defer(), response);
+            };
+
+            scope.restoreOrganizationDefaults(organization);
+            scope.$digest();
+            timeout.flush();
         });
         it('showOrganizationManagement should return a boolean', function () {
             var response;
@@ -285,8 +317,6 @@ describe('controller: OrganizationManagementController', function () {
             response = scope.showOrganizationManagement();
             expect(response).toBe(true);
         });
-        // FIXME: this test cannot be performed because OrganizationManagementController.setSelectedOrganization() is not defined.
-        /*
         it('updateOrganization should should save an organization', function () {
             var organization = new mockOrganization(q);
             scope.updatingOrganization = null;
@@ -299,7 +329,6 @@ describe('controller: OrganizationManagementController', function () {
             expect(scope.setSelectedOrganization).toHaveBeenCalled();
             expect(scope.updatingOrganization).toBe(false);
         });
-        */
         it('updateWorkflowStep should update a workflow step', function () {
             var workflowStep = new mockWorkflowStep(q);
 

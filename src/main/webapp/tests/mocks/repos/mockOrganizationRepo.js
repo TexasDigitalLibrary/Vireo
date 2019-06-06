@@ -95,7 +95,7 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
     repo.restoreDefaults = function (organization) {
         var payload = {};
 
-        // FIXME: $scope.deleteWorkflowStep of organizationManagementController is expecting a different response structure.
+        // FIXME: $scope.restoreOrganizationDefaults of organizationManagementController is expecting a different response structure.
         var response = {
             meta: {
                 status: 'SUCCESS',
