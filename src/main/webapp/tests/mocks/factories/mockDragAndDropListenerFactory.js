@@ -3,25 +3,19 @@ angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListen
     var defer;
 
     var listener = {
-
         'trash': {
             hover: false,
             element: null,
             id: ''
         },
-
         'select': null,
-
         'dragging': null,
-
         'list': [],
-
         'confirm': {
             'remove': {
                 'modal': ''
             }
         },
-
         'reorder': function(src, dest) {}
     };
 
@@ -60,7 +54,7 @@ angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListen
             listener.setScopeReorderFunction(drag.reorder);
         }
         else {
-            console.log('ensure configured')
+            console.log('ensure configured');
         }
 
         var dragControls = {
@@ -112,7 +106,7 @@ angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListen
         };
 
         return dragControls;
-    }
+    };
 
     return factory;
 });
