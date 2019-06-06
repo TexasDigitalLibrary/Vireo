@@ -1,12 +1,14 @@
 describe('controller: OrganizationCategoriesController', function () {
 
-    var controller, q, scope, OrganizationCategoryRepo;
+    var compile, controller, q, scope, DragAndDropListenerFactory, OrganizationCategoryRepo;
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _OrganizationCategoryRepo_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($compile, $controller, $q, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _OrganizationCategoryRepo_, _RestApi_, _StorageService_, _WsApi_) {
+            compile = $compile;
             q = $q;
             scope = $rootScope.$new();
 
+            DragAndDropListenerFactory = _DragAndDropListenerFactory_;
             OrganizationCategoryRepo = _OrganizationCategoryRepo_;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -16,7 +18,7 @@ describe('controller: OrganizationCategoriesController', function () {
                 $q: q,
                 $scope: scope,
                 $window: mockWindow(),
-                DragAndDropListenerFactory: _DragAndDropListenerFactory_,
+                DragAndDropListenerFactory: DragAndDropListenerFactory,
                 ModalService: _ModalService_,
                 OrganizationCategoryRepo: _OrganizationCategoryRepo_,
                 RestApi: _RestApi_,
@@ -76,6 +78,17 @@ describe('controller: OrganizationCategoriesController', function () {
         it('updateOrganizationCategory should be defined', function () {
             expect(scope.updateOrganizationCategory).toBeDefined();
             expect(typeof scope.updateOrganizationCategory).toEqual("function");
+        });
+    });
+
+    describe('Are the scope.dragControlListeners methods defined', function () {
+        it('accept should be defined', function () {
+            expect(scope.dragControlListeners.accept).toBeDefined();
+            expect(typeof scope.dragControlListeners.accept).toEqual("function");
+        });
+        it('orderChanged should be defined', function () {
+            expect(scope.dragControlListeners.orderChanged).toBeDefined();
+            expect(typeof scope.dragControlListeners.orderChanged).toEqual("function");
         });
     });
 
@@ -156,8 +169,31 @@ describe('controller: OrganizationCategoriesController', function () {
         });
     });
 
-    // FIXME: there are methods not on the scope that are added in the controller that may need to be tested.
-    // scope.dragControlListeners.accept()
-    // scope.dragControlListeners.orderChanged()
+    describe('Do the scope.dragControlListeners methods work as expected', function () {
+        it('accept should create a new fieldPredicate', function () {
+            var sourceItemHandleScope = {};
+            var destSortableScope = {
+                element: {
+                    0: compile("<div id=\"myId\"></div>")(scope),
+                    addClass: function() {}
+                }
+            };
+            var response;
+
+            response = scope.dragControlListeners.accept(sourceItemHandleScope, destSortableScope);
+
+            // TODO: dragControlListeners.accept() always returns false, consider implementation.
+            expect(response).toBe(false);
+
+            DragAndDropListenerFactory.listener.dragging = true;
+            DragAndDropListenerFactory.listener.trash.id = destSortableScope.element[0].id;
+            DragAndDropListenerFactory.listener.trash.element = destSortableScope.element;
+            scope.dragControlListeners.accept(sourceItemHandleScope, destSortableScope);
+        });
+        it('orderChanged should create a new fieldPredicate', function () {
+            // method appears to be a stub.
+            scope.dragControlListeners.orderChanged();
+        });
+    });
 
 });
