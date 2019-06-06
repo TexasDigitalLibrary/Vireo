@@ -80,6 +80,10 @@ describe('controller: DegreeRepoController', function () {
             expect(scope.selectDegree).toBeDefined();
             expect(typeof scope.selectDegree).toEqual("function");
         });
+        it('sortDegrees should be defined', function () {
+            expect(scope.sortDegrees).toBeDefined();
+            expect(typeof scope.sortDegrees).toEqual("function");
+        });
         it('updateDegree should be defined', function () {
             expect(scope.updateDegree).toBeDefined();
             expect(typeof scope.updateDegree).toEqual("function");
@@ -137,6 +141,17 @@ describe('controller: DegreeRepoController', function () {
             expect(degree.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData.level).toBeDefined();
+
+            scope.forms.myForm = {
+                $pristine: true,
+                $untouched: true,
+                $setPristine: function (value) { this.$pristine = value; },
+                $setUntouched: function (value) { this.$untouched = value; }
+            };
+            scope.resetDegree();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetDegree();
         });
         it('selectDegree should select a custom action', function () {
             scope.modalData = null;
@@ -149,6 +164,22 @@ describe('controller: DegreeRepoController', function () {
             scope.selectDegree(1);
 
             expect(scope.modalData).toBe(scope.degrees[1]);
+        });
+        it('sortDegrees should sort the degrees', function () {
+            scope.modalData = null;
+            scope.degrees = [
+                new mockDegree(q),
+                new mockDegree(q)
+            ];
+            scope.degrees[1].mock(dataDegree2);
+
+            scope.sortDegrees();
+
+            scope.sortAction = "sort";
+            scope.sortDegrees();
+
+            scope.sortAction = "unknown";
+            scope.sortDegrees();
         });
         it('updateDegree should should save a custom action', function () {
             scope.modalData = new mockDegree(q);
