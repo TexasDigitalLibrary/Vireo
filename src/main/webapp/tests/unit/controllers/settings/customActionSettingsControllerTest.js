@@ -134,6 +134,17 @@ describe('controller: CustomActionSettingsController', function () {
             expect(cad.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData.isStudentVisible).toBe(false);
+
+            scope.forms.myForm = {
+                $pristine: true,
+                $untouched: true,
+                $setPristine: function (value) { this.$pristine = value; },
+                $setUntouched: function (value) { this.$untouched = value; }
+            };
+            scope.resetCustomAction();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetCustomAction();
         });
         it('selectCustomAction should select a custom action', function () {
             scope.modalData = null;
