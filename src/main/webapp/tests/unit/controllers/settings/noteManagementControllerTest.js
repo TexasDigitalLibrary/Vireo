@@ -184,6 +184,12 @@ describe('controller: NoteManagementController', function () {
             expect(scope.noteRepo.clearValidationResults).toHaveBeenCalled();
             expect(note.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
+
+            scope.forms.myForm = mockForms();
+            scope.resetNotes();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetNotes();
         });
         it('selectNote should select a note', function () {
             scope.modalData = null;

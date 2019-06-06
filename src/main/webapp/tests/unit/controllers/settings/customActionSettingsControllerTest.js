@@ -135,12 +135,7 @@ describe('controller: CustomActionSettingsController', function () {
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData.isStudentVisible).toBe(false);
 
-            scope.forms.myForm = {
-                $pristine: true,
-                $untouched: true,
-                $setPristine: function (value) { this.$pristine = value; },
-                $setUntouched: function (value) { this.$untouched = value; }
-            };
+            scope.forms.myForm = mockForms();
             scope.resetCustomAction();
 
             scope.forms.myForm.$pristine = false;

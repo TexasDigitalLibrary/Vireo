@@ -158,12 +158,7 @@ describe('controller: DepositLocationRepoController', function () {
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData.level).not.toBe(depositLocation);
 
-            scope.forms.myForm = {
-                $pristine: true,
-                $untouched: true,
-                $setPristine: function (value) { this.$pristine = value; },
-                $setUntouched: function (value) { this.$untouched = value; }
-            };
+            scope.forms.myForm = mockForms();
             scope.resetDepositLocation();
 
             scope.forms.myForm.$pristine = false;

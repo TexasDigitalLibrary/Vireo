@@ -131,6 +131,7 @@ describe('controller: FieldPredicatesController', function () {
         });
         it('resetFieldPredicates should reset the fieldPredicate', function () {
             var fieldPredicate = new mockFieldPredicate(q);
+
             scope.forms = [];
             scope.modalData = fieldPredicate;
 
@@ -145,12 +146,7 @@ describe('controller: FieldPredicatesController', function () {
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData).toBeDefined();
 
-            scope.forms.myForm = {
-                $pristine: true,
-                $untouched: true,
-                $setPristine: function (value) { this.$pristine = value; },
-                $setUntouched: function (value) { this.$untouched = value; }
-            };
+            scope.forms.myForm = mockForms();
             scope.resetFieldPredicates();
 
             scope.forms.myForm.$pristine = false;

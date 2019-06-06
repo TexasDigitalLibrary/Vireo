@@ -100,6 +100,7 @@ describe('controller: LookAndFeelController', function () {
         });
         it('resetLogo should reset the logo', function () {
             var mockSetting = {};
+
             scope.resetLogo(mockSetting);
             scope.$digest();
 

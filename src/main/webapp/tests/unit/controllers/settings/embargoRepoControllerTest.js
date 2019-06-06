@@ -140,6 +140,7 @@ describe('controller: EmbargoRepoController', function () {
         });
         it('resetEmbargo should reset the embargo', function () {
             var embargo = new mockEmbargo(q);
+
             scope.forms = [];
             scope.modalData = embargo;
             scope.modalData.level = null;
@@ -159,12 +160,7 @@ describe('controller: EmbargoRepoController', function () {
             expect(scope.proquestEmbargoes).toBeDefined();
             expect(scope.defaultEmbargoes).toBeDefined();
 
-            scope.forms.myForm = {
-                $pristine: true,
-                $untouched: true,
-                $setPristine: function (value) { this.$pristine = value; },
-                $setUntouched: function (value) { this.$untouched = value; }
-            };
+            scope.forms.myForm = mockForms();
             scope.resetEmbargo();
 
             scope.forms.myForm.$pristine = false;

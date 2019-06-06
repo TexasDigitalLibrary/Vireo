@@ -148,12 +148,7 @@ describe('controller: LanguagesController', function () {
             expect(scope.uploadAction).toEqual("confirm");
             expect(typeof scope.modalData.degreeLevel).not.toBe(language1);
 
-            scope.forms.myForm = {
-                $pristine: true,
-                $untouched: true,
-                $setPristine: function (value) { this.$pristine = value; },
-                $setUntouched: function (value) { this.$untouched = value; }
-            };
+            scope.forms.myForm = mockForms();
             scope.languages = [
                 language1,
                 language2

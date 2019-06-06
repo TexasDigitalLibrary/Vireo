@@ -142,12 +142,7 @@ describe('controller: DocumentTypesController', function () {
             expect(scope.closeModal).toHaveBeenCalled();
             expect(typeof scope.modalData.degreeLevel).toBe("string");
 
-            scope.forms.myForm = {
-                $pristine: true,
-                $untouched: true,
-                $setPristine: function (value) { this.$pristine = value; },
-                $setUntouched: function (value) { this.$untouched = value; }
-            };
+            scope.forms.myForm = mockForms();
             scope.resetDocumentTypes();
 
             scope.forms.myForm.$pristine = false;

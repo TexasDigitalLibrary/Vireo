@@ -93,3 +93,12 @@ var mockWindow = function() {
         }
     };
 };
+
+var mockForms = function() {
+    return {
+        $pristine: true,
+        $untouched: true,
+        $setPristine: function (value) { this.$pristine = value; },
+        $setUntouched: function (value) { this.$untouched = value; }
+    };
+};

@@ -341,6 +341,7 @@ describe('controller: FieldProfileManagementController', function () {
         });
         it('resetFieldProfiles should reset the field profile', function () {
             var fieldProfile = new mockFieldProfile(q);
+
             scope.forms = [];
             scope.modalData = fieldProfile;
 
@@ -363,12 +364,7 @@ describe('controller: FieldProfileManagementController', function () {
                 fieldProfile
             ];
 
-            scope.forms.myForm = {
-                $pristine: true,
-                $untouched: true,
-                $setPristine: function (value) { this.$pristine = value; },
-                $setUntouched: function (value) { this.$untouched = value; }
-            };
+            scope.forms.myForm = mockForms();
             scope.resetFieldProfiles();
 
             scope.forms.myForm.$pristine = false;

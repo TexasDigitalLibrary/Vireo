@@ -251,6 +251,12 @@ describe('controller: OrganizationManagementController', function () {
             expect(scope.organizationRepo.clearValidationResults).toHaveBeenCalled();
             expect(organization.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
+
+            scope.forms.myForm = mockForms();
+            scope.resetWorkflowSteps();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetWorkflowSteps();
         });
         it('restoreOrganizationDefaults should restore defaults', function () {
             var organization = new mockOrganization(q);

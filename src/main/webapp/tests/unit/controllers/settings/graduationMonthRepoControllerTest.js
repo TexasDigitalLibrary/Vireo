@@ -127,6 +127,7 @@ describe('controller: GraduationMonthRepoController', function () {
         });
         it('resetGraduationMonth should reset the graduation month', function () {
             var graduationMonth = new mockGraduationMonth(q);
+
             scope.forms = [];
             scope.modalData = graduationMonth;
 
@@ -141,12 +142,7 @@ describe('controller: GraduationMonthRepoController', function () {
             expect(scope.closeModal).toHaveBeenCalled();
             expect(typeof scope.modalData.degreeLevel).not.toBe(graduationMonth);
 
-            scope.forms.myForm = {
-                $pristine: true,
-                $untouched: true,
-                $setPristine: function (value) { this.$pristine = value; },
-                $setUntouched: function (value) { this.$untouched = value; }
-            };
+            scope.forms.myForm = mockForms();
             scope.resetGraduationMonth();
 
             scope.forms.myForm.$pristine = false;

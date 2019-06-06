@@ -92,6 +92,12 @@ describe('controller: OrganizationSideBarController', function () {
             expect(scope.organizationRepo.clearValidationResults).toHaveBeenCalled();
             expect(scope.newOrganization.category).toBeDefined();
             expect(scope.newOrganization.parent).toBeDefined();
+
+            scope.forms.myForm = mockForms();
+            scope.reset();
+
+            scope.forms.myForm.$pristine = false;
+            scope.reset();
         });
     });
 

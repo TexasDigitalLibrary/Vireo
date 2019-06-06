@@ -121,6 +121,12 @@ describe('controller: OrganizationCategoriesController', function () {
             expect(organizationCategory.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData).toBeDefined();
+
+            scope.forms.myForm = mockForms();
+            scope.resetOrganizationCategories();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetOrganizationCategories();
         });
         it('selectOrganizationCategory should select a organizationCategory', function () {
             scope.modalData = null;

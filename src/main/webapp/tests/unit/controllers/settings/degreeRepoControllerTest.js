@@ -142,12 +142,7 @@ describe('controller: DegreeRepoController', function () {
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData.level).toBeDefined();
 
-            scope.forms.myForm = {
-                $pristine: true,
-                $untouched: true,
-                $setPristine: function (value) { this.$pristine = value; },
-                $setUntouched: function (value) { this.$untouched = value; }
-            };
+            scope.forms.myForm = mockForms();
             scope.resetDegree();
 
             scope.forms.myForm.$pristine = false;

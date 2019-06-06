@@ -429,12 +429,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             expect(modalDataRefresh).toHaveBeenCalled();
             expect(scope.modalData).toEqual({});
 
-            scope.forms.myForm = {
-                $pristine: true,
-                $untouched: true,
-                $setPristine: function (value) { this.$pristine = value; },
-                $setUntouched: function (value) { this.$untouched = value; }
-            };
+            scope.forms.myForm = mockForms();
             scope.refreshControlledVocabulary();
 
             scope.forms.myForm.$pristine = false;
