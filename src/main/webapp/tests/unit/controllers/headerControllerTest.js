@@ -36,7 +36,6 @@ describe('controller: HeaderController', function () {
         module('core');
         module('vireo');
         module('mock.abstractAppRepo');
-        module('mock.abstractRepo');
         module('mock.alertService');
         module('mock.managedConfiguration');
         module('mock.managedConfigurationRepo');
