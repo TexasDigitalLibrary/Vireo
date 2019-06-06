@@ -141,6 +141,17 @@ describe('controller: DocumentTypesController', function () {
             expect(documentType.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
             expect(typeof scope.modalData.degreeLevel).toBe("string");
+
+            scope.forms.myForm = {
+                $pristine: true,
+                $untouched: true,
+                $setPristine: function (value) { this.$pristine = value; },
+                $setUntouched: function (value) { this.$untouched = value; }
+            };
+            scope.resetDocumentTypes();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetDocumentTypes();
         });
         it('selectDocumentType should select a custom action', function () {
             scope.modalData = null;
@@ -168,6 +179,10 @@ describe('controller: DocumentTypesController', function () {
 
             expect(scope.sortAction).toEqual("confirm");
             expect(DocumentTypeRepo.sort).toHaveBeenCalled();
+
+            scope.sortAction = "unknown";
+            scope.sortDocumentTypes("column");
+            expect(scope.sortAction).toEqual("unknown");
         });
         it('updateDocumentType should should save a custom action', function () {
             scope.modalData = new mockDocumentType(q);
