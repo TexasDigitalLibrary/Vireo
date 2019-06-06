@@ -176,15 +176,13 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
                 status: 200
             };
             cbOrActionOrActionArray(apiRes);
-        }
-        else if (Array.isArray(cbOrActionOrActionArray)) {
+        } else if (Array.isArray(cbOrActionOrActionArray)) {
             for (var cbAction in cbOrActionOrActionArray) {
                 if (typeof cbAction === "function") {
                     cbAction();
                 }
             }
-        }
-        else if (typeof cb === "function") {
+        } else if (typeof cb === "function") {
             cb();
         }
 
@@ -220,6 +218,7 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
         if (typeof modelToSave === "object") {
             var isNew = true;
             var savedModel = repo.mockModel(modelToSave);
+
             for (var i in repo.mockedList) {
                 if (repo.mockedList[i].id === modelToSave.id) {
                     angular.extend(repo.mockedList[i], savedModel);

@@ -27,15 +27,15 @@ describe('controller: FieldProfileManagementController', function () {
                 ControlledVocabularyRepo: _ControlledVocabularyRepo_,
                 DocumentTypeRepo: _DocumentTypeRepo_,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
-                FieldPredicateRepo: _FieldPredicateRepo_,
-                FieldProfileRepo: _FieldProfileRepo_,
+                FieldPredicateRepo: FieldPredicateRepo,
+                FieldProfileRepo: FieldProfileRepo,
                 InputTypeRepo: _InputTypeRepo_,
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
                 OrganizationRepo: _OrganizationRepo_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WorkflowStepRepo: _WorkflowStepRepo_,
+                WorkflowStepRepo: WorkflowStepRepo,
                 WsApi: _WsApi_
             });
 
@@ -178,6 +178,8 @@ describe('controller: FieldProfileManagementController', function () {
             expect(result).toBe(false);
         });
         it('changeLabel should update the field predicate', function () {
+            var fieldPredicate = mockFieldPredicate(q);
+
             scope.modalData = new mockFieldProfile(q);
             scope.modalData.fieldPredicate = "test";
             delete scope.modalData.gloss;
@@ -191,6 +193,14 @@ describe('controller: FieldProfileManagementController', function () {
             scope.changeLabel();
 
             expect(scope.modalData.fieldPredicate).toEqual("test_this");
+
+            scope.fieldPredicates = [fieldPredicate];
+            scope.modalData.fieldPredicate = {};
+            scope.changeLabel();
+
+            scope.modalData.fieldPredicate = fieldPredicate.value;
+            scope.modalData.gloss = fieldPredicate.value;
+            scope.changeLabel();
         });
         it('createFieldPredicate should create a new field predicate', function () {
             var originalMustCreateFieldPredicate = scope.mustCreateFieldPredicate;
@@ -207,6 +217,14 @@ describe('controller: FieldProfileManagementController', function () {
             scope.mustCreateFieldPredicate = originalMustCreateFieldPredicate;
             spyOn(scope, "mustCreateFieldPredicate").and.returnValue(false);
 
+            scope.createFieldPredicate();
+            scope.$digest();
+
+            scope.modalData.fieldPredicate = "";
+            scope.mustCreateFieldPredicate = originalMustCreateFieldPredicate;
+            FieldPredicateRepo.create = function() {
+                return payloadPromise(q.defer(), {}, "OTHER");
+            };
             scope.createFieldPredicate();
             scope.$digest();
         });
@@ -340,9 +358,23 @@ describe('controller: FieldProfileManagementController', function () {
             expect(fieldProfile.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.modalData).toBeDefined();
+
+            scope.step.aggregateFieldProfiles = [
+                fieldProfile
+            ];
+
+            scope.forms.myForm = {
+                $pristine: true,
+                $untouched: true,
+                $setPristine: function (value) { this.$pristine = value; },
+                $setUntouched: function (value) { this.$untouched = value; }
+            };
+            scope.resetFieldProfiles();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetFieldProfiles();
         });
         it('selectFieldProfile should select a field profile', function () {
-            // FIXME: this was confusing to write, review the method to ensure that the logic of the method makes sense.
             scope.modalData = null;
             scope.step = {
                 aggregateFieldProfiles: [
@@ -372,6 +404,9 @@ describe('controller: FieldProfileManagementController', function () {
             scope.selectFieldProfile(1);
             expect(scope.documentData.documentType.id).toBe(scope.documentTypes[0].id);
             expect(scope.inputTypeChanged).toHaveBeenCalled();
+
+            scope.step.aggregateFieldProfiles[0] = null;
+            scope.selectFieldProfile(0);
         });
         it('updateFieldProfile should should save a fieldPredicate', function () {
             scope.modalData = new mockFieldProfile(q);
