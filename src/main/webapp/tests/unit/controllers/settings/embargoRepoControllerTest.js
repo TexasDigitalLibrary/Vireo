@@ -158,6 +158,17 @@ describe('controller: EmbargoRepoController', function () {
             expect(scope.modalData).toBeDefined();
             expect(scope.proquestEmbargoes).toBeDefined();
             expect(scope.defaultEmbargoes).toBeDefined();
+
+            scope.forms.myForm = {
+                $pristine: true,
+                $untouched: true,
+                $setPristine: function (value) { this.$pristine = value; },
+                $setUntouched: function (value) { this.$untouched = value; }
+            };
+            scope.resetEmbargo();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetEmbargo();
         });
         it('selectEmbargo should select a embargo', function () {
             scope.modalData = null;
@@ -186,6 +197,11 @@ describe('controller: EmbargoRepoController', function () {
 
             expect(scope.sortAction).toEqual("confirm");
             expect(EmbargoRepo.sort).toHaveBeenCalled();
+
+            scope.sortDefault = "different";
+            scope.sortProquest = "sortProquestEmbargoes";
+            scope.sortAction = "sortProquestEmbargoes";
+            scope.sortEmbargoesDefault("column");
         });
         it('sortEmbargoesProquest should select a sort action', function () {
             scope.sortAction = "neither";
