@@ -78,6 +78,9 @@ describe('controller: OrganizationSideBarController', function () {
             expect(scope.reset).toHaveBeenCalled();
             expect(OrganizationRepo.create).toHaveBeenCalled();
             expect(scope.creatingNewOrganization).toBe(false);
+
+            scope.createNewOrganization("true");
+            scope.$digest();
         });
         it('reset should reset the custom action', function () {
             var organization = new mockOrganization(q);
