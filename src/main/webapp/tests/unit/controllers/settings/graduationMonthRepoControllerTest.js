@@ -165,22 +165,7 @@ describe('controller: GraduationMonthRepoController', function () {
             expect(scope.modalData).toBe(scope.graduationMonths[1]);
         });
         it('sortGraduationMonths should select a graduation month', function () {
-            scope.sortAction = "confirm";
-
-            spyOn(GraduationMonthRepo, "sort");
-
-            scope.sortGraduationMonths("column");
-
-            expect(scope.sortAction).toEqual("sort");
-            expect(GraduationMonthRepo.sort).not.toHaveBeenCalled();
-
-            scope.sortGraduationMonths("column");
-
-            expect(scope.sortAction).toEqual("confirm");
-            expect(GraduationMonthRepo.sort).toHaveBeenCalled();
-
-            scope.sortAction = "unknown";
-            scope.sortGraduationMonths("column");
+            testUtility.repoSorting(scope, GraduationMonthRepo, scope.sortGraduationMonths);
         });
         it('toMonthString should return a month', function () {
             var response = scope.toMonthString(0);

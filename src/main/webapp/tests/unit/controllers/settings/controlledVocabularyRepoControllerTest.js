@@ -532,22 +532,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             timeout.flush();
         });
         it('sortControlledVocabulary should sort the controlled vocabulary', function () {
-            scope.sortAction = "confirm";
-
-            spyOn(ControlledVocabularyRepo, "sort");
-
-            scope.sortControlledVocabulary("column");
-
-            expect(scope.sortAction).toEqual("sort");
-            expect(ControlledVocabularyRepo.sort).not.toHaveBeenCalled();
-
-            scope.sortControlledVocabulary("column");
-
-            expect(scope.sortAction).toEqual("confirm");
-            expect(ControlledVocabularyRepo.sort).toHaveBeenCalled();
-
-            scope.sortAction = "unknown";
-            scope.sortControlledVocabulary("column");
+            testUtility.repoSorting(scope, ControlledVocabularyRepo, scope.sortControlledVocabulary);
         });
         it('startEditVWMode should assign the editable vocabulary word', function () {
             var vw1 = new mockVocabularyWord(q);

@@ -173,13 +173,7 @@ describe('controller: DegreeRepoController', function () {
             ];
             scope.degrees[1].mock(dataDegree2);
 
-            scope.sortDegrees();
-
-            scope.sortAction = "sort";
-            scope.sortDegrees();
-
-            scope.sortAction = "unknown";
-            scope.sortDegrees();
+            testUtility.repoSorting(scope, DegreeRepo, scope.sortDegrees);
         });
         it('updateDegree should should save a custom action', function () {
             scope.modalData = new mockDegree(q);

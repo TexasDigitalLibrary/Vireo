@@ -166,23 +166,7 @@ describe('controller: DocumentTypesController', function () {
             expect(scope.modalData).toBe(scope.documentTypes[1]);
         });
         it('sortDocumentTypes should select a sort action', function () {
-            scope.sortAction = "confirm";
-
-            spyOn(DocumentTypeRepo, "sort");
-
-            scope.sortDocumentTypes("column");
-
-            expect(scope.sortAction).toEqual("sort");
-            expect(DocumentTypeRepo.sort).not.toHaveBeenCalled();
-
-            scope.sortDocumentTypes("column");
-
-            expect(scope.sortAction).toEqual("confirm");
-            expect(DocumentTypeRepo.sort).toHaveBeenCalled();
-
-            scope.sortAction = "unknown";
-            scope.sortDocumentTypes("column");
-            expect(scope.sortAction).toEqual("unknown");
+            testUtility.repoSorting(scope, DocumentTypeRepo, scope.sortDocumentTypes);
         });
         it('updateDocumentType should should save a custom action', function () {
             scope.modalData = new mockDocumentType(q);

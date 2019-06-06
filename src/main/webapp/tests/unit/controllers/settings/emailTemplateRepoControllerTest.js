@@ -211,22 +211,7 @@ describe('controller: EmailTemplateRepoController', function () {
             expect(angular.element).toHaveBeenCalled();
         });
         it('sortEmailTemplates should select a sort action', function () {
-            scope.sortAction = "confirm";
-
-            spyOn(EmailTemplateRepo, "sort");
-
-            scope.sortEmailTemplates("column");
-            expect(scope.sortAction).toEqual("sort");
-            expect(EmailTemplateRepo.sort).not.toHaveBeenCalled();
-
-            scope.sortAction = "sort";
-            scope.sortEmailTemplates("column");
-            expect(scope.sortAction).toEqual("confirm");
-            expect(EmailTemplateRepo.sort).toHaveBeenCalled();
-
-            scope.sortAction = "unknown";
-            scope.sortEmailTemplates("column");
-            expect(scope.sortAction).toEqual("unknown");
+            testUtility.repoSorting(scope, EmailTemplateRepo, scope.sortEmailTemplates);
         });
         it('templateToString should convert a template to a string', function () {
             var emailTemplate = new mockEmailTemplate(q);

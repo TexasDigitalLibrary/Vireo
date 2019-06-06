@@ -184,39 +184,46 @@ describe('controller: EmbargoRepoController', function () {
             expect(scope.modalData.id).toBe(scope.embargos[1].id);
         });
         it('sortEmbargoesDefault should select a sort action', function () {
-            scope.sortAction = "neither";
-
             spyOn(EmbargoRepo, "sort");
 
+            scope.sortAction = "confirm";
             scope.sortEmbargoesDefault("column");
 
             expect(scope.sortAction).toEqual("sortDefaultEmbargoes");
             expect(EmbargoRepo.sort).not.toHaveBeenCalled();
 
+            scope.sortAction = "sortDefaultEmbargoes";
             scope.sortEmbargoesDefault("column");
 
             expect(scope.sortAction).toEqual("confirm");
             expect(EmbargoRepo.sort).toHaveBeenCalled();
 
-            scope.sortDefault = "different";
-            scope.sortProquest = "sortProquestEmbargoes";
-            scope.sortAction = "sortProquestEmbargoes";
+            scope.sortAction = "unknown";
+            scope.sortDefault = "unknownDefault";
+            scope.sortProquest = "unknownProquest";
             scope.sortEmbargoesDefault("column");
+            expect(scope.sortAction).toEqual("unknownDefault");
         });
         it('sortEmbargoesProquest should select a sort action', function () {
-            scope.sortAction = "neither";
-
             spyOn(EmbargoRepo, "sort");
 
+            scope.sortAction = "confirm";
             scope.sortEmbargoesProquest("column");
 
             expect(scope.sortAction).toEqual("sortProquestEmbargoes");
             expect(EmbargoRepo.sort).not.toHaveBeenCalled();
 
+            scope.sortAction = "sortProquestEmbargoes";
             scope.sortEmbargoesProquest("column");
 
             expect(scope.sortAction).toEqual("confirm");
             expect(EmbargoRepo.sort).toHaveBeenCalled();
+
+            scope.sortAction = "unknown";
+            scope.sortDefault = "unknownDefault";
+            scope.sortProquest = "unknownProquest";
+            scope.sortEmbargoesProquest("column");
+            expect(scope.sortAction).toEqual("unknownProquest");
         });
         it('updateEmbargo should should save a embargo', function () {
             scope.modalData = new mockEmbargo(q);

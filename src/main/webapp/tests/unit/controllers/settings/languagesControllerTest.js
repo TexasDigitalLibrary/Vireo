@@ -179,22 +179,7 @@ describe('controller: LanguagesController', function () {
             expect(scope.modalData).toBe(scope.languages[1]);
         });
         it('sortLanguages should select a sort action', function () {
-            scope.sortAction = "confirm";
-
-            spyOn(LanguageRepo, "sort");
-
-            scope.sortLanguages("column");
-
-            expect(scope.sortAction).toEqual("sort");
-            expect(LanguageRepo.sort).not.toHaveBeenCalled();
-
-            scope.sortLanguages("column");
-
-            expect(scope.sortAction).toEqual("confirm");
-            expect(LanguageRepo.sort).toHaveBeenCalled();
-
-            scope.sortAction = "unknown";
-            scope.sortLanguages("column");
+            testUtility.repoSorting(scope, LanguageRepo, scope.sortLanguages);
         });
         it('updateLanguage should should save a language', function () {
             scope.modalData = new mockLanguage(q);
