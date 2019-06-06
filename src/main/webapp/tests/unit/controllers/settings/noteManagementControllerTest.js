@@ -185,9 +185,11 @@ describe('controller: NoteManagementController', function () {
             expect(note.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
 
+            scope.step.aggregateNotes = [ note ];
             scope.forms.myForm = mockForms();
             scope.resetNotes();
 
+            scope.step = undefined;
             scope.forms.myForm.$pristine = false;
             scope.resetNotes();
         });
