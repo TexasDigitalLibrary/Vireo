@@ -80,6 +80,10 @@ describe('controller: GraduationMonthRepoController', function () {
             expect(scope.sortGraduationMonths).toBeDefined();
             expect(typeof scope.sortGraduationMonths).toEqual("function");
         });
+        it('toMonthString should be defined', function () {
+            expect(scope.toMonthString).toBeDefined();
+            expect(typeof scope.toMonthString).toEqual("function");
+        });
         it('updateGraduationMonth should be defined', function () {
             expect(scope.updateGraduationMonth).toBeDefined();
             expect(typeof scope.updateGraduationMonth).toEqual("function");
@@ -136,6 +140,17 @@ describe('controller: GraduationMonthRepoController', function () {
             expect(graduationMonth.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
             expect(typeof scope.modalData.degreeLevel).not.toBe(graduationMonth);
+
+            scope.forms.myForm = {
+                $pristine: true,
+                $untouched: true,
+                $setPristine: function (value) { this.$pristine = value; },
+                $setUntouched: function (value) { this.$untouched = value; }
+            };
+            scope.resetGraduationMonth();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetGraduationMonth();
         });
         it('selectGraduationMonth should select a graduation month', function () {
             scope.modalData = null;
@@ -163,6 +178,13 @@ describe('controller: GraduationMonthRepoController', function () {
 
             expect(scope.sortAction).toEqual("confirm");
             expect(GraduationMonthRepo.sort).toHaveBeenCalled();
+
+            scope.sortAction = "unknown";
+            scope.sortGraduationMonths("column");
+        });
+        it('toMonthString should return a month', function () {
+            var response = scope.toMonthString(0);
+            expect(response).toBe("January");
         });
         it('updateGraduationMonth should should save a graduation month', function () {
             scope.modalData = new mockGraduationMonth(q);
