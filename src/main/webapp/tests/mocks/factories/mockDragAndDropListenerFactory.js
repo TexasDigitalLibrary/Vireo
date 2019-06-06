@@ -2,7 +2,7 @@ angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListen
     var factory = this;
     var defer;
 
-    var listener = {
+    factory.listener = {
         'trash': {
             hover: false,
             element: null,
@@ -19,39 +19,49 @@ angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListen
         'reorder': function(src, dest) {}
     };
 
-    listener.setConfirmRemoveModal = function(confirmRemoveModal) {
-        listener.confirm.remove.modal = confirmRemoveModal;
+    factory.mock = function(toMock) {
+        if (typeof toMock === "object") {
+            var keys = Object.keys(toMock);
+            for (var i in keys) {
+                factory[keys[i]] = toMock[keys[i]];
+            }
+        } else if (toMock === undefined || toMock === null) {
+            factory = null;
+        }
     };
 
-    listener.setScopeDragging = function(dragging) {
-        listener.dragging = dragging;
+    factory.listener.setConfirmRemoveModal = function(confirmRemoveModal) {
+        factory.listener.confirm.remove.modal = confirmRemoveModal;
     };
 
-    listener.setScopeList = function(list) {
-        listener.list = list;
+    factory.listener.setScopeDragging = function(dragging) {
+        factory.listener.dragging = dragging;
     };
 
-    listener.setScopeReorderFunction = function(reorder) {
-        listener.reorder = reorder;
+    factory.listener.setScopeList = function(list) {
+        factory.listener.list = list;
     };
 
-    listener.setScopeSelect = function(select) {
-        listener.select = select;
+    factory.listener.setScopeReorderFunction = function(reorder) {
+        factory.listener.reorder = reorder;
     };
 
-    listener.setScopeTrashId = function(id) {
-        listener.trash.id = id;
+    factory.listener.setScopeSelect = function(select) {
+        factory.listener.select = select;
+    };
+
+    factory.listener.setScopeTrashId = function(id) {
+        factory.listener.trash.id = id;
     };
 
     factory.buildDragControls = function(drag) {
-
-        if(typeof drag == 'object') {
-            listener.setScopeTrashId(drag.trashId);
-            listener.setScopeDragging(drag.dragging);
-            listener.setScopeSelect(drag.select);
-            listener.setScopeList(drag.list);
-            listener.setConfirmRemoveModal(drag.confirm);
-            listener.setScopeReorderFunction(drag.reorder);
+        if (typeof drag === 'object') {
+            factory.listener.setScopeTrashId(drag.trashId);
+            factory.listener.setScopeDragging(drag.dragging);
+            factory.listener.setScopeSelect(drag.select);
+            factory.listener.setScopeList(drag.list);
+            factory.listener.setConfirmRemoveModal(drag.confirm);
+            factory.listener.setScopeReorderFunction(drag.reorder);
         }
         else {
             console.log('ensure configured');
@@ -59,50 +69,48 @@ angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListen
 
         var dragControls = {
             dragStart: function(event) {
-                listener.dragging = true;
-                listener.select(event.source.index);
+                factory.listener.dragging = true;
+                factory.listener.select(event.source.index);
             },
             dragMove: function(event) {
-                if(listener.trash.hover) {
-                    listener.trash.hover = false;
-                    listener.trash.element.removeClass('dragging');
+                if (factory.listener.trash.hover) {
+                    factory.listener.trash.hover = false;
+                    factory.listener.trash.element.removeClass('dragging');
                 }
             },
             dragEnd: function(event) {
-                if(listener.dragging) {
-                    if(listener.trash.hover) {
-                        angular.element(listener.confirm.remove.modal).modal('show');
-                        listener.trash.element.removeClass('dragging');
-                    }
-                    else {
+                if (factory.listener.dragging) {
+                    if (factory.listener.trash.hover) {
+                        angular.element(factory.listener.confirm.remove.modal).modal('show');
+                        factory.listener.trash.element.removeClass('dragging');
+                    } else {
                         // do nothing
                     }
                 }
-                listener.dragging = false;
+                factory.listener.dragging = false;
             },
             accept: function (sourceItemHandleScope, destSortableScope) {
                 var currentElement = destSortableScope.element;
-                if(currentElement[0].id == listener.trash.id) {
-                    listener.trash.hover = true;
-                    listener.trash.element = currentElement;
-                    listener.trash.element.addClass('dragging');
-                }
-                else {
-                    listener.trash.hover = false;
+                if(currentElement[0].id == factory.listener.trash.id) {
+                    factory.listener.trash.hover = true;
+                    factory.listener.trash.element = currentElement;
+                    factory.listener.trash.element.addClass('dragging');
+                } else {
+                    factory.listener.trash.hover = false;
                 }
                 return sourceItemHandleScope.itemScope.sortableScope.$id === destSortableScope.$id;
             },
             orderChanged: function(event) {
-                if(!listener.trash.hover) {
+                if (!factory.listener.trash.hover) {
                     var src = event.source.index + 1;
                     var dest = event.dest.index + 1;
-                    listener.reorder(src, dest);
+                    factory.listener.reorder(src, dest);
                 }
             }
         };
 
         dragControls.getListener = function() {
-            return listener;
+            return factory.listener;
         };
 
         return dragControls;

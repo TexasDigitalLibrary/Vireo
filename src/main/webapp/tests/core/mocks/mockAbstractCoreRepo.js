@@ -100,6 +100,7 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
                 break;
             }
         }
+
         return payloadPromise($q.defer());
     };
 
@@ -110,6 +111,7 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
                 break;
             }
         }
+
         return payloadPromise($q.defer());
     };
 
@@ -128,6 +130,7 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
                 found = repo.mockCopy(repo.mockedList[i]);
             }
         }
+
         return found;
     };
 
@@ -184,6 +187,7 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
         else if (typeof cb === "function") {
             cb();
         }
+
         return payloadPromise($q.defer());
     };
 
@@ -263,6 +267,7 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
                 break;
             }
         }
+
         return payloadPromise($q.defer(), updated);
     };
 
