@@ -124,25 +124,47 @@ describe('controller: LanguagesController', function () {
             expect(LanguageRepo.reorder).toHaveBeenCalled();
         });
         it('resetLanguages should reset the language', function () {
-            var language = new mockLanguage(q);
+            var language1 = new mockLanguage(q);
+            var language2 = new mockLanguage(q);
+
+            language2.mock(dataLanguage2);
+
             scope.forms = [];
-            scope.modalData = language;
+            scope.modalData = language1;
             scope.uploadAction = "process";
             scope.uploadStatus = function() {};
 
             spyOn(scope.languageRepo, "clearValidationResults");
-            spyOn(language, "refresh");
+            spyOn(language1, "refresh");
             spyOn(scope, "closeModal");
             spyOn(scope, "uploadStatus");
 
             scope.resetLanguages();
 
             expect(scope.languageRepo.clearValidationResults).toHaveBeenCalled();
-            expect(language.refresh).toHaveBeenCalled();
+            expect(language1.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.uploadStatus).toHaveBeenCalled();
             expect(scope.uploadAction).toEqual("confirm");
-            expect(typeof scope.modalData.degreeLevel).not.toBe(language);
+            expect(typeof scope.modalData.degreeLevel).not.toBe(language1);
+
+            scope.forms.myForm = {
+                $pristine: true,
+                $untouched: true,
+                $setPristine: function (value) { this.$pristine = value; },
+                $setUntouched: function (value) { this.$untouched = value; }
+            };
+            scope.languages = [
+                language1,
+                language2
+            ];
+            scope.proquestLanguageCodes = [
+                language1.name
+            ];
+            scope.resetLanguages();
+
+            scope.forms.myForm.$pristine = false;
+            scope.resetLanguages();
         });
         it('selectLanguage should select a language', function () {
             scope.modalData = null;
@@ -170,6 +192,9 @@ describe('controller: LanguagesController', function () {
 
             expect(scope.sortAction).toEqual("confirm");
             expect(LanguageRepo.sort).toHaveBeenCalled();
+
+            scope.sortAction = "unknown";
+            scope.sortLanguages("column");
         });
         it('updateLanguage should should save a language', function () {
             scope.modalData = new mockLanguage(q);
