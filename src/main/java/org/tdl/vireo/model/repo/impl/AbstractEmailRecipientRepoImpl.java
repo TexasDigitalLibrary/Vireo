@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.AbstractEmailRecipient;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailRecipientAssignee;
+import org.tdl.vireo.model.EmailRecipientAdvisor;
 import org.tdl.vireo.model.EmailRecipientContact;
 import org.tdl.vireo.model.EmailRecipientOrganization;
 import org.tdl.vireo.model.EmailRecipientSubmitter;
@@ -35,6 +36,12 @@ public class AbstractEmailRecipientRepoImpl extends AbstractWeaverRepoImpl<Abstr
     public EmailRecipient createAssigneeRecipient() {
         EmailRecipient assigneeRecipient = findOneByName("Assignee");
         return assigneeRecipient != null ? assigneeRecipient : abstractEmailRecipientRepo.save(new EmailRecipientAssignee());
+    }
+
+    @Override
+    public EmailRecipient createAdvisorRecipient() {
+        EmailRecipient advisorRecipient = findOneByName("Advisor");
+        return advisorRecipient != null ? advisorRecipient : abstractEmailRecipientRepo.save(new EmailRecipientAdvisor());
     }
 
     @Override

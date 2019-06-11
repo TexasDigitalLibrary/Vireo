@@ -10,6 +10,8 @@ public interface AbstractEmailRecipientRepoCustom {
 
     EmailRecipient createAssigneeRecipient();
 
+    EmailRecipient createAdvisorRecipient();
+
     EmailRecipient createSubmitterRecipient();
 
     EmailRecipient createContactRecipient(String label, FieldPredicate fieldPredicate);
