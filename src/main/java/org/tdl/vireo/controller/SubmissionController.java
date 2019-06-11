@@ -54,6 +54,7 @@ import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailRecipientAssignee;
+import org.tdl.vireo.model.EmailRecipientAdvisor;
 import org.tdl.vireo.model.EmailRecipientContact;
 import org.tdl.vireo.model.EmailRecipientOrganization;
 import org.tdl.vireo.model.EmailRecipientPlainAddress;
@@ -298,6 +299,7 @@ public class SubmissionController {
             List<String> recipientEmailAddresses = new ArrayList<String>();
             recipientEmailAddressesList.forEach(emailRecipientNode->{
                 String type = (String) emailRecipientNode.get("type");
+	System.out.println("PTA "+type+"\n");
                 EmailRecipient recipient = buildEmailRecipient(type, emailRecipientNode, submission);
                 if(recipient != null) {
                   recipientEmailAddresses.addAll(recipient.getEmails(submission));
@@ -343,9 +345,14 @@ public class SubmissionController {
     private EmailRecipient buildEmailRecipient(String type, HashMap<String, Object> emailRecipientMap, Submission submission) {
       EmailRecipient recipient = null;
 
+System.out.println("FSS buildEmailRecipient "+type+" MAP "+emailRecipientMap.toString()+"\n");
       switch(EmailRecipientType.valueOf(type)) {
         case ASSIGNEE: {
           recipient = new EmailRecipientAssignee();
+          break;
+        }
+        case ADVISOR: {
+          recipient = new EmailRecipientAdvisor();
           break;
         }
         case CONTACT: {
