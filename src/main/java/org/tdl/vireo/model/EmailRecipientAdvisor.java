@@ -22,7 +22,6 @@ public class EmailRecipientAdvisor extends AbstractEmailRecipient implements Ema
             Optional<String> optEmail = optFv.get().getContacts().stream().findFirst();
             if (optEmail.isPresent()) {
                 email = optEmail.get();
-                System.out.println("FSS ADVISOR EMAIL "+email+"\n");
                 emails.add(email);
             }
         }

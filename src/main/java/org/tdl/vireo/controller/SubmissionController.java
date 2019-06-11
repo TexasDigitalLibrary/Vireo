@@ -299,7 +299,6 @@ public class SubmissionController {
             List<String> recipientEmailAddresses = new ArrayList<String>();
             recipientEmailAddressesList.forEach(emailRecipientNode->{
                 String type = (String) emailRecipientNode.get("type");
-	System.out.println("PTA "+type+"\n");
                 EmailRecipient recipient = buildEmailRecipient(type, emailRecipientNode, submission);
                 if(recipient != null) {
                   recipientEmailAddresses.addAll(recipient.getEmails(submission));
@@ -345,7 +344,6 @@ public class SubmissionController {
     private EmailRecipient buildEmailRecipient(String type, HashMap<String, Object> emailRecipientMap, Submission submission) {
       EmailRecipient recipient = null;
 
-System.out.println("FSS buildEmailRecipient "+type+" MAP "+emailRecipientMap.toString()+"\n");
       switch(EmailRecipientType.valueOf(type)) {
         case ASSIGNEE: {
           recipient = new EmailRecipientAssignee();
