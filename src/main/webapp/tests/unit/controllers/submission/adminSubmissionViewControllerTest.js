@@ -1,42 +1,52 @@
 describe('controller: AdminSubmissionViewController', function () {
 
-    var controller, location, q, scope, EmailTemplateRepo, FileUploadService;
+    var controller, location, q, scope, timeout, EmailTemplateRepo, FileUploadService, SubmissionRepo, UserSettings, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($anchorScroll, $controller, $location, $q, $route, $routeParams, $rootScope, _DepositLocationRepo_, _EmailRecipient_, _EmailTemplateRepo_, _FieldPredicateRepo_, _FieldValue_, _FileUploadService_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _UserService_, _WsApi_) {
-            location = $location;
+    var initializeVariables = function(settings) {
+        inject(function ($q, $timeout, $location, _EmailTemplateRepo_, _FileUploadService_, _SubmissionRepo_, _UserSettings_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
+            timeout = $timeout;
+            location = $location;
+            WsApi = _WsApi_;
 
             EmailTemplateRepo = _EmailTemplateRepo_;
             FileUploadService = _FileUploadService_;
+            SubmissionRepo = _SubmissionRepo_;
+            UserSettings = _UserSettings_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($anchorScroll, $controller, $q, $route, $routeParams, $rootScope, _DepositLocationRepo_, _EmailRecipient_, _FieldPredicateRepo_, _FieldValue_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionStatusRepo_, _UserRepo_, _UserService_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('AdminSubmissionViewController', {
                 $anchorScroll: $anchorScroll,
-                $location: $location,
+                $location: location,
                 $route: $route,
                 $routeParams: $routeParams,
                 $scope: scope,
                 $window: mockWindow(),
                 DepositLocationRepo: _DepositLocationRepo_,
-                EmailRecipient: _EmailRecipient_,
+                EmailRecipient: mockParameterModel(q, mockEmailRecipient),
                 EmailTemplateRepo: EmailTemplateRepo,
                 FieldPredicateRepo: _FieldPredicateRepo_,
                 FieldValue: mockParameterModel(q, mockFieldValue),
-                FileUploadService: _FileUploadService_,
+                FileUploadService: FileUploadService,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
-                SubmissionRepo: _SubmissionRepo_,
+                SubmissionRepo: SubmissionRepo,
                 SubmissionStatus: mockParameterModel(q, mockSubmissionStatus),
                 SubmissionStatusRepo: _SubmissionStatusRepo_,
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,
-                WsApi: _WsApi_
+                UserSettings: mockParameterConstructor(UserSettings),
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -65,9 +75,11 @@ describe('controller: AdminSubmissionViewController', function () {
         module('mock.user');
         module('mock.userRepo');
         module('mock.userService');
+        module('mock.userSettings');
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 
@@ -155,6 +167,10 @@ describe('controller: AdminSubmissionViewController', function () {
         it('hasPrimaryDocument should be defined', function () {
             expect(scope.hasPrimaryDocument).toBeDefined();
             expect(typeof scope.hasPrimaryDocument).toEqual("function");
+        });
+        it('isEmailAddresseeInvalid should be defined', function () {
+            expect(scope.isEmailAddresseeInvalid).toBeDefined();
+            expect(typeof scope.isEmailAddresseeInvalid).toEqual("function");
         });
         it('isPrimaryDocument should be defined', function () {
             expect(scope.isPrimaryDocument).toBeDefined();
@@ -264,6 +280,25 @@ describe('controller: AdminSubmissionViewController', function () {
         });
     });
 
+    describe('Are the scope.activeDocumentBox methods defined', function () {
+        it('downloadPrimaryDocument should be defined', function () {
+            expect(scope.activeDocumentBox.downloadPrimaryDocument).toBeDefined();
+            expect(typeof scope.activeDocumentBox.downloadPrimaryDocument).toEqual("function");
+        });
+        it('getPrimaryDocumentFileName should be defined', function () {
+            expect(scope.activeDocumentBox.getPrimaryDocumentFileName).toBeDefined();
+            expect(typeof scope.activeDocumentBox.getPrimaryDocumentFileName).toEqual("function");
+        });
+        it('gotoAllFiles should be defined', function () {
+            expect(scope.activeDocumentBox.gotoAllFiles).toBeDefined();
+            expect(typeof scope.activeDocumentBox.gotoAllFiles).toEqual("function");
+        });
+        it('uploadNewFile should be defined', function () {
+            expect(scope.activeDocumentBox.uploadNewFile).toBeDefined();
+            expect(typeof scope.activeDocumentBox.uploadNewFile).toEqual("function");
+        });
+    });
+
     describe('Does the scope initialize as expected', function () {
         it('EmailTemplateRepo.ready() should handle default template', function () {
             var defaultEmailTemplate = new mockEmailTemplate(q);
@@ -273,6 +308,54 @@ describe('controller: AdminSubmissionViewController', function () {
             EmailTemplateRepo.mockedList.push(defaultEmailTemplate);
 
             initializeController();
+        });
+        it('Listen on "/channel/submission/" + id should work as expected', function () {
+            var submission1 = new mockSubmission(q);
+            var submission2 = new mockSubmission(q);
+            var fieldValue1 = new mockFieldValue(q);
+            var fieldValue2 = new mockFieldValue(q);
+            var fieldPredicate1 = new mockFieldPredicate(q);
+            var fieldPredicate2 = new mockFieldPredicate(q);
+
+            fieldPredicate2.documentTypePredicate = undefined;
+            submission2.fieldValues = [
+                fieldValue1,
+                fieldValue2
+            ];
+            fieldValue1.fieldPredicate = fieldPredicate1;
+            fieldValue2.fieldPredicate = fieldPredicate2;
+
+            WsApi.listen = function(path) {
+                var payload = {
+                    Submission: submission1
+                };
+                return notifyPromise(timeout, q.defer(), payload);
+            };
+
+            initializeController();
+            scope.$digest();
+            timeout.flush();
+
+            SubmissionRepo.fetchSubmissionById = function() {
+                return valuePromise(q.defer(), submission2);
+            };
+
+            initializeController();
+            scope.$digest();
+            timeout.flush();
+
+            WsApi.listen = function(path) {
+                var payload = {
+                    Submission: submission2
+                };
+                return notifyPromise(timeout, q.defer(), payload);
+            };
+
+            fieldPredicate2.documentTypePredicate = true;
+
+            initializeController();
+            scope.$digest();
+            timeout.flush();
         });
     });
 
@@ -297,17 +380,39 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(scope.addCommentModal.ccRecipientEmail).toBeDefined();
             expect(scope.submission.changeStatus).toHaveBeenCalled();
             expect(scope.resetCommentModal).toHaveBeenCalled();
+
+            commentModal.needsCorrection = false;
+
+            scope.addComment(commentModal);
+            scope.$digest();
         });
         it('addEmailAddressee should update the destination', function () {
             var mockEmails = { push: jasmine.createSpy() };
             var mockFormField =  {
-              $$rawModelValue: {},
-              $$attr: {name:""}
+              $$rawModelValue: { type: "mock" },
+              $$attr: { name: "" }
             };
 
-            scope.addEmailAddressee(mockEmails,mockFormField);
+            scope.validateEmailAddressee = function() { return false; };
 
+            scope.addEmailAddressee(mockEmails, mockFormField);
             expect(mockEmails.push).toHaveBeenCalled();
+
+            scope.validateEmailAddressee = function() { return true; };
+
+            scope.addEmailAddressee(mockEmails, mockFormField);
+
+            mockFormField.$$rawModelValue = "mock@example.com";
+
+            scope.addEmailAddressee(mockEmails, mockFormField);
+
+            mockFormField.$$rawModelValue = "invalid email mock";
+
+            scope.addEmailAddressee(mockEmails, mockFormField);
+
+            mockFormField.$$rawModelValue = false;
+
+            scope.addEmailAddressee(mockEmails, mockFormField);
         });
         it('cancel should open a modal close a modal', function () {
             var fieldValue = { refresh: jasmine.createSpy() };
@@ -350,17 +455,98 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.addCommentModal.sendEmailToCCRecipient = true;
 
             response = scope.disableAddComment();
-            expect(typeof response).toBe("boolean");
+            expect(response).toBe(true);
 
             scope.addCommentModal.sendEmailToCCRecipient = false;
 
             response = scope.disableAddComment();
-            expect(typeof response).toBe("boolean");
+            expect(response).toBe(true);
 
+            scope.addCommentModal.recipientEmails = [{}];
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.subject = 1;
+            scope.addCommentModal.message = undefined;
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.message = "";
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.message = 1;
+
+            response = scope.disableAddComment();
+            expect(response).toBe(false);
+
+            scope.addCommentModal.sendEmailToCCRecipient = true;
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.ccRecipientEmails = [{}];
+            scope.addCommentModal.subject = undefined;
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.subject = "";
+            scope.addCommentModal.message = undefined;
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.subject = 1;
+            scope.addCommentModal.message = undefined;
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.message = "";
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.message = 1;
+
+            response = scope.disableAddComment();
+            expect(response).toBe(false);
+
+            scope.addCommentModal.sendEmailToRecipient = false;
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.subject = undefined;
             scope.addCommentModal.commentVisibility = 'private';
 
             response = scope.disableAddComment();
             expect(typeof response).toBe("boolean");
+
+            scope.addCommentModal.subject = 1;
+            scope.addCommentModal.message = undefined;
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.message = "";
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
+
+            scope.addCommentModal.message = 1;
+
+            response = scope.disableAddComment();
+            expect(response).toBe(false);
+
+            scope.addCommentModal.commentVisibility = "unknown";
+
+            response = scope.disableAddComment();
+            expect(response).toBe(true);
         });
         it('disableSubmitAddFile should return a boolean', function () {
             var response;
@@ -479,6 +665,26 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.hasPrimaryDocument();
             expect(response).toBe(false);
         });
+        it('isEmailAddresseeInvalid should return a boolean', function () {
+            var response;
+            var formField = {
+                $$attr: {
+                    name: "mock"
+                },
+                $$rawModelValue: {
+                    type: "mock"
+                },
+                $invalid: false
+            };
+
+            response = scope.isEmailAddresseeInvalid(formField);
+            // TODO
+
+            formField.$invalid = true;
+
+            response = scope.isEmailAddresseeInvalid(formField);
+            // TODO
+        });
         it('isPrimaryDocument should return a boolean', function () {
             var response;
 
@@ -534,12 +740,26 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.resetCommentModal({});
 
             expect(scope.closeModal).toHaveBeenCalled();
+
+            UserSettings = {
+                notes_cc_student_advisor_by_default: "true",
+                notes_mark_comment_as_private_by_default: "true",
+                notes_email_student_by_default: "true"
+            };
+
+            initializeController();
+            scope.resetCommentModal({});
+
+            UserSettings.notes_email_student_by_default = "false";
+            UserSettings.notes_cc_student_advisor_by_default = "true";
+
+            initializeController();
+            scope.resetCommentModal({});
         });
         it('saveDocumentFieldValue should close a modal', function () {
             var fieldValue = new mockFieldValue(q);
             fieldValue.updating = null;
 
-            // TODO: add test case for when scope.submission.saveFieldValue() response is INVALID.
             spyOn(scope, "closeModal");
 
             scope.saveDocumentFieldValue(fieldValue);
@@ -547,6 +767,14 @@ describe('controller: AdminSubmissionViewController', function () {
 
             expect(scope.closeModal).toHaveBeenCalled();
             expect(fieldValue.updating).toBe(false);
+
+            scope.submission.saveFieldValue = function() {
+                var payload = {};
+                return payloadPromise(q.defer(), payload, "INVALID");
+            };
+
+            scope.saveDocumentFieldValue(fieldValue);
+            scope.$digest();
         });
         it('saveReviewerNotes should save the reviewer notes', function () {
             scope.submission = new mockSubmission(q);
@@ -666,18 +894,19 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(scope.actionLogCurrentLimit).toBe(100);
         });
         it('validateEmailAddressee should validate email addresses', function () {
-            var result;
+            var response;
             var formField = {
                 $$attr: {
-                    name: "TODO"
+                    name: "mock"
                 },
                 $$rawModelValue: {
-                    type: "TODO"
+                    type: "mock"
                 },
                 $invalid: false
             };
 
-            result = scope.validateEmailAddressee(formField);
+            response = scope.validateEmailAddressee(formField);
+            scope.$digest();
             // TODO
         });
     });
@@ -690,12 +919,27 @@ describe('controller: AdminSubmissionViewController', function () {
 
             expect(scope.getFile).toHaveBeenCalled();
         });
-        it('uploadNewFile should open a modal', function () {
-            spyOn(scope, "openModal");
+        it('getPrimaryDocumentFileName should update the location', function () {
+            var response;
 
-            scope.activeDocumentBox.uploadNewFile();
+            scope.submission = new mockSubmission(q);
+            scope.submission.primaryDocumentFieldValue = {
+                fileInfo: {
+                    name: "mock"
+                }
+            };
 
-            expect(scope.openModal).toHaveBeenCalled();
+            response = scope.activeDocumentBox.getPrimaryDocumentFileName();
+
+            expect(response).toBe("mock");
+
+            scope.submission.primaryDocumentFieldValue.fileInfo = undefined;
+            response = scope.activeDocumentBox.getPrimaryDocumentFileName();
+
+            scope.submission.primaryDocumentFieldValue = undefined;
+            response = scope.activeDocumentBox.getPrimaryDocumentFileName();
+
+            expect(response).toBe("");
         });
         it('gotoAllFiles should update the location', function () {
             spyOn(location, "hash");
@@ -703,6 +947,13 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.activeDocumentBox.gotoAllFiles();
 
             expect(location.hash).toHaveBeenCalled();
+        });
+        it('uploadNewFile should open a modal', function () {
+            spyOn(scope, "openModal");
+
+            scope.activeDocumentBox.uploadNewFile();
+
+            expect(scope.openModal).toHaveBeenCalled();
         });
     });
 

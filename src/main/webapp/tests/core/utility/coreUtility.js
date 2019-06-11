@@ -13,11 +13,13 @@ var messagePromise = function (defer, message, messageStatus, httpStatus) {
     return defer.promise;
 };
 
-var valuePromise = function (defer, model, type) {
+var valuePromise = function (defer, model, type, timeout) {
     if (type === 'reject') {
         defer.reject(model);
     } else if (type === 'notify') {
-        defer.notify(model);
+        timeout(function () {
+            defer.notify(model);
+        }, 0);
     } else {
         defer.resolve(model);
     }
@@ -77,12 +79,31 @@ var failurePromise = function (defer, payload, messageStatus, httpStatus) {
     return defer.promise;
 };
 
+var notifyPromise = function (timeout, defer, payload, messageStatus, httpStatus) {
+    timeout(function () {
+        defer.notify({
+            body: angular.toJson({
+                meta: {
+                    status: messageStatus ? messageStatus : 'SUCCESS',
+                },
+                payload: payload,
+                status: httpStatus ? httpStatus : 200
+            })
+        });
+    }, 0);
+    return defer.promise;
+};
+
 var mockParameterModel = function($q, mockModel) {
     return function(toMock) {
         var model = new mockModel($q);
         model.mock(toMock);
         return model;
     };
+};
+
+var mockParameterConstructor = function(mockConstructor) {
+    return function() { return mockConstructor; };
 };
 
 var mockWindow = function() {
