@@ -1,19 +1,29 @@
 describe('model: AbstractAppModel', function () {
     var model, rootScope, scope, WsApi;
 
+    var initializeVariables = function(settings) {
+        inject(function ($rootScope, _WsApi_) {
+            rootScope = $rootScope;
+
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeModel = function(settings) {
+        inject(function (AbstractAppModel) {
+            scope = rootScope.$new();
+
+            model = angular.extend(new AbstractAppModel());
+        });
+    };
+
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, AbstractAppModel, _WsApi_) {
-            rootScope = $rootScope;
-            scope = $rootScope.$new();
-
-            WsApi = _WsApi_;
-
-            model = angular.extend(new AbstractAppModel());
-        });
+        initializeVariables();
+        initializeModel();
     });
 
     describe('Is the model defined', function () {

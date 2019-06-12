@@ -1,19 +1,29 @@
 describe('model: Degree', function () {
     var model, rootScope, scope, WsApi;
 
+    var initializeVariables = function(settings) {
+        inject(function ($rootScope, _WsApi_) {
+            rootScope = $rootScope;
+
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeModel = function(settings) {
+        inject(function (Degree) {
+            scope = rootScope.$new();
+
+            model = angular.extend(new Degree(), dataDegree1);
+        });
+    };
+
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, Degree, _WsApi_) {
-            rootScope = $rootScope;
-            scope = $rootScope.$new();
-
-            WsApi = _WsApi_;
-
-            model = angular.extend(new Degree(), dataDegree1);
-        });
+        initializeVariables();
+        initializeModel();
     });
 
     describe('Is the model defined', function () {

@@ -1,6 +1,22 @@
 describe('model: SubmissionListColumn', function () {
     var model, rootScope, scope, WsApi;
 
+    var initializeVariables = function(settings) {
+        inject(function ($rootScope, _WsApi_) {
+            rootScope = $rootScope;
+
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeModel = function(settings) {
+        inject(function (AbstractAppModel) {
+            scope = rootScope.$new();
+
+            model = angular.extend(new AbstractAppModel());
+        });
+    };
+
     beforeEach(function() {
         module('core');
         module('vireo');
@@ -12,8 +28,11 @@ describe('model: SubmissionListColumn', function () {
 
             WsApi = _WsApi_;
 
+            initializeVariables();
             model = angular.extend(new SubmissionListColumn(), dataSubmissionListColumn1);
         });
+        initializeVariables();
+        initializeModel();
     });
 
     describe('Is the model defined', function () {
