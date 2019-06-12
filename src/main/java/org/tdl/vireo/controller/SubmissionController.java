@@ -301,11 +301,17 @@ public class SubmissionController {
                 String type = (String) emailRecipientNode.get("type");
                 EmailRecipient recipient = buildEmailRecipient(type, emailRecipientNode, submission);
                 if(recipient != null) {
-                  recipientEmailAddresses.addAll(recipient.getEmails(submission));
+				    System.out.println("FSS "+recipient.getEmails(submission).toString()+"\n");
+                    recipientEmailAddresses.addAll(recipient.getEmails(submission));
                 }
             });
 
+			for(int i=0;i<recipientEmailAddresses.size();i++){
+				System.out.println("FSS ITER "+i+" "+recipientEmailAddresses.get(i).toString()+"\n");
+			}
+
             smm.setTo(recipientEmailAddresses.toArray(new String[0]));
+				System.out.println("FSS LIST "+String.join("::",recipientEmailAddresses)+"\n");
             recipientEmails.append("Email sent to: [ " + String.join(";",recipientEmailAddresses) + " ]; ");
 
             if (sendCCRecipientEmail) {
@@ -391,7 +397,14 @@ public class SubmissionController {
                 }
             }
             try {
-              addComment(user, sub.getId(), subMessage);
+                if(subMessage.get("recipientEmails").toString().contains("Assignee")){
+                    if(sub.getAssignee()!=null){
+                        addComment(user, sub.getId(), subMessage);
+                        System.out.println("FSS ADD COMMENT "+sub.getAssignee().getEmail()+"\n");
+                    }else{
+                        System.out.println("FSS DONT ADD COMMENT");
+                    }
+                }
             } catch (IOException e) {
               e.printStackTrace();
             }
