@@ -1,10 +1,17 @@
 describe('controller: AdvisorSubmissionReviewController', function () {
 
-    var controller, q, scope;
+    var controller, q, scope, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($q, _WsApi_) {
+            q = $q;
+
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            q = $q;
+        inject(function ($controller, $rootScope, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -18,7 +25,7 @@ describe('controller: AdvisorSubmissionReviewController', function () {
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 Submission: mockParameterModel(q, mockSubmission),
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -39,6 +46,7 @@ describe('controller: AdvisorSubmissionReviewController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

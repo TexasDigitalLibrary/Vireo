@@ -1,13 +1,19 @@
 describe('controller: EmbargoRepoController', function () {
 
-    var controller, q, scope, EmbargoRepo;
+    var controller, q, scope, EmbargoRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $filter, $q, $rootScope, _DragAndDropListenerFactory_, _EmbargoRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, _EmbargoRepo_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
 
             EmbargoRepo = _EmbargoRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $filter, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -18,11 +24,11 @@ describe('controller: EmbargoRepoController', function () {
                 $scope: scope,
                 $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
-                EmbargoRepo: _EmbargoRepo_,
+                EmbargoRepo: EmbargoRepo,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -44,6 +50,7 @@ describe('controller: EmbargoRepoController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

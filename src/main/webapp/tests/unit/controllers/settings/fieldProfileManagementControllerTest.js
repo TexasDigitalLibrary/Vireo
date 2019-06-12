@@ -1,15 +1,21 @@
 describe('controller: FieldProfileManagementController', function () {
 
-    var controller, q, scope, FieldPredicateRepo, FieldProfileRepo, WorkflowStepRepo;
+    var controller, q, scope, FieldPredicateRepo, FieldProfileRepo, WorkflowStepRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $filter, $q, $rootScope, _ControlledVocabularyRepo_, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _FieldProfileRepo_, _InputTypeRepo_, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, _FieldPredicateRepo_, _FieldProfileRepo_, _WorkflowStepRepo_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
 
             FieldPredicateRepo = _FieldPredicateRepo_;
             FieldProfileRepo = _FieldProfileRepo_;
             WorkflowStepRepo = _WorkflowStepRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $filter, $rootScope, _ControlledVocabularyRepo_, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _InputTypeRepo_, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -36,7 +42,7 @@ describe('controller: FieldProfileManagementController', function () {
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 WorkflowStepRepo: WorkflowStepRepo,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -72,6 +78,7 @@ describe('controller: FieldProfileManagementController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

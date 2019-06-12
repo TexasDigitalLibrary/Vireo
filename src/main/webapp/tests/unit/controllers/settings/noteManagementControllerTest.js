@@ -1,14 +1,20 @@
 describe('controller: NoteManagementController', function () {
 
-    var controller, q, scope, NoteRepo, WorkflowStepRepo;
+    var controller, q, scope, NoteRepo, WorkflowStepRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _NoteRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, _NoteRepo_, _WorkflowStepRepo_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
 
             NoteRepo = _NoteRepo_;
             WorkflowStepRepo = _WorkflowStepRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -22,12 +28,12 @@ describe('controller: NoteManagementController', function () {
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
                 Note: mockParameterModel(q, mockNote),
-                NoteRepo: _NoteRepo_,
+                NoteRepo: NoteRepo,
                 OrganizationRepo: _OrganizationRepo_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WorkflowStepRepo: _WorkflowStepRepo_,
-                WsApi: _WsApi_
+                WorkflowStepRepo: WorkflowStepRepo,
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -53,6 +59,7 @@ describe('controller: NoteManagementController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

@@ -1,13 +1,20 @@
 describe('controller: OrganizationSideBarController', function () {
 
-    var controller, q, scope, OrganizationRepo;
+    var controller, q, scope, OrganizationRepo, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($q, _OrganizationRepo_, _WsApi_) {
+            q = $q;
+
+            WsApi = _WsApi_;
+            OrganizationRepo = _OrganizationRepo_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _ModalService_, _OrganizationCategoryRepo_, _OrganizationRepo_, _RestApi_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $q, $rootScope, _ModalService_, _OrganizationCategoryRepo_, _RestApi_, _StorageService_) {
             q = $q;
             scope = $rootScope.$new();
-
-            OrganizationRepo = _OrganizationRepo_;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -18,10 +25,10 @@ describe('controller: OrganizationSideBarController', function () {
                 $window: mockWindow(),
                 ModalService: _ModalService_,
                 OrganizationCategoryRepo: _OrganizationCategoryRepo_,
-                OrganizationRepo: _OrganizationRepo_,
+                OrganizationRepo: OrganizationRepo,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -44,6 +51,7 @@ describe('controller: OrganizationSideBarController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

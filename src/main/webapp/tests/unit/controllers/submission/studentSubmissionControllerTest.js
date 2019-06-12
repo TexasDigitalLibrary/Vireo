@@ -1,35 +1,42 @@
 describe('controller: StudentSubmissionController', function () {
 
-    var controller, q, location, routeParams, scope, timeout;
+    var controller, q, location, routeParams, scope, timeout, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($anchorScroll, $controller, $location, $q, $rootScope, $routeParams, $timeout, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($location, $q, $routeParams, $timeout, _WsApi_) {
             location = $location;
             q = $q;
             routeParams = $routeParams;
-            scope = $rootScope.$new();
             timeout = $timeout;
+
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($anchorScroll, $controller, $rootScope, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             if (settings && settings.stepNum !== undefined) {
-                $routeParams.stepNum = settings.stepNum;
+                routeParams.stepNum = settings.stepNum;
             }
 
             controller = $controller('StudentSubmissionController', {
                 $anchorScroll: $anchorScroll,
-                $location: $location,
-                $routeParams: $routeParams,
+                $location: location,
+                $routeParams: routeParams,
                 $scope: scope,
-                $timeout: $timeout,
+                $timeout: timeout,
                 $window: mockWindow(),
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -52,6 +59,7 @@ describe('controller: StudentSubmissionController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

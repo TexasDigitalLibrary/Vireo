@@ -1,15 +1,21 @@
 describe('controller: ControlledVocabularyRepoController', function () {
 
-    var controller, compile, q, scope, timeout, ControlledVocabularyRepo;
+    var controller, compile, q, scope, timeout, ControlledVocabularyRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $compile, $q, $rootScope, $timeout, _ControlledVocabularyRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($compile, $q, $timeout, _ControlledVocabularyRepo_, _WsApi_) {
             compile = $compile;
             q = $q;
-            scope = $rootScope.$new();
             timeout = $timeout;
 
             ControlledVocabularyRepo = _ControlledVocabularyRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -19,13 +25,13 @@ describe('controller: ControlledVocabularyRepoController', function () {
                 $scope: scope,
                 $timeout: timeout,
                 $window: mockWindow(),
-                ControlledVocabularyRepo: _ControlledVocabularyRepo_,
+                ControlledVocabularyRepo: ControlledVocabularyRepo,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
                 NgTableParams: mockNgTableParams,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -49,6 +55,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

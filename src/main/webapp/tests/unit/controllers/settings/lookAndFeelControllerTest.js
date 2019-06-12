@@ -2,19 +2,23 @@ describe('controller: LookAndFeelController', function () {
 
     var controller, q, scope, window, FileService, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _FileService_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, _FileService_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
             window = mockWindow();
 
             FileService = _FileService_;
             WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, _ModalService_, _RestApi_, _StorageService_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            // TODO: should this instead be initialized in the controller itself?
             scope.settings = {
                 configurable: {
                     lookAndFeel: {
@@ -56,6 +60,7 @@ describe('controller: LookAndFeelController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

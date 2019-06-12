@@ -1,23 +1,29 @@
 describe('controller: SubmissionListController', function () {
 
-    var controller, location, q, scope, ManagerFilterColumnRepo, SavedFilterRepo, SubmissionRepo;
+    var controller, location, q, scope, ManagerFilterColumnRepo, SavedFilterRepo, SubmissionRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $filter, $location, $q, $rootScope, _ControlledVocabularyRepo_, _CustomActionDefinitionRepo_, _CustomActionValueRepo_, _DepositLocationRepo_, _DocumentTypeRepo_, _EmailRecipient_, _EmailTemplateRepo_, _EmbargoRepo_, _ManagerFilterColumnRepo_, _ManagerSubmissionListColumnRepo_, _ModalService_, _OrganizationCategory_, _OrganizationCategoryRepo_, _Organization_, _OrganizationRepo_, _Packager_, _PackagerRepo_, _RestApi_, _SavedFilterRepo_, _SidebarService_, _StorageService_, _SubmissionListColumnRepo_, _SubmissionRepo_, _SubmissionStatusRepo_, _UserRepo_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($location, $q, _ManagerFilterColumnRepo_, _SavedFilterRepo_, _SubmissionRepo_, _WsApi_) {
             location = $location;
             q = $q;
+
+            ManagerFilterColumnRepo = _ManagerFilterColumnRepo_;
+            SavedFilterRepo = _SavedFilterRepo_;
+            SubmissionRepo = _SubmissionRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $filter, $rootScope, _ControlledVocabularyRepo_, _CustomActionDefinitionRepo_, _CustomActionValueRepo_, _DepositLocationRepo_, _DocumentTypeRepo_, _EmailRecipient_, _EmailTemplateRepo_, _EmbargoRepo_, _ManagerSubmissionListColumnRepo_, _ModalService_, _OrganizationCategory_, _OrganizationCategoryRepo_, _Organization_, _OrganizationRepo_, _Packager_, _PackagerRepo_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionListColumnRepo_, _SubmissionStatusRepo_, _UserRepo_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            ManagerFilterColumnRepo = _ManagerFilterColumnRepo_;
-            SavedFilterRepo = _SavedFilterRepo_;
-            SubmissionRepo = _SubmissionRepo_;
-
             controller = $controller('SubmissionListController', {
                 $filter: $filter,
-                $location: $location,
+                $location: location,
                 $q: q,
                 $scope: scope,
                 $window: mockWindow(),
@@ -29,7 +35,7 @@ describe('controller: SubmissionListController', function () {
                 EmailRecipient: mockParameterModel(q, mockEmailRecipient),
                 EmailTemplateRepo: _EmailTemplateRepo_,
                 EmbargoRepo: _EmbargoRepo_,
-                ManagerFilterColumnRepo: _ManagerFilterColumnRepo_,
+                ManagerFilterColumnRepo: ManagerFilterColumnRepo,
                 ManagerSubmissionListColumnRepo: _ManagerSubmissionListColumnRepo_,
                 ModalService: _ModalService_,
                 NamedSearchFilterGroup: mockParameterModel(q, mockNamedSearchFilterGroup),
@@ -38,15 +44,15 @@ describe('controller: SubmissionListController', function () {
                 OrganizationRepo: _OrganizationRepo_,
                 PackagerRepo: _PackagerRepo_,
                 RestApi: _RestApi_,
-                SavedFilterRepo: _SavedFilterRepo_,
+                SavedFilterRepo: SavedFilterRepo,
                 SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
                 SubmissionListColumnRepo: _SubmissionListColumnRepo_,
-                SubmissionRepo: _SubmissionRepo_,
+                SubmissionRepo: SubmissionRepo,
                 SubmissionStatusRepo: _SubmissionStatusRepo_,
                 UserRepo: _UserRepo_,
                 UserSettings: mockParameterModel(q, mockUserSettings),
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -106,6 +112,7 @@ describe('controller: SubmissionListController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

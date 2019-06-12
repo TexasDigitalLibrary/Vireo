@@ -1,14 +1,20 @@
 describe('controller: AbstractController', function () {
 
-    var controller, q, scope, window, RestApi;
+    var controller, q, scope, window, RestApi, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, _RestApi_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
             window = mockWindow();
 
             RestApi = _RestApi_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, _ModalService_, _StorageService_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -17,9 +23,9 @@ describe('controller: AbstractController', function () {
                 $scope: scope,
                 $window: window,
                 ModalService: _ModalService_,
-                RestApi: _RestApi_,
+                RestApi: RestApi,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -38,6 +44,7 @@ describe('controller: AbstractController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

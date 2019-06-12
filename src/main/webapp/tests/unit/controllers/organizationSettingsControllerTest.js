@@ -1,10 +1,17 @@
 describe('controller: OrganizationSettingsController', function () {
 
-    var controller, q, scope, AccordionService, OrganizationRepo;
+    var controller, q, scope, AccordionService, OrganizationRepo, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($q, _WsApi_) {
+            q = $q;
+
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
-            q = $q;
+        inject(function ($controller, $rootScope, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_) {
             scope = $rootScope.$new();
 
             AccordionService = _AccordionService_;
@@ -22,7 +29,7 @@ describe('controller: OrganizationSettingsController', function () {
                 RestApi: _RestApi_,
                 SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -45,6 +52,7 @@ describe('controller: OrganizationSettingsController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

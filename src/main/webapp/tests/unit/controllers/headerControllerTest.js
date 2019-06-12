@@ -1,10 +1,18 @@
 describe('controller: HeaderController', function () {
 
-    var controller, location, scope;
+    var controller, location, scope, timeout, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($location, $timeout, _WsApi_) {
+            location = $location;
+            timeout = $timeout;
+
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $rootScope, $timeout, _AbstractRepo_, _AbstractAppRepo_, _AlertService_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            location = $location;
+        inject(function ($controller, $rootScope, _AbstractRepo_, _AbstractAppRepo_, _AlertService_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -12,8 +20,8 @@ describe('controller: HeaderController', function () {
 
             controller = $controller('HeaderController', {
                 $scope: scope,
-                $location: $location,
-                $timeout: $timeout,
+                $location: location,
+                $timeout: timeout,
                 $window: mockWindow(),
                 AbstractRepo: _AbstractRepo_,
                 AbstractAppRepo: _AbstractAppRepo_,
@@ -22,7 +30,7 @@ describe('controller: HeaderController', function () {
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -45,6 +53,7 @@ describe('controller: HeaderController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

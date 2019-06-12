@@ -1,13 +1,19 @@
 describe('controller: DocumentTypesController', function () {
 
-    var controller, q, scope, DocumentTypeRepo;
+    var controller, q, scope, DocumentTypeRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, _DocumentTypeRepo_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
 
             DocumentTypeRepo = _DocumentTypeRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -15,12 +21,12 @@ describe('controller: DocumentTypesController', function () {
             controller = $controller('DocumentTypesController', {
                 $scope: scope,
                 $window: mockWindow(),
-                DocumentTypeRepo: _DocumentTypeRepo_,
+                DocumentTypeRepo: DocumentTypeRepo,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -42,6 +48,7 @@ describe('controller: DocumentTypesController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

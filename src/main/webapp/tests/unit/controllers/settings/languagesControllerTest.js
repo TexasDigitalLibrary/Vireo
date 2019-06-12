@@ -1,13 +1,20 @@
 describe('controller: LanguagesController', function () {
 
-    var controller, q, scope, LanguageRepo;
+    var controller, q, scope, timeout, LanguageRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $timeout, _DragAndDropListenerFactory_, _LanguageRepo_, _StorageService_, _ModalService_, _RestApi_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, $timeout, _LanguageRepo_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
+            timeout = $timeout;
 
             LanguageRepo = _LanguageRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, _DragAndDropListenerFactory_, _StorageService_, _ModalService_, _RestApi_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -15,14 +22,14 @@ describe('controller: LanguagesController', function () {
             controller = $controller('LanguagesController', {
                 $q: q,
                 $scope: scope,
-                $timeout: $timeout,
+                $timeout: timeout,
                 $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
-                LanguageRepo: _LanguageRepo_,
+                LanguageRepo: LanguageRepo,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -44,6 +51,7 @@ describe('controller: LanguagesController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

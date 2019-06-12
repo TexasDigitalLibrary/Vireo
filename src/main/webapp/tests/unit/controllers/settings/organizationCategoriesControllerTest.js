@@ -1,15 +1,21 @@
 describe('controller: OrganizationCategoriesController', function () {
 
-    var compile, controller, q, scope, DragAndDropListenerFactory, OrganizationCategoryRepo;
+    var compile, controller, q, scope, DragAndDropListenerFactory, OrganizationCategoryRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($compile, $controller, $q, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _OrganizationCategoryRepo_, _RestApi_, _StorageService_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($compile, $q, _DragAndDropListenerFactory_, _OrganizationCategoryRepo_, _WsApi_) {
             compile = $compile;
             q = $q;
-            scope = $rootScope.$new();
 
             DragAndDropListenerFactory = _DragAndDropListenerFactory_;
             OrganizationCategoryRepo = _OrganizationCategoryRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, _ModalService_, _RestApi_, _StorageService_, WsApi) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -20,10 +26,10 @@ describe('controller: OrganizationCategoriesController', function () {
                 $window: mockWindow(),
                 DragAndDropListenerFactory: DragAndDropListenerFactory,
                 ModalService: _ModalService_,
-                OrganizationCategoryRepo: _OrganizationCategoryRepo_,
+                OrganizationCategoryRepo: OrganizationCategoryRepo,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -45,6 +51,7 @@ describe('controller: OrganizationCategoriesController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

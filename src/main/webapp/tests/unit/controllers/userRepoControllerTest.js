@@ -1,10 +1,18 @@
 describe('controller: UserRepoController', function () {
 
-    var controller, q, scope;
+    var controller, q, scope, timeout, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($q, $timeout, _WsApi_) {
+            q = $q;
+            timeout = $timeout;
+
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $route, $q, $rootScope, $timeout, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_, _WsApi_) {
-            q = $q;
+        inject(function ($controller, $location, $route, $rootScope, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -15,7 +23,7 @@ describe('controller: UserRepoController', function () {
                 $q: q,
                 $route: $route,
                 $scope: scope,
-                $timeout: $timeout,
+                $timeout: timeout,
                 $window: mockWindow(),
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
@@ -23,7 +31,7 @@ describe('controller: UserRepoController', function () {
                 User: mockParameterModel(q, mockUser),
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -45,6 +53,7 @@ describe('controller: UserRepoController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

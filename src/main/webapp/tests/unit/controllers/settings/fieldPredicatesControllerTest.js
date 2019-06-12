@@ -1,15 +1,22 @@
 describe('controller: FieldPredicatesController', function () {
 
-    var compile, controller, q, scope, DragAndDropListenerFactory, FieldPredicateRepo;
+    var compile, controller, q, scope, timeout, DragAndDropListenerFactory, FieldPredicateRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($filter, $q, $compile, $controller, $rootScope, $timeout, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($compile, $q, $timeout, _DragAndDropListenerFactory_, _FieldPredicateRepo_, _WsApi_) {
             compile = $compile;
             q = $q;
-            scope = $rootScope.$new();
+            timeout = $timeout;
 
             DragAndDropListenerFactory = _DragAndDropListenerFactory_;
             FieldPredicateRepo = _FieldPredicateRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($filter, $controller, $rootScope, _ModalService_, _RestApi_, _SidebarService_, _StorageService_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -18,15 +25,15 @@ describe('controller: FieldPredicatesController', function () {
                 $filter: $filter,
                 $q: q,
                 $scope: scope,
-                $timeout: $timeout,
+                $timeout: timeout,
                 $window: mockWindow(),
                 DragAndDropListenerFactory: DragAndDropListenerFactory,
-                FieldPredicateRepo: _FieldPredicateRepo_,
+                FieldPredicateRepo: FieldPredicateRepo,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -49,6 +56,7 @@ describe('controller: FieldPredicatesController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

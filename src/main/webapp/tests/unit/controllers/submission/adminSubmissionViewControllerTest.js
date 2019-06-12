@@ -7,12 +7,12 @@ describe('controller: AdminSubmissionViewController', function () {
             q = $q;
             timeout = $timeout;
             location = $location;
-            WsApi = _WsApi_;
 
             EmailTemplateRepo = _EmailTemplateRepo_;
             FileUploadService = _FileUploadService_;
             SubmissionRepo = _SubmissionRepo_;
             UserSettings = _UserSettings_;
+            WsApi = _WsApi_;
         });
     };
 

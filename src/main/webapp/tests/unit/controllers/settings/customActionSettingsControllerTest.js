@@ -1,13 +1,20 @@
 describe('controller: CustomActionSettingsController', function () {
 
-    var controller, q, scope, CustomActionDefinitionRepo;
+    var controller, q, scope, timeout, CustomActionDefinitionRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $timeout, _CustomActionDefinitionRepo_, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, $timeout, _CustomActionDefinitionRepo_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
+            timeout = $timeout;
 
             CustomActionDefinitionRepo = _CustomActionDefinitionRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -15,14 +22,14 @@ describe('controller: CustomActionSettingsController', function () {
             controller = $controller('CustomActionSettingsController', {
                 $q: q,
                 $scope: scope,
-                $timeout: $timeout,
+                $timeout: timeout,
                 $window: mockWindow(),
-                CustomActionDefinitionRepo: _CustomActionDefinitionRepo_,
+                CustomActionDefinitionRepo: CustomActionDefinitionRepo,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -44,6 +51,7 @@ describe('controller: CustomActionSettingsController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

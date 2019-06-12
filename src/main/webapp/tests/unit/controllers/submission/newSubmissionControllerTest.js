@@ -1,31 +1,37 @@
 describe('controller: NewSubmissionController', function () {
 
-    var controller, location, q, scope, OrganizationRepo;
+    var controller, location, q, scope, OrganizationRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $location, $q, $rootScope, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($location, $q, _OrganizationRepo_, _WsApi_) {
             location = $location;
             q = $q;
-            scope = $rootScope.$new();
 
             OrganizationRepo = _OrganizationRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('NewSubmissionController', {
-                $location: $location,
+                $location: location,
                 $q: q,
                 $scope: scope,
                 $window: mockWindow(),
                 SubmissionStates: SubmissionStates,
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
-                OrganizationRepo: _OrganizationRepo_,
+                OrganizationRepo: OrganizationRepo,
                 StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,
                 RestApi: _RestApi_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -50,6 +56,7 @@ describe('controller: NewSubmissionController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

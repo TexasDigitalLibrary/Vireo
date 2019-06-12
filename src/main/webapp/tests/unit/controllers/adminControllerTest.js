@@ -1,10 +1,17 @@
 describe('controller: AdminController', function () {
 
-    var controller, scope, location;
+    var controller, scope, location, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($location, _WsApi_) {
+            location = $location;
+
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $rootScope, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            location = $location;
+        inject(function ($controller, $rootScope, _ModalService_, _RestApi_, _StorageService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -12,12 +19,12 @@ describe('controller: AdminController', function () {
 
             controller = $controller('AdminController', {
                 $scope: scope,
-                $location: $location,
+                $location: location,
                 $window: mockWindow(),
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -36,6 +43,7 @@ describe('controller: AdminController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

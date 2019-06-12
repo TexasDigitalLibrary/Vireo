@@ -1,13 +1,19 @@
 describe('controller: EmailWorkflowRulesController', function () {
 
-    var controller, q, scope, OrganizationRepo;
+    var controller, q, scope, OrganizationRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _EmailTemplateRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _SubmissionStatusRepo_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, _OrganizationRepo_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
 
             OrganizationRepo = _OrganizationRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, _EmailTemplateRepo_, _ModalService_, _RestApi_, _StorageService_, _SubmissionStatusRepo_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -22,7 +28,7 @@ describe('controller: EmailWorkflowRulesController', function () {
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 SubmissionStatusRepo: _SubmissionStatusRepo_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -47,6 +53,7 @@ describe('controller: EmailWorkflowRulesController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

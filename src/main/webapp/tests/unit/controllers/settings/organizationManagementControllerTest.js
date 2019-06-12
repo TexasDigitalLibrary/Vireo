@@ -1,16 +1,22 @@
 describe('controller: OrganizationManagementController', function () {
 
-    var controller, q, scope, timeout, AccordionService, AlertService, OrganizationRepo;
+    var controller, q, scope, timeout, AccordionService, AlertService, OrganizationRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $location, $q, $rootScope, $route, $timeout, _AccordionService_, _AlertService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_, _WorkflowStepRepo_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, $timeout, _AccordionService_, _AlertService_, _OrganizationRepo_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
             timeout = $timeout;
 
             AccordionService = _AccordionService_;
             AlertService = _AlertService_;
             OrganizationRepo = _OrganizationRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $location, $rootScope, $route, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WorkflowStepRepo_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -26,7 +32,7 @@ describe('controller: OrganizationManagementController', function () {
                 RestApi: _RestApi_,
                 SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             controller = $controller('OrganizationManagementController', {
@@ -34,7 +40,7 @@ describe('controller: OrganizationManagementController', function () {
                 $location: $location,
                 $route: $route,
                 $scope: scope,
-                $timeout: $timeout,
+                $timeout: timeout,
                 $window: mockWindow(),
                 AccordionService: AccordionService,
                 AlertService: AlertService,
@@ -43,7 +49,7 @@ describe('controller: OrganizationManagementController', function () {
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 WorkflowStepRepo: _WorkflowStepRepo_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -67,6 +73,7 @@ describe('controller: OrganizationManagementController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

@@ -1,9 +1,15 @@
 describe('controller: ApplicationAuthenticationController', function () {
 
-    var controller, scope;
+    var controller, scope, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($q, _WsApi_) {
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $rootScope, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_, _WsApi_) {
+        inject(function ($controller, $location, $rootScope, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -18,7 +24,7 @@ describe('controller: ApplicationAuthenticationController', function () {
                 StorageService: _StorageService_,
                 UserService: _UserService_,
                 ValidationStore: _ValidationStore_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -40,6 +46,7 @@ describe('controller: ApplicationAuthenticationController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

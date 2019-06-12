@@ -1,21 +1,29 @@
 describe('controller: SubmissionHistoryController', function () {
 
-    var controller, location, q, scope, timeout, NgTableParams;
+    var controller, location, q, scope, timeout, NgTableParams, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $location, $q, $rootScope, $timeout, SubmissionStates, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($location, $q, $timeout, _WsApi_) {
             location = $location;
             q = $q;
-            scope = $rootScope.$new();
             timeout = $timeout;
+
+            NgTableParams = mockNgTableParams;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, SubmissionStates, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller('SubmissionHistoryController', {
-                $location: $location,
+                $location: location,
                 $scope: scope,
-                $timeout: $timeout,
+                $timeout: timeout,
                 $window: mockWindow(),
                 SubmissionStates: SubmissionStates,
                 ModalService: _ModalService_,
@@ -23,7 +31,7 @@ describe('controller: SubmissionHistoryController', function () {
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -45,6 +53,7 @@ describe('controller: SubmissionHistoryController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

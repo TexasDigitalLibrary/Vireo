@@ -1,13 +1,19 @@
 describe('controller: GraduationMonthRepoController', function () {
 
-    var controller, q, scope, GraduationMonthRepo;
+    var controller, q, scope, GraduationMonthRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _DragAndDropListenerFactory_, _GraduationMonthRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($q, _GraduationMonthRepo_, _WsApi_) {
             q = $q;
-            scope = $rootScope.$new();
 
             GraduationMonthRepo = _GraduationMonthRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _RestApi_, _StorageService_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -16,11 +22,11 @@ describe('controller: GraduationMonthRepoController', function () {
                 $scope: scope,
                 $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
-                GraduationMonthRepo: _GraduationMonthRepo_,
+                GraduationMonthRepo: GraduationMonthRepo,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -42,6 +48,7 @@ describe('controller: GraduationMonthRepoController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

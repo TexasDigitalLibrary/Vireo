@@ -1,9 +1,15 @@
 describe('controller: SidebarController', function () {
 
-    var controller, scope;
+    var controller, scope, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function (_WsApi_) {
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WsApi_) {
+        inject(function ($controller, $rootScope, _ModalService_, _RestApi_, _SidebarService_, _StorageService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -16,7 +22,7 @@ describe('controller: SidebarController', function () {
                 RestApi: _RestApi_,
                 SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -36,6 +42,7 @@ describe('controller: SidebarController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 

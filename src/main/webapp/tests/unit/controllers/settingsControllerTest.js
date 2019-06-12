@@ -1,12 +1,19 @@
 describe('controller: SettingsController', function () {
 
-    var controller, q, scope, timeout, StudentSubmissionRepo, SubmissionStates;
+    var controller, q, scope, timeout, StudentSubmissionRepo, SubmissionStates, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($q, $timeout, _WsApi_) {
+            q = $q;
+            timeout = $timeout;
+
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $injector, $q, $rootScope, $timeout, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _SubmissionStates_, _UserService_, _WsApi_) {
-            q = $q;
+        inject(function ($controller, $injector, $rootScope, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _SubmissionStates_, _UserService_) {
             scope = $rootScope.$new();
-            timeout = $timeout;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
@@ -17,7 +24,7 @@ describe('controller: SettingsController', function () {
             controller = $controller('SettingsController', {
                 $scope: scope,
                 $injector: $injector,
-                $timeout: $timeout,
+                $timeout: timeout,
                 $window: mockWindow(),
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
@@ -26,7 +33,7 @@ describe('controller: SettingsController', function () {
                 StudentSubmissionRepo: settings && settings.StudentSubmissionRepo ? settings.StudentSubmissionRepo :  _StudentSubmissionRepo_,
                 User: mockParameterModel(q, mockUser),
                 UserService: _UserService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -53,6 +60,7 @@ describe('controller: SettingsController', function () {
         module('mock.wsApi');
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 
