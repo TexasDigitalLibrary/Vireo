@@ -12,7 +12,7 @@ describe('service: SidebarService', function () {
     };
 
     var initializeService = function(settings) {
-        inject(function ($injector, AbstractAppModel) {
+        inject(function ($injector) {
             scope = rootScope.$new();
 
             service = $injector.get('SidebarService');
@@ -34,7 +34,7 @@ describe('service: SidebarService', function () {
         });
     });
 
-    describe('Are the scope methods defined', function () {
+    describe('Are the service methods defined', function () {
         it('addBox should be defined', function () {
             expect(service.addBox).toBeDefined();
             expect(typeof service.addBox).toEqual("function");

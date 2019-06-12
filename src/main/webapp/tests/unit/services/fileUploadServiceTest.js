@@ -13,7 +13,7 @@ describe('service: FileUploadService', function () {
     };
 
     var initializeService = function(settings) {
-        inject(function ($injector, AbstractAppModel) {
+        inject(function ($injector) {
             scope = rootScope.$new();
 
             service = $injector.get('FileUploadService');
@@ -45,7 +45,7 @@ describe('service: FileUploadService', function () {
         });
     });
 
-    describe('Are the scope methods defined', function () {
+    describe('Are the service methods defined', function () {
         it('archiveFile should be defined', function () {
             expect(service.archiveFile).toBeDefined();
             expect(typeof service.archiveFile).toEqual("function");
