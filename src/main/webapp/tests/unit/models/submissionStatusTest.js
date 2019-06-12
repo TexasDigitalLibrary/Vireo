@@ -10,10 +10,10 @@ describe('model: SubmissionStatus', function () {
     };
 
     var initializeModel = function(settings) {
-        inject(function (AbstractAppModel) {
+        inject(function (SubmissionStatus) {
             scope = rootScope.$new();
 
-            model = angular.extend(new AbstractAppModel());
+            model = angular.extend(new SubmissionStatus(), dataSubmissionStatus1);
         });
     };
 
@@ -22,15 +22,6 @@ describe('model: SubmissionStatus', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, SubmissionStatus, _WsApi_) {
-            rootScope = $rootScope;
-            scope = $rootScope.$new();
-
-            WsApi = _WsApi_;
-
-            initializeVariables();
-            model = angular.extend(new SubmissionStatus(), dataSubmissionStatus1);
-        });
         initializeVariables();
         initializeModel();
     });

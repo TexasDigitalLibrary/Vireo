@@ -10,10 +10,10 @@ describe('model: SubmissionListColumn', function () {
     };
 
     var initializeModel = function(settings) {
-        inject(function (AbstractAppModel) {
+        inject(function (SubmissionListColumn) {
             scope = rootScope.$new();
 
-            model = angular.extend(new AbstractAppModel());
+            model = angular.extend(new SubmissionListColumn(), dataSubmissionListColumn1);
         });
     };
 
@@ -22,15 +22,6 @@ describe('model: SubmissionListColumn', function () {
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, SubmissionListColumn, _WsApi_) {
-            rootScope = $rootScope;
-            scope = $rootScope.$new();
-
-            WsApi = _WsApi_;
-
-            initializeVariables();
-            model = angular.extend(new SubmissionListColumn(), dataSubmissionListColumn1);
-        });
         initializeVariables();
         initializeModel();
     });
