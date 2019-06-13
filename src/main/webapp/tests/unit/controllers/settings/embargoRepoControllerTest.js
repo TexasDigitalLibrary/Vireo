@@ -1,4 +1,4 @@
-describe('controller: EmbargoRepoController', function () {
+describe("controller: EmbargoRepoController", function () {
 
     var controller, q, scope, EmbargoRepo, WsApi;
 
@@ -18,7 +18,7 @@ describe('controller: EmbargoRepoController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('EmbargoRepoController', {
+            controller = $controller("EmbargoRepoController", {
                 $filter: $filter,
                 $q: q,
                 $scope: scope,
@@ -39,72 +39,72 @@ describe('controller: EmbargoRepoController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.dragAndDropListenerFactory');
-        module('mock.embargo');
-        module('mock.embargoRepo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.dragAndDropListenerFactory");
+        module("mock.embargo");
+        module("mock.embargoRepo");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('createEmbargo should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("createEmbargo should be defined", function () {
             expect(scope.createEmbargo).toBeDefined();
             expect(typeof scope.createEmbargo).toEqual("function");
         });
-        it('editEmbargo should be defined', function () {
+        it("editEmbargo should be defined", function () {
             expect(scope.editEmbargo).toBeDefined();
             expect(typeof scope.editEmbargo).toEqual("function");
         });
-        it('removeEmbargo should be defined', function () {
+        it("removeEmbargo should be defined", function () {
             expect(scope.removeEmbargo).toBeDefined();
             expect(typeof scope.removeEmbargo).toEqual("function");
         });
-        it('reorderEmbargoDefault should be defined', function () {
+        it("reorderEmbargoDefault should be defined", function () {
             expect(scope.reorderEmbargoDefault).toBeDefined();
             expect(typeof scope.reorderEmbargoDefault).toEqual("function");
         });
-        it('reorderEmbargoProquest should be defined', function () {
+        it("reorderEmbargoProquest should be defined", function () {
             expect(scope.reorderEmbargoProquest).toBeDefined();
             expect(typeof scope.reorderEmbargoProquest).toEqual("function");
         });
-        it('resetEmbargo should be defined', function () {
+        it("resetEmbargo should be defined", function () {
             expect(scope.resetEmbargo).toBeDefined();
             expect(typeof scope.resetEmbargo).toEqual("function");
         });
-        it('selectEmbargo should be defined', function () {
+        it("selectEmbargo should be defined", function () {
             expect(scope.selectEmbargo).toBeDefined();
             expect(typeof scope.selectEmbargo).toEqual("function");
         });
-        it('sortEmbargoesDefault should be defined', function () {
+        it("sortEmbargoesDefault should be defined", function () {
             expect(scope.sortEmbargoesDefault).toBeDefined();
             expect(typeof scope.sortEmbargoesDefault).toEqual("function");
         });
-        it('sortEmbargoesProquest should be defined', function () {
+        it("sortEmbargoesProquest should be defined", function () {
             expect(scope.sortEmbargoesProquest).toBeDefined();
             expect(typeof scope.sortEmbargoesProquest).toEqual("function");
         });
-        it('updateEmbargo should be defined', function () {
+        it("updateEmbargo should be defined", function () {
             expect(scope.updateEmbargo).toBeDefined();
             expect(typeof scope.updateEmbargo).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('createEmbargo should create a new embargo', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("createEmbargo should create a new embargo", function () {
             scope.modalData = new mockEmbargo(q);
 
             spyOn(EmbargoRepo, "create").and.callThrough();
@@ -113,7 +113,7 @@ describe('controller: EmbargoRepoController', function () {
 
             expect(EmbargoRepo.create).toHaveBeenCalled();
         });
-        it('editEmbargo should open a modal', function () {
+        it("editEmbargo should open a modal", function () {
             spyOn(scope, "selectEmbargo");
             spyOn(scope, "openModal");
 
@@ -122,7 +122,7 @@ describe('controller: EmbargoRepoController', function () {
             expect(scope.selectEmbargo).toHaveBeenCalled();
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('removeEmbargo should delete a embargo', function () {
+        it("removeEmbargo should delete a embargo", function () {
             scope.modalData = new mockEmbargo(q);
 
             spyOn(scope.modalData, "delete");
@@ -131,21 +131,21 @@ describe('controller: EmbargoRepoController', function () {
 
             expect(scope.modalData.delete).toHaveBeenCalled();
         });
-        it('reorderEmbargoDefault should reorder a defult embargo', function () {
+        it("reorderEmbargoDefault should reorder a defult embargo", function () {
             spyOn(EmbargoRepo, "reorder");
 
             scope.reorderEmbargoDefault("a", "b");
 
             expect(EmbargoRepo.reorder).toHaveBeenCalled();
         });
-        it('reorderEmbargoProquest should reorder a proquest embargo', function () {
+        it("reorderEmbargoProquest should reorder a proquest embargo", function () {
             spyOn(EmbargoRepo, "reorder");
 
             scope.reorderEmbargoProquest("a", "b");
 
             expect(EmbargoRepo.reorder).toHaveBeenCalled();
         });
-        it('resetEmbargo should reset the embargo', function () {
+        it("resetEmbargo should reset the embargo", function () {
             var embargo = new mockEmbargo(q);
 
             scope.forms = [];
@@ -173,7 +173,7 @@ describe('controller: EmbargoRepoController', function () {
             scope.forms.myForm.$pristine = false;
             scope.resetEmbargo();
         });
-        it('selectEmbargo should select a embargo', function () {
+        it("selectEmbargo should select a embargo", function () {
             scope.modalData = null;
             scope.embargos = [
                 new mockEmbargo(q),
@@ -186,7 +186,7 @@ describe('controller: EmbargoRepoController', function () {
 
             expect(scope.modalData.id).toBe(scope.embargos[1].id);
         });
-        it('sortEmbargoesDefault should select a sort action', function () {
+        it("sortEmbargoesDefault should select a sort action", function () {
             spyOn(EmbargoRepo, "sort");
 
             scope.sortAction = "confirm";
@@ -207,7 +207,7 @@ describe('controller: EmbargoRepoController', function () {
             scope.sortEmbargoesDefault("column");
             expect(scope.sortAction).toEqual("unknownDefault");
         });
-        it('sortEmbargoesProquest should select a sort action', function () {
+        it("sortEmbargoesProquest should select a sort action", function () {
             spyOn(EmbargoRepo, "sort");
 
             scope.sortAction = "confirm";
@@ -228,7 +228,7 @@ describe('controller: EmbargoRepoController', function () {
             scope.sortEmbargoesProquest("column");
             expect(scope.sortAction).toEqual("unknownProquest");
         });
-        it('updateEmbargo should should save a embargo', function () {
+        it("updateEmbargo should should save a embargo", function () {
             scope.modalData = new mockEmbargo(q);
 
             spyOn(scope.modalData, "save");

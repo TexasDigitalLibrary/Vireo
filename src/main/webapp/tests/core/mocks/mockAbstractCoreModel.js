@@ -48,11 +48,11 @@ var mockModel = function (modelName, $q, mockDataObj) {
     };
 
     model.enableMergeCombinationOperation = function () {
-        combinationOperation = 'merge';
+        combinationOperation = "merge";
     };
 
     model.enableExtendCombinationOperation = function () {
-        combinationOperation = 'extend';
+        combinationOperation = "extend";
     };
 
     model.fetch = function() {

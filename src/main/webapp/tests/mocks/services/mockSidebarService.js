@@ -1,4 +1,4 @@
-angular.module('mock.sidebarService', []).service('service', function($q) {
+angular.module("mock.sidebarService", []).service("service", function($q) {
     var service = mockService($q);
 
     service.boxes = [];

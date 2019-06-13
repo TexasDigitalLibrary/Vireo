@@ -130,5 +130,5 @@ var mockActionLog = function($q) {
     return model;
 };
 
-angular.module('mock.actionLog', []).service('ActionLog', mockActionLog);
+angular.module("mock.actionLog", []).service("ActionLog", mockActionLog);
 

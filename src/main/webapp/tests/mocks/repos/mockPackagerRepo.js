@@ -16,8 +16,8 @@ var dataPackagerRepo3 = [
     dataPackager6
 ];
 
-angular.module('mock.packagerRepo', []).service('PackagerRepo', function($q) {
-    var repo = mockRepo('PackagerRepo', $q, mockPackager, dataPackagerRepo1);
+angular.module("mock.packagerRepo", []).service("PackagerRepo", function($q) {
+    var repo = mockRepo("PackagerRepo", $q, mockPackager, dataPackagerRepo1);
 
     return repo;
 });

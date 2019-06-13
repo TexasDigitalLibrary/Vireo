@@ -1,4 +1,4 @@
-describe('controller: OrganizationManagementController', function () {
+describe("controller: OrganizationManagementController", function () {
 
     var controller, q, scope, timeout, AccordionService, AlertService, OrganizationRepo, WsApi;
 
@@ -23,7 +23,7 @@ describe('controller: OrganizationManagementController', function () {
 
             // OrganizationManagementController is included inside of a OrganizationSettingsController scope.
             // This results in having additional methods on the scope that OrganizationManagementController requires.
-            $controller('OrganizationSettingsController', {
+            $controller("OrganizationSettingsController", {
                 $scope: scope,
                 $window: mockWindow(),
                 AccordionService: AccordionService,
@@ -35,7 +35,7 @@ describe('controller: OrganizationManagementController', function () {
                 WsApi: WsApi
             });
 
-            controller = $controller('OrganizationManagementController', {
+            controller = $controller("OrganizationManagementController", {
                 $q: q,
                 $location: $location,
                 $route: $route,
@@ -60,90 +60,90 @@ describe('controller: OrganizationManagementController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.accordionService');
-        module('mock.alertService');
-        module('mock.modalService');
-        module('mock.organization');
-        module('mock.organizationRepo');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.workflowStepRepo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.accordionService");
+        module("mock.alertService");
+        module("mock.modalService");
+        module("mock.organization");
+        module("mock.organizationRepo");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.workflowStepRepo");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('addWorkflowStep should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("addWorkflowStep should be defined", function () {
             expect(scope.addWorkflowStep).toBeDefined();
             expect(typeof scope.addWorkflowStep).toEqual("function");
         });
-        it('cancelDeleteOrganization should be defined', function () {
+        it("cancelDeleteOrganization should be defined", function () {
             expect(scope.cancelDeleteOrganization).toBeDefined();
             expect(typeof scope.cancelDeleteOrganization).toEqual("function");
         });
-        it('cancelRestoreOrganizationDefaults should be defined', function () {
+        it("cancelRestoreOrganizationDefaults should be defined", function () {
             expect(scope.cancelRestoreOrganizationDefaults).toBeDefined();
             expect(typeof scope.cancelRestoreOrganizationDefaults).toEqual("function");
         });
-        it('deleteOrganization should be defined', function () {
+        it("deleteOrganization should be defined", function () {
             expect(scope.deleteOrganization).toBeDefined();
             expect(typeof scope.deleteOrganization).toEqual("function");
         });
-        it('deleteWorkflowStep should be defined', function () {
+        it("deleteWorkflowStep should be defined", function () {
             expect(scope.deleteWorkflowStep).toBeDefined();
             expect(typeof scope.deleteWorkflowStep).toEqual("function");
         });
-        it('openConfirmDeleteModal should be defined', function () {
+        it("openConfirmDeleteModal should be defined", function () {
             expect(scope.openConfirmDeleteModal).toBeDefined();
             expect(typeof scope.openConfirmDeleteModal).toEqual("function");
         });
-        it('reorderWorkflowStepDown should be defined', function () {
+        it("reorderWorkflowStepDown should be defined", function () {
             expect(scope.reorderWorkflowStepDown).toBeDefined();
             expect(typeof scope.reorderWorkflowStepDown).toEqual("function");
         });
-        it('reorderWorkflowStepUp should be defined', function () {
+        it("reorderWorkflowStepUp should be defined", function () {
             expect(scope.reorderWorkflowStepUp).toBeDefined();
             expect(typeof scope.reorderWorkflowStepUp).toEqual("function");
         });
-        it('resetManageOrganization should be defined', function () {
+        it("resetManageOrganization should be defined", function () {
             expect(scope.resetManageOrganization).toBeDefined();
             expect(typeof scope.resetManageOrganization).toEqual("function");
         });
-        it('resetWorkflowSteps should be defined', function () {
+        it("resetWorkflowSteps should be defined", function () {
             expect(scope.resetWorkflowSteps).toBeDefined();
             expect(typeof scope.resetWorkflowSteps).toEqual("function");
         });
-        it('restoreOrganizationDefaults should be defined', function () {
+        it("restoreOrganizationDefaults should be defined", function () {
             expect(scope.restoreOrganizationDefaults).toBeDefined();
             expect(typeof scope.restoreOrganizationDefaults).toEqual("function");
         });
-        it('showOrganizationManagement should be defined', function () {
+        it("showOrganizationManagement should be defined", function () {
             expect(scope.showOrganizationManagement).toBeDefined();
             expect(typeof scope.showOrganizationManagement).toEqual("function");
         });
-        it('updateOrganization should be defined', function () {
+        it("updateOrganization should be defined", function () {
             expect(scope.updateOrganization).toBeDefined();
             expect(typeof scope.updateOrganization).toEqual("function");
         });
-        it('updateWorkflowStep should be defined', function () {
+        it("updateWorkflowStep should be defined", function () {
             expect(scope.updateWorkflowStep).toBeDefined();
             expect(typeof scope.updateWorkflowStep).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('addWorkflowStep should add a workflow step', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("addWorkflowStep should add a workflow step", function () {
             scope.modalData = mockWorkflowStep(q);
 
             spyOn(OrganizationRepo, "addWorkflowStep");
@@ -152,7 +152,7 @@ describe('controller: OrganizationManagementController', function () {
 
             expect(OrganizationRepo.addWorkflowStep).toHaveBeenCalled();
         });
-        it('cancelDeleteOrganization should close a modal', function () {
+        it("cancelDeleteOrganization should close a modal", function () {
             OrganizationRepo.selectedId = 1;
 
             spyOn(scope, "closeModal");
@@ -161,7 +161,7 @@ describe('controller: OrganizationManagementController', function () {
 
             expect(scope.closeModal).toHaveBeenCalled();
         });
-        it('cancelRestoreOrganizationDefaults should close a modal', function () {
+        it("cancelRestoreOrganizationDefaults should close a modal", function () {
             OrganizationRepo.selectedId = 1;
 
             spyOn(scope, "closeModal");
@@ -170,7 +170,7 @@ describe('controller: OrganizationManagementController', function () {
 
             expect(scope.closeModal).toHaveBeenCalled();
         });
-        it('deleteOrganization should delete the organization', function () {
+        it("deleteOrganization should delete the organization", function () {
             var organization = new mockOrganization(q);
             OrganizationRepo.selectedId = organization.id;
 
@@ -197,7 +197,7 @@ describe('controller: OrganizationManagementController', function () {
 
             expect(scope.closeModal).toHaveBeenCalled();
         });
-        it('deleteWorkflowStep should delete a workflow step', function () {
+        it("deleteWorkflowStep should delete a workflow step", function () {
             spyOn(AccordionService, "close");
 
             scope.deleteWorkflowStep(new mockWorkflowStep(q));
@@ -209,7 +209,7 @@ describe('controller: OrganizationManagementController', function () {
                 // FIXME: $scope.deleteWorkflowStep of organizationManagementController is expecting a different response structure.
                 var response = {
                     meta: {
-                        status: 'INVALID',
+                        status: "INVALID",
                     },
                     payload: {},
                     status: 200
@@ -222,14 +222,14 @@ describe('controller: OrganizationManagementController', function () {
             scope.$digest();
             timeout.flush();
         });
-        it('openConfirmDeleteModal should open a modal', function () {
+        it("openConfirmDeleteModal should open a modal", function () {
             spyOn(scope, "openModal");
 
             scope.openConfirmDeleteModal({id: 1});
 
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('reorderWorkflowStepDown should reorder a workflow step', function () {
+        it("reorderWorkflowStepDown should reorder a workflow step", function () {
             spyOn(AccordionService, "closeAll");
             spyOn(OrganizationRepo, "reorderWorkflowSteps");
 
@@ -238,7 +238,7 @@ describe('controller: OrganizationManagementController', function () {
             expect(AccordionService.closeAll).toHaveBeenCalled();
             expect(OrganizationRepo.reorderWorkflowSteps).toHaveBeenCalled();
         });
-        it('reorderWorkflowStepUp should reorder a workflow step', function () {
+        it("reorderWorkflowStepUp should reorder a workflow step", function () {
             spyOn(AccordionService, "closeAll");
             spyOn(OrganizationRepo, "reorderWorkflowSteps");
 
@@ -247,7 +247,7 @@ describe('controller: OrganizationManagementController', function () {
             expect(AccordionService.closeAll).toHaveBeenCalled();
             expect(OrganizationRepo.reorderWorkflowSteps).toHaveBeenCalled();
         });
-        it('resetManageOrganization should reset the selected organization', function () {
+        it("resetManageOrganization should reset the selected organization", function () {
             var organization;
             OrganizationRepo.selectedId = 1;
             OrganizationRepo.mockSpyAssist = true;
@@ -259,7 +259,7 @@ describe('controller: OrganizationManagementController', function () {
 
             expect(organization.refresh).toHaveBeenCalled();
         });
-        it('resetWorkflowSteps should reset the workflow steps', function () {
+        it("resetWorkflowSteps should reset the workflow steps", function () {
             var organization = new mockOrganization(q);
             scope.forms = [];
             scope.modalData = organization;
@@ -280,7 +280,7 @@ describe('controller: OrganizationManagementController', function () {
             scope.forms.myForm.$pristine = false;
             scope.resetWorkflowSteps();
         });
-        it('restoreOrganizationDefaults should restore defaults', function () {
+        it("restoreOrganizationDefaults should restore defaults", function () {
             var organization = new mockOrganization(q);
 
             spyOn(AlertService, "add");
@@ -297,7 +297,7 @@ describe('controller: OrganizationManagementController', function () {
                 // FIXME: $scope.restoreOrganizationDefaults of organizationManagementController is expecting a different response structure.
                 var response = {
                     meta: {
-                        status: 'INVALID',
+                        status: "INVALID",
                     },
                     payload: {},
                     status: 200
@@ -310,7 +310,7 @@ describe('controller: OrganizationManagementController', function () {
             scope.$digest();
             timeout.flush();
         });
-        it('showOrganizationManagement should return a boolean', function () {
+        it("showOrganizationManagement should return a boolean", function () {
             var response;
 
             OrganizationRepo.selectedId = 1;
@@ -324,7 +324,7 @@ describe('controller: OrganizationManagementController', function () {
             response = scope.showOrganizationManagement();
             expect(response).toBe(true);
         });
-        it('updateOrganization should should save an organization', function () {
+        it("updateOrganization should should save an organization", function () {
             var organization = new mockOrganization(q);
             scope.updatingOrganization = null;
 
@@ -336,7 +336,7 @@ describe('controller: OrganizationManagementController', function () {
             expect(scope.setSelectedOrganization).toHaveBeenCalled();
             expect(scope.updatingOrganization).toBe(false);
         });
-        it('updateWorkflowStep should update a workflow step', function () {
+        it("updateWorkflowStep should update a workflow step", function () {
             var workflowStep = new mockWorkflowStep(q);
 
             spyOn(OrganizationRepo, "setToUpdate");

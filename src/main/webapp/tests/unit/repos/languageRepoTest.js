@@ -1,4 +1,4 @@
-describe('service: languageRepo', function () {
+describe("service: languageRepo", function () {
     var q, repo, rootScope, mockedRepo, scope, WsApi;
 
     var initializeVariables = function(settings) {
@@ -19,29 +19,29 @@ describe('service: languageRepo', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.wsApi");
 
         initializeVariables();
         initializeRepo();
     });
 
-    describe('Is the repo defined', function () {
-        it('should be defined', function () {
+    describe("Is the repo defined", function () {
+        it("should be defined", function () {
             expect(repo).toBeDefined();
         });
     });
 
-    describe('Are the repo methods defined', function () {
-        it('getProquestLanguageCodes should be defined', function () {
+    describe("Are the repo methods defined", function () {
+        it("getProquestLanguageCodes should be defined", function () {
             expect(repo.getProquestLanguageCodes).toBeDefined();
             expect(typeof repo.getProquestLanguageCodes).toEqual("function");
         });
     });
 
-    describe('Do the repo methods work as expected', function () {
-        it('getProquestLanguageCodes should return a field predicate', function () {
+    describe("Do the repo methods work as expected", function () {
+        it("getProquestLanguageCodes should return a field predicate", function () {
             var response;
 
             response = repo.getProquestLanguageCodes();

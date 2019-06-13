@@ -56,5 +56,5 @@ var mockInputType = function($q) {
     return model;
 };
 
-angular.module('mock.inputType', []).service('InputType', mockInputType);
+angular.module("mock.inputType", []).service("InputType", mockInputType);
 

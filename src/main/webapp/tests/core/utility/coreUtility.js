@@ -4,7 +4,7 @@ var messagePromise = function (defer, message, messageStatus, httpStatus) {
      defer.resolve({
         body: angular.toJson({
             meta: {
-                status: messageStatus ? messageStatus : 'SUCCESS',
+                status: messageStatus ? messageStatus : "SUCCESS",
                 message: message
             },
             status: httpStatus ? httpStatus : 200
@@ -14,9 +14,9 @@ var messagePromise = function (defer, message, messageStatus, httpStatus) {
 };
 
 var valuePromise = function (defer, model, type, timeout) {
-    if (type === 'reject') {
+    if (type === "reject") {
         defer.reject(model);
-    } else if (type === 'notify') {
+    } else if (type === "notify") {
         timeout(function () {
             defer.notify(model);
         }, 0);
@@ -31,7 +31,7 @@ var payloadPromise = function (defer, payload, messageStatus, httpStatus) {
     defer.resolve({
         body: angular.toJson({
             meta: {
-                status: messageStatus ? messageStatus : 'SUCCESS',
+                status: messageStatus ? messageStatus : "SUCCESS",
             },
             payload: payload,
             status: httpStatus ? httpStatus : 200
@@ -44,7 +44,7 @@ var dataPromise = function (defer, payload, messageStatus, httpStatus) {
     defer.resolve({
         data: {
             meta: {
-                status: messageStatus ? messageStatus : 'SUCCESS',
+                status: messageStatus ? messageStatus : "SUCCESS",
             },
             payload: payload,
             status: httpStatus ? httpStatus : 200
@@ -57,7 +57,7 @@ var rejectPromise = function (defer, payload, messageStatus, httpStatus) {
     defer.reject({
         body: angular.toJson({
             meta: {
-                status: messageStatus ? messageStatus : 'INVALID',
+                status: messageStatus ? messageStatus : "INVALID",
             },
             payload: payload,
             status: httpStatus ? httpStatus : 200
@@ -70,7 +70,7 @@ var failurePromise = function (defer, payload, messageStatus, httpStatus) {
     defer.reject({
         data: {
             meta: {
-                status: messageStatus ? messageStatus : 'INVALID',
+                status: messageStatus ? messageStatus : "INVALID",
             },
             payload: payload,
             status: httpStatus ? httpStatus : 500
@@ -84,7 +84,7 @@ var notifyPromise = function (timeout, defer, payload, messageStatus, httpStatus
         defer.notify({
             body: angular.toJson({
                 meta: {
-                    status: messageStatus ? messageStatus : 'SUCCESS',
+                    status: messageStatus ? messageStatus : "SUCCESS",
                 },
                 payload: payload,
                 status: httpStatus ? httpStatus : 200
@@ -109,7 +109,7 @@ var mockParameterConstructor = function(mockConstructor) {
 var mockWindow = function() {
     return {
         location: {
-            href: '',
+            href: "",
             replace: function() {}
         }
     };

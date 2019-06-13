@@ -470,5 +470,5 @@ var mockSubmission = function($q) {
     return model;
 };
 
-angular.module('mock.submission', []).service('Submission', mockSubmission);
+angular.module("mock.submission", []).service("Submission", mockSubmission);
 

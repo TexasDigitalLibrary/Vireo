@@ -1,4 +1,4 @@
-describe('service: userRepo', function () {
+describe("service: userRepo", function () {
     var q, repo, rootScope, mockedRepo, scope, WsApi;
 
     var initializeVariables = function(settings) {
@@ -19,34 +19,34 @@ describe('service: userRepo', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.user');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.user");
+        module("mock.wsApi");
 
         initializeVariables();
         initializeRepo();
     });
 
-    describe('Is the repo defined', function () {
-        it('should be defined', function () {
+    describe("Is the repo defined", function () {
+        it("should be defined", function () {
             expect(repo).toBeDefined();
         });
     });
 
-    describe('Are the repo methods defined', function () {
-        it('getAllByRole should be defined', function () {
+    describe("Are the repo methods defined", function () {
+        it("getAllByRole should be defined", function () {
             expect(repo.getAllByRole).toBeDefined();
             expect(typeof repo.getAllByRole).toEqual("function");
         });
-        it('getAssignableUsers should be defined', function () {
+        it("getAssignableUsers should be defined", function () {
             expect(repo.getAssignableUsers).toBeDefined();
             expect(typeof repo.getAssignableUsers).toEqual("function");
         });
     });
 
-    describe('Do the repo methods work as expected', function () {
-        it('getAllByRole should return an array', function () {
+    describe("Do the repo methods work as expected", function () {
+        it("getAllByRole should return an array", function () {
             var response;
             var roles = [ "mock" ];
 
@@ -54,7 +54,7 @@ describe('service: userRepo', function () {
 
             // TODO
         });
-        it('getAssignableUsers should return an array', function () {
+        it("getAssignableUsers should return an array", function () {
             var response;
             var roles = [ "mock" ];
 

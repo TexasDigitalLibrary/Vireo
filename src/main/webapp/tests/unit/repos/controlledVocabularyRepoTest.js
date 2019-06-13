@@ -1,4 +1,4 @@
-describe('service: controlledVocabularyRepo', function () {
+describe("service: controlledVocabularyRepo", function () {
     var q, repo, rootScope, mockedRepo, scope, FileService, WsApi;
 
     var initializeVariables = function(settings) {
@@ -20,63 +20,63 @@ describe('service: controlledVocabularyRepo', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.controlledVocabulary');
-        module('mock.fileService', function($provide) {
+        module("core");
+        module("vireo");
+        module("mock.controlledVocabulary");
+        module("mock.fileService", function($provide) {
             FileService = {};
             $provide.value("FileService", FileService);
         });
-        module('mock.vocabularyWord');
-        module('mock.wsApi');
+        module("mock.vocabularyWord");
+        module("mock.wsApi");
 
         initializeVariables();
         initializeRepo();
     });
 
-    describe('Is the repo defined', function () {
-        it('should be defined', function () {
+    describe("Is the repo defined", function () {
+        it("should be defined", function () {
             expect(repo).toBeDefined();
         });
     });
 
-    describe('Are the repo methods defined', function () {
-        it('addVocabularyWord should be defined', function () {
+    describe("Are the repo methods defined", function () {
+        it("addVocabularyWord should be defined", function () {
             expect(repo.addVocabularyWord).toBeDefined();
             expect(typeof repo.addVocabularyWord).toEqual("function");
         });
-        it('cancel should be defined', function () {
+        it("cancel should be defined", function () {
             expect(repo.cancel).toBeDefined();
             expect(typeof repo.cancel).toEqual("function");
         });
-        it('confirmCSV should be defined', function () {
+        it("confirmCSV should be defined", function () {
             expect(repo.confirmCSV).toBeDefined();
             expect(typeof repo.confirmCSV).toEqual("function");
         });
-        it('downloadCSV should be defined', function () {
+        it("downloadCSV should be defined", function () {
             expect(repo.downloadCSV).toBeDefined();
             expect(typeof repo.downloadCSV).toEqual("function");
         });
-        it('removeVocabularyWord should be defined', function () {
+        it("removeVocabularyWord should be defined", function () {
             expect(repo.removeVocabularyWord).toBeDefined();
             expect(typeof repo.removeVocabularyWord).toEqual("function");
         });
-        it('status should be defined', function () {
+        it("status should be defined", function () {
             expect(repo.status).toBeDefined();
             expect(typeof repo.status).toEqual("function");
         });
-        it('updateVocabularyWord should be defined', function () {
+        it("updateVocabularyWord should be defined", function () {
             expect(repo.updateVocabularyWord).toBeDefined();
             expect(typeof repo.updateVocabularyWord).toEqual("function");
         });
-        it('uploadCSV should be defined', function () {
+        it("uploadCSV should be defined", function () {
             expect(repo.uploadCSV).toBeDefined();
             expect(typeof repo.uploadCSV).toEqual("function");
         });
     });
 
-    describe('Do the repo methods work as expected', function () {
-        it('addVocabularyWord should return a submission', function () {
+    describe("Do the repo methods work as expected", function () {
+        it("addVocabularyWord should return a submission", function () {
             var controlledVocabulary = new mockControlledVocabulary(q);
             var vocabularyWord = new mockVocabularyWord(q);
 
@@ -85,7 +85,7 @@ describe('service: controlledVocabularyRepo', function () {
 
             // TODO
         });
-        it('cancel should return a submission', function () {
+        it("cancel should return a submission", function () {
             var controlledVocabulary = new mockControlledVocabulary(q);
 
             repo.cancel(controlledVocabulary);
@@ -93,7 +93,7 @@ describe('service: controlledVocabularyRepo', function () {
 
             // TODO
         });
-        it('confirmCSV should return a submission', function () {
+        it("confirmCSV should return a submission", function () {
             var controlledVocabulary = new mockControlledVocabulary(q);
             var file = {};
 
@@ -106,7 +106,7 @@ describe('service: controlledVocabularyRepo', function () {
 
             // TODO
         });
-        it('downloadCSV should return a submission', function () {
+        it("downloadCSV should return a submission", function () {
             var controlledVocabulary = new mockControlledVocabulary(q);
 
             repo.downloadCSV(controlledVocabulary);
@@ -114,7 +114,7 @@ describe('service: controlledVocabularyRepo', function () {
 
             // TODO
         });
-        it('removeVocabularyWord should return a submission', function () {
+        it("removeVocabularyWord should return a submission", function () {
             var controlledVocabulary = new mockControlledVocabulary(q);
             var vocabularyWord = new mockVocabularyWord(q);
 
@@ -123,7 +123,7 @@ describe('service: controlledVocabularyRepo', function () {
 
             // TODO
         });
-        it('status should return a submission', function () {
+        it("status should return a submission", function () {
             var controlledVocabulary = new mockControlledVocabulary(q);
 
             repo.status(controlledVocabulary);
@@ -131,7 +131,7 @@ describe('service: controlledVocabularyRepo', function () {
 
             // TODO
         });
-        it('updateVocabularyWord should return a submission', function () {
+        it("updateVocabularyWord should return a submission", function () {
             var controlledVocabulary = new mockControlledVocabulary(q);
             var vocabularyWord = new mockVocabularyWord(q);
 
@@ -140,7 +140,7 @@ describe('service: controlledVocabularyRepo', function () {
 
             // TODO
         });
-        it('uploadCSV should return a submission', function () {
+        it("uploadCSV should return a submission", function () {
             var controlledVocabulary = new mockControlledVocabulary(q);
 
             repo.uploadCSV(controlledVocabulary);

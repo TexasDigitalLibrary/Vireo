@@ -50,5 +50,5 @@ var mockManagedConfiguration = function($q) {
     return model;
 };
 
-angular.module('mock.managedConfiguration', []).service('ManagedConfiguration', mockManagedConfiguration);
+angular.module("mock.managedConfiguration", []).service("ManagedConfiguration", mockManagedConfiguration);
 

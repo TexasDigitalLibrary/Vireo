@@ -1,4 +1,4 @@
-describe('service: FileUploadService', function () {
+describe("service: FileUploadService", function () {
     var q, rootScope, service, scope, FieldValue, FileService, WsApi;
 
     var initializeVariables = function(settings) {
@@ -16,64 +16,64 @@ describe('service: FileUploadService', function () {
         inject(function ($injector) {
             scope = rootScope.$new();
 
-            service = $injector.get('FileUploadService');
+            service = $injector.get("FileUploadService");
         });
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.fieldValue', function($provide) {
+        module("core");
+        module("vireo");
+        module("mock.fieldValue", function($provide) {
             FieldValue = {};
             $provide.value("FieldValue", mockParameterConstructor(FieldValue));
         });
-        module('mock.fileService', function($provide) {
+        module("mock.fileService", function($provide) {
             FileService = {};
             $provide.value("FileService", FileService);
         });
-        module('mock.fieldPredicate');
-        module('mock.submission');
-        module('mock.wsApi');
+        module("mock.fieldPredicate");
+        module("mock.submission");
+        module("mock.wsApi");
 
         initializeVariables();
         initializeService();
     });
 
-    describe('Is the service defined', function () {
-        it('should be defined', function () {
+    describe("Is the service defined", function () {
+        it("should be defined", function () {
             expect(service).toBeDefined();
         });
     });
 
-    describe('Are the service methods defined', function () {
-        it('archiveFile should be defined', function () {
+    describe("Are the service methods defined", function () {
+        it("archiveFile should be defined", function () {
             expect(service.archiveFile).toBeDefined();
             expect(typeof service.archiveFile).toEqual("function");
         });
-        it('download should be defined', function () {
+        it("download should be defined", function () {
             expect(service.download).toBeDefined();
             expect(typeof service.download).toEqual("function");
         });
-        it('getFileType should be defined', function () {
+        it("getFileType should be defined", function () {
             expect(service.getFileType).toBeDefined();
             expect(typeof service.getFileType).toEqual("function");
         });
-        it('isPrimaryDocument should be defined', function () {
+        it("isPrimaryDocument should be defined", function () {
             expect(service.isPrimaryDocument).toBeDefined();
             expect(typeof service.isPrimaryDocument).toEqual("function");
         });
-        it('removeFile should be defined', function () {
+        it("removeFile should be defined", function () {
             expect(service.removeFile).toBeDefined();
             expect(typeof service.removeFile).toEqual("function");
         });
-        it('uploadFile should be defined', function () {
+        it("uploadFile should be defined", function () {
             expect(service.uploadFile).toBeDefined();
             expect(typeof service.uploadFile).toEqual("function");
         });
     });
 
-    describe('Do the service methods work as expected', function () {
-        it('archiveFile should archive a file', function () {
+    describe("Do the service methods work as expected", function () {
+        it("archiveFile should archive a file", function () {
             var fieldValue = new mockFieldValue(q);
             var fieldProfile = new mockFieldProfile(q);
             var submission = new mockSubmission(q);
@@ -101,7 +101,7 @@ describe('service: FileUploadService', function () {
             service.archiveFile(submission, fieldValue, removeFieldValue);
             scope.$digest();
         });
-        it('download should download a file', function () {
+        it("download should download a file", function () {
             var fieldValue = new mockFieldValue(q);
             var submission = new mockSubmission(q);
 
@@ -110,7 +110,7 @@ describe('service: FileUploadService', function () {
             service.download(submission, fieldValue);
             expect(submission.file).toHaveBeenCalled();
         });
-        it('getFileType should return a string', function () {
+        it("getFileType should return a string", function () {
             var response;
             var fieldPredicate1 = new mockFieldPredicate(q);
             var fieldPredicate2 = new mockFieldPredicate(q);
@@ -123,7 +123,7 @@ describe('service: FileUploadService', function () {
             response = service.getFileType(fieldPredicate2);
             expect(response).toEqual("ARCHIVED");
         });
-        it('isPrimaryDocument should return a boolean', function () {
+        it("isPrimaryDocument should return a boolean", function () {
             var response;
             var fieldPredicate1 = new mockFieldPredicate(q);
             var fieldPredicate2 = new mockFieldPredicate(q);
@@ -136,7 +136,7 @@ describe('service: FileUploadService', function () {
             response = service.isPrimaryDocument(fieldPredicate2);
             expect(response).toBe(false);
         });
-        it('removeFile should remove a file', function () {
+        it("removeFile should remove a file", function () {
             var fieldValue = new mockFieldValue(q);
             var submission = new mockSubmission(q);
 
@@ -150,7 +150,7 @@ describe('service: FileUploadService', function () {
             service.removeFile(submission, fieldValue);
             scope.$digest();
         });
-        it('uploadFile should upload a file', function () {
+        it("uploadFile should upload a file", function () {
             var fieldValue = new mockFieldValue(q);
             var submission = new mockSubmission(q);
 

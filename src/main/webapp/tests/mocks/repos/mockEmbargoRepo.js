@@ -16,8 +16,8 @@ var dataEmbargoRepo3 = [
     dataEmbargo6
 ];
 
-angular.module('mock.embargoRepo', []).service('EmbargoRepo', function($q) {
-    var repo = mockRepo('EmbargoRepo', $q, mockEmbargo, dataEmbargoRepo1);
+angular.module("mock.embargoRepo", []).service("EmbargoRepo", function($q) {
+    var repo = mockRepo("EmbargoRepo", $q, mockEmbargo, dataEmbargoRepo1);
 
     return repo;
 });

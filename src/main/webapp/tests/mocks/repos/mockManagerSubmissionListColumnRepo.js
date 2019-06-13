@@ -16,8 +16,8 @@ var dataManagerSubmissionListColumnRepo3 = [
     dataSubmissionListColumn6
 ];
 
-angular.module('mock.managerSubmissionListColumnRepo', []).service('ManagerSubmissionListColumnRepo', function($q) {
-    var repo = mockRepo('ManagerSubmissionListColumnRepo', $q, mockSubmissionListColumn, dataManagerSubmissionListColumnRepo1);
+angular.module("mock.managerSubmissionListColumnRepo", []).service("ManagerSubmissionListColumnRepo", function($q) {
+    var repo = mockRepo("ManagerSubmissionListColumnRepo", $q, mockSubmissionListColumn, dataManagerSubmissionListColumnRepo1);
 
     repo.resetSubmissionListColumns = function (cv) {
         var payload = {};

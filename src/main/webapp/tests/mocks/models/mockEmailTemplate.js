@@ -53,5 +53,5 @@ var mockEmailTemplate = function($q) {
     return model;
 };
 
-angular.module('mock.emailTemplate', []).service('EmailTemplate', mockEmailTemplate);
+angular.module("mock.emailTemplate", []).service("EmailTemplate", mockEmailTemplate);
 

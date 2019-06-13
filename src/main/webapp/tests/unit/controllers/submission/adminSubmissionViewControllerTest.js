@@ -1,4 +1,4 @@
-describe('controller: AdminSubmissionViewController', function () {
+describe("controller: AdminSubmissionViewController", function () {
 
     var controller, location, q, scope, timeout, EmailTemplateRepo, FileUploadService, SubmissionRepo, UserSettings, WsApi;
 
@@ -23,7 +23,7 @@ describe('controller: AdminSubmissionViewController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('AdminSubmissionViewController', {
+            controller = $controller("AdminSubmissionViewController", {
                 $anchorScroll: $anchorScroll,
                 $location: location,
                 $route: $route,
@@ -57,250 +57,250 @@ describe('controller: AdminSubmissionViewController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.depositLocationRepo');
-        module('mock.emailRecipient');
-        module('mock.emailTemplateRepo');
-        module('mock.fieldPredicateRepo');
-        module('mock.fieldValue');
-        module('mock.fileUploadService');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.sidebarService');
-        module('mock.storageService');
-        module('mock.submissionRepo');
-        module('mock.submissionStatus');
-        module('mock.submissionStatusRepo');
-        module('mock.user');
-        module('mock.userRepo');
-        module('mock.userService');
-        module('mock.userSettings');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.depositLocationRepo");
+        module("mock.emailRecipient");
+        module("mock.emailTemplateRepo");
+        module("mock.fieldPredicateRepo");
+        module("mock.fieldValue");
+        module("mock.fileUploadService");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.sidebarService");
+        module("mock.storageService");
+        module("mock.submissionRepo");
+        module("mock.submissionStatus");
+        module("mock.submissionStatusRepo");
+        module("mock.user");
+        module("mock.userRepo");
+        module("mock.userService");
+        module("mock.userSettings");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined for admin', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined for admin", function () {
             expect(controller).toBeDefined();
         });
-        it('should be defined for manager', function () {
+        it("should be defined for manager", function () {
             initializeController({role: "ROLE_MANAGER"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for reviewer', function () {
+        it("should be defined for reviewer", function () {
             initializeController({role: "ROLE_REVIEWER"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for student', function () {
+        it("should be defined for student", function () {
             initializeController({role: "ROLE_STUDENT"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for anonymous', function () {
+        it("should be defined for anonymous", function () {
             initializeController({role: "ROLE_ANONYMOUS"});
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('addComment should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("addComment should be defined", function () {
             expect(scope.addComment).toBeDefined();
             expect(typeof scope.addComment).toEqual("function");
         });
-        it('addEmailAddressee should be defined', function () {
+        it("addEmailAddressee should be defined", function () {
             expect(scope.addEmailAddressee).toBeDefined();
             expect(typeof scope.addEmailAddressee).toEqual("function");
         });
-        it('cancel should be defined', function () {
+        it("cancel should be defined", function () {
             expect(scope.cancel).toBeDefined();
             expect(typeof scope.cancel).toEqual("function");
         });
-        it('cancelReviewerNotes should be defined', function () {
+        it("cancelReviewerNotes should be defined", function () {
             expect(scope.cancelReviewerNotes).toBeDefined();
             expect(typeof scope.cancelReviewerNotes).toEqual("function");
         });
-        it('deleteDocumentFieldValue should be defined', function () {
+        it("deleteDocumentFieldValue should be defined", function () {
             expect(scope.deleteDocumentFieldValue).toBeDefined();
             expect(typeof scope.deleteDocumentFieldValue).toEqual("function");
         });
-        it('disableAddComment should be defined', function () {
+        it("disableAddComment should be defined", function () {
             expect(scope.disableAddComment).toBeDefined();
             expect(typeof scope.disableAddComment).toEqual("function");
         });
-        it('disableSubmitAddFile should be defined', function () {
+        it("disableSubmitAddFile should be defined", function () {
             expect(scope.disableSubmitAddFile).toBeDefined();
             expect(typeof scope.disableSubmitAddFile).toEqual("function");
         });
-        it('editReviewerNotes should be defined', function () {
+        it("editReviewerNotes should be defined", function () {
             expect(scope.editReviewerNotes).toBeDefined();
             expect(typeof scope.editReviewerNotes).toEqual("function");
         });
-        it('getDocumentTypePredicates should be defined', function () {
+        it("getDocumentTypePredicates should be defined", function () {
             expect(scope.getDocumentTypePredicates).toBeDefined();
             expect(typeof scope.getDocumentTypePredicates).toEqual("function");
         });
-        it('getFile should be defined', function () {
+        it("getFile should be defined", function () {
             expect(scope.getFile).toBeDefined();
             expect(typeof scope.getFile).toEqual("function");
         });
-        it('getFileType should be defined', function () {
+        it("getFileType should be defined", function () {
             expect(scope.getFileType).toBeDefined();
             expect(typeof scope.getFileType).toEqual("function");
         });
-        it('getPattern should be defined', function () {
+        it("getPattern should be defined", function () {
             expect(scope.getPattern).toBeDefined();
             expect(typeof scope.getPattern).toEqual("function");
         });
-        it('getTabPath should be defined', function () {
+        it("getTabPath should be defined", function () {
             expect(scope.getTabPath).toBeDefined();
             expect(typeof scope.getTabPath).toEqual("function");
         });
-        it('hasPrimaryDocument should be defined', function () {
+        it("hasPrimaryDocument should be defined", function () {
             expect(scope.hasPrimaryDocument).toBeDefined();
             expect(typeof scope.hasPrimaryDocument).toEqual("function");
         });
-        it('isEmailAddresseeInvalid should be defined', function () {
+        it("isEmailAddresseeInvalid should be defined", function () {
             expect(scope.isEmailAddresseeInvalid).toBeDefined();
             expect(typeof scope.isEmailAddresseeInvalid).toEqual("function");
         });
-        it('isPrimaryDocument should be defined', function () {
+        it("isPrimaryDocument should be defined", function () {
             expect(scope.isPrimaryDocument).toBeDefined();
             expect(typeof scope.isPrimaryDocument).toEqual("function");
         });
-        it('queueUpload should be defined', function () {
+        it("queueUpload should be defined", function () {
             expect(scope.queueUpload).toBeDefined();
             expect(typeof scope.queueUpload).toEqual("function");
         });
-        it('removeEmailAddressee should be defined', function () {
+        it("removeEmailAddressee should be defined", function () {
             expect(scope.removeEmailAddressee).toBeDefined();
             expect(typeof scope.removeEmailAddressee).toEqual("function");
         });
-        it('removeFiles should be defined', function () {
+        it("removeFiles should be defined", function () {
             expect(scope.removeFiles).toBeDefined();
             expect(typeof scope.removeFiles).toEqual("function");
         });
-        it('resetAddFile should be defined', function () {
+        it("resetAddFile should be defined", function () {
             expect(scope.resetAddFile).toBeDefined();
             expect(typeof scope.resetAddFile).toEqual("function");
         });
-        it('resetCommentModal should be defined', function () {
+        it("resetCommentModal should be defined", function () {
             expect(scope.resetCommentModal).toBeDefined();
             expect(typeof scope.resetCommentModal).toEqual("function");
         });
-        it('saveDocumentFieldValue should be defined', function () {
+        it("saveDocumentFieldValue should be defined", function () {
             expect(scope.saveDocumentFieldValue).toBeDefined();
             expect(typeof scope.saveDocumentFieldValue).toEqual("function");
         });
-        it('saveReviewerNotes should be defined', function () {
+        it("saveReviewerNotes should be defined", function () {
             expect(scope.saveReviewerNotes).toBeDefined();
             expect(typeof scope.saveReviewerNotes).toEqual("function");
         });
-        it('showTab should be defined', function () {
+        it("showTab should be defined", function () {
             expect(scope.showTab).toBeDefined();
             expect(typeof scope.showTab).toEqual("function");
         });
-        it('submitAddFile should be defined', function () {
+        it("submitAddFile should be defined", function () {
             expect(scope.submitAddFile).toBeDefined();
             expect(typeof scope.submitAddFile).toEqual("function");
         });
-        it('toggleConfirm should be defined', function () {
+        it("toggleConfirm should be defined", function () {
             expect(scope.toggleConfirm).toBeDefined();
             expect(typeof scope.toggleConfirm).toEqual("function");
         });
-        it('updateActionLogLimit should be defined', function () {
+        it("updateActionLogLimit should be defined", function () {
             expect(scope.updateActionLogLimit).toBeDefined();
             expect(typeof scope.updateActionLogLimit).toEqual("function");
         });
-        it('validateEmailAddressee should be defined', function () {
+        it("validateEmailAddressee should be defined", function () {
             expect(scope.validateEmailAddressee).toBeDefined();
             expect(typeof scope.validateEmailAddressee).toEqual("function");
         });
     });
 
-    describe('Are the scope.submissionStatusBox methods defined', function () {
-        it('isUmiRelease should be defined', function () {
+    describe("Are the scope.submissionStatusBox methods defined", function () {
+        it("isUmiRelease should be defined", function () {
             expect(scope.submissionStatusBox.isUmiRelease).toBeDefined();
             expect(typeof scope.submissionStatusBox.isUmiRelease).toEqual("function");
         });
-        it('getLastActionDate should be defined', function () {
+        it("getLastActionDate should be defined", function () {
             expect(scope.submissionStatusBox.getLastActionDate).toBeDefined();
             expect(typeof scope.submissionStatusBox.getLastActionDate).toEqual("function");
         });
-        it('getLastActionEntry should be defined', function () {
+        it("getLastActionEntry should be defined", function () {
             expect(scope.submissionStatusBox.getLastActionEntry).toBeDefined();
             expect(typeof scope.submissionStatusBox.getLastActionEntry).toEqual("function");
         });
-        it('sendAdvisorEmail should be defined', function () {
+        it("sendAdvisorEmail should be defined", function () {
             expect(scope.submissionStatusBox.sendAdvisorEmail).toBeDefined();
             expect(typeof scope.submissionStatusBox.sendAdvisorEmail).toEqual("function");
         });
-        it('changeStatus should be defined', function () {
+        it("changeStatus should be defined", function () {
             expect(scope.submissionStatusBox.changeStatus).toBeDefined();
             expect(typeof scope.submissionStatusBox.changeStatus).toEqual("function");
         });
-        it('publish should be defined', function () {
+        it("publish should be defined", function () {
             expect(scope.submissionStatusBox.publish).toBeDefined();
             expect(typeof scope.submissionStatusBox.publish).toEqual("function");
         });
-        it('deleteSubmission should be defined', function () {
+        it("deleteSubmission should be defined", function () {
             expect(scope.submissionStatusBox.deleteSubmission).toBeDefined();
             expect(typeof scope.submissionStatusBox.deleteSubmission).toEqual("function");
         });
-        it('changeAssignee should be defined', function () {
+        it("changeAssignee should be defined", function () {
             expect(scope.submissionStatusBox.changeAssignee).toBeDefined();
             expect(typeof scope.submissionStatusBox.changeAssignee).toEqual("function");
         });
-        it('resetStatus should be defined', function () {
+        it("resetStatus should be defined", function () {
             expect(scope.submissionStatusBox.resetStatus).toBeDefined();
             expect(typeof scope.submissionStatusBox.resetStatus).toEqual("function");
         });
-        it('resetAssigneeWorking should be defined', function () {
+        it("resetAssigneeWorking should be defined", function () {
             expect(scope.submissionStatusBox.resetAssigneeWorking).toBeDefined();
             expect(typeof scope.submissionStatusBox.resetAssigneeWorking).toEqual("function");
         });
-        it('setSubmitDate should be defined', function () {
+        it("setSubmitDate should be defined", function () {
             expect(scope.submissionStatusBox.setSubmitDate).toBeDefined();
             expect(typeof scope.submissionStatusBox.setSubmitDate).toEqual("function");
         });
     });
 
-    describe('Are the scope.customActionsBox methods defined', function () {
-        it('updateCustomActionValue should be defined', function () {
+    describe("Are the scope.customActionsBox methods defined", function () {
+        it("updateCustomActionValue should be defined", function () {
             expect(scope.customActionsBox.updateCustomActionValue).toBeDefined();
             expect(typeof scope.customActionsBox.updateCustomActionValue).toEqual("function");
         });
     });
 
-    describe('Are the scope.activeDocumentBox methods defined', function () {
-        it('downloadPrimaryDocument should be defined', function () {
+    describe("Are the scope.activeDocumentBox methods defined", function () {
+        it("downloadPrimaryDocument should be defined", function () {
             expect(scope.activeDocumentBox.downloadPrimaryDocument).toBeDefined();
             expect(typeof scope.activeDocumentBox.downloadPrimaryDocument).toEqual("function");
         });
-        it('getPrimaryDocumentFileName should be defined', function () {
+        it("getPrimaryDocumentFileName should be defined", function () {
             expect(scope.activeDocumentBox.getPrimaryDocumentFileName).toBeDefined();
             expect(typeof scope.activeDocumentBox.getPrimaryDocumentFileName).toEqual("function");
         });
-        it('gotoAllFiles should be defined', function () {
+        it("gotoAllFiles should be defined", function () {
             expect(scope.activeDocumentBox.gotoAllFiles).toBeDefined();
             expect(typeof scope.activeDocumentBox.gotoAllFiles).toEqual("function");
         });
-        it('uploadNewFile should be defined', function () {
+        it("uploadNewFile should be defined", function () {
             expect(scope.activeDocumentBox.uploadNewFile).toBeDefined();
             expect(typeof scope.activeDocumentBox.uploadNewFile).toEqual("function");
         });
     });
 
-    describe('Does the scope initialize as expected', function () {
-        it('EmailTemplateRepo.ready() should handle default template', function () {
+    describe("Does the scope initialize as expected", function () {
+        it("EmailTemplateRepo.ready() should handle default template", function () {
             var defaultEmailTemplate = new mockEmailTemplate(q);
             defaultEmailTemplate.mock({
                 name: "Choose a Message Template"
@@ -309,7 +309,7 @@ describe('controller: AdminSubmissionViewController', function () {
 
             initializeController();
         });
-        it('Listen on "/channel/submission/" + id should work as expected', function () {
+        it("Listen on '/channel/submission/id' should work as expected", function () {
             var submission1 = new mockSubmission(q);
             var submission2 = new mockSubmission(q);
             var fieldValue1 = new mockFieldValue(q);
@@ -359,8 +359,8 @@ describe('controller: AdminSubmissionViewController', function () {
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('addComment should update the comment modal', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("addComment should update the comment modal", function () {
             var commentModal = {};
             scope.resetCommentModal(commentModal);
             commentModal.sendEmailToRecipient = true;
@@ -386,7 +386,7 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.addComment(commentModal);
             scope.$digest();
         });
-        it('addEmailAddressee should update the destination', function () {
+        it("addEmailAddressee should update the destination", function () {
             var mockEmails = { push: jasmine.createSpy() };
             var mockFormField =  {
               $$rawModelValue: { type: "mock" },
@@ -414,7 +414,7 @@ describe('controller: AdminSubmissionViewController', function () {
 
             scope.addEmailAddressee(mockEmails, mockFormField);
         });
-        it('cancel should open a modal close a modal', function () {
+        it("cancel should open a modal close a modal", function () {
             var fieldValue = { refresh: jasmine.createSpy() };
 
             spyOn(scope, "closeModal");
@@ -424,7 +424,7 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(fieldValue.refresh).toHaveBeenCalled();
             expect(scope.closeModal).toHaveBeenCalled();
         });
-        it('cancelReviewerNotes should cancel reviewer notes', function () {
+        it("cancelReviewerNotes should cancel reviewer notes", function () {
             scope.editingReviewerNotes = null;
             scope.submission = mockSubmission(q);
             scope.submission.reviewerNotes = null;
@@ -435,7 +435,7 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(scope.editingReviewerNotes).toBe(false);
             expect(scope.submission.reviewerNotes).toEqual(scope.reviewerNotes);
         });
-        it('deleteDocumentFieldValue should close a modal', function () {
+        it("deleteDocumentFieldValue should close a modal", function () {
             scope.confirm = null;
 
             spyOn(scope, "closeModal");
@@ -446,11 +446,11 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(scope.confirm).toBe(false);
             expect(scope.closeModal).toHaveBeenCalled();
         });
-        it('disableAddComment should return a boolean', function () {
+        it("disableAddComment should return a boolean", function () {
             var response;
             scope.addCommentModal = {};
             scope.resetCommentModal(scope.addCommentModal);
-            scope.addCommentModal.commentVisibility = 'public';
+            scope.addCommentModal.commentVisibility = "public";
             scope.addCommentModal.sendEmailToRecipient = true;
             scope.addCommentModal.sendEmailToCCRecipient = true;
 
@@ -522,7 +522,7 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(response).toBe(true);
 
             scope.addCommentModal.subject = undefined;
-            scope.addCommentModal.commentVisibility = 'private';
+            scope.addCommentModal.commentVisibility = "private";
 
             response = scope.disableAddComment();
             expect(typeof response).toBe("boolean");
@@ -548,10 +548,10 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.disableAddComment();
             expect(response).toBe(true);
         });
-        it('disableSubmitAddFile should return a boolean', function () {
+        it("disableSubmitAddFile should return a boolean", function () {
             var response;
             scope.addFileData = {};
-            scope.addFileData.addFileSelection = 'replace';
+            scope.addFileData.addFileSelection = "replace";
             scope.addFileData.sendEmailToRecipient = true;
             scope.addFileData.sendEmailToCCRecipient = true;
             scope.addFileData.files = [ {} ];
@@ -572,7 +572,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.disableSubmitAddFile();
             expect(typeof response).toBe("boolean");
 
-            scope.addFileData.addFileSelection = 'different';
+            scope.addFileData.addFileSelection = "different";
 
             response = scope.disableSubmitAddFile();
             expect(typeof response).toBe("boolean");
@@ -587,7 +587,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.disableSubmitAddFile();
             expect(typeof response).toBe("boolean");
         });
-        it('editReviewerNotes should copy the reviewer notes', function () {
+        it("editReviewerNotes should copy the reviewer notes", function () {
             scope.submission = mockSubmission(q);
             scope.submission.reviewerNotes = {};
             scope.editingReviewerNotes = null;
@@ -597,7 +597,7 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(scope.editingReviewerNotes).toBe(true);
             expect(scope.reviewerNotes).toEqual(scope.submission.reviewerNotes);
         });
-        it('getDocumentTypePredicates should return an array', function () {
+        it("getDocumentTypePredicates should return an array", function () {
             var response;
             scope.submission = mockSubmission(q);
             scope.submission.submissionWorkflowSteps = [ new mockWorkflowStep(q) ];
@@ -608,26 +608,26 @@ describe('controller: AdminSubmissionViewController', function () {
 
             expect(typeof response).toBe("object");
         });
-        it('getFile should save a file', function () {
+        it("getFile should save a file", function () {
             var fieldValue = new mockFieldValue(q);
             fieldValue.fileInfo = {};
             scope.submission = mockSubmission(q);
 
             // manually override the FileSaver.saveAs method, which is installed globally.
-            var _global = typeof window === 'object' && window.window === window ? window : typeof self === 'object' && self.self === self ? self : typeof global === 'object' && global.global === global ? global : void 0;
+            var _global = typeof window === "object" && window.window === window ? window : typeof self === "object" && self.self === self ? self : typeof global === "object" && global.global === global ? global : void 0;
             _global.saveAs = function() { return true; };
 
             scope.getFile(fieldValue);
             scope.$digest();
         });
-        it('getFileType should get a file type', function () {
+        it("getFileType should get a file type", function () {
             spyOn(FileUploadService, "getFileType");
 
             scope.getFileType(new mockFieldPredicate(q));
 
             expect(FileUploadService.getFileType).toHaveBeenCalled();
         });
-        it('getPattern should return a pattern', function () {
+        it("getPattern should return a pattern", function () {
             var response;
             scope.fieldPredicates = [ new mockFieldPredicate(q), new mockFieldPredicate(q) ];
             scope.fieldPredicates[1].mock(dataFieldPredicate3);
@@ -643,7 +643,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.getPattern("does not exist");
             expect(response).toEqual("*");
         });
-        it('getTabPath should return a path with the submission id', function () {
+        it("getTabPath should return a path with the submission id", function () {
             var response;
             var path = "/a/b/c";
             scope.submission = mockSubmission(q);
@@ -652,7 +652,7 @@ describe('controller: AdminSubmissionViewController', function () {
 
             expect(response).toBe(path + "/" + scope.submission.id);
         });
-        it('hasPrimaryDocument should return a boolean', function () {
+        it("hasPrimaryDocument should return a boolean", function () {
             var response;
             scope.submission = mockSubmission(q);
             scope.submission.primaryDocumentFieldValue = {id: 1};
@@ -665,7 +665,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.hasPrimaryDocument();
             expect(response).toBe(false);
         });
-        it('isEmailAddresseeInvalid should return a boolean', function () {
+        it("isEmailAddresseeInvalid should return a boolean", function () {
             var response;
             var formField = {
                 $$attr: {
@@ -685,7 +685,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.isEmailAddresseeInvalid(formField);
             // TODO
         });
-        it('isPrimaryDocument should return a boolean', function () {
+        it("isPrimaryDocument should return a boolean", function () {
             var response;
 
             spyOn(scope, "getFileType").and.returnValue("PRIMARY");
@@ -699,7 +699,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.isPrimaryDocument();
             expect(response).toBe(false);
         });
-        it('queueUpload should assign the files', function () {
+        it("queueUpload should assign the files", function () {
             scope.errorMessage = null;
             scope.addFileData = { files: [] };
 
@@ -708,7 +708,7 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(typeof scope.errorMessage).toBe("string");
             expect(scope.addFileData.files.length).toBe(1);
         });
-        it('resetAddFile should close a modal', function () {
+        it("resetAddFile should close a modal", function () {
             scope.errorMessage = null;
             spyOn(scope, "closeModal");
 
@@ -717,7 +717,7 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(typeof scope.errorMessage).toBe("string");
             expect(scope.closeModal).toHaveBeenCalled();
         });
-        it('removeEmailAddressee should remove an email address', function () {
+        it("removeEmailAddressee should remove an email address", function () {
             var destination = { indexOf: jasmine.createSpy(), splice: jasmine.createSpy() };
 
             scope.removeEmailAddressee(true, destination);
@@ -725,7 +725,7 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(destination.indexOf).toHaveBeenCalled();
             expect(destination.splice).toHaveBeenCalled();
         });
-        it('removeFiles should remove files', function () {
+        it("removeFiles should remove files", function () {
             scope.errorMessage = null;
             scope.addFileData = { files: [] };
 
@@ -734,7 +734,7 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(typeof scope.errorMessage).toBe("string");
             expect(scope.addFileData.files).not.toBeDefined();
         });
-        it('resetCommentModal should close a modal', function () {
+        it("resetCommentModal should close a modal", function () {
             spyOn(scope, "closeModal");
 
             scope.resetCommentModal({});
@@ -756,7 +756,7 @@ describe('controller: AdminSubmissionViewController', function () {
             initializeController();
             scope.resetCommentModal({});
         });
-        it('saveDocumentFieldValue should close a modal', function () {
+        it("saveDocumentFieldValue should close a modal", function () {
             var fieldValue = new mockFieldValue(q);
             fieldValue.updating = null;
 
@@ -776,7 +776,7 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.saveDocumentFieldValue(fieldValue);
             scope.$digest();
         });
-        it('saveReviewerNotes should save the reviewer notes', function () {
+        it("saveReviewerNotes should save the reviewer notes", function () {
             scope.submission = new mockSubmission(q);
             scope.savingReviewerNotes = null;
             scope.editingReviewerNotes = null;
@@ -787,7 +787,7 @@ describe('controller: AdminSubmissionViewController', function () {
             expect(typeof scope.savingReviewerNotes).toBe("boolean");
             expect(scope.editingReviewerNotes).toBe(false);
         });
-        it('showTab should return a boolean', function () {
+        it("showTab should return a boolean", function () {
             var response;
             var workflowStep = new mockWorkflowStep(q);
 
@@ -800,7 +800,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.showTab(workflowStep);
             expect(response).toBe(true);
         });
-        it('submitAddFile should submit a file', function () {
+        it("submitAddFile should submit a file", function () {
             scope.fieldPredicates = [ new mockFieldPredicate(q), new mockFieldPredicate(q) ];
             scope.fieldPredicates[1].mock(dataFieldPredicate3);
             scope.submission = mockSubmission(q);
@@ -872,7 +872,7 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.submitAddFile();
             scope.$digest();
         });
-        it('toggleConfirm should toggle a boolean', function () {
+        it("toggleConfirm should toggle a boolean", function () {
             scope.confirm = false;
 
             scope.toggleConfirm();
@@ -881,7 +881,7 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.toggleConfirm();
             expect(scope.confirm).toBe(false);
         });
-        it('updateActionLogLimit should assign the action log limit', function () {
+        it("updateActionLogLimit should assign the action log limit", function () {
             scope.actionLogCurrentLimit = null;
             scope.actionLogLimit = 1;
 
@@ -893,7 +893,7 @@ describe('controller: AdminSubmissionViewController', function () {
             scope.updateActionLogLimit();
             expect(scope.actionLogCurrentLimit).toBe(100);
         });
-        it('validateEmailAddressee should validate email addresses', function () {
+        it("validateEmailAddressee should validate email addresses", function () {
             var response;
             var formField = {
                 $$attr: {
@@ -911,15 +911,15 @@ describe('controller: AdminSubmissionViewController', function () {
         });
     });
 
-    describe('Do the scope.activeDocumentBox methods work as expected', function () {
-        it('downloadPrimaryDocument should execute getFile', function () {
+    describe("Do the scope.activeDocumentBox methods work as expected", function () {
+        it("downloadPrimaryDocument should execute getFile", function () {
             spyOn(scope, "getFile");
 
             scope.activeDocumentBox.downloadPrimaryDocument();
 
             expect(scope.getFile).toHaveBeenCalled();
         });
-        it('getPrimaryDocumentFileName should update the location', function () {
+        it("getPrimaryDocumentFileName should update the location", function () {
             var response;
 
             scope.submission = new mockSubmission(q);
@@ -941,14 +941,14 @@ describe('controller: AdminSubmissionViewController', function () {
 
             expect(response).toBe("");
         });
-        it('gotoAllFiles should update the location', function () {
+        it("gotoAllFiles should update the location", function () {
             spyOn(location, "hash");
 
             scope.activeDocumentBox.gotoAllFiles();
 
             expect(location.hash).toHaveBeenCalled();
         });
-        it('uploadNewFile should open a modal', function () {
+        it("uploadNewFile should open a modal", function () {
             spyOn(scope, "openModal");
 
             scope.activeDocumentBox.uploadNewFile();
@@ -957,8 +957,8 @@ describe('controller: AdminSubmissionViewController', function () {
         });
     });
 
-    describe('Do the scope.submissionStatusBox methods work as expected', function () {
-        it('isUmiRelease should return a string', function () {
+    describe("Do the scope.submissionStatusBox methods work as expected", function () {
+        it("isUmiRelease should return a string", function () {
             var response;
             var fieldValue = new mockFieldValue(q);
             var fieldPredicate = new mockFieldPredicate(q);
@@ -980,7 +980,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.submissionStatusBox.isUmiRelease();
             expect(response).toBe("yes");
         });
-        it('getLastActionDate should return an action log date', function () {
+        it("getLastActionDate should return an action log date", function () {
             var response;
             var submission = new mockSubmission(q);
             var actionLog = new mockActionLog(q);
@@ -991,7 +991,7 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.submissionStatusBox.getLastActionDate();
             expect(response).toBe(actionLog.actionDate);
         });
-        it('getLastActionEntry should return a string', function () {
+        it("getLastActionEntry should return a string", function () {
             var response;
             var submission = new mockSubmission(q);
             var actionLog = new mockActionLog(q);
@@ -1002,50 +1002,50 @@ describe('controller: AdminSubmissionViewController', function () {
             response = scope.submissionStatusBox.getLastActionEntry();
             expect(response).toBe(actionLog.entry);
         });
-        it('sendAdvisorEmail should work', function () {
+        it("sendAdvisorEmail should work", function () {
             var response;
             response = scope.submissionStatusBox.sendAdvisorEmail();
             scope.$digest();
             // TODO
         });
-        it('changeStatus should work', function () {
+        it("changeStatus should work", function () {
             var response;
             var state = {};
             response = scope.submissionStatusBox.changeStatus(state);
             scope.$digest();
             // TODO
         });
-        it('publish should work', function () {
+        it("publish should work", function () {
             var response;
             var state = {};
             response = scope.submissionStatusBox.publish(state);
             scope.$digest();
             // TODO
         });
-        it('deleteSubmission should work', function () {
+        it("deleteSubmission should work", function () {
             var response;
             response = scope.submissionStatusBox.deleteSubmission();
             scope.$digest();
             // TODO
         });
-        it('changeAssignee should work', function () {
+        it("changeAssignee should work", function () {
             var response;
             var assignee = new mockUser(q);
             response = scope.submissionStatusBox.changeAssignee(assignee);
             scope.$digest();
             // TODO
         });
-        it('resetStatus should work', function () {
+        it("resetStatus should work", function () {
             var response;
             response = scope.submissionStatusBox.resetStatus();
             // TODO
         });
-        it('resetAssigneeWorking should work', function () {
+        it("resetAssigneeWorking should work", function () {
             var response;
             response = scope.submissionStatusBox.resetAssigneeWorking();
             // TODO
         });
-        it('setSubmitDate should work', function () {
+        it("setSubmitDate should work", function () {
             var response;
             var date = "1425393875282";
             response = scope.submissionStatusBox.setSubmitDate(date);
@@ -1054,8 +1054,8 @@ describe('controller: AdminSubmissionViewController', function () {
         });
     });
 
-    describe('Do the scope.customActionsBox methods work as expected', function () {
-        it('updateCustomActionValue should work', function () {
+    describe("Do the scope.customActionsBox methods work as expected", function () {
+        it("updateCustomActionValue should work", function () {
             var response;
             response = scope.customActionsBox.updateCustomActionValue();
             // TODO

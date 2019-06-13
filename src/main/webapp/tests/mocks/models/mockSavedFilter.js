@@ -52,5 +52,5 @@ var mockSavedFilter = function($q) {
     return model;
 };
 
-angular.module('mock.savedFilter', []).service('SavedFilter', mockSavedFilter);
+angular.module("mock.savedFilter", []).service("SavedFilter", mockSavedFilter);
 

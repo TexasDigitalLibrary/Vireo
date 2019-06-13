@@ -1,22 +1,22 @@
-angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListenerFactory', function($q, ModalService) {
+angular.module("mock.dragAndDropListenerFactory", []).factory("DragAndDropListenerFactory", function($q, ModalService) {
     var factory = this;
     var defer;
 
     factory.listener = {
-        'trash': {
+        "trash": {
             hover: false,
             element: null,
-            id: ''
+            id: ""
         },
-        'select': null,
-        'dragging': null,
-        'list': [],
-        'confirm': {
-            'remove': {
-                'modal': ''
+        "select": null,
+        "dragging": null,
+        "list": [],
+        "confirm": {
+            "remove": {
+                "modal": ""
             }
         },
-        'reorder': function(src, dest) {}
+        "reorder": function(src, dest) {}
     };
 
     factory.mock = function(toMock) {
@@ -55,7 +55,7 @@ angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListen
     };
 
     factory.buildDragControls = function(drag) {
-        if (typeof drag === 'object') {
+        if (typeof drag === "object") {
             factory.listener.setScopeTrashId(drag.trashId);
             factory.listener.setScopeDragging(drag.dragging);
             factory.listener.setScopeSelect(drag.select);
@@ -64,7 +64,7 @@ angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListen
             factory.listener.setScopeReorderFunction(drag.reorder);
         }
         else {
-            console.log('ensure configured');
+            console.log("ensure configured");
         }
 
         var dragControls = {
@@ -75,14 +75,14 @@ angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListen
             dragMove: function(event) {
                 if (factory.listener.trash.hover) {
                     factory.listener.trash.hover = false;
-                    factory.listener.trash.element.removeClass('dragging');
+                    factory.listener.trash.element.removeClass("dragging");
                 }
             },
             dragEnd: function(event) {
                 if (factory.listener.dragging) {
                     if (factory.listener.trash.hover) {
-                        angular.element(factory.listener.confirm.remove.modal).modal('show');
-                        factory.listener.trash.element.removeClass('dragging');
+                        angular.element(factory.listener.confirm.remove.modal).modal("show");
+                        factory.listener.trash.element.removeClass("dragging");
                     } else {
                         // do nothing
                     }
@@ -94,7 +94,7 @@ angular.module('mock.dragAndDropListenerFactory', []).factory('DragAndDropListen
                 if(currentElement[0].id == factory.listener.trash.id) {
                     factory.listener.trash.hover = true;
                     factory.listener.trash.element = currentElement;
-                    factory.listener.trash.element.addClass('dragging');
+                    factory.listener.trash.element.addClass("dragging");
                 } else {
                     factory.listener.trash.hover = false;
                 }

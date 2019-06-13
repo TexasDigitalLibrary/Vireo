@@ -170,7 +170,7 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
         if (typeof cbOrActionOrActionArray === "function") {
             var apiRes = {
                 meta: {
-                    status: 'SUCCESS',
+                    status: "SUCCESS",
                     message: ""
                 },
                 status: 200

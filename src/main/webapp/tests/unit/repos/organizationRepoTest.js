@@ -1,4 +1,4 @@
-describe('service: organizationRepo', function () {
+describe("service: organizationRepo", function () {
     var q, repo, rootScope, mockedRepo, scope, RestApi, WsApi;
 
     var initializeVariables = function(settings) {
@@ -20,76 +20,76 @@ describe('service: organizationRepo', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.organization');
-        module('mock.restApi');
-        module('mock.workflowStep');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.organization");
+        module("mock.restApi");
+        module("mock.workflowStep");
+        module("mock.wsApi");
 
         initializeVariables();
         initializeRepo();
     });
 
-    describe('Is the repo defined', function () {
-        it('should be defined', function () {
+    describe("Is the repo defined", function () {
+        it("should be defined", function () {
             expect(repo).toBeDefined();
         });
     });
 
-    describe('Are the repo methods defined', function () {
-        it('addWorkflowStep should be defined', function () {
+    describe("Are the repo methods defined", function () {
+        it("addWorkflowStep should be defined", function () {
             expect(repo.addWorkflowStep).toBeDefined();
             expect(typeof repo.addWorkflowStep).toEqual("function");
         });
-        it('create should be defined', function () {
+        it("create should be defined", function () {
             expect(repo.create).toBeDefined();
             expect(typeof repo.create).toEqual("function");
         });
-        it('countSubmissions should be defined', function () {
+        it("countSubmissions should be defined", function () {
             expect(repo.countSubmissions).toBeDefined();
             expect(typeof repo.countSubmissions).toEqual("function");
         });
-        it('deleteWorkflowStep should be defined', function () {
+        it("deleteWorkflowStep should be defined", function () {
             expect(repo.deleteWorkflowStep).toBeDefined();
             expect(typeof repo.deleteWorkflowStep).toEqual("function");
         });
-        it('getNewOrganization should be defined', function () {
+        it("getNewOrganization should be defined", function () {
             expect(repo.getNewOrganization).toBeDefined();
             expect(typeof repo.getNewOrganization).toEqual("function");
         });
-        it('getSelectedOrganization should be defined', function () {
+        it("getSelectedOrganization should be defined", function () {
             expect(repo.getSelectedOrganization).toBeDefined();
             expect(typeof repo.getSelectedOrganization).toEqual("function");
         });
-        it('ready should be defined', function () {
+        it("ready should be defined", function () {
             expect(repo.ready).toBeDefined();
             expect(typeof repo.ready).toEqual("function");
         });
-        it('reorderWorkflowSteps should be defined', function () {
+        it("reorderWorkflowSteps should be defined", function () {
             expect(repo.reorderWorkflowSteps).toBeDefined();
             expect(typeof repo.reorderWorkflowSteps).toEqual("function");
         });
-        it('resetNewOrganization should be defined', function () {
+        it("resetNewOrganization should be defined", function () {
             expect(repo.resetNewOrganization).toBeDefined();
             expect(typeof repo.resetNewOrganization).toEqual("function");
         });
-        it('restoreDefaults should be defined', function () {
+        it("restoreDefaults should be defined", function () {
             expect(repo.restoreDefaults).toBeDefined();
             expect(typeof repo.restoreDefaults).toEqual("function");
         });
-        it('setSelectedOrganization should be defined', function () {
+        it("setSelectedOrganization should be defined", function () {
             expect(repo.setSelectedOrganization).toBeDefined();
             expect(typeof repo.setSelectedOrganization).toEqual("function");
         });
-        it('updateWorkflowStep should be defined', function () {
+        it("updateWorkflowStep should be defined", function () {
             expect(repo.updateWorkflowStep).toBeDefined();
             expect(typeof repo.updateWorkflowStep).toEqual("function");
         });
     });
 
-    describe('Do the repo methods work as expected', function () {
-        it('addWorkflowStep should add a step', function () {
+    describe("Do the repo methods work as expected", function () {
+        it("addWorkflowStep should add a step", function () {
             var workflowStep = new mockWorkflowStep(q);
 
             WsApi.fetch = function() {
@@ -105,7 +105,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('create should create an organization', function () {
+        it("create should create an organization", function () {
             var organization1 = new mockOrganization(q);
             var organization2 = new mockOrganization(q);
 
@@ -118,7 +118,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('countSubmissions should return a number', function () {
+        it("countSubmissions should return a number", function () {
             WsApi.fetch = function() {
                 // TODO: having to send an object structure of response.body.payload.payload.Long seems wrong, review implementation for bug.
                 var payload = {
@@ -134,7 +134,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('deleteWorkflowStep should delete a step', function () {
+        it("deleteWorkflowStep should delete a step", function () {
             var workflowStep = new mockWorkflowStep(q);
 
             WsApi.fetch = function() {
@@ -144,7 +144,7 @@ describe('service: organizationRepo', function () {
             RestApi.post = function () {
                 var payload = {
                     meta: {
-                        status: 'SUCCESS',
+                        status: "SUCCESS",
                     },
                     payload: {},
                     status: 200
@@ -162,7 +162,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('getNewOrganization should return an organization', function () {
+        it("getNewOrganization should return an organization", function () {
             WsApi.fetch = function() {
                 return payloadPromise(q.defer());
             };
@@ -172,7 +172,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('getSelectedOrganization should return an organization', function () {
+        it("getSelectedOrganization should return an organization", function () {
             WsApi.fetch = function() {
                 return payloadPromise(q.defer());
             };
@@ -182,7 +182,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('ready should perform additional actions', function () {
+        it("ready should perform additional actions", function () {
             WsApi.listen = function() {
                 // FIXME: this is not called because the mocked WsApi is not atually used.
                 return payloadPromise(q.defer());
@@ -193,7 +193,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('reorderWorkflowSteps should reorder the steps', function () {
+        it("reorderWorkflowSteps should reorder the steps", function () {
             WsApi.fetch = function() {
                 return payloadPromise(q.defer());
             };
@@ -207,7 +207,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('resetNewOrganization should reset the organization', function () {
+        it("resetNewOrganization should reset the organization", function () {
             WsApi.fetch = function() {
                 return payloadPromise(q.defer());
             };
@@ -217,7 +217,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('restoreDefaults should restore defaults', function () {
+        it("restoreDefaults should restore defaults", function () {
             var organization = new mockOrganization(q);
 
             WsApi.fetch = function() {
@@ -228,7 +228,7 @@ describe('service: organizationRepo', function () {
                 // TODO: having to use a different format that other RestApi.post() mocks, review implementations for bugs.
                 var payload = {
                     meta: {
-                        status: 'SUCCESS',
+                        status: "SUCCESS",
                     },
                     payload: {},
                     status: 200
@@ -242,7 +242,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('setSelectedOrganization should select an organization', function () {
+        it("setSelectedOrganization should select an organization", function () {
             var organization = new mockOrganization(q);
 
             WsApi.fetch = function() {
@@ -264,7 +264,7 @@ describe('service: organizationRepo', function () {
 
             // TODO
         });
-        it('updateWorkflowStep should update the step', function () {
+        it("updateWorkflowStep should update the step", function () {
             var workflowStep = new mockWorkflowStep(q);
 
             WsApi.fetch = function() {
@@ -275,7 +275,7 @@ describe('service: organizationRepo', function () {
                 // TODO: having to use a different format that other RestApi.post() mocks, review implementations for bugs.
                 var payload = {
                     meta: {
-                        status: 'SUCCESS',
+                        status: "SUCCESS",
                     },
                     payload: {},
                     status: 200

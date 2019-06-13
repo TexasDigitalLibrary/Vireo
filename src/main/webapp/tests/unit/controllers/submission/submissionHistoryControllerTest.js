@@ -1,4 +1,4 @@
-describe('controller: SubmissionHistoryController', function () {
+describe("controller: SubmissionHistoryController", function () {
 
     var controller, location, q, scope, timeout, NgTableParams, WsApi;
 
@@ -20,7 +20,7 @@ describe('controller: SubmissionHistoryController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('SubmissionHistoryController', {
+            controller = $controller("SubmissionHistoryController", {
                 $location: location,
                 $scope: scope,
                 $timeout: timeout,
@@ -42,52 +42,52 @@ describe('controller: SubmissionHistoryController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.modalService');
-        module('mock.ngTableParams');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.studentSubmission');
-        module('mock.studentSubmissionRepo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.modalService");
+        module("mock.ngTableParams");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.studentSubmission");
+        module("mock.studentSubmissionRepo");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('confirmDelete should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("confirmDelete should be defined", function () {
             expect(scope.confirmDelete).toBeDefined();
             expect(typeof scope.confirmDelete).toEqual("function");
         });
-        it('deleteSubmission should be defined', function () {
+        it("deleteSubmission should be defined", function () {
             expect(scope.deleteSubmission).toBeDefined();
             expect(typeof scope.deleteSubmission).toEqual("function");
         });
-        it('getDocumentTitle should be defined', function () {
+        it("getDocumentTitle should be defined", function () {
             expect(scope.getDocumentTitle).toBeDefined();
             expect(typeof scope.getDocumentTitle).toEqual("function");
         });
-        it('getManuscriptFileName should be defined', function () {
+        it("getManuscriptFileName should be defined", function () {
             expect(scope.getManuscriptFileName).toBeDefined();
             expect(typeof scope.getManuscriptFileName).toEqual("function");
         });
-        it('startNewSubmission should be defined', function () {
+        it("startNewSubmission should be defined", function () {
             expect(scope.startNewSubmission).toBeDefined();
             expect(typeof scope.startNewSubmission).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('confirmDelete should open a modal', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("confirmDelete should open a modal", function () {
             var submission = mockSubmission(q);
 
             spyOn(scope, "openModal");
@@ -97,7 +97,7 @@ describe('controller: SubmissionHistoryController', function () {
             expect(scope.openModal).toHaveBeenCalled();
             expect(scope.submissionToDelete.id).toBe(submission.id);
         });
-        it('deleteSubmission should delete a submission', function () {
+        it("deleteSubmission should delete a submission", function () {
             scope.submissionToDelete = mockSubmission(q);
 
             spyOn(scope, "closeModal");
@@ -107,7 +107,7 @@ describe('controller: SubmissionHistoryController', function () {
 
             expect(scope.closeModal).toHaveBeenCalled();
         });
-        it('getDocumentTitle should return the document title', function () {
+        it("getDocumentTitle should return the document title", function () {
             var result;
             var row = { fieldValues: [ new mockFieldValue(q) ] };
 
@@ -119,7 +119,7 @@ describe('controller: SubmissionHistoryController', function () {
             result = scope.getDocumentTitle(row);
             expect(result).toBe(row.fieldValues[0].value);
         });
-        it('getManuscriptFileName should return a manuscript file name', function () {
+        it("getManuscriptFileName should return a manuscript file name", function () {
             var result;
             var row = { fieldValues: [ new mockFieldValue(q) ] };
 
@@ -132,7 +132,7 @@ describe('controller: SubmissionHistoryController', function () {
             result = scope.getManuscriptFileName(row);
             expect(result).toBe(row.fieldValues[0].fileInfo.name);
         });
-        it('startNewSubmission should close a modal', function () {
+        it("startNewSubmission should close a modal", function () {
             scope.submissionToDelete = mockSubmission(q);
 
             spyOn(scope, "closeModal");

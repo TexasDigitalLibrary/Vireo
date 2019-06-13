@@ -144,5 +144,5 @@ var mockOrganization = function($q) {
     return model;
 };
 
-angular.module('mock.organization', []).service('Organization', mockOrganization);
+angular.module("mock.organization", []).service("Organization", mockOrganization);
 

@@ -28,5 +28,5 @@ var mockUserSettings = function($q) {
     return model;
 };
 
-angular.module('mock.userSettings', []).service('UserSettings', mockUserSettings);
+angular.module("mock.userSettings", []).service("UserSettings", mockUserSettings);
 

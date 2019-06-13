@@ -28,5 +28,5 @@ var mockPackager = function($q) {
     return model;
 };
 
-angular.module('mock.packager', []).service('Packager', mockPackager);
+angular.module("mock.packager", []).service("Packager", mockPackager);
 

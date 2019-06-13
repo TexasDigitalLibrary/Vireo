@@ -1,4 +1,4 @@
-angular.module('mock.fileUploadService', []).service('FileUploadService', function($q) {
+angular.module("mock.fileUploadService", []).service("FileUploadService", function($q) {
     var service = mockService($q);
 
     service.archiveFile = function (submission, fieldValue, removeFieldValue) {

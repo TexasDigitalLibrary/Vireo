@@ -1,4 +1,4 @@
-describe('controller: DegreeRepoController', function () {
+describe("controller: DegreeRepoController", function () {
 
     var controller, q, scope, DegreeRepo, WsApi;
 
@@ -18,7 +18,7 @@ describe('controller: DegreeRepoController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('DegreeRepoController', {
+            controller = $controller("DegreeRepoController", {
                 $q: q,
                 $scope: scope,
                 $window: mockWindow(),
@@ -39,66 +39,66 @@ describe('controller: DegreeRepoController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.degree');
-        module('mock.degreeRepo');
-        module('mock.degreeLevel');
-        module('mock.degreeLevelRepo');
-        module('mock.dragAndDropListenerFactory');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.degree");
+        module("mock.degreeRepo");
+        module("mock.degreeLevel");
+        module("mock.degreeLevelRepo");
+        module("mock.dragAndDropListenerFactory");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('createDegree should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("createDegree should be defined", function () {
             expect(scope.createDegree).toBeDefined();
             expect(typeof scope.createDegree).toEqual("function");
         });
-        it('editDegree should be defined', function () {
+        it("editDegree should be defined", function () {
             expect(scope.editDegree).toBeDefined();
             expect(typeof scope.editDegree).toEqual("function");
         });
-        it('removeDegree should be defined', function () {
+        it("removeDegree should be defined", function () {
             expect(scope.removeDegree).toBeDefined();
             expect(typeof scope.removeDegree).toEqual("function");
         });
-        it('reorderDegree should be defined', function () {
+        it("reorderDegree should be defined", function () {
             expect(scope.reorderDegree).toBeDefined();
             expect(typeof scope.reorderDegree).toEqual("function");
         });
-        it('resetDegree should be defined', function () {
+        it("resetDegree should be defined", function () {
             expect(scope.resetDegree).toBeDefined();
             expect(typeof scope.resetDegree).toEqual("function");
         });
-        it('selectDegree should be defined', function () {
+        it("selectDegree should be defined", function () {
             expect(scope.selectDegree).toBeDefined();
             expect(typeof scope.selectDegree).toEqual("function");
         });
-        it('sortDegrees should be defined', function () {
+        it("sortDegrees should be defined", function () {
             expect(scope.sortDegrees).toBeDefined();
             expect(typeof scope.sortDegrees).toEqual("function");
         });
-        it('updateDegree should be defined', function () {
+        it("updateDegree should be defined", function () {
             expect(scope.updateDegree).toBeDefined();
             expect(typeof scope.updateDegree).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('createDegree should create a new custom action', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("createDegree should create a new custom action", function () {
             scope.modalData = new mockDegree(q);
 
             spyOn(DegreeRepo, "create");
@@ -107,7 +107,7 @@ describe('controller: DegreeRepoController', function () {
 
             expect(DegreeRepo.create).toHaveBeenCalled();
         });
-        it('editDegree should open a modal', function () {
+        it("editDegree should open a modal", function () {
             spyOn(scope, "selectDegree");
             spyOn(scope, "openModal");
 
@@ -116,7 +116,7 @@ describe('controller: DegreeRepoController', function () {
             expect(scope.selectDegree).toHaveBeenCalled();
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('removeDegree should delete a custom action', function () {
+        it("removeDegree should delete a custom action", function () {
             scope.modalData = new mockDegree(q);
 
             spyOn(scope.modalData, "delete");
@@ -125,14 +125,14 @@ describe('controller: DegreeRepoController', function () {
 
             expect(scope.modalData.delete).toHaveBeenCalled();
         });
-        it('reorderDegree should reorder a custom action', function () {
+        it("reorderDegree should reorder a custom action", function () {
             spyOn(DegreeRepo, "reorder");
 
             scope.reorderDegree("a", "b");
 
             expect(DegreeRepo.reorder).toHaveBeenCalled();
         });
-        it('resetDegree should reset the custom action', function () {
+        it("resetDegree should reset the custom action", function () {
             var degree = new mockDegree(q);
             scope.forms = [];
             scope.modalData = degree;
@@ -155,7 +155,7 @@ describe('controller: DegreeRepoController', function () {
             scope.forms.myForm.$pristine = false;
             scope.resetDegree();
         });
-        it('selectDegree should select a custom action', function () {
+        it("selectDegree should select a custom action", function () {
             scope.modalData = null;
             scope.degrees = [
                 new mockDegree(q),
@@ -167,7 +167,7 @@ describe('controller: DegreeRepoController', function () {
 
             expect(scope.modalData).toBe(scope.degrees[1]);
         });
-        it('sortDegrees should sort the degrees', function () {
+        it("sortDegrees should sort the degrees", function () {
             scope.modalData = null;
             scope.degrees = [
                 new mockDegree(q),
@@ -177,7 +177,7 @@ describe('controller: DegreeRepoController', function () {
 
             testUtility.repoSorting(scope, DegreeRepo, scope.sortDegrees);
         });
-        it('updateDegree should should save a custom action', function () {
+        it("updateDegree should should save a custom action", function () {
             scope.modalData = new mockDegree(q);
 
             spyOn(scope.modalData, "save");

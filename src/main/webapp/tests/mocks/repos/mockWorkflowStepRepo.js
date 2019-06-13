@@ -16,8 +16,8 @@ var dataWorkflowStepRepo3 = [
     dataWorkflowStep6
 ];
 
-angular.module('mock.workflowStepRepo', []).service('WorkflowStepRepo', function($q) {
-    var repo = mockRepo('WorkflowStepRepo', $q, mockWorkflowStep, dataWorkflowStepRepo1);
+angular.module("mock.workflowStepRepo", []).service("WorkflowStepRepo", function($q) {
+    var repo = mockRepo("WorkflowStepRepo", $q, mockWorkflowStep, dataWorkflowStepRepo1);
 
     repo.addFieldProfile = function (workflowStep, fieldProfile) {
         var payload = {};

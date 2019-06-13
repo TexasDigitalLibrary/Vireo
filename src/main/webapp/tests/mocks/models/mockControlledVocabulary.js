@@ -114,5 +114,5 @@ var mockControlledVocabulary = function($q) {
     return model;
 };
 
-angular.module('mock.controlledVocabulary', []).service('ControlledVocabulary', mockControlledVocabulary);
+angular.module("mock.controlledVocabulary", []).service("ControlledVocabulary", mockControlledVocabulary);
 

@@ -1,4 +1,4 @@
-describe('controller: NoteManagementController', function () {
+describe("controller: NoteManagementController", function () {
 
     var controller, q, scope, NoteRepo, WorkflowStepRepo, WsApi;
 
@@ -22,7 +22,7 @@ describe('controller: NoteManagementController', function () {
             // step is not defined/initialized in the controller.
             scope.step = {aggregateNotes: {}};
 
-            controller = $controller('NoteManagementController', {
+            controller = $controller("NoteManagementController", {
                 $scope: scope,
                 $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
@@ -44,72 +44,72 @@ describe('controller: NoteManagementController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.dragAndDropListenerFactory');
-        module('mock.modalService');
-        module('mock.note');
-        module('mock.noteRepo');
-        module('mock.organization');
-        module('mock.organizationRepo');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.workflowStep');
-        module('mock.workflowStepRepo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.dragAndDropListenerFactory");
+        module("mock.modalService");
+        module("mock.note");
+        module("mock.noteRepo");
+        module("mock.organization");
+        module("mock.organizationRepo");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.workflowStep");
+        module("mock.workflowStepRepo");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('createNote should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("createNote should be defined", function () {
             expect(scope.createNote).toBeDefined();
             expect(typeof scope.createNote).toEqual("function");
         });
-        it('editNote should be defined', function () {
+        it("editNote should be defined", function () {
             expect(scope.editNote).toBeDefined();
             expect(typeof scope.editNote).toEqual("function");
         });
-        it('isEditable should be defined', function () {
+        it("isEditable should be defined", function () {
             expect(scope.isEditable).toBeDefined();
             expect(typeof scope.isEditable).toEqual("function");
         });
-        it('openNewModal should be defined', function () {
+        it("openNewModal should be defined", function () {
             expect(scope.openNewModal).toBeDefined();
             expect(typeof scope.openNewModal).toEqual("function");
         });
-        it('removeNote should be defined', function () {
+        it("removeNote should be defined", function () {
             expect(scope.removeNote).toBeDefined();
             expect(typeof scope.removeNote).toEqual("function");
         });
-        it('reorderNotes should be defined', function () {
+        it("reorderNotes should be defined", function () {
             expect(scope.reorderNotes).toBeDefined();
             expect(typeof scope.reorderNotes).toEqual("function");
         });
-        it('resetNotes should be defined', function () {
+        it("resetNotes should be defined", function () {
             expect(scope.resetNotes).toBeDefined();
             expect(typeof scope.resetNotes).toEqual("function");
         });
-        it('selectNote should be defined', function () {
+        it("selectNote should be defined", function () {
             expect(scope.selectNote).toBeDefined();
             expect(typeof scope.selectNote).toEqual("function");
         });
-        it('updateNote should be defined', function () {
+        it("updateNote should be defined", function () {
             expect(scope.updateNote).toBeDefined();
             expect(typeof scope.updateNote).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('createNote should create a new note', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("createNote should create a new note", function () {
             scope.modalData = new mockNote(q);
 
             spyOn(WorkflowStepRepo, "addNote");
@@ -118,7 +118,7 @@ describe('controller: NoteManagementController', function () {
 
             expect(WorkflowStepRepo.addNote).toHaveBeenCalled();
         });
-        it('isEditable should return a boolean', function () {
+        it("isEditable should return a boolean", function () {
             var response;
             var note = mockNote(q);
             note.overrideable = true;
@@ -145,14 +145,14 @@ describe('controller: NoteManagementController', function () {
             response = scope.isEditable(note);
             expect(response).toBe(true);
         });
-        it('openNewModal should open a modal', function () {
+        it("openNewModal should open a modal", function () {
             spyOn(scope, "openModal");
 
             scope.openNewModal();
 
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('editNote should open a modal', function () {
+        it("editNote should open a modal", function () {
             spyOn(scope, "selectNote");
             spyOn(scope, "openModal");
 
@@ -161,21 +161,21 @@ describe('controller: NoteManagementController', function () {
             expect(scope.selectNote).toHaveBeenCalled();
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('removeNote should delete a note', function () {
+        it("removeNote should delete a note", function () {
             spyOn(WorkflowStepRepo, "removeNote");
 
             scope.removeNote();
 
             expect(WorkflowStepRepo.removeNote).toHaveBeenCalled();
         });
-        it('reorderNotes should reorder a note', function () {
+        it("reorderNotes should reorder a note", function () {
             spyOn(WorkflowStepRepo, "reorderNotes");
 
             scope.reorderNotes("a", "b");
 
             expect(WorkflowStepRepo.reorderNotes).toHaveBeenCalled();
         });
-        it('resetNotes should reset the note', function () {
+        it("resetNotes should reset the note", function () {
             var note = new mockNote(q);
             scope.forms = [];
             scope.modalData = note;
@@ -200,7 +200,7 @@ describe('controller: NoteManagementController', function () {
             scope.forms.myForm.$pristine = false;
             scope.resetNotes();
         });
-        it('selectNote should select a note', function () {
+        it("selectNote should select a note", function () {
             scope.modalData = null;
             scope.step.aggregateNotes = [
                 new mockNote(q),
@@ -211,7 +211,7 @@ describe('controller: NoteManagementController', function () {
             scope.selectNote(1);
             expect(scope.modalData.id).toBe(scope.step.aggregateNotes[1].id);
         });
-        it('updateNote should should save a note', function () {
+        it("updateNote should should save a note", function () {
             spyOn(WorkflowStepRepo, "updateNote");
 
             scope.updateNote();

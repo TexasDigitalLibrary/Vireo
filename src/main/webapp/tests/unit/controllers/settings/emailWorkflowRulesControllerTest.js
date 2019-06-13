@@ -1,4 +1,4 @@
-describe('controller: EmailWorkflowRulesController', function () {
+describe("controller: EmailWorkflowRulesController", function () {
 
     var controller, q, scope, OrganizationRepo, WsApi;
 
@@ -18,7 +18,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('EmailWorkflowRulesController', {
+            controller = $controller("EmailWorkflowRulesController", {
                 $q: q,
                 $scope: scope,
                 $window: mockWindow(),
@@ -39,79 +39,79 @@ describe('controller: EmailWorkflowRulesController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.submissionStatus');
-        module('mock.submissionStatusRepo');
-        module('mock.emailTemplate');
-        module('mock.emailTemplateRepo');
-        module('mock.modalService');
-        module('mock.organization');
-        module('mock.organizationRepo');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.submissionStatus");
+        module("mock.submissionStatusRepo");
+        module("mock.emailTemplate");
+        module("mock.emailTemplateRepo");
+        module("mock.modalService");
+        module("mock.organization");
+        module("mock.organizationRepo");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('addEmailWorkflowRule should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("addEmailWorkflowRule should be defined", function () {
             expect(scope.addEmailWorkflowRule).toBeDefined();
             expect(typeof scope.addEmailWorkflowRule).toEqual("function");
         });
-        it('buildRecipients should be defined', function () {
+        it("buildRecipients should be defined", function () {
             expect(scope.buildRecipients).toBeDefined();
             expect(typeof scope.buildRecipients).toEqual("function");
         });
-        it('cancelDeleteEmailWorkflowRule should be defined', function () {
+        it("cancelDeleteEmailWorkflowRule should be defined", function () {
             expect(scope.cancelDeleteEmailWorkflowRule).toBeDefined();
             expect(typeof scope.cancelDeleteEmailWorkflowRule).toEqual("function");
         });
-        it('changeEmailWorkflowRuleActivation should be defined', function () {
+        it("changeEmailWorkflowRuleActivation should be defined", function () {
             expect(scope.changeEmailWorkflowRuleActivation).toBeDefined();
             expect(typeof scope.changeEmailWorkflowRuleActivation).toEqual("function");
         });
-        it('confirmEmailWorkflowRuleDelete should be defined', function () {
+        it("confirmEmailWorkflowRuleDelete should be defined", function () {
             expect(scope.confirmEmailWorkflowRuleDelete).toBeDefined();
             expect(typeof scope.confirmEmailWorkflowRuleDelete).toEqual("function");
         });
-        it('deleteEmailWorkflowRule should be defined', function () {
+        it("deleteEmailWorkflowRule should be defined", function () {
             expect(scope.deleteEmailWorkflowRule).toBeDefined();
             expect(typeof scope.deleteEmailWorkflowRule).toEqual("function");
         });
-        it('editEmailWorkflowRule should be defined', function () {
+        it("editEmailWorkflowRule should be defined", function () {
             expect(scope.editEmailWorkflowRule).toBeDefined();
             expect(typeof scope.editEmailWorkflowRule).toEqual("function");
         });
-        it('openAddEmailWorkflowRuleModal should be defined', function () {
+        it("openAddEmailWorkflowRuleModal should be defined", function () {
             expect(scope.openAddEmailWorkflowRuleModal).toBeDefined();
             expect(typeof scope.openAddEmailWorkflowRuleModal).toEqual("function");
         });
-        it('openEditEmailWorkflowRule should be defined', function () {
+        it("openEditEmailWorkflowRule should be defined", function () {
             expect(scope.openEditEmailWorkflowRule).toBeDefined();
             expect(typeof scope.openEditEmailWorkflowRule).toEqual("function");
         });
-        it('resetEditEmailWorkflowRule should be defined', function () {
+        it("resetEditEmailWorkflowRule should be defined", function () {
             expect(scope.resetEditEmailWorkflowRule).toBeDefined();
             expect(typeof scope.resetEditEmailWorkflowRule).toEqual("function");
         });
-        it('resetEmailWorkflowRule should be defined', function () {
+        it("resetEmailWorkflowRule should be defined", function () {
             expect(scope.resetEmailWorkflowRule).toBeDefined();
             expect(typeof scope.resetEmailWorkflowRule).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('addEmailWorkflowRule should ', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("addEmailWorkflowRule should ", function () {
             var template = {id: 1};
             var emailRecipient = mockEmailRecipient(q);
             var submissionStatus = mockSubmissionStatus(q);
@@ -129,7 +129,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             scope.addEmailWorkflowRule(template, emailRecipient, submissionStatus);
             scope.$digest();
         });
-        it('buildRecipients should build the recipients', function () {
+        it("buildRecipients should build the recipients", function () {
             OrganizationRepo.selectedId = dataOrganization1.id;
             scope.recipients = null;
             scope.$digest();
@@ -138,7 +138,7 @@ describe('controller: EmailWorkflowRulesController', function () {
 
             expect(typeof scope.recipients).toBe("object");
         });
-        it('cancelDeleteEmailWorkflowRule should close a modal', function () {
+        it("cancelDeleteEmailWorkflowRule should close a modal", function () {
             scope.emailWorkflowRuleDeleteWorking = true;
 
             spyOn(scope, "closeModal");
@@ -148,7 +148,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             expect(scope.closeModal).toHaveBeenCalled();
             expect(scope.emailWorkflowRuleDeleteWorking).toBe(false);
         });
-        it('changeEmailWorkflowRuleActivation should change the email', function () {
+        it("changeEmailWorkflowRuleActivation should change the email", function () {
             var working = null;
             OrganizationRepo.selectedId = dataOrganization1.id;
 
@@ -158,7 +158,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             // FIXME: the implementation is not working.
             //expect(scope.changeEmailWorkflowRuleActivationWorking).toBe(false);
         });
-        it('confirmEmailWorkflowRuleDelete should open a modal', function () {
+        it("confirmEmailWorkflowRuleDelete should open a modal", function () {
             scope.emailWorkflowRuleToDelete = null;
 
             spyOn(scope, "openModal");
@@ -168,7 +168,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             expect(scope.emailWorkflowRuleToDelete).toBeDefined();
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('deleteEmailWorkflowRule should delete the rule', function () {
+        it("deleteEmailWorkflowRule should delete the rule", function () {
             scope.emailWorkflowRuleDeleteWorking = null;
             OrganizationRepo.selectedId = dataOrganization1.id;
 
@@ -177,7 +177,7 @@ describe('controller: EmailWorkflowRulesController', function () {
 
             expect(scope.emailWorkflowRuleDeleteWorking).toBe(false);
         });
-        it('editEmailWorkflowRule should reset the rule', function () {
+        it("editEmailWorkflowRule should reset the rule", function () {
             var emailRecipient = new mockEmailRecipient(q);
 
             emailRecipient.mock(dataEmailRecipient3);
@@ -200,7 +200,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             scope.editEmailWorkflowRule();
             scope.$digest();
         });
-        it('openAddEmailWorkflowRuleModal should open a modal', function () {
+        it("openAddEmailWorkflowRuleModal should open a modal", function () {
             var emailRecipient = mockEmailRecipient(q);
 
             emailRecipient.mock(dataEmailRecipient3);
@@ -219,7 +219,7 @@ describe('controller: EmailWorkflowRulesController', function () {
             expect(scope.buildRecipients).toHaveBeenCalled();
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('openEditEmailWorkflowRule should open a modal', function () {
+        it("openEditEmailWorkflowRule should open a modal", function () {
             var emailRecipient = new mockEmailRecipient(q);
             var emailRecipient2 = new mockEmailRecipient(q);
             var emailTemplate = new mockEmailTemplate(q);
@@ -257,14 +257,14 @@ describe('controller: EmailWorkflowRulesController', function () {
             scope.emailWorkflowRuleToEdit.emailTemplate = emailTemplate;
             scope.openEditEmailWorkflowRule(rule);
         });
-        it('resetEditEmailWorkflowRule should close a modal', function () {
+        it("resetEditEmailWorkflowRule should close a modal", function () {
             spyOn(scope, "closeModal");
 
             scope.resetEditEmailWorkflowRule({});
 
             expect(scope.closeModal).toHaveBeenCalled();
         });
-        it('resetEmailWorkflowRule should close a modal', function () {
+        it("resetEmailWorkflowRule should close a modal", function () {
             var emailRecipient = mockEmailRecipient(q);
 
             emailRecipient.mock(dataEmailRecipient3);

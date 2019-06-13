@@ -28,5 +28,5 @@ var mockDocumentType = function($q) {
     return model;
 };
 
-angular.module('mock.documentType', []).service('DocumentType', mockDocumentType);
+angular.module("mock.documentType", []).service("DocumentType", mockDocumentType);
 

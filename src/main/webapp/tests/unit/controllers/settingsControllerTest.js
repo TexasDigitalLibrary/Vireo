@@ -1,4 +1,4 @@
-describe('controller: SettingsController', function () {
+describe("controller: SettingsController", function () {
 
     var controller, q, scope, timeout, StudentSubmissionRepo, SubmissionStates, WsApi;
 
@@ -21,7 +21,7 @@ describe('controller: SettingsController', function () {
             StudentSubmissionRepo = _StudentSubmissionRepo_;
             SubmissionStates = _SubmissionStates_;
 
-            controller = $controller('SettingsController', {
+            controller = $controller("SettingsController", {
                 $scope: scope,
                 $injector: $injector,
                 $timeout: timeout,
@@ -44,122 +44,122 @@ describe('controller: SettingsController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.degree');
-        module('mock.modalService');
-        module('mock.managedConfiguration');
-        module('mock.managedConfigurationRepo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.studentSubmission');
-        module('mock.studentSubmissionRepo');
-        module('mock.user');
-        module('mock.userService');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.degree");
+        module("mock.modalService");
+        module("mock.managedConfiguration");
+        module("mock.managedConfigurationRepo");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.studentSubmission");
+        module("mock.studentSubmissionRepo");
+        module("mock.user");
+        module("mock.userService");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined for admin', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined for admin", function () {
             expect(controller).toBeDefined();
         });
-        it('should be defined for manager', function () {
+        it("should be defined for manager", function () {
             initializeController({role: "ROLE_MANAGER"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for reviewer', function () {
+        it("should be defined for reviewer", function () {
             initializeController({role: "ROLE_REVIEWER"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for student', function () {
+        it("should be defined for student", function () {
             initializeController({role: "ROLE_STUDENT"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for anonymous', function () {
+        it("should be defined for anonymous", function () {
             initializeController({role: "ROLE_ANONYMOUS"});
             expect(controller).toBeDefined();
         });
 
     });
 
-    describe('Are the scope methods defined', function () {
-        it('confirmEdit should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("confirmEdit should be defined", function () {
             expect(scope.confirmEdit).toBeDefined();
             expect(typeof scope.confirmEdit).toEqual("function");
         });
-        it('delayedUpdateConfiguration should be defined', function () {
+        it("delayedUpdateConfiguration should be defined", function () {
             expect(scope.delayedUpdateConfiguration).toBeDefined();
             expect(typeof scope.delayedUpdateConfiguration).toEqual("function");
         });
-        it('editMode should be defined', function () {
+        it("editMode should be defined", function () {
             expect(scope.editMode).toBeDefined();
             expect(typeof scope.editMode).toEqual("function");
         });
-        it('getFirstSubmissionId should be defined', function () {
+        it("getFirstSubmissionId should be defined", function () {
             expect(scope.getFirstSubmissionId).toBeDefined();
             expect(typeof scope.getFirstSubmissionId).toEqual("function");
         });
-        it('getUserSettingsValidations should be defined', function () {
+        it("getUserSettingsValidations should be defined", function () {
             expect(scope.getUserSettingsValidations).toBeDefined();
             expect(typeof scope.getUserSettingsValidations).toEqual("function");
         });
-        it('hasError should be defined', function () {
+        it("hasError should be defined", function () {
             expect(scope.hasError).toBeDefined();
             expect(typeof scope.hasError).toEqual("function");
         });
-        it('hasSubmissions should be defined', function () {
+        it("hasSubmissions should be defined", function () {
             expect(scope.hasSubmissions).toBeDefined();
             expect(typeof scope.hasSubmissions).toEqual("function");
         });
-        it('multipleSubmissions should be defined', function () {
+        it("multipleSubmissions should be defined", function () {
             expect(scope.multipleSubmissions).toBeDefined();
             expect(typeof scope.multipleSubmissions).toEqual("function");
         });
-        it('resetConfiguration should be defined', function () {
+        it("resetConfiguration should be defined", function () {
             expect(scope.resetConfiguration).toBeDefined();
             expect(typeof scope.resetConfiguration).toEqual("function");
         });
-        it('saveDegree should be defined', function () {
+        it("saveDegree should be defined", function () {
             expect(scope.saveDegree).toBeDefined();
             expect(typeof scope.saveDegree).toEqual("function");
         });
-        it('submissionInProgress should be defined', function () {
+        it("submissionInProgress should be defined", function () {
             expect(scope.submissionInProgress).toBeDefined();
             expect(typeof scope.submissionInProgress).toEqual("function");
         });
-        it('submissionNeedsCorrections should be defined', function () {
+        it("submissionNeedsCorrections should be defined", function () {
             expect(scope.submissionNeedsCorrections).toBeDefined();
             expect(typeof scope.submissionNeedsCorrections).toEqual("function");
         });
-        it('submissionsOpen should be defined', function () {
+        it("submissionsOpen should be defined", function () {
             expect(scope.submissionsOpen).toBeDefined();
             expect(typeof scope.submissionsOpen).toEqual("function");
         });
-        it('updateConfiguration should be defined', function () {
+        it("updateConfiguration should be defined", function () {
             expect(scope.updateConfiguration).toBeDefined();
             expect(typeof scope.updateConfiguration).toEqual("function");
         });
-        it('updateConfigurationPlainText should be defined', function () {
+        it("updateConfigurationPlainText should be defined", function () {
             expect(scope.updateConfigurationPlainText).toBeDefined();
             expect(typeof scope.updateConfigurationPlainText).toEqual("function");
         });
-        it('updateUserSetting should be defined', function () {
+        it("updateUserSetting should be defined", function () {
             expect(scope.updateUserSetting).toBeDefined();
             expect(typeof scope.updateUserSetting).toEqual("function");
         });
-        it('viewMode should be defined', function () {
+        it("viewMode should be defined", function () {
             expect(scope.viewMode).toBeDefined();
             expect(typeof scope.viewMode).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('confirmEdit should process the event', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("confirmEdit should process the event", function () {
             var event = {
                 which: 13,
                 target: {
@@ -168,7 +168,7 @@ describe('controller: SettingsController', function () {
             };
             var property = "test";
 
-            spyOn(event.target, 'blur');
+            spyOn(event.target, "blur");
 
             scope.confirmEdit(event, property);
             expect(event.target.blur).toHaveBeenCalled();
@@ -177,12 +177,12 @@ describe('controller: SettingsController', function () {
             event.which = 0;
             event.target.blur = function() {};
 
-            spyOn(event.target, 'blur');
+            spyOn(event.target, "blur");
 
             scope.confirmEdit(event);
             expect(event.target.blur).not.toHaveBeenCalled();
         });
-        it('delayedUpdateConfiguration should update the configuration', function () {
+        it("delayedUpdateConfiguration should update the configuration", function () {
             scope.pendingUpdate = false;
             scope.updateConfiguration = function(a, b) {};
 
@@ -204,7 +204,7 @@ describe('controller: SettingsController', function () {
 
             expect(timeout.cancel).toHaveBeenCalled();
         });
-        it('editMode should update the edit mode', function () {
+        it("editMode should update the edit mode", function () {
             var property = "test";
             scope["edit" + property] = null;
 
@@ -212,26 +212,26 @@ describe('controller: SettingsController', function () {
 
             expect(scope["edit" + property]).toBe(true);
         });
-        it('getFirstSubmissionId should return a submission id', function () {
+        it("getFirstSubmissionId should return a submission id", function () {
             var result = scope.getFirstSubmissionId();
             expect(typeof result).toBe("number");
         });
-        it('getUserSettingsValidations should return the validations array', function () {
+        it("getUserSettingsValidations should return the validations array", function () {
             var result = scope.getUserSettingsValidations();
             expect(typeof result).toBe("object");
         });
-        it('hasError should ', function () {
+        it("hasError should ", function () {
             var result = scope.hasError();
             expect(result).toBe(false);
 
             result = scope.hasError({a: null});
             expect(result).toBe(true);
         });
-        it('hasSubmissions should return a boolean', function () {
+        it("hasSubmissions should return a boolean", function () {
             var result = scope.hasSubmissions();
             expect(result).toBe(true);
         });
-        it('multipleSubmissions should return a boolean', function () {
+        it("multipleSubmissions should return a boolean", function () {
             var result;
             scope.settings = {
                 configurable: {
@@ -251,7 +251,7 @@ describe('controller: SettingsController', function () {
             result = scope.multipleSubmissions();
             expect(result).toBe(false);
         });
-        it('resetConfiguration should reset the configuration', function () {
+        it("resetConfiguration should reset the configuration", function () {
             scope.settings = {
                 configurable: {
                     a: {
@@ -268,7 +268,7 @@ describe('controller: SettingsController', function () {
 
             expect(scope.settings.configurable.a.b.reset).toHaveBeenCalled();
         });
-        it('saveDegree should save a degree', function () {
+        it("saveDegree should save a degree", function () {
             var degree = new mockDegree(q);
             degree.mock(dataDegree1);
 
@@ -282,7 +282,7 @@ describe('controller: SettingsController', function () {
             expect(scope.inProgress[degree.id]).toBe(false);
             expect(degree.save).toHaveBeenCalled();
         });
-        it('submissionInProgress should return a boolean', function () {
+        it("submissionInProgress should return a boolean", function () {
             var result = scope.submissionInProgress();
             expect(result).toBe(true);
 
@@ -293,7 +293,7 @@ describe('controller: SettingsController', function () {
             result = scope.submissionInProgress();
             expect(result).toBe(false);
         });
-        it('submissionNeedsCorrections should return a boolean', function () {
+        it("submissionNeedsCorrections should return a boolean", function () {
             var result = scope.submissionNeedsCorrections();
             expect(result).toBe(false);
 
@@ -305,7 +305,7 @@ describe('controller: SettingsController', function () {
             result = scope.submissionNeedsCorrections();
             expect(result).toBe(true);
         });
-        it('submissionsOpen should return a boolean', function () {
+        it("submissionsOpen should return a boolean", function () {
             var result;
             scope.settings = {
                 configurable: {
@@ -325,7 +325,7 @@ describe('controller: SettingsController', function () {
             result = scope.submissionsOpen();
             expect(result).toBe(false);
         });
-        it('updateConfiguration should update the configuration', function () {
+        it("updateConfiguration should update the configuration", function () {
             scope.settings = {
                 configurable: {
                     a: {
@@ -342,7 +342,7 @@ describe('controller: SettingsController', function () {
 
             expect(scope.settings.configurable.a.b.save).toHaveBeenCalled();
         });
-        it('updateConfigurationPlainText should update the configuration', function () {
+        it("updateConfigurationPlainText should update the configuration", function () {
             scope.settings = {
                 configurable: {
                     a: {
@@ -361,7 +361,7 @@ describe('controller: SettingsController', function () {
             expect(scope.settings.configurable.a.b.value).toBe("Example Text");
             expect(scope.settings.configurable.a.b.save).toHaveBeenCalled();
         });
-        it('updateUserSetting should update the user settings', function () {
+        it("updateUserSetting should update the user settings", function () {
             spyOn(scope.settings.user, "save");
 
             scope.updateUserSetting();
@@ -369,7 +369,7 @@ describe('controller: SettingsController', function () {
             expect(scope.settings.user.save).toHaveBeenCalled();
             expect(scope.settings.user.UserSettings).not.toBeDefined();
         });
-        it('viewMode should update the edit mode', function () {
+        it("viewMode should update the edit mode", function () {
             var property = "test";
             scope["edit" + property] = null;
 

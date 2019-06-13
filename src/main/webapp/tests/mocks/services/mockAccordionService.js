@@ -1,4 +1,4 @@
-angular.module('mock.accordionService', []).service('AccordionService', function ($q) {
+angular.module("mock.accordionService", []).service("AccordionService", function ($q) {
     var service = mockService($q);
 
     service.close = function () {

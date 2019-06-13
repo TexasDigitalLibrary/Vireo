@@ -40,5 +40,5 @@ var mockValidation = function($q) {
     return model;
 };
 
-angular.module('mock.validation', []).service('Validation', mockValidation);
+angular.module("mock.validation", []).service("Validation", mockValidation);
 

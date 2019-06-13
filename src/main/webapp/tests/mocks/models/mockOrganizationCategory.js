@@ -34,5 +34,5 @@ var mockOrganizationCategory = function($q) {
     return model;
 };
 
-angular.module('mock.organizationCategory', []).service('OrganizationCategory', mockOrganizationCategory);
+angular.module("mock.organizationCategory", []).service("OrganizationCategory", mockOrganizationCategory);
 

@@ -1,4 +1,4 @@
-describe('controller: ControlledVocabularyRepoController', function () {
+describe("controller: ControlledVocabularyRepoController", function () {
 
     var controller, compile, q, scope, timeout, ControlledVocabularyRepo, WsApi;
 
@@ -20,7 +20,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('ControlledVocabularyRepoController', {
+            controller = $controller("ControlledVocabularyRepoController", {
                 $q: q,
                 $scope: scope,
                 $timeout: timeout,
@@ -42,134 +42,134 @@ describe('controller: ControlledVocabularyRepoController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.controlledVocabulary');
-        module('mock.controlledVocabularyRepo');
-        module('mock.dragAndDropListenerFactory');
-        module('mock.modalService');
-        module('mock.ngTableParams');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.vocabularyWord');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.controlledVocabulary");
+        module("mock.controlledVocabularyRepo");
+        module("mock.dragAndDropListenerFactory");
+        module("mock.modalService");
+        module("mock.ngTableParams");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.vocabularyWord");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('addVocabularyWord should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("addVocabularyWord should be defined", function () {
             expect(scope.addVocabularyWord).toBeDefined();
             expect(typeof scope.addVocabularyWord).toEqual("function");
         });
-        it('beginImport should be defined', function () {
+        it("beginImport should be defined", function () {
             expect(scope.beginImport).toBeDefined();
             expect(typeof scope.beginImport).toEqual("function");
         });
-        it('cancelAdding should be defined', function () {
+        it("cancelAdding should be defined", function () {
             expect(scope.cancelAdding).toBeDefined();
             expect(typeof scope.cancelAdding).toEqual("function");
         });
-        it('createControlledVocabulary should be defined', function () {
+        it("createControlledVocabulary should be defined", function () {
             expect(scope.createControlledVocabulary).toBeDefined();
             expect(typeof scope.createControlledVocabulary).toEqual("function");
         });
-        it('cancelCvEdits should be defined', function () {
+        it("cancelCvEdits should be defined", function () {
             expect(scope.cancelCvEdits).toBeDefined();
             expect(typeof scope.cancelCvEdits).toEqual("function");
         });
-        it('createHotKeys should be defined', function () {
+        it("createHotKeys should be defined", function () {
             expect(scope.createHotKeys).toBeDefined();
             expect(typeof scope.createHotKeys).toEqual("function");
         });
-        it('editControlledVocabulary should be defined', function () {
+        it("editControlledVocabulary should be defined", function () {
             expect(scope.editControlledVocabulary).toBeDefined();
             expect(typeof scope.editControlledVocabulary).toEqual("function");
         });
-        it('editMode should be defined', function () {
+        it("editMode should be defined", function () {
             expect(scope.editMode).toBeDefined();
             expect(typeof scope.editMode).toEqual("function");
         });
-        it('exportControlledVocabulary should be defined', function () {
+        it("exportControlledVocabulary should be defined", function () {
             expect(scope.exportControlledVocabulary).toBeDefined();
             expect(typeof scope.exportControlledVocabulary).toEqual("function");
         });
-        it('filterWord should be defined', function () {
+        it("filterWord should be defined", function () {
             expect(scope.filterWord).toBeDefined();
             expect(typeof scope.filterWord).toEqual("function");
         });
-        it('filterWordArray should be defined', function () {
+        it("filterWordArray should be defined", function () {
             expect(scope.filterWordArray).toBeDefined();
             expect(typeof scope.filterWordArray).toEqual("function");
         });
-        it('refreshControlledVocabulary should be defined', function () {
+        it("refreshControlledVocabulary should be defined", function () {
             expect(scope.refreshControlledVocabulary).toBeDefined();
             expect(typeof scope.refreshControlledVocabulary).toEqual("function");
         });
-        it('removeControlledVocabulary should be defined', function () {
+        it("removeControlledVocabulary should be defined", function () {
             expect(scope.removeControlledVocabulary).toBeDefined();
             expect(typeof scope.removeControlledVocabulary).toEqual("function");
         });
-        it('removeVocabularyWord should be defined', function () {
+        it("removeVocabularyWord should be defined", function () {
             expect(scope.removeVocabularyWord).toBeDefined();
             expect(typeof scope.removeVocabularyWord).toEqual("function");
         });
-        it('reorderControlledVocabulary should be defined', function () {
+        it("reorderControlledVocabulary should be defined", function () {
             expect(scope.reorderControlledVocabulary).toBeDefined();
             expect(typeof scope.reorderControlledVocabulary).toEqual("function");
         });
-        it('resetControlledVocabulary should be defined', function () {
+        it("resetControlledVocabulary should be defined", function () {
             expect(scope.resetControlledVocabulary).toBeDefined();
             expect(typeof scope.resetControlledVocabulary).toEqual("function");
         });
-        it('selectControlledVocabulary should be defined', function () {
+        it("selectControlledVocabulary should be defined", function () {
             expect(scope.selectControlledVocabulary).toBeDefined();
             expect(typeof scope.selectControlledVocabulary).toEqual("function");
         });
-        it('setSelectedCv should be defined', function () {
+        it("setSelectedCv should be defined", function () {
             expect(scope.setSelectedCv).toBeDefined();
             expect(typeof scope.setSelectedCv).toEqual("function");
         });
-        it('sortControlledVocabulary should be defined', function () {
+        it("sortControlledVocabulary should be defined", function () {
             expect(scope.sortControlledVocabulary).toBeDefined();
             expect(typeof scope.sortControlledVocabulary).toEqual("function");
         });
-        it('startEditVWMode should be defined', function () {
+        it("startEditVWMode should be defined", function () {
             expect(scope.startEditVWMode).toBeDefined();
             expect(typeof scope.startEditVWMode).toEqual("function");
         });
-        it('updateControlledVocabulary should be defined', function () {
+        it("updateControlledVocabulary should be defined", function () {
             expect(scope.updateControlledVocabulary).toBeDefined();
             expect(typeof scope.updateControlledVocabulary).toEqual("function");
         });
-        it('uploadControlledVocabulary should be defined', function () {
+        it("uploadControlledVocabulary should be defined", function () {
             expect(scope.uploadControlledVocabulary).toBeDefined();
             expect(typeof scope.uploadControlledVocabulary).toEqual("function");
         });
-        it('updateHotKeys should be defined', function () {
+        it("updateHotKeys should be defined", function () {
             expect(scope.updateHotKeys).toBeDefined();
             expect(typeof scope.updateHotKeys).toEqual("function");
         });
-        it('updateVocabularyWord should be defined', function () {
+        it("updateVocabularyWord should be defined", function () {
             expect(scope.updateVocabularyWord).toBeDefined();
             expect(typeof scope.updateVocabularyWord).toEqual("function");
         });
-        it('uploadStatus should be defined', function () {
+        it("uploadStatus should be defined", function () {
             expect(scope.uploadStatus).toBeDefined();
             expect(typeof scope.uploadStatus).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('addVocabularyWord should add a vocabulary word', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("addVocabularyWord should add a vocabulary word", function () {
             var vw = new mockVocabularyWord(q);
             scope.lastCreatedVocabularyWordId = null;
             scope.cvTableParams = new mockNgTableParams(q);
@@ -188,7 +188,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             scope.addVocabularyWord(vw);
             scope.$digest();
         });
-        it('beginImport should open a modal', function () {
+        it("beginImport should open a modal", function () {
             var originalMethod = scope.openModal;
 
             spyOn(scope, "openModal");
@@ -203,14 +203,14 @@ describe('controller: ControlledVocabularyRepoController', function () {
             expect(scope.uploadModalData.file).toBe("test.file");
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('cancelAdding should cancel adding a vocabulary word', function () {
+        it("cancelAdding should cancel adding a vocabulary word", function () {
             var vw = new mockVocabularyWord(q);
             vw.adding = true;
 
             scope.cancelAdding(vw);
             expect(vw.adding).toBe(false);
         });
-        it('createControlledVocabulary to create a controlled vocabulary', function () {
+        it("createControlledVocabulary to create a controlled vocabulary", function () {
             scope.modalData = new mockControlledVocabulary(q);
 
             spyOn(scope, "resetControlledVocabulary");
@@ -226,7 +226,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             scope.createControlledVocabulary();
             scope.$digest();
         });
-        it('cancelCvEdits to cancel editing', function () {
+        it("cancelCvEdits to cancel editing", function () {
             var vw = new mockVocabularyWord(q);
             scope.editableVW = new mockVocabularyWord(q);
             scope.editableVW.editing = true;
@@ -234,7 +234,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             scope.cancelCvEdits(vw);
             expect(scope.editableVW.editing).toBe(false);
         });
-        it('createHotKeys to operate hotkeys', function () {
+        it("createHotKeys to operate hotkeys", function () {
             var vw = new mockVocabularyWord(q);
             var vw2 = new mockVocabularyWord(q);
             var e = {
@@ -308,7 +308,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             expect(scope.cancelAdding).toHaveBeenCalled();
             expect(scope.addVocabularyWord).toHaveBeenCalled();
         });
-        it('editControlledVocabulary to open a modal', function () {
+        it("editControlledVocabulary to open a modal", function () {
             spyOn(scope, "openModal");
             spyOn(scope, "selectControlledVocabulary");
 
@@ -317,7 +317,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             expect(scope.openModal).toHaveBeenCalled();
             expect(scope.selectControlledVocabulary).toHaveBeenCalled();
         });
-        it('editMode to return a boolean', function () {
+        it("editMode to return a boolean", function () {
             var result;
             var vw = new mockVocabularyWord(q);
             scope.editableVW = new mockVocabularyWord(q);
@@ -339,7 +339,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             result = scope.editMode(vw);
             expect(result).toBe(false);
         });
-        it('exportControlledVocabulary should export a controlled vocabulary', function () {
+        it("exportControlledVocabulary should export a controlled vocabulary", function () {
             var result;
             scope.headers = [];
             scope.uploadModalData = {
@@ -369,7 +369,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             scope.exportControlledVocabulary();
             scope.$digest();
         });
-        it('filterWord should filter a vocabulary word', function () {
+        it("filterWord should filter a vocabulary word", function () {
             var result;
             var vw = new mockVocabularyWord(q);
 
@@ -380,7 +380,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             expect(result.identifier).toBe(vw.identifier);
             expect(result.contacts).toBe(vw.contacts);
         });
-        it('filterWordArray should filter multiple vocabulary words', function () {
+        it("filterWordArray should filter multiple vocabulary words", function () {
             var result;
             var vw1 = new mockVocabularyWord(q);
             var vw2 = new mockVocabularyWord(q);
@@ -414,7 +414,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             vw1.contacts = "";
             scope.filterWordArray([vw1, vw2]);
         });
-        it('refreshControlledVocabulary refresh a controlled vocabulary', function () {
+        it("refreshControlledVocabulary refresh a controlled vocabulary", function () {
             var modalDataRefresh;
             var vw1 = new mockVocabularyWord(q);
 
@@ -442,7 +442,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             scope.forms.myForm.$pristine = false;
             scope.refreshControlledVocabulary();
         });
-        it('removeControlledVocabulary should reset a controlled vocabulary', function () {
+        it("removeControlledVocabulary should reset a controlled vocabulary", function () {
             scope.modalData = new mockControlledVocabulary(q);
 
             spyOn(scope, "resetControlledVocabulary");
@@ -460,7 +460,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             scope.removeControlledVocabulary();
             scope.$digest();
         });
-        it('removeVocabularyWord should remove a controlled vocabulary', function () {
+        it("removeVocabularyWord should remove a controlled vocabulary", function () {
             scope.selectedCv = new mockControlledVocabulary(q);
 
             spyOn(ControlledVocabularyRepo, "removeVocabularyWord").and.callThrough();
@@ -471,14 +471,14 @@ describe('controller: ControlledVocabularyRepoController', function () {
             expect(ControlledVocabularyRepo.removeVocabularyWord).toHaveBeenCalled();
             expect(scope.selectedCv.deleting).toBe(false);
         });
-        it('reorderControlledVocabulary should reorder the controlled vocabulary', function () {
+        it("reorderControlledVocabulary should reorder the controlled vocabulary", function () {
             spyOn(ControlledVocabularyRepo, "reorder");
 
             scope.reorderControlledVocabulary("a", "b");
 
             expect(ControlledVocabularyRepo.reorder).toHaveBeenCalled();
         });
-        it('resetControlledVocabulary should refresh the controlled vocabulary', function () {
+        it("resetControlledVocabulary should refresh the controlled vocabulary", function () {
             spyOn(scope, "refreshControlledVocabulary");
             spyOn(scope, "closeModal");
 
@@ -494,7 +494,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
 
             expect(scope.closeModal).not.toHaveBeenCalled();
         });
-        it('selectControlledVocabulary should select the controlled vocabulary', function () {
+        it("selectControlledVocabulary should select the controlled vocabulary", function () {
             scope.modalData = null;
             scope.controlledVocabularies = [
                 new mockControlledVocabulary(q)
@@ -508,7 +508,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
 
             expect(scope.modalData).not.toBeDefined();
         });
-        it('setSelectedCv should select the controlled vocabulary', function () {
+        it("setSelectedCv should select the controlled vocabulary", function () {
             var cv1 = new mockControlledVocabulary(q);
             var cv2 = new mockControlledVocabulary(q);
             var cv4 = new mockControlledVocabulary(q);
@@ -533,10 +533,10 @@ describe('controller: ControlledVocabularyRepoController', function () {
             scope.setSelectedCv(cv4, true);
             timeout.flush();
         });
-        it('sortControlledVocabulary should sort the controlled vocabulary', function () {
+        it("sortControlledVocabulary should sort the controlled vocabulary", function () {
             testUtility.repoSorting(scope, ControlledVocabularyRepo, scope.sortControlledVocabulary);
         });
-        it('startEditVWMode should assign the editable vocabulary word', function () {
+        it("startEditVWMode should assign the editable vocabulary word", function () {
             var vw1 = new mockVocabularyWord(q);
             var vw2 = new mockVocabularyWord(q);
             vw2.mock(dataVocabularyWord2);
@@ -553,7 +553,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             expect(scope.editableVW.id).toBe(vw2.id);
             expect(scope.editableVW.clickedCell).toBe(false);
         });
-        it('updateControlledVocabulary should update the controlled vocabulary', function () {
+        it("updateControlledVocabulary should update the controlled vocabulary", function () {
             scope.modalData = new mockControlledVocabulary(q);
 
             spyOn(scope, "resetControlledVocabulary");
@@ -570,7 +570,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             scope.updateControlledVocabulary();
             scope.$digest();
         });
-        it('uploadControlledVocabulary should upload the controlled vocabulary', function () {
+        it("uploadControlledVocabulary should upload the controlled vocabulary", function () {
             scope.modalData = new mockControlledVocabulary(q);
             scope.uploadModalData = {
                 cv: scope.modalData
@@ -596,7 +596,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             scope.uploadControlledVocabulary();
             scope.$digest();
         });
-        it('updateHotKeys should operate hotkeys', function () {
+        it("updateHotKeys should operate hotkeys", function () {
             var vw1 = new mockVocabularyWord(q);
             var vw2 = new mockVocabularyWord(q);
             var e = {
@@ -681,7 +681,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             expect(scope.cancelCvEdits).toHaveBeenCalled();
             expect(scope.editableVW.editing).toBe(false);
         });
-        it('updateVocabularyWord should update the vocabulary word', function () {
+        it("updateVocabularyWord should update the vocabulary word", function () {
             var vw = new mockVocabularyWord(q);
             scope.selectedCv = vw;
             scope.editableVW = vw;
@@ -698,7 +698,7 @@ describe('controller: ControlledVocabularyRepoController', function () {
             scope.updateVocabularyWord(vw);
             scope.$digest();
         });
-        it('uploadStatus should update in progress and sync', function () {
+        it("uploadStatus should update in progress and sync", function () {
             scope.uploadModalData = {
                 cv: new mockControlledVocabulary(q)
             };

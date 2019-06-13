@@ -16,8 +16,8 @@ var dataControlledVocabularyRepo3 = [
     dataControlledVocabulary6
 ];
 
-angular.module('mock.controlledVocabularyRepo', []).service('ControlledVocabularyRepo', function($q) {
-    var repo = mockRepo('ControlledVocabularyRepo', $q, mockControlledVocabulary, dataControlledVocabularyRepo1);
+angular.module("mock.controlledVocabularyRepo", []).service("ControlledVocabularyRepo", function($q) {
+    var repo = mockRepo("ControlledVocabularyRepo", $q, mockControlledVocabulary, dataControlledVocabularyRepo1);
 
     repo.addVocabularyWord = function (cv, vw) {
         var payload = {};

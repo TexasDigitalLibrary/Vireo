@@ -97,5 +97,5 @@ var mockDepositLocation = function($q) {
     return model;
 };
 
-angular.module('mock.depositLocation', []).service('DepositLocation', mockDepositLocation);
+angular.module("mock.depositLocation", []).service("DepositLocation", mockDepositLocation);
 

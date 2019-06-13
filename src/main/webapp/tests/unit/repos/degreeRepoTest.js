@@ -1,4 +1,4 @@
-describe('service: degreeRepo', function () {
+describe("service: degreeRepo", function () {
     var q, repo, rootScope, mockedRepo, scope, WsApi;
 
     var initializeVariables = function(settings) {
@@ -19,16 +19,16 @@ describe('service: degreeRepo', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.wsApi");
 
         initializeVariables();
         initializeRepo();
     });
 
-    describe('Is the repo defined', function () {
-        it('should be defined', function () {
+    describe("Is the repo defined", function () {
+        it("should be defined", function () {
             expect(repo).toBeDefined();
         });
     });

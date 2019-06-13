@@ -16,8 +16,8 @@ var dataDegreeLevelRepo3 = [
     dataDegreeLevel6
 ];
 
-angular.module('mock.degreeLevelRepo', []).service('DegreeLevelRepo', function($q) {
-    var repo = mockRepo('DegreeLevelRepo', $q, mockDegreeLevel, dataDegreeLevelRepo1);
+angular.module("mock.degreeLevelRepo", []).service("DegreeLevelRepo", function($q) {
+    var repo = mockRepo("DegreeLevelRepo", $q, mockDegreeLevel, dataDegreeLevelRepo1);
 
     return repo;
 });

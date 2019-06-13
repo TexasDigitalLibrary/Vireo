@@ -1,4 +1,4 @@
-describe('controller: OrganizationSideBarController', function () {
+describe("controller: OrganizationSideBarController", function () {
 
     var controller, q, scope, OrganizationRepo, WsApi;
 
@@ -19,7 +19,7 @@ describe('controller: OrganizationSideBarController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('OrganizationSideBarController', {
+            controller = $controller("OrganizationSideBarController", {
                 $q: q,
                 $scope: scope,
                 $window: mockWindow(),
@@ -39,41 +39,41 @@ describe('controller: OrganizationSideBarController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.organizationCategory');
-        module('mock.organizationCategoryRepo');
-        module('mock.organization');
-        module('mock.organizationRepo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.organizationCategory");
+        module("mock.organizationCategoryRepo");
+        module("mock.organization");
+        module("mock.organizationRepo");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('createNewOrganization should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("createNewOrganization should be defined", function () {
             expect(scope.createNewOrganization).toBeDefined();
             expect(typeof scope.createNewOrganization).toEqual("function");
         });
-        it('reset should be defined', function () {
+        it("reset should be defined", function () {
             expect(scope.reset).toBeDefined();
             expect(typeof scope.reset).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('createNewOrganization should create a new custom action', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("createNewOrganization should create a new custom action", function () {
             scope.organizations = [ mockOrganization(q) ];
             scope.creatingNewOrganization = null;
 
@@ -90,7 +90,7 @@ describe('controller: OrganizationSideBarController', function () {
             scope.createNewOrganization("true");
             scope.$digest();
         });
-        it('reset should reset the custom action', function () {
+        it("reset should reset the custom action", function () {
             var organization = new mockOrganization(q);
             scope.forms = [];
             scope.modalData = organization;

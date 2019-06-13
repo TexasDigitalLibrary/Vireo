@@ -1,4 +1,4 @@
-describe('service: workflowStepRepo', function () {
+describe("service: workflowStepRepo", function () {
     var q, repo, rootScope, mockedRepo, scope, OrganizationRepo, RestApi, WsApi;
 
     var initializeVariables = function(settings) {
@@ -21,63 +21,63 @@ describe('service: workflowStepRepo', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.fieldProfile');
-        module('mock.note');
-        module('mock.organization');
-        module('mock.organizationRepo');
-        module('mock.restApi');
-        module('mock.workflowStep');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.fieldProfile");
+        module("mock.note");
+        module("mock.organization");
+        module("mock.organizationRepo");
+        module("mock.restApi");
+        module("mock.workflowStep");
+        module("mock.wsApi");
 
         initializeVariables();
         initializeRepo();
     });
 
-    describe('Is the repo defined', function () {
-        it('should be defined', function () {
+    describe("Is the repo defined", function () {
+        it("should be defined", function () {
             expect(repo).toBeDefined();
         });
     });
 
-    describe('Are the repo methods defined', function () {
-        it('addNote should be defined', function () {
+    describe("Are the repo methods defined", function () {
+        it("addNote should be defined", function () {
             expect(repo.addNote).toBeDefined();
             expect(typeof repo.addNote).toEqual("function");
         });
-        it('addFieldProfile should be defined', function () {
+        it("addFieldProfile should be defined", function () {
             expect(repo.addFieldProfile).toBeDefined();
             expect(typeof repo.addFieldProfile).toEqual("function");
         });
-        it('reorderFieldProfiles should be defined', function () {
+        it("reorderFieldProfiles should be defined", function () {
             expect(repo.reorderFieldProfiles).toBeDefined();
             expect(typeof repo.reorderFieldProfiles).toEqual("function");
         });
-        it('removeFieldProfile should be defined', function () {
+        it("removeFieldProfile should be defined", function () {
             expect(repo.removeFieldProfile).toBeDefined();
             expect(typeof repo.removeFieldProfile).toEqual("function");
         });
-        it('removeNote should be defined', function () {
+        it("removeNote should be defined", function () {
             expect(repo.removeNote).toBeDefined();
             expect(typeof repo.removeNote).toEqual("function");
         });
-        it('reorderNotes should be defined', function () {
+        it("reorderNotes should be defined", function () {
             expect(repo.reorderNotes).toBeDefined();
             expect(typeof repo.reorderNotes).toEqual("function");
         });
-        it('updateNote should be defined', function () {
+        it("updateNote should be defined", function () {
             expect(repo.updateNote).toBeDefined();
             expect(typeof repo.updateNote).toEqual("function");
         });
-        it('updateFieldProfile should be defined', function () {
+        it("updateFieldProfile should be defined", function () {
             expect(repo.updateFieldProfile).toBeDefined();
             expect(typeof repo.updateFieldProfile).toEqual("function");
         });
     });
 
-    describe('Do the repo methods work as expected', function () {
-        it('addNote should add a note', function () {
+    describe("Do the repo methods work as expected", function () {
+        it("addNote should add a note", function () {
             var workflowStep = new mockWorkflowStep(q);
             var note = new mockNote(q);
             var organization = new mockOrganization(q);
@@ -91,7 +91,7 @@ describe('service: workflowStepRepo', function () {
 
             // TODO
         });
-        it('addFieldProfile should add a field profile', function () {
+        it("addFieldProfile should add a field profile", function () {
             var workflowStep = new mockWorkflowStep(q);
             var fieldProfile = new mockFieldProfile(q);
             var organization = new mockOrganization(q);
@@ -104,7 +104,7 @@ describe('service: workflowStepRepo', function () {
                 // TODO: having to use a different format that other RestApi.post() mocks, review implementations for bugs.
                 var payload = {
                     meta: {
-                        status: 'SUCCESS',
+                        status: "SUCCESS",
                     },
                     payload: {},
                     status: 200
@@ -118,7 +118,7 @@ describe('service: workflowStepRepo', function () {
 
             // TODO
         });
-        it('reorderFieldProfiles should reorder field profiles', function () {
+        it("reorderFieldProfiles should reorder field profiles", function () {
             var workflowStep = new mockWorkflowStep(q);
             var organization = new mockOrganization(q);
 
@@ -131,7 +131,7 @@ describe('service: workflowStepRepo', function () {
 
             // TODO
         });
-        it('removeFieldProfile should remove a field profile', function () {
+        it("removeFieldProfile should remove a field profile", function () {
             var workflowStep = new mockWorkflowStep(q);
             var fieldProfile = new mockFieldProfile(q);
             var organization = new mockOrganization(q);
@@ -145,7 +145,7 @@ describe('service: workflowStepRepo', function () {
 
             // TODO
         });
-        it('removeNote should remove a note', function () {
+        it("removeNote should remove a note", function () {
             var workflowStep = new mockWorkflowStep(q);
             var note = new mockNote(q);
             var organization = new mockOrganization(q);
@@ -159,7 +159,7 @@ describe('service: workflowStepRepo', function () {
 
             // TODO
         });
-        it('reorderNotes should reorder notes', function () {
+        it("reorderNotes should reorder notes", function () {
             var workflowStep = new mockWorkflowStep(q);
             var organization = new mockOrganization(q);
 
@@ -172,7 +172,7 @@ describe('service: workflowStepRepo', function () {
 
             // TODO
         });
-        it('updateNote should update a note', function () {
+        it("updateNote should update a note", function () {
             var workflowStep = new mockWorkflowStep(q);
             var note = new mockNote(q);
             var organization = new mockOrganization(q);
@@ -186,7 +186,7 @@ describe('service: workflowStepRepo', function () {
 
             // TODO
         });
-        it('updateFieldProfile should update field profiles', function () {
+        it("updateFieldProfile should update field profiles", function () {
             var workflowStep = new mockWorkflowStep(q);
             var fieldProfile = new mockFieldProfile(q);
             var organization = new mockOrganization(q);
@@ -199,7 +199,7 @@ describe('service: workflowStepRepo', function () {
                 // TODO: having to use a different format that other RestApi.post() mocks, review implementations for bugs.
                 var payload = {
                     meta: {
-                        status: 'SUCCESS',
+                        status: "SUCCESS",
                     },
                     payload: {},
                     status: 200

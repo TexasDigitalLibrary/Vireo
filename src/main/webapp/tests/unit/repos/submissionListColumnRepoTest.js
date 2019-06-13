@@ -1,4 +1,4 @@
-describe('service: submissionListColumnRepo', function () {
+describe("service: submissionListColumnRepo", function () {
     var q, repo, rootScope, mockedRepo, scope, WsApi;
 
     var initializeVariables = function(settings) {
@@ -19,29 +19,29 @@ describe('service: submissionListColumnRepo', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.wsApi");
 
         initializeVariables();
         initializeRepo();
     });
 
-    describe('Is the repo defined', function () {
-        it('should be defined', function () {
+    describe("Is the repo defined", function () {
+        it("should be defined", function () {
             expect(repo).toBeDefined();
         });
     });
 
-    describe('Are the repo methods defined', function () {
-        it('findByTitle should be defined', function () {
+    describe("Are the repo methods defined", function () {
+        it("findByTitle should be defined", function () {
             expect(repo.findByTitle).toBeDefined();
             expect(typeof repo.findByTitle).toEqual("function");
         });
     });
 
-    describe('Do the repo methods work as expected', function () {
-        it('findByTitle should return a submission', function () {
+    describe("Do the repo methods work as expected", function () {
+        it("findByTitle should return a submission", function () {
             repo.findByTitle("mock title");
 
             // TODO

@@ -16,8 +16,8 @@ var dataCustomActionValueRepo3 = [
     dataCustomActionValue6
 ];
 
-angular.module('mock.customActionValueRepo', []).service('CustomActionValueRepo', function($q) {
-    var repo = mockRepo('CustomActionValueRepo', $q, mockCustomActionValue, dataCustomActionValueRepo1);
+angular.module("mock.customActionValueRepo", []).service("CustomActionValueRepo", function($q) {
+    var repo = mockRepo("CustomActionValueRepo", $q, mockCustomActionValue, dataCustomActionValueRepo1);
 
     return repo;
 });

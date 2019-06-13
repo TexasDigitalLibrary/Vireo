@@ -1,4 +1,4 @@
-angular.module('mock.wsApi', []).service('WsApi', function ($q) {
+angular.module("mock.wsApi", []).service("WsApi", function ($q) {
     var service = mockService($q);
     var mapping;
     var fetchResponse;

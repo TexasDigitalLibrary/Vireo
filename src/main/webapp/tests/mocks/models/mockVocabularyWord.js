@@ -83,4 +83,4 @@ var mockVocabularyWord = function($q) {
     return model;
 };
 
-angular.module('mock.vocabularyWord', []).service('VocabularyWord', mockVocabularyWord);
+angular.module("mock.vocabularyWord", []).service("VocabularyWord", mockVocabularyWord);

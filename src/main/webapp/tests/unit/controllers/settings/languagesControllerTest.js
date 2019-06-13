@@ -1,4 +1,4 @@
-describe('controller: LanguagesController', function () {
+describe("controller: LanguagesController", function () {
 
     var controller, q, scope, timeout, LanguageRepo, WsApi;
 
@@ -19,7 +19,7 @@ describe('controller: LanguagesController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('LanguagesController', {
+            controller = $controller("LanguagesController", {
                 $q: q,
                 $scope: scope,
                 $timeout: timeout,
@@ -40,64 +40,64 @@ describe('controller: LanguagesController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.dragAndDropListenerFactory');
-        module('mock.language');
-        module('mock.languageRepo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.dragAndDropListenerFactory");
+        module("mock.language");
+        module("mock.languageRepo");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('createLanguage should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("createLanguage should be defined", function () {
             expect(scope.createLanguage).toBeDefined();
             expect(typeof scope.createLanguage).toEqual("function");
         });
-        it('editLanguage should be defined', function () {
+        it("editLanguage should be defined", function () {
             expect(scope.editLanguage).toBeDefined();
             expect(typeof scope.editLanguage).toEqual("function");
         });
-        it('removeLanguage should be defined', function () {
+        it("removeLanguage should be defined", function () {
             expect(scope.removeLanguage).toBeDefined();
             expect(typeof scope.removeLanguage).toEqual("function");
         });
-        it('reorderLanguages should be defined', function () {
+        it("reorderLanguages should be defined", function () {
             expect(scope.reorderLanguages).toBeDefined();
             expect(typeof scope.reorderLanguages).toEqual("function");
         });
-        it('resetLanguages should be defined', function () {
+        it("resetLanguages should be defined", function () {
             expect(scope.resetLanguages).toBeDefined();
             expect(typeof scope.resetLanguages).toEqual("function");
         });
-        it('selectLanguage should be defined', function () {
+        it("selectLanguage should be defined", function () {
             expect(scope.selectLanguage).toBeDefined();
             expect(typeof scope.selectLanguage).toEqual("function");
         });
-        it('sortLanguages should be defined', function () {
+        it("sortLanguages should be defined", function () {
             expect(scope.sortLanguages).toBeDefined();
             expect(typeof scope.sortLanguages).toEqual("function");
         });
-        it('updateLanguage should be defined', function () {
+        it("updateLanguage should be defined", function () {
             expect(scope.updateLanguage).toBeDefined();
             expect(typeof scope.updateLanguage).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('createLanguage should create a language', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("createLanguage should create a language", function () {
             scope.modalData = new mockLanguage(q);
 
             spyOn(LanguageRepo, "create");
@@ -106,7 +106,7 @@ describe('controller: LanguagesController', function () {
 
             expect(LanguageRepo.create).toHaveBeenCalled();
         });
-        it('editLanguage should open a modal', function () {
+        it("editLanguage should open a modal", function () {
             spyOn(scope, "selectLanguage");
             spyOn(scope, "openModal");
 
@@ -115,7 +115,7 @@ describe('controller: LanguagesController', function () {
             expect(scope.selectLanguage).toHaveBeenCalled();
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('removeLanguage should delete a language', function () {
+        it("removeLanguage should delete a language", function () {
             scope.modalData = new mockLanguage(q);
 
             spyOn(scope.modalData, "delete");
@@ -124,14 +124,14 @@ describe('controller: LanguagesController', function () {
 
             expect(scope.modalData.delete).toHaveBeenCalled();
         });
-        it('reorderLanguages should reorder a language', function () {
+        it("reorderLanguages should reorder a language", function () {
             spyOn(LanguageRepo, "reorder");
 
             scope.reorderLanguages("a", "b");
 
             expect(LanguageRepo.reorder).toHaveBeenCalled();
         });
-        it('resetLanguages should reset the language', function () {
+        it("resetLanguages should reset the language", function () {
             var language1 = new mockLanguage(q);
             var language2 = new mockLanguage(q);
 
@@ -169,7 +169,7 @@ describe('controller: LanguagesController', function () {
             scope.forms.myForm.$pristine = false;
             scope.resetLanguages();
         });
-        it('selectLanguage should select a language', function () {
+        it("selectLanguage should select a language", function () {
             scope.modalData = null;
             scope.languages = [
                 new mockLanguage(q),
@@ -181,10 +181,10 @@ describe('controller: LanguagesController', function () {
 
             expect(scope.modalData).toBe(scope.languages[1]);
         });
-        it('sortLanguages should select a sort action', function () {
+        it("sortLanguages should select a sort action", function () {
             testUtility.repoSorting(scope, LanguageRepo, scope.sortLanguages);
         });
-        it('updateLanguage should should save a language', function () {
+        it("updateLanguage should should save a language", function () {
             scope.modalData = new mockLanguage(q);
 
             spyOn(scope.modalData, "save");

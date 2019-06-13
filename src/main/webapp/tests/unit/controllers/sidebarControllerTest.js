@@ -1,4 +1,4 @@
-describe('controller: SidebarController', function () {
+describe("controller: SidebarController", function () {
 
     var controller, scope, WsApi;
 
@@ -15,7 +15,7 @@ describe('controller: SidebarController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('SidebarController', {
+            controller = $controller("SidebarController", {
                 $scope: scope,
                 $window: mockWindow(),
                 ModalService: _ModalService_,
@@ -33,21 +33,21 @@ describe('controller: SidebarController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.sidebarService');
-        module('mock.storageService');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.sidebarService");
+        module("mock.storageService");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });

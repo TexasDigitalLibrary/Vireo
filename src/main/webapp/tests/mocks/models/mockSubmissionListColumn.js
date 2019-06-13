@@ -102,5 +102,5 @@ var mockSubmissionListColumn = function($q) {
     return model;
 };
 
-angular.module('mock.submissionListColumn', []).service('SubmissionListColumn', mockSubmissionListColumn);
+angular.module("mock.submissionListColumn", []).service("SubmissionListColumn", mockSubmissionListColumn);
 

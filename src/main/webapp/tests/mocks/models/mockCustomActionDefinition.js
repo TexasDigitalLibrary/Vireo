@@ -40,5 +40,5 @@ var mockCustomActionDefinition = function($q) {
     return model;
 };
 
-angular.module('mock.customActionDefinition', []).service('CustomActionDefinition', mockCustomActionDefinition);
+angular.module("mock.customActionDefinition", []).service("CustomActionDefinition", mockCustomActionDefinition);
 

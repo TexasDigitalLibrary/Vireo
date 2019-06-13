@@ -16,8 +16,8 @@ var dataDegreeRepo3 = [
     dataDegree6
 ];
 
-angular.module('mock.degreeRepo', []).service('DegreeRepo', function($q) {
-    var repo = mockRepo('DegreeRepo', $q, mockDegree, dataDegreeRepo1);
+angular.module("mock.degreeRepo", []).service("DegreeRepo", function($q) {
+    var repo = mockRepo("DegreeRepo", $q, mockDegree, dataDegreeRepo1);
 
     repo.getProquestDegreeCodes = function (cv) {
         var payload = {};

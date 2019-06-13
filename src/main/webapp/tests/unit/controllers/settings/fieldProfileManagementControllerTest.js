@@ -1,4 +1,4 @@
-describe('controller: FieldProfileManagementController', function () {
+describe("controller: FieldProfileManagementController", function () {
 
     var controller, q, scope, FieldPredicateRepo, FieldProfileRepo, WorkflowStepRepo, WsApi;
 
@@ -25,7 +25,7 @@ describe('controller: FieldProfileManagementController', function () {
                 scope.step = {aggregateFieldProfiles: {}};
             }
 
-            controller = $controller('FieldProfileManagementController', {
+            controller = $controller("FieldProfileManagementController", {
                 $filter: $filter,
                 $q: q,
                 $scope: scope,
@@ -53,109 +53,109 @@ describe('controller: FieldProfileManagementController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.controlledVocabulary');
-        module('mock.controlledVocabularyRepo');
-        module('mock.documentType');
-        module('mock.documentTypeRepo');
-        module('mock.dragAndDropListenerFactory');
-        module('mock.fieldPredicate');
-        module('mock.fieldPredicateRepo');
-        module('mock.fieldProfile');
-        module('mock.fieldProfileRepo');
-        module('mock.inputType');
-        module('mock.inputTypeRepo');
-        module('mock.managedConfiguration');
-        module('mock.managedConfigurationRepo');
-        module('mock.modalService');
-        module('mock.organization');
-        module('mock.organizationRepo');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.workflowStep');
-        module('mock.workflowStepRepo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.controlledVocabulary");
+        module("mock.controlledVocabularyRepo");
+        module("mock.documentType");
+        module("mock.documentTypeRepo");
+        module("mock.dragAndDropListenerFactory");
+        module("mock.fieldPredicate");
+        module("mock.fieldPredicateRepo");
+        module("mock.fieldProfile");
+        module("mock.fieldProfileRepo");
+        module("mock.inputType");
+        module("mock.inputTypeRepo");
+        module("mock.managedConfiguration");
+        module("mock.managedConfigurationRepo");
+        module("mock.modalService");
+        module("mock.organization");
+        module("mock.organizationRepo");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.workflowStep");
+        module("mock.workflowStepRepo");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('buildFilteredPredicateList should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("buildFilteredPredicateList should be defined", function () {
             expect(scope.buildFilteredPredicateList).toBeDefined();
             expect(typeof scope.buildFilteredPredicateList).toEqual("function");
         });
-        it('canCreateFieldPredicate should be defined', function () {
+        it("canCreateFieldPredicate should be defined", function () {
             expect(scope.canCreateFieldPredicate).toBeDefined();
             expect(typeof scope.canCreateFieldPredicate).toEqual("function");
         });
-        it('changeLabel should be defined', function () {
+        it("changeLabel should be defined", function () {
             expect(scope.changeLabel).toBeDefined();
             expect(typeof scope.changeLabel).toEqual("function");
         });
-        it('createFieldPredicate should be defined', function () {
+        it("createFieldPredicate should be defined", function () {
             expect(scope.createFieldPredicate).toBeDefined();
             expect(typeof scope.createFieldPredicate).toEqual("function");
         });
-        it('createFieldProfile should be defined', function () {
+        it("createFieldProfile should be defined", function () {
             expect(scope.createFieldProfile).toBeDefined();
             expect(typeof scope.createFieldProfile).toEqual("function");
         });
-        it('documentTypeChanged should be defined', function () {
+        it("documentTypeChanged should be defined", function () {
             expect(scope.documentTypeChanged).toBeDefined();
             expect(typeof scope.documentTypeChanged).toEqual("function");
         });
-        it('editFieldProfile should be defined', function () {
+        it("editFieldProfile should be defined", function () {
             expect(scope.editFieldProfile).toBeDefined();
             expect(typeof scope.editFieldProfile).toEqual("function");
         });
-        it('inputTypeChanged should be defined', function () {
+        it("inputTypeChanged should be defined", function () {
             expect(scope.inputTypeChanged).toBeDefined();
             expect(typeof scope.inputTypeChanged).toEqual("function");
         });
-        it('isEditable should be defined', function () {
+        it("isEditable should be defined", function () {
             expect(scope.isEditable).toBeDefined();
             expect(typeof scope.isEditable).toEqual("function");
         });
-        it('mustCreateFieldPredicate should be defined', function () {
+        it("mustCreateFieldPredicate should be defined", function () {
             expect(scope.mustCreateFieldPredicate).toBeDefined();
             expect(typeof scope.mustCreateFieldPredicate).toEqual("function");
         });
-        it('openNewModal should be defined', function () {
+        it("openNewModal should be defined", function () {
             expect(scope.openNewModal).toBeDefined();
             expect(typeof scope.openNewModal).toEqual("function");
         });
-        it('removeFieldProfile should be defined', function () {
+        it("removeFieldProfile should be defined", function () {
             expect(scope.removeFieldProfile).toBeDefined();
             expect(typeof scope.removeFieldProfile).toEqual("function");
         });
-        it('reorderFieldProfiles should be defined', function () {
+        it("reorderFieldProfiles should be defined", function () {
             expect(scope.reorderFieldProfiles).toBeDefined();
             expect(typeof scope.reorderFieldProfiles).toEqual("function");
         });
-        it('resetFieldProfiles should be defined', function () {
+        it("resetFieldProfiles should be defined", function () {
             expect(scope.resetFieldProfiles).toBeDefined();
             expect(typeof scope.resetFieldProfiles).toEqual("function");
         });
-        it('selectFieldProfile should be defined', function () {
+        it("selectFieldProfile should be defined", function () {
             expect(scope.selectFieldProfile).toBeDefined();
             expect(typeof scope.selectFieldProfile).toEqual("function");
         });
-        it('updateFieldProfile should be defined', function () {
+        it("updateFieldProfile should be defined", function () {
             expect(scope.updateFieldProfile).toBeDefined();
             expect(typeof scope.updateFieldProfile).toEqual("function");
         });
     });
-    describe('Do the scope methods work as expected', function () {
-        it('buildFilteredPredicateList should build the field predicates', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("buildFilteredPredicateList should build the field predicates", function () {
             scope.fieldPredicates = null;
 
             scope.buildFilteredPredicateList();
@@ -163,7 +163,7 @@ describe('controller: FieldProfileManagementController', function () {
 
             expect(scope.fieldPredicates).toBeDefined();
         });
-        it('canCreateFieldPredicate should return a boolean', function () {
+        it("canCreateFieldPredicate should return a boolean", function () {
             var result;
             scope.modalData = new mockFieldProfile(q);
             scope.modalData.fieldPredicate = "test";
@@ -184,7 +184,7 @@ describe('controller: FieldProfileManagementController', function () {
             result = scope.canCreateFieldPredicate();
             expect(result).toBe(false);
         });
-        it('changeLabel should update the field predicate', function () {
+        it("changeLabel should update the field predicate", function () {
             var fieldPredicate = mockFieldPredicate(q);
 
             scope.modalData = new mockFieldProfile(q);
@@ -209,7 +209,7 @@ describe('controller: FieldProfileManagementController', function () {
             scope.modalData.gloss = fieldPredicate.value;
             scope.changeLabel();
         });
-        it('createFieldPredicate should create a new field predicate', function () {
+        it("createFieldPredicate should create a new field predicate", function () {
             var originalMustCreateFieldPredicate = scope.mustCreateFieldPredicate;
             scope.modalData = new mockFieldProfile(q);
             scope.modalData.fieldPredicate = "test";
@@ -235,7 +235,7 @@ describe('controller: FieldProfileManagementController', function () {
             scope.createFieldPredicate();
             scope.$digest();
         });
-        it('createFieldProfile should create a new field profile', function () {
+        it("createFieldProfile should create a new field profile", function () {
             scope.modalData = new mockFieldProfile(q);
             scope.modalData.fieldPredicate = "test";
 
@@ -250,7 +250,7 @@ describe('controller: FieldProfileManagementController', function () {
             expect(WorkflowStepRepo.addFieldProfile).toHaveBeenCalled();
             expect(scope.modalData.fieldPredicate).not.toEqual("test");
         });
-        it('documentTypeChanged should update the field predicate', function () {
+        it("documentTypeChanged should update the field predicate", function () {
             scope.modalData = new mockFieldProfile(q);
             scope.modalData.fieldPredicate = "test";
             scope.documentData.documentType.fieldPredicate = "different";
@@ -259,7 +259,7 @@ describe('controller: FieldProfileManagementController', function () {
 
             expect(scope.modalData.fieldPredicate).toEqual("different");
         });
-        it('editFieldProfile should open a modal', function () {
+        it("editFieldProfile should open a modal", function () {
             scope.modalData = new mockFieldProfile(q);
             scope.modalData.fieldPredicate = "test";
 
@@ -271,7 +271,7 @@ describe('controller: FieldProfileManagementController', function () {
             expect(scope.selectFieldProfile).toHaveBeenCalled();
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('inputTypeChanged should update the input file settings', function () {
+        it("inputTypeChanged should update the input file settings", function () {
             scope.modalData = new mockFieldProfile(q);
             scope.modalData.fieldPredicate = "test";
             scope.documentData.documentType.fieldPredicate = "different";
@@ -285,7 +285,7 @@ describe('controller: FieldProfileManagementController', function () {
             scope.inputTypeChanged();
             expect(scope.inputFile).toBe(true);
         });
-        it('isEditable should update the input file settings', function () {
+        it("isEditable should update the input file settings", function () {
             var response;
             var fieldProfile = new mockFieldProfile(q);
             fieldProfile.overrideable = true;
@@ -312,7 +312,7 @@ describe('controller: FieldProfileManagementController', function () {
             response = scope.isEditable(fieldProfile);
             expect(response).toBe(true);
         });
-        it('mustCreateFieldPredicate should return a boolean', function () {
+        it("mustCreateFieldPredicate should return a boolean", function () {
             var response;
             scope.modalData = new mockFieldProfile(q);
             scope.modalData.fieldPredicate = null;
@@ -325,28 +325,28 @@ describe('controller: FieldProfileManagementController', function () {
             response = scope.mustCreateFieldPredicate();
             expect(response).toBe(true);
         });
-        it('openNewModal should open a modal', function () {
+        it("openNewModal should open a modal", function () {
             spyOn(scope, "openModal");
 
             scope.openNewModal();
 
             expect(scope.openModal).toHaveBeenCalled();
         });
-        it('removeFieldProfile should delete a fieldPredicate', function () {
+        it("removeFieldProfile should delete a fieldPredicate", function () {
             spyOn(WorkflowStepRepo, "removeFieldProfile");
 
             scope.removeFieldProfile();
 
             expect(WorkflowStepRepo.removeFieldProfile).toHaveBeenCalled();
         });
-        it('reorderFieldProfiles should reorder a field profile', function () {
+        it("reorderFieldProfiles should reorder a field profile", function () {
             spyOn(WorkflowStepRepo, "reorderFieldProfiles");
 
             scope.reorderFieldProfiles("a", "b");
 
             expect(WorkflowStepRepo.reorderFieldProfiles).toHaveBeenCalled();
         });
-        it('resetFieldProfiles should reset the field profile', function () {
+        it("resetFieldProfiles should reset the field profile", function () {
             var fieldProfile = new mockFieldProfile(q);
 
             scope.forms = [];
@@ -377,7 +377,7 @@ describe('controller: FieldProfileManagementController', function () {
             scope.forms.myForm.$pristine = false;
             scope.resetFieldProfiles();
         });
-        it('selectFieldProfile should select a field profile', function () {
+        it("selectFieldProfile should select a field profile", function () {
             scope.modalData = null;
             scope.step = {
                 aggregateFieldProfiles: [
@@ -411,7 +411,7 @@ describe('controller: FieldProfileManagementController', function () {
             scope.step.aggregateFieldProfiles[0] = null;
             scope.selectFieldProfile(0);
         });
-        it('updateFieldProfile should should save a fieldPredicate', function () {
+        it("updateFieldProfile should should save a fieldPredicate", function () {
             scope.modalData = new mockFieldProfile(q);
             scope.modalData.notReset = true;
 

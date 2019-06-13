@@ -34,5 +34,5 @@ var mockGraduationMonth = function($q) {
     return model;
 };
 
-angular.module('mock.graduationMonth', []).service('GraduationMonth', mockGraduationMonth);
+angular.module("mock.graduationMonth", []).service("GraduationMonth", mockGraduationMonth);
 

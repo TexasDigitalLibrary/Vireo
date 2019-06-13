@@ -1,4 +1,4 @@
-describe('service: submissionStatusRepo', function () {
+describe("service: submissionStatusRepo", function () {
     var q, repo, rootScope, mockedRepo, scope, WsApi;
 
     var initializeVariables = function(settings) {
@@ -19,33 +19,33 @@ describe('service: submissionStatusRepo', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.wsApi");
 
         initializeVariables();
         initializeRepo();
     });
 
-    describe('Is the repo defined', function () {
-        it('should be defined', function () {
+    describe("Is the repo defined", function () {
+        it("should be defined", function () {
             expect(repo).toBeDefined();
         });
     });
 
-    describe('Are the repo methods defined', function () {
-        it('findById should be defined', function () {
+    describe("Are the repo methods defined", function () {
+        it("findById should be defined", function () {
             expect(repo.findById).toBeDefined();
             expect(typeof repo.findById).toEqual("function");
         });
-        it('findByName should be defined', function () {
+        it("findByName should be defined", function () {
             expect(repo.findByName).toBeDefined();
             expect(typeof repo.findByName).toEqual("function");
         });
     });
 
-    describe('Do the repo methods work as expected', function () {
-        it('findById should return a submission status', function () {
+    describe("Do the repo methods work as expected", function () {
+        it("findById should return a submission status", function () {
             var response;
 
             response = repo.findById();
@@ -53,7 +53,7 @@ describe('service: submissionStatusRepo', function () {
 
             // TODO
         });
-        it('findByName should return a submission status', function () {
+        it("findByName should return a submission status", function () {
             var response;
 
             response = repo.findByName("mock");

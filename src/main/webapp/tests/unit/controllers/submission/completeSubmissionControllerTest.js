@@ -1,4 +1,4 @@
-describe('controller: CompleteSubmissionController', function () {
+describe("controller: CompleteSubmissionController", function () {
 
     var controller, scope, WsApi;
 
@@ -15,7 +15,7 @@ describe('controller: CompleteSubmissionController', function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('CompleteSubmissionController', {
+            controller = $controller("CompleteSubmissionController", {
                 $scope: scope,
                 $window: mockWindow(),
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
@@ -33,22 +33,22 @@ describe('controller: CompleteSubmissionController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.managedConfiguration');
-        module('mock.managedConfigurationRepo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.managedConfiguration");
+        module("mock.managedConfigurationRepo");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.wsApi");
 
         installPromiseMatchers();
         initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });

@@ -58,5 +58,5 @@ var mockEmailRecipient = function($q) {
     return model;
 };
 
-angular.module('mock.emailRecipient', []).service('EmailRecipient', mockEmailRecipient);
+angular.module("mock.emailRecipient", []).service("EmailRecipient", mockEmailRecipient);
 

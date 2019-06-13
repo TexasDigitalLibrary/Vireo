@@ -16,8 +16,8 @@ var dataDocumentTypeRepo3 = [
     dataDocumentType6
 ];
 
-angular.module('mock.documentTypeRepo', []).service('DocumentTypeRepo', function($q) {
-    var repo = mockRepo('DocumentTypeRepo', $q, mockDocumentType, dataDocumentTypeRepo1);
+angular.module("mock.documentTypeRepo", []).service("DocumentTypeRepo", function($q) {
+    var repo = mockRepo("DocumentTypeRepo", $q, mockDocumentType, dataDocumentTypeRepo1);
 
     return repo;
 });

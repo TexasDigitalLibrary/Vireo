@@ -1,4 +1,4 @@
-describe('service: SidebarService', function () {
+describe("service: SidebarService", function () {
     var q, rootScope, service, scope, timeout, WsApi;
 
     var initializeVariables = function(settings) {
@@ -15,54 +15,54 @@ describe('service: SidebarService', function () {
         inject(function ($injector) {
             scope = rootScope.$new();
 
-            service = $injector.get('SidebarService');
+            service = $injector.get("SidebarService");
         });
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.wsApi");
 
         initializeVariables();
         initializeService();
     });
 
-    describe('Is the service defined', function () {
-        it('should be defined', function () {
+    describe("Is the service defined", function () {
+        it("should be defined", function () {
             expect(service).toBeDefined();
         });
     });
 
-    describe('Are the service methods defined', function () {
-        it('addBox should be defined', function () {
+    describe("Are the service methods defined", function () {
+        it("addBox should be defined", function () {
             expect(service.addBox).toBeDefined();
             expect(typeof service.addBox).toEqual("function");
         });
-        it('addBoxes should be defined', function () {
+        it("addBoxes should be defined", function () {
             expect(service.addBoxes).toBeDefined();
             expect(typeof service.addBoxes).toEqual("function");
         });
-        it('clear should be defined', function () {
+        it("clear should be defined", function () {
             expect(service.clear).toBeDefined();
             expect(typeof service.clear).toEqual("function");
         });
-        it('getBox should be defined', function () {
+        it("getBox should be defined", function () {
             expect(service.getBox).toBeDefined();
             expect(typeof service.getBox).toEqual("function");
         });
-        it('getBoxes should be defined', function () {
+        it("getBoxes should be defined", function () {
             expect(service.getBoxes).toBeDefined();
             expect(typeof service.getBoxes).toEqual("function");
         });
-        it('remove should be defined', function () {
+        it("remove should be defined", function () {
             expect(service.remove).toBeDefined();
             expect(typeof service.remove).toEqual("function");
         });
     });
 
-    describe('Do the service methods work as expected', function () {
-        it('addBox should add a box', function () {
+    describe("Do the service methods work as expected", function () {
+        it("addBox should add a box", function () {
             var response;
             var target1 = { id: 1 };
             var target2 = { id: 2 };
@@ -75,7 +75,7 @@ describe('service: SidebarService', function () {
             service.addBox(target2);
             expect(service.boxes.length).toBe(2);
         });
-        it('addBoxes should add boxes', function () {
+        it("addBoxes should add boxes", function () {
             var response;
             var target1 = { id: 1 };
             var target2 = { id: 2 };
@@ -97,7 +97,7 @@ describe('service: SidebarService', function () {
             //response = service.addBoxes(boxes3);
             //expect(service.boxes.length).toBe(3);
         });
-        it('clear should remove all boxes', function () {
+        it("clear should remove all boxes", function () {
             var response;
             var target1 = { id: 1 };
             var target2 = { id: 2 };
@@ -107,7 +107,7 @@ describe('service: SidebarService', function () {
             service.clear();
             expect(service.boxes.length).toBe(0);
         });
-        it('getBox should return a box', function () {
+        it("getBox should return a box", function () {
             var response;
             var target1 = { id: 1 };
             var target2 = { id: 2 };
@@ -120,7 +120,7 @@ describe('service: SidebarService', function () {
             response = service.getBox(1);
             expect(response).toBe(target2);
         });
-        it('getBoxes should return all boxes', function () {
+        it("getBoxes should return all boxes", function () {
             var response;
             var target1 = { id: 1 };
             var target2 = { id: 2 };
@@ -130,7 +130,7 @@ describe('service: SidebarService', function () {
             response = service.getBoxes();
             expect(response).toBe(service.boxes);
         });
-        it('remove should remove a box', function () {
+        it("remove should remove a box", function () {
             var response;
             var target1 = { id: 1 };
             var target2 = { id: 2 };
@@ -147,8 +147,8 @@ describe('service: SidebarService', function () {
     });
 
     /* TODO: implement this.
-    describe('Does the service initialize as expected', function () {
-        it('Listen on "$routeChangeSuccess" should work as expected', function () {
+    describe("Does the service initialize as expected", function () {
+        it("Listen on "$routeChangeSuccess" should work as expected", function () {
             // TODO
         });
     });
