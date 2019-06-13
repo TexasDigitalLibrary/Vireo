@@ -32,4 +32,22 @@ describe('service: languageRepo', function () {
             expect(repo).toBeDefined();
         });
     });
+
+    describe('Are the repo methods defined', function () {
+        it('getProquestLanguageCodes should be defined', function () {
+            expect(repo.getProquestLanguageCodes).toBeDefined();
+            expect(typeof repo.getProquestLanguageCodes).toEqual("function");
+        });
+    });
+
+    describe('Do the repo methods work as expected', function () {
+        it('getProquestLanguageCodes should return a field predicate', function () {
+            var response;
+
+            response = repo.getProquestLanguageCodes();
+            scope.$digest();
+
+            // TODO
+        });
+    });
 });

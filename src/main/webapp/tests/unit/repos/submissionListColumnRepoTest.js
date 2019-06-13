@@ -32,4 +32,19 @@ describe('service: submissionListColumnRepo', function () {
             expect(repo).toBeDefined();
         });
     });
+
+    describe('Are the repo methods defined', function () {
+        it('findByTitle should be defined', function () {
+            expect(repo.findByTitle).toBeDefined();
+            expect(typeof repo.findByTitle).toEqual("function");
+        });
+    });
+
+    describe('Do the repo methods work as expected', function () {
+        it('findByTitle should return a submission', function () {
+            repo.findByTitle("mock title");
+
+            // TODO
+        });
+    });
 });

@@ -32,4 +32,20 @@ describe('service: fieldPredicateRepo', function () {
             expect(repo).toBeDefined();
         });
     });
+
+    describe('Are the repo methods defined', function () {
+        it('findByValue should be defined', function () {
+            expect(repo.findByValue).toBeDefined();
+            expect(typeof repo.findByValue).toEqual("function");
+        });
+    });
+
+    describe('Do the repo methods work as expected', function () {
+        it('findByValue should return a field predicate', function () {
+            repo.findByValue("mock value");
+            scope.$digest();
+
+            // TODO
+        });
+    });
 });
