@@ -34,7 +34,7 @@ public class SubmissionHelperUtility {
     private final static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
     private final static SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy-MM");
-    private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMM yyyy");
+    private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy");
 
     private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
