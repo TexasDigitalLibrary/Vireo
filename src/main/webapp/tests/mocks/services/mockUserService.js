@@ -1,4 +1,4 @@
-angular.module('mock.userService', []).service('UserService', function ($q) {
+angular.module("mock.userService", []).service("UserService", function ($q) {
     var service = mockService($q, mockUser);
     var currentUser;
 

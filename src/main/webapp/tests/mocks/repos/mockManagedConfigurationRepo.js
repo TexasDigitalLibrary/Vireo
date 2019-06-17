@@ -16,8 +16,8 @@ var dataManagedConfigurationRepo3 = [
     dataManagedConfiguration6
 ];
 
-angular.module('mock.managedConfigurationRepo', []).service('ManagedConfigurationRepo', function($q) {
-    var repo = mockRepo('ManagedConfigurationRepo', $q, mockManagedConfiguration, dataManagedConfigurationRepo1);
+angular.module("mock.managedConfigurationRepo", []).service("ManagedConfigurationRepo", function($q) {
+    var repo = mockRepo("ManagedConfigurationRepo", $q, mockManagedConfiguration, dataManagedConfigurationRepo1);
 
     repo.build = function (data) {
         var payload = {};

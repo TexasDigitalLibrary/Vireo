@@ -40,5 +40,5 @@ var mockLanguage = function($q) {
     return model;
 };
 
-angular.module('mock.language', []).service('Language', mockLanguage);
+angular.module("mock.language", []).service("Language", mockLanguage);
 

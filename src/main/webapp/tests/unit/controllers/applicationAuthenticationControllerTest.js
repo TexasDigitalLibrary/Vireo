@@ -1,15 +1,21 @@
-describe('controller: ApplicationAuthenticationController', function () {
+describe("controller: ApplicationAuthenticationController", function () {
 
-    var controller, scope;
+    var controller, scope, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($q, _WsApi_) {
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $rootScope, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_, _WsApi_) {
+        inject(function ($controller, $location, $rootScope, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('ApplicationAuthenticationController', {
+            controller = $controller("ApplicationAuthenticationController", {
                 $location: $location,
                 $scope: scope,
                 $window: mockWindow(),
@@ -18,7 +24,7 @@ describe('controller: ApplicationAuthenticationController', function () {
                 StorageService: _StorageService_,
                 UserService: _UserService_,
                 ValidationStore: _ValidationStore_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -29,37 +35,38 @@ describe('controller: ApplicationAuthenticationController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.user');
-        module('mock.userService');
-        module('mock.validationStore');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.user");
+        module("mock.userService");
+        module("mock.validationStore");
+        module("mock.wsApi");
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined for admin', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined for admin", function () {
             expect(controller).toBeDefined();
         });
-        it('should be defined for manager', function () {
+        it("should be defined for manager", function () {
             initializeController({role: "ROLE_MANAGER"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for reviewer', function () {
+        it("should be defined for reviewer", function () {
             initializeController({role: "ROLE_REVIEWER"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for student', function () {
+        it("should be defined for student", function () {
             initializeController({role: "ROLE_STUDENT"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for anonymous', function () {
+        it("should be defined for anonymous", function () {
             initializeController({role: "ROLE_ANONYMOUS"});
             expect(controller).toBeDefined();
         });

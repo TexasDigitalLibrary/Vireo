@@ -34,5 +34,5 @@ var mockSubmissionStatus = function($q) {
     return model;
 };
 
-angular.module('mock.submissionStatus', []).service('SubmissionStatus', mockSubmissionStatus);
+angular.module("mock.submissionStatus", []).service("SubmissionStatus", mockSubmissionStatus);
 

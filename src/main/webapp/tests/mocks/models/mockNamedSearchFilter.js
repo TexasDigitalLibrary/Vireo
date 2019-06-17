@@ -3,7 +3,7 @@ var dataNamedSearchFilter1 = {
     allColumnSearch: true,
     exactMatch: true,
     filterCriteria: {},
-    name: 'named search filter 1'
+    name: "named search filter 1"
 };
 
 var dataNamedSearchFilter2 = {
@@ -11,7 +11,7 @@ var dataNamedSearchFilter2 = {
     allColumnSearch: false,
     exactMatch: true,
     filterCriteria: {},
-    name: 'named search filter 2'
+    name: "named search filter 2"
 };
 
 var dataNamedSearchFilter3 = {
@@ -19,7 +19,7 @@ var dataNamedSearchFilter3 = {
     allColumnSearch: true,
     exactMatch: false,
     filterCriteria: {},
-    name: 'named search filter 3'
+    name: "named search filter 3"
 };
 
 var dataNamedSearchFilter4 = {
@@ -27,7 +27,7 @@ var dataNamedSearchFilter4 = {
     allColumnSearch: true,
     exactMatch: false,
     filterCriteria: {},
-    name: 'named search filter 4'
+    name: "named search filter 4"
 };
 
 var dataNamedSearchFilter5 = {
@@ -35,7 +35,7 @@ var dataNamedSearchFilter5 = {
     allColumnSearch: false,
     exactMatch: true,
     filterCriteria: {},
-    name: 'named search filter 5'
+    name: "named search filter 5"
 };
 
 var dataNamedSearchFilter6 = {
@@ -43,7 +43,7 @@ var dataNamedSearchFilter6 = {
     allColumnSearch: false,
     exactMatch: false,
     filterCriteria: {},
-    name: 'named search filter 6'
+    name: "named search filter 6"
 };
 
 var mockNamedSearchFilter = function($q) {
@@ -52,5 +52,5 @@ var mockNamedSearchFilter = function($q) {
     return model;
 };
 
-angular.module('mock.namedSearchFilter', []).service('NamedSearchFilter', mockNamedSearchFilter);
+angular.module("mock.namedSearchFilter", []).service("NamedSearchFilter", mockNamedSearchFilter);
 

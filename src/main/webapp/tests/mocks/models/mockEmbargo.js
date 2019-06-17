@@ -28,5 +28,5 @@ var mockEmbargo = function($q) {
     return model;
 };
 
-angular.module('mock.embargo', []).service('Embargo', mockEmbargo);
+angular.module("mock.embargo", []).service("Embargo", mockEmbargo);
 

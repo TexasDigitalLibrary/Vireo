@@ -16,8 +16,8 @@ var dataLanguageRepo3 = [
     dataLanguage6
 ];
 
-angular.module('mock.languageRepo', []).service('LanguageRepo', function($q) {
-    var repo = mockRepo('LanguageRepo', $q, mockLanguage, dataLanguageRepo1);
+angular.module("mock.languageRepo", []).service("LanguageRepo", function($q) {
+    var repo = mockRepo("LanguageRepo", $q, mockLanguage, dataLanguageRepo1);
 
     repo.getProquestLanguageCodes = function () {
         var payload = {};

@@ -270,4 +270,4 @@ var mockFieldProfile = function($q) {
     return model;
 };
 
-angular.module('mock.fieldProfile', []).service('FieldProfile', mockFieldProfile);
+angular.module("mock.fieldProfile", []).service("FieldProfile", mockFieldProfile);

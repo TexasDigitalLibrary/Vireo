@@ -1,4 +1,4 @@
-angular.module('mock.restApi', []).service('RestApi', function ($q) {
+angular.module("mock.restApi", []).service("RestApi", function ($q) {
     var service = mockService($q);
 
     service.get = function () {

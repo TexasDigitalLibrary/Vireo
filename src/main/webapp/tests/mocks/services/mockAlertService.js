@@ -1,4 +1,4 @@
-angular.module('mock.alertService', []).service('AlertService', function ($q) {
+angular.module("mock.alertService", []).service("AlertService", function ($q) {
     var service = mockService($q);
 
     service.add = function (meta, channel) {

@@ -1,7 +1,7 @@
 var dataNamedSearchFilterGroup1 = {
     id: 1,
     columnsFlag: true,
-    name: 'named search filter group 1',
+    name: "named search filter group 1",
     namedSearchFilters: [],
     publicFlag: true,
     savedColumns: [],
@@ -11,7 +11,7 @@ var dataNamedSearchFilterGroup1 = {
 var dataNamedSearchFilterGroup2 = {
     id: 2,
     columnsFlag: false,
-    name: 'named search filter group 2',
+    name: "named search filter group 2",
     publicFlag: false,
     namedSearchFilters: [],
     savedColumns: [],
@@ -21,7 +21,7 @@ var dataNamedSearchFilterGroup2 = {
 var dataNamedSearchFilterGroup3 = {
     id: 3,
     columnsFlag: false,
-    name: 'named search filter group 3',
+    name: "named search filter group 3",
     publicFlag: true,
     namedSearchFilters: [],
     savedColumns: [],
@@ -31,7 +31,7 @@ var dataNamedSearchFilterGroup3 = {
 var dataNamedSearchFilterGroup4 = {
     id: 4,
     columnsFlag: false,
-    name: 'named search filter group 4',
+    name: "named search filter group 4",
     publicFlag: true,
     namedSearchFilters: [],
     savedColumns: [],
@@ -41,7 +41,7 @@ var dataNamedSearchFilterGroup4 = {
 var dataNamedSearchFilterGroup5 = {
     id: 5,
     columnsFlag: true,
-    name: 'named search filter group 5',
+    name: "named search filter group 5",
     publicFlag: false,
     namedSearchFilters: [],
     savedColumns: [],
@@ -51,7 +51,7 @@ var dataNamedSearchFilterGroup5 = {
 var dataNamedSearchFilterGroup6 = {
     id: 6,
     columnsFlag: true,
-    name: 'named search filter group 6',
+    name: "named search filter group 6",
     publicFlag: false,
     namedSearchFilters: [],
     savedColumns: [],
@@ -109,5 +109,5 @@ var mockNamedSearchFilterGroup = function($q) {
     return model;
 };
 
-angular.module('mock.namedSearchFilterGroup', []).service('NamedSearchFilterGroup', mockNamedSearchFilterGroup);
+angular.module("mock.namedSearchFilterGroup", []).service("NamedSearchFilterGroup", mockNamedSearchFilterGroup);
 

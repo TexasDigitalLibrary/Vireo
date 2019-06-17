@@ -16,8 +16,8 @@ var dataDepositLocationRepo3 = [
     dataDepositLocation6
 ];
 
-angular.module('mock.depositLocationRepo', []).service('DepositLocationRepo', function($q) {
-    var repo = mockRepo('DepositLocationRepo', $q, mockDepositLocation, dataDepositLocationRepo1);
+angular.module("mock.depositLocationRepo", []).service("DepositLocationRepo", function($q) {
+    var repo = mockRepo("DepositLocationRepo", $q, mockDepositLocation, dataDepositLocationRepo1);
 
     return repo;
 });

@@ -1,31 +1,37 @@
-describe('controller: NewSubmissionController', function () {
+describe("controller: NewSubmissionController", function () {
 
-    var controller, location, q, scope, OrganizationRepo;
+    var controller, location, q, scope, OrganizationRepo, WsApi;
 
-    var initializeController = function(settings) {
-        inject(function ($controller, $location, $q, $rootScope, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _WsApi_) {
+    var initializeVariables = function(settings) {
+        inject(function ($location, $q, _OrganizationRepo_, _WsApi_) {
             location = $location;
             q = $q;
-            scope = $rootScope.$new();
 
             OrganizationRepo = _OrganizationRepo_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeController = function(settings) {
+        inject(function ($controller, $rootScope, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_) {
+            scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('NewSubmissionController', {
-                $location: $location,
+            controller = $controller("NewSubmissionController", {
+                $location: location,
                 $q: q,
                 $scope: scope,
                 $window: mockWindow(),
                 SubmissionStates: SubmissionStates,
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
-                OrganizationRepo: _OrganizationRepo_,
+                OrganizationRepo: OrganizationRepo,
                 StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,
                 RestApi: _RestApi_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -36,54 +42,55 @@ describe('controller: NewSubmissionController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.managedConfiguration');
-        module('mock.managedConfigurationRepo');
-        module('mock.modalService');
-        module('mock.organization');
-        module('mock.organizationRepo');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.studentSubmission');
-        module('mock.studentSubmissionRepo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.managedConfiguration");
+        module("mock.managedConfigurationRepo");
+        module("mock.modalService");
+        module("mock.organization");
+        module("mock.organizationRepo");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.studentSubmission");
+        module("mock.studentSubmissionRepo");
+        module("mock.wsApi");
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('createSubmission should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("createSubmission should be defined", function () {
             expect(scope.createSubmission).toBeDefined();
             expect(typeof scope.createSubmission).toEqual("function");
         });
-        it('getSelectedOrganization should be defined', function () {
+        it("getSelectedOrganization should be defined", function () {
             expect(scope.getSelectedOrganization).toBeDefined();
             expect(typeof scope.getSelectedOrganization).toEqual("function");
         });
-        it('gotoSubmission should be defined', function () {
+        it("gotoSubmission should be defined", function () {
             expect(scope.gotoSubmission).toBeDefined();
             expect(typeof scope.gotoSubmission).toEqual("function");
         });
-        it('hasSubmission should be defined', function () {
+        it("hasSubmission should be defined", function () {
             expect(scope.hasSubmission).toBeDefined();
             expect(typeof scope.hasSubmission).toEqual("function");
         });
-        it('setSelectedOrganization should be defined', function () {
+        it("setSelectedOrganization should be defined", function () {
             expect(scope.setSelectedOrganization).toBeDefined();
             expect(typeof scope.setSelectedOrganization).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('createSubmission should create a new submission', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("createSubmission should create a new submission", function () {
             scope.creatingSubmission = null;
             OrganizationRepo.selectedId = 1;
 
@@ -92,7 +99,7 @@ describe('controller: NewSubmissionController', function () {
 
             expect(scope.creatingSubmission).toBe(false);
         });
-        it('getSelectedOrganization should return an organization', function () {
+        it("getSelectedOrganization should return an organization", function () {
             var response;
             OrganizationRepo.selectedId = 1;
 
@@ -100,7 +107,7 @@ describe('controller: NewSubmissionController', function () {
 
             expect(response.id).toBe(OrganizationRepo.selectedId);
         });
-        it('gotoSubmission should change the URL path', function () {
+        it("gotoSubmission should change the URL path", function () {
             var organization = new mockOrganization(q);
             scope.studentSubmissions = [ new mockStudentSubmission(q) ];
             scope.studentSubmissions[0].organization = organization;
@@ -115,7 +122,7 @@ describe('controller: NewSubmissionController', function () {
 
             scope.gotoSubmission(organization);
         });
-        it('hasSubmission should return a boolean', function () {
+        it("hasSubmission should return a boolean", function () {
             var response;
             var organization = new mockOrganization(q);
             scope.studentSubmissions = [];
@@ -129,7 +136,7 @@ describe('controller: NewSubmissionController', function () {
             response = scope.hasSubmission(organization);
             expect(response).toBe(true);
         });
-        it('setSelectedOrganization should select the organization', function () {
+        it("setSelectedOrganization should select the organization", function () {
             var organization = new mockOrganization(q);
             OrganizationRepo.selectedId = null;
 

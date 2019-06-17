@@ -43,7 +43,7 @@ var dataVocabularyWord4 = {
     adding: false,
     beginAdd: false,
     clickedCell: false,
-    contacts: "a,b",
+    contacts: "b,a",
     definition: "",
     editing: false,
     moving: false,
@@ -56,7 +56,7 @@ var dataVocabularyWord5 = {
     adding: false,
     beginAdd: false,
     clickedCell: false,
-    contacts: ["a", "c"],
+    contacts: ["c", "a"],
     definition: "",
     editing: false,
     moving: false,
@@ -83,4 +83,4 @@ var mockVocabularyWord = function($q) {
     return model;
 };
 
-angular.module('mock.vocabularyWord', []).service('VocabularyWord', mockVocabularyWord);
+angular.module("mock.vocabularyWord", []).service("VocabularyWord", mockVocabularyWord);

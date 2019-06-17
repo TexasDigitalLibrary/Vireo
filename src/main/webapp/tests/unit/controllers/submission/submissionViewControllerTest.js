@@ -1,16 +1,23 @@
-describe('controller: SubmissionViewController', function () {
+describe("controller: SubmissionViewController", function () {
 
-    var controller, q, scope;
+    var controller, q, scope, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($q, _WsApi_) {
+            q = $q;
+
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, $routeParams, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_, _WsApi_) {
-            q = $q;
+        inject(function ($controller, $rootScope, $routeParams, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('SubmissionViewController', {
+            controller = $controller("SubmissionViewController", {
                 $q: q,
                 $routeParams: $routeParams,
                 $scope: scope,
@@ -22,7 +29,7 @@ describe('controller: SubmissionViewController', function () {
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -33,75 +40,76 @@ describe('controller: SubmissionViewController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.customActionDefinition');
-        module('mock.customActionDefinitionRepo');
-        module('mock.fieldPredicate');
-        module('mock.fieldPredicateRepo');
-        module('mock.fileUploadService');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.studentSubmission');
-        module('mock.studentSubmissionRepo');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.customActionDefinition");
+        module("mock.customActionDefinitionRepo");
+        module("mock.fieldPredicate");
+        module("mock.fieldPredicateRepo");
+        module("mock.fileUploadService");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.studentSubmission");
+        module("mock.studentSubmissionRepo");
+        module("mock.wsApi");
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('addMessage should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("addMessage should be defined", function () {
             expect(scope.addMessage).toBeDefined();
             expect(typeof scope.addMessage).toEqual("function");
         });
-        it('archiveManuscript should be defined', function () {
+        it("archiveManuscript should be defined", function () {
             expect(scope.archiveManuscript).toBeDefined();
             expect(typeof scope.archiveManuscript).toEqual("function");
         });
-        it('cancelUpload should be defined', function () {
+        it("cancelUpload should be defined", function () {
             expect(scope.cancelUpload).toBeDefined();
             expect(typeof scope.cancelUpload).toEqual("function");
         });
-        it('getFileType should be defined', function () {
+        it("getFileType should be defined", function () {
             expect(scope.getFileType).toBeDefined();
             expect(typeof scope.getFileType).toEqual("function");
         });
-        it('isPrimaryDocument should be defined', function () {
+        it("isPrimaryDocument should be defined", function () {
             expect(scope.isPrimaryDocument).toBeDefined();
             expect(typeof scope.isPrimaryDocument).toEqual("function");
         });
-        it('queueRemove should be defined', function () {
+        it("queueRemove should be defined", function () {
             expect(scope.queueRemove).toBeDefined();
             expect(typeof scope.queueRemove).toEqual("function");
         });
-        it('removeAdditionalUploads should be defined', function () {
+        it("removeAdditionalUploads should be defined", function () {
             expect(scope.removeAdditionalUploads).toBeDefined();
             expect(typeof scope.removeAdditionalUploads).toEqual("function");
         });
-        it('removableDocuments should be defined', function () {
+        it("removableDocuments should be defined", function () {
             expect(scope.removableDocuments).toBeDefined();
             expect(typeof scope.removableDocuments).toEqual("function");
         });
-        it('updateActionLogLimit should be defined', function () {
+        it("updateActionLogLimit should be defined", function () {
             expect(scope.updateActionLogLimit).toBeDefined();
             expect(typeof scope.updateActionLogLimit).toEqual("function");
         });
-        it('uploadableFieldPredicates should be defined', function () {
+        it("uploadableFieldPredicates should be defined", function () {
             expect(scope.uploadableFieldPredicates).toBeDefined();
             expect(typeof scope.uploadableFieldPredicates).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('addMessage should add a message', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("addMessage should add a message", function () {
             scope.messaging = null;
             scope.message = "test";
 
@@ -111,7 +119,7 @@ describe('controller: SubmissionViewController', function () {
             expect(scope.messaging).toBe(false);
             expect(scope.message).toEqual("");
         });
-        it('archiveManuscript should add archived status to a manuscript', function () {
+        it("archiveManuscript should add archived status to a manuscript", function () {
             scope.archivingManuscript = null;
             scope.submission = new mockSubmission(q);
 
@@ -120,14 +128,14 @@ describe('controller: SubmissionViewController', function () {
 
             expect(scope.archivingManuscript).toBe(false);
         });
-        it('cancelUpload should close a modal', function () {
+        it("cancelUpload should close a modal", function () {
             spyOn(scope, "closeModal");
 
             scope.cancelUpload();
 
             expect(scope.closeModal).toHaveBeenCalled();
         });
-        it('getFileType should return a file type', function () {
+        it("getFileType should return a file type", function () {
             var response;
             var fieldPredicate = new mockFieldPredicate(q);
 
@@ -136,7 +144,7 @@ describe('controller: SubmissionViewController', function () {
             response = scope.getFileType(fieldPredicate);
             expect(response).toEqual(fieldPredicate.value);
         });
-        it('isPrimaryDocument should return a boolean', function () {
+        it("isPrimaryDocument should return a boolean", function () {
             var response;
             var fieldPredicate = new mockFieldPredicate(q);
 
@@ -148,7 +156,7 @@ describe('controller: SubmissionViewController', function () {
             response = scope.isPrimaryDocument(fieldPredicate);
             expect(response).toBe(true);
         });
-        it('queueRemove should remove a field value', function () {
+        it("queueRemove should remove a field value", function () {
             var fieldValue = new mockFieldValue(q);
 
             scope.queueRemove(fieldValue);
@@ -157,7 +165,7 @@ describe('controller: SubmissionViewController', function () {
 
             scope.queueRemove(fieldValue);
         });
-        it('removeAdditionalUploads should remove uploads', function () {
+        it("removeAdditionalUploads should remove uploads", function () {
             var fieldValue = new mockFieldValue(q);
             scope.removeQueue = [ fieldValue ];
             scope.removingUploads = null;
@@ -167,13 +175,13 @@ describe('controller: SubmissionViewController', function () {
 
             expect(scope.removingUploads).toBe(false);
         });
-        it('removableDocuments should return a boolean', function () {
+        it("removableDocuments should return a boolean", function () {
             var response;
             var fieldValue = new mockFieldValue(q);
 
             response = scope.removableDocuments(fieldValue);
         });
-        it('updateActionLogLimit should assign an action log limit', function () {
+        it("updateActionLogLimit should assign an action log limit", function () {
             var response;
             scope.submission = new mockSubmission(q);
             scope.submission.actionLogs = [];
@@ -186,7 +194,7 @@ describe('controller: SubmissionViewController', function () {
             response = scope.updateActionLogLimit();
             expect(scope.actionLogCurrentLimit).toBe(1);
         });
-        it('uploadableFieldPredicates should return a boolean', function () {
+        it("uploadableFieldPredicates should return a boolean", function () {
             var response;
             var fieldPredicate = new mockFieldPredicate(q);
 

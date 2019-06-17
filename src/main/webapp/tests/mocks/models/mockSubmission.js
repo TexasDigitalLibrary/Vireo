@@ -1,67 +1,209 @@
 var dataSubmission1 = {
     id: 1,
+    actionLogs: [],
+    advisorAccessHash: "",
+    advisorReviewURL: "",
+    approveAdvisor: false,
+    approveAdvisorDate: null,
+    approveApplication: false,
+    approveApplicationDate: null,
+    approveEmbargo: false,
+    approveEmbargoDate: null,
+    assignee: null,
+    customActionValues: [],
+    depositURL: "",
+    fieldValues: [],
     organization: {
-        name: "organization 1"
+        id: 1,
+        acceptsSubmissions: true,
+        aggregateWorkflowSteps: [],
+        category: {
+            id: 1,
+            name: "OrganizationCategory1"
+        },
+        childrenOrganizations: [],
+        defaultRecipients: [],
+        emails: [],
+        emailWorkflowRules: [],
+        name: "organization 1",
+        originalWorkflowSteps: [],
+        parentOrganization: null
     },
+    reviewerNotes: "",
+    submissionDate: null,
     submissionStatus: {
+        id: 1,
         submissionState: "IN_PROGRESS"
     },
     submissionWorkflowSteps: [
     ],
     submitter: {
-        uin: "123456789",
-        lastName: "Daniels",
+        anonymous: false,
+        email: "aggieJack@library.tamu.edu",
+        exp: "1425393875282",
         firstName: "Jack",
-        name: "jack",
-        role: "ROLE_ADMIN"
+        lastName: "Daniels",
+        netId: "aggieJack",
+        role: "ROLE_ADMIN",
+        uin: "123456789"
     }
 };
 
 var dataSubmission2 = {
     id: 2,
-    organization: {
-        name: "organization 2"
+    actionLogs: [],
+    advisorAccessHash: "",
+    advisorReviewURL: "",
+    approveAdvisor: true,
+    approveAdvisorDate: "1425393875282",
+    approveApplication: false,
+    approveApplicationDate: null,
+    approveEmbargo: false,
+    approveEmbargoDate: null,
+    assignee: {
+        anonymous: false,
+        email: "aggieJill@library.tamu.edu",
+        exp: "1425393875282",
+        firstName: "Jill",
+        lastName: "Daniels",
+        netId: "aggieJill",
+        role: "ROLE_STUDENT",
+        uin: "987654321"
     },
+    customActionValues: [],
+    depositURL: "",
+    fieldValues: [],
+    organization: {
+        id: 2,
+        acceptsSubmissions: false,
+        aggregateWorkflowSteps: [],
+        category: {
+            id: 1,
+            name: "OrganizationCategory1"
+        },
+        childrenOrganizations: [],
+        defaultRecipients: [],
+        emails: [],
+        emailWorkflowRules: [],
+        name: "organization 2",
+        originalWorkflowSteps: [],
+        parentOrganization: null
+    },
+    reviewerNotes: "",
+    submissionDate: null,
     submissionStatus: {
+        id: 1,
         submissionState: "IN_PROGRESS"
     },
     submissionWorkflowSteps: [
     ],
     submitter: {
-        uin: "123456789",
-        lastName: "Daniels",
+        anonymous: false,
+        email: "aggieJack@library.tamu.edu",
+        exp: "1425393875282",
         firstName: "Jack",
-        name: "jack",
-        role: "ROLE_ADMIN"
+        lastName: "Daniels",
+        netId: "aggieJack",
+        role: "ROLE_ADMIN",
+        uin: "123456789"
     }
 };
 
 var dataSubmission3 = {
     id: 3,
+    actionLogs: [],
+    advisorAccessHash: "",
+    advisorReviewURL: "",
+    approveAdvisor: false,
+    approveAdvisorDate: null,
+    approveApplication: true,
+    approveApplicationDate: "1425393875282",
+    approveEmbargo: false,
+    approveEmbargoDate: null,
+    assignee: null,
+    customActionValues: [],
+    depositURL: "",
+    fieldValues: [],
     organization: {
-        name: "organization 3"
+        id: 1,
+        acceptsSubmissions: true,
+        aggregateWorkflowSteps: [],
+        category: {
+            id: 1,
+            name: "OrganizationCategory1"
+        },
+        childrenOrganizations: [],
+        defaultRecipients: [],
+        emails: [],
+        emailWorkflowRules: [],
+        name: "organization 1",
+        originalWorkflowSteps: [],
+        parentOrganization: null
     },
+    reviewerNotes: "",
+    submissionDate: null,
     submissionStatus: {
+        id: 1,
         submissionState: "IN_PROGRESS"
     },
     submissionWorkflowSteps: [
     ],
     submitter: {
-        uin: "123456789",
-        lastName: "Daniels",
+        anonymous: false,
+        email: "aggieJack@library.tamu.edu",
+        exp: "1425393875282",
         firstName: "Jack",
-        name: "jack",
-        role: "ROLE_ADMIN"
+        lastName: "Daniels",
+        netId: "aggieJack",
+        role: "ROLE_ADMIN",
+        uin: "123456789"
     }
 };
 
 var dataSubmission4 = {
     id: 4,
+    actionLogs: [],
+    advisorAccessHash: "",
+    advisorReviewURL: "",
+    approveAdvisor: false,
+    approveAdvisorDate: null,
+    approveApplication: false,
+    approveApplicationDate: null,
+    approveEmbargo: true,
+    approveEmbargoDate: "1425393875282",
+    assignee: {
+        anonymous: false,
+        email: "aggieJill@library.tamu.edu",
+        exp: "1425393875282",
+        firstName: "Jill",
+        lastName: "Daniels",
+        netId: "aggieJill",
+        role: "ROLE_STUDENT",
+        uin: "987654321"
+    },
+    customActionValues: [],
+    depositURL: "",
+    fieldValues: [],
     organization: {
         id: 1,
-        name: "organization 4"
+        acceptsSubmissions: true,
+        aggregateWorkflowSteps: [],
+        category: {
+            id: 1,
+            name: "OrganizationCategory1"
+        },
+        childrenOrganizations: [],
+        defaultRecipients: [],
+        emails: [],
+        emailWorkflowRules: [],
+        name: "organization 1",
+        originalWorkflowSteps: [],
+        parentOrganization: null
     },
+    reviewerNotes: "",
+    submissionDate: null,
     submissionStatus: {
+        id: 1,
         submissionState: "IN_PROGRESS"
     },
     submissionWorkflowSteps: [
@@ -70,11 +212,39 @@ var dataSubmission4 = {
 
 var dataSubmission5 = {
     id: 5,
+    actionLogs: [],
+    advisorAccessHash: "",
+    advisorReviewURL: "",
+    approveAdvisor: true,
+    approveAdvisorDate: "1425393875282",
+    approveApplication: false,
+    approveApplicationDate: null,
+    approveEmbargo: true,
+    approveEmbargoDate: "1425393875282",
+    assignee: null,
+    customActionValues: [],
+    depositURL: "",
+    fieldValues: [],
     organization: {
         id: 1,
-        name: "organization 5"
+        acceptsSubmissions: true,
+        aggregateWorkflowSteps: [],
+        category: {
+            id: 1,
+            name: "OrganizationCategory1"
+        },
+        childrenOrganizations: [],
+        defaultRecipients: [],
+        emails: [],
+        emailWorkflowRules: [],
+        name: "organization 1",
+        originalWorkflowSteps: [],
+        parentOrganization: null
     },
+    reviewerNotes: "",
+    submissionDate: null,
     submissionStatus: {
+        id: 2,
         submissionState: "SUBMITTED"
     },
     submissionWorkflowSteps: [
@@ -83,11 +253,39 @@ var dataSubmission5 = {
 
 var dataSubmission6 = {
     id: 6,
+    actionLogs: [],
+    advisorAccessHash: "",
+    advisorReviewURL: "",
+    approveAdvisor: true,
+    approveAdvisorDate: "1425393875282",
+    approveApplication: true,
+    approveApplicationDate: "1425393875282",
+    approveEmbargo: true,
+    approveEmbargoDate: "1425393875282",
+    assignee: null,
+    customActionValues: [],
+    depositURL: "",
+    fieldValues: [],
     organization: {
         id: 2,
-        name: "organization 6"
+        acceptsSubmissions: false,
+        aggregateWorkflowSteps: [],
+        category: {
+            id: 1,
+            name: "OrganizationCategory1"
+        },
+        childrenOrganizations: [],
+        defaultRecipients: [],
+        emails: [],
+        emailWorkflowRules: [],
+        name: "organization 2",
+        originalWorkflowSteps: [],
+        parentOrganization: null
     },
+    reviewerNotes: "",
+    submissionDate: null,
     submissionStatus: {
+        id: 3,
         submissionState: "WITHDRAWN"
     },
     submissionWorkflowSteps: [
@@ -272,5 +470,5 @@ var mockSubmission = function($q) {
     return model;
 };
 
-angular.module('mock.submission', []).service('Submission', mockSubmission);
+angular.module("mock.submission", []).service("Submission", mockSubmission);
 

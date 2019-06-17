@@ -16,8 +16,8 @@ var dataFieldProfileRepo3 = [
     dataFieldProfile6
 ];
 
-angular.module('mock.fieldProfileRepo', []).service('FieldProfileRepo', function($q) {
-    var repo = mockRepo('FieldProfileRepo', $q, mockFieldProfile, dataFieldProfileRepo1);
+angular.module("mock.fieldProfileRepo", []).service("FieldProfileRepo", function($q) {
+    var repo = mockRepo("FieldProfileRepo", $q, mockFieldProfile, dataFieldProfileRepo1);
 
     return repo;
 });

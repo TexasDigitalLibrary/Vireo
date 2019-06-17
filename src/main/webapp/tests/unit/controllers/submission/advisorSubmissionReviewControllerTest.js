@@ -1,16 +1,23 @@
-describe('controller: AdvisorSubmissionReviewController', function () {
+describe("controller: AdvisorSubmissionReviewController", function () {
 
-    var controller, q, scope;
+    var controller, q, scope, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($q, _WsApi_) {
+            q = $q;
+
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_, _WsApi_) {
-            q = $q;
+        inject(function ($controller, $rootScope, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('AdvisorSubmissionReviewController', {
+            controller = $controller("AdvisorSubmissionReviewController", {
                 $scope: scope,
                 $window: mockWindow(),
                 AdvisorSubmissionRepo: _AdvisorSubmissionRepo_,
@@ -18,7 +25,7 @@ describe('controller: AdvisorSubmissionReviewController', function () {
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 Submission: mockParameterModel(q, mockSubmission),
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -29,46 +36,47 @@ describe('controller: AdvisorSubmissionReviewController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.advisorSubmissionRepo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.submission');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.advisorSubmissionRepo");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.submission");
+        module("mock.wsApi");
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined", function () {
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('addComment should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("addComment should be defined", function () {
             expect(scope.addComment).toBeDefined();
             expect(typeof scope.addComment).toEqual("function");
         });
-        it('disableCheck should be defined', function () {
+        it("disableCheck should be defined", function () {
             expect(scope.disableCheck).toBeDefined();
             expect(typeof scope.disableCheck).toEqual("function");
         });
-        it('predicateMatch should be defined', function () {
+        it("predicateMatch should be defined", function () {
             expect(scope.predicateMatch).toBeDefined();
             expect(typeof scope.predicateMatch).toEqual("function");
         });
-        it('required should be defined', function () {
+        it("required should be defined", function () {
             expect(scope.required).toBeDefined();
             expect(typeof scope.required).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('addComment should add a comment', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("addComment should add a comment", function () {
             scope.approval = { updating: null };
             scope.messages = [];
             scope.submission = new mockSubmission(q);
@@ -79,7 +87,7 @@ describe('controller: AdvisorSubmissionReviewController', function () {
             expect(scope.approval.updating).toBe(false);
             expect(scope.messages.length).toBe(1);
         });
-        it('disableCheck should return a boolean', function () {
+        it("disableCheck should return a boolean", function () {
             var response;
             var approval = {
                 embargo: new mockEmbargo(q)
@@ -110,7 +118,7 @@ describe('controller: AdvisorSubmissionReviewController', function () {
             response = scope.disableCheck(approval);
             expect(response).toBe(false);
         });
-        it('predicateMatch should return a function', function () {
+        it("predicateMatch should return a function", function () {
             var response;
             var fieldValue = mockFieldValue(q);
             var aggregateFieldProfile = mockFieldProfile(q);
@@ -121,7 +129,7 @@ describe('controller: AdvisorSubmissionReviewController', function () {
             response = response(aggregateFieldProfile);
             expect(typeof response).toBe("boolean");
         });
-        it('required should return a boolean', function () {
+        it("required should return a boolean", function () {
             var response;
 
             response = scope.required({optional: true});

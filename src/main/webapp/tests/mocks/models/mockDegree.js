@@ -28,5 +28,5 @@ var mockDegree = function($q) {
     return model;
 };
 
-angular.module('mock.degree', []).service('Degree', mockDegree);
+angular.module("mock.degree", []).service("Degree", mockDegree);
 
