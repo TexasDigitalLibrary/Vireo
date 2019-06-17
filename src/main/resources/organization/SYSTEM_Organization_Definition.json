@@ -585,7 +585,7 @@
         },
         {
           "fieldPredicate":{
-            "value":"dc.date.issued",
+            "value":"defense_date",
             "documentTypePredicate":false
           },
           "originatingWorkflowStep":{
