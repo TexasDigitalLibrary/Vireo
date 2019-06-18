@@ -257,10 +257,10 @@ public class SubmissionController {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             Map<String, Object> subMessage = new HashMap<String, Object>(data);
             if (data.get("commentVisibility").toString().equalsIgnoreCase("public")) {
-                if (data.get("sendEmailToRecipient") != null) {
+                if (data.containsKey("sendEmailToRecipient") && (boolean) data.get("sendEmailToRecipient")) {
                     subMessage.put("recipientEmail", subMessage.get("recipientEmail"));
                 }
-                if (data.get("sendEmailToCCRecipient") != null) {
+                if (data.containsKey("sendEmailToCCRecipient") && (boolean) data.get("sendEmailToCCRecipient")) {
                     subMessage.put("ccRecipientEmail", subMessage.get("ccRecipientEmail"));
                 }
             }
