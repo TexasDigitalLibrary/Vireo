@@ -220,9 +220,8 @@ public class SubmissionEmailService {
         List<String> recipients = new ArrayList<>();
         List<HashMap<String, Object>> emails = (List<HashMap<String, Object>>) data.get(property);
 
-        emails.forEach(emailRecipientNode -> {
-            String type = (String) emailRecipientNode.get("type");
-            EmailRecipient recipient = buildEmailRecipient(type, emailRecipientNode, submission);
+        emails.forEach(emailRecipientMap -> {
+            EmailRecipient recipient = buildEmailRecipient(emailRecipientMap, submission);
             if (recipient != null) {
                 for (String recipientEmail : recipient.getEmails(submission)) {
                     if (!recipients.contains(recipientEmail)) {
@@ -238,13 +237,13 @@ public class SubmissionEmailService {
     /**
      * Build the e-mail recipient.
      *
-     * @param type Type of the e-mail.
      * @param emailRecipientMap Recipient e-mail mapping.
      * @param submission Associated Submission.
      *
      * @return A single e-mail recipient.
      */
-    private EmailRecipient buildEmailRecipient(String type, HashMap<String, Object> emailRecipientMap, Submission submission) {
+    private EmailRecipient buildEmailRecipient(HashMap<String, Object> emailRecipientMap, Submission submission) {
+      String type = (String) emailRecipientMap.get("type");
       EmailRecipient recipient = null;
 
       switch(EmailRecipientType.valueOf(type)) {
