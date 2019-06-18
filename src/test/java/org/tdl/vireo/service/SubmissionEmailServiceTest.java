@@ -26,8 +26,11 @@ import org.tdl.vireo.mock.MockData;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailRecipientPlainAddress;
+import org.tdl.vireo.model.EmailRecipientType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.FieldPredicate;
+import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
@@ -50,6 +53,25 @@ import edu.tamu.weaver.email.service.EmailSender;
 public class SubmissionEmailServiceTest extends MockData {
     private static final EmailRecipient TEST_EMAIL_RECIPIENT1 = new EmailRecipientPlainAddress(TEST_USER_EMAIL);
     private static final EmailRecipient TEST_EMAIL_RECIPIENT2 = new EmailRecipientPlainAddress(TEST_USER_EMAIL);
+
+    private static final Map<String, String> TEST_USER1_SETTINGS1 = new HashMap<>();
+    static {
+        TEST_USER1_SETTINGS1.put("displayName", "Display Name 1");
+        TEST_USER1_SETTINGS1.put("preferedEmail", TEST_USER_EMAIL);
+    }
+
+    private static final Map<String, String> TEST_USER1_SETTINGS2 = new HashMap<>();
+    static {
+        TEST_USER1_SETTINGS2.put("displayName", "Display Name 1");
+        TEST_USER1_SETTINGS2.put("ccEmail", "true");
+    }
+
+    private static final Map<String, String> TEST_USER1_SETTINGS3 = new HashMap<>();
+    static {
+        TEST_USER1_SETTINGS3.put("displayName", "Display Name 1");
+        TEST_USER1_SETTINGS3.put("ccEmail", "true");
+        TEST_USER1_SETTINGS3.put("preferedEmail", TEST_USER_EMAIL);
+    }
 
     private static final EmailTemplate TEST_EMAIL_TEMPLATE1 = new EmailTemplate();
     static {
@@ -92,7 +114,68 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_EMAIL_WORKFLOW_RULE2.setEmailTemplate(TEST_EMAIL_TEMPLATE1);
     }
 
+    private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP1 = new HashMap<String, Object>();
+    static {
+        TEST_EMAIL_RECIPIENT_MAP1.put("type", "PLAIN_ADDRESS");
+        TEST_EMAIL_RECIPIENT_MAP1.put("name", TEST_USER_EMAIL);
+        TEST_EMAIL_RECIPIENT_MAP1.put("data", TEST_USER_EMAIL);
+    }
+
+    private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP2 = new HashMap<String, Object>();
+    static {
+        TEST_EMAIL_RECIPIENT_MAP2.put("type", "ASSIGNEE");
+        TEST_EMAIL_RECIPIENT_MAP2.put("name", "Assignee");
+        TEST_EMAIL_RECIPIENT_MAP2.put("data", EmailRecipientType.ASSIGNEE.ordinal());
+    }
+
+    private static final FieldPredicate TEST_FIELD_PREDICATE1 = new FieldPredicate();
+    static {
+        TEST_FIELD_PREDICATE1.setId(1L);
+        TEST_FIELD_PREDICATE1.setDocumentTypePredicate(false);
+        TEST_FIELD_PREDICATE1.setValue("mock field predicate value 1");
+    }
+
+    private static final FieldPredicate TEST_FIELD_PREDICATE2 = new FieldPredicate();
+    static {
+        TEST_FIELD_PREDICATE2.setId(2L);
+        TEST_FIELD_PREDICATE2.setDocumentTypePredicate(false);
+        TEST_FIELD_PREDICATE2.setValue("mock field predicate value 2");
+    }
+
+    private static final List<String> TEST_CONTACTS_LIST1 = new ArrayList<>();
+    static {
+        TEST_CONTACTS_LIST1.add(TEST_USER_EMAIL);
+    }
+
+    private static final List<String> TEST_CONTACTS_LIST2 = new ArrayList<>();
+    static {
+        TEST_CONTACTS_LIST1.add(TEST_USER_EMAIL);
+        TEST_CONTACTS_LIST1.add(TEST_EMAIL);
+    }
+
+    private static final FieldValue TEST_FIELD_VALUE1 = new FieldValue();
+    static {
+        TEST_FIELD_VALUE1.setId(1L);
+        TEST_FIELD_VALUE1.setContacts(TEST_CONTACTS_LIST1);
+        TEST_FIELD_VALUE1.setDefinition("Mock Field Value Definition 1");
+        TEST_FIELD_VALUE1.setFieldPredicate(TEST_FIELD_PREDICATE1);
+        TEST_FIELD_VALUE1.setIdentifier("1");
+        TEST_FIELD_VALUE1.setValue("Mock Field Value Value 1");
+    }
+
+    private static final FieldValue TEST_FIELD_VALUE2 = new FieldValue();
+    static {
+        TEST_FIELD_VALUE2.setId(2L);
+        TEST_FIELD_VALUE2.setContacts(TEST_CONTACTS_LIST2);
+        TEST_FIELD_VALUE2.setDefinition("Mock Field Value Definition 2");
+        TEST_FIELD_VALUE2.setFieldPredicate(TEST_FIELD_PREDICATE2);
+        TEST_FIELD_VALUE2.setIdentifier("2");
+        TEST_FIELD_VALUE2.setValue("Mock Field Value Value 2");
+    }
+
     private Map<String, Object> mockData;
+
+    private List<FieldValue> mockFieldValues;
 
     @MockBean
     protected ActionLogRepo mockActionLogRepo;
@@ -121,6 +204,9 @@ public class SubmissionEmailServiceTest extends MockData {
     @Before
     public void setup() throws OrganizationDoesNotAcceptSubmissionsExcception {
         mockData = new HashMap<>();
+        mockFieldValues = new ArrayList<>();
+
+        TEST_USER.setSettings(TEST_USER1_SETTINGS1);
 
         List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<>();
         emailWorkflowRules.add(TEST_EMAIL_WORKFLOW_RULE1);
@@ -134,6 +220,8 @@ public class SubmissionEmailServiceTest extends MockData {
         when(mockSubmission.getOrganization()).thenReturn(mockOrganization);
         when(mockSubmission.getSubmissionStatus()).thenReturn(TEST_SUBMISSION_STATUS1);
         when(mockSubmission.getSubmitter()).thenReturn(TEST_USER);
+
+        when(mockSubmission.getFieldValuesByInputType(any(InputType.class))).thenReturn(mockFieldValues);
 
         when(mockInputTypeRepo.getOne(1L)).thenReturn(TEST_INPUT_TYPE1);
         when(mockInputTypeRepo.findOne(1L)).thenReturn(TEST_INPUT_TYPE1);
@@ -150,21 +238,82 @@ public class SubmissionEmailServiceTest extends MockData {
     @Test
     public void testSendAdvisorEmails() {
         submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
+
+        mockFieldValues.add(TEST_FIELD_VALUE1);
+
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
+
+        TEST_USER.setSettings(TEST_USER1_SETTINGS2);
+
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
+
+        TEST_USER.setSettings(TEST_USER1_SETTINGS3);
+
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
     }
 
     @Test
     public void testSendAutomatedEmails() throws JsonProcessingException, IOException {
-        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
+        doTestSendAutomatedEmails(false);
+
+        doTestSendAutomatedEmails(true);
     }
 
     @Test
     public void testSendWorkflowEmails() {
+        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission);
+
+        TEST_USER.setSettings(TEST_USER1_SETTINGS2);
+
+        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission);
+
+        TEST_USER.setSettings(TEST_USER1_SETTINGS3);
+
         submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission);
     }
 
     @After
     public void cleanup() {
 
+    }
+
+    private void doTestSendAutomatedEmails(boolean cc) throws JsonProcessingException, IOException {
+        List<Map<String, Object>> emails = new ArrayList<Map<String, Object>>();
+        emails.add(TEST_EMAIL_RECIPIENT_MAP1);
+
+        List<Map<String, Object>> ccEmails = new ArrayList<Map<String, Object>>();
+        emails.add(TEST_EMAIL_RECIPIENT_MAP1);
+        emails.add(TEST_EMAIL_RECIPIENT_MAP1);
+        emails.add(TEST_EMAIL_RECIPIENT_MAP2);
+
+        mockData.put("commentVisibility", "public");
+        mockData.put("message", "Mock Message.");
+        mockData.put("recipientEmails", emails);
+        mockData.put("ccRecipientEmails", ccEmails);
+
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
+
+        mockData.put("sendEmailToRecipient", true);
+        mockData.put("sendCCEmailToRecipient", cc);
+
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
+
+        mockData.put("commentVisibility", "private");
+        mockData.put("sendEmailToRecipient", false);
+        mockData.put("sendCCEmailToRecipient", false);
+
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
+
+        mockData.put("commentVisibility", "public");
+        mockData.put("sendEmailToRecipient", true);
+        mockData.put("sendCCEmailToRecipient", cc);
+        TEST_USER.setSettings(TEST_USER1_SETTINGS2);
+
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
+
+        TEST_USER.setSettings(TEST_USER1_SETTINGS3);
+
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
     }
 
 }
