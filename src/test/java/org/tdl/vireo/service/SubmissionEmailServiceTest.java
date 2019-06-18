@@ -104,6 +104,7 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_EMAIL_WORKFLOW_RULE1.setEmailRecipient(TEST_EMAIL_RECIPIENT1);
         TEST_EMAIL_WORKFLOW_RULE1.setSubmissionStatus(TEST_SUBMISSION_STATUS1);
         TEST_EMAIL_WORKFLOW_RULE1.setEmailTemplate(TEST_EMAIL_TEMPLATE1);
+        TEST_EMAIL_WORKFLOW_RULE1.isDisabled(false);
     }
 
     private static final EmailWorkflowRule TEST_EMAIL_WORKFLOW_RULE2 = new EmailWorkflowRule();
@@ -112,6 +113,7 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_EMAIL_WORKFLOW_RULE2.setEmailRecipient(TEST_EMAIL_RECIPIENT2);
         TEST_EMAIL_WORKFLOW_RULE2.setSubmissionStatus(TEST_SUBMISSION_STATUS2);
         TEST_EMAIL_WORKFLOW_RULE2.setEmailTemplate(TEST_EMAIL_TEMPLATE1);
+        TEST_EMAIL_WORKFLOW_RULE2.isDisabled(false);
     }
 
     private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP1 = new HashMap<String, Object>();
