@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,8 +43,6 @@ import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
-import edu.tamu.weaver.email.service.EmailSender;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
@@ -192,9 +189,6 @@ public class SubmissionEmailServiceTest extends MockData {
     private InputTypeRepo mockInputTypeRepo;
 
     @Mock
-    private EmailSender mockEmailSender;
-
-    @Mock
     private Organization mockOrganization;
 
     @Mock
@@ -204,7 +198,7 @@ public class SubmissionEmailServiceTest extends MockData {
     private SubmissionEmailService submissionEmailService;
 
     @Before
-    public void setup() throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public void setUp() throws OrganizationDoesNotAcceptSubmissionsExcception {
         mockData = new HashMap<>();
         mockFieldValues = new ArrayList<>();
 
@@ -272,11 +266,6 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_USER.setSettings(TEST_USER1_SETTINGS3);
 
         submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission);
-    }
-
-    @After
-    public void cleanup() {
-
     }
 
     private void doTestSendAutomatedEmails(boolean cc) throws JsonProcessingException, IOException {

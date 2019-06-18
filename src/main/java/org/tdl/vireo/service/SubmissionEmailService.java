@@ -271,6 +271,7 @@ public class SubmissionEmailService {
           recipient = new EmailRecipientSubmitter();
           break;
         }
+        default:
       }
 
       return recipient;
