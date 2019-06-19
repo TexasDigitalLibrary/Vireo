@@ -560,7 +560,7 @@
         },
         {
           "fieldPredicate":{
-            "value":"dc.date.created",
+            "value":"dc.date.issued",
             "documentTypePredicate":false
           },
           "originatingWorkflowStep":{
