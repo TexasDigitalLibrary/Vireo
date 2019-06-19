@@ -35,6 +35,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.tamu.weaver.email.service.EmailSender;
 
+/**
+ * Provide e-mail sending specific to the Submission process.
+ *
+ * E-mails are built utilizing SimpleMailMessage and then sent via EmailSender.
+ *
+ * @see EmailSender
+ * @see SimpleMailMessage
+ */
 @Service
 public class SubmissionEmailService {
 
