@@ -34,7 +34,7 @@ public class SubmissionHelperUtility {
     private final static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
     private final static SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy-MM");
-    private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy");
+    private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMM yyyy");
 
     private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
@@ -279,7 +279,7 @@ public class SubmissionHelperUtility {
         String date = "";
         if (graduationDate.isPresent()) {
             try {
-                date = dateFormat.format(dateFormat.parse(graduationDate.get()));
+                date = dateFormat.format(dateTimeFormat.parse(graduationDate.get()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -534,9 +534,8 @@ public class SubmissionHelperUtility {
         return title.isPresent() ? title.get() : "";
     }
 
-    public String getCommitteeChair() {
-        Optional<String> chair = getFieldValueByPredicateValue("dc.contributor.advisor");
-        return chair.isPresent() ? chair.get() : "";
+    public List<FieldValue> getCommitteeChairFieldValues() {
+        return submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
     }
 
     public String getFirstName(String name) {
