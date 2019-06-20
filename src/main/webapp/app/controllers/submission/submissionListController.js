@@ -530,7 +530,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         $scope.displaySubmissionProperty = function (row, col) {
             var value = $scope.getSubmissionProperty(row, col);
             if ($scope.isDateColumn(col)) {
-                if(col.predicate === 'dc.date.created') {
+                if(col.predicate === 'dc.date.issued') {
                     value = $filter('date')(value, 'MMMM yyyy');
                 } else {
                     value = $filter('date')(value, 'MMM dd, yyyy');
