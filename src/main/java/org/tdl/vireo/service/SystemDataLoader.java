@@ -537,7 +537,7 @@ public class SystemDataLoader {
                 // create new SubmissionStatus if not already exists
                 if (newSubmissionStatus == null) {
                     newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(), emailWorkflowRule.getSubmissionStatus().isArchived(), emailWorkflowRule.getSubmissionStatus().isPublishable(), emailWorkflowRule.getSubmissionStatus().isDeletable(), emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(), emailWorkflowRule.getSubmissionStatus().isEditableByStudent(), emailWorkflowRule.getSubmissionStatus().isActive(),
-                            emailWorkflowRule.getSubmissionStatus().getSubmissionState());
+                        emailWorkflowRule.getSubmissionStatus().isDefault(), emailWorkflowRule.getSubmissionStatus().getSubmissionState());
                     newSubmissionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(emailWorkflowRule.getSubmissionStatus()));
                 }
 
@@ -602,7 +602,7 @@ public class SystemDataLoader {
 
             // create new SubmissionStatus if not already exists
             if (newSubmissionStatus == null) {
-                newSubmissionStatus = submissionStatusRepo.create(systemSubmissionStatus.getName(), systemSubmissionStatus.isArchived(), systemSubmissionStatus.isPublishable(), systemSubmissionStatus.isDeletable(), systemSubmissionStatus.isEditableByReviewer(), systemSubmissionStatus.isEditableByStudent(), systemSubmissionStatus.isActive(), systemSubmissionStatus.getSubmissionState());
+                newSubmissionStatus = submissionStatusRepo.create(systemSubmissionStatus.getName(), systemSubmissionStatus.isArchived(), systemSubmissionStatus.isPublishable(), systemSubmissionStatus.isDeletable(), systemSubmissionStatus.isEditableByReviewer(), systemSubmissionStatus.isEditableByStudent(), systemSubmissionStatus.isActive(), systemSubmissionStatus.isDefault(), systemSubmissionStatus.getSubmissionState());
 
                 newSubmissionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(systemSubmissionStatus));
             }
@@ -619,7 +619,7 @@ public class SystemDataLoader {
 
         // create new SubmissionStatus if not already exists
         if (newSubmissionStatus == null) {
-            newSubmissionStatus = submissionStatusRepo.create(submissionStatus.getName(), submissionStatus.isArchived(), submissionStatus.isPublishable(), submissionStatus.isDeletable(), submissionStatus.isEditableByReviewer(), submissionStatus.isEditableByStudent(), submissionStatus.isActive(), submissionStatus.getSubmissionState());
+            newSubmissionStatus = submissionStatusRepo.create(submissionStatus.getName(), submissionStatus.isArchived(), submissionStatus.isPublishable(), submissionStatus.isDeletable(), submissionStatus.isEditableByReviewer(), submissionStatus.isEditableByStudent(), submissionStatus.isActive(), submissionStatus.isDefault(), submissionStatus.getSubmissionState());
         }
 
         // temporary list of SubmissionState
@@ -632,7 +632,7 @@ public class SystemDataLoader {
 
             // create new Transistion SubmissionStatus if not already exists
             if (newTransitionStatus == null) {
-                newTransitionStatus = submissionStatusRepo.create(transitionStatus.getName(), transitionStatus.isArchived(), transitionStatus.isPublishable(), transitionStatus.isDeletable(), transitionStatus.isEditableByReviewer(), transitionStatus.isEditableByStudent(), transitionStatus.isActive(), transitionStatus.getSubmissionState());
+                newTransitionStatus = submissionStatusRepo.create(transitionStatus.getName(), transitionStatus.isArchived(), transitionStatus.isPublishable(), transitionStatus.isDeletable(), transitionStatus.isEditableByReviewer(), transitionStatus.isEditableByStudent(), transitionStatus.isActive(), transitionStatus.isDefault(), transitionStatus.getSubmissionState());
                 newTransitionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(transitionStatus));
             }
 
@@ -919,7 +919,7 @@ public class SystemDataLoader {
             Iterator<Entry<String, JsonNode>> it = systemDefaults.fields();
 
             while (it.hasNext()) {
-                Map.Entry<String, JsonNode> entry = (Map.Entry<String, JsonNode>) it.next();
+                Map.Entry<String, JsonNode> entry = it.next();
                 List<DefaultConfiguration> defaultConfigurations = new ArrayList<DefaultConfiguration>();
                 if (entry.getValue().isArray()) {
                     for (JsonNode objNode : entry.getValue()) {

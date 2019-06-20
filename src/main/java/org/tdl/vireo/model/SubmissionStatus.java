@@ -54,6 +54,10 @@ public class SubmissionStatus extends ValidatingBaseEntity {
     @JsonProperty("isActive")
     private Boolean isActive;
 
+    @Column(nullable = false)
+    @JsonProperty("isDefault")
+    private Boolean isDefault;
+
     @JsonView(ApiView.Partial.class)
     @Column(nullable = false)
     private SubmissionState submissionState;
@@ -76,8 +80,10 @@ public class SubmissionStatus extends ValidatingBaseEntity {
      * @param isEditableByReviewer
      * @param isEditableByStudent
      * @param isActive
+     * @param isDefault
+     * @param submissionState
      */
-    public SubmissionStatus(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean isActive, SubmissionState submissionState) {
+    public SubmissionStatus(String name, Boolean isArchived, Boolean isPublishable, Boolean isDeletable, Boolean isEditableByReviewer, Boolean isEditableByStudent, Boolean isActive, Boolean isDefault, SubmissionState submissionState) {
         this();
         setName(name);
         isArchived(isArchived);
@@ -86,6 +92,7 @@ public class SubmissionStatus extends ValidatingBaseEntity {
         isEditableByReviewer(isEditableByReviewer);
         isEditableByStudent(isEditableByStudent);
         isActive(isActive);
+        isDefault(isDefault);
         setSubmissionState(submissionState);
     }
 
@@ -192,6 +199,21 @@ public class SubmissionStatus extends ValidatingBaseEntity {
      */
     public void isActive(Boolean isActive) {
         this.isActive = isActive;
+    }
+
+    /**
+     * @return isDefault
+     */
+    public Boolean isDefault() {
+        return isDefault;
+    }
+
+    /**
+     * @param isDefault
+     *            the default to set
+     */
+    public void isDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
     }
 
     /**

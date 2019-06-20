@@ -5,6 +5,5 @@ import org.tdl.vireo.model.SubmissionStatus;
 
 public interface SubmissionStatusRepoCustom {
 
-    public SubmissionStatus create(String name, Boolean archived, Boolean publishable, Boolean deletable, Boolean editableByReviewer, Boolean editableByStudent, Boolean active, SubmissionState submissionState);
-
+    public SubmissionStatus create(String name, Boolean archived, Boolean publishable, Boolean deletable, Boolean editableByReviewer, Boolean editableByStudent, Boolean active, Boolean isDefault, SubmissionState submissionState);
 }
