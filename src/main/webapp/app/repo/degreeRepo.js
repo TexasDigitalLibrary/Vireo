@@ -4,9 +4,9 @@ vireo.repo("DegreeRepo", function DegreeRepo(WsApi) {
 
     // additional repo methods and variables
 
-    this.getProquestDegreeCodes = function () {
+    degreeRepo.getProquestDegreeCodes = function () {
         degreeRepo.clearValidationResults();
-        var promise = WsApi.fetch(this.mapping.proquest);
+        var promise = WsApi.fetch(degreeRepo.mapping.proquest);
         promise.then(function (res) {
             if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(degreeRepo, angular.fromJson(res.body).payload);
@@ -16,6 +16,14 @@ vireo.repo("DegreeRepo", function DegreeRepo(WsApi) {
         return promise;
     };
 
-    return this;
+    degreeRepo.removeAll = function () {
+        var promise = WsApi.fetch(degreeRepo.mapping.removeAll);
+        promise.then(function (res) {
+            console.log("Removed all degrees");
+        });
+        return promise;
+    };
+
+    return degreeRepo;
 
 });

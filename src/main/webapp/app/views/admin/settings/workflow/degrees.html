@@ -12,6 +12,13 @@
 
 			<p ng-if="degrees.length == 0">Add new Degree</p>
 
+			<div ng-if="degrees.length !== 0">
+				<a href="" ng-click="removeAllDegrees()">
+					<span class="glyphicon glyphicon-trash text-danger"></span>
+					<span class="text-danger"> Remove all Degrees</span>
+				</a>
+			</div>
+			
 			<draganddroplist dragging="dragging"
 							 scope-value="degrees"
 							 properties='["name", "level"]'

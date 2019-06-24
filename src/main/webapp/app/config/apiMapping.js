@@ -171,6 +171,12 @@ var apiMapping = {
             'controller': 'settings/degree',
             'method': 'remove'
         },
+        removeAll: {
+            'endpoint': '/private/queue',
+            'httpMethod': 'POST',
+            'controller': 'settings/degree',
+            'method': 'remove-all'
+        },
         reorder: {
             'endpoint': '/private/queue',
             'controller': 'settings/degree'

@@ -65,6 +65,11 @@ vireo.controller("DegreeRepoController", function ($controller, $scope, $q, Degr
             $scope.modalData.delete();
         };
 
+        $scope.removeAllDegrees = function () {
+            DegreeRepo.removeAll().then(function (res){
+            });
+        };
+        
         $scope.reorderDegree = function (src, dest) {
             return DegreeRepo.reorder(src, dest);
         };
