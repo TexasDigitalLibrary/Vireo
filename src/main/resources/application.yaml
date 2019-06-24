@@ -118,7 +118,9 @@ app:
     
   # edu.tamu.weaver.email.config.WeaverEmailConfig
   email:
-    host: relay.tamu.edu
+#FSS
+#    host: smtp.tamu.edu
+    host: smtp-relay.tdl.org
     from: noreply@library.tamu.edu
     replyTo: helpdesk@library.tamu.edu
     # additional email configurations

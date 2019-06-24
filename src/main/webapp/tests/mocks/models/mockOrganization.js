@@ -114,6 +114,11 @@ var mockOrganization = function($q) {
         data: "Assignee"
       },
       {
+        name: "Advisor",
+        type: "ADVISOR",
+        data: "Advisor"
+      },
+      {
         name: "Organization",
         type: "ORGANIZATION",
         data: null

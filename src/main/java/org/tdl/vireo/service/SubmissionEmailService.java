@@ -14,6 +14,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailRecipientAssignee;
+import org.tdl.vireo.model.EmailRecipientAdvisor;
 import org.tdl.vireo.model.EmailRecipientContact;
 import org.tdl.vireo.model.EmailRecipientOrganization;
 import org.tdl.vireo.model.EmailRecipientPlainAddress;
@@ -257,6 +258,10 @@ public class SubmissionEmailService {
       switch(EmailRecipientType.valueOf(type)) {
         case ASSIGNEE: {
           recipient = new EmailRecipientAssignee();
+          break;
+        }
+        case ADVISOR: {
+          recipient = new EmailRecipientAdvisor();
           break;
         }
         case CONTACT: {
