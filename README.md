@@ -135,6 +135,10 @@ drwxrwxrwx  7 root  root  238 Sep  3 11:20 webapp
 * logs - where vireo log files are stored
 * webapp - the extracted WAR file
 
+### Recommended Hardware Configuration
+
+* 2 CPUs
+* 2 GB RAM
 
 ### Configure application
 
@@ -236,22 +240,22 @@ The default system values can be customized by editing the JSON files found in `
 | Resource Type | Files |
 |---------------|-------|
 | [Controlled Vocabularies](#controlled-vocabularies) | - AdministrativeGroups.json<br/> - Colleges.json<br/> - CommitteeMembers.json<br/> - Departments.json<br/> - Majors.json<br/> - ManuscriptAllowedMimeTypes.json<br/> - Programs.json<br/> - SubmissionTypes.json |
-| Degree Levels | - SYSTEM_Degree-Levels.json |
-| Degrees | - SYSTEM_Degrees.json |
-| Document Types | - SYSTEM_Document_Types.json |
-| Emails | - SYSTEM_Advisor_Review_Request.email<br/> - SYSTEM_Deposit_Notification.email<br/> - SYSTEM_Email_Test.email<br/> - SYSTEM_Initial_Submission.email<br/> - SYSTEM_Needs_Corrections.email<br/> - SYSTEM_New_User_Registration.email<br/> - SYSTEM_Verify_Email_Address.email |
-| Embargos | - SYSTEM_Embargo_Definitions.json |
-| Filter Columns | - default_filter_columns.json |
-| Formats | - dspace_mets.xml<br/> - dspace_simple_dublin_core.xml<br/> - dspace_simple_metadata_local.xml<br/> - marc21_xml.xml<br/> - proquest_umi.xml |
-| Graduation Months | - SYSTEM_Graduation_Months.json |
-| Input Types | - SYSTEM_Input_Types.json |
-| Languages | - SYSTEM_Languages.json |
-| Organization | - SYSTEM_Organization_Definition.json |
-| Organization Categories | - SYSTEM_Organization_Categories.json |
-| ProQuest | - degree_codes.xls<br/> - language_codes.xls<br/> - umi_subjects.xls |
-| Settings | - SYSTEM_Defaults.json |
-| Submission List Columns | - SYSTEM_Submission_List_Columns_Titles.json<br/> - SYSTEM_Submission_List_Columns.json |
-| Submission Statuses | - SYSTEM_Submission_Statuses.json |
+| [Degree Levels](#degree-levels) | - SYSTEM_Degree-Levels.json |
+| [Degrees](#degrees) | - SYSTEM_Degrees.json |
+| [Document Types](#document-types) | - SYSTEM_Document_Types.json |
+| [Emails](#emails) | - SYSTEM_Advisor_Review_Request.email<br/> - SYSTEM_Deposit_Notification.email<br/> - SYSTEM_Email_Test.email<br/> - SYSTEM_Initial_Submission.email<br/> - SYSTEM_Needs_Corrections.email<br/> - SYSTEM_New_User_Registration.email<br/> - SYSTEM_Verify_Email_Address.email |
+| [Embargos](#embargos) | - SYSTEM_Embargo_Definitions.json |
+| [Filter Columns](#filter-columns) | - default_filter_columns.json |
+| [Formats](#formats) | - dspace_mets.xml<br/> - dspace_simple_dublin_core.xml<br/> - dspace_simple_metadata_local.xml<br/> - marc21_xml.xml<br/> - proquest_umi.xml |
+| [Graduation Months](#graduation-months) | - SYSTEM_Graduation_Months.json |
+| [Input Types](#input-types) | - SYSTEM_Input_Types.json |
+| [Languages](#languages) | - SYSTEM_Languages.json |
+| [Organization](#organization) | - SYSTEM_Organization_Definition.json |
+| [Organization Categories](#organization-categories) | - SYSTEM_Organization_Categories.json |
+| [ProQuest](#proquest) | - degree_codes.xls<br/> - language_codes.xls<br/> - umi_subjects.xls |
+| [Settings](#settings) | - SYSTEM_Defaults.json |
+| [Submission List Columns](#submission-list-columns) | - SYSTEM_Submission_List_Columns_Titles.json<br/> - SYSTEM_Submission_List_Columns.json |
+| [Submission Statuses](#submission-statuses) | - SYSTEM_Submission_Statuses.json |
 
 #### Controlled Vocabularies
 
@@ -331,13 +335,53 @@ Email Templates can dynamically use any Field Predicate associated with the Subm
 
 #### Filter Columns
 
+Array of [Filter Columns](#filter-column)
+
+#### Filter Column
+
+| Key | Type | Description |
+|----|----|----|
+| inputType | [InputType](#input-type) | The Input Type of the column being filtered |
+| title | String | Title of the Filter Column |
+| predicate | String | Predicate associatied with this Filter Column |
+
 #### Formats
+
+Templates for the various exporters. Written using [Thymeleaf](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html) templating engine syntax.
 
 #### Graduation Months
 
+Array of [Months](#month)
+
+#### Month
+
+| Key | Type | Description |
+|----|----|----|
+| month | Number | Zero-indexed Month of the year |
+
 #### Input Types
 
+Array of [InputType](#input-type)
+
+#### Input Type
+
+| Key | Type | Description |
+|----|----|----|
+| name | String | Name of the Input Type |
+| validationPattern | String | Regular expression for validating the value of the field, null if not used |
+| validationMessage | String | Failure message for validation, null if validationPattern is not used |
+| validation | Object | Validations for contact type inputs, optional otherwise. Consists of name and email, each with a pattern and message. |
+
 #### Languages
+
+Array of [Languages](#language)
+
+#### Language
+
+| Key | Type | Description |
+|----|----|----|
+| name | String | Name of the Language |
+
 
 #### Organization
 
@@ -393,14 +437,55 @@ Email Templates can dynamically use any Field Predicate associated with the Subm
 | Key | Type | Description |
 |----|----|----|
 | value | String | Value of the Field Predicate |
-| documentTypePredicate | Boolean | Indicated if the Field Predicate is a Document |
+| documentTypePredicate | Boolean | Indicates if the Field Predicate is a Document |
 
 #### Organization Categories
 
+Array of [Organization Categories](#organization-category)
+
+#### Organization Category
+
+| Key | Type | Description |
+|----|----|----|
+| name | String | Name of the Organization Category |
+| organizations | Array[[Organization](#organization)] | List of Organizations in this Category |
+
 #### Proquest
+
+Excel files with the Degree Codes, Language Codes, and UMI Subjects in tabular format.
 
 #### Settings
 
+Default configuration settings. These values can be set here, or configured via the application UI.
+
 #### Submission List Columns
 
+Contains Submission List Column Titles, an Array[String] for the default column names and Submission List Columns an Array[[SubmissionListColumn](#submission-list-column)].
+
+#### Submission List Column
+
+| Key | Type | Description |
+|----|----|----|
+| title | String | Title of the Column |
+| sort | String | Either 'ASC' or 'DESC' for assending or descending sorting respectively |
+| valuePath | Array[String] | The Value Paths for the Column |
+| status | String | Status of the Column, typically null |
+| inputType | [InputType](#input-type) | The input type associated with the Column |
+
 #### Submission Statuses
+
+An Object that defines default system [Submission Statuses](#submission-status) and their suggested transitions.
+
+#### Submission Status
+
+| Key | Type | Description |
+|----|----|----|
+| name | String | Name of the Status |
+| isArchived | Boolean | Indicates if the Status is for archived Submissions |
+| isPublishable | Boolean | Indicates if the Status is for Submissions ready for publication |
+| isDeletable | Boolean | Indicates if the Status is for Submissions that can be deleted |
+| isEditableByReviewer | Boolean | Indicates if the Status is for Submissions that can be editied by the Reviewer |
+| isEditableByStudent | Boolean | Indicates if the Status is for Submissions that can be edited by the Student |
+| isActive | Boolean | Indicated if the Status is for active Submissions |
+| submissionState | Number | The order for Submission Statuses, beginning with 1 |
+| transitionSubmissionStatuses | Array[[SubmissionStatus](#submission-status)] | A list of suggested Submission States to transition to |
