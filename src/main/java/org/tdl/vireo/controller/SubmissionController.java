@@ -12,10 +12,8 @@ import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -36,8 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -52,18 +48,7 @@ import org.tdl.vireo.exception.DepositException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
-import org.tdl.vireo.model.EmailRecipient;
-import org.tdl.vireo.model.EmailRecipientAssignee;
-import org.tdl.vireo.model.EmailRecipientContact;
-import org.tdl.vireo.model.EmailRecipientOrganization;
-import org.tdl.vireo.model.EmailRecipientPlainAddress;
-import org.tdl.vireo.model.EmailRecipientSubmitter;
-import org.tdl.vireo.model.EmailRecipientType;
-import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
-import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
-import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.Submission;
@@ -78,10 +63,7 @@ import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
-import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
-import org.tdl.vireo.model.repo.FieldPredicateRepo;
-import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
@@ -91,6 +73,7 @@ import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.validation.FieldValueValidator;
 import org.tdl.vireo.service.AssetService;
 import org.tdl.vireo.service.DepositorService;
+import org.tdl.vireo.service.SubmissionEmailService;
 import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
@@ -104,7 +87,6 @@ import edu.tamu.weaver.auth.annotation.WeaverCredentials;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
 import edu.tamu.weaver.auth.model.Credentials;
 import edu.tamu.weaver.data.model.ApiPage;
-import edu.tamu.weaver.email.service.EmailSender;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.results.ValidationResults;
@@ -131,9 +113,6 @@ public class SubmissionController {
   private FieldValueRepo fieldValueRepo;
 
   @Autowired
-  private FieldPredicateRepo fieldPredicateRepo;
-
-  @Autowired
   private SubmissionFieldProfileRepo submissionFieldProfileRepo;
 
   @Autowired
@@ -143,16 +122,10 @@ public class SubmissionController {
   private OrganizationRepo organizationRepo;
 
   @Autowired
-  private InputTypeRepo inputTypeRepo;
-
-  @Autowired
   private SubmissionStatusRepo submissionStatusRepo;
 
   @Autowired
-  private EmailSender emailSender;
-
-  @Autowired
-  private EmailTemplateRepo emailTemplateRepo;
+  private SubmissionEmailService submissionEmailService;
 
   @Autowired
   private TemplateUtility templateUtility;
@@ -259,7 +232,7 @@ public class SubmissionController {
     String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
 
     if (commentVisibility.equals("public")) {
-      sendEmail(user, submission, data);
+        submissionEmailService.sendAutomatedEmails(user, submission, data);
     } else {
       String subject = (String) data.get("subject");
       String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
@@ -273,104 +246,10 @@ public class SubmissionController {
   @PreAuthorize("hasRole('REVIEWER')")
   public ApiResponse sendEmail(@WeaverUser User user, @PathVariable Long submissionId,
       @RequestBody Map<String, Object> data) throws JsonProcessingException, IOException {
-    sendEmail(user, submissionRepo.read(submissionId), data);
+    submissionEmailService.sendAutomatedEmails(user, submissionRepo.read(submissionId), data);
     return new ApiResponse(SUCCESS);
   }
 
-  private void sendEmail(User user, Submission submission, Map<String, Object> data)
-      throws JsonProcessingException, IOException {
-
-        String subject = (String) data.get("subject");
-
-        String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-
-        StringBuilder recipientEmails = new StringBuilder();
-
-        boolean sendRecipientEmail = (boolean) data.get("sendEmailToRecipient");
-
-        if (sendRecipientEmail) {
-            boolean sendCCRecipientEmail = (boolean) data.get("sendEmailToCCRecipient");
-
-            SimpleMailMessage smm = new SimpleMailMessage();
-
-            @SuppressWarnings("unchecked")
-            List<HashMap<String,Object>> recipientEmailAddressesList = (List<HashMap<String,Object>>) data.get("recipientEmails");
-            List<String> recipientEmailAddresses = new ArrayList<String>();
-            recipientEmailAddressesList.forEach(emailRecipientNode->{
-                String type = (String) emailRecipientNode.get("type");
-                EmailRecipient recipient = buildEmailRecipient(type, emailRecipientNode, submission);
-                if(recipient != null) {
-                  recipientEmailAddresses.addAll(recipient.getEmails(submission));
-                }
-            });
-
-            smm.setTo(recipientEmailAddresses.toArray(new String[0]));
-            recipientEmails.append("Email sent to: [ " + String.join(";",recipientEmailAddresses) + " ]; ");
-
-            if (sendCCRecipientEmail) {
-              @SuppressWarnings("unchecked")
-              List<HashMap<String,Object>> ccRecipientEmailAddressesList = (List<HashMap<String,Object>>) data.get("ccRecipientEmails");
-              List<String> ccRecipientEmailAddresses = new ArrayList<String>();
-              ccRecipientEmailAddressesList.forEach(emailRecipientNode->{
-                  String type = (String) emailRecipientNode.get("type");
-                  EmailRecipient recipient = buildEmailRecipient(type, emailRecipientNode, submission);
-                  if(recipient != null) {
-                    ccRecipientEmailAddresses.addAll(recipient.getEmails(submission));
-                  }
-              });
-
-              smm.setCc(ccRecipientEmailAddresses.toArray(new String[0]));
-              recipientEmails.append(" and cc to: [ " + String.join(";", ccRecipientEmailAddresses) + " ]; ");
-            } else {
-              recipientEmails.append(";");
-            }
-
-            String preferredEmail = user.getSetting("preferedEmail");
-
-            if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
-                smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
-            }
-
-            smm.setSubject(subject);
-            smm.setText(templatedMessage);
-
-            emailSender.send(smm);
-        }
-
-        actionLogRepo.createPublicLog(submission, user, recipientEmails.toString() + subject + ": " + templatedMessage);
-    }
-
-    private EmailRecipient buildEmailRecipient(String type, HashMap<String, Object> emailRecipientMap, Submission submission) {
-      EmailRecipient recipient = null;
-
-      switch(EmailRecipientType.valueOf(type)) {
-        case ASSIGNEE: {
-          recipient = new EmailRecipientAssignee();
-          break;
-        }
-        case CONTACT: {
-          String label = (String) emailRecipientMap.get("name");
-          FieldPredicate fp = fieldPredicateRepo.getOne(new Long((Integer)emailRecipientMap.get("data")));
-          if(label!=null & fp != null) {
-            recipient = new EmailRecipientContact(label, fp);
-          }
-          break;
-        }
-        case PLAIN_ADDRESS: {
-          recipient = new EmailRecipientPlainAddress((String) emailRecipientMap.get("name"));
-          break;
-        }
-        case ORGANIZATION: {
-          recipient = new EmailRecipientOrganization(submission.getOrganization());
-          break;
-        }
-        case SUBMITTER: {
-          recipient = new EmailRecipientSubmitter();
-          break;
-        }
-      }
-      return recipient;
-    }
 
     @RequestMapping(value = "/batch-comment")
     @PreAuthorize("hasRole('REVIEWER')")
@@ -378,10 +257,10 @@ public class SubmissionController {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             Map<String, Object> subMessage = new HashMap<String, Object>(data);
             if (data.get("commentVisibility").toString().equalsIgnoreCase("public")) {
-                if ((boolean) data.get("sendEmailToRecipient")) {
+                if (data.containsKey("sendEmailToRecipient") && (boolean) data.get("sendEmailToRecipient")) {
                     subMessage.put("recipientEmail", subMessage.get("recipientEmail"));
                 }
-                if ((boolean) data.get("sendEmailToCCRecipient")) {
+                if (data.containsKey("sendEmailToCCRecipient") && (boolean) data.get("sendEmailToCCRecipient")) {
                     subMessage.put("ccRecipientEmail", subMessage.get("ccRecipientEmail"));
                 }
             }
@@ -504,7 +383,7 @@ public class SubmissionController {
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
-        processEmailWorkflowRules(user, submission);
+        submissionEmailService.sendWorkflowEmails(user, submission);
         return response;
     }
 
@@ -514,7 +393,7 @@ public class SubmissionController {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
             submission = submissionRepo.updateStatus(submission, submissionStatus, user);
-            processEmailWorkflowRules(user, submission);
+            submissionEmailService.sendWorkflowEmails(user, submission);
         });
         return new ApiResponse(SUCCESS);
 
@@ -556,7 +435,7 @@ public class SubmissionController {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
 
-        processEmailWorkflowRules(user, submission);
+        submissionEmailService.sendWorkflowEmails(user, submission);
 
         return response;
     }
@@ -963,7 +842,7 @@ public class SubmissionController {
         Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : submissionListColumns, new PageRequest(page, size));
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        LOG.info("Dynamic query took " + (double) (duration / 1000000000.0) + " seconds");
+        LOG.info("Dynamic query took " + duration / 1000000000.0 + " seconds");
         return new ApiResponse(SUCCESS, new ApiPage<Submission>(submissions));
     }
 
@@ -1052,39 +931,7 @@ public class SubmissionController {
     @RequestMapping("/{submissionId}/send-advisor-email")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse sendAdvisorEmail(@WeaverUser User user, @PathVariable Long submissionId) {
-
-        Submission submission = submissionRepo.read(submissionId);
-
-        InputType contactInputType = inputTypeRepo.findByName("INPUT_CONTACT");
-
-        EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired("SYSTEM Advisor Review Request", true);
-
-        String subject = templateUtility.compileString(template.getSubject(), submission);
-        String content = templateUtility.compileTemplate(template, submission);
-
-        // TODO: this needs to only send email to the advisor not any field value that
-        // is contact type
-        submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
-
-            SimpleMailMessage smm = new SimpleMailMessage();
-
-            smm.setTo(String.join(",", fv.getContacts()));
-
-            String preferedEmail = user.getSetting("preferedEmail");
-
-            if ("true".equals(user.getSetting("ccEmail"))) {
-                smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
-            }
-
-            smm.setSubject(subject);
-            smm.setText(content);
-
-            emailSender.send(smm);
-
-        });
-
-        actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
-
+        submissionEmailService.sendAdvisorEmails(user, submissionRepo.read(submissionId));
         return new ApiResponse(SUCCESS);
     }
 
@@ -1154,50 +1001,6 @@ public class SubmissionController {
             clearAdvisorMessage += " Rejection.";
         }
         actionLogRepo.createAdvisorPublicLog(submission, clearAdvisorMessage);
-    }
-
-    private void processEmailWorkflowRules(User user, Submission submission) {
-
-        SimpleMailMessage smm = new SimpleMailMessage();
-
-        List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
-
-        for (EmailWorkflowRule rule : rules) {
-
-            LOG.debug("Email Workflow Rule " + rule.getId() + " firing for submission " + submission.getId());
-
-            if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
-
-                // TODO: Not all variables are currently being replaced.
-                String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
-                String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
-
-                for (String email : rule.getEmailRecipient().getEmails(submission)) {
-
-                    try {
-                        LOG.debug("\tSending email to recipient at address " + email);
-
-                        smm.setTo(email);
-
-                        String preferedEmail = user.getSetting("preferedEmail");
-
-                        if ("true".equals(user.getSetting("ccEmail"))) {
-                            smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
-                        }
-
-                        smm.setSubject(subject);
-                        smm.setText(content);
-
-                        emailSender.send(smm);
-                    } catch (MailException me) {
-                        LOG.error("Problem sending email: " + me.getMessage());
-                    }
-                }
-
-            } else {
-                LOG.debug("\tRule disabled or of irrelevant status condition.");
-            }
-        }
     }
 
 }
