@@ -1,0 +1,62 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close" ng-click="resetSubmissionStatus()" aria-label="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Edit Submission Status</h3>
+</div>
+
+<form ng-submit="updateSubmissionStatus()" name="forms.update" novalidate>
+
+    <validationmessage results="submissionStatusRepo.getValidationResults()"></validationmessage>
+
+    <div class="modal-body">
+
+        <validatedinput
+            id="edit-submission-status-name"
+            type="text"
+            model="modalData"
+            property="name"
+            label="Submission Status"
+            placeholder="Name of the submission status"
+            form="forms.update"
+            validations="submissionStatusRepo.getValidations()"
+            results="modalData.ValidationResults">
+        </validatedinput>
+
+        <toggleButton id="edit-is-active" label="Active:" scope-value="modalData.isActive" toggle-options="{{toggleOptions}}"></toggleButton>
+        <toggleButton id="edit-is-archived" label="Archived:" scope-value="modalData.isArchived" toggle-options="{{toggleOptions}}"></toggleButton>
+        <toggleButton id="edit-is-default" label="Default:" scope-value="modalData.isDefault" toggle-options="{{toggleOptions}}"></toggleButton>
+        <toggleButton id="edit-is-deletable" label="Deletable:" scope-value="modalData.isDeletable" toggle-options="{{toggleOptions}}"></toggleButton>
+        <toggleButton id="edit-is-editable-by-student" label="Editable By Reviewer:" scope-value="modalData.isEditableByReviewer" toggle-options="{{toggleOptions}}"></toggleButton>
+        <toggleButton id="edit-is-editable-by-reviewer" label="Editable By Student:" scope-value="modalData.isEditableByStudent" toggle-options="{{toggleOptions}}"></toggleButton>
+        <toggleButton id="edit-is-publishable" label="Publishable:" scope-value="modalData.isPublishable" toggle-options="{{toggleOptions}}"></toggleButton>
+
+        <validatedselect
+            id="edit-submission-state"
+            options="submissionStates"
+            model="modalData"
+            property="submissionState"
+            label="Submission State"
+            form="forms.update"
+            validations="submissionStatusRepo.getValidations()"
+            results="modalData.ValidationResults">
+        </validatedselect>
+
+        <div ng-if="modalData.submissionState != 'NONE' && invalidDefaultForState(modalData.isDefault, modalData.submissionState)">
+            <b>A default must be specified for the selected state.</b>
+        </div>
+
+    </div>
+
+    <div class="modal-footer">
+        <button
+            type="button"
+            class="btn btn-default"
+            ng-click="resetSubmissionStatus()">Cancel</button>
+        <button
+            id="edit-submissionStatus-save"
+            type="submit"
+            class="btn btn-primary"
+            ng-disabled="forms.update.$invalid || invalidDefaultForState(modalData.isDefault, modalData.submissionState)">Update</button>
+    </div>
+</form>
