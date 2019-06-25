@@ -118,7 +118,7 @@ app:
     
   # edu.tamu.weaver.email.config.WeaverEmailConfig
   email:
-    host: smtp.tamu.edu
+    host: relay.tamu.edu
     from: noreply@library.tamu.edu
     replyTo: helpdesk@library.tamu.edu
     # additional email configurations
