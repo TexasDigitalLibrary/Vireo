@@ -3,14 +3,6 @@
   "isEntityProperty":false,
   "dictionary":[
     {
-      "name":"Frank",
-      "definition":"FSS",
-      "identifier":"",
-      "contacts":[
-        "smutniak@yahoo.com"
-      ]
-    },
-    {
       "name":"Dr. Bob Boring",
       "definition":"Chair of Computer Science",
       "identifier":"",
