@@ -152,20 +152,10 @@ vireo.controller("SubmissionStatusController", function ($controller, $scope, $q
             return isDefault === false && $scope.totalDefaultsForSubmissionState(submissionState) != 1;
         };
 
-        $scope.submissionStatusRepo.listen(function (data) {
-            switch (data.meta.action) {
-                case ApiResponseActions.CREATE:
-                case ApiResponseActions.UPDATE:
-                case ApiResponseActions.DELETE: {
-                    // reset the repo to ensure secondary changes are also presented.
-                    if (data.meta.status == "SUCCESS") {
-                        $scope.submissionStatusRepo.reset();
-                    }
-                    break;
-                }
-                default: {
-                    break;
-                }
+        $scope.submissionStatusRepo.listen([ApiResponseActions.CREATE, ApiResponseActions.UPDATE, ApiResponseActions.DELETE], function (data) {
+            // reset the repo to ensure secondary changes are also presented.
+            if (data.meta.status == "SUCCESS") {
+                $scope.submissionStatusRepo.reset();
             }
         });
 
