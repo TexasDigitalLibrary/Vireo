@@ -13,7 +13,7 @@
 			<p ng-if="degrees.length == 0">Add new Degree</p>
 
 			<div ng-if="degrees.length !== 0">
-				<a href="" ng-click="removeAllDegrees()">
+				<a href="" ng-click="confirmRemoveAllDegrees()">
 					<span class="glyphicon glyphicon-trash text-danger"></span>
 					<span class="text-danger"> Remove all Degrees</span>
 				</a>
@@ -58,6 +58,13 @@
 
 	<modal modal-id="degreeConfirmRemoveModal"
 		   modal-view="views/modals/settings/degreeConfirmRemoveModal.html"
+		   modal-header-class="modal-header-primary"
+		   modal-keyboard="false"
+		   wvr-modal-backdrop="static">
+	</modal>
+
+	<modal modal-id="degreeConfirmRemoveAllModal"
+		   modal-view="views/modals/settings/degreeConfirmRemoveAllModal.html"
 		   modal-header-class="modal-header-primary"
 		   modal-keyboard="false"
 		   wvr-modal-backdrop="static">
