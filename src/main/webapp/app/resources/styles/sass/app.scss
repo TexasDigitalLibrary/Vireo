@@ -1317,6 +1317,10 @@ input[type=color]:focus {
   transition: max-height 0.5s ease-out;
 }
 
+.accordion .panel-body .remove {
+  margin-bottom: 10px;
+}
+
 .accordion .loader {
   margin-left: 4.5px;
   margin-top: 4.5px;
