@@ -1,0 +1,28 @@
+<div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close" ng-click="resetSubmissionStatus()" aria-label="Close">
+        <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Are You Sure?</h3>
+</div>
+
+<form ng-submit="removeSubmissionStatus()" novalidate>
+
+    <validationmessage results="submissionStatusRepo.getValidationResults()"></validationmessage>
+
+    <div class="modal-body">
+        <span ng-show="!modalData.isDefault">
+            <h4><b>Click confirm to remove the Submission Status:</b></h4>
+            <span class="glyphicon glyphicon glyphicon-user"></span>
+        </span>
+        <span ng-show="modalData.isDefault">
+            <h4><b>Cannot delete default Submission Status:</b></h4>
+            <span class="glyphicon glyphicon glyphicon-globe"></span>
+        </span>
+        {{modalData.name}}
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="resetSubmissionStatus()">Cancel</button>
+        <button id="submissionStatus-confirm" type="submit" class="btn btn-primary" ng-disabled="modalData.isDefault">Confirm</button>
+    </div>
+</form>

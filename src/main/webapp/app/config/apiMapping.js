@@ -511,7 +511,7 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'organization',
             'method': 'count-submisisons'
-        },        
+        },
         create: {
             'endpoint': '/private/queue',
             'controller': 'organization'
@@ -851,11 +851,32 @@ var apiMapping = {
         }
     },
     SubmissionStatus: {
+        channel: '/channel/submission-status',
         validations: true,
         all: {
             'endpoint': '/private/queue',
             'controller': 'submission-status',
             'method': 'all'
+        },
+        default: {
+            'endpoint': '/private/queue',
+            'controller': 'submission-status',
+            'method': 'default'
+        },
+        create: {
+            'endpoint': '/private/queue',
+            'controller': 'submission-status',
+            'method': 'create'
+        },
+        update: {
+            'endpoint': '/private/queue',
+            'controller': 'submission-status',
+            'method': 'update'
+        },
+        remove: {
+            'endpoint': '/private/queue',
+            'controller': 'submission-status',
+            'method': 'delete'
         }
     },
     ManagerSubmissionListColumn: {
