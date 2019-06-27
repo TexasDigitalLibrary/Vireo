@@ -41,7 +41,7 @@ public class SubmissionStatusRepoImpl extends AbstractWeaverRepoImpl<SubmissionS
     }
 
     private void updateDefaultsToFalse(SubmissionStatus submissionStatus) {
-        if (submissionStatus.isDefault() == true) {
+        if (submissionStatus.isDefault()) {
             submissionStatusRepo.updateDefaultsToFalse(submissionStatus.getSubmissionState());
         }
     }

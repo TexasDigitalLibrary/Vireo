@@ -14,7 +14,7 @@ vireo.controller("SubmissionStatusController", function ($controller, $scope, $q
 
     $scope.dragging = false;
 
-    $scope.trashCanId = 'submission-status-trash';
+    $scope.trashCanId = "submission-status-trash";
 
     $scope.forms = {};
 
@@ -30,13 +30,13 @@ vireo.controller("SubmissionStatusController", function ($controller, $scope, $q
             $scope.submissionStatusRepo.clearValidationResults();
 
             for (var key in $scope.forms) {
-                if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
+                if (angular.isDefined($scope.forms[key]) && !$scope.forms[key].$pristine) {
                     $scope.forms[key].$setPristine();
                     $scope.forms[key].$setUntouched();
                 }
             }
 
-            if ($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+            if (angular.isDefined($scope.modalData) && angular.isDefined($scope.modalData.refresh)) {
                 $scope.modalData.refresh();
             }
 
@@ -90,7 +90,7 @@ vireo.controller("SubmissionStatusController", function ($controller, $scope, $q
 
         $scope.launchEditModal = function (id) {
             $scope.selectSubmissionStatusById(id);
-            $scope.openModal('#submissionStatusEditModal');
+            $scope.openModal("#submissionStatusEditModal");
         };
 
         $scope.updateSubmissionStatus = function () {
@@ -106,9 +106,9 @@ vireo.controller("SubmissionStatusController", function ($controller, $scope, $q
             dragging: $scope.dragging,
             select: $scope.selectSubmissionStatusByIndex,
             model: $scope.submissionStatuses,
-            confirm: '#submissionStatusConfirmRemoveModal',
+            confirm: "#submissionStatusConfirmRemoveModal",
             reorder: function() {},
-            container: '#submission-statuses'
+            container: "#submission-statuses"
         });
 
         var listener = $scope.dragControlListeners.getListener();
@@ -149,12 +149,12 @@ vireo.controller("SubmissionStatusController", function ($controller, $scope, $q
         };
 
         $scope.invalidDefaultForState = function(isDefault, submissionState) {
-            return isDefault === false && $scope.totalDefaultsForSubmissionState(submissionState) != 1;
+            return isDefault === false && $scope.totalDefaultsForSubmissionState(submissionState) !== 1;
         };
 
         $scope.submissionStatusRepo.listen([ApiResponseActions.CREATE, ApiResponseActions.UPDATE, ApiResponseActions.DELETE], function (data) {
             // reset the repo to ensure secondary changes are also presented.
-            if (data.meta.status == "SUCCESS") {
+            if (data.meta.status === "SUCCESS") {
                 $scope.submissionStatusRepo.reset();
             }
         });

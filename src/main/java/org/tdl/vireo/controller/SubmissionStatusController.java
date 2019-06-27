@@ -78,7 +78,7 @@ public class SubmissionStatusController {
         submissionStatusRepo.delete(submissionStatus);
         submissionStatusRepo.flush();
 
-        if (submissionStatusRepo.exists(submissionStatus.getId()) == false) {
+        if (!submissionStatusRepo.exists(submissionStatus.getId())) {
             simpMessagingTemplate.convertAndSend("/channel/submission-status", new ApiResponse(SUCCESS, ApiAction.DELETE, submissionStatus));
             return new ApiResponse(SUCCESS, ApiAction.DELETE, "Submission Status " + submissionStatus.getName() + " has been deleted!");
         }
