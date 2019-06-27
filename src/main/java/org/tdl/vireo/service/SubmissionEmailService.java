@@ -23,6 +23,7 @@ import org.tdl.vireo.model.EmailRecipientType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldPredicate;
+import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.User;
@@ -80,6 +81,26 @@ public class SubmissionEmailService {
         String subject = templateUtility.compileString(template.getSubject(), submission);
         String content = templateUtility.compileTemplate(template, submission);
 
+        List<FieldValue> advisorList = submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
+        SimpleMailMessage smm = new SimpleMailMessage();
+        List<String> recipientList = new ArrayList<>();
+        advisorList.forEach(afv -> {
+            for (String afvcontact : afv.getContacts()) {
+                recipientList.add(afvcontact);
+            }
+        });
+        if(recipientList.isEmpty()){
+            actionLogRepo.createPublicLog(submission, user, "No Advisor review emails to generate.");
+        }else{
+            smm.setTo(recipientList.toArray(new String[0]));
+            smm.setSubject(subject);
+            smm.setText(content);
+
+            emailSender.send(smm);
+
+            actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
+        }
+/****
         List<String> fullRecipientList = new ArrayList<>();
 
         // TODO: this needs to only send email to the advisor not any field value that is contact type
@@ -109,6 +130,7 @@ public class SubmissionEmailService {
         });
 
         actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
+****/
     }
 
     /**
