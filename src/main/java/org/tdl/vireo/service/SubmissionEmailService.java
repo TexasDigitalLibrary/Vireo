@@ -86,7 +86,9 @@ public class SubmissionEmailService {
         List<String> recipientList = new ArrayList<>();
         advisorList.forEach(afv -> {
             for (String afvcontact : afv.getContacts()) {
-                recipientList.add(afvcontact);
+                if (!recipientList.contains(afvcontact)) {
+                    recipientList.add(afvcontact);
+                }
             }
         });
         if(recipientList.isEmpty()){

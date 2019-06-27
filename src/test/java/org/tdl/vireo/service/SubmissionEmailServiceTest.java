@@ -167,6 +167,14 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_EMAIL_RECIPIENT_MAP5.put("data", EmailRecipientType.SUBMITTER.ordinal());
     }
 
+//FSS
+    private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP6 = new HashMap<String, Object>();
+    static {
+        TEST_EMAIL_RECIPIENT_MAP6.put("type", "ADVISOR");
+        TEST_EMAIL_RECIPIENT_MAP6.put("name", "Advisor");
+        TEST_EMAIL_RECIPIENT_MAP6.put("data", EmailRecipientType.ADVISOR.ordinal());
+    }
+
     private static final FieldPredicate TEST_FIELD_PREDICATE1 = new FieldPredicate();
     static {
         TEST_FIELD_PREDICATE1.setId(1L);
@@ -181,6 +189,20 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_FIELD_PREDICATE2.setValue("mock field predicate value 2");
     }
 
+    private static final FieldPredicate TEST_FIELD_PREDICATE3 = new FieldPredicate();
+    static {
+        TEST_FIELD_PREDICATE2.setId(3L);
+        TEST_FIELD_PREDICATE2.setDocumentTypePredicate(false);
+        TEST_FIELD_PREDICATE2.setValue("mock field predicate value 3");
+    }
+
+    private static final FieldPredicate TEST_FIELD_PREDICATE4 = new FieldPredicate();
+    static {
+        TEST_FIELD_PREDICATE2.setId(4L);
+        TEST_FIELD_PREDICATE2.setDocumentTypePredicate(false);
+        TEST_FIELD_PREDICATE2.setValue("dc.contributor.advisor");
+    }
+
     private static final List<String> TEST_CONTACTS_LIST1 = new ArrayList<>();
     static {
         TEST_CONTACTS_LIST1.add(TEST_USER_EMAIL);
@@ -188,8 +210,8 @@ public class SubmissionEmailServiceTest extends MockData {
 
     private static final List<String> TEST_CONTACTS_LIST2 = new ArrayList<>();
     static {
-        TEST_CONTACTS_LIST1.add(TEST_USER_EMAIL);
-        TEST_CONTACTS_LIST1.add(TEST_EMAIL);
+        TEST_CONTACTS_LIST2.add(TEST_USER_EMAIL);
+        TEST_CONTACTS_LIST2.add(TEST_EMAIL);
     }
 
     private static final FieldValue TEST_FIELD_VALUE1 = new FieldValue();
@@ -210,6 +232,16 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_FIELD_VALUE2.setFieldPredicate(TEST_FIELD_PREDICATE2);
         TEST_FIELD_VALUE2.setIdentifier("2");
         TEST_FIELD_VALUE2.setValue("Mock Field Value Value 2");
+    }
+
+    private static final FieldValue TEST_FIELD_VALUE3 = new FieldValue();
+    static {
+        TEST_FIELD_VALUE3.setId(3L);
+        TEST_FIELD_VALUE3.setContacts(TEST_CONTACTS_LIST1);
+        TEST_FIELD_VALUE3.setDefinition("Mock Field Value Definition 1");
+        TEST_FIELD_VALUE3.setFieldPredicate(TEST_FIELD_PREDICATE4);
+        TEST_FIELD_VALUE3.setIdentifier("1");
+        TEST_FIELD_VALUE3.setValue("email@mailinator.com");
     }
 
     private Map<String, Object> mockData;
@@ -294,7 +326,7 @@ public class SubmissionEmailServiceTest extends MockData {
         verify(mockEmailSender, never()).send(any(SimpleMailMessage.class));
         reset(mockEmailSender);
 
-        mockFieldValues.add(TEST_FIELD_VALUE1);
+        mockFieldValues.add(TEST_FIELD_VALUE3);
 
         submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
         verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
