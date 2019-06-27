@@ -214,6 +214,12 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_CONTACTS_LIST2.add(TEST_EMAIL);
     }
 
+    private static final List<String> TEST_CONTACTS_LIST3 = new ArrayList<>();
+    static {
+        TEST_CONTACTS_LIST3.add(TEST_USER_EMAIL);
+        //TEST_CONTACTS_LIST3.add(TEST_EMAIL);
+    }
+
     private static final FieldValue TEST_FIELD_VALUE1 = new FieldValue();
     static {
         TEST_FIELD_VALUE1.setId(1L);
@@ -237,10 +243,10 @@ public class SubmissionEmailServiceTest extends MockData {
     private static final FieldValue TEST_FIELD_VALUE3 = new FieldValue();
     static {
         TEST_FIELD_VALUE3.setId(3L);
-        TEST_FIELD_VALUE3.setContacts(TEST_CONTACTS_LIST1);
-        TEST_FIELD_VALUE3.setDefinition("Mock Field Value Definition 1");
+        TEST_FIELD_VALUE3.setContacts(TEST_CONTACTS_LIST3);
+        TEST_FIELD_VALUE3.setDefinition("Mock Field Value Definition 3");
         TEST_FIELD_VALUE3.setFieldPredicate(TEST_FIELD_PREDICATE4);
-        TEST_FIELD_VALUE3.setIdentifier("1");
+        TEST_FIELD_VALUE3.setIdentifier("3");
         TEST_FIELD_VALUE3.setValue("email@mailinator.com");
     }
 
