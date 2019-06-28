@@ -137,8 +137,8 @@ drwxrwxrwx  7 root  root  238 Sep  3 11:20 webapp
 
 ### Recommended Hardware Configuration
 
-* 2 CPUs
-* 2 GB RAM
+*  2 CPUs
+*  2 GB RAM
 
 ### Configure application
 
@@ -231,7 +231,6 @@ java -jar target/vireo-4.0.0-SNAPSHOT.war
 | app.email.from | string | email address from | noreply@tdl.org |
 | app.email.replyTo | string | email address replyTo | admin@tdl.org |
 | app.reporting.address | string | email address to report issues | issues@tdl.org |
-
 
 ### Customization of default values
 
