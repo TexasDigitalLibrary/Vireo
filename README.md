@@ -234,4 +234,4 @@ java -jar target/vireo-4.0.0-SNAPSHOT.war
 
 ### Customization of default values
 
-Information on customizing default values can be found in the [advanced configuration](https://github.com/TexasDigitalLibrary/Vireo/blob/master/ADVANCED_CUSTOMIZATION.md) documentation.
+Information on customizing default values can be found in the [advanced customization](https://github.com/TexasDigitalLibrary/Vireo/blob/master/ADVANCED_CUSTOMIZATION.md) documentation.
