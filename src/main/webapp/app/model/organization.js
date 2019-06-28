@@ -15,6 +15,11 @@ vireo.model("Organization", function Organization($q, WsApi, InputTypes, EmailRe
           data: "Assignee"
         },
         {
+          name: "Advisor",
+          type: EmailRecipientType.ADVISOR,
+          data: "Advisor"
+        },
+        {
           name: "Organization",
           type: EmailRecipientType.ORGANIZATION,
           data: null

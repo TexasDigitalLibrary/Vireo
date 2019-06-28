@@ -314,6 +314,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                   data: "Assignee"
                 },
                 {
+                  name: "Advisor",
+                  type: EmailRecipientType.ADVISOR,
+                  data: "Advisor"
+                },
+                {
                   name: "Organization",
                   type: EmailRecipientType.ORGANIZATION,
                   data: null
