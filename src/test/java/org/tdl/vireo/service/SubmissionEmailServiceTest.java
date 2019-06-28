@@ -209,7 +209,6 @@ public class SubmissionEmailServiceTest extends MockData {
     private static final List<String> TEST_CONTACTS_LIST3 = new ArrayList<>();
     static {
         TEST_CONTACTS_LIST3.add(TEST_USER_EMAIL);
-        //TEST_CONTACTS_LIST3.add(TEST_EMAIL);
     }
 
     private static final FieldValue TEST_FIELD_VALUE1 = new FieldValue();
