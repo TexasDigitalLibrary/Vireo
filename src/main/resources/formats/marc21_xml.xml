@@ -278,10 +278,9 @@
                 <marc:subfield code="a">Leggett, John</marc:subfield>
                 <marc:subfield code="e">chair</marc:subfield>
             </marc:datafield>
-        
     -->
-    <datafield tag="720" ind1="1" ind2=" ">
-        <subfield th:text="${ COMMITTEE_CHAIR }" code="a"></subfield>
+    <datafield th:each="chair: ${COMMITTEE_CHAIR_FIELD_VALUES}" tag="720" ind1="1" ind2=" ">
+        <subfield th:text="${ chair }" code="a"></subfield>
         <subfield code="e">chair</subfield>
     </datafield>
 

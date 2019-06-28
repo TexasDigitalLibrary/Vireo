@@ -201,8 +201,8 @@
             <DISS_processing_code th:text="${DEGREE_LEVEL}"></DISS_processing_code>
         </DISS_institution>
 
-        <DISS_advisor th:if="${COMMITTEE_CHAIR.length() > 0}">
-            <DISS_name th:with="name=${COMMITTEE_CHAIR}">
+        <DISS_advisor th:each="committeeChairFieldValue : ${COMMITTEE_CHAIR_FIELD_VALUES}" th:if="${committeeChairFieldValue.getValue().length() > 0}">
+            <DISS_name th:with="name=${committeeChairFieldValue.getValue()}">
                 <DISS_surname th:text="${SUBMISSION_HELPER.getLastName(name)}"></DISS_surname>
                 <DISS_fname th:text="${SUBMISSION_HELPER.getFirstName(name)}"></DISS_fname>
                 <DISS_middle th:text="${SUBMISSION_HELPER.getMiddleName(name)}"></DISS_middle>
@@ -248,3 +248,4 @@
     </DISS_restriction>
 
 </DISS_submission>
+
