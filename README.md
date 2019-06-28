@@ -297,7 +297,7 @@ Array of [Degrees](#degree)
 
 Array of [DocumentTypes](#document-type)
 
-##### Docuement Type
+##### Document Type
 
 | Key | Type | Description |
 |----|----|----|
@@ -311,11 +311,11 @@ Email Templates can dynamically use any Field Predicate associated with the Subm
 | Value | Description |
 |----|----|
 | FULL_NAME | Submitter's full name |
-| FIRST_NAME | Submiiter's first name |
-| Last_NAME | Submitter's last name |
+| FIRST_NAME | Submitter's first name |
+| LAST_NAME | Submitter's last name |
 | STUDENT_URL | URL for viewing a submitted submission from the submitter's view |
-| SUBMISSION_RUL | URL for viewing an in progress submission from the submitter's view |
-| ADVISOR_URL | URL for view a submitted submission from the advisor's view |
+| SUBMISSION_URL | URL for viewing an in progress submission from the submitter's view |
+| ADVISOR_URL | URL for viewing a submitted submission from the advisor's view |
 | DEPOSIT_URI | URI where a complete submission was publised |
 | DOCUMENT_TITLE | The title of the submission's primary document |
 | SUBMISSION_TYPE | The submission type of the submission |
@@ -466,7 +466,7 @@ Contains Submission List Column Titles, an Array[String] for the default column 
 | Key | Type | Description |
 |----|----|----|
 | title | String | Title of the Column |
-| sort | String | Either 'ASC' or 'DESC' for assending or descending sorting respectively |
+| sort | String | Either 'ASC' or 'DESC' for ascending or descending sorting respectively |
 | valuePath | Array[String] | The Value Paths for the Column |
 | status | String | Status of the Column, typically null |
 | inputType | [InputType](#input-type) | The input type associated with the Column |
