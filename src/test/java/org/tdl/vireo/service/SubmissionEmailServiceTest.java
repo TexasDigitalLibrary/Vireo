@@ -181,12 +181,12 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_FIELD_PREDICATE2.setValue("mock field predicate value 2");
     }
 
-    private static final FieldPredicate TEST_FIELD_PREDICATE3 = new FieldPredicate();
-    static {
-        TEST_FIELD_PREDICATE2.setId(3L);
-        TEST_FIELD_PREDICATE2.setDocumentTypePredicate(false);
-        TEST_FIELD_PREDICATE2.setValue("mock field predicate value 3");
-    }
+//    private static final FieldPredicate TEST_FIELD_PREDICATE3 = new FieldPredicate();
+//    static {
+//        TEST_FIELD_PREDICATE2.setId(3L);
+//        TEST_FIELD_PREDICATE2.setDocumentTypePredicate(false);
+//        TEST_FIELD_PREDICATE2.setValue("mock field predicate value 3");
+//    }
 
     private static final FieldPredicate TEST_FIELD_PREDICATE4 = new FieldPredicate();
     static {
