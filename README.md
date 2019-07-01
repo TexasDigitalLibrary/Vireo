@@ -1,4 +1,4 @@
-[![Waffle.io - Columns and their card count](https://badge.waffle.io/TexasDigitalLibrary/Vireo.png?columns=all)](https://waffle.io/TexasDigitalLibrary/Vireo?utm_source=badge) [![Build Status](https://travis-ci.org/TexasDigitalLibrary/Vireo.svg?branch=master)](https://travis-ci.org/TexasDigitalLibrary/Vireo) [![Coverage Status](https://coveralls.io/repos/github/TexasDigitalLibrary/Vireo/badge.svg?branch=master)](https://coveralls.io/github/TexasDigitalLibrary/Vireo?branch=master)
+[![Build Status](https://travis-ci.org/TexasDigitalLibrary/Vireo.svg?branch=master)](https://travis-ci.org/TexasDigitalLibrary/Vireo) [![Coverage Status](https://coveralls.io/repos/github/TexasDigitalLibrary/Vireo/badge.svg?branch=master)](https://coveralls.io/github/TexasDigitalLibrary/Vireo?branch=master)
 
 # Vireo 4
 
@@ -135,6 +135,10 @@ drwxrwxrwx  7 root  root  238 Sep  3 11:20 webapp
 * logs - where vireo log files are stored
 * webapp - the extracted WAR file
 
+### Recommended Hardware Configuration
+
+*  2 CPUs
+*  2 GB RAM
 
 ### Configure application
 
@@ -227,3 +231,7 @@ java -jar target/vireo-4.0.0-SNAPSHOT.war
 | app.email.from | string | email address from | noreply@tdl.org |
 | app.email.replyTo | string | email address replyTo | admin@tdl.org |
 | app.reporting.address | string | email address to report issues | issues@tdl.org |
+
+### Customization of default values
+
+Information on customizing default values can be found in the [advanced customization](https://github.com/TexasDigitalLibrary/Vireo/blob/master/ADVANCED_CUSTOMIZATION.md) documentation.
