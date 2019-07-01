@@ -729,6 +729,7 @@ public class SubmissionController {
 
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
 
+					//METADATA
                     if (exportPackage.isMap()) {
                         for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
                             zos.putNextEntry(new ZipEntry(submissionName + fileEntry.getKey()));
@@ -743,7 +744,7 @@ public class SubmissionController {
                         Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
                         byte[] fileBytes = Files.readAllBytes(path);
                         zos.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
-                        contentsText.append(ldfv.getFileName()+"\n");
+                        contentsText.append(ldfv.getFileName()+"\tBUNDLE:LICENSE\n");
                         zos.write(fileBytes);
                         zos.closeEntry();
                     }
@@ -753,19 +754,17 @@ public class SubmissionController {
                     Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
                     byte[] fileBytes = Files.readAllBytes(path);
                     zos.putNextEntry(new ZipEntry(submissionName+primaryDoc.getFileName()));
-                    contentsText.append(primaryDoc.getFileName()+"\tprimary:true\n");
+                    contentsText.append(primaryDoc.getFileName()+"\tBUNDLE:CONTENT\tprimary:true\n");
                     zos.write(fileBytes);
                     zos.closeEntry();
 
                     // SUPPLEMENTAL_DOCS
-                    // supplemental, source, administrative
-                    // ask Stephanie about administrative
                     List<FieldValue> supplDocs = submission.getSupplementalAndSourceDocumentFieldValues();
                     for (FieldValue supplDoc : supplDocs) {
                         Path supplPath = assetService.getAssetsAbsolutePath(supplDoc.getValue());
                         byte[] supplFileBytes = Files.readAllBytes(supplPath);
                         zos.putNextEntry(new ZipEntry(submissionName+supplDoc.getFileName()));
-                        contentsText.append(supplDoc.getFileName()+"\n");
+                        contentsText.append(supplDoc.getFileName()+"\tBUNDLE:CONTENT\n");
                         zos.write(supplFileBytes);
                         zos.closeEntry();
                     }
