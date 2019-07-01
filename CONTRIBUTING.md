@@ -71,4 +71,4 @@ If your commits do not conform to these recommendations you might consider rebas
 
 #### Good Luck!
 
-We look forward to seeing your contributions. If you have any additional questions please contact the Vireo developers at [support@tdl.org]().
+We look forward to seeing your contributions. If you have any additional questions please contact the Vireo developers at [tdl-vireo@utlists.utexas.edu]().
