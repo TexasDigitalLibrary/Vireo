@@ -275,11 +275,11 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationDateString() {
-        Optional<String> graduationDate = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationDate = getFieldValueByPredicateValue("dc.date.issued");
         String date = "";
         if (graduationDate.isPresent()) {
             try {
-                date = dateFormat.format(dateFormat.parse(graduationDate.get()));
+                date = dateFormat.format(dateTimeFormat.parse(graduationDate.get()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -289,7 +289,7 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationYearString() {
-        Optional<String> graduationYear = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationYear = getFieldValueByPredicateValue("dc.date.issued");
         String year = "";
         if (graduationYear.isPresent()) {
             try {
@@ -303,7 +303,7 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationYearMonthString() {
-        Optional<String> graduationYearMonth = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationYearMonth = getFieldValueByPredicateValue("dc.date.issued");
         String yearMonth = "";
         if (graduationYearMonth.isPresent()) {
             try {
@@ -317,7 +317,7 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationMonthYearString() {
-        Optional<String> graduationMonthYear = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationMonthYear = getFieldValueByPredicateValue("dc.date.issued");
         String monthYear = "";
         if (graduationMonthYear.isPresent()) {
             try {
@@ -534,9 +534,8 @@ public class SubmissionHelperUtility {
         return title.isPresent() ? title.get() : "";
     }
 
-    public String getCommitteeChair() {
-        Optional<String> chair = getFieldValueByPredicateValue("dc.contributor.advisor");
-        return chair.isPresent() ? chair.get() : "";
+    public List<FieldValue> getCommitteeChairFieldValues() {
+        return submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
     }
 
     public String getFirstName(String name) {

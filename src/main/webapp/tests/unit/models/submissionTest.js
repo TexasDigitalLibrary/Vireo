@@ -329,7 +329,7 @@ describe('model: Submission', function () {
             spyOn(model, "getFieldValuesByInputType").and.returnValue(fieldValues);
 
             response = model.getContactEmails();
-            expect(response.length).toBe(3);
+            expect(response.length).toBe(4);
         });
         it('getFieldProfileByPredicate should return a Field Predicate', function () {
             var response;

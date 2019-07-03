@@ -84,8 +84,8 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
             case TITLE:
                 context.setVariable(key.name(), submissionHelperUtility.getTitle());
                 break;
-            case COMMITTEE_CHAIR:
-                context.setVariable(key.name(), submissionHelperUtility.getCommitteeChair());
+            case COMMITTEE_CHAIR_FIELD_VALUES:
+                context.setVariable(key.name(), submissionHelperUtility.getCommitteeChairFieldValues());
                 break;
             case COMMITTEE_MEMBER_FIELD_VALUES:
                 context.setVariable(key.name(), submissionHelperUtility.getCommitteeMemberFieldValues());

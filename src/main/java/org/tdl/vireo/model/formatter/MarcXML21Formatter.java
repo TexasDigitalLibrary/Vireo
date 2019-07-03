@@ -69,8 +69,9 @@ public class MarcXML21Formatter extends AbstractFormatter {
             case DEPARTMENT:
                 context.setVariable(key.name(), submissionHelperUtility.getDepartment());
                 break;
-            case COMMITTEE_CHAIR:
-                context.setVariable(key.name(), formatName(submissionHelperUtility.getCommitteeChair()));
+            case COMMITTEE_CHAIR_FIELD_VALUES:
+                List<String> chairs = submissionHelperUtility.getCommitteeChairFieldValues().stream().map(chair -> formatName(chair.getValue())).collect(Collectors.toList());
+                context.setVariable(key.name(), chairs);
                 break;
             case COMMITTEE_MEMBER_FIELD_VALUES:
                 List<String> members = submissionHelperUtility.getCommitteeMemberFieldValues().stream().map(member -> formatName(member.getValue())).collect(Collectors.toList());

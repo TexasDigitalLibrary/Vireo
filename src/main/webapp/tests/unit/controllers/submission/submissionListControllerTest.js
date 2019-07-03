@@ -369,7 +369,7 @@ describe("controller: SubmissionListController", function () {
 
             scope.displaySubmissionProperty(row, column);
 
-            column.predicate = "dc.date.created";
+            column.predicate = "dc.date.issued";
 
             scope.displaySubmissionProperty(row, column);
         });
