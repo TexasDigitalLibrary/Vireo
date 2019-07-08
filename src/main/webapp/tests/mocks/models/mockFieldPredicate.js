@@ -40,5 +40,5 @@ var mockFieldPredicate = function($q) {
     return model;
 };
 
-angular.module('mock.fieldPredicate', []).service('FieldPredicate', mockFieldPredicate);
+angular.module("mock.fieldPredicate", []).service("FieldPredicate", mockFieldPredicate);
 

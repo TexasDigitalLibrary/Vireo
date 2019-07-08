@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,7 +34,7 @@ public class SubmissionHelperUtility {
     private final static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
     private final static SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy-MM");
-    private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMM yyyy");
+    private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy");
 
     private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
@@ -203,6 +204,31 @@ public class SubmissionHelperUtility {
         return submission.getApproveEmbargoDate() != null ? dateFormat.format(submission.getApproveEmbargoDate().getTime()) : "";
     }
 
+    public String getFormattedCommitteeApprovedEmbargoLiftDateString() {
+        Calendar appEmbDate = submission.getApproveEmbargoDate();
+        if(appEmbDate==null){
+            return "";
+        }
+        Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
+        int monthIncr = 0;
+        if(defaultEmbargo.isPresent()){
+            String defEmbStr = defaultEmbargo.get().getValue();
+            if(defEmbStr==null){
+            }else if(defEmbStr.equals("None")){
+            }else if(defEmbStr.equals("Journal Hold")){
+                monthIncr = 12;
+            }else if(defEmbStr.equals("Patent Hold")){
+                monthIncr = 24;
+            }else if(defEmbStr.equals("Other Embargo Period")){
+                monthIncr = 24;//max?
+            }
+        }
+        if(monthIncr>0){
+            appEmbDate.add(Calendar.MONTH,monthIncr);
+        }
+        return dateFormat.format(appEmbDate.getTime());
+    }
+
     public String getAdvisorApprovalDateString() {
         return submission.getApproveAdvisorDate() != null ? dateFormat.format(submission.getApproveAdvisorDate().getTime()) : "";
     }
@@ -249,11 +275,11 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationDateString() {
-        Optional<String> graduationDate = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationDate = getFieldValueByPredicateValue("dc.date.issued");
         String date = "";
         if (graduationDate.isPresent()) {
             try {
-                date = dateFormat.format(dateFormat.parse(graduationDate.get()));
+                date = dateFormat.format(dateTimeFormat.parse(graduationDate.get()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -263,7 +289,7 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationYearString() {
-        Optional<String> graduationYear = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationYear = getFieldValueByPredicateValue("dc.date.issued");
         String year = "";
         if (graduationYear.isPresent()) {
             try {
@@ -277,7 +303,7 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationYearMonthString() {
-        Optional<String> graduationYearMonth = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationYearMonth = getFieldValueByPredicateValue("dc.date.issued");
         String yearMonth = "";
         if (graduationYearMonth.isPresent()) {
             try {
@@ -291,7 +317,7 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationMonthYearString() {
-        Optional<String> graduationMonthYear = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationMonthYear = getFieldValueByPredicateValue("dc.date.issued");
         String monthYear = "";
         if (graduationMonthYear.isPresent()) {
             try {
@@ -508,9 +534,8 @@ public class SubmissionHelperUtility {
         return title.isPresent() ? title.get() : "";
     }
 
-    public String getCommitteeChair() {
-        Optional<String> chair = getFieldValueByPredicateValue("dc.contributor.advisor");
-        return chair.isPresent() ? chair.get() : "";
+    public List<FieldValue> getCommitteeChairFieldValues() {
+        return submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
     }
 
     public String getFirstName(String name) {
@@ -557,14 +582,10 @@ public class SubmissionHelperUtility {
     }
 
     public int getEmbargoCode() {
-
         int embargoCode = 0;
-
         Optional<FieldValue> proquestEmbargo = getFirstFieldValueByPredicateValue("proquest_embargos");
         Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
-
         Optional<FieldValue> embargo = proquestEmbargo.isPresent() ? proquestEmbargo : defaultEmbargo.isPresent() ? defaultEmbargo : Optional.empty();
-
         if (embargo.isPresent()) {
             String duration = embargo.get().getIdentifier();
             if (duration != null) {

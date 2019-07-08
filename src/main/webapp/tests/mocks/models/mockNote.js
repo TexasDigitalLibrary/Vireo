@@ -28,5 +28,5 @@ var mockNote = function($q) {
     return model;
 };
 
-angular.module('mock.note', []).service('Note', mockNote);
+angular.module("mock.note", []).service("Note", mockNote);
 

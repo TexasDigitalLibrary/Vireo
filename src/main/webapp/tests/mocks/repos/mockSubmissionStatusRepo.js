@@ -16,8 +16,8 @@ var dataSubmissionStatusRepo3 = [
     dataSubmissionStatus6
 ];
 
-angular.module('mock.submissionStatusRepo', []).service('SubmissionStatusRepo', function($q) {
-    var repo = mockRepo('SubmissionStatusRepo', $q, mockSubmissionStatus, dataSubmissionStatusRepo1);
+angular.module("mock.submissionStatusRepo", []).service("SubmissionStatusRepo", function($q) {
+    var repo = mockRepo("SubmissionStatusRepo", $q, mockSubmissionStatus, dataSubmissionStatusRepo1);
 
     repo.findById = function (id) {
         var found;

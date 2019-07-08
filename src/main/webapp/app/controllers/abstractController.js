@@ -38,7 +38,7 @@ vireo.controller('AbstractController', function ($scope, $window, ModalService, 
             method: 'error',
             data: alert
         }).then(function () {
-            angular.element("#reportModal").modal('show');
+            $scope.openModal('#reportModal');
         }, function (response) {
             if (response.data === null || response.data.message != "EXPIRED_JWT") {
                 var subject = 'Error Report';

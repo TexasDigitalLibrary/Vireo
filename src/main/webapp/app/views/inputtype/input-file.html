@@ -31,6 +31,7 @@
         <span ng-if="hasFile(fieldValue)">Replace</span>
       </button>
       <button class="btn btn-default" ng-click="cancelUpload()">Cancel</button>
+      <div ng-if="fieldValue.fieldPredicate.value==='_doctype_primary'" class="text-danger">(File will be renamed)</div>
     </div>
     <uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="uploading" value="progress" max="100">{{progress + '%'}}</uib-progressbar>
   </div>

@@ -16,8 +16,8 @@ var dataStudentSubmissionRepo3 = [
     dataStudentSubmission6
 ];
 
-angular.module('mock.studentSubmissionRepo', []).service('StudentSubmissionRepo', function($q) {
-    var repo = mockRepo('StudentSubmissionRepo', $q, mockStudentSubmission, dataStudentSubmissionRepo1);
+angular.module("mock.studentSubmissionRepo", []).service("StudentSubmissionRepo", function($q) {
+    var repo = mockRepo("StudentSubmissionRepo", $q, mockStudentSubmission, dataStudentSubmissionRepo1);
 
     repo.create = function (model) {
         if (repo.mockedList === undefined) {

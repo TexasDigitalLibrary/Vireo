@@ -108,5 +108,5 @@ var mockFieldValue = function($q) {
     return model;
 };
 
-angular.module('mock.fieldValue', []).service('FieldValue', mockFieldValue);
+angular.module("mock.fieldValue", []).service("FieldValue", mockFieldValue);
 

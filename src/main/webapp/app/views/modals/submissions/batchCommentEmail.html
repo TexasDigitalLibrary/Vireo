@@ -1,4 +1,4 @@
-<form>
+<form name="batchCommentEmailForm">
     <div class="modal-header {{attr.modalHeaderClass}}">
         <button type="button" class="close" ng-click="box.resetBatchCommentEmailModal(box.batchCommentEmail)" aria-title="Close">
             <span class="modal-close" aria-hidden="true">&times;</span>
@@ -10,22 +10,28 @@
         <div class="row">
             <div class="col-xs-12">
 
-                <div class="form-group email-element email-to" ng-class="{'email-active':box.batchCommentEmail.sendEmailToRecipient&&box.batchCommentEmail.commentVisibility==='public'}">
+                <div class="form-group email-element email-to" ng-class="{ 'email-active': box.batchCommentEmail.sendEmailToRecipient && box.batchCommentEmail.commentVisibility === 'public', 'has-error': box.isBatchEmailAddresseeInvalid(batchCommentEmailForm.recipientEmail) }">
                     <label>To:</label>
-                    <select class="form-control" ng-model="box.batchCommentEmail.recipientEmail">
-                        <option value=""></option>
-                        <option value="student">Student</option>
-                        <option value="advisor">Advisor</option>
-                    </select>
+                    <span class="label-remove-hover" ng-click="box.removeBatchEmailAddressee(email, box.batchCommentEmail.recipientEmails)" ng-repeat="email in box.batchCommentEmail.recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
+                    <div class="input-group">
+                        <input type="email" class="form-control" ng-model="box.batchCommentEmail.recipientEmail" ng-pattern="box.emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in box.getBatchContactEmails() | filter: $viewValue" placeholder="Email type (e.g. Submitter) or valid email address." ng-blur="box.validateBatchEmailAddressee(batchCommentEmailForm.recipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+                        <span title="Add Email" ng-class="{ disabled: !box.batchCommentEmail.recipientEmail }" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="box.addBatchEmailAddressee(box.batchCommentEmail.recipientEmails, batchCommentEmailForm.recipientEmail)"></span>
+                    </div>
+                    <div ng-if="box.isBatchEmailAddresseeInvalid(batchCommentEmailForm.recipientEmail)" class="alert alert-danger">
+                      <small>Value must either be a valid email address or an email recipient type (e.g. Submitter).</small>
+                    </div>
                 </div>
 
-                <div class="form-group email-element email-cc" ng-class="{'email-active': box.batchCommentEmail.sendEmailToCCRecipient&&box.batchCommentEmail.commentVisibility==='public'}">
+                <div class="form-group email-element email-cc" ng-class="{ 'email-active': box.batchCommentEmail.sendEmailToCCRecipient && box.batchCommentEmail.commentVisibility === 'public', 'has-error': box.isBatchEmailAddresseeInvalid(batchCommentEmailForm.ccRecipientEmail) }">
                     <label>CC:</label>
-                    <select class="form-control" ng-model="box.batchCommentEmail.ccRecipientEmail">
-                        <option value=""></option>
-                        <option value="student">Student</option>
-                        <option value="advisor">Advisor</option>
-                    </select>
+                    <span class="label-remove-hover" ng-click="box.removeBatchEmailAddressee(email, box.batchCommentEmail.ccRecipientEmails)" ng-repeat="email in box.batchCommentEmail.ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
+                    <div class="input-group">
+                        <input type="email" class="form-control" ng-model="box.batchCommentEmail.ccRecipientEmail" ng-pattern="box.emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in box.getBatchContactEmails() | filter: $viewValue" placeholder="Email type (e.g. Submitter) or valid email address." ng-blur="box.validateBatchEmailAddressee(batchCommentEmailForm.ccRecipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+                        <span title="Add Email" ng-class="{ disabled: !box.batchCommentEmail.ccRecipientEmail }" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="box.addBatchEmailAddressee(box.batchCommentEmail.ccRecipientEmails, batchCommentEmailForm.ccRecipientEmail)"></span>
+                    </div>
+                    <div ng-if="box.isBatchEmailAddresseeInvalid(batchCommentEmailForm.ccRecipientEmail)" class="alert alert-danger">
+                      <small>Value must either be a valid email address or an email recipient type (e.g. Submitter).</small>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -45,7 +51,7 @@
                 <div class="form-group public-private">
 
                     <div class="radio">
-                    <label><input type="radio" name="optradio" value="public" ng-model="box.batchCommentEmail.commentVisibility">Comment is public</label>
+                    <label><input type="radio" name="optradio" value="public" ng-model="box.batchCommentEmail.commentVisibility" ng-click="box.batchCommentEmail.sendEmailToRecipient=true">Comment is public</label>
                     </div>
 
                     <div class="recipient-options email-element" ng-class="{'email-active': box.batchCommentEmail.commentVisibility==='public'}">
@@ -66,7 +72,7 @@
 
         <div class="modal-footer">
             <button type="button" class="btn btn-default" ng-click="box.resetBatchCommentEmailModal(box.batchCommentEmail)" ng-disabled="box.batchCommentEmail.adding">Cancel</button>
-            <button type="button" class="btn btn-primary" ng-click="box.addBatchCommentEmail(box.batchCommentEmail)" ng-disabled="box.batchCommentEmail.adding">
+            <button type="button" class="btn btn-primary" ng-click="box.addBatchCommentEmail(box.batchCommentEmail)" ng-disabled="box.disableAddBatchComment()">
                 <span ng-if="!box.batchCommentEmail.adding">Comment</span>
                 <span ng-if="box.batchCommentEmail.adding">
                     Adding Comment

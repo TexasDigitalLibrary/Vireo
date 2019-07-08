@@ -27,10 +27,10 @@ var dataControlledVocabulary1 = {
             identifier: "vw2",
             moving: false,
             name: "PROQUEST"
-        },
+        }
     ],
     enum: true,
-    entityProperty: true
+    isEntityProperty: true
 };
 
 var dataControlledVocabulary2 = {
@@ -40,7 +40,7 @@ var dataControlledVocabulary2 = {
     entityName: "Attachment",
     dictionary: [],
     enum: false,
-    entityProperty: true
+    isEntityProperty: true
 };
 
 var dataControlledVocabulary3 = {
@@ -50,15 +50,27 @@ var dataControlledVocabulary3 = {
     entityName: null,
     dictionary: [],
     enum: false,
-    entityProperty: false
+    isEntityProperty: false
 };
 
 var dataControlledVocabulary4 = {
     id: 4,
     position: 4,
-    name: "guarantor",
+    name: "default",
     entityName: "Embargo",
     dictionary: [
+        {
+            id: 5,
+            identifier: "vw5",
+            adding: false,
+            beginAdd: false,
+            clickedCell: false,
+            contacts: ["c", "a"],
+            definition: "",
+            editing: false,
+            moving: false,
+            name: "PROQUEST"
+        },
         {
             id: 1,
             adding: false,
@@ -70,22 +82,10 @@ var dataControlledVocabulary4 = {
             identifier: "vw1",
             moving: false,
             name: "DEFAULT"
-        },
-        {
-            id: 2,
-            adding: false,
-            beginAdd: false,
-            clickedCell: false,
-            contacts: ["a", "c"],
-            definition: "",
-            editing: false,
-            identifier: "vw2",
-            moving: false,
-            name: "PROQUEST"
-        },
+        }
     ],
     enum: true,
-    entityProperty: true
+    isEntityProperty: true
 };
 
 var dataControlledVocabulary5 = {
@@ -95,7 +95,7 @@ var dataControlledVocabulary5 = {
     entityName: "Attachment",
     dictionary: [],
     enum: false,
-    entityProperty: true
+    isEntityProperty: true
 };
 
 var dataControlledVocabulary6 = {
@@ -105,7 +105,7 @@ var dataControlledVocabulary6 = {
     entityName: null,
     dictionary: [],
     enum: false,
-    entityProperty: false
+    isEntityProperty: false
 };
 
 var mockControlledVocabulary = function($q) {
@@ -114,5 +114,5 @@ var mockControlledVocabulary = function($q) {
     return model;
 };
 
-angular.module('mock.controlledVocabulary', []).service('ControlledVocabulary', mockControlledVocabulary);
+angular.module("mock.controlledVocabulary", []).service("ControlledVocabulary", mockControlledVocabulary);
 

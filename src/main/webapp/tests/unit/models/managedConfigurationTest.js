@@ -1,20 +1,30 @@
 describe('model: ManagedConfiguration', function () {
     var model, rootScope, sanitize, scope, WsApi;
 
+    var initializeVariables = function(settings) {
+        inject(function ($rootScope, $sanitize, _WsApi_) {
+            rootScope = $rootScope;
+            sanitize = $sanitize;
+
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeModel = function(settings) {
+        inject(function (ManagedConfiguration) {
+            scope = rootScope.$new();
+
+            model = angular.extend(new ManagedConfiguration(), dataManagedConfiguration1);
+        });
+    };
+
     beforeEach(function() {
         module('core');
         module('vireo');
         module('mock.wsApi');
 
-        inject(function ($rootScope, $sanitize, ManagedConfiguration, _WsApi_) {
-            rootScope = $rootScope;
-            sanitize = $sanitize;
-            scope = $rootScope.$new();
-
-            WsApi = _WsApi_;
-
-            model = angular.extend(new ManagedConfiguration(), dataManagedConfiguration1);
-        });
+        initializeVariables();
+        initializeModel();
     });
 
     describe('Is the model defined', function () {

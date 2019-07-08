@@ -135,3 +135,4 @@ theme:
   manager: false
   default.css:
   defaults.location:
+  initialize: false

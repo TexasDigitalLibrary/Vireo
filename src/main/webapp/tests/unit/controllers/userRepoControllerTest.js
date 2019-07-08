@@ -1,29 +1,37 @@
-describe('controller: UserRepoController', function () {
+describe("controller: UserRepoController", function () {
 
-    var controller, q, scope;
+    var controller, q, scope, timeout, WsApi;
+
+    var initializeVariables = function(settings) {
+        inject(function ($q, $timeout, _WsApi_) {
+            q = $q;
+            timeout = $timeout;
+
+            WsApi = _WsApi_;
+        });
+    };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $route, $q, $rootScope, $timeout, $window, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_, _WsApi_) {
-            q = $q;
+        inject(function ($controller, $location, $route, $rootScope, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            controller = $controller('UserRepoController', {
+            controller = $controller("UserRepoController", {
                 $location: $location,
                 $q: q,
                 $route: $route,
                 $scope: scope,
-                $timeout: $timeout,
-                $window: $window,
+                $timeout: timeout,
+                $window: mockWindow(),
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 User: mockParameterModel(q, mockUser),
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,
-                WsApi: _WsApi_
+                WsApi: WsApi
             });
 
             // ensure that the isReady() is called.
@@ -34,63 +42,64 @@ describe('controller: UserRepoController', function () {
     };
 
     beforeEach(function() {
-        module('core');
-        module('vireo');
-        module('mock.modalService');
-        module('mock.restApi');
-        module('mock.storageService');
-        module('mock.user');
-        module('mock.userRepo');
-        module('mock.userService');
-        module('mock.wsApi');
+        module("core");
+        module("vireo");
+        module("mock.modalService");
+        module("mock.restApi");
+        module("mock.storageService");
+        module("mock.user");
+        module("mock.userRepo");
+        module("mock.userService");
+        module("mock.wsApi");
 
         installPromiseMatchers();
+        initializeVariables();
         initializeController();
     });
 
-    describe('Is the controller defined', function () {
-        it('should be defined for admin', function () {
+    describe("Is the controller defined", function () {
+        it("should be defined for admin", function () {
             expect(controller).toBeDefined();
         });
-        it('should be defined for manager', function () {
+        it("should be defined for manager", function () {
             initializeController({role: "ROLE_MANAGER"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for reviewer', function () {
+        it("should be defined for reviewer", function () {
             initializeController({role: "ROLE_REVIEWER"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for student', function () {
+        it("should be defined for student", function () {
             initializeController({role: "ROLE_STUDENT"});
             expect(controller).toBeDefined();
         });
-        it('should be defined for anonymous', function () {
+        it("should be defined for anonymous", function () {
             initializeController({role: "ROLE_ANONYMOUS"});
             expect(controller).toBeDefined();
         });
     });
 
-    describe('Are the scope methods defined', function () {
-        it('allowableRoles should be defined', function () {
+    describe("Are the scope methods defined", function () {
+        it("allowableRoles should be defined", function () {
             expect(scope.allowableRoles).toBeDefined();
             expect(typeof scope.allowableRoles).toEqual("function");
         });
-        it('disableUpdateRole should be defined', function () {
+        it("disableUpdateRole should be defined", function () {
             expect(scope.disableUpdateRole).toBeDefined();
             expect(typeof scope.disableUpdateRole).toEqual("function");
         });
-        it('setRole should be defined', function () {
+        it("setRole should be defined", function () {
             expect(scope.setRole).toBeDefined();
             expect(typeof scope.setRole).toEqual("function");
         });
-        it('updateRole should be defined', function () {
+        it("updateRole should be defined", function () {
             expect(scope.updateRole).toBeDefined();
             expect(typeof scope.updateRole).toEqual("function");
         });
     });
 
-    describe('Do the scope methods work as expected', function () {
-        it('allowableRoles should return allowed roles', function () {
+    describe("Do the scope methods work as expected", function () {
+        it("allowableRoles should return allowed roles", function () {
             var response;
 
             response = scope.allowableRoles("ROLE_ADMIN");
@@ -117,7 +126,7 @@ describe('controller: UserRepoController', function () {
 
             initializeController({role: "ROLE_ANONYMOUS"});
         });
-        it('disableUpdateRole should return a boolean', function () {
+        it("disableUpdateRole should return a boolean", function () {
             var user = mockUser(q);
             var response;
 
@@ -136,14 +145,14 @@ describe('controller: UserRepoController', function () {
             response = scope.disableUpdateRole(user);
             expect(response).toBe(true);
         });
-        it('setRole should assign the role', function () {
+        it("setRole should assign the role", function () {
             var user = mockUser(q);
 
             scope.roles = [];
             scope.setRole(user);
             expect(scope.roles[dataUser1.email]).toBeDefined();
         });
-        it('updateRole should update the role', function () {
+        it("updateRole should update the role", function () {
             var user = mockUser(q);
             delete user.role;
 

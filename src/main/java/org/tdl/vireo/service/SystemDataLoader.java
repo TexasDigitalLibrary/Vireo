@@ -248,7 +248,7 @@ public class SystemDataLoader {
 
         List<File> controlledVocabularyFiles = new ArrayList<File>();
         try {
-            controlledVocabularyFiles = fileIOUtility.getResouceDirectoryListing("classpath:/controlled_vocabularies/");
+            controlledVocabularyFiles = fileIOUtility.getResourceDirectoryListing("classpath:/controlled_vocabularies/");
         } catch (IOException e) {
             e.printStackTrace();
         }

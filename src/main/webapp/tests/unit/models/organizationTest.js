@@ -1,6 +1,24 @@
 describe('model: Organization', function () {
     var model, rootScope, q, scope, RestApi, WsApi;
 
+    var initializeVariables = function(settings) {
+        inject(function ($q, $rootScope, _RestApi_, _WsApi_) {
+            q = $q;
+            rootScope = $rootScope;
+
+            RestApi = _RestApi_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeModel = function(settings) {
+        inject(function (Organization) {
+            scope = rootScope.$new();
+
+            model = angular.extend(new Organization(), dataOrganization1);
+        });
+    };
+
     beforeEach(function() {
         module('core');
         module('vireo');
@@ -8,16 +26,8 @@ describe('model: Organization', function () {
         module('mock.restApi');
         module('mock.wsApi');
 
-        inject(function ($q, $rootScope, Organization, _RestApi_, _WsApi_) {
-            q = $q;
-            rootScope = $rootScope;
-            scope = $rootScope.$new();
-
-            RestApi = _RestApi_;
-            WsApi = _WsApi_;
-
-            model = angular.extend(new Organization(), dataOrganization1);
-        });
+        initializeVariables();
+        initializeModel();
     });
 
     describe('Is the model defined', function () {

@@ -16,8 +16,8 @@ var dataSubmissionRepo3 = [
     dataSubmission6
 ];
 
-angular.module('mock.submissionRepo', []).service('SubmissionRepo', function($q) {
-    var repo = mockRepo('SubmissionRepo', $q, mockSubmission, dataSubmissionRepo1);
+angular.module("mock.submissionRepo", []).service("SubmissionRepo", function($q) {
+    var repo = mockRepo("SubmissionRepo", $q, mockSubmission, dataSubmissionRepo1);
 
     repo.batchAssignTo = function (assignee) {
         var payload = {};

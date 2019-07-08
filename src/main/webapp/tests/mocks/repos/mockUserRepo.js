@@ -16,8 +16,8 @@ var dataUserRepo3 = [
     dataUser6
 ];
 
-angular.module('mock.userRepo', []).service('UserRepo', function($q) {
-    var repo = mockRepo('UserRepo', $q, mockUser, dataUserRepo1);
+angular.module("mock.userRepo", []).service("UserRepo", function($q) {
+    var repo = mockRepo("UserRepo", $q, mockUser, dataUserRepo1);
 
     repo.getAllByRole = function (roles) {
         var found;

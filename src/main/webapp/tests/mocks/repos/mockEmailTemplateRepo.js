@@ -16,8 +16,8 @@ var dataEmailTemplateRepo3 = [
     dataEmailTemplate6
 ];
 
-angular.module('mock.emailTemplateRepo', []).service('EmailTemplateRepo', function($q) {
-    var repo = mockRepo('EmailTemplateRepo', $q, mockEmailTemplate, dataEmailTemplateRepo1);
+angular.module("mock.emailTemplateRepo", []).service("EmailTemplateRepo", function($q) {
+    var repo = mockRepo("EmailTemplateRepo", $q, mockEmailTemplate, dataEmailTemplateRepo1);
 
     return repo;
 });

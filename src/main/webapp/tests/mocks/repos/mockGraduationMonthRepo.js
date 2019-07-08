@@ -16,8 +16,8 @@ var dataGraduationMonthRepo3 = [
     dataGraduationMonth6
 ];
 
-angular.module('mock.graduationMonthRepo', []).service('GraduationMonthRepo', function($q) {
-    var repo = mockRepo('GraduationMonthRepo', $q, mockGraduationMonth, dataGraduationMonthRepo1);
+angular.module("mock.graduationMonthRepo", []).service("GraduationMonthRepo", function($q) {
+    var repo = mockRepo("GraduationMonthRepo", $q, mockGraduationMonth, dataGraduationMonthRepo1);
 
     return repo;
 });

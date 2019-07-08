@@ -249,7 +249,7 @@ var mockStudentSubmission = function($q) {
     model.updateAdvisorApproval = function (approval) {
         var payload = {
             Submission: angular.copy(model)
-        }
+        };
         return payloadPromise($q.defer(), payload);
     };
 
@@ -268,5 +268,5 @@ var mockStudentSubmission = function($q) {
     return model;
 };
 
-angular.module('mock.studentSubmission', []).service('StudentSubmission', mockStudentSubmission);
+angular.module("mock.studentSubmission", []).service("StudentSubmission", mockStudentSubmission);
 

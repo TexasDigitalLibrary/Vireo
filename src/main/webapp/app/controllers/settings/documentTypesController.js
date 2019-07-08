@@ -61,7 +61,7 @@ vireo.controller("DocumentTypesController", function($controller, $scope, Docume
         };
 
         $scope.reorderDocumentTypes = function(src, dest) {
-            DocumentTypeRepo.reorder(src, dest);
+            return DocumentTypeRepo.reorder(src, dest);
         };
 
         $scope.selectDocumentType = function(index) {

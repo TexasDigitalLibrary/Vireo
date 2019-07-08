@@ -16,8 +16,8 @@ var dataSavedFilterRepo3 = [
     dataSavedFilter6
 ];
 
-angular.module('mock.savedFilterRepo', []).service('SavedFilterRepo', function($q) {
-    var repo = mockRepo('SavedFilterRepo', $q, mockSavedFilter, dataSavedFilterRepo1);
+angular.module("mock.savedFilterRepo", []).service("SavedFilterRepo", function($q) {
+    var repo = mockRepo("SavedFilterRepo", $q, mockSavedFilter, dataSavedFilterRepo1);
 
     return repo;
 });

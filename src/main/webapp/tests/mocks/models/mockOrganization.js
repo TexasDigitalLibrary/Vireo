@@ -1,41 +1,108 @@
 var dataOrganization1 = {
     id: 1,
+    acceptsSubmissions: true,
+    aggregateWorkflowSteps: [],
+    category: {
+        id: 1,
+        name: "OrganizationCategory1"
+    },
+    childrenOrganizations: [],
+    defaultRecipients: [],
+    emails: [],
+    emailWorkflowRules: [],
     name: "organization 1",
-    defaultRecipients: []
+    originalWorkflowSteps: [],
+    parentOrganization: null
 };
 
 var dataOrganization2 = {
     id: 2,
+    acceptsSubmissions: false,
+    aggregateWorkflowSteps: [],
+    category: {
+        id: 1,
+        name: "OrganizationCategory1"
+    },
+    childrenOrganizations: [],
+    defaultRecipients: [],
+    emails: [],
+    emailWorkflowRules: [],
     name: "organization 2",
-    defaultRecipients: []
+    originalWorkflowSteps: [],
+    parentOrganization: null
 };
 
 var dataOrganization3 = {
     id: 3,
+    acceptsSubmissions: true,
+    aggregateWorkflowSteps: [],
+    category: {
+        id: 2,
+        name: "OrganizationCategory2"
+    },
+    childrenOrganizations: [],
+    defaultRecipients: [],
+    emails: [],
+    emailWorkflowRules: [],
     name: "organization 3",
-    defaultRecipients: []
+    originalWorkflowSteps: [],
+    parentOrganization: null
 };
 
 var dataOrganization4 = {
     id: 4,
+    acceptsSubmissions: false,
+    aggregateWorkflowSteps: [],
+    category: {
+        id: 2,
+        name: "OrganizationCategory2"
+    },
+    childrenOrganizations: [],
+    defaultRecipients: [],
+    emails: [],
+    emailWorkflowRules: [],
     name: "organization 4",
-    defaultRecipients: []
+    originalWorkflowSteps: [],
+    parentOrganization: null
 };
 
 var dataOrganization5 = {
     id: 5,
+    acceptsSubmissions: true,
+    aggregateWorkflowSteps: [],
+    category: {
+        id: 3,
+        name: "OrganizationCategory3"
+    },
+    childrenOrganizations: [],
+    defaultRecipients: [],
+    emails: [],
+    emailWorkflowRules: [],
     name: "organization 5",
-    defaultRecipients: []
+    originalWorkflowSteps: [],
+    parentOrganization: null
 };
 
 var dataOrganization6 = {
     id: 6,
+    acceptsSubmissions: false,
+    aggregateWorkflowSteps: [],
+    category: {
+        id: 3,
+        name: "OrganizationCategory3"
+    },
+    childrenOrganizations: [],
+    defaultRecipients: [],
+    emails: [],
+    emailWorkflowRules: [],
     name: "organization 6",
-    defaultRecipients: []
+    originalWorkflowSteps: [],
+    parentOrganization: null
 };
+
 var mockOrganization = function($q) {
     var model = mockModel("Organization", $q, dataOrganization1);
-    
+
     model.defaultRecipients = [{
         name: "Submitter",
         type: "SUBMITTER",
@@ -45,6 +112,11 @@ var mockOrganization = function($q) {
         name: "Assignee",
         type: "ASSIGNEE",
         data: "Assignee"
+      },
+      {
+        name: "Advisor",
+        type: "ADVISOR",
+        data: "Advisor"
       },
       {
         name: "Organization",
@@ -57,7 +129,7 @@ var mockOrganization = function($q) {
         return payloadPromise($q.defer());
     };
 
-    
+
     model.changeEmailWorkflowRuleActivation = function(rule) {
         return payloadPromise($q.defer());
     };
@@ -77,5 +149,5 @@ var mockOrganization = function($q) {
     return model;
 };
 
-angular.module('mock.organization', []).service('Organization', mockOrganization);
+angular.module("mock.organization", []).service("Organization", mockOrganization);
 

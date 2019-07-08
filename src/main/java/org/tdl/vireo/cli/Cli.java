@@ -32,9 +32,8 @@ import edu.tamu.weaver.auth.model.Credentials;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-
 /**
- * Activate the Vireo command line interface by passing the console argument to Maven 
+ * Activate the Vireo command line interface by passing the console argument to Maven
  *
  * mvn clean spring-boot:run -Drun.arguments=console
  * 
@@ -126,8 +125,32 @@ public class Cli implements CommandLineRunner {
                     }
                     for (int i = 0; i < acct; i++) {
                         String enc_pwd = passwordEncoder.encode("password");
-                        User submitter = userRepo.create("test" + (i + 1) + "@example.com", "test", "example", enc_pwd, Role.ROLE_STUDENT);
-                        userRepo.saveAndFlush(submitter);
+                        User testacct = userRepo.create("student" + (i + 1) + "@example.com", "student" + (i + 1), "example", enc_pwd, Role.ROLE_STUDENT);
+                        System.out.println("Creating account with email " + testacct.getEmail() + " with role ROLE_STUDENT");
+                        userRepo.saveAndFlush(testacct);
+                        testacct = userRepo.create("reviewer" + (i + 1) + "@example.com", "reviewer" + (i + 1), "example", enc_pwd, Role.ROLE_REVIEWER);
+                        System.out.println("Creating account with email " + testacct.getEmail() + " with role ROLE_REVIEWER");
+                        userRepo.saveAndFlush(testacct);
+                        testacct = userRepo.create("manager" + (i + 1) + "@example.com", "", "manager" + (i + 1), enc_pwd, Role.ROLE_MANAGER);
+                        System.out.println("Creating account with email " + testacct.getEmail() + " with role ROLE_MANAGER");
+                        userRepo.saveAndFlush(testacct);
+                    }
+                    break;
+
+                case "admin_accounts":
+                    int admin_acct = 0;
+                    if (commandArgs.size() > 0) {
+                        try {
+                            admin_acct = Integer.parseInt(commandArgs.get(0));
+                        } catch (Exception e) {
+                            System.err.println("unable to parse as a number of items: " + commandArgs.get(0));
+                        }
+                    }
+                    for (int i = 0; i < admin_acct; i++) {
+                        String enc_pwd = passwordEncoder.encode("password");
+                        User testacct = userRepo.create("admin" + (i + 1) + "@example.com", "", "admin" + (i + 1), enc_pwd, Role.ROLE_ADMIN);
+                        System.out.println("Creating account with email " + testacct.getEmail() + " with role ROLE_ADMIN");
+                        userRepo.saveAndFlush(testacct);
                     }
                     break;
 

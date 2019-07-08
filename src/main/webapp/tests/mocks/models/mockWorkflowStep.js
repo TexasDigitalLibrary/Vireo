@@ -90,5 +90,5 @@ var mockWorkflowStep = function($q) {
     return model;
 };
 
-angular.module('mock.workflowStep', []).service('WorkflowStep', mockWorkflowStep);
+angular.module("mock.workflowStep", []).service("WorkflowStep", mockWorkflowStep);
 

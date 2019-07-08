@@ -18,8 +18,9 @@
     </th:block>
      
     <!-- dc.contributor.advisor = Committee Memmbers who are flagged as chair (may be multiple) -->
-    <th:block th:if="${(COMMITTEE_CHAIR != null) && (COMMITTEE_CHAIR.length() > 0)}"> 
-    	<dcvalue element="contributor" qualifier="advisor" th:text="${COMMITTEE_CHAIR}"></dcvalue>
+
+    <th:block th:each="CCFV : ${COMMITTEE_CHAIR_FIELD_VALUES}">
+        <dcvalue element="contributor" qualifier="advisor" th:text="${CCFV.getValue()}"></dcvalue>
 	</th:block>
     
     <!-- dc.contributor.committeeMember = Committee Members who are not flagged as chair (likely multiple) -->
@@ -28,14 +29,12 @@
 	</th:block>
 
     
-    <!-- dc.date.created = Graduation date in "YYYY-MM" format -->
-    <dcvalue element="date" qualifier="created" th:text="${GRADUATION_DATE_YEAR_MONTH_STRING}"></dcvalue>
-    <!-- dc.date.submitted = Graduation date in "month YYYY" format -->
-    <dcvalue element="date" qualifier="submitted" th:text="${GRADUATION_DATE_MONTH_YEAR_STRING}"></dcvalue>
+    <!-- dc.date.created = Graduation date in "Month YYYY" format -->
+    <dcvalue element="date" qualifier="created" th:text="${GRADUATION_DATE_MONTH_YEAR_STRING}"></dcvalue>
 
-    <!-- dc.date.issued = Approval date in "YYYY-MM-DD" format -->
-    <dcvalue element="date" qualifier="issued" th:text="${FORMATTED_APPLICATION_APPROVAL_DATE}"></dcvalue>
-        
+    <!-- dc.date.issued = Graduation date in "YYYY-MM" format -->
+    <dcvalue element="date" qualifier="issued" th:text="${GRADUATION_DATE_YEAR_MONTH_STRING}"></dcvalue>
+
     <!-- dc.format.mimetype = Primary Document's mimetype, almost always "application/pdf" -->
     <dcvalue element="format" qualifier="mimetype" th:text="${PRIMARY_DOCUMENT_MIMETYPE}"></dcvalue>
         
@@ -74,8 +73,8 @@
 		</th:block>
 		
 		<!-- dc.description.provenance = Committee Embargo Approval Date -->
-		<th:block th:if="${ EMBARGO_APPROVAL_DATE != null }">
-       		<dcvalue element="description" qualifier="provenance" th:text="${ 'The committee advisor approved the embargo selection for this ' + SUBMISSION_TYPE+ ' on '+ FORMATTED_EMBARGO_APPROVAL_DATE +'.' }">               
+		<th:block th:if="${ COMMITTEE_EMBARGO_APPROVAL_DATE != null }">
+       		<dcvalue element="description" qualifier="provenance" th:text="${ 'The committee advisor approved the embargo selection for this ' + SUBMISSION_TYPE+ ' on '+ FORMATTED_COMMITTEE_EMBARGO_APPROVAL_DATE +'.' }">               
 			</dcvalue>
 		</th:block>
 		
