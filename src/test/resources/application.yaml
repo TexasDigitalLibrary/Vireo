@@ -49,7 +49,7 @@ logging:
   level:
     org:
       tdl: ERROR
-      hibernate: ERROR
+      hibernate: OFF
       springframework: ERROR
     edu.tamu: ERROR
     ro.isdc.wro: ERROR

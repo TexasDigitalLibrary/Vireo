@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/base.xml" />
+  <logger name="com.zaxxer" level="ERROR"/>
+  <logger name="org.apache" level="ERROR"/>
+  <logger name="org.hibernate" level="OFF"/>
+  <logger name="org.springframework" level="ERROR"/>
+  <logger name="org.tdl.vireo" level="ERROR"/>
+  <logger name="edu.tamu" level="ERROR"/>
+  <property name="root.level.console" value="OFF" />
+</configuration>
