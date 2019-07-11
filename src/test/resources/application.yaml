@@ -48,10 +48,11 @@ spring:
 logging:
   level:
     org:
-      tdl: INFO
-      springframework: INFO
-    edu.tamu: INFO
-    ro.isdc.wro: INFO
+      tdl: ERROR
+      hibernate: ERROR
+      springframework: ERROR
+    edu.tamu: ERROR
+    ro.isdc.wro: ERROR
   file: logs/vireo.log
 
 # generated values
