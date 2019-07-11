@@ -71,6 +71,7 @@ logging:
   level:
     org:
       tdl: INFO
+      hibernate: INFO
       springframework: INFO
     edu.tamu: INFO
     ro.isdc.wro: INFO
