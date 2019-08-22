@@ -19,6 +19,7 @@
             placeholder="Name of the embargo"
             form="forms.update"
             validations="embargoRepo.getValidations()"
+            disabled="isSystemRequired"
             results="modalData.ValidationResults">
         </validatedinput>
 
@@ -30,6 +31,7 @@
             placeholder="Description of the embargo"
             form="forms.update"
             validations="embargoRepo.getValidations()"
+            disabled="isSystemRequired"
             results="modalData.ValidationResults">
         </validatedinput>
 
@@ -41,6 +43,7 @@
             placeholder="Duration of the embargo"
             form="forms.update"
             validations="embargoRepo.getValidations()"
+            disabled="isSystemRequired"
             results="modalData.ValidationResults">
         </validatedinput>
 
@@ -55,11 +58,12 @@
             falsevalue="12"
             form="forms.update"
             validations="embargoRepo.getValidations()"
+            disabled="isSystemRequired"
             results="modalData.ValidationResults">
         </validatedinput>
 
         <validatedinput
-        id="edit-embargo-is-active"
+            id="edit-embargo-is-active"
             type="checkbox"
             model="modalData"
             property="isActive"
@@ -83,6 +87,7 @@
             id="edit-embargo-delete"
             type="button"
             class="btn btn-danger"
+            ng-disabled="isSystemRequired(modalData)"
             ng-click="removeEmbargo()">Delete</button>
         <button
             id="edit-embargo-save"
