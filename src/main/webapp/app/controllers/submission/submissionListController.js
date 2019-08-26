@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, CustomActionValueRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, CustomActionValueRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -27,7 +27,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.activeFilters = new NamedSearchFilterGroup();
 
-    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready()]);
+    $scope.fieldPredicates = FieldPredicateRepo.getAll();
+
+    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready()]);
 
     var updateChange = function(change) {
         $scope.change = change;
@@ -314,16 +316,23 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                   data: "Assignee"
                 },
                 {
-                  name: "Advisor",
-                  type: EmailRecipientType.ADVISOR,
-                  data: "Advisor"
-                },
-                {
                   name: "Organization",
                   type: EmailRecipientType.ORGANIZATION,
                   data: null
                 }
             ];
+
+            for (var i in $scope.fieldPredicates) {
+                if ($scope.fieldPredicates[i].value === "dc.contributor.advisor") {
+                    emails.push({
+                      name: "Committee Chair",
+                      type: EmailRecipientType.CONTACT,
+                      data: $scope.fieldPredicates[i].id
+                    });
+
+                    break;
+                }
+            }
 
             return emails;
         };

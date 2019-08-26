@@ -15,11 +15,6 @@ vireo.model("Organization", function Organization($q, WsApi, InputTypes, EmailRe
           data: "Assignee"
         },
         {
-          name: "Advisor",
-          type: EmailRecipientType.ADVISOR,
-          data: "Advisor"
-        },
-        {
           name: "Organization",
           type: EmailRecipientType.ORGANIZATION,
           data: null
@@ -70,7 +65,7 @@ vireo.model("Organization", function Organization($q, WsApi, InputTypes, EmailRe
             InputTypes.INPUT_CONTACT,
             InputTypes.INPUT_CONTACT_SELECT
           ];
-          
+
           var dynamicRecipients = [];
 
           angular.forEach(organization.aggregateWorkflowSteps, function (aggregateWorkflowStep) {
@@ -84,7 +79,7 @@ vireo.model("Organization", function Organization($q, WsApi, InputTypes, EmailRe
                   }
               });
           });
-          
+
           return angular.copy(organization.defaultRecipients).concat(dynamicRecipients);
         };
 

@@ -3,6 +3,7 @@ package org.tdl.vireo.service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,6 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailRecipientAssignee;
-import org.tdl.vireo.model.EmailRecipientAdvisor;
 import org.tdl.vireo.model.EmailRecipientContact;
 import org.tdl.vireo.model.EmailRecipientOrganization;
 import org.tdl.vireo.model.EmailRecipientPlainAddress;
@@ -24,13 +24,12 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
-import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
-import org.tdl.vireo.model.repo.EmailTemplateRepo;
+import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
-import org.tdl.vireo.model.repo.InputTypeRepo;
+import org.tdl.vireo.model.repo.impl.AbstractEmailRecipientRepoImpl;
 import org.tdl.vireo.utility.TemplateUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,19 +50,19 @@ public class SubmissionEmailService {
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
+    private AbstractEmailRecipientRepoImpl abstractEmailRecipientRepoImpl;
+
+    @Autowired
     private ActionLogRepo actionLogRepo;
 
     @Autowired
     private EmailSender emailSender;
 
     @Autowired
-    private EmailTemplateRepo emailTemplateRepo;
+    private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
     @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
-
-    @Autowired
-    private InputTypeRepo inputTypeRepo;
 
     @Autowired
     private TemplateUtility templateUtility;
@@ -75,64 +74,49 @@ public class SubmissionEmailService {
      * @param submission Associated Submission.
      */
     public void sendAdvisorEmails(User user, Submission submission) {
-        InputType contactInputType = inputTypeRepo.findByName("INPUT_CONTACT");
-        EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired("SYSTEM Advisor Review Request", true);
+        EmailRecipient advisorRecipient = abstractEmailRecipientRepoImpl.createAdvisorRecipient();
+        ArrayList<EmailWorkflowRule> emailWorkflowRules = (ArrayList<EmailWorkflowRule>) emailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(advisorRecipient, false);
 
-        String subject = templateUtility.compileString(template.getSubject(), submission);
-        String content = templateUtility.compileTemplate(template, submission);
-
-        List<FieldValue> advisorList = submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
-        SimpleMailMessage smm = new SimpleMailMessage();
-        List<String> recipientList = new ArrayList<>();
-        advisorList.forEach(afv -> {
-            for (String afvcontact : afv.getContacts()) {
-                if (!recipientList.contains(afvcontact)) {
-                    recipientList.add(afvcontact);
-                }
-            }
-        });
-        if(recipientList.isEmpty()){
-            actionLogRepo.createPublicLog(submission, user, "No Advisor review emails to generate.");
-        }else{
-            smm.setTo(recipientList.toArray(new String[0]));
-            smm.setSubject(subject);
-            smm.setText(content);
-
-            emailSender.send(smm);
-
-            actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
+        if (emailWorkflowRules.size() == 0) {
+            actionLogRepo.createPublicLog(submission, user, "No Advisor email workflow rules are defined and enabled.");
         }
-/****
-        List<String> fullRecipientList = new ArrayList<>();
+        else {
+            boolean emailed = false;
+            Iterator<EmailWorkflowRule> emailWorkflowRuleIterator = emailWorkflowRules.iterator();
 
-        // TODO: this needs to only send email to the advisor not any field value that is contact type
-        submission.getFieldValuesByInputType(contactInputType).forEach(fv -> {
-            SimpleMailMessage smm = new SimpleMailMessage();
+            while (emailWorkflowRuleIterator.hasNext()) {
+                EmailWorkflowRule emailWorkflowRule = emailWorkflowRuleIterator.next();
+                EmailTemplate template = emailWorkflowRule.getEmailTemplate();
+                String subject = templateUtility.compileString(template.getSubject(), submission);
+                String content = templateUtility.compileTemplate(template, submission);
 
-            List<String> recipientList = new ArrayList<>();
-            for (String contact : fv.getContacts()) {
-                if (!fullRecipientList.contains(contact)) {
-                    fullRecipientList.add(contact);
-                    recipientList.add(contact);
+                List<FieldValue> advisorList = submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
+                SimpleMailMessage smm = new SimpleMailMessage();
+                List<String> recipientList = new ArrayList<>();
+                advisorList.forEach(afv -> {
+                    for (String afvcontact : afv.getContacts()) {
+                        if (!recipientList.contains(afvcontact)) {
+                            recipientList.add(afvcontact);
+                        }
+                    }
+                });
+
+                if (!recipientList.isEmpty()) {
+                    smm.setTo(recipientList.toArray(new String[0]));
+                    smm.setSubject(subject);
+                    smm.setText(content);
+
+                    emailSender.send(smm);
+                    emailed = true;
                 }
             }
 
-            smm.setTo(String.join(",", recipientList));
-            smm.setTo(recipientList.toArray(new String[0]));
-
-            if ("true".equals(user.getSetting("ccEmail"))) {
-                String preferedEmail = user.getSetting("preferedEmail");
-                smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+            if (emailed) {
+                actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
+            } else {
+                actionLogRepo.createPublicLog(submission, user, "No Advisor review emails to generate.");
             }
-
-            smm.setSubject(subject);
-            smm.setText(content);
-
-            emailSender.send(smm);
-        });
-
-        actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
-****/
+        }
     }
 
     /**
@@ -232,7 +216,6 @@ public class SubmissionEmailService {
                         recipientLists.get(templateId).remove(email);
                     }
                 }
-
             } else {
                 LOG.debug("\tRule disabled or of irrelevant status condition.");
             }
@@ -284,14 +267,10 @@ public class SubmissionEmailService {
           recipient = new EmailRecipientAssignee();
           break;
         }
-        case ADVISOR: {
-          recipient = new EmailRecipientAdvisor();
-          break;
-        }
         case CONTACT: {
           String label = (String) emailRecipientMap.get("name");
           FieldPredicate fp = fieldPredicateRepo.getOne(new Long((Integer)emailRecipientMap.get("data")));
-          if(label != null & fp != null) {
+          if (label != null & fp != null) {
             recipient = new EmailRecipientContact(label, fp);
           }
           break;

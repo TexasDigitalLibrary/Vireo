@@ -292,9 +292,6 @@ public class OrganizationController {
         case "ASSIGNEE":
             emailRecipient = abstractEmailRecipientRepo.createAssigneeRecipient();
             break;
-        case "ADVISOR":
-            emailRecipient = abstractEmailRecipientRepo.createAdvisorRecipient();
-            break;
         case "ORGANIZATION":
             Organization recipientOrganization = organizationRepo.read(recipientNode.get("data").asLong());
             emailRecipient = abstractEmailRecipientRepo.createOrganizationRecipient(recipientOrganization);
