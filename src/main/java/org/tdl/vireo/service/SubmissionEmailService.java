@@ -75,7 +75,7 @@ public class SubmissionEmailService {
      */
     public void sendAdvisorEmails(User user, Submission submission) {
         EmailRecipient advisorRecipient = abstractEmailRecipientRepoImpl.createAdvisorRecipient();
-        ArrayList<EmailWorkflowRule> emailWorkflowRules = (ArrayList<EmailWorkflowRule>) emailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(advisorRecipient, false);
+        List<EmailWorkflowRule> emailWorkflowRules = emailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(advisorRecipient, false);
 
         if (emailWorkflowRules.size() == 0) {
             actionLogRepo.createPublicLog(submission, user, "No Advisor email workflow rules are defined and enabled.");
