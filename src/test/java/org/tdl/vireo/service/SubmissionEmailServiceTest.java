@@ -420,6 +420,7 @@ public class SubmissionEmailServiceTest extends MockData {
         emails.add(TEST_EMAIL_RECIPIENT_MAP1);
 
         List<Map<String, Object>> ccEmails = new ArrayList<Map<String, Object>>();
+        // TEST_EMAIL_RECIPIENT_MAP1 is added twice to test that it gets processed only once.
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP1);
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP1);
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP2);
