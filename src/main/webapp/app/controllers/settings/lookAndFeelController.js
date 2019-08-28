@@ -119,7 +119,7 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, Fil
     $scope.updateHexValue = function(type, name) {
         var hexCheck = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
         if (hexCheck.test($scope.settings.configurable[type][name].value)) {
-            $scope.delayedUpdateConfiguration(type, name);
+            $scope.updateConfiguration(type, name);
         }
     };
 
