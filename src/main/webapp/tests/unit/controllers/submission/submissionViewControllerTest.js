@@ -11,7 +11,7 @@ describe("controller: SubmissionViewController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, $routeParams, _CustomActionDefinitionRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_) {
+        inject(function ($controller, $rootScope, $routeParams, _CustomActionDefinitionRepo_, _EmbargoRepo_, _FieldPredicateRepo_, _FileUploadService_, _ModalService_, _StorageService_, _RestApi_, _StudentSubmission_, _StudentSubmissionRepo_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -23,6 +23,7 @@ describe("controller: SubmissionViewController", function () {
                 $scope: scope,
                 $window: mockWindow(),
                 CustomActionDefinitionRepo: _CustomActionDefinitionRepo_,
+                EmbargoRepo: _EmbargoRepo_,
                 FieldPredicateRepo: _FieldPredicateRepo_,
                 FileUploadService: _FileUploadService_,
                 ModalService: _ModalService_,
@@ -44,14 +45,19 @@ describe("controller: SubmissionViewController", function () {
         module("vireo");
         module("mock.customActionDefinition");
         module("mock.customActionDefinitionRepo");
+        module("mock.embargoRepo");
         module("mock.fieldPredicate");
         module("mock.fieldPredicateRepo");
+        module("mock.fieldProfile");
+        module("mock.fieldValue");
         module("mock.fileUploadService");
         module("mock.modalService");
         module("mock.restApi");
         module("mock.storageService");
         module("mock.studentSubmission");
         module("mock.studentSubmissionRepo");
+        module("mock.submission");
+        module("mock.vocabularyWord");
         module("mock.wsApi");
 
         installPromiseMatchers();
@@ -97,6 +103,10 @@ describe("controller: SubmissionViewController", function () {
         it("removableDocuments should be defined", function () {
             expect(scope.removableDocuments).toBeDefined();
             expect(typeof scope.removableDocuments).toEqual("function");
+        });
+        it("showVocabularyWord should be defined", function () {
+            expect(scope.showVocabularyWord).toBeDefined();
+            expect(typeof scope.showVocabularyWord).toEqual("function");
         });
         it("updateActionLogLimit should be defined", function () {
             expect(scope.updateActionLogLimit).toBeDefined();
@@ -180,6 +190,71 @@ describe("controller: SubmissionViewController", function () {
             var fieldValue = new mockFieldValue(q);
 
             response = scope.removableDocuments(fieldValue);
+        });
+        it("showVocabularyWord should return a boolean", function () {
+            var response;
+            var vocabularyWord = new mockVocabularyWord(q);
+            var fieldProfile = new mockFieldProfile(q);
+            var fieldPredicate = new mockFieldPredicate(q);
+            var fieldValue1 = new mockFieldValue(q);
+            var fieldValue2 = new mockFieldValue(q);
+            var submission = new mockSubmission(q);
+            var embargo = new mockEmbargo(q);
+
+            fieldPredicate.id = 90;
+            fieldValue2.mock(dataFieldValue3);
+            fieldValue2.fieldPredicate = fieldPredicate;
+            submission.fieldValues = [
+                fieldValue1
+            ];
+            scope.submission = submission;
+
+            response = scope.showVocabularyWord(vocabularyWord);
+            expect(response).toBe(true);
+
+            delete fieldProfile.fieldPredicate;
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldProfile.fieldPredicate = fieldPredicate;
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.value = "proquest_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.id = embargo.id;
+            submission.fieldValues.push(fieldValue2);
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            vocabularyWord.identifier = embargo.id;
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            embargo.mock(dataEmbargo3);
+            embargo.isActive = false;
+            fieldPredicate.id = embargo.id;
+            vocabularyWord.identifier = embargo.id;
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(false);
+            vocabularyWord.identifier = embargo.id;
+
+            fieldValue2.value = embargo.name;
+            submission.fieldValues.push(fieldValue2);
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
         });
         it("updateActionLogLimit should assign an action log limit", function () {
             var response;

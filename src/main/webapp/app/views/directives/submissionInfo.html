@@ -42,7 +42,7 @@
       </label>
 
       <li ng-if="type=='flagged'">{{label}}:</li>
-      
+
       <span ng-if="type=='view' && fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus clickable" ng-click="addFieldValue()"></span>
 
       <span ng-class="type=='view' ? 'info-data form-control' : 'flagged-fields font-weight-bold'">
@@ -71,8 +71,8 @@
 
         <!-- conditionally show the edit clicker or the progress spinner -->
         <span id="{{$index}}" ng-if="type=='view' && !field.updating" class="glyphicon glyphicon-pencil clickable" ng-click="editFieldValue($event, field)"></span>
-        <span ng-if="type=='view' && !field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" ng-click="removeFieldValue(field)"></span>        
-        
+        <span ng-if="type=='view' && !field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" ng-click="removeFieldValue(field)"></span>
+
         <span ng-if="type=='view' && field.updating" class="glyphicon glyphicon-refresh spinning"></span>
       </span>
 
@@ -86,7 +86,7 @@
           <span>{{label}}</span>
         </label>
 
-        <ng-include class="info-form" src="edit"></ng-include>
+        <ng-include class="info-form" src="edit" show-vocabulary-word="showVocabularyWord"></ng-include>
 
       </div>
 

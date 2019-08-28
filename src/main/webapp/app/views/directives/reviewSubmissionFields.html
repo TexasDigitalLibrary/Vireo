@@ -36,11 +36,7 @@
         <label class="control-label col-sm-3" for="aggregateFieldProfile.name" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">Alternative Options (Not Selected):</label>
         <div class="col-sm-9 field-values">
           <ul class="list-unstyled">
-            <li ng-repeat="word in aggregateFieldProfile.controlledVocabulary.dictionary">
-              <div ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
-                <span ng-if="fv.value!==word.name">{{word.name}}</span>
-              </div>
-            </li>
+            <dictionary-words field-profile="aggregateFieldProfile" field-values="submission.fieldValues" show-vocabulary-word="showVocabularyWord()"></dictionary-words>
           </ul>
         </div>
       </div>

@@ -14,7 +14,7 @@ describe("controller: StudentSubmissionController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($anchorScroll, $controller, $rootScope, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_) {
+        inject(function ($anchorScroll, $controller, $rootScope, _EmbargoRepo_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -31,6 +31,7 @@ describe("controller: StudentSubmissionController", function () {
                 $scope: scope,
                 $timeout: timeout,
                 $window: mockWindow(),
+                EmbargoRepo: _EmbargoRepo_,
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
@@ -49,6 +50,10 @@ describe("controller: StudentSubmissionController", function () {
     beforeEach(function() {
         module("core");
         module("vireo");
+        module("mock.embargoRepo");
+        module("mock.fieldPredicate");
+        module("mock.fieldProfile");
+        module("mock.fieldValue");
         module("mock.managedConfiguration");
         module("mock.managedConfigurationRepo");
         module("mock.modalService");
@@ -56,6 +61,8 @@ describe("controller: StudentSubmissionController", function () {
         module("mock.storageService");
         module("mock.studentSubmission");
         module("mock.studentSubmissionRepo");
+        module("mock.submission");
+        module("mock.vocabularyWord");
         module("mock.wsApi");
 
         installPromiseMatchers();
@@ -81,6 +88,10 @@ describe("controller: StudentSubmissionController", function () {
         it("setActiveStep should be defined", function () {
             expect(scope.setActiveStep).toBeDefined();
             expect(typeof scope.setActiveStep).toEqual("function");
+        });
+        it("showVocabularyWord should be defined", function () {
+            expect(scope.showVocabularyWord).toBeDefined();
+            expect(typeof scope.showVocabularyWord).toEqual("function");
         });
         it("submit should be defined", function () {
             expect(scope.submit).toBeDefined();
@@ -125,6 +136,71 @@ describe("controller: StudentSubmissionController", function () {
             scope.setActiveStep(step, hash);
 
             timeout.flush();
+        });
+        it("showVocabularyWord should return a boolean", function () {
+            var response;
+            var vocabularyWord = new mockVocabularyWord(q);
+            var fieldProfile = new mockFieldProfile(q);
+            var fieldPredicate = new mockFieldPredicate(q);
+            var fieldValue1 = new mockFieldValue(q);
+            var fieldValue2 = new mockFieldValue(q);
+            var submission = new mockSubmission(q);
+            var embargo = new mockEmbargo(q);
+
+            fieldPredicate.id = 90;
+            fieldValue2.mock(dataFieldValue3);
+            fieldValue2.fieldPredicate = fieldPredicate;
+            submission.fieldValues = [
+                fieldValue1
+            ];
+            scope.submission = submission;
+
+            response = scope.showVocabularyWord(vocabularyWord);
+            expect(response).toBe(true);
+
+            delete fieldProfile.fieldPredicate;
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldProfile.fieldPredicate = fieldPredicate;
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.value = "proquest_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.id = embargo.id;
+            submission.fieldValues.push(fieldValue2);
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            vocabularyWord.identifier = embargo.id;
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            embargo.mock(dataEmbargo3);
+            embargo.isActive = false;
+            fieldPredicate.id = embargo.id;
+            vocabularyWord.identifier = embargo.id;
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(false);
+            vocabularyWord.identifier = embargo.id;
+
+            fieldValue2.value = embargo.name;
+            submission.fieldValues.push(fieldValue2);
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
         });
         it("submit should submit and change path", function () {
             spyOn(location, "path");
