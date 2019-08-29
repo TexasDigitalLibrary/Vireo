@@ -69,9 +69,11 @@ vireo.directive("submissionInfo", function () {
             };
 
             $scope.save = function (fieldValue) {
-                fieldValue.editing = false;
-                fieldValue.updating = true;
-                save(fieldValue);
+                if (!angular.isDefined(fieldValue.updating) || !fieldValue.updating) {
+                    fieldValue.editing = false;
+                    fieldValue.updating = true;
+                    save(fieldValue);
+                }
             };
 
             $scope.saveContacts = function (fieldValue) {
@@ -91,6 +93,27 @@ vireo.directive("submissionInfo", function () {
                 fieldValue.contacts = item.contacts;
                 fieldValue.value = item.name;
                 save(fieldValue);
+            };
+
+            $scope.stopEditing = function (fieldValue) {
+                angular.forEach($scope.submission.fieldValues, function(fv) {
+                    if (fv.id === fieldValue.id) {
+                        if (fv.value === fieldValue.value) {
+                            fieldValue.editing = false;
+                        }
+
+                        return;
+                    }
+                });
+            };
+
+            $scope.toggleFieldValue = function (field, value) {
+                if (field.value === value) {
+                    $scope.stopEditing(field);
+                } else {
+                    field.value = value;
+                    $scope.save(field);
+                }
             };
 
             $scope.datepickerOptions = {};
