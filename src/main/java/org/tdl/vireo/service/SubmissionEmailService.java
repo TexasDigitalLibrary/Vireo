@@ -267,6 +267,14 @@ public class SubmissionEmailService {
           recipient = new EmailRecipientAssignee();
           break;
         }
+        case ADVISOR: {
+            String label = (String) emailRecipientMap.get("name");
+            FieldPredicate fp = fieldPredicateRepo.findByValue("dc.contributor.advisor");
+            if (label != null & fp != null) {
+              recipient = new EmailRecipientContact(label, fp);
+            }
+            break;
+        }
         case CONTACT: {
           String label = (String) emailRecipientMap.get("name");
           FieldPredicate fp = fieldPredicateRepo.getOne(new Long((Integer)emailRecipientMap.get("data")));

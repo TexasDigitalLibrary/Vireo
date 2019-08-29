@@ -286,20 +286,29 @@ public class OrganizationController {
         EmailRecipient emailRecipient;
 
         switch (recipientNode.get("type").asText()) {
-        case "SUBMITTER":
+        case "SUBMITTER": {
             emailRecipient = abstractEmailRecipientRepo.createSubmitterRecipient();
             break;
-        case "ASSIGNEE":
+        }
+        case "ASSIGNEE": {
             emailRecipient = abstractEmailRecipientRepo.createAssigneeRecipient();
             break;
-        case "ORGANIZATION":
+        }
+        case "ADVISOR": {
+            FieldPredicate recipientPredicate = fieldPredicateRepo.findByValue("dc.contributor.advisor");
+            emailRecipient = abstractEmailRecipientRepo.createContactRecipient(recipientNode.get("name").asText(), recipientPredicate);
+            break;
+        }
+        case "ORGANIZATION": {
             Organization recipientOrganization = organizationRepo.read(recipientNode.get("data").asLong());
             emailRecipient = abstractEmailRecipientRepo.createOrganizationRecipient(recipientOrganization);
             break;
-        case "CONTACT":
+        }
+        case "CONTACT": {
             FieldPredicate recipientPredicate = fieldPredicateRepo.findOne(recipientNode.get("data").asLong());
             emailRecipient = abstractEmailRecipientRepo.createContactRecipient(recipientNode.get("name").asText(), recipientPredicate);
             break;
+        }
         default:
             emailRecipient = null;
         }

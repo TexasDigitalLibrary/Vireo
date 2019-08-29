@@ -1,5 +1,6 @@
 vireo.constant("EmailRecipientType", {
     SUBMITTER: "SUBMITTER",
+    ADVISOR: "ADVISOR",
     ASSIGNEE: "ASSIGNEE",
     ORGANIZATION: "ORGANIZATION",
     CONTACT: "CONTACT",
