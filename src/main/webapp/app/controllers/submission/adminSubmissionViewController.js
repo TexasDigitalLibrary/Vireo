@@ -167,8 +167,9 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         if (recipient) {
 
           if(typeof recipient === 'string') {
-            if(!$scope.validateEmailAddressee(formField)) return;
-            console.log(formField);
+
+            if(!$scope.validateEmailAddressee(formField)) return;            
+
             recipient = new EmailRecipient({
               name: recipient,
               type: EmailRecipientType.PLAIN_ADDRESS,
