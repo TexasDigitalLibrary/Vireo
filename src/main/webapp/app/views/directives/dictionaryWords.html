@@ -1,0 +1,5 @@
+<li ng-repeat="word in fieldProfile.controlledVocabulary.dictionary | filter:displayVocabularyWord">
+  <div ng-repeat="fv in fieldValues | filter:predicateMatch(fieldProfile)">
+    <span ng-if="fv.value !== word.name">{{word.name}}</span>
+  </div>
+</li>

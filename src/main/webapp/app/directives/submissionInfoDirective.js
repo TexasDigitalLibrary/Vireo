@@ -9,6 +9,7 @@ vireo.directive("submissionInfo", function () {
             fieldProfile: '=',
             fields: '=',
             label: '@',
+            showVocabularyWord: "&?",
             stacked: '=?',
             type: '@'
         },
@@ -18,7 +19,7 @@ vireo.directive("submissionInfo", function () {
             }
         },
         controller: function ($scope, $element, $timeout) {
-            
+
             $scope.refreshFieldValue = function (fieldValue) {
                 fieldValue.refresh();
                 fieldValue.setIsValid(true);
@@ -116,7 +117,7 @@ vireo.directive("submissionInfo", function () {
                 $scope.datepickerOptions.minViewMode = "month";
                 $scope.datepickerOptions.minMode = "month";
             }
-            
+
             $scope.cancel = function (fieldValue) {
                 fieldValue.refresh();
                 fieldValue.editing = false;
@@ -130,7 +131,7 @@ vireo.directive("submissionInfo", function () {
             $scope.inputProquest = function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_PROQUEST';
             };
-            
+
             $scope.inputTel = function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_TEL';
             };
@@ -142,7 +143,7 @@ vireo.directive("submissionInfo", function () {
             $scope.inputDegreeDate = function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_DEGREEDATE';
             };
-            
+
             $scope.inputDateTime = function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_DATETIME';
             };
@@ -161,6 +162,14 @@ vireo.directive("submissionInfo", function () {
 
             $scope.setConditionalTextArea = function (fieldValue, checked) {
                 fieldValue.value = checked ? fieldValue.value : null;
+            };
+
+            $scope.displayVocabularyWord = function(value, index, array) {
+                if (angular.isDefined($scope.showVocabularyWord)) {
+                    return $scope.showVocabularyWord()(value, $scope.fieldProfile);
+                }
+
+                return true;
             };
         }
     };

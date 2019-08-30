@@ -11,7 +11,7 @@ describe("controller: AdvisorSubmissionReviewController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, _AdvisorSubmissionRepo_, _ModalService_, _RestApi_, _StorageService_) {
+        inject(function ($controller, $rootScope, _AdvisorSubmissionRepo_, _EmbargoRepo_, _ModalService_, _RestApi_, _StorageService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -21,6 +21,7 @@ describe("controller: AdvisorSubmissionReviewController", function () {
                 $scope: scope,
                 $window: mockWindow(),
                 AdvisorSubmissionRepo: _AdvisorSubmissionRepo_,
+                EmbargoRepo: _EmbargoRepo_,
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
@@ -39,10 +40,14 @@ describe("controller: AdvisorSubmissionReviewController", function () {
         module("core");
         module("vireo");
         module("mock.advisorSubmissionRepo");
+        module("mock.embargoRepo");
+        module("mock.fieldPredicate");
+        module("mock.fieldProfile");
         module("mock.modalService");
         module("mock.restApi");
         module("mock.storageService");
         module("mock.submission");
+        module("mock.vocabularyWord");
         module("mock.wsApi");
 
         installPromiseMatchers();
@@ -72,6 +77,10 @@ describe("controller: AdvisorSubmissionReviewController", function () {
         it("required should be defined", function () {
             expect(scope.required).toBeDefined();
             expect(typeof scope.required).toEqual("function");
+        });
+        it("showVocabularyWord should be defined", function () {
+            expect(scope.showVocabularyWord).toBeDefined();
+            expect(typeof scope.showVocabularyWord).toEqual("function");
         });
     });
 
@@ -137,6 +146,50 @@ describe("controller: AdvisorSubmissionReviewController", function () {
 
             response = scope.required({optional: false});
             expect(response).toBe(true);
+        });
+        it("showVocabularyWord should return a boolean", function () {
+            var response;
+            var vocabularyWord = new mockVocabularyWord(q);
+            var fieldProfile = new mockFieldProfile(q);
+            var fieldPredicate = new mockFieldPredicate(q);
+            var embargo = new mockEmbargo(q);
+
+            fieldPredicate.id = 90;
+
+            response = scope.showVocabularyWord(vocabularyWord);
+            expect(response).toBe(true);
+
+            delete fieldProfile.fieldPredicate;
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldProfile.fieldPredicate = fieldPredicate;
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.value = "proquest_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            vocabularyWord.identifier = embargo.id;
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            embargo.mock(dataEmbargo3);
+            embargo.isActive = false;
+            fieldPredicate.id = embargo.id;
+            vocabularyWord.identifier = embargo.id;
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(false);
+            vocabularyWord.identifier = embargo.id;
         });
     });
 });

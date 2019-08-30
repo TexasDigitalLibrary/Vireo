@@ -20,7 +20,7 @@
       </div>
 
       <submissiondialog submission="submission" type="actions"></submissiondialog>
-      <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="loaded"></reviewsubmissionsfields>
+      <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="loaded" show-vocabulary-word="showVocabularyWord"></reviewsubmissionsfields>
       <div id="upload-files" class="row" ng-if="loaded && submission.submissionStatus.submissionState === SubmissionStates.NEEDS_CORRECTIONS">
         <span class="text-danger">
           <h3>Upload/Remove Files</h3>

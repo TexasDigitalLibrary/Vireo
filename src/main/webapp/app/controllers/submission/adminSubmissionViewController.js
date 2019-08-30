@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $route, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, EmailRecipient, EmailRecipientType, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserService, UserSettings, SubmissionStatuses, WsApi) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $route, $routeParams, $scope, DepositLocationRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatuses, SubmissionStatusRepo, UserRepo, UserService, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -9,6 +9,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     };
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
+
+    $scope.embargoes = EmbargoRepo.getAll();
 
     var userSettings = new UserSettings();
 
@@ -70,7 +72,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     $scope.dropZoneText = "Drop a file or click arrow";
 
     SubmissionRepo.fetchSubmissionById($routeParams.id).then(function(submission) {
-
 
         $scope.submission = submission;
 
@@ -658,6 +659,38 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "title": "Flagged Fields",
             "viewUrl": "views/sideboxes/flaggedFieldProfiles.html",
             "submission": $scope.submission
+        };
+
+        $scope.showVocabularyWord = function (vocabularyWord, fieldProfile) {
+            var result = true;
+
+            if (angular.isDefined(fieldProfile) && angular.isDefined(fieldProfile.fieldPredicate)) {
+                if (fieldProfile.fieldPredicate.value === "proquest_embargos" || fieldProfile.fieldPredicate.value === "default_embargos") {
+                    var selectedValue;
+
+                    // Always make the currently selected value visible, even if isActive is FALSE.
+                    angular.forEach($scope.submission.fieldValues, function(fieldValue) {
+                        if (fieldValue.fieldPredicate.id === fieldProfile.fieldPredicate.id) {
+                            selectedValue = fieldValue.value;
+                            return;
+                        }
+                    });
+
+                    angular.forEach($scope.embargoes, function(embargo) {
+                        if (Number(vocabularyWord.identifier) === embargo.id) {
+                            if (angular.isDefined(selectedValue) && embargo.name === selectedValue) {
+                                result = true;
+                            } else {
+                                result = embargo.isActive;
+                            }
+
+                            return;
+                        }
+                    });
+                }
+            }
+
+            return result;
         };
 
         SidebarService.addBoxes([$scope.activeDocumentBox, $scope.submissionStatusBox, $scope.flaggedFieldProfilesBox, $scope.customActionsBox]);

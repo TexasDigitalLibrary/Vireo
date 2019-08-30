@@ -17,7 +17,7 @@ describe("controller: AdminSubmissionViewController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($anchorScroll, $controller, $q, $route, $routeParams, $rootScope, _DepositLocationRepo_, _EmailRecipient_, _FieldPredicateRepo_, _FieldValue_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionStatusRepo_, _UserRepo_, _UserService_) {
+        inject(function ($anchorScroll, $controller, $q, $route, $routeParams, $rootScope, _DepositLocationRepo_, _EmailRecipient_, _EmailRecipientType_, _EmbargoRepo_, _FieldPredicateRepo_, _FieldValue_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionStatuses_, _SubmissionStatusRepo_, _UserRepo_, _UserService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -32,7 +32,9 @@ describe("controller: AdminSubmissionViewController", function () {
                 $window: mockWindow(),
                 DepositLocationRepo: _DepositLocationRepo_,
                 EmailRecipient: mockParameterModel(q, mockEmailRecipient),
+                EmailRecipientType: _EmailRecipientType_,
                 EmailTemplateRepo: EmailTemplateRepo,
+                EmbargoRepo: _EmbargoRepo_,
                 FieldPredicateRepo: _FieldPredicateRepo_,
                 FieldValue: mockParameterModel(q, mockFieldValue),
                 FileUploadService: FileUploadService,
@@ -41,7 +43,7 @@ describe("controller: AdminSubmissionViewController", function () {
                 SidebarService: _SidebarService_,
                 StorageService: _StorageService_,
                 SubmissionRepo: SubmissionRepo,
-                SubmissionStatus: mockParameterModel(q, mockSubmissionStatus),
+                SubmissionStatuses: _SubmissionStatuses_,
                 SubmissionStatusRepo: _SubmissionStatusRepo_,
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,
@@ -62,20 +64,24 @@ describe("controller: AdminSubmissionViewController", function () {
         module("mock.depositLocationRepo");
         module("mock.emailRecipient");
         module("mock.emailTemplateRepo");
+        module("mock.embargoRepo");
+        module("mock.fieldPredicate");
         module("mock.fieldPredicateRepo");
+        module("mock.fieldProfile");
         module("mock.fieldValue");
         module("mock.fileUploadService");
         module("mock.modalService");
         module("mock.restApi");
         module("mock.sidebarService");
         module("mock.storageService");
+        module("mock.submission");
         module("mock.submissionRepo");
-        module("mock.submissionStatus");
         module("mock.submissionStatusRepo");
         module("mock.user");
         module("mock.userRepo");
         module("mock.userService");
         module("mock.userSettings");
+        module("mock.vocabularyWord");
         module("mock.wsApi");
 
         installPromiseMatchers();
@@ -207,6 +213,10 @@ describe("controller: AdminSubmissionViewController", function () {
         it("showTab should be defined", function () {
             expect(scope.showTab).toBeDefined();
             expect(typeof scope.showTab).toEqual("function");
+        });
+        it("showVocabularyWord should be defined", function () {
+            expect(scope.showVocabularyWord).toBeDefined();
+            expect(typeof scope.showVocabularyWord).toEqual("function");
         });
         it("submitAddFile should be defined", function () {
             expect(scope.submitAddFile).toBeDefined();
@@ -798,6 +808,71 @@ describe("controller: AdminSubmissionViewController", function () {
             workflowStep.aggregateFieldProfiles[0].mock(dataFieldProfile2);
 
             response = scope.showTab(workflowStep);
+            expect(response).toBe(true);
+        });
+        it("showVocabularyWord should return a boolean", function () {
+            var response;
+            var vocabularyWord = new mockVocabularyWord(q);
+            var fieldProfile = new mockFieldProfile(q);
+            var fieldPredicate = new mockFieldPredicate(q);
+            var fieldValue1 = new mockFieldValue(q);
+            var fieldValue2 = new mockFieldValue(q);
+            var submission = new mockSubmission(q);
+            var embargo = new mockEmbargo(q);
+
+            fieldPredicate.id = 90;
+            fieldValue2.mock(dataFieldValue3);
+            fieldValue2.fieldPredicate = fieldPredicate;
+            submission.fieldValues = [
+                fieldValue1
+            ];
+            scope.submission = submission;
+
+            response = scope.showVocabularyWord(vocabularyWord);
+            expect(response).toBe(true);
+
+            delete fieldProfile.fieldPredicate;
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldProfile.fieldPredicate = fieldPredicate;
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.value = "proquest_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            fieldPredicate.id = embargo.id;
+            submission.fieldValues.push(fieldValue2);
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            vocabularyWord.identifier = embargo.id;
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(true);
+
+            embargo.mock(dataEmbargo3);
+            embargo.isActive = false;
+            fieldPredicate.id = embargo.id;
+            vocabularyWord.identifier = embargo.id;
+
+            fieldPredicate.value = "default_embargos";
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
+            expect(response).toBe(false);
+            vocabularyWord.identifier = embargo.id;
+
+            fieldValue2.value = embargo.name;
+            submission.fieldValues.push(fieldValue2);
+            response = scope.showVocabularyWord(vocabularyWord, fieldProfile);
             expect(response).toBe(true);
         });
         it("submitAddFile should submit a file", function () {

@@ -201,7 +201,7 @@ public class Embargo extends ValidatingOrderedBaseEntity implements EntityContro
 
     @Override
     public String getControlledIdentifier() {
-        return String.valueOf(duration);
+        return String.valueOf(id);
     }
 
     @Override
