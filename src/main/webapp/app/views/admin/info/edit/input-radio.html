@@ -1,14 +1,14 @@
-<div class="input-radio-container" ng-repeat="word in fieldProfile.controlledVocabulary.dictionary | filter:displayVocabularyWord" ng-click="field.value = word.name">
+<div class="input-radio-container" ng-repeat="word in fieldProfile.controlledVocabulary.dictionary | filter:displayVocabularyWord" ng-click="toggleFieldValue(field, word.name)">
   <div class="col-xs-8">
     <span class="radio-label">{{word.name}}:</span>
   </div>
   <div class="col-xs-2">
-    <input
-      type="radio"
+    <input type="radio"
       ng-model="field.value"
-      ng-click="save(field)"
-      name="fieldProfile.fieldPredicate.value"
+      ng-change="save(field)"
+      ng-click="stopEditing(field)"
       ng-disabled="field.updating"
-      value="{{word.name}}"/>
+      ng-hide="field.updating"
+      ng-value="word.name">
   </div>
 </div>
