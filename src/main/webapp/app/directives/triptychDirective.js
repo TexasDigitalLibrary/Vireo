@@ -163,7 +163,7 @@ vireo.directive("triptych", function () {
                         setOrganzization(panel, updatedOrganization);
                         if (panel.organization.childrenOrganizations.length === 0) {
                             clear(panel);
-                        } else {
+                        } else if ($scope.getSelectedOrganization() !== undefined && $scope.getSelectedOrganization().id !== 1) {
                             newVisiblePanel = panel;
                         }
                     } else {
@@ -210,7 +210,8 @@ vireo.directive("triptych", function () {
                         open(panel.parent, closingPromise);
                     }
                 }
-                if (panel.parent ? panel.parent.selected.organization.id === panel.organization.id && !panel.visible && visible : !panel.visible && visible) {
+                if (panel.parent ? (panel.parent.selected !== undefined && panel.parent.selected.organization.id === panel.organization.id) && !panel.visible && visible : !panel.visible && visible) {
+
                     open(panel, closingPromise);
                 }
             };

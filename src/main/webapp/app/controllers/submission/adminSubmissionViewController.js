@@ -692,7 +692,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             return result;
         };
 
-        SidebarService.addBoxes([$scope.activeDocumentBox, $scope.submissionStatusBox, $scope.customActionsBox, $scope.flaggedFieldProfilesBox]);
+        SidebarService.addBoxes([$scope.activeDocumentBox, $scope.submissionStatusBox, $scope.flaggedFieldProfilesBox, $scope.customActionsBox]);
 
     });
 
