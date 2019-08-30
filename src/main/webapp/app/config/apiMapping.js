@@ -517,7 +517,7 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'organization',
             'method': 'count-submisisons'
-        },        
+        },
         create: {
             'endpoint': '/private/queue',
             'controller': 'organization'
