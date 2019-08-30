@@ -1,5 +1,7 @@
 package org.tdl.vireo.utility;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -30,6 +32,9 @@ public class TemplateUtility {
     private static final String SUBMISSION_STATUS = "SUBMISSION_STATUS";
     private static final String SUBMISSION_ASSIGNED_TO = "SUBMISSION_ASSIGNED_TO";
     private static final String REGISTRATION_URL = "REGISTRATION_URL";
+
+    private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy");
 
     public String templateParameters(String content, Map<String, String> parameters) {
         for (String name : parameters.keySet()) {
@@ -66,13 +71,13 @@ public class TemplateUtility {
 
                 .replaceAll("\\{" + DOCUMENT_TITLE + "\\}", findValue("dc.title", submission))
                 .replaceAll("\\{" + SUBMISSION_TYPE + "\\}", findValue("submission_type", submission));
-                
-                // This is being handled elswhere and may not be useful, since 
-        		// sending this uri from an email workflow rule seems illogical.
-        		// This is because these rule trigger from submission state changes
-        		// and a user must be registered already to have a submission.
+
+                // This is being handled elswhere and may not be useful, since
+                // sending this uri from an email workflow rule seems illogical.
+                // This is because these rule trigger from submission state changes
+                // and a user must be registered already to have a submission.
                 //.replaceAll("\\{" + REGISTRATION_URL + "\\}", REGISTRATION_URL);
- 
+
 
         if (submission.getSubmissionStatus() != null) {
             compiled = compiled.replaceAll("\\{" + SUBMISSION_STATUS + "\\}", submission.getSubmissionStatus().getName());
@@ -81,30 +86,35 @@ public class TemplateUtility {
         if (submission.getAssignee() != null) {
             compiled = compiled.replaceAll("\\{" + SUBMISSION_ASSIGNED_TO + "\\}", submission.getAssignee().getSetting("displayName"));
         }
-        
+
         compiled = replacePredicates(compiled, submission);
 
         return compiled;
     }
 
-	private String replacePredicates(String compiled, Submission submission) {
-				
-		for(SubmissionWorkflowStep sws : submission.getSubmissionWorkflowSteps()) {
-			
-			for(SubmissionFieldProfile afp : sws.getAggregateFieldProfiles()) {
-				
-				String predicateKey = afp.getFieldPredicate().getValue();				
-				String fieldValue = findValue(predicateKey, submission);
-				
-				compiled = compiled.replaceAll("\\{" + predicateKey + "\\}", fieldValue);
-				
-			};
-			
-		};
-		
-		return compiled;
+    private String replacePredicates(String compiled, Submission submission) {
+
+        for (SubmissionWorkflowStep sws : submission.getSubmissionWorkflowSteps()) {
+
+            for (SubmissionFieldProfile afp : sws.getAggregateFieldProfiles()) {
+
+                String predicateKey = afp.getFieldPredicate().getValue();
+                String fieldValue = findValue(predicateKey, submission);
+
+                try {
+                    fieldValue = monthYearFormat.format(dateTimeFormat.parse(fieldValue));
+                } catch (ParseException e) {
+                    // most fieldValues are likely not dates and will generate parse exceptions.
+                }
+
+                compiled = compiled.replaceAll("\\{" + predicateKey + "\\}", fieldValue);
+            };
+
+        };
+
+        return compiled;
     }
-    
+
     private String findValue(String predicateKey, Submission submission) {
         return submission.getFieldValuesByPredicateValue(predicateKey)
             .stream()

@@ -116,6 +116,13 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, Fil
         $scope.modalData.newLogo.setting = "left_logo";
     };
 
+    $scope.updateHexValue = function(type, name) {
+        var hexCheck = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+        if (hexCheck.test($scope.settings.configurable[type][name].value)) {
+            $scope.updateConfiguration(type, name);
+        }
+    };
+
     var previewLogo = function (file) {
 
         var defer = $q.defer();

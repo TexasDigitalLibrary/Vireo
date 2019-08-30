@@ -598,8 +598,9 @@ public class SubmissionController {
             }
             break;
         case "DSpaceSimple":
+            ServletOutputStream sosDss = response.getOutputStream();
             try {
-                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+                ZipOutputStream zos = new ZipOutputStream(sosDss);
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     String submissionName = "submission_" + submission.getId() + "/";
                     zos.putNextEntry(new ZipEntry(submissionName));
@@ -661,13 +662,11 @@ public class SubmissionController {
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
+                LOG.info("Error With Export",e);
                 response.setContentType("application/json");
-
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-
-                PrintWriter out = response.getWriter();
-                out.print(objectMapper.writeValueAsString(apiResponse));
-                out.close();
+                sosDss.print(objectMapper.writeValueAsString(apiResponse));
+                sosDss.close();
             }
             break;
 

@@ -1,8 +1,8 @@
 package org.tdl.vireo.controller;
 
+import static edu.tamu.weaver.response.ApiStatus.INVALID;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.CREATE;
-import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
@@ -16,12 +16,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.DocumentType;
-import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.repo.DocumentTypeRepo;
 
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
+import edu.tamu.weaver.validation.model.BusinessValidationType;
+import edu.tamu.weaver.validation.results.ValidationResults;
 
 @RestController
 @RequestMapping("/settings/document-type")
@@ -56,11 +57,17 @@ public class DocumentTypeController {
 
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, joins = { FieldValue.class }, path = { "fieldPredicate", "documentTypePredicate" }, restrict = "true") })
     public ApiResponse removeDocumentType(@WeaverValidatedModel DocumentType documentType) {
-        logger.info("Removing document type with name " + documentType.getName());
-        documentTypeRepo.remove(documentType);
-        return new ApiResponse(SUCCESS);
+        if (documentType.getFieldPredicate().getDocumentTypePredicate() == false) {
+            logger.info("Removing document type with name " + documentType.getName());
+            documentTypeRepo.remove(documentType);
+            return new ApiResponse(SUCCESS);
+        } else {
+            ValidationResults validationResults = new ValidationResults();
+            validationResults.setValid(false);
+            validationResults.addMessage("business", BusinessValidationType.DELETE.getMessage(),"Document Type predicates can not be deleted");
+            return new ApiResponse(INVALID,validationResults);
+        }
     }
 
     @RequestMapping("/reorder/{src}/{dest}")
