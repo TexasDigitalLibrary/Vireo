@@ -8,7 +8,7 @@
 		<li>Last Action:</li>
 		<li class="font-weight-bold">{{box.getLastActionDate() | date : 'short'}}</li>
 		<li>What:</li>
-		<li class="font-weight-bold">{{box.getLastActionEntry()}}</li>
+		<li class="font-weight-bold">{{(box.getLastActionEntry() | limitTo : 100) + (box.getLastActionEntry().length > 100 ? ' . . .' : '')}}</li>
 
 		<li>Submission Date:</li>
 		<li class="sidebar-btn font-weight-bold"

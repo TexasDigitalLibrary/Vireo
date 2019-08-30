@@ -2,13 +2,13 @@
 
 # Vireo 4
 
-Vireo is a turnkey Electronic Thesis and Dissertation (ETD) Management System.  Starting with the 4.x release, Vireo offers fully customizable workflows and controlled vocabularies.  
+Vireo is a turnkey Electronic Thesis and Dissertation (ETD) Management System.  Starting with the 4.x release, Vireo offers fully customizable workflows and controlled vocabularies.
 
 The software is presently in a Beta release.  If you would like to help with testing or development, GitHub issues and pull requests are encouraged!
 
 ## Building
 
-Vireo build is done with [Maven](https://maven.apache.org/). The build is configured with [pom.xml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/pom.xml) and [package.json](https://github.com/TexasDigitalLibrary/Vireo/blob/master/package.json). There are several command line arguments that can be used when packaging Vireo 4. 
+Vireo build is done with [Maven](https://maven.apache.org/). The build is configured with [pom.xml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/pom.xml) and [package.json](https://github.com/TexasDigitalLibrary/Vireo/blob/master/package.json). There are several command line arguments that can be used when packaging Vireo 4.
 
 * ```-Dproduction``` will package production ready. **Required for Tomcat deployment or running as a jar**
 * ```-DskipTests``` will skip tests.
@@ -18,7 +18,7 @@ Vireo build is done with [Maven](https://maven.apache.org/). The build is config
 
 **Ending trailing slash is required for spring.config.location**
 
-The external configuration directory is where an application.yaml file can be added to override default properties. When packaging the application define `config.uri`, which will template context.xml file with the `spring.config.location` system variable for container deployment. 
+The external configuration directory is where an application.yaml file can be added to override default properties. When packaging the application define `config.uri`, which will template context.xml file with the `spring.config.location` system variable for container deployment.
 
 When running for development define `spring.config.location` to externalize the configuration. If running for development and using an external configuration, do not define `assets.uri`. It will have to be configured manually in the external application.yaml.
 
@@ -231,6 +231,8 @@ java -jar target/vireo-4.0.0-SNAPSHOT.war
 | app.email.from | string | email address from | noreply@tdl.org |
 | app.email.replyTo | string | email address replyTo | admin@tdl.org |
 | app.reporting.address | string | email address to report issues | issues@tdl.org |
+
+**Do not forget to provide your own custom values for the security related properties, such as `auth.security.jwt.secret`, `auth.security.jwt.issuer`, `auth.security.jwt.duration`, `app.security.secret`, and `app.security.allow-access`.**
 
 ### Customization of default values
 

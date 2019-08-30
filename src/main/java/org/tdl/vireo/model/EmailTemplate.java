@@ -92,10 +92,17 @@ public class EmailTemplate extends ValidatingOrderedBaseEntity {
         this.message = message;
     }
 
+    /**
+     * @return the systemRequired
+     */
     public Boolean getSystemRequired() {
         return systemRequired;
     }
 
+    /**
+     * @param systemRequired
+     *            the systemRequired to set
+     */
     public void setSystemRequired(Boolean systemRequired) {
         this.systemRequired = systemRequired;
     }
