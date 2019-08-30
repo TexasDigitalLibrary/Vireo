@@ -292,6 +292,16 @@ var apiMapping = {
             'controller': 'settings/embargo',
             'method': 'remove'
         },
+        activate: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/embargo',
+            'httpMethod': 'POST'
+        },
+        deactivate: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/embargo',
+            'httpMethod': 'POST'
+        },
         reorder: {
             'endpoint': '/private/queue',
             'controller': 'settings/embargo'
