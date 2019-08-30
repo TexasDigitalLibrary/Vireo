@@ -145,6 +145,8 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
 
         WorkflowStep persistedWorkflowStep = workflowStepRepo.findOne(pendingWorkflowStep.getId());
 
+        pendingWorkflowStep.setOriginatingOrganization(persistedWorkflowStep.getOriginatingOrganization());
+
         boolean overridabilityOfPersistedWorkflowStep = persistedWorkflowStep.getOverrideable();
 
         // The requestingOrganization does not have the workflow step being updated
