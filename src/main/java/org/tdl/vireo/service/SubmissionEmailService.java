@@ -147,7 +147,7 @@ public class SubmissionEmailService {
      */
     public void sendAutomatedEmails(User user, Submission submission, Map<String, Object> data) throws JsonProcessingException, IOException {
         if (data.containsKey("sendEmailToRecipient") && (boolean) data.get("sendEmailToRecipient")) {
-            String subject = (String) data.get("subject");
+            String subject = templateUtility.compileString((String) data.get("subject"), submission);
             String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
             StringBuilder recipientEmails = new StringBuilder();
             SimpleMailMessage smm = new SimpleMailMessage();
