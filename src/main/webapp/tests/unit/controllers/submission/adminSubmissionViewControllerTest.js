@@ -933,15 +933,66 @@ describe("controller: AdminSubmissionViewController", function () {
             scope.addFileData.needsCorrection = true;
             scope.addFileData.files = [ {} ];
             FileUploadService.uploadFile = function (submission, fieldValue) {
-                var defer = q.defer();
                 var response = {
                     meta: {
                         status: "INVALID",
                     },
-                    status: 200
+                    status: 500
                 };
-                defer.reject(response);
-                return defer.promise;
+                var payload = null;
+                return valuePromise(q.defer(), response, "reject");
+            };
+
+            scope.submitAddFile();
+            scope.$digest();
+
+            scope.addFileData.files = [ {} ];
+            FileUploadService.uploadFile = function (submission, fieldValue) {
+                var response = {
+                    meta: {
+                        status: "INVALID",
+                    },
+                    payload: {
+                        meta: {
+                            message: "message",
+                            status: 500
+                        }
+                    },
+                    status: 500
+                };
+                var payload = null;
+                return valuePromise(q.defer(), response, "reject");
+            };
+
+            scope.submitAddFile();
+            scope.$digest();
+
+            scope.addFileData.files = [ {} ];
+            FileUploadService.uploadFile = function (submission, fieldValue) {
+                var payload;
+                return dataPromise(q.defer(), payload, "INVALID");
+            };
+
+            scope.submitAddFile();
+            scope.$digest();
+
+            scope.addFileData.files = [ {} ];
+            FileUploadService.uploadFile = function (submission, fieldValue) {
+                var response = {
+                    data: {
+                        meta: {
+                            status: "INVALID",
+                        },
+                    },
+                    payload: {
+                        meta: {
+                            message: "message",
+                            status: 500
+                        }
+                    },
+                    status: 500
+                };
+                return valuePromise(q.defer(), response);
             };
 
             scope.submitAddFile();

@@ -90,6 +90,9 @@ describe("controller: AdvisorSubmissionReviewController", function () {
             scope.messages = [];
             scope.submission = new mockSubmission(q);
 
+            scope.submission["approveEmbargoDate"] = true;
+            scope.submission["approveEmbargo"] = "";
+
             scope.addComment();
             scope.$digest();
 

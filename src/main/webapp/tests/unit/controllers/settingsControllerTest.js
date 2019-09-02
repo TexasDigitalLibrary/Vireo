@@ -202,6 +202,8 @@ describe("controller: SettingsController", function () {
             jasmine.clock().tick(101);
             jasmine.clock().uninstall();
 
+            timeout.flush();
+
             expect(timeout.cancel).toHaveBeenCalled();
         });
         it("editMode should update the edit mode", function () {

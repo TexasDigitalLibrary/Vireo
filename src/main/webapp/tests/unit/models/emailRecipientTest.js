@@ -1,4 +1,4 @@
-describe('model: SavedFilter', function () {
+describe('model: EmailRecipient', function () {
     var model, rootScope, scope, WsApi;
 
     var initializeVariables = function(settings) {
@@ -10,10 +10,10 @@ describe('model: SavedFilter', function () {
     };
 
     var initializeModel = function(settings) {
-        inject(function (SavedFilter) {
+        inject(function (EmailRecipient) {
             scope = rootScope.$new();
 
-            model = angular.extend(new SavedFilter(), dataSavedFilter1);
+            model = angular.extend(new EmailRecipient(), dataEmailRecipient1);
         });
     };
 

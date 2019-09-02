@@ -105,26 +105,91 @@ describe("controller: UserRepoController", function () {
             response = scope.allowableRoles("ROLE_ADMIN");
             expect(response.length).toBe(5);
 
+            response = scope.allowableRoles("ROLE_MANAGER");
+            expect(response.length).toBe(5);
+
+            response = scope.allowableRoles("ROLE_REVIEWER");
+            expect(response.length).toBe(5);
+
+            response = scope.allowableRoles("ROLE_STUDENT");
+            expect(response.length).toBe(5);
+
             response = scope.allowableRoles("ROLE_ANONYMOUS");
             expect(response.length).toBe(5);
+
 
             initializeController({role: "ROLE_MANAGER"});
 
             response = scope.allowableRoles("ROLE_ADMIN");
             expect(response.length).toBe(1);
 
+            response = scope.allowableRoles("ROLE_MANAGER");
+            expect(response.length).toBe(4);
+
+            response = scope.allowableRoles("ROLE_REVIEWER");
+            expect(response.length).toBe(4);
+
+            response = scope.allowableRoles("ROLE_STUDENT");
+            expect(response.length).toBe(4);
+
             response = scope.allowableRoles("ROLE_ANONYMOUS");
             expect(response.length).toBe(4);
+
 
             initializeController({role: "ROLE_USER"});
 
             response = scope.allowableRoles("ROLE_ADMIN");
             expect(response.length).toBe(1);
 
+            response = scope.allowableRoles("ROLE_MANAGER");
+            expect(response.length).toBe(1);
+
+            response = scope.allowableRoles("ROLE_REVIEWER");
+            expect(response.length).toBe(1);
+
+            response = scope.allowableRoles("ROLE_STUDENT");
+            expect(response.length).toBe(1);
+
             response = scope.allowableRoles("ROLE_ANONYMOUS");
             expect(response.length).toBe(1);
 
+
+            initializeController({role: "ROLE_REVIEWER"});
+
+            response = scope.allowableRoles("ROLE_ADMIN");
+            expect(response.length).toBe(1);
+
+            response = scope.allowableRoles("ROLE_MANAGER");
+            expect(response.length).toBe(3);
+
+            response = scope.allowableRoles("ROLE_REVIEWER");
+            expect(response.length).toBe(3);
+
+            response = scope.allowableRoles("ROLE_STUDENT");
+            expect(response.length).toBe(3);
+
+            response = scope.allowableRoles("ROLE_ANONYMOUS");
+            expect(response.length).toBe(3);
+
+
             initializeController({role: "ROLE_ANONYMOUS"});
+
+            response = scope.allowableRoles("ROLE_ADMIN");
+            expect(response.length).toBe(1);
+
+            response = scope.allowableRoles("ROLE_MANAGER");
+            expect(response.length).toBe(1);
+
+            response = scope.allowableRoles("ROLE_REVIEWER");
+            expect(response.length).toBe(1);
+
+            response = scope.allowableRoles("ROLE_STUDENT");
+            expect(response.length).toBe(1);
+
+            response = scope.allowableRoles("ROLE_ANONYMOUS");
+            expect(response.length).toBe(1);
+
+            timeout.flush();
         });
         it("disableUpdateRole should return a boolean", function () {
             var user = mockUser(q);
