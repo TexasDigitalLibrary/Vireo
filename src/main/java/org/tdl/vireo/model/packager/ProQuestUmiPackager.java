@@ -2,6 +2,7 @@ package org.tdl.vireo.model.packager;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class ProQuestUmiPackager extends AbstractPackager<ZipExportPackage> {
                 String docName = submission.getId()+"_"+ds_entry.getKey();
                 String docContents = ds_entry.getValue();
                 File ff = File.createTempFile(docName, "");
-                FileUtils.writeStringToFile(ff, docContents, "UTF-8");
+                FileUtils.writeStringToFile(ff, docContents, StandardCharsets.UTF_8);
                 pkgs.put(docName, ff);
             }
         } catch (IOException ioe) {

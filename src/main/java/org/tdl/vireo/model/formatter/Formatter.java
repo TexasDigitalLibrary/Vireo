@@ -17,4 +17,8 @@ public interface Formatter {
 
     public void populateContext(Context context, Submission submission);
 
+    public String getSuffix();
+
+    public String getTemplateMode();
+
 }

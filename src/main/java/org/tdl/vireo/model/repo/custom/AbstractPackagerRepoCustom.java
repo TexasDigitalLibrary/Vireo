@@ -15,4 +15,6 @@ public interface AbstractPackagerRepoCustom {
 
     public Packager<?> createMARC21XMLPackager(String name, AbstractFormatter formatter);
 
+    public Packager<?> createMARC21Packager(String name, AbstractFormatter formatter);
+
 }

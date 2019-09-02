@@ -18,4 +18,14 @@ public class ExcelFormatter extends AbstractFormatter {
         // NOTE: no context required
     }
 
+    @Override
+    public String getSuffix() {
+        return ".xml";
+    }
+
+    @Override
+    public String getTemplateMode() {
+        return "XML";
+    }
+
 }

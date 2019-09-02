@@ -7,6 +7,7 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -498,11 +499,12 @@ public class SubmissionController {
 
             break;
         case "MarcXML21":
+        case "Marc21":
         case "ProQuest":
             ServletOutputStream sos = response.getOutputStream();
 
             try {
-                ZipOutputStream zos = new ZipOutputStream(sos);
+                ZipOutputStream zos = new ZipOutputStream(sos, StandardCharsets.UTF_8);
 
                 // TODO: need a more dynamic way to achieve this
                 if (packagerName.equals("ProQuest")) {
