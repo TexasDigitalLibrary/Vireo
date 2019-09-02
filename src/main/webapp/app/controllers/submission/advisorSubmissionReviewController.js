@@ -1,10 +1,12 @@
-vireo.controller("AdvisorSubmissionReviewController", function ($controller, $scope, $routeParams, AdvisorSubmissionRepo, Submission) {
+vireo.controller("AdvisorSubmissionReviewController", function ($controller, $scope, $routeParams, AdvisorSubmissionRepo, EmbargoRepo, Submission) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
     }));
 
     var message = "You may return to this page to follow the application's progress, or provide additional input in the future.";
+
+    $scope.embargoes = EmbargoRepo.getAll();
 
     $scope.messages = [];
 
@@ -80,6 +82,23 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
         }
         return disabled;
 
+    };
+
+    $scope.showVocabularyWord = function (vocabularyWord, fieldProfile) {
+        var result = true;
+
+        if (angular.isDefined(fieldProfile) && angular.isDefined(fieldProfile.fieldPredicate)) {
+            if (fieldProfile.fieldPredicate.value === "proquest_embargos" || fieldProfile.fieldPredicate.value === "default_embargos") {
+                angular.forEach($scope.embargoes, function(embargo) {
+                    if (Number(vocabularyWord.identifier) === embargo.id) {
+                        result = embargo.isActive;
+                        return;
+                    }
+                });
+            }
+        }
+
+        return result;
     };
 
 });

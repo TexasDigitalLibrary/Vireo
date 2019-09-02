@@ -16,8 +16,8 @@ var dataFieldPredicateRepo3 = [
     dataFieldPredicate6
 ];
 
-angular.module('mock.fieldPredicateRepo', []).service('FieldPredicateRepo', function($q) {
-    var repo = mockRepo('FieldPredicateRepo', $q, mockFieldPredicate, dataFieldPredicateRepo1);
+angular.module("mock.fieldPredicateRepo", []).service("FieldPredicateRepo", function($q) {
+    var repo = mockRepo("FieldPredicateRepo", $q, mockFieldPredicate, dataFieldPredicateRepo1);
 
     repo.findByValue = function (value) {
         var payload = {};

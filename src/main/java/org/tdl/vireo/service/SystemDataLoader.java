@@ -249,7 +249,7 @@ public class SystemDataLoader {
 
         List<File> controlledVocabularyFiles = new ArrayList<File>();
         try {
-            controlledVocabularyFiles = fileIOUtility.getResouceDirectoryListing("classpath:/controlled_vocabularies/");
+            controlledVocabularyFiles = fileIOUtility.getResourceDirectoryListing("classpath:/controlled_vocabularies/");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -757,7 +757,7 @@ public class SystemDataLoader {
 
                     // if this System template already has a custom template
                     // (meaning one named the same but that is
-                    // !isSystemRequired)
+                    // !systemRequired)
                     if (possibleCustomTemplate != null) {
 
                         // a custom version of this System email template
@@ -772,7 +772,7 @@ public class SystemDataLoader {
                         emailTemplateRepo.save(dbTemplate);
                     }
                     // there is no custom one yet, we need to make the
-                    // dbTemplate !isSystemRequired and the save loadedTemplate
+                    // dbTemplate !systemRequired and the save loadedTemplate
                     else {
                         logger.info("Upgrading Old System Email Template and creating custom version for [" + dbTemplate.getName() + "]");
                         dbTemplate.setSystemRequired(false);
@@ -893,18 +893,18 @@ public class SystemDataLoader {
             List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
 
             for (Embargo embargoDefinition : embargoDefinitions) {
-                Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
+                Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
 
                 if (dbEmbargo == null) {
                     dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
-                    dbEmbargo.isSystemRequired(true);
+                    dbEmbargo.setSystemRequired(true);
                     embargoRepo.save(dbEmbargo);
                 } else {
                     dbEmbargo.setDescription(embargoDefinition.getDescription());
                     dbEmbargo.setDuration(embargoDefinition.getDuration());
                     dbEmbargo.setGuarantor(embargoDefinition.getGuarantor());
                     dbEmbargo.isActive(embargoDefinition.isActive());
-                    dbEmbargo.isSystemRequired(embargoDefinition.isSystemRequired());
+                    dbEmbargo.setSystemRequired(embargoDefinition.getSystemRequired());
                     embargoRepo.save(dbEmbargo);
                 }
             }

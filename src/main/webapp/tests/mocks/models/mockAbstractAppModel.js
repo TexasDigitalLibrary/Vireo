@@ -28,4 +28,4 @@ var mockAbstractAppModel = function($q) {
     return model;
 };
 
-angular.module('mock.abstractAppModel', []).service('AbstractAppModel', mockAbstractAppModel);
+angular.module("mock.abstractAppModel", []).service("AbstractAppModel", mockAbstractAppModel);

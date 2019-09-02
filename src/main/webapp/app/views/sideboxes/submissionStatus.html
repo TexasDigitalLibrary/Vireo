@@ -8,16 +8,14 @@
 		<li>Last Action:</li>
 		<li class="font-weight-bold">{{box.getLastActionDate() | date : 'short'}}</li>
 		<li>What:</li>
-		<li class="font-weight-bold">{{box.getLastActionEntry()}}</li>
-
-		<li>ProQuest Release:</li>
-		<li class="font-weight-bold">{{box.isUmiRelease()}}</li>
+		<li class="font-weight-bold">{{(box.getLastActionEntry() | limitTo : 100) + (box.getLastActionEntry().length > 100 ? ' . . .' : '')}}</li>
 
 		<li>Submission Date:</li>
 		<li class="sidebar-btn font-weight-bold"
 			ng-click="date=true"
 			ng-change="box.setSubmitDate(newSubmitDate)"
 			uib-datepicker-popup="MM/dd/yyyy"
+			datepicker-popup-template-url="views/sideboxes/datepicker.html"
 			ng-model="newSubmitDate"
 			is-open="date"
 			close-text="Close"

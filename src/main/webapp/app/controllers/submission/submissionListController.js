@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, CustomActionValueRepo, DepositLocationRepo, DocumentTypeRepo, EmailTemplateRepo, EmbargoRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, CustomActionValueRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -27,7 +27,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.activeFilters = new NamedSearchFilterGroup();
 
-    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]);
+    $scope.fieldPredicates = FieldPredicateRepo.getAll();
+
+    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready()]);
 
     var updateChange = function(change) {
         $scope.change = change;
@@ -35,7 +37,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
     };
 
     updateChange(false);
-    
+
     ready.then(function () {
 
         // This is for piping the user/all columns through to the customizeFilters modal
@@ -118,9 +120,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         update();
 
         var assignableUsers = UserRepo.getAssignableUsers();
-
         var savedFilters = SavedFilterRepo.getAll();
         var emailTemplates = EmailTemplateRepo.getAll();
+        var emailValidationPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         var organizations = OrganizationRepo.getAll();
         var organizationCategories = OrganizationCategoryRepo.getAll();
         var submissionStatuses = SubmissionStatusRepo.getAll();
@@ -157,15 +159,19 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var resetBatchCommentEmailModal = function (batchCommentEmail) {
             $scope.closeModal();
             batchCommentEmail.adding = false;
-            batchCommentEmail.commentVisiblity = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
-            batchCommentEmail.recipientEmail = userSettings.notes_email_student_by_default === "true" ? $scope.submission.submitter.email : "";
-            batchCommentEmail.ccRecipientEmail = userSettings.notes_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails().join(",") : "";
-            batchCommentEmail.sendEmailToRecipient = (userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
+            batchCommentEmail.commentVisibility = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
+            batchCommentEmail.recipientEmails = userSettings.notes_email_student_by_default === "true" ? [new EmailRecipient({
+                name: "Submitter",
+                type: EmailRecipientType.SUBMITTER,
+                data: "Submitter"
+            })] : [];
+            batchCommentEmail.ccRecipientEmails = [];
+            batchCommentEmail.sendEmailToRecipient = (batchCommentEmail.commentVisibility === "public" || userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
             batchCommentEmail.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default === "true";
             batchCommentEmail.subject = "";
             batchCommentEmail.message = "";
             batchCommentEmail.actionLogCurrentLimit = $scope.actionLogLimit;
-            batchCommentEmail.selectedTemplate = emailTemplates[0];
+            batchCommentEmail.selectedTemplate = "";
         };
 
         resetBatchCommentEmailModal(batchCommentEmail);
@@ -214,7 +220,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var addDateFilter = function (column) {
             var dateValue = $scope.furtherFilterBy[column.title.split(" ").join("")].d1.toISOString();
-            var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, column.title==="Degree Date" ? "MMMM yyyy" : "MM/dd/yyyy");
+            var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, column.title==="Graduation Semester" ? "MMMM yyyy" : "MM/dd/yyyy");
             dateValue += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? "|" + $scope.furtherFilterBy[column.title.split(" ").join("")].d2.toISOString() : "";
             dateGloss += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? " to " + $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d2, "MM/dd/yyyy") : "";
             $scope.activeFilters.addFilter(column.title, dateValue, dateGloss, false).then(function () {
@@ -275,6 +281,135 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 }), packager.name + '.' + packager.fileExtension);
                 resetBatchProcess();
             });
+        };
+
+        var setupEmailTemplates = function() {
+            var addDefaultTemplate = true;
+
+            for (var i in emailTemplates) {
+                var template = emailTemplates[i];
+                if (template.name === "Choose a Message Template") {
+                    addDefaultTemplate = false;
+                    break;
+                }
+            }
+
+            if (addDefaultTemplate) {
+                emailTemplates.unshift({
+                    name: "Choose a Message Template"
+                });
+            }
+        };
+
+        setupEmailTemplates();
+
+        var getBatchContactEmails = function() {
+            var emails = [
+                {
+                  name: "Submitter",
+                  type: EmailRecipientType.SUBMITTER,
+                  data: "Submitter"
+                },
+                {
+                  name: "Advisor",
+                  type: EmailRecipientType.ADVISOR,
+                  data: "Advisor"
+                },
+                {
+                  name: "Assignee",
+                  type: EmailRecipientType.ASSIGNEE,
+                  data: "Assignee"
+                },
+                {
+                  name: "Organization",
+                  type: EmailRecipientType.ORGANIZATION,
+                  data: null
+                }
+            ];
+
+            for (var i in $scope.fieldPredicates) {
+                if ($scope.fieldPredicates[i].value === "dc.contributor.advisor") {
+                    emails.push({
+                      name: "Committee Chair",
+                      type: EmailRecipientType.CONTACT,
+                      data: $scope.fieldPredicates[i].id
+                    });
+
+                    break;
+                }
+            }
+
+            return emails;
+        };
+
+        var addBatchEmailAddressee = function(emails, formField) {
+            var recipient = formField.$$rawModelValue;
+
+            if (recipient) {
+                if (typeof recipient === 'string') {
+                    if (!validateBatchEmailAddressee(formField)) return;
+
+                    recipient = new EmailRecipient({
+                      name: recipient,
+                      type: EmailRecipientType.PLAIN_ADDRESS,
+                      data: recipient
+                    });
+                }
+
+                emails.push(recipient);
+
+                //This is not ideal, as it assumes the attr name and attr ngModel are the same.
+                $scope[formField.$$attr.name + "Invalid"] = false;
+                batchCommentEmail[formField.$$attr.name] = "";
+            }
+        };
+
+        var validateBatchEmailAddressee = function(formField) {
+            var valueIsContact = false;
+
+            if (typeof formField.$$rawModelValue !== 'string') {
+                var allContacts = getBatchContactEmails();
+
+                for (var i in allContacts) {
+                    var contact = allContacts[i];
+                    if (formField.$$rawModelValue && formField.$$rawModelValue.type === contact.type) {
+                        valueIsContact = true;
+                        break;
+                    }
+                }
+            }
+
+            $scope[formField.$$attr.name+"Invalid"] = formField.$invalid && !valueIsContact;
+            return !$scope[formField.$$attr.name + "Invalid"];
+        };
+
+        var isBatchEmailAddresseeInvalid = function(formField) {
+            return formField.$invalid && $scope[formField.$$attr.name + "Invalid"];
+        };
+
+        var removeBatchEmailAddressee = function (email, destinationModel) {
+            var removeIndex = destinationModel.indexOf(email);
+            destinationModel.splice(removeIndex, 1);
+        };
+
+        var disableAddBatchComment = function () {
+            var disable = batchCommentEmail.adding ||
+                          batchCommentEmail.subject === undefined ||
+                          batchCommentEmail.subject === "" ||
+                          batchCommentEmail.message === undefined ||
+                          batchCommentEmail.message === "";
+
+            if (!disable && batchCommentEmail.commentVisibility === 'public') {
+                if (batchCommentEmail.sendEmailToRecipient) {
+                    if (batchCommentEmail.sendEmailToCCRecipient) {
+                        disable = batchCommentEmail.recipientEmails.length === 0 || batchCommentEmail.ccRecipientEmails.length === 0;
+                    } else {
+                        disable = batchCommentEmail.recipientEmails.length === 0;
+                    }
+                }
+            }
+
+            return disable;
         };
 
         var getValueFromArray = function (array, col) {
@@ -374,6 +509,13 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "resetBatchCommentEmailModal": resetBatchCommentEmailModal,
             "batchCommentEmail": batchCommentEmail,
             "addBatchCommentEmail": addBatchCommentEmail,
+            "getBatchContactEmails": getBatchContactEmails,
+            "addBatchEmailAddressee": addBatchEmailAddressee,
+            "validateBatchEmailAddressee": validateBatchEmailAddressee,
+            "isBatchEmailAddresseeInvalid": isBatchEmailAddresseeInvalid,
+            "removeBatchEmailAddressee": removeBatchEmailAddressee,
+            "disableAddBatchComment": disableAddBatchComment,
+            "emailValidationPattern": emailValidationPattern,
             "emailTemplates": emailTemplates,
             "updateTemplate": updateTemplate,
             "batchDownloadExport": batchDownloadExport,
@@ -407,7 +549,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         $scope.displaySubmissionProperty = function (row, col) {
             var value = $scope.getSubmissionProperty(row, col);
             if ($scope.isDateColumn(col)) {
-                if(col.predicate === 'dc.date.created') {
+                if(col.predicate === 'dc.date.issued') {
                     value = $filter('date')(value, 'MMMM yyyy');
                 } else {
                     value = $filter('date')(value, 'MMM dd, yyyy');
@@ -425,7 +567,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.isDateColumn = function (col) {
-            return (col.inputType.name == 'INPUT_DATE' || col.inputType.name == 'INPUT_DATETIME' || col.inputType.name == 'INPUT_DEGREEDATE');
+            return (col.inputType.name == 'INPUT_DATETIME' || col.inputType.name == 'INPUT_DEGREEDATE');
         };
 
         $scope.getUserById = function (userId) {

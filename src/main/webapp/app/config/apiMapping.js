@@ -171,6 +171,12 @@ var apiMapping = {
             'controller': 'settings/degree',
             'method': 'remove'
         },
+        removeAll: {
+            'endpoint': '/private/queue',
+            'httpMethod': 'POST',
+            'controller': 'settings/degree',
+            'method': 'remove-all'
+        },
         reorder: {
             'endpoint': '/private/queue',
             'controller': 'settings/degree'
@@ -285,6 +291,16 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'settings/embargo',
             'method': 'remove'
+        },
+        activate: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/embargo',
+            'httpMethod': 'POST'
+        },
+        deactivate: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/embargo',
+            'httpMethod': 'POST'
         },
         reorder: {
             'endpoint': '/private/queue',
@@ -511,7 +527,7 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'organization',
             'method': 'count-submisisons'
-        },        
+        },
         create: {
             'endpoint': '/private/queue',
             'controller': 'organization'

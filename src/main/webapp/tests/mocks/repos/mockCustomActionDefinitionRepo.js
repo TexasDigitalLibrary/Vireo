@@ -16,8 +16,8 @@ var dataCustomActionDefinitionRepo3 = [
     dataCustomActionDefinition6
 ];
 
-angular.module('mock.customActionDefinitionRepo', []).service('CustomActionDefinitionRepo', function($q) {
-    var repo = mockRepo('CustomActionDefinitionRepo', $q, mockCustomActionDefinition, dataCustomActionDefinitionRepo1);
+angular.module("mock.customActionDefinitionRepo", []).service("CustomActionDefinitionRepo", function($q) {
+    var repo = mockRepo("CustomActionDefinitionRepo", $q, mockCustomActionDefinition, dataCustomActionDefinitionRepo1);
 
     return repo;
 });

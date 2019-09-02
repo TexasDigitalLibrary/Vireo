@@ -68,6 +68,15 @@ public class DegreeController {
         return new ApiResponse(SUCCESS);
     }
 
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/remove-all", method = POST)
+    public ApiResponse removeAllDegrees() {
+        logger.info("Removing all degrees");
+        degreeRepo.deleteAll();
+        degreeRepo.broadcast(degreeRepo.findAll());
+        return new ApiResponse(SUCCESS);
+    }
+
     @RequestMapping("/reorder/{src}/{dest}")
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = Degree.class, params = { "0", "1" }) })

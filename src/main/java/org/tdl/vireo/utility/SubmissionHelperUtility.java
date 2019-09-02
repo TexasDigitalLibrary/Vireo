@@ -6,14 +6,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.tdl.vireo.model.Address;
+import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.DefaultConfiguration;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.service.DefaultSettingsService;
 import org.tdl.vireo.service.ProquestCodesService;
 
@@ -31,7 +34,7 @@ public class SubmissionHelperUtility {
     private final static SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 
     private final static SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy-MM");
-    private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMM yyyy");
+    private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy");
 
     private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
@@ -201,8 +204,43 @@ public class SubmissionHelperUtility {
         return submission.getApproveEmbargoDate() != null ? dateFormat.format(submission.getApproveEmbargoDate().getTime()) : "";
     }
 
+    public String getFormattedCommitteeApprovedEmbargoLiftDateString() {
+        Calendar appEmbDate = submission.getApproveEmbargoDate();
+        if(appEmbDate==null){
+            return "";
+        }
+        Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
+        int monthIncr = 0;
+        if(defaultEmbargo.isPresent()){
+            String defEmbStr = defaultEmbargo.get().getValue();
+            if(defEmbStr==null){
+            }else if(defEmbStr.equals("None")){
+            }else if(defEmbStr.equals("Journal Hold")){
+                monthIncr = 12;
+            }else if(defEmbStr.equals("Patent Hold")){
+                monthIncr = 24;
+            }else if(defEmbStr.equals("Other Embargo Period")){
+                monthIncr = 24;//max?
+            }
+        }
+        if(monthIncr>0){
+            appEmbDate.add(Calendar.MONTH,monthIncr);
+        }
+        return dateFormat.format(appEmbDate.getTime());
+    }
+
     public String getAdvisorApprovalDateString() {
         return submission.getApproveAdvisorDate() != null ? dateFormat.format(submission.getApproveAdvisorDate().getTime()) : "";
+    }
+
+    public String getApproveApplicationDate() {
+        return submission.getApproveApplicationDate() != null ? dateFormat.format(submission.getApproveApplicationDate().getTime()) : "";
+    }
+
+    public String getUserOrcid() {
+        //return submission.getSubmitter() != null ? submission.getSubmitter().getOrcid() : "";
+        Optional<String> orcid = getFieldValueByPredicateValue("dc.identifier.orcid");
+        return orcid.isPresent() ? orcid.get() : "";
     }
 
     public List<FieldValue> getLicenseAgreementFieldValues() {
@@ -237,11 +275,11 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationDateString() {
-        Optional<String> graduationDate = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationDate = getFieldValueByPredicateValue("dc.date.issued");
         String date = "";
         if (graduationDate.isPresent()) {
             try {
-                date = dateFormat.format(dateFormat.parse(graduationDate.get()));
+                date = dateFormat.format(dateTimeFormat.parse(graduationDate.get()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -251,7 +289,7 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationYearString() {
-        Optional<String> graduationYear = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationYear = getFieldValueByPredicateValue("dc.date.issued");
         String year = "";
         if (graduationYear.isPresent()) {
             try {
@@ -265,7 +303,7 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationYearMonthString() {
-        Optional<String> graduationYearMonth = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationYearMonth = getFieldValueByPredicateValue("dc.date.issued");
         String yearMonth = "";
         if (graduationYearMonth.isPresent()) {
             try {
@@ -279,7 +317,7 @@ public class SubmissionHelperUtility {
 
     // NOTE: uses hard coded predicate values
     public String getGraduationMonthYearString() {
-        Optional<String> graduationMonthYear = getFieldValueByPredicateValue("dc.date.created");
+        Optional<String> graduationMonthYear = getFieldValueByPredicateValue("dc.date.issued");
         String monthYear = "";
         if (graduationMonthYear.isPresent()) {
             try {
@@ -476,14 +514,28 @@ public class SubmissionHelperUtility {
         return degreeLevel.isPresent() ? degreeLevel.get() : "";
     }
 
+    public String getDegreeCollege() {
+        Optional<String> degreeCollege = getFieldValueIdentifierByPredicateValue("thesis.degree.college");
+        return degreeCollege.isPresent() ? degreeCollege.get() : "";
+    }
+
+    public String getDegreeSchool() {
+        Optional<String> degreeSchool = getFieldValueIdentifierByPredicateValue("thesis.degree.school");
+        return degreeSchool.isPresent() ? degreeSchool.get() : "";
+    }
+
+    public String getDegreeProgram() {
+        Optional<String> degreeProgram = getFieldValueIdentifierByPredicateValue("thesis.degree.program");
+        return degreeProgram.isPresent() ? degreeProgram.get() : "";
+    }
+
     public String getTitle() {
         Optional<String> title = getFieldValueByPredicateValue("dc.title");
         return title.isPresent() ? title.get() : "";
     }
 
-    public String getCommitteeChair() {
-        Optional<String> chair = getFieldValueByPredicateValue("dc.contributor.advisor");
-        return chair.isPresent() ? chair.get() : "";
+    public List<FieldValue> getCommitteeChairFieldValues() {
+        return submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
     }
 
     public String getFirstName(String name) {
@@ -530,14 +582,10 @@ public class SubmissionHelperUtility {
     }
 
     public int getEmbargoCode() {
-
         int embargoCode = 0;
-
         Optional<FieldValue> proquestEmbargo = getFirstFieldValueByPredicateValue("proquest_embargos");
         Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
-
         Optional<FieldValue> embargo = proquestEmbargo.isPresent() ? proquestEmbargo : defaultEmbargo.isPresent() ? defaultEmbargo : Optional.empty();
-
         if (embargo.isPresent()) {
             String duration = embargo.get().getIdentifier();
             if (duration != null) {
@@ -567,12 +615,8 @@ public class SubmissionHelperUtility {
     // NOTE: these come from the settings service
 
 
-    public String getGrantor() {
-        String grantor = null;
-        if(submission.getConfigurationRepo()!=null){
-            grantor = submission.getConfigurationRepo().getValueByName("grantor");
-        }
-        return grantor != null ? grantor : "";
+    public String getGrantor() {        
+      return getSettingByNameAndType("grantor","application").getValue();
     }
 
     public boolean getReleaseStudentContactInformation() {
@@ -618,9 +662,9 @@ public class SubmissionHelperUtility {
 
     // NOTE: used context to get the default settings service
 
-    public DefaultConfiguration getSettingByNameAndType(String name, String type) {
-        DefaultSettingsService defaultSettingsService = SpringContext.bean(DefaultSettingsService.class);
-        return defaultSettingsService.getSettingByNameAndType(name, type);
+    public Configuration getSettingByNameAndType(String name, String type) {
+        ConfigurationRepo configurationRepo = SpringContext.bean(ConfigurationRepo.class);
+        return configurationRepo.getByNameAndType(name, type);
     }
 
     public Optional<String> getProQuestCodeByNameAndType(String name, String type) {

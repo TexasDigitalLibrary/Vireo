@@ -502,7 +502,8 @@ sidebox ul.sidebox-list {
   list-style-type: none;
 }
 
-sidebox ul.sidebox-list li {
+sidebox ul.sidebox-list li,
+sidebox .flagged-fields  {
   padding: 3px;
   overflow-wrap: break-word;
   word-wrap: break-word;
@@ -1314,6 +1315,10 @@ input[type=color]:focus {
   max-height: 700px;
   -webkit-transition: max-height 0.5s ease-out;
   transition: max-height 0.5s ease-out;
+}
+
+.accordion .panel-body .remove {
+  margin-bottom: 10px;
 }
 
 .accordion .loader {

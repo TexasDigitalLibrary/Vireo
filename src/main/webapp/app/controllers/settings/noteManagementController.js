@@ -82,7 +82,7 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
     };
 
     $scope.reorderNotes = function(src, dest) {
-        WorkflowStepRepo.reorderNote($scope.step, src, dest);
+        return WorkflowStepRepo.reorderNotes($scope.step, src, dest);
     };
 
     $scope.isEditable = function(note) {

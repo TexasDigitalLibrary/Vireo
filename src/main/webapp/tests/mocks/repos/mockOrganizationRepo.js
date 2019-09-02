@@ -16,8 +16,8 @@ var dataOrganizationRepo3 = [
     dataOrganization6
 ];
 
-angular.module('mock.organizationRepo', []).service('OrganizationRepo', function($q) {
-    var repo = mockRepo('OrganizationRepo', $q, mockOrganization, dataOrganizationRepo1);
+angular.module("mock.organizationRepo", []).service("OrganizationRepo", function($q) {
+    var repo = mockRepo("OrganizationRepo", $q, mockOrganization, dataOrganizationRepo1);
 
     repo.newOrganization = {};
     repo.selectedId = null;
@@ -55,7 +55,7 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
         // FIXME: $scope.deleteWorkflowStep of organizationManagementController is expecting a different response structure.
         var response = {
             meta: {
-                status: 'SUCCESS',
+                status: "SUCCESS",
             },
             payload: payload,
             status: 200
@@ -78,14 +78,14 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
         return found;
     };
 
-    repo.reorderWorkflowStep = function (upOrDown, workflowStepID) {
+    repo.reorderWorkflowSteps = function (upOrDown, workflowStepID) {
         var payload = {};
         return payloadPromise($q.defer(), payload);
     };
 
     repo.resetNewOrganization = function () {
         for (var key in repo.newOrganization) {
-            if (key !== 'category' && key !== 'parent') {
+            if (key !== "category" && key !== "parent") {
                 delete repo.newOrganization[key];
             }
         }
@@ -95,10 +95,10 @@ angular.module('mock.organizationRepo', []).service('OrganizationRepo', function
     repo.restoreDefaults = function (organization) {
         var payload = {};
 
-        // FIXME: $scope.deleteWorkflowStep of organizationManagementController is expecting a different response structure.
+        // FIXME: $scope.restoreOrganizationDefaults of organizationManagementController is expecting a different response structure.
         var response = {
             meta: {
-                status: 'SUCCESS',
+                status: "SUCCESS",
             },
             payload: payload,
             status: 200

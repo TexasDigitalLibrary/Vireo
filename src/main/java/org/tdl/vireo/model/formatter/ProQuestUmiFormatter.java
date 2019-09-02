@@ -16,7 +16,7 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
         super();
         setName("ProQuestUMI");
         HashMap<String, String> templates = new HashMap<String, String>();
-        templates.put(DEFAULT_TEMPLATE_KEY, "proquest_umi");
+        templates.put("proquest_umi.xml", "proquest_umi");
         setTemplates(templates);
     }
 
@@ -84,8 +84,8 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
             case TITLE:
                 context.setVariable(key.name(), submissionHelperUtility.getTitle());
                 break;
-            case COMMITTEE_CHAIR:
-                context.setVariable(key.name(), submissionHelperUtility.getCommitteeChair());
+            case COMMITTEE_CHAIR_FIELD_VALUES:
+                context.setVariable(key.name(), submissionHelperUtility.getCommitteeChairFieldValues());
                 break;
             case COMMITTEE_MEMBER_FIELD_VALUES:
                 context.setVariable(key.name(), submissionHelperUtility.getCommitteeMemberFieldValues());

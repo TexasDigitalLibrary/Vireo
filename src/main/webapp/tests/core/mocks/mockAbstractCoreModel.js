@@ -11,8 +11,7 @@ var mockModel = function (modelName, $q, mockDataObj) {
             for (var i in keys) {
                 model[keys[i]] = toMock[keys[i]];
             }
-        }
-        else if (toMock === undefined || toMock === null) {
+        } else if (toMock === undefined || toMock === null) {
             model = null;
         }
     };
@@ -49,11 +48,11 @@ var mockModel = function (modelName, $q, mockDataObj) {
     };
 
     model.enableMergeCombinationOperation = function () {
-        combinationOperation = 'merge';
+        combinationOperation = "merge";
     };
 
     model.enableExtendCombinationOperation = function () {
-        combinationOperation = 'extend';
+        combinationOperation = "extend";
     };
 
     model.fetch = function() {

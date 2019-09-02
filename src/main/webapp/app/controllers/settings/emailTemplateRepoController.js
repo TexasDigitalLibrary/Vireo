@@ -89,8 +89,16 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
             $scope.modalData.delete();
         };
 
+        $scope.isSystemRequired = function(modalData) {
+            if (angular.isDefined(modalData) && angular.isDefined(modalData.systemRequired)) {
+                return modalData.systemRequired === true;
+            }
+
+            return false;
+        };
+
         $scope.reorderEmailTemplates = function (src, dest) {
-            EmailTemplateRepo.reorder(src, dest);
+            return EmailTemplateRepo.reorder(src, dest);
         };
 
         $scope.sortEmailTemplates = function (column) {

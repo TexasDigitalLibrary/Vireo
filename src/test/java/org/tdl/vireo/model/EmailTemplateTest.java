@@ -22,6 +22,24 @@ public class EmailTemplateTest extends AbstractEntityTest {
         assertEquals("Saved submission did not contain the correct Subject!", TEST_EMAIL_TEMPLATE_SUBJECT, emailTemplate.getSubject());
     }
 
+    public void testUpdate() {
+        EmailTemplate testEmailTemplate = emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
+        assertEquals("Embargo Repo did not save the email template!", 1, emailTemplateRepo.count());
+
+        testEmailTemplate.setSystemRequired(!testEmailTemplate.getSystemRequired());
+        testEmailTemplate.setName("Updated Name");
+        testEmailTemplate.setMessage("Updated Message");
+        testEmailTemplate.setSubject("Updated Subject");
+        testEmailTemplate.setPosition(9000L);
+
+        EmailTemplate updatedEmailTemplate = emailTemplateRepo.update(testEmailTemplate);
+        assertEquals("Email Template Repo did not update the email template SystemRequired property!", testEmailTemplate.getSystemRequired(), updatedEmailTemplate.getSystemRequired());
+        assertEquals("Email Template Repo did not update the email template Name property!", testEmailTemplate.getName(), updatedEmailTemplate.getName());
+        assertEquals("Email Template Repo did not update the email template Message property!", testEmailTemplate.getMessage(), updatedEmailTemplate.getMessage());
+        assertEquals("Email Template Repo did not update the email template Subject property!", testEmailTemplate.getSubject(), updatedEmailTemplate.getSubject());
+        assertEquals("Email Template Repo did not update the email template Position property!", testEmailTemplate.getPosition(), updatedEmailTemplate.getPosition());
+    }
+
     @Override
     public void testDuplication() {
         emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);

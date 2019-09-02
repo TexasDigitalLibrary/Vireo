@@ -8,8 +8,8 @@
     <ul class="dropdown-menu" uib-dropdown-menu role="menu">
       <li class="select-option"
         role="menuitem"
-        ng-click="field.value = word.name; fieldProfileForm.$dirty = true; saveWithCV(field, word);" 
-        ng-repeat="word in fieldProfile.controlledVocabulary.dictionary">
+        ng-click="field.value = word.name; fieldProfileForm.$dirty = true; saveWithCV(field, word);"
+        ng-repeat="word in fieldProfile.controlledVocabulary.dictionary | filter:displayVocabularyWord">
         <a href="#">{{word.name}}</a>
       </li>
     </ul>

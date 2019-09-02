@@ -16,8 +16,8 @@ var dataSubmissionListColumnRepo3 = [
     dataSubmissionListColumn6
 ];
 
-angular.module('mock.submissionListColumnRepo', []).service('SubmissionListColumnRepo', function($q) {
-    var repo = mockRepo('SubmissionListColumnRepo', $q, mockSubmissionListColumn, dataSubmissionListColumnRepo1);
+angular.module("mock.submissionListColumnRepo", []).service("SubmissionListColumnRepo", function($q) {
+    var repo = mockRepo("SubmissionListColumnRepo", $q, mockSubmissionListColumn, dataSubmissionListColumnRepo1);
 
     repo.findByTitle = function (title) {
         var found;

@@ -1,6 +1,27 @@
 describe('model: Submission', function () {
     var model, q, rootScope, scope, ActionLog, FieldValue, FileService, Organization, WsApi;
 
+    var initializeVariables = function(settings) {
+        inject(function ($q, $rootScope, _ActionLog_, _FieldValue_, _FileService_ /*, _Organization_*/, _WsApi_) {
+            q = $q;
+            rootScope = $rootScope;
+
+            ActionLog = _ActionLog_;
+            FieldValue = _FieldValue_;
+            FileService = _FileService_;
+            // Organization = _Organization_;
+            WsApi = _WsApi_;
+        });
+    };
+
+    var initializeModel = function(settings) {
+        inject(function (Submission) {
+            scope = rootScope.$new();
+
+            model = angular.extend(new Submission(), dataSubmission1);
+        });
+    };
+
     beforeEach(function() {
         module('core');
         module('vireo');
@@ -12,19 +33,8 @@ describe('model: Submission', function () {
         module('mock.user');
         module('mock.wsApi');
 
-        inject(function ($q, $rootScope, Submission, _ActionLog_, _FieldValue_, _FileService_ /*, _Organization_*/, _WsApi_) {
-            q = $q;
-            rootScope = $rootScope;
-            scope = $rootScope.$new();
-
-            ActionLog = _ActionLog_;
-            FieldValue = _FieldValue_;
-            FileService = _FileService_;
-            // Organization = _Organization_;
-            WsApi = _WsApi_;
-
-            model = angular.extend(new Submission(), dataSubmission1);
-        });
+        initializeVariables();
+        initializeModel();
     });
 
     describe('Is the model defined', function () {
@@ -319,7 +329,7 @@ describe('model: Submission', function () {
             spyOn(model, "getFieldValuesByInputType").and.returnValue(fieldValues);
 
             response = model.getContactEmails();
-            expect(response.length).toBe(3);
+            expect(response.length).toBe(4);
         });
         it('getFieldProfileByPredicate should return a Field Predicate', function () {
             var response;
@@ -604,7 +614,7 @@ describe('model: Submission', function () {
             var fieldProfile = new mockFieldProfile(q);
             fieldProfile.optional = false;
             fieldProfile.enabled = true;
-            model.isValid = null
+            model.isValid = null;
 
             model.validate();
             scope.$apply();

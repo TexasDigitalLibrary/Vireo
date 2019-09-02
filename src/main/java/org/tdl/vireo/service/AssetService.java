@@ -26,6 +26,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -96,10 +97,12 @@ public class AssetService {
         BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
         Map<String, Object> fileInfo = new HashMap<String, Object>();
         String fileName = path.getFileName().toString();
+        String readableFileSize = FileUtils.byteCountToDisplaySize(attr.size());
         fileInfo.put("name", fileName.substring(fileName.indexOf('-') + 1));
         fileInfo.put("type", fileHelperUtility.getMimeTypeOfAsset(relativePath));
         fileInfo.put("time", attr.creationTime().toMillis());
         fileInfo.put("size", attr.size());
+        fileInfo.put("readableSize", readableFileSize);
         fileInfo.put("uploaded", true);
         return objectMapper.valueToTree(fileInfo);
     }
@@ -125,11 +128,16 @@ public class AssetService {
         return resource.getFile();
     }
 
-    public List<File> getResouceDirectoryListing(String resourceDirectory) throws IOException {
+    public List<File> getResourceDirectoryListing(String resourceDirectory) throws IOException {
         Resource resource = getResource(resourceDirectory);
         URI uri = resource.getURI();
         if (uri.getScheme().equals("jar")) {
-            String directory = resourceDirectory.replace("classpath:", "/WEB-INF/classes").replace("file:", "/");
+            String directory = null;
+        	if (uri.toString().contains(".jar!")) {
+                directory = resourceDirectory.replace("classpath:", "/BOOT-INF/classes").replace("file:", "/");
+            }else{ //.war!
+                directory = resourceDirectory.replace("classpath:", "/WEB-INF/classes").replace("file:", "/");
+            }
             FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.<String, String>emptyMap());
             Path directoryPath = fileSystem.getPath(directory);
             Iterator<Path> it = Files.walk(directoryPath, 1).filter(Files::isRegularFile).iterator();

@@ -28,5 +28,5 @@ var mockCustomActionValue = function($q) {
     return model;
 };
 
-angular.module('mock.customActionValue', []).service('CustomActionValue', mockCustomActionValue);
+angular.module("mock.customActionValue", []).service("CustomActionValue", mockCustomActionValue);
 

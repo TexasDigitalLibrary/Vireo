@@ -16,8 +16,8 @@ var dataInputTypeRepo3 = [
     dataInputType6
 ];
 
-angular.module('mock.inputTypeRepo', []).service('InputTypeRepo', function($q) {
-    var repo = mockRepo('InputTypeRepo', $q, mockInputType, dataInputTypeRepo1);
+angular.module("mock.inputTypeRepo", []).service("InputTypeRepo", function($q) {
+    var repo = mockRepo("InputTypeRepo", $q, mockInputType, dataInputTypeRepo1);
 
     return repo;
 });

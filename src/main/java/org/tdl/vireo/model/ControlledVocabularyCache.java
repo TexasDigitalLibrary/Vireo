@@ -15,10 +15,13 @@ public class ControlledVocabularyCache {
 
     private List<VocabularyWord> duplicateVocabularyWords;
 
+    private List<VocabularyWord> removedVocabularyWords;
+
     public ControlledVocabularyCache() {
         setNewVocabularyWords(new ArrayList<VocabularyWord>());
         setUpdatingVocabularyWords(new ArrayList<VocabularyWord[]>());
         setDuplicateVocabularyWords(new ArrayList<VocabularyWord>());
+        setRemovedVocabularyWords(new ArrayList<VocabularyWord>());
     }
 
     public ControlledVocabularyCache(Long timestamp, String controlledVocabularyName) {
@@ -100,6 +103,21 @@ public class ControlledVocabularyCache {
      */
     public void setDuplicateVocabularyWords(List<VocabularyWord> duplicateVocabularyWords) {
         this.duplicateVocabularyWords = duplicateVocabularyWords;
+    }
+
+    /**
+     * @return the removedVocabularyWords
+     */
+    public List<VocabularyWord> getRemovedVocabularyWords() {
+        return removedVocabularyWords;
+    }
+
+    /**
+     * @param removedVocabularyWords
+     *            the removedVocabularyWords to set
+     */
+    public void setRemovedVocabularyWords(List<VocabularyWord> removedVocabularyWords) {
+        this.removedVocabularyWords = removedVocabularyWords;
     }
 
 }

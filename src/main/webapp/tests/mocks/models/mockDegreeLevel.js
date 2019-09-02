@@ -28,5 +28,5 @@ var mockDegreeLevel = function($q) {
     return model;
 };
 
-angular.module('mock.degreeLevel', []).service('DegreeLevel', mockDegreeLevel);
+angular.module("mock.degreeLevel", []).service("DegreeLevel", mockDegreeLevel);
 

@@ -16,8 +16,8 @@ var dataOrganizationCategoryRepo3 = [
     dataOrganizationCategory6
 ];
 
-angular.module('mock.organizationCategoryRepo', []).service('OrganizationCategoryRepo', function($q) {
-    var repo = mockRepo('OrganizationCategoryRepo', $q, mockOrganizationCategory, dataOrganizationCategoryRepo1);
+angular.module("mock.organizationCategoryRepo", []).service("OrganizationCategoryRepo", function($q) {
+    var repo = mockRepo("OrganizationCategoryRepo", $q, mockOrganizationCategory, dataOrganizationCategoryRepo1);
 
     return repo;
 });

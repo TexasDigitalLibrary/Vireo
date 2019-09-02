@@ -15,9 +15,9 @@ import edu.tamu.weaver.data.model.repo.WeaverOrderedRepo;
 })
 public interface EmbargoRepo extends WeaverOrderedRepo<Embargo>, EntityControlledVocabularyRepo<Embargo>, EmbargoRepoCustom {
 
-    public Embargo findByNameAndGuarantorAndIsSystemRequired(String name, EmbargoGuarantor guarantor, Boolean isSystemRequired);
+    public Embargo findByNameAndGuarantorAndSystemRequired(String name, EmbargoGuarantor guarantor, Boolean systemRequired);
 
     public List<Embargo> findAllByOrderByGuarantorAscPositionAsc();
-    
-    
+
+
 }

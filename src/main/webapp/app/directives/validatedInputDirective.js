@@ -21,7 +21,8 @@ vireo.directive("validatedinput", function ($q, $timeout) {
             "confirm": "&",
             "validations": "=",
             "formView": "=",
-            "repeatable": "=?"
+            "repeatable": "=?",
+            "disabled": "="
         },
         link: function ($scope, element, attr) {
 
@@ -98,6 +99,14 @@ vireo.directive("validatedinput", function ($q, $timeout) {
             $scope.removeMember = function (i) {
                 $scope.model[$scope.property].splice(i, 1);
                 $scope.model.dirty(true);
+            };
+
+            $scope.isDisabled = function () {
+                if (angular.isDefined($scope.disabled)) {
+                    return $scope.disabled($scope.model);
+                }
+
+                return false;
             };
 
         }

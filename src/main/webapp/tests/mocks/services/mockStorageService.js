@@ -1,14 +1,14 @@
-angular.module('mock.storageService', []).service('StorageService', function ($q) {
+angular.module("mock.storageService", []).service("StorageService", function ($q) {
     var service = mockService($q);
 
     service.storage = {
-        'session': {},
-        'local': {}
+        "session": {},
+        "local": {}
     };
 
     service.keys = {
-        'session': {},
-        'local': {}
+        "session": {},
+        "local": {}
     };
 
     service.set = function (key, value, type) {
@@ -47,8 +47,8 @@ angular.module('mock.storageService', []).service('StorageService', function ($q
     };
 
     for (var type in {
-            'session': '0',
-            'local': '1'
+            "session": "0",
+            "local": "1"
         }) {
         for (var key in service.storage[type]) {
             service.keys[type][key] = $q.defer();

@@ -4,15 +4,17 @@
 
     <div class="info-container form-group">
 
-      <label class="info-label" ng-if="$index < 1">
+      <label ng-if="type=='view'" class="info-label" ng-if="$index < 1">
         <span>{{label}}</span>
       </label>
 
-      <span class="info-data form-control">
+      <li ng-if="type=='flagged'">{{label}}:</li>
+
+      <span ng-class="type=='view' ? 'info-data form-control' : 'flagged-fields'">
         <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
         <span ng-if="inputLicense() || inputProquest()">{{field.value === 'true' ? 'yes' : 'no'}}</span>
         <span ng-if="inputTel()">
-          <a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
+          <a ng-if="field.value" href="tel:{{field.value}}">{{field.value}}</a>
           <span ng-if="!field.value" class="info-empty">none</span>
         </span>
         <span ng-if="inputUrl()">
@@ -25,6 +27,7 @@
         <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
         <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
         <span ng-if="inputContactChair() && field.value"><span class="span-block">{{field.value}}</span><span>{{field.contacts[0]}}</span></span>
+        <span ng-if="inputFile()" ng-class="{'info-empty': !field.value}">{{field.fileInfo.name || 'none'}}</span>
       </span>
 
     </div>
@@ -33,19 +36,21 @@
 
   <div ng-if="!immutable" ng-repeat="field in submission.fieldValues | filter: fieldPredicateFilter">
 
-    <div ng-if="!field.editing" class="info-container form-group" ng-class="{'text-danger': !field.isValid()}">
-      
-      <label class="info-label" ng-if="$index < 1">
+    <div ng-if="type=='flagged' || (type=='view' && !field.editing)" ng-class="{'info-container form-group': type=='view', 'text-danger ': type=='view' && !field.isValid()}">
+      <label ng-if="type=='view'" ng-class="info-label" ng-if="$index < 1">
         <span>{{label}}</span>
       </label>
-      <span ng-if="fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus clickable" ng-click="addFieldValue()"></span>
 
-      <span class="info-data form-control">
+      <li ng-if="type=='flagged'">{{label}}:</li>
+
+      <span ng-if="type=='view' && fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus clickable" ng-click="addFieldValue()"></span>
+
+      <span ng-class="type=='view' ? 'info-data form-control' : 'flagged-fields font-weight-bold'">
         <!-- conditionally show the proper form of the field value -->
         <span ng-if="standardInput()" ng-class="{'info-empty': !field.value}">{{field.value || 'none'}}</span>
         <span ng-if="inputLicense() || inputProquest()">{{field.value === 'true' ? 'yes' : 'no'}}</span>
         <span ng-if="inputTel()">
-          <a ng-if="field.value" href="tel://{{field.value}}">{{field.value}}</a>
+          <a ng-if="field.value" href="tel:{{field.value}}">{{field.value}}</a>
           <span ng-if="!field.value" class="info-empty">none</span>
         </span>
         <span ng-if="inputUrl()">
@@ -58,21 +63,22 @@
         <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
         <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
         <span ng-if="inputContactChair() && field.value"><span class="span-block">{{field.value}}</span><span>{{field.contacts[0]}}</span></span>
+        <span ng-if="inputFile()" ng-class="{'info-empty': !field.value}">{{field.fileInfo.name || 'none'}}</span>
 
         <!-- conditionally show the invalidation and refresh -->
-        <span ng-if="!field.isValid()" class="glyphicon glyphicon-warning-sign text-danger" tooltip="{{field.getValidationMessages()}}"></span>
-        <span ng-if="!field.isValid()" class="glyphicon glyphicon-refresh text-primary clickable" ng-click="refreshFieldValue(field)"></span>
+        <span ng-if="type=='view' && !field.isValid()" class="glyphicon glyphicon-warning-sign text-danger" tooltip="{{field.getValidationMessages()}}"></span>
+        <span ng-if="type=='view' && !field.isValid()" class="glyphicon glyphicon-refresh text-primary clickable" ng-click="refreshFieldValue(field)"></span>
 
         <!-- conditionally show the edit clicker or the progress spinner -->
-        <span id="{{$index}}" ng-if="!field.updating" class="glyphicon glyphicon-pencil clickable" ng-click="editFieldValue($event, field)"></span>
-        <span ng-if="!field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" ng-click="removeFieldValue(field)"></span>        
-        
-        <span ng-if="field.updating" class="glyphicon glyphicon-refresh spinning"></span>
+        <span id="{{$index}}" ng-if="type=='view' && !field.updating" class="glyphicon glyphicon-pencil clickable" ng-click="editFieldValue($event, field)"></span>
+        <span ng-if="type=='view' && !field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" ng-click="removeFieldValue(field)"></span>
+
+        <span ng-if="type=='view' && field.updating" class="glyphicon glyphicon-refresh spinning"></span>
       </span>
 
     </div>
 
-    <form ng-submit="save(field)">
+    <form ng-if="type=='view'" ng-submit="save(field)">
 
       <div ng-show="field.editing" class="info-container form-group">
 
@@ -80,7 +86,7 @@
           <span>{{label}}</span>
         </label>
 
-        <ng-include class="info-form" src="edit"></ng-include>
+        <ng-include class="info-form" src="edit" show-vocabulary-word="showVocabularyWord"></ng-include>
 
       </div>
 

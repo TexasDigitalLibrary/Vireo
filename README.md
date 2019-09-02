@@ -1,14 +1,14 @@
-[![Waffle.io - Columns and their card count](https://badge.waffle.io/TexasDigitalLibrary/Vireo.png?columns=all)](https://waffle.io/TexasDigitalLibrary/Vireo?utm_source=badge) [![Build Status](https://travis-ci.org/TexasDigitalLibrary/Vireo.svg?branch=master)](https://travis-ci.org/TexasDigitalLibrary/Vireo) [![Coverage Status](https://coveralls.io/repos/github/TexasDigitalLibrary/Vireo/badge.svg?branch=master)](https://coveralls.io/github/TexasDigitalLibrary/Vireo?branch=master)
+[![Build Status](https://travis-ci.org/TexasDigitalLibrary/Vireo.svg?branch=master)](https://travis-ci.org/TexasDigitalLibrary/Vireo) [![Coverage Status](https://coveralls.io/repos/github/TexasDigitalLibrary/Vireo/badge.svg?branch=master)](https://coveralls.io/github/TexasDigitalLibrary/Vireo?branch=master)
 
 # Vireo 4
 
-Vireo is a turnkey Electronic Thesis and Dissertation (ETD) Management System.  Starting with the 4.x release, Vireo offers fully customizable workflows and controlled vocabularies.  
+Vireo is a turnkey Electronic Thesis and Dissertation (ETD) Management System.  Starting with the 4.x release, Vireo offers fully customizable workflows and controlled vocabularies.
 
 The software is presently in a Beta release.  If you would like to help with testing or development, GitHub issues and pull requests are encouraged!
 
 ## Building
 
-Vireo build is done with [Maven](https://maven.apache.org/). The build is configured with [pom.xml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/pom.xml) and [package.json](https://github.com/TexasDigitalLibrary/Vireo/blob/master/package.json). There are several command line arguments that can be used when packaging Vireo 4. 
+Vireo build is done with [Maven](https://maven.apache.org/). The build is configured with [pom.xml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/pom.xml) and [package.json](https://github.com/TexasDigitalLibrary/Vireo/blob/master/package.json). There are several command line arguments that can be used when packaging Vireo 4.
 
 * ```-Dproduction``` will package production ready. **Required for Tomcat deployment or running as a jar**
 * ```-DskipTests``` will skip tests.
@@ -18,7 +18,7 @@ Vireo build is done with [Maven](https://maven.apache.org/). The build is config
 
 **Ending trailing slash is required for spring.config.location**
 
-The external configuration directory is where an application.yaml file can be added to override default properties. When packaging the application define `config.uri`, which will template context.xml file with the `spring.config.location` system variable for container deployment. 
+The external configuration directory is where an application.yaml file can be added to override default properties. When packaging the application define `config.uri`, which will template context.xml file with the `spring.config.location` system variable for container deployment.
 
 When running for development define `spring.config.location` to externalize the configuration. If running for development and using an external configuration, do not define `assets.uri`. It will have to be configured manually in the external application.yaml.
 
@@ -135,6 +135,10 @@ drwxrwxrwx  7 root  root  238 Sep  3 11:20 webapp
 * logs - where vireo log files are stored
 * webapp - the extracted WAR file
 
+### Recommended Hardware Configuration
+
+*  2 CPUs
+*  2 GB RAM
 
 ### Configure application
 
@@ -227,3 +231,9 @@ java -jar target/vireo-4.0.0-SNAPSHOT.war
 | app.email.from | string | email address from | noreply@tdl.org |
 | app.email.replyTo | string | email address replyTo | admin@tdl.org |
 | app.reporting.address | string | email address to report issues | issues@tdl.org |
+
+**Do not forget to provide your own custom values for the security related properties, such as `auth.security.jwt.secret`, `auth.security.jwt.issuer`, `auth.security.jwt.duration`, `app.security.secret`, and `app.security.allow-access`.**
+
+### Customization of default values
+
+Information on customizing default values can be found in the [advanced customization](https://github.com/TexasDigitalLibrary/Vireo/blob/master/ADVANCED_CUSTOMIZATION.md) documentation.

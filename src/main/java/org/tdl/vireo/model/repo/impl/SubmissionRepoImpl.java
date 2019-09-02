@@ -13,8 +13,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
@@ -31,6 +34,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -114,6 +118,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     }
 
     @Override
+    @Transactional
     public Submission create(User submitter, Organization organization, SubmissionStatus startingStatus, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception {
         if (organization.getAcceptsSubmissions().equals(false)) {
             throw new OrganizationDoesNotAcceptSubmissionsExcception();
@@ -420,16 +425,26 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         StringBuilder sqlCountSelectBuilder = new StringBuilder("SELECT COUNT(DISTINCT s.id) FROM submission s ");
 
+        Map<Long, ArrayList<StringBuilder>> sqlColumnsBuilders = new HashMap<Long, ArrayList<StringBuilder>>();
+
         StringBuilder sqlJoinsBuilder = new StringBuilder();
-        StringBuilder sqlWheresBuilder = new StringBuilder();
+        StringBuilder sqlWhereBuilder;
         StringBuilder sqlWheresExcludeBuilder = new StringBuilder();
         StringBuilder sqlOrderBysBuilder = new StringBuilder();
+
+        ArrayList<StringBuilder> sqlWhereBuilderList;
+        ArrayList<StringBuilder> sqlAllColumnsWhereBuilderList = new ArrayList<StringBuilder>();
 
         int n = 0;
 
         for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
 
             if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0 || submissionListColumn.getVisible()) {
+                if (sqlColumnsBuilders.containsKey(submissionListColumn.getId())) {
+                    sqlWhereBuilderList = sqlColumnsBuilders.get(submissionListColumn.getId());
+                } else {
+                    sqlWhereBuilderList = new ArrayList<StringBuilder>();
+                }
 
                 switch (String.join(".", submissionListColumn.getValuePath())) {
                 case "fieldValues.value":
@@ -450,12 +465,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWhereBuilder = new StringBuilder();
 
                         switch (submissionListColumn.getInputType().getName()) {
                         case "INPUT_DEGREEDATE":
                             // Column's values are of type datetime
                             filterString.replaceAll("[TZ:.\\-]", " ");
-                            sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
+                            sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
                             break;
                         case "INPUT_DATETIME":
                             // Column's values are of type datetime
@@ -465,46 +481,48 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                                 dates[0] = dates[0].replaceAll("[TZ:.\\-]", " ");
                                 dates[1] = dates[1].replaceAll("[TZ:.\\-]", " ");
 
-                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) BETWEEN to_timestamp('").append(dates[0]).append("', \'YYYY MM DD HH MI SS MS') AND to_timestamp('").append(dates[1]).append("', \'YYYY MM DD HH MI SS MS')) OR");
+                                sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) BETWEEN to_timestamp('").append(dates[0]).append("', \'YYYY MM DD HH MI SS MS') AND to_timestamp('").append(dates[1]).append("', \'YYYY MM DD HH MI SS MS')");
                             } else {
                                 // Date Match
                                 filterString.replaceAll("[TZ:.\\-]", " ");
-                                sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
+                                sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
                             }
                             break;
                         case "INPUT_CHECKBOX":
+                            sqlWhereBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+
                             // Column's values are a boolean
-                            if (Boolean.valueOf(filterString)) {
-                                sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString).append("' OR");
-                            } else {
-                                sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString).append("' OR").append(" pfv").append(n).append(".value IS NULL ").append(" OR");
+                            if (!Boolean.valueOf(filterString)) {
+                                sqlWhereBuilderList.add(sqlWhereBuilder);
+                                sqlWhereBuilder = new StringBuilder();
+
+                                sqlWhereBuilder.append(" pfv").append(n).append(".value IS NULL");
                             }
                             break;
                         default:
                             // Column's values can be handled by this default
                             if (submissionListColumn.getExactMatch()) {
                                 // perform exact match
-                                sqlWheresBuilder.append(" pfv").append(n).append(".value = '").append(filterString).append("' OR");
+                                sqlWhereBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
                             } else {
                                 // perform like when input from text field
-                                sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                                sqlWhereBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
                             }
                             break;
                         }
 
+                        if (sqlWhereBuilder.length() > 0) {
+                            sqlWhereBuilderList.add(sqlWhereBuilder);
+                        }
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
-                    
-                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
-                    }
-                    
+
                     n++;
 
                     break;
@@ -516,13 +534,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWheresBuilder.append(" s").append(".id = ").append(filterString).append(" OR");
-                    }
-                    
-                    if(submissionListColumn.getFilters().size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("s").append(".id = ").append(filterString);
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -536,26 +550,24 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWhereBuilder = new StringBuilder();
+
                         if (submissionListColumn.getExactMatch()) {
-                            sqlWheresBuilder.append(" ss").append(".name = '").append(filterString).append("' OR");
+                            sqlWhereBuilder.append("ss").append(".name = '").append(filterString).append("'");
                         } else {
                             // TODO: determine if status will ever be search using a like
-                            sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                            sqlWhereBuilder.append("LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
                         }
 
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
-                    
-                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
-                    }
-
 
                     break;
 
@@ -570,24 +582,24 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWhereBuilder = new StringBuilder();
+
                         if (submissionListColumn.getExactMatch()) {
-                            sqlWheresBuilder.append(" o").append(".name = '").append(filterString).append("' OR");
+                            sqlWhereBuilder.append("o").append(".name = '").append(filterString).append("'");
                         } else {
                             // TODO: determine if organization name will ever be
                             // search using a like
-                            sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                            sqlWhereBuilder.append("LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
                         }
+
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
-                    }
-                    
-                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -604,24 +616,23 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWhereBuilder = new StringBuilder();
                         if (submissionListColumn.getExactMatch()) {
-                            sqlWheresBuilder.append(" oc").append(".name = '").append(filterString).append("' OR");
+                            sqlWhereBuilder.append("oc").append(".name = '").append(filterString).append("'");
                         } else {
                             // TODO: determine if organization category name
                             // will ever be search using a like
-                            sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                            sqlWhereBuilder.append("LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
                         }
+
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
-                    }
-
-                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -635,24 +646,24 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWhereBuilder = new StringBuilder();
+
                         if (filterString == null) {
-                            sqlWheresBuilder.append(" a").append(".email IS NULL").append(" OR");
+                            sqlWhereBuilder.append("a").append(".email IS NULL");
                         } else if (submissionListColumn.getExactMatch()) {
-                            sqlWheresBuilder.append(" a").append(".email = '").append(filterString).append("' OR");
+                            sqlWhereBuilder.append("a").append(".email = '").append(filterString).append("'");
                         } else {
-                            sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
+                            sqlWhereBuilder.append("LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%'");
                         }
+
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
-                    }
-
-                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -672,22 +683,24 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
+                        sqlWhereBuilder = new StringBuilder();
+
+                        sqlWhereBuilder.append(" embs").append(".name = '").append(filterString).append("'");
+
                         if (filterString.equals("None")) {
-                            sqlWheresBuilder.append(" embs").append(".name = '").append(filterString).append("' OR").append(" embs.id IS NULL OR");
-                        } else {
-                            sqlWheresBuilder.append(" embs").append(".name = '").append(filterString).append("' OR");
+                            sqlWhereBuilderList.add(sqlWhereBuilder);
+                            sqlWhereBuilder = new StringBuilder();
+                            sqlWhereBuilder.append("embs.id IS NULL");
                         }
+
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWheresBuilder.append(" LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%' OR");
-                    }
-
-                    if(submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -704,8 +717,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                                    .append("\n   ON action_logs_id = s.submission_status_id");
                     // @formatter:on
 
-                    // TODO:
-                    // @todo finish sqlWheresBuilder.
+                    // TODO: finish sqlWheresBuilder.
 
                     break;
 
@@ -733,13 +745,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
-                        sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
-                    }
-                    
-                    if(submissionListColumn.getFilters().size() > 0 && allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
+
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -751,13 +760,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
-                        sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
-                    }
 
-                    if(submissionListColumn.getFilters().size() > 0 && allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -769,13 +775,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
-                        sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
-                    }
 
-                    if(submissionListColumn.getFilters().size() > 0 && allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -787,15 +790,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
-                        sqlWheresBuilder.append(" ( CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("') OR");
+
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
-                    if(submissionListColumn.getFilters().size() > 0 && allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
-                    }
-                    
                     break;
                 case "customActionValues":
 
@@ -809,13 +809,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     // @formatter:on
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWheresBuilder.append(" (scavcavcad.value = true AND scavcavcad.label = '" + filterString + "') OR ");
-                    }
-
-                    if(submissionListColumn.getFilters().size() > 0 && allColumnSearchFilters.size() > 0) {
-	                    //Strip the trailing OR and add an AND for across columns
-	                    sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 3);
-	                    sqlWheresBuilder.append(" AND ");
+                        sqlWhereBuilder = new StringBuilder();
+                        sqlWhereBuilder.append("scavcavcad.value = true AND scavcavcad.label = '" + filterString + "'");
+                        sqlWhereBuilderList.add(sqlWhereBuilder);
                     }
 
                     break;
@@ -823,6 +819,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     logger.info("No value path given for submission list column " + String.join(".", submissionListColumn.getValuePath()) + ": " + submissionListColumn.getTitle());
                 }
 
+                if (sqlWhereBuilderList.size() > 0) {
+                    sqlColumnsBuilders.put(submissionListColumn.getId(), sqlWhereBuilderList);
+                }
             }
         }
 
@@ -836,35 +835,54 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             sqlOrderBysBuilder.setLength(sqlOrderBysBuilder.length() - 1);
         }
 
-        // if where, complete where clause and strip the tailing AND
-        if (sqlWheresBuilder.length() > 0) {
-            sqlWheresBuilder.insert(0, "\nWHERE (");
-            sqlWheresBuilder.setLength(sqlWheresBuilder.length() - 4);
-            sqlWheresBuilder.append(" )");
-            // append excluded submissions
-            if (sqlWheresExcludeBuilder.length() > 0) {
-                sqlWheresBuilder.append(" AND ").append(sqlWheresExcludeBuilder);
+        // build WHERE query such that OR is used for conditions inside a column and AND is used across each different column.
+        sqlWhereBuilder = new StringBuilder();
+        if (sqlColumnsBuilders.size() > 0 || sqlAllColumnsWhereBuilderList.size() > 0 || sqlWheresExcludeBuilder.length() > 0) {
+            sqlWhereBuilder.append("\nWHERE ");
+
+            for (Entry<Long, ArrayList<StringBuilder>> list : sqlColumnsBuilders.entrySet()) {
+                sqlWhereBuilder.append("(");
+
+                for (StringBuilder builder : list.getValue()) {
+                    sqlWhereBuilder.append("(").append(builder).append(") OR ");
+                }
+
+                // remove last " OR".
+                sqlWhereBuilder.setLength(sqlWhereBuilder.length() - 4);
+
+                sqlWhereBuilder.append(") AND ");
             }
-            // if only exclude filter, complete where clause
-        } else {
+
+            if (sqlAllColumnsWhereBuilderList.size() > 0) {
+                sqlWhereBuilder.append("(");
+
+                for (StringBuilder builder : sqlAllColumnsWhereBuilderList) {
+                    sqlWhereBuilder.append("(").append(builder).append(") OR ");
+                }
+
+                // remove last " OR".
+                sqlWhereBuilder.setLength(sqlWhereBuilder.length() - 4);
+
+                sqlWhereBuilder.append(") AND ");
+            }
+
             if (sqlWheresExcludeBuilder.length() > 0) {
-                sqlWheresBuilder.insert(0, "\nWHERE");
-                sqlWheresBuilder.append(sqlWheresExcludeBuilder);
+                sqlWhereBuilder.append("(").append(sqlWheresExcludeBuilder).append(")");
+            } else {
+                // remove last " AND"
+                sqlWhereBuilder.setLength(sqlWhereBuilder.length() - 5);
             }
         }
 
-        String sqlQuery;
+        String sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWhereBuilder.toString();
+        String sqlCountQuery = sqlCountSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWhereBuilder.toString();
 
         if (pageable != null) {
             // determine the offset and limit of the query
             int offset = pageable.getPageSize() * pageable.getPageNumber();
             int limit = pageable.getPageSize();
-            sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString() + sqlOrderBysBuilder.toString() + "\nLIMIT " + limit + " OFFSET " + offset + ";";
-        } else {
-            sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString();
+            sqlQuery += sqlOrderBysBuilder.toString() + "\nLIMIT " + limit + " OFFSET " + offset + ";";
         }
-
-        String sqlCountQuery = sqlCountSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWheresBuilder.toString();
 
         logger.debug("QUERY:\n" + sqlQuery);
 

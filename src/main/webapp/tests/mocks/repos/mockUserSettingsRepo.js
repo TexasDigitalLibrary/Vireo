@@ -16,8 +16,8 @@ var dataUserSettingsRepo3 = [
     dataUserSettings6
 ];
 
-angular.module('mock.userSettingsRepo', []).service('UserSettingsRepo', function($q) {
-    var repo = mockRepo('UserSettingsRepo', $q, mockUserSettings, dataUserSettingsRepo1);
+angular.module("mock.userSettingsRepo", []).service("UserSettingsRepo", function($q) {
+    var repo = mockRepo("UserSettingsRepo", $q, mockUserSettings, dataUserSettingsRepo1);
 
     return repo;
 });

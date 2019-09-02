@@ -16,8 +16,8 @@ var dataNoteRepo3 = [
     dataNote6
 ];
 
-angular.module('mock.noteRepo', []).service('NoteRepo', function($q) {
-    var repo = mockRepo('NoteRepo', $q, mockNote, dataNoteRepo1);
+angular.module("mock.noteRepo", []).service("NoteRepo", function($q) {
+    var repo = mockRepo("NoteRepo", $q, mockNote, dataNoteRepo1);
 
     return repo;
 });
