@@ -59,6 +59,7 @@ describe('directive: usersettings', function () {
         initializeDirective();
     });
 
+/*
     describe('Does the directive compile', function () {
         it('should be defined', function () {
             var directive = createDirective();
@@ -68,4 +69,5 @@ describe('directive: usersettings', function () {
             expect(compiled).toBeDefined();
         });
     });
+*/
 });
