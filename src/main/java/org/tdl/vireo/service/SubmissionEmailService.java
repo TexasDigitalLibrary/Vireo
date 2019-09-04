@@ -161,8 +161,6 @@ public class SubmissionEmailService {
                 List<String> ccRecipientEmailAddresses = buildEmailRecipients("ccRecipientEmails", submission, data);
                 smm.setCc(ccRecipientEmailAddresses.toArray(new String[0]));
                 recipientEmails.append(" and cc to: [ " + String.join(";", ccRecipientEmailAddresses) + " ]; ");
-            } else {
-                recipientEmails.append(";");
             }
 
             if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
