@@ -1,23 +1,23 @@
 var dataSavedFilterRepo1 = [
-    dataSavedFilter1,
-    dataSavedFilter2,
-    dataSavedFilter3
+    dataNamedSearchFilter1,
+    dataNamedSearchFilter2,
+    dataNamedSearchFilter3
 ];
 
 var dataSavedFilterRepo2 = [
-    dataSavedFilter3,
-    dataSavedFilter2,
-    dataSavedFilter1
+    dataNamedSearchFilter3,
+    dataNamedSearchFilter2,
+    dataNamedSearchFilter1
 ];
 
 var dataSavedFilterRepo3 = [
-    dataSavedFilter4,
-    dataSavedFilter5,
-    dataSavedFilter6
+    dataNamedSearchFilter4,
+    dataNamedSearchFilter5,
+    dataNamedSearchFilter6
 ];
 
 angular.module("mock.savedFilterRepo", []).service("SavedFilterRepo", function($q) {
-    var repo = mockRepo("SavedFilterRepo", $q, mockSavedFilter, dataSavedFilterRepo1);
+    var repo = mockRepo("SavedFilterRepo", $q, mockNamedSearchFilter, dataSavedFilterRepo1);
 
     return repo;
 });
