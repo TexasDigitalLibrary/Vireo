@@ -1,23 +1,110 @@
-<div class="modal-header {{attr.modalHeaderClass}}">
-  <button type="button" class="close" ng-click="resetAddFile()" aria-label="Close">
-    <span class="modal-close" aria-hidden="true">&times;</span>
-  </button>
-  <h3 class="modal-title">Add File</h3>
-</div>
+<form name="addFileDataForm">
+  <div class="modal-header {{attr.modalHeaderClass}}">
+    <button type="button" class="close" ng-click="resetFileData(addFileData)" aria-label="Close">
+      <span class="modal-close" aria-hidden="true">&times;</span>
+    </button>
+    <h3 class="modal-title">Add File</h3>
+  </div>
 
-<form novalidate>
+    <div class="modal-body">
 
-  <div class="modal-body">
+      <span>
+        <input id="primaryDocument" type="radio" name="addFile" value="replace" ng-model="addFileData.addFileSelection">
+        <label ng-if="!hasPrimaryDocument()" for="primaryDocument">Add the primary document</label>
+        <label ng-if="hasPrimaryDocument()" for="primaryDocument">Replace the primary document</label>
+        <br/>
 
-    <span>
-      <input id="primaryDocument" type="radio" name="addFile" value="replace" ng-model="addFileData.addFileSelection">
-      <label ng-if="!hasPrimaryDocument()" for="primaryDocument">Add the primary document</label>
-      <label ng-if="hasPrimaryDocument()" for="primaryDocument">Replace the primary document</label>
+        <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection === 'replace', 'section-closed': addFileData.addFileSelection !== 'replace'}">
+
+          <dropzone ng-if="!addFileData.files" file-model="files" text="dropZoneText" , patterns="getPattern('_doctype_primary')" drop-method="queueUpload(files)"></dropzone>
+
+          <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
+          <div ng-if="addFileData.files">
+            <button ng-if="!addFileData.uploading" class="btn btn-default pull-right" ng-click="removeFiles()">Remove</button>
+            <label>Name:</label>
+            <span>{{addFileData.files[0].name}}</span><br/>
+            <label>Type:</label>
+            <span>{{addFileData.files[0].type}}</span><br/>
+            <label>Size:</label>
+            <span>{{addFileData.files[0].size | readableFileSize}}</span><br/>
+            <uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="addFileData.progress" max="100">{{addFileData.progress + '%'}}</uib-progressbar>
+          </div>
+
+          <span>
+            <div class="checkbox">
+              <label><input type="checkbox" value="false" ng-model="addFileData.sendEmailToRecipient" ng-change="!addFileData.sendEmailToRecipient?addFileData.sendEmailToCCRecipient=sendEmailToRecipient:addFileData.sendEmailToCCRecipient=addFileData.sendEmailToCCRecipient">Add Email Recipients</label>
+            </div>
+
+            <div class="checkbox">
+              <label><input type="checkbox" value="false" ng-model="addFileData.sendEmailToCCRecipient" ng-disabled="!addFileData.sendEmailToRecipient">Add CC Recipients</label>
+            </div>
+
+            <div class="email-section" ng-class="{'section-open': addFileData.sendEmailToRecipient, 'section-closed': !addFileData.sendEmailToRecipient}">
+
+              <div class="form-group email-element email-to" ng-class="{'email-active':addFileData.sendEmailToRecipient, 'has-error': isEmailAddresseeInvalid(addFileDataForm.recipientEmail)}">
+                <label for="primaryDocumentRecipientEmail">To:</label>
+                <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0" class="text-danger">No Emails added.</span>
+                <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.recipientEmails)" ng-repeat="email in addFileData.recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
+                <div class="input-group">
+                  <input id="primaryDocumentRecipientEmail" class="form-control" type="email" ng-model="addFileData.recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" placeholder="Contact name (e.g. {{submission.getContactEmails()[0].name}}) or valid email address." ng-blur="validateEmailAddressee(addFileDataForm.recipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+                  <span title="Add Email" ng-class="{disabled: !addFileData.recipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addFileData.recipientEmails, addFileDataForm.recipientEmail)"></span>
+                </div>
+                <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0">An Email is not added until you click the Add Email button.</span>
+                <div ng-if="isEmailAddresseeInvalid(addFileDataForm.recipientEmail)" class="alert alert-danger">
+                  <small>Value must either be a valid email address or a contact name (e.g. {{submission.getContactEmails()[0].name}}).</small>
+                </div>
+              </div>
+
+              <div class="form-group email-element email-cc" ng-class="{'email-active':addFileData.sendEmailToCCRecipient, 'has-error': isEmailAddresseeInvalid(addFileDataForm.ccRecipientEmail)}">
+                <label for="primaryDocumentCcRecipientEmail">CC:</label>
+                <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0" class="text-danger">No Emails added.</span>
+                <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.ccRecipientEmails)" ng-repeat="email in addFileData.ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
+                <div class="input-group">
+                  <input id="primaryDocumentCcRecipientEmail" class="form-control" type="email" ng-model="addFileData.ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" placeholder="Contact name (e.g. {{submission.getContactEmails()[0].name}}) or valid email address." ng-blur="validateEmailAddressee(addFileDataForm.ccRecipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+                  <span title="Add Email" ng-class="{disabled: !addFileData.ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addFileData.ccRecipientEmails, addFileDataForm.ccRecipientEmail)"></span>
+                </div>
+                <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0">An Email is not added until you click the Add Email button.</span>
+                <div ng-if="isEmailAddresseeInvalid(addFileDataForm.ccRecipientEmail)" class="alert alert-danger">
+                  <small>Value must either be a valid email address or a contact name (e.g. {{submission.getContactEmails()[0].name}}).</small>
+                </div>
+              </div>
+
+              <div class="form-group email-subject">
+                <label for="primaryDocumentEmailSubject">Subject:</label>
+                <input id="primaryDocumentEmailSubject" class="form-control" type="text" ng-model="addFileData.subject" name="emailSubject">
+              </div>
+
+              <div class="form-group">
+                <textarea id="primaryDocumentEmailBody" class="form-control" placeholder="Compose comment here..." ng-model="addFileData.message" name="emailBody" rows="5"></textarea>
+              </div>
+
+              <div class="form-group">
+                <select id="primaryDocumentEmailTemplate" class="form-control" ng-model="addFileData.selectedTemplate" ng-options="template as template.name for template in emailTemplates track by template.id" ng-change="addFileData.message = addFileData.selectedTemplate.message;addFileData.subject=addFileData.selectedTemplate.subject"></select>
+              </div>
+
+            </div>
+          </span>
+
+        </div>
+      </span>
+
+      <input id="additionalDocument" type="radio" name="addFile" value="add" ng-model="addFileData.addFileSelection">
+      <label for="additionalDocument">Add additional document</label>
       <br/>
 
-      <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection === 'replace', 'section-closed': addFileData.addFileSelection !== 'replace'}">
+      <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection === 'add', 'section-closed': addFileData.addFileSelection !== 'add'}">
 
-        <dropzone ng-if="!addFileData.files" file-model="files" text="dropZoneText" , patterns="getPattern('_doctype_primary')" drop-method="queueUpload(files)"></dropzone>
+        <div class="form-group">
+          <label for="additionalDocumentFileName">New Document Type:</label>
+          <select id="additionalDocumentFileName" class="form-control" ng-model="addFileData.fieldPredicate" ng-options="documentTypePredicate as getFileType(documentTypePredicate) for documentTypePredicate in getDocumentTypePredicates() | filter:{ documentTypePredicate: true } | filter:{value:'!_doctype_primary'} track by documentTypePredicate.value" ng-selected="getPattern(addFileData.fieldPredicate.value)">
+            <option value="">Select File Type...</option>
+          </select>
+        </div>
+
+        <dropzone ng-if="!addFileData.files && addFileData.fieldPredicate" file-model="files" text="dropZoneText" patterns="getPattern(addFileData.fieldPredicate.value)" drop-method="queueUpload(files)"></dropzone>
+        <div ng-if="!addFileData.fieldPredicate" class="well">
+          <p>Please select a File Type</p>
+        </div>
 
         <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
         <div ng-if="addFileData.files">
@@ -31,149 +118,74 @@
           <uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="addFileData.progress" max="100">{{addFileData.progress + '%'}}</uib-progressbar>
         </div>
 
-        <span>
-          <div class="checkbox">
-            <label><input type="checkbox" value="false" ng-model="addFileData.sendEmailToRecipient">Add Email Recipients</label>
+        <div class="checkbox">
+          <label><input type="checkbox" value="false" ng-model="addFileData.sendEmailToRecipient" ng-change="!addFileData.sendEmailToRecipient?addFileData.sendEmailToCCRecipient=sendEmailToRecipient:addFileData.sendEmailToCCRecipient=addFileData.sendEmailToCCRecipient">Add Email Recipients</label>
+        </div>
+
+        <div class="checkbox">
+          <label><input type="checkbox" value="false" ng-model="addFileData.sendEmailToCCRecipient" ng-disabled="!addFileData.sendEmailToRecipient">Add CC Recipients</label>
+        </div>
+
+        <div class="email-section" ng-class="{'section-open': addFileData.sendEmailToRecipient, 'section-closed': !addFileData.sendEmailToRecipient}">
+          <div class="form-group">
+            <label for="additionalDocumentRecipientEmail">To:</label>
+            <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0" class="text-danger">No Emails added.</span>
+            <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.recipientEmails)" ng-repeat="email in addFileData.recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
+            <div class="input-group">
+              <input id="additionalDocumentRecipientEmail" class="form-control" type="email" ng-model="addFileData.recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" placeholder="Contact name (e.g. {{submission.getContactEmails()[0].name}}) or valid email address." ng-blur="validateEmailAddressee(addFileDataForm.recipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+              <span title="Add Email" ng-class="{disabled: !addFileData.recipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addFileData.recipientEmails, addFileDataForm.recipientEmail)"></span>
+            </div>
+            <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0">An Email is not added until you click the Add Email button.</span>
+            <div ng-if="isEmailAddresseeInvalid(addFileDataForm.recipientEmail)" class="alert alert-danger">
+              <small>Value must either be a valid email address or a contact name (e.g. {{submission.getContactEmails()[0].name}}).</small>
+            </div>
           </div>
 
-          <div class="checkbox">
-            <label><input type="checkbox" value="false" ng-model="addFileData.sendEmailToCCRecipient" ng-disabled="!addFileData.sendEmailToRecipient">Add CC Recipients</label>
+          <div class="form-group email-section" ng-class="{'section-open': addFileData.addCCRecipeints, 'section-closed': !addFileData.sendEmailToCCRecipient}">
+            <label for="additionalDocumentCcRecipientEmail">CC:</label>
+            <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0" class="text-danger">No Emails added.</span>
+            <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.ccRecipientEmails)" ng-repeat="email in addFileData.ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
+            <div class="input-group">
+              <input id="additionalDocumentCcRecipientEmail" class="form-control" type="email" ng-model="addFileData.ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" placeholder="Contact name (e.g. {{submission.getContactEmails()[0].name}}) or valid email address." ng-blur="validateEmailAddressee(addFileDataForm.ccRecipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+              <span title="Add Email" ng-class="{disabled: !addFileData.ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addFileData.ccRecipientEmails, addFileDataForm.ccRecipientEmail)"></span>
+            </div>
+            <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0">An Email is not added until you click the Add Email button.</span>
+            <div ng-if="isEmailAddresseeInvalid(addFileDataForm.ccRecipientEmail)" class="alert alert-danger">
+              <small>Value must either be a valid email address or a contact name (e.g. {{submission.getContactEmails()[0].name}}).</small>
+            </div>
           </div>
 
-          <div class="email-section" ng-class="{'section-open': addFileData.sendEmailToRecipient, 'section-closed': !addFileData.sendEmailToRecipient}">
-
-            <div class="form-group">
-              <label for="primaryDocumentRecipientEmail">To:</label>
-              <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0" class="text-danger">No Emails added.</span>
-              <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.recipientEmails)" ng-repeat="email in addFileData.recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
-              <div class="input-group">
-                <input id="primaryDocumentRecipientEmail" class="form-control" type="email" ng-model="recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" autocomplete="true" />
-                <span title="Add Email" ng-class="{disabled: !recipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(recipientEmail, addFileData.recipientEmails);recipientEmail=''"></span>
-              </div>
-              <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0">An Email is not added until you click the Add Email button.</span>
-            </div>
-
-            <div class="form-group email-section" ng-class="{'section-open': addFileData.addCCRecipeints, 'section-closed': !addFileData.sendEmailToCCRecipient}">
-              <label for="primaryDocumentCcRecipientEmail">CC:</label>
-              <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0" class="text-danger">No Emails added.</span>
-              <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.ccRecipientEmails)" ng-repeat="email in addFileData.ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
-              <div class="input-group">
-                <input id="primaryDocumentCcRecipientEmail" class="form-control" type="email" ng-model="ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" autocomplete="true" />
-                <span title="Add Email" ng-class="{disabled: !ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(ccRecipientEmail, addFileData.ccRecipientEmails);ccRecipientEmail=''"></span>
-              </div>
-              <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0">An Email is not added until you click the Add Email button.</span>
-            </div>
-
-            <div class="form-group">
-              <label for="primaryDocumentEmailSubject">Subject:</label>
-              <input id="primaryDocumentEmailSubject" class="form-control" type="text" ng-model="addFileData.subject" name="emailSubject">
-            </div>
-
-            <div class="form-group">
-              <label for="primaryDocumentEmailBody" class="hidden">Body:</label>
-              <textarea id="primaryDocumentEmailBody" class="form-control" placeholder="Compose comment here..." ng-model="addFileData.message" name="emailBody" rows="5"></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="primaryDocumentEmailTemplate" class="hidden">Selected Template:</label>
-              <select id="primaryDocumentEmailTemplate" class="form-control" ng-model="addFileData.selectedTemplate" ng-options="template as template.name for template in emailTemplates track by template.id" ng-change="addFileData.message = addFileData.selectedTemplate.message;addFileData.subject=addFileData.selectedTemplate.subject"></select>
-            </div>
-
+          <div class="form-group email-subject">
+            <label for="additionalDocumentEmailSubject">Subject:</label>
+            <input id="additionalDocumentEmailSubject" class="form-control" type="text" ng-model="addFileData.subject" name="emailSubject">
           </div>
+
+          <div class="form-group">
+            <textarea id="additionalDocumentEmailBody" class="form-control" placeholder="Compose comment here..." ng-model="addFileData.message" name="emailBody" rows="5"></textarea>
+          </div>
+
+          <div class="form-group">
+            <select id="additionalDocumentEmailTemplate" class="form-control" ng-model="addFileData.selectedTemplate" ng-options="template as template.name for template in emailTemplates track by template.id" ng-change="addFileData.message = addFileData.selectedTemplate.message;addFileData.subject=addFileData.selectedTemplate.subject"></select>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="checkbox">
+        <label><input type="checkbox" ng-model="addFileData.needsCorrection">Flag submission as Needs Corrections</label>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" ng-click="resetFileData(addFileData)" ng-disabled="addCommentModal.uploading">Cancel</button>
+      <button type="button" class="btn btn-primary" ng-disabled="disableSubmitAddFile()" ng-click="submitAddFile(addFileData)">
+          <span ng-if="!addCommentModal.uploading">Submit</span>
+          <span ng-if="addFileData.uploading">
+          Submitting
+          <span class="glyphicon glyphicon-refresh spinning"></span>
         </span>
-
-      </div>
-    </span>
-
-    <input id="additionalDocument" type="radio" name="addFile" value="add" ng-model="addFileData.addFileSelection">
-    <label for="additionalDocument">Add additional document</label>
-    <br/>
-
-    <div class="add-file-section" ng-class="{'section-open': addFileData.addFileSelection === 'add', 'section-closed': addFileData.addFileSelection !== 'add'}">
-
-      <div class="form-group">
-        <label for="additionalDocumentFileName">New Document Type:</label>
-        <select ng-change="removeFiles()" id="additionalDocumentFileName" class="form-control" ng-model="addFileData.fieldPredicate" ng-options="documentTypePredicate as getFileType(documentTypePredicate) for documentTypePredicate in getDocumentTypePredicates() | filter:{ documentTypePredicate: true } | filter:{value:'!_doctype_primary'} track by documentTypePredicate.value" ng-selected="getPattern(addFileData.fieldPredicate.value)">
-          <option value="">Select File Type...</option>
-        </select>
-      </div>
-
-      <dropzone ng-if="!addFileData.files && addFileData.fieldPredicate" file-model="files" text="dropZoneText" patterns="getPattern(addFileData.fieldPredicate.value)" drop-method="queueUpload(files)"></dropzone>
-      <div ng-if="!addFileData.fieldPredicate" class="well">
-        <p>Please select a File Type</p>
-      </div>
-
-      <div class="file-info text-danger" ng-if="errorMessage">{{errorMessage}}</div>
-      <div ng-if="addFileData.files">
-        <button ng-if="!addFileData.uploading" class="btn btn-default pull-right" ng-click="removeFiles()">Remove</button>
-        <label>Name:</label>
-        <span>{{addFileData.files[0].name}}</span><br/>
-        <label>Type:</label>
-        <span>{{addFileData.files[0].type}}</span><br/>
-        <label>Size:</label>
-        <span>{{addFileData.files[0].size | readableFileSize}}</span><br/>
-        <uib-progressbar class="progress-striped active file-upload-progress" type="success" ng-if="addFileData.uploading" value="addFileData.progress" max="100">{{addFileData.progress + '%'}}</uib-progressbar>
-      </div>
-
-      <div class="checkbox">
-        <label><input type="checkbox" value="false" ng-model="addFileData.sendEmailToRecipient">Add Email Recipients</label>
-      </div>
-
-      <div class="checkbox">
-        <label><input type="checkbox" value="false" ng-model="addFileData.sendEmailToCCRecipient" ng-disabled="!addFileData.sendEmailToRecipient">Add CC Recipients</label>
-      </div>
-
-      <div class="email-section" ng-class="{'section-open': addFileData.sendEmailToRecipient, 'section-closed': !addFileData.sendEmailToRecipient}">
-        <div class="form-group">
-          <label for="additionalDocumentRecipientEmail">To:</label>
-          <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0" class="text-danger">No Emails added.</span>
-          <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.recipientEmails)" ng-repeat="email in addFileData.recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
-          <div class="input-group">
-            <input id="additionalDocumentRecipientEmail" class="form-control" type="email" ng-model="recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" autocomplete="true" />
-            <span title="Add Email" ng-class="{disabled: !recipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(recipientEmail,addFileData.recipientEmails);recipientEmail=''"></span>
-          </div>
-          <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0">An Email is not added until you click the Add Email button.</span>
-        </div>
-
-        <div class="form-group email-section" ng-class="{'section-open': addFileData.addCCRecipeints, 'section-closed': !addFileData.sendEmailToCCRecipient}">
-          <label for="additionalDocumentCcRecipientEmail">CC:</label>
-          <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0" class="text-danger">No Emails added.</span>
-          <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.ccRecipientEmails)" ng-repeat="email in addFileData.ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
-          <div class="input-group">
-            <input id="additionalDocumentCcRecipientEmail" class="form-control" type="email" ng-model="ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" autocomplete="true" />
-            <span title="Add Email" ng-class="{disabled: !ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(ccRecipientEmail,addFileData.ccRecipientEmails);ccRecipientEmail=''"></span>
-          </div>
-          <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0">An Email is not added until you click the Add Email button.</span>
-        </div>
-
-        <div class="form-group">
-          <label for="additionalDocumentEmailSubject">Subject:</label>
-          <input id="additionalDocumentEmailSubject" class="form-control" type="text" ng-model="addFileData.subject" name="emailSubject">
-        </div>
-
-        <div class="form-group">
-          <label for="additionalDocumentEmailBody" class="hidden">Body:</label>
-          <textarea id="additionalDocumentEmailBody" class="form-control" placeholder="Compose comment here..." ng-model="addFileData.message" name="emailBody" rows="5"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="additionalDocumentEmailTemplate" class="hidden">Selected Template:</label>
-          <select id="additionalDocumentEmailTemplate" class="form-control" ng-model="addFileData.selectedTemplate" ng-options="template as template.name for template in emailTemplates track by template.id" ng-change="addFileData.message = addFileData.selectedTemplate.message;addFileData.subject=addFileData.selectedTemplate.subject"></select>
-        </div>
-
-      </div>
-
+      </button>
     </div>
 
-    <div class="checkbox">
-      <label><input type="checkbox" ng-model="addFileData.needsCorrection">Flag submission as Needs Corrections</label>
-    </div>
-
-  </div>
-
-  <div class="modal-footer">
-    <button type="button" class="btn btn-default" ng-click="resetAddFile()">Cancel</button>
-    <button type="button" class="btn btn-primary" ng-disabled="disableSubmitAddFile()" ng-click="submitAddFile()">Submit <span ng-if="addFileData.uploading" class="glyphicon glyphicon-refresh spinning"></span></button>
-  </div>
-
-</form>
+  </form>
