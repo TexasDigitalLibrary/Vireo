@@ -413,9 +413,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                 fieldValue = new FieldValue({
                     fieldPredicate: $scope.addFileData.fieldPredicate
                 });
-
-            $scope.resetFileData(addFileData);
-
             }
 
             fieldValue.file = $scope.addFileData.files[0];
@@ -449,10 +446,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                                     sendEmailToRecipient: $scope.addFileData.sendEmailToRecipient,
                                     sendEmailToCCRecipient: $scope.addFileData.sendEmailToCCRecipient
                                 }).then(function () {
-                                    $scope.resetAddFile(addFileData);
+                                    $scope.resetFileData(addFileData);
                                 });
                             } else {
-                                $scope.resetAddFile(addFileData);
+                                $scope.resetFileData(addFileData);
                             }
                         }
                     });
