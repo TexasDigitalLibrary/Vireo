@@ -188,9 +188,9 @@ describe("controller: AdminSubmissionViewController", function () {
             expect(scope.removeFiles).toBeDefined();
             expect(typeof scope.removeFiles).toEqual("function");
         });
-        it("resetAddFile should be defined", function () {
-            expect(scope.resetAddFile).toBeDefined();
-            expect(typeof scope.resetAddFile).toEqual("function");
+        it("resetFileData should be defined", function () {
+            expect(scope.resetFileData).toBeDefined();
+            expect(typeof scope.resetFileData).toEqual("function");
         });
         it("resetCommentModal should be defined", function () {
             expect(scope.resetCommentModal).toBeDefined();
@@ -708,11 +708,12 @@ describe("controller: AdminSubmissionViewController", function () {
             expect(typeof scope.errorMessage).toBe("string");
             expect(scope.addFileData.files.length).toBe(1);
         });
-        it("resetAddFile should close a modal", function () {
+        it("resetFileData should close a modal", function () {
+            var fileData = {};
             scope.errorMessage = null;
             spyOn(scope, "closeModal");
 
-            scope.resetAddFile();
+            scope.resetFileData(fileData);
 
             expect(typeof scope.errorMessage).toBe("string");
             expect(scope.closeModal).toHaveBeenCalled();
@@ -801,6 +802,7 @@ describe("controller: AdminSubmissionViewController", function () {
             expect(response).toBe(true);
         });
         it("submitAddFile should submit a file", function () {
+            var fileData = {};
             scope.fieldPredicates = [ new mockFieldPredicate(q), new mockFieldPredicate(q) ];
             scope.fieldPredicates[1].mock(dataFieldPredicate3);
             scope.submission = mockSubmission(q);
@@ -814,20 +816,20 @@ describe("controller: AdminSubmissionViewController", function () {
             scope.ccRecipientEmails = [ "b" ];
             scope.addFileData.uploading = null;
 
-            scope.submitAddFile();
+            scope.submitAddFile(fileData);
             scope.$digest();
 
             scope.addFileData.addFileSelection = "replace";
             scope.addFileData.files = [ {} ];
             delete scope.submission.primaryDocumentFieldValue;
 
-            scope.submitAddFile();
+            scope.submitAddFile(fileData);
             scope.$digest();
 
             scope.addFileData.files = [ {} ];
             scope.addFileData.addFileSelection = null;
 
-            scope.submitAddFile();
+            scope.submitAddFile(fileData);
             scope.$digest();
 
             scope.addFileData.files = [ {} ];
@@ -835,7 +837,7 @@ describe("controller: AdminSubmissionViewController", function () {
                 return messagePromise(q.defer(), "This is an accept response sending a INVALID status", "INVALID");
             };
 
-            scope.submitAddFile();
+            scope.submitAddFile(fileData);
             scope.$digest();
 
             scope.addFileData.files = [ {} ];
@@ -843,7 +845,7 @@ describe("controller: AdminSubmissionViewController", function () {
                 return messagePromise(q.defer(), undefined, "INVALID");
             };
 
-            scope.submitAddFile();
+            scope.submitAddFile(fileData);
             scope.$digest();
 
             scope.addFileData.files = [ {} ];
@@ -852,7 +854,7 @@ describe("controller: AdminSubmissionViewController", function () {
                 return dataPromise(q.defer(), payload);
             };
 
-            scope.submitAddFile();
+            scope.submitAddFile(fileData);
             scope.$digest();
 
             scope.addFileData.needsCorrection = true;
@@ -869,7 +871,7 @@ describe("controller: AdminSubmissionViewController", function () {
                 return defer.promise;
             };
 
-            scope.submitAddFile();
+            scope.submitAddFile(fileData);
             scope.$digest();
         });
         it("toggleConfirm should toggle a boolean", function () {
