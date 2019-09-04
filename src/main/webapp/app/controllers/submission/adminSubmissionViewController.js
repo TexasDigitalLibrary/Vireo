@@ -365,9 +365,9 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         $scope.resetFileData = function (addFileData) {
-            $scope.closeModal();
-
+            $scope.errorMessage = "";
             $scope.removeFiles();
+            $scope.closeModal();
             
             addFileData.uploading = false;
             addFileData.recipientEmail = '';
