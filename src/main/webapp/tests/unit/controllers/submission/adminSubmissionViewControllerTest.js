@@ -713,7 +713,7 @@ describe("controller: AdminSubmissionViewController", function () {
             scope.errorMessage = null;
             spyOn(scope, "closeModal");
 
-            scope.resetFileData(fileData);
+            scope.resetFileData();
 
             expect(typeof scope.errorMessage).toBe("string");
             expect(scope.closeModal).toHaveBeenCalled();
@@ -816,20 +816,20 @@ describe("controller: AdminSubmissionViewController", function () {
             scope.ccRecipientEmails = [ "b" ];
             scope.addFileData.uploading = null;
 
-            scope.submitAddFile(fileData);
+            scope.submitAddFile();
             scope.$digest();
 
             scope.addFileData.addFileSelection = "replace";
             scope.addFileData.files = [ {} ];
             delete scope.submission.primaryDocumentFieldValue;
 
-            scope.submitAddFile(fileData);
+            scope.submitAddFile();
             scope.$digest();
 
             scope.addFileData.files = [ {} ];
             scope.addFileData.addFileSelection = null;
 
-            scope.submitAddFile(fileData);
+            scope.submitAddFile();
             scope.$digest();
 
             scope.addFileData.files = [ {} ];
@@ -837,7 +837,7 @@ describe("controller: AdminSubmissionViewController", function () {
                 return messagePromise(q.defer(), "This is an accept response sending a INVALID status", "INVALID");
             };
 
-            scope.submitAddFile(fileData);
+            scope.submitAddFile();
             scope.$digest();
 
             scope.addFileData.files = [ {} ];
@@ -845,7 +845,7 @@ describe("controller: AdminSubmissionViewController", function () {
                 return messagePromise(q.defer(), undefined, "INVALID");
             };
 
-            scope.submitAddFile(fileData);
+            scope.submitAddFile();
             scope.$digest();
 
             scope.addFileData.files = [ {} ];
@@ -854,7 +854,7 @@ describe("controller: AdminSubmissionViewController", function () {
                 return dataPromise(q.defer(), payload);
             };
 
-            scope.submitAddFile(fileData);
+            scope.submitAddFile();
             scope.$digest();
 
             scope.addFileData.needsCorrection = true;
@@ -871,7 +871,7 @@ describe("controller: AdminSubmissionViewController", function () {
                 return defer.promise;
             };
 
-            scope.submitAddFile(fileData);
+            scope.submitAddFile();
             scope.$digest();
         });
         it("toggleConfirm should toggle a boolean", function () {
