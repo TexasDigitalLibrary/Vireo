@@ -178,8 +178,8 @@
     </div>
 
     <div class="modal-footer">
-      <button type="button" class="btn btn-default" ng-click="resetFileData(addFileData)" ng-disabled="addCommentModal.uploading">Cancel</button>
-      <button type="button" class="btn btn-primary" ng-disabled="disableSubmitAddFile()" ng-click="submitAddFile(addFileData)">
+      <button type="button" class="btn btn-default" ng-click="resetFileData()" ng-disabled="addCommentModal.uploading">Cancel</button>
+      <button type="button" class="btn btn-primary" ng-disabled="disableSubmitAddFile()" ng-click="submitAddFile()">
           <span ng-if="!addCommentModal.uploading">Submit</span>
           <span ng-if="addFileData.uploading">
           Submitting
