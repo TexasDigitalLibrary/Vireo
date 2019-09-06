@@ -3,7 +3,8 @@ var dataNamedSearchFilter1 = {
     allColumnSearch: true,
     exactMatch: true,
     filterCriteria: {},
-    name: "named search filter 1"
+    name: "named search filter 1",
+    submissionListColumn: []
 };
 
 var dataNamedSearchFilter2 = {
@@ -11,7 +12,8 @@ var dataNamedSearchFilter2 = {
     allColumnSearch: false,
     exactMatch: true,
     filterCriteria: {},
-    name: "named search filter 2"
+    name: "named search filter 2",
+    submissionListColumn: []
 };
 
 var dataNamedSearchFilter3 = {
@@ -19,7 +21,8 @@ var dataNamedSearchFilter3 = {
     allColumnSearch: true,
     exactMatch: false,
     filterCriteria: {},
-    name: "named search filter 3"
+    name: "named search filter 3",
+    submissionListColumn: []
 };
 
 var dataNamedSearchFilter4 = {
@@ -27,7 +30,8 @@ var dataNamedSearchFilter4 = {
     allColumnSearch: true,
     exactMatch: false,
     filterCriteria: {},
-    name: "named search filter 4"
+    name: "named search filter 4",
+    submissionListColumn: []
 };
 
 var dataNamedSearchFilter5 = {
@@ -35,7 +39,8 @@ var dataNamedSearchFilter5 = {
     allColumnSearch: false,
     exactMatch: true,
     filterCriteria: {},
-    name: "named search filter 5"
+    name: "named search filter 5",
+    submissionListColumn: []
 };
 
 var dataNamedSearchFilter6 = {
@@ -43,7 +48,8 @@ var dataNamedSearchFilter6 = {
     allColumnSearch: false,
     exactMatch: false,
     filterCriteria: {},
-    name: "named search filter 6"
+    name: "named search filter 6",
+    submissionListColumn: []
 };
 
 var mockNamedSearchFilter = function($q) {

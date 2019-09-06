@@ -6,15 +6,14 @@ import static edu.tamu.weaver.validation.model.BusinessValidationType.DELETE;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-
-import javax.transaction.Transactional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.Embargo;
@@ -34,39 +33,56 @@ public class EmbargoController {
     @Autowired
     private EmbargoRepo embargoRepo;
 
-    @RequestMapping("/all")
+    @GetMapping("/all")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse getEmbargoes() {
         return new ApiResponse(SUCCESS, embargoRepo.findAllByOrderByGuarantorAscPositionAsc());
     }
 
     @PreAuthorize("hasRole('MANAGER')")
-    @RequestMapping(value = "/create", method = POST)
+    @PostMapping(value = "/create")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createEmbargo(@WeaverValidatedModel Embargo embargo) {
         logger.info("Creating embargo with name " + embargo.getName());
         return new ApiResponse(SUCCESS, embargoRepo.create(embargo.getName(), embargo.getDescription(), embargo.getDuration(), embargo.getGuarantor(), embargo.isActive()));
     }
 
-    @Transactional
     @PreAuthorize("hasRole('MANAGER')")
-    @RequestMapping(value = "/update", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
+    @PostMapping(value = "/update")
+    @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE, path = { "systemRequired" }, restrict = "true") })
     public ApiResponse updateEmbargo(@WeaverValidatedModel Embargo embargo) {
         logger.info("Updating embargo with name " + embargo.getName());
         return new ApiResponse(SUCCESS, embargoRepo.update(embargo));
     }
 
     @PreAuthorize("hasRole('MANAGER')")
-    @RequestMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
+    @PostMapping(value = "/remove")
+    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE, path = { "systemRequired" }, restrict = "true") })
     public ApiResponse removeEmbargo(@WeaverValidatedModel Embargo embargo) {
         logger.info("Removing Embargo:  " + embargo.getName());
         embargoRepo.remove(embargo);
         return new ApiResponse(SUCCESS);
     }
 
-    @RequestMapping("/reorder/{guarantorString}/{src}/{dest}")
+    @PreAuthorize("hasRole('MANAGER')")
+    @PostMapping(value = "/activate/{id}")
+    public ApiResponse activateEmbargo(@PathVariable Long id) {
+        Embargo embargo = embargoRepo.findOne(id);
+        logger.info("Activating Embargo with name " + embargo.getName());
+        embargo.isActive(true);
+        return new ApiResponse(SUCCESS, embargoRepo.update(embargo));
+    }
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @PostMapping(value = "/deactivate/{id}")
+    public ApiResponse deactivateEmbargo(@PathVariable Long id) {
+        Embargo embargo = embargoRepo.findOne(id);
+        logger.info("Deactivating Embargo with name " + embargo.getName());
+        embargo.isActive(false);
+        return new ApiResponse(SUCCESS, embargoRepo.update(embargo));
+    }
+
+    @GetMapping("/reorder/{guarantorString}/{src}/{dest}")
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = REORDER, model = Embargo.class, params = { "1", "2", "guarantor" }) })
     public ApiResponse reorderEmbargoes(@PathVariable String guarantorString, @PathVariable Long src, @PathVariable Long dest) {
@@ -76,7 +92,7 @@ public class EmbargoController {
         return new ApiResponse(SUCCESS);
     }
 
-    @RequestMapping("/sort/{guarantorString}/{column}")
+    @GetMapping("/sort/{guarantorString}/{column}")
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = SORT, model = Embargo.class, params = { "1", "0", "guarantor" }) })
     public ApiResponse sortEmbargoes(@PathVariable String guarantorString, @PathVariable String column) {

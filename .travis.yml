@@ -7,12 +7,12 @@ matrix:
   - name: "Java Tests"
     sudo: required
     language: java
-    jdk: oraclejdk8
+    jdk: openjdk8
     before_script:
       - export COVERALLS_PARALLEL=true
     install:
-      - mvn clean package -Dproduction -DskipTests=true
-      - mvn test-compile -Dclient -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+      - mvn clean package -Dproduction -DskipTests=true -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+      - mvn test-compile -Dclient -DskipTests=true -Dmaven.javadoc.skip=true -B -V -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
     after_success:
       - mvn clean test cobertura:cobertura jacoco:report coveralls:report -DserviceName="travis-ci" -DserviceBuildNumber=$TRAVIS_BUILD_NUMBER
 
@@ -21,12 +21,12 @@ matrix:
     node_js: "6"
     addons:
       - chrome: stable
+    services:
+      - xvfb
     before_script:
-      - export DISPLAY=:99.0
       - export COVERALLS_PARALLEL=true
       - export CI_NAME="travis-ci"
       - export CI_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER
-      - sh -e /etc/init.d/xvfb start
       - npm start > /dev/null &
       - npm run update-webdriver
       - sleep 1 # give server time to start

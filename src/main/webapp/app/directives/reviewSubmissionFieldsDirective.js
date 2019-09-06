@@ -7,6 +7,7 @@ vireo.directive('reviewsubmissionsfields', function ($location, InputTypes, Fiel
             filterOptional: "=?",
             hideLinks: "=?",
             setActiveStep: "&",
+            showVocabularyWord: "&?",
             validate: "=?"
         },
         controller: function ($scope) {

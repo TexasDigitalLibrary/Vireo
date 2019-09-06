@@ -7,6 +7,7 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -498,11 +499,12 @@ public class SubmissionController {
 
             break;
         case "MarcXML21":
+        case "Marc21":
         case "ProQuest":
             ServletOutputStream sos = response.getOutputStream();
 
             try {
-                ZipOutputStream zos = new ZipOutputStream(sos);
+                ZipOutputStream zos = new ZipOutputStream(sos, StandardCharsets.UTF_8);
 
                 // TODO: need a more dynamic way to achieve this
                 if (packagerName.equals("ProQuest")) {
@@ -598,8 +600,9 @@ public class SubmissionController {
             }
             break;
         case "DSpaceSimple":
+            ServletOutputStream sosDss = response.getOutputStream();
             try {
-                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+                ZipOutputStream zos = new ZipOutputStream(sosDss);
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     String submissionName = "submission_" + submission.getId() + "/";
                     zos.putNextEntry(new ZipEntry(submissionName));
@@ -661,13 +664,11 @@ public class SubmissionController {
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
+                LOG.info("Error With Export",e);
                 response.setContentType("application/json");
-
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-
-                PrintWriter out = response.getWriter();
-                out.print(objectMapper.writeValueAsString(apiResponse));
-                out.close();
+                sosDss.print(objectMapper.writeValueAsString(apiResponse));
+                sosDss.close();
             }
             break;
 

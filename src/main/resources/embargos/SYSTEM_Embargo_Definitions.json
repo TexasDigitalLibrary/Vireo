@@ -3,7 +3,7 @@
     "description": "The work will be published after approval.",
     "duration": 0,
     "isActive": true,
-    "isSystemRequired": true,
+    "systemRequired": true,
     "guarantor": 0
   },
   {
@@ -11,7 +11,7 @@
     "description": "The work will be delayed for publication by one year because of a restriction from publication in an academic journal.",
     "duration": 12,
     "isActive": true,
-    "isSystemRequired": true,
+    "systemRequired": true,
     "guarantor": 0
   },
   {
@@ -19,7 +19,7 @@
     "description": "The work will be delayed for publication by two years because of patent related activities.",
     "duration": 24,
     "isActive": true,
-    "isSystemRequired": true,
+    "systemRequired": true,
     "guarantor": 0
   },
   {
@@ -27,7 +27,7 @@
     "description": "The work will be delayed for publication by an indefinite amount of time.",
     "duration": null,
     "isActive": false,
-    "isSystemRequired": true,
+    "systemRequired": true,
     "guarantor": 0
   },
   {
@@ -35,7 +35,7 @@
     "description": "The work will be published after approval.",
     "duration": 0,
     "isActive": true,
-    "isSystemRequired": true,
+    "systemRequired": true,
     "guarantor": 1
   },
   {
@@ -43,7 +43,7 @@
     "description": "The full text of this work will be held/restricted from worldwide access on the internet for six months from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.",
     "duration": 6,
     "isActive": true,
-    "isSystemRequired": true,
+    "systemRequired": true,
     "guarantor": 1
   },
   {
@@ -51,7 +51,7 @@
     "description": "The full text of this work will be held/restricted from worldwide access on the internet for one year from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.",
     "duration": 12,
     "isActive": true,
-    "isSystemRequired": true,
+    "systemRequired": true,
     "guarantor": 1
   },
   {
@@ -59,7 +59,7 @@
     "description": "The full text of this work will be held/restricted from worldwide access on the internet for two years from the semester/year of graduation to meet academic publisher restrictions or to allow time for publication.",
     "duration": 24,
     "isActive": true,
-    "isSystemRequired": true,
+    "systemRequired": true,
     "guarantor": 1
   },
   {
@@ -67,7 +67,7 @@
     "description": "The work will be delayed for publication by an indefinite amount of time.",
     "duration": null,
     "isActive": false,
-    "isSystemRequired": true,
+    "systemRequired": true,
     "guarantor": 1
   }
 ]

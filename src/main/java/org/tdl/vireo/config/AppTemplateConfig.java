@@ -18,12 +18,10 @@ public class AppTemplateConfig implements ApplicationContextAware {
     }
 
     @Bean
-    public SpringResourceTemplateResolver xmlTemplateResolver() {
+    public SpringResourceTemplateResolver templateResolver() {
         SpringResourceTemplateResolver resolver = new SpringResourceTemplateResolver();
         resolver.setApplicationContext(applicationContext);
         resolver.setPrefix("classpath:/formats/");
-        resolver.setSuffix(".xml");
-        resolver.setTemplateMode("XML");
         resolver.setCharacterEncoding(UTF_8.name());
         resolver.setCheckExistence(true);
         resolver.setCacheable(false);

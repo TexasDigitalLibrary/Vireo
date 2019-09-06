@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "isSystemRequired" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "guarantor", "systemRequired" }))
 public class Embargo extends ValidatingOrderedBaseEntity implements EntityControlledVocabulary {
 
     @Column(nullable = false)
@@ -35,8 +35,8 @@ public class Embargo extends ValidatingOrderedBaseEntity implements EntityContro
     private Boolean isActive;
 
     @Column(nullable = false)
-    @JsonProperty("isSystemRequired")
-    private Boolean isSystemRequired;
+    @JsonProperty("systemRequired")
+    private Boolean systemRequired;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -47,7 +47,7 @@ public class Embargo extends ValidatingOrderedBaseEntity implements EntityContro
      */
     public Embargo() {
         setModelValidator(new EmbargoValidator());
-        isSystemRequired(false);
+        setSystemRequired(false);
     }
 
     /**
@@ -129,20 +129,20 @@ public class Embargo extends ValidatingOrderedBaseEntity implements EntityContro
     }
 
     /**
-     * @return the isSystemRequired
+     * @return the systemRequired
      */
     @JsonIgnore
-    public Boolean isSystemRequired() {
-        return isSystemRequired;
+    public Boolean getSystemRequired() {
+        return systemRequired;
     }
 
     /**
-     * @param isSystemRequired
-     *            the isSystemRequired to set
+     * @param systemRequired
+     *            the systemRequired to set
      */
     @JsonIgnore
-    public void isSystemRequired(Boolean isSystemRequired) {
-        this.isSystemRequired = isSystemRequired;
+    public void setSystemRequired(Boolean systemRequired) {
+        this.systemRequired = systemRequired;
     }
 
     /**
@@ -201,7 +201,7 @@ public class Embargo extends ValidatingOrderedBaseEntity implements EntityContro
 
     @Override
     public String getControlledIdentifier() {
-        return String.valueOf(duration);
+        return String.valueOf(id);
     }
 
     @Override

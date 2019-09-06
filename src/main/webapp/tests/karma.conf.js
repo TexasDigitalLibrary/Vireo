@@ -3,7 +3,7 @@ module.exports = function(config){
 
         preprocessors : {
             "app/!(node_modules)/**/*.js": "coverage",
-            '**/*.html': ['ng-html2js']
+            "app/!(node_modules)/**/*.html": "ng-html2js"
         },
 
         reporters : ['progress', 'coverage'],
@@ -112,6 +112,9 @@ module.exports = function(config){
         junitReporter : {
             outputFile: 'test_out/unit.xml',
             suite: 'unit'
+        },
+        ngHtml2JsPreprocessor: {
+            moduleName: 'templates'
         }
 
     });

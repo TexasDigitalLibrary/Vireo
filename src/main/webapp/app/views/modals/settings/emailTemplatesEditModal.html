@@ -19,6 +19,7 @@
             placeholder="Name of the email template"
             form="forms.update"
             validations="emailTemplateRepo.getValidations()"
+            disabled="isSystemRequired"
             results="emailTemplateRepo.getValidationResults()">
         </validatedinput>
 
@@ -30,6 +31,7 @@
             placeholder="Subject of the email template"
             form="forms.update"
             validations="emailTemplateRepo.getValidations()"
+            disabled="isSystemRequired"
             results="emailTemplateRepo.getValidationResults()">
         </validatedinput>
 
@@ -45,6 +47,7 @@
                     rows="25"
                     form="forms.update"
                     validations="emailTemplateRepo.getValidations()"
+                    disabled="isSystemRequired"
                     results="modalData.ValidationResults">
                 </validatedtextarea>
 
@@ -94,7 +97,7 @@
             id="edit-emailTemplate-save"
             type="submit"
             class="btn btn-primary"
-            ng-disabled="forms.update.$invalid">Update</button>
+            ng-disabled="forms.update.$invalid || isSystemRequired(modalData)">Update</button>
     </div>
 
 </form>

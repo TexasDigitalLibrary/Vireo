@@ -98,4 +98,14 @@ public class MarcXML21Formatter extends AbstractFormatter {
         }
         return name;
     }
+
+    @Override
+    public String getSuffix() {
+        return ".xml";
+    }
+
+    @Override
+    public String getTemplateMode() {
+        return "XML";
+    }
 }

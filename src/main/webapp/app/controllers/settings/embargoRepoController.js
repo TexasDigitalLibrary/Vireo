@@ -58,11 +58,30 @@ vireo.controller("EmbargoRepoController", function ($controller, $scope, $q, Emb
         };
 
         $scope.updateEmbargo = function() {
-            $scope.modalData.save();
+            // when systemRequired is TRUE, then only the isActive property can be updated.
+            // in these cases, use the custom end-points for updating the isActive state.
+            if ($scope.isSystemRequired($scope.modalData)) {
+                if ($scope.modalData.isActive) {
+                    EmbargoRepo.activate($scope.modalData);
+                } else {
+                    EmbargoRepo.deactivate($scope.modalData);
+                }
+            }
+            else {
+                $scope.modalData.save();
+            }
         };
 
         $scope.removeEmbargo = function() {
             $scope.modalData.delete();
+        };
+
+        $scope.isSystemRequired = function(modalData) {
+            if (angular.isDefined(modalData) && angular.isDefined(modalData.systemRequired)) {
+                return modalData.systemRequired === true;
+            }
+
+            return false;
         };
 
         $scope.reorderEmbargoDefault = function(src, dest) {
