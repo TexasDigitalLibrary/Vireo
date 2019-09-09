@@ -87,32 +87,32 @@ public class SubmissionEmailService {
             while (emailWorkflowRuleIterator.hasNext()) {
                 EmailWorkflowRule emailWorkflowRule = emailWorkflowRuleIterator.next();
                 EmailTemplate template = emailWorkflowRule.getEmailTemplate();
-                String subject = templateUtility.compileString(template.getSubject(), submission);
-                String content = templateUtility.compileTemplate(template, submission);
+        String subject = templateUtility.compileString(template.getSubject(), submission);
+        String content = templateUtility.compileTemplate(template, submission);
 
-                List<FieldValue> advisorList = submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
-                SimpleMailMessage smm = new SimpleMailMessage();
-                List<String> recipientList = new ArrayList<>();
-                advisorList.forEach(afv -> {
-                    for (String afvcontact : afv.getContacts()) {
-                        if (!recipientList.contains(afvcontact)) {
-                            recipientList.add(afvcontact);
-                        }
-                    }
-                });
+        List<FieldValue> advisorList = submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
+        SimpleMailMessage smm = new SimpleMailMessage();
+        List<String> recipientList = new ArrayList<>();
+        advisorList.forEach(afv -> {
+            for (String afvcontact : afv.getContacts()) {
+                if (!recipientList.contains(afvcontact)) {
+                    recipientList.add(afvcontact);
+                }
+            }
+        });
 
                 if (!recipientList.isEmpty()) {
-                    smm.setTo(recipientList.toArray(new String[0]));
-                    smm.setSubject(subject);
-                    smm.setText(content);
+            smm.setTo(recipientList.toArray(new String[0]));
+            smm.setSubject(subject);
+            smm.setText(content);
 
-                    emailSender.send(smm);
+            emailSender.send(smm);
                     emailed = true;
-                }
+        }
             }
 
             if (emailed) {
-                actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
+        actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
             } else {
                 actionLogRepo.createPublicLog(submission, user, "No Advisor review emails to generate.");
             }
@@ -145,8 +145,6 @@ public class SubmissionEmailService {
                 List<String> ccRecipientEmailAddresses = buildEmailRecipients("ccRecipientEmails", submission, data);
                 smm.setCc(ccRecipientEmailAddresses.toArray(new String[0]));
                 recipientEmails.append(" and cc to: [ " + String.join(";", ccRecipientEmailAddresses) + " ]; ");
-            } else {
-                recipientEmails.append(";");
             }
 
             if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
@@ -273,12 +271,12 @@ public class SubmissionEmailService {
             if (label != null & fp != null) {
               recipient = new EmailRecipientContact(label, fp);
             }
-            break;
+          break;
         }
         case CONTACT: {
           String label = (String) emailRecipientMap.get("name");
           FieldPredicate fp = fieldPredicateRepo.getOne(new Long((Integer)emailRecipientMap.get("data")));
-          if (label != null & fp != null) {
+          if(label != null & fp != null) {
             recipient = new EmailRecipientContact(label, fp);
           }
           break;

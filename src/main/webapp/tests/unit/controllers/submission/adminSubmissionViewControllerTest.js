@@ -194,9 +194,9 @@ describe("controller: AdminSubmissionViewController", function () {
             expect(scope.removeFiles).toBeDefined();
             expect(typeof scope.removeFiles).toEqual("function");
         });
-        it("resetAddFile should be defined", function () {
-            expect(scope.resetAddFile).toBeDefined();
-            expect(typeof scope.resetAddFile).toEqual("function");
+        it("resetFileData should be defined", function () {
+            expect(scope.resetFileData).toBeDefined();
+            expect(typeof scope.resetFileData).toEqual("function");
         });
         it("resetCommentModal should be defined", function () {
             expect(scope.resetCommentModal).toBeDefined();
@@ -718,11 +718,12 @@ describe("controller: AdminSubmissionViewController", function () {
             expect(typeof scope.errorMessage).toBe("string");
             expect(scope.addFileData.files.length).toBe(1);
         });
-        it("resetAddFile should close a modal", function () {
+        it("resetFileData should close a modal", function () {
+            var fileData = {};
             scope.errorMessage = null;
             spyOn(scope, "closeModal");
 
-            scope.resetAddFile();
+            scope.resetFileData();
 
             expect(typeof scope.errorMessage).toBe("string");
             expect(scope.closeModal).toHaveBeenCalled();
@@ -876,6 +877,7 @@ describe("controller: AdminSubmissionViewController", function () {
             expect(response).toBe(true);
         });
         it("submitAddFile should submit a file", function () {
+            var fileData = {};
             scope.fieldPredicates = [ new mockFieldPredicate(q), new mockFieldPredicate(q) ];
             scope.fieldPredicates[1].mock(dataFieldPredicate3);
             scope.submission = mockSubmission(q);

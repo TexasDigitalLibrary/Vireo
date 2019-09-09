@@ -177,6 +177,11 @@
  transition: all 0.35s linear, margin 0.35s linear;
 }
 
+.email-subject {
+  z-index: 1;
+  position: relative;
+}
+
 div .item-view div.row h1 span.spinning {
   font-size: 32px;
 }
