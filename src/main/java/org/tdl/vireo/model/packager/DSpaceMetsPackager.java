@@ -91,7 +91,6 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
         try {
             // Add non submitted content
             for (Map.Entry<String, String> ds_entry : dsDocs.entrySet()) {
-                String docName = ds_entry.getKey();
                 String docContents = ds_entry.getValue();
                 File ff = File.createTempFile(packageName, "");
                 FileUtils.writeStringToFile(ff, docContents, "UTF-8");
