@@ -550,22 +550,19 @@ public class SubmissionController {
                     List<FieldValue> fieldValues = submission.getFieldValuesByPredicateValue("first_name");
                     Optional<String> firstNameOpt = fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
                     String firstName = firstNameOpt.isPresent() ? firstNameOpt.get() : "";
+                    firstName = firstName.substring(0,1).toUpperCase()+firstName.substring(1);
                     fieldValues = submission.getFieldValuesByPredicateValue("last_name");
                     Optional<String> lastNameOpt = fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
                     String lastName = lastNameOpt.isPresent() ? lastNameOpt.get() : "";
+                    lastName = lastName.substring(0,1).toUpperCase()+lastName.substring(1);
                     String personName = lastName+"_"+firstName;
-
-
-                    StringBuilder contentsText = new StringBuilder();
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     try (ZipOutputStream b = new ZipOutputStream(baos)){
                         ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                         if (exportPackage.isMap()) {
                             for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
-                                //b.putNextEntry(new ZipEntry(fileEntry.getKey()));
                                 b.putNextEntry(new ZipEntry(personName+"_DATA.xml"));
-                                contentsText.append("MD " + fileEntry.getKey() + "\n");
                                 b.write(Files.readAllBytes(fileEntry.getValue().toPath()));
                                 b.closeEntry();
                             }
@@ -574,9 +571,12 @@ public class SubmissionController {
                     	for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
                         	Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
                         	byte[] fileBytes = Files.readAllBytes(path);
-                        	//b.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
-                        	b.putNextEntry(new ZipEntry(personName+"_permission/"+ldfv.getFileName()));
-                        	contentsText.append(ldfv.getFileName()+"\tBUNDLE:LICENSE\n");
+                            int sfxIndx;
+                            String licFileName = ldfv.getFileName();
+                            if((sfxIndx = licFileName.indexOf("."))>0){
+                                licFileName = licFileName.substring(0,sfxIndx).toUpperCase()+licFileName.substring(sfxIndx); 
+                            }
+                        	b.putNextEntry(new ZipEntry(personName+"_permission/"+licFileName));
                         	b.write(fileBytes);
                             b.closeEntry();
                         }
@@ -584,7 +584,6 @@ public class SubmissionController {
                         FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
                         Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
                         byte[] fileBytes = Files.readAllBytes(path);
-                        //zos.putNextEntry(new ZipEntry(submissionName+primaryDoc.getFileName()));
                         String fName = primaryDoc.getFileName();
                         int fNameIndx = fName.indexOf(".");
                         String fType = "";//default
@@ -592,7 +591,6 @@ public class SubmissionController {
                             fType = fName.substring(fNameIndx);
                         }
                         b.putNextEntry(new ZipEntry(personName+fType));
-                        contentsText.append(primaryDoc.getFileName()+"\tBUNDLE:CONTENT\tprimary:true\n");
                         b.write(fileBytes);
                         b.closeEntry();
 
@@ -603,41 +601,6 @@ public class SubmissionController {
                     baos.close();
                     zos.write(baos.toByteArray());
                     zos.closeEntry();
-
-/****
-                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-                    if (exportPackage.isMap()) {
-                        for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
-                            if (packagerName.equals("MarcXML21")) {
-                                zos.putNextEntry(new ZipEntry("MarcXML21/" + fileEntry.getKey()));
-                            } else {
-                                zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
-                            }
-                            contentsText.append("MD " + fileEntry.getKey() + "\n");
-                            zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
-                            zos.closeEntry();
-                        }
-                    }
-                    // LICENSES
-                    for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
-                        Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
-                        byte[] fileBytes = Files.readAllBytes(path);
-                        zos.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
-                        contentsText.append(ldfv.getFileName()+"\tBUNDLE:LICENSE\n");
-                        zos.write(fileBytes);
-                        zos.closeEntry();
-                    }
-
-
-                    // PRIMARY_DOC
-                    FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
-                    Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
-                    byte[] fileBytes = Files.readAllBytes(path);
-                    zos.putNextEntry(new ZipEntry(submissionName+primaryDoc.getFileName()));
-                    contentsText.append(primaryDoc.getFileName()+"\tBUNDLE:CONTENT\tprimary:true\n");
-                    zos.write(fileBytes);
-                    zos.closeEntry();
-****/
                 }
                 zos.close();
 
