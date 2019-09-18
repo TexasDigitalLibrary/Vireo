@@ -121,13 +121,12 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
                 break;
             case PROQUEST_PERSON_FILENAME:
 				String personFileName = submissionHelperUtility.getSubmitterLastName()+"_"+submissionHelperUtility.getSubmitterFirstName();
-				String ufnSuffix = ".pdf"; //default
+                String ufnSuffix = ".pdf"; //default
                 if(submission.getPrimaryDocumentFieldValue()!=null){
                     String uploadedFileName = submission.getPrimaryDocumentFieldValue().getFileName();
                     int ufnIndx;
                     if((ufnIndx = uploadedFileName.indexOf(".")) > 0){
                         ufnSuffix = uploadedFileName.substring(ufnIndx);
-                        System.out.println("SUFF "+ufnSuffix+"\n");
                     }
                 }
                 personFileName += ufnSuffix;
