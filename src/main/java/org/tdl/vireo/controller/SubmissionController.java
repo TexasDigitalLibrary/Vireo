@@ -22,6 +22,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import java.io.ByteArrayOutputStream;
+import java.util.Optional;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
@@ -500,16 +503,10 @@ public class SubmissionController {
             break;
         case "MarcXML21":
         case "Marc21":
-        case "ProQuest":
             ServletOutputStream sos = response.getOutputStream();
 
             try {
                 ZipOutputStream zos = new ZipOutputStream(sos, StandardCharsets.UTF_8);
-
-                // TODO: need a more dynamic way to achieve this
-                if (packagerName.equals("ProQuest")) {
-                    // TODO: add filter for UMI Publication true
-                }
 
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
 
@@ -538,6 +535,120 @@ public class SubmissionController {
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
                 sos.print(objectMapper.writeValueAsString(apiResponse));
                 sos.close();
+            }
+            break;
+
+        case "ProQuest":
+            ServletOutputStream sos_pq = response.getOutputStream();
+
+            try {
+                ZipOutputStream zos = new ZipOutputStream(sos_pq, StandardCharsets.UTF_8);
+
+                for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
+                    String submissionName = "submission_" + submission.getId() + "/";
+
+                    List<FieldValue> fieldValues = submission.getFieldValuesByPredicateValue("first_name");
+                    Optional<String> firstNameOpt = fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
+                    String firstName = firstNameOpt.isPresent() ? firstNameOpt.get() : "";
+                    fieldValues = submission.getFieldValuesByPredicateValue("last_name");
+                    Optional<String> lastNameOpt = fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
+                    String lastName = lastNameOpt.isPresent() ? lastNameOpt.get() : "";
+                    String personName = lastName+"_"+firstName;
+
+
+                    StringBuilder contentsText = new StringBuilder();
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    try (ZipOutputStream b = new ZipOutputStream(baos)){
+                        ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+                        if (exportPackage.isMap()) {
+                            for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
+                                //b.putNextEntry(new ZipEntry(fileEntry.getKey()));
+                                b.putNextEntry(new ZipEntry(personName+"_DATA.xml"));
+                                contentsText.append("MD " + fileEntry.getKey() + "\n");
+                                b.write(Files.readAllBytes(fileEntry.getValue().toPath()));
+                                b.closeEntry();
+                            }
+                        }
+                        // LICENSES
+                    	for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
+                        	Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+                        	byte[] fileBytes = Files.readAllBytes(path);
+                        	//b.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
+                        	b.putNextEntry(new ZipEntry(personName+"_permission/"+ldfv.getFileName()));
+                        	contentsText.append(ldfv.getFileName()+"\tBUNDLE:LICENSE\n");
+                        	b.write(fileBytes);
+                            b.closeEntry();
+                        }
+                        // PRIMARY_DOC
+                        FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
+                        Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
+                        byte[] fileBytes = Files.readAllBytes(path);
+                        //zos.putNextEntry(new ZipEntry(submissionName+primaryDoc.getFileName()));
+                        String fName = primaryDoc.getFileName();
+                        int fNameIndx = fName.indexOf(".");
+                        String fType = "";//default
+                        if(fNameIndx>0){
+                            fType = fName.substring(fNameIndx);
+                        }
+                        b.putNextEntry(new ZipEntry(personName+fType));
+                        contentsText.append(primaryDoc.getFileName()+"\tBUNDLE:CONTENT\tprimary:true\n");
+                        b.write(fileBytes);
+                        b.closeEntry();
+
+                    }catch(IOException ioe){
+                        ioe.printStackTrace();
+                    }
+                    zos.putNextEntry(new ZipEntry("upload_"+personName+".zip"));
+                    baos.close();
+                    zos.write(baos.toByteArray());
+                    zos.closeEntry();
+
+/****
+                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+                    if (exportPackage.isMap()) {
+                        for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
+                            if (packagerName.equals("MarcXML21")) {
+                                zos.putNextEntry(new ZipEntry("MarcXML21/" + fileEntry.getKey()));
+                            } else {
+                                zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
+                            }
+                            contentsText.append("MD " + fileEntry.getKey() + "\n");
+                            zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
+                            zos.closeEntry();
+                        }
+                    }
+                    // LICENSES
+                    for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
+                        Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+                        byte[] fileBytes = Files.readAllBytes(path);
+                        zos.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
+                        contentsText.append(ldfv.getFileName()+"\tBUNDLE:LICENSE\n");
+                        zos.write(fileBytes);
+                        zos.closeEntry();
+                    }
+
+
+                    // PRIMARY_DOC
+                    FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
+                    Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
+                    byte[] fileBytes = Files.readAllBytes(path);
+                    zos.putNextEntry(new ZipEntry(submissionName+primaryDoc.getFileName()));
+                    contentsText.append(primaryDoc.getFileName()+"\tBUNDLE:CONTENT\tprimary:true\n");
+                    zos.write(fileBytes);
+                    zos.closeEntry();
+****/
+                }
+                zos.close();
+
+                response.setContentType(packager.getMimeType());
+                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+            } catch (Exception e) {
+                LOG.info("Error With Export",e);
+                response.setContentType("application/json");
+                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
+                sos_pq.print(objectMapper.writeValueAsString(apiResponse));
+                sos_pq.close();
             }
             break;
         case "DSpaceMETS":
