@@ -539,18 +539,30 @@ public class SubmissionHelperUtility {
     }
 
     public String getFirstName(String name) {
-        HumanNameParserParser parser = new HumanNameParserParser(name);
-        return parser.getFirst();
+        try {
+            HumanNameParserParser parser = new HumanNameParserParser(name);
+            return parser.getFirst();
+        } catch (com.tupilabs.human_name_parser.ParseException e) {
+            return (name!=null) ? name : "";
+        }
     }
 
     public String getMiddleName(String name) {
-        HumanNameParserParser parser = new HumanNameParserParser(name);
-        return parser.getMiddle();
+        try {
+            HumanNameParserParser parser = new HumanNameParserParser(name);
+            return parser.getMiddle();
+        } catch (com.tupilabs.human_name_parser.ParseException e) {
+            return (name!=null) ? name : "";
+        }
     }
 
     public String getLastName(String name) {
-        HumanNameParserParser parser = new HumanNameParserParser(name);
-        return parser.getLast();
+        try {
+            HumanNameParserParser parser = new HumanNameParserParser(name);
+            return parser.getLast();
+        } catch (com.tupilabs.human_name_parser.ParseException e) {
+            return (name!=null) ? name : "";
+        }
     }
 
     public List<FieldValue> getSubjectFieldValues() {
