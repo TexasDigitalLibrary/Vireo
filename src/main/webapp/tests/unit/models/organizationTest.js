@@ -49,6 +49,10 @@ describe('model: Organization', function () {
             expect(model.editEmailWorkflowRule).toBeDefined();
             expect(typeof model.editEmailWorkflowRule).toEqual("function");
         });
+        it('getWorkflowEmailContacts should be defined', function () {
+            expect(model.getWorkflowEmailContacts).toBeDefined();
+            expect(typeof model.getWorkflowEmailContacts).toEqual("function");
+        });
         it('removeEmailWorkflowRule should be defined', function () {
             expect(model.removeEmailWorkflowRule).toBeDefined();
             expect(typeof model.removeEmailWorkflowRule).toEqual("function");
@@ -85,6 +89,28 @@ describe('model: Organization', function () {
             scope.$digest();
 
             expect(WsApi.fetch).toHaveBeenCalled();
+        });
+        it('getWorkflowEmailContacts should return an array', function () {
+            var response;
+            var fieldProfile = new mockFieldProfile(q);
+            var workflowStep = new mockWorkflowStep(q);
+
+            fieldProfile.inputType.id = 2;
+            fieldProfile.inputType.name = "INPUT_CONTACT";
+
+            model.aggregateWorkflowSteps = [ workflowStep ];
+
+            response = model.getWorkflowEmailContacts();
+
+            expect(typeof response).toBe("object");
+            expect(typeof response.length).toBe("number");
+
+            workflowStep.mock(dataWorkflowStep2);
+
+            response = model.getWorkflowEmailContacts();
+
+            expect(typeof response).toBe("object");
+            expect(typeof response.length).toBe("number");
         });
         it('removeEmailWorkflowRule should call WsApi', function () {
             spyOn(WsApi, 'fetch');

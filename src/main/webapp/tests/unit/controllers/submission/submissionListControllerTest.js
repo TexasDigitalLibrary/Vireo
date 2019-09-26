@@ -1,9 +1,10 @@
 describe("controller: SubmissionListController", function () {
 
-    var controller, location, q, scope, ManagerFilterColumnRepo, SavedFilterRepo, SubmissionRepo, WsApi;
+    var controller, filter, location, q, scope, ManagerFilterColumnRepo, SavedFilterRepo, SubmissionRepo, WsApi;
 
     var initializeVariables = function(settings) {
-        inject(function ($location, $q, _ManagerFilterColumnRepo_, _SavedFilterRepo_, _SubmissionRepo_, _WsApi_) {
+        inject(function ($filter, $location, $q, _ManagerFilterColumnRepo_, _SavedFilterRepo_, _SubmissionRepo_, _WsApi_) {
+            filter = $filter;
             location = $location;
             q = $q;
 
@@ -22,7 +23,7 @@ describe("controller: SubmissionListController", function () {
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
             controller = $controller("SubmissionListController", {
-                $filter: $filter,
+                $filter: filter,
                 $location: location,
                 $q: q,
                 $scope: scope,
@@ -96,7 +97,6 @@ describe("controller: SubmissionListController", function () {
         module("mock.packager");
         module("mock.packagerRepo");
         module("mock.restApi");
-        module("mock.savedFilter");
         module("mock.savedFilterRepo");
         module("mock.sidebarService");
         module("mock.storageService");
@@ -245,6 +245,38 @@ describe("controller: SubmissionListController", function () {
     });
 
     describe("Are the scope.advancedfeaturesBox methods defined", function () {
+        it("addBatchCommentEmail should be defined", function () {
+            expect(scope.advancedfeaturesBox.addBatchCommentEmail).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.addBatchCommentEmail).toEqual("function");
+        });
+        it("addBatchEmailAddressee should be defined", function () {
+            expect(scope.advancedfeaturesBox.addBatchEmailAddressee).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.addBatchEmailAddressee).toEqual("function");
+        });
+        it("batchAssignTo should be defined", function () {
+            expect(scope.advancedfeaturesBox.batchAssignTo).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.batchAssignTo).toEqual("function");
+        });
+        it("batchDownloadExport should be defined", function () {
+            expect(scope.advancedfeaturesBox.batchDownloadExport).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.batchDownloadExport).toEqual("function");
+        });
+        it("batchPublish should be defined", function () {
+            expect(scope.advancedfeaturesBox.batchPublish).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.batchPublish).toEqual("function");
+        });
+        it("batchUpdateStatus should be defined", function () {
+            expect(scope.advancedfeaturesBox.batchUpdateStatus).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.batchUpdateStatus).toEqual("function");
+        });
+        it("disableAddBatchComment should be defined", function () {
+            expect(scope.advancedfeaturesBox.disableAddBatchComment).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.disableAddBatchComment).toEqual("function");
+        });
+        it("getBatchContactEmails should be defined", function () {
+            expect(scope.advancedfeaturesBox.getBatchContactEmails).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.getBatchContactEmails).toEqual("function");
+        });
         it("getFiltersWithColumns should be defined", function () {
             expect(scope.advancedfeaturesBox.getFiltersWithColumns).toBeDefined();
             expect(typeof scope.advancedfeaturesBox.getFiltersWithColumns).toEqual("function");
@@ -252,46 +284,6 @@ describe("controller: SubmissionListController", function () {
         it("getFiltersWithoutColumns should be defined", function () {
             expect(scope.advancedfeaturesBox.getFiltersWithoutColumns).toBeDefined();
             expect(typeof scope.advancedfeaturesBox.getFiltersWithoutColumns).toEqual("function");
-        });
-        it("resetBatchProcess should be defined", function () {
-            expect(scope.advancedfeaturesBox.resetBatchProcess).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.resetBatchProcess).toEqual("function");
-        });
-        it("batchUpdateStatus should be defined", function () {
-            expect(scope.advancedfeaturesBox.batchUpdateStatus).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.batchUpdateStatus).toEqual("function");
-        });
-        it("batchAssignTo should be defined", function () {
-            expect(scope.advancedfeaturesBox.batchAssignTo).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.batchAssignTo).toEqual("function");
-        });
-        it("batchPublish should be defined", function () {
-            expect(scope.advancedfeaturesBox.batchPublish).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.batchPublish).toEqual("function");
-        });
-        it("resetBatchCommentEmailModal should be defined", function () {
-            expect(scope.advancedfeaturesBox.resetBatchCommentEmailModal).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.resetBatchCommentEmailModal).toEqual("function");
-        });
-        it("resetBatchCommentEmailModal should be defined", function () {
-            expect(scope.advancedfeaturesBox.resetBatchCommentEmailModal).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.resetBatchCommentEmailModal).toEqual("function");
-        });
-        it("addBatchCommentEmail should be defined", function () {
-            expect(scope.advancedfeaturesBox.addBatchCommentEmail).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.addBatchCommentEmail).toEqual("function");
-        });
-        it("getBatchContactEmails should be defined", function () {
-            expect(scope.advancedfeaturesBox.getBatchContactEmails).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.getBatchContactEmails).toEqual("function");
-        });
-        it("addBatchEmailAddressee should be defined", function () {
-            expect(scope.advancedfeaturesBox.addBatchEmailAddressee).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.addBatchEmailAddressee).toEqual("function");
-        });
-        it("validateBatchEmailAddressee should be defined", function () {
-            expect(scope.advancedfeaturesBox.validateBatchEmailAddressee).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.validateBatchEmailAddressee).toEqual("function");
         });
         it("isBatchEmailAddresseeInvalid should be defined", function () {
             expect(scope.advancedfeaturesBox.isBatchEmailAddresseeInvalid).toBeDefined();
@@ -301,17 +293,21 @@ describe("controller: SubmissionListController", function () {
             expect(scope.advancedfeaturesBox.removeBatchEmailAddressee).toBeDefined();
             expect(typeof scope.advancedfeaturesBox.removeBatchEmailAddressee).toEqual("function");
         });
-        it("disableAddBatchComment should be defined", function () {
-            expect(scope.advancedfeaturesBox.disableAddBatchComment).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.disableAddBatchComment).toEqual("function");
+        it("resetBatchCommentEmailModal should be defined", function () {
+            expect(scope.advancedfeaturesBox.resetBatchCommentEmailModal).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.resetBatchCommentEmailModal).toEqual("function");
+        });
+        it("resetBatchProcess should be defined", function () {
+            expect(scope.advancedfeaturesBox.resetBatchProcess).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.resetBatchProcess).toEqual("function");
         });
         it("updateTemplate should be defined", function () {
             expect(scope.advancedfeaturesBox.updateTemplate).toBeDefined();
             expect(typeof scope.advancedfeaturesBox.updateTemplate).toEqual("function");
         });
-        it("batchDownloadExport should be defined", function () {
-            expect(scope.advancedfeaturesBox.batchDownloadExport).toBeDefined();
-            expect(typeof scope.advancedfeaturesBox.batchDownloadExport).toEqual("function");
+        it("validateBatchEmailAddressee should be defined", function () {
+            expect(scope.advancedfeaturesBox.validateBatchEmailAddressee).toBeDefined();
+            expect(typeof scope.advancedfeaturesBox.validateBatchEmailAddressee).toEqual("function");
         });
     });
 
@@ -487,15 +483,44 @@ describe("controller: SubmissionListController", function () {
 
             expect(scope.closeModal).toHaveBeenCalled();
         });
-        // TODO: more work needed for this method.
-        /*
         it("resetSaveFilter should reset the saved filter", function () {
+            var submissionListColumn1 = new mockSubmissionListColumn(q);
+            var submissionListColumn2 = new mockSubmissionListColumn(q);
+            var submissionListColumn3 = new mockSubmissionListColumn(q);
+            var repoList = [ submissionListColumn1, submissionListColumn2, submissionListColumn3 ];
+
+            submissionListColumn2.mock(dataSubmissionListColumn2);
+            submissionListColumn2.status = "previouslyDisabled";
+
+            submissionListColumn3.mock(dataSubmissionListColumn3);
+            submissionListColumn3.status = "previouslyDisplayed";
+
+            ManagerFilterColumnRepo.mock(repoList);
+
+            // orderBy and exclude filters are not working during testing and return undefined.
+            // mock filter to forcibly return an array.
+            filter = function(name) {
+                return function() { return []; };
+            };
+
+            // controller must be re-initialized for filter mock to be accepted.
+            initializeController();
+
             spyOn(scope, "closeModal");
-
             scope.resetSaveFilter();
-
+            scope.$digest();
             expect(scope.closeModal).toHaveBeenCalled();
-        });*/
+
+            scope.closeModal = function() {};
+            filter = function(name) {
+                return function() { return repoList; };
+            };
+            initializeController();
+            spyOn(scope, "closeModal");
+            scope.resetSaveFilter();
+            scope.$digest();
+            expect(scope.closeModal).toHaveBeenCalled();
+        });
         it("saveColumns should reset the columns", function () {
             spyOn(scope, "resetColumns");
 
@@ -592,69 +617,20 @@ describe("controller: SubmissionListController", function () {
     });
 
     describe("Do the scope.advancedfeaturesBox methods work as expected", function () {
-        // TODO: more work needed for this method.
-        /*
-        it("getFiltersWithColumns should return filters", function () {
-            scope.advancedfeaturesBox.getFiltersWithColumns();
-        });
-        */
-        // TODO: more work needed for this method.
-        /*
-        it("getFiltersWithColumns should return filters", function () {
-            scope.advancedfeaturesBox.getFiltersWithColumns();
-        });
-        */
-        // TODO: more work needed for this method.
-        /*
-        it("getFiltersWithoutColumns should return filters", function () {
-            scope.advancedfeaturesBox.getFiltersWithoutColumns();
-        });
-        */
-        // TODO: more work needed for this method.
-        /*
-        it("resetBatchProcess should reset the batch process", function () {
-            scope.advancedfeaturesBox.resetBatchProcess();
-        });
-        */
-        // TODO: more work needed for this method.
-        /*
-        it("batchUpdateStatus should update the batch", function () {
-            scope.advancedfeaturesBox.batchUpdateStatus();
-        });
-        */
-        // TODO: more work needed for this method.
-        /*
-        it("batchAssignTo should assign the batch", function () {
-            scope.advancedfeaturesBox.batchAssignTo();
-        });
-        */
-        // TODO: more work needed for this method.
-        /*
-        it("batchPublish should publish the batch", function () {
-            scope.advancedfeaturesBox.batchPublish();
-        });
-        */
-        // TODO: more work needed for this method.
-        /*
-        it("resetBatchCommentEmailModal should open a modal", function () {
-            scope.advancedfeaturesBox.resetBatchCommentEmailModal();
-        });
-        */
-        // TODO: more work needed for this method.
-        /*
-        it("resetBatchCommentEmailModal should open a modal", function () {
-            scope.advancedfeaturesBox.resetBatchCommentEmailModal();
-        });
-        */
-        // TODO: more work needed for this method.
-        /*
         it("addBatchCommentEmail should add a comment", function () {
+            var payload = {
+                ValidationResults: {}
+            };
+
             scope.advancedfeaturesBox.addBatchCommentEmail();
-        });
-        */
-        it("getBatchContactEmails should return an emails array", function () {
-            var emails = scope.advancedfeaturesBox.getBatchContactEmails();
-            expect(Array.isArray(emails)).toBe(true);
+            scope.$digest();
+
+            /* @fixme: source code is likely incorrect, "submission" is not defined and reject promise is not being handled.
+            spyOn(WsApi, "fetch").and.returnValue(failurePromise(q.defer(), payload));
+
+            scope.advancedfeaturesBox.addBatchCommentEmail();
+            scope.$digest();
+            */
         });
         it("addBatchEmailAddressee should add emails", function () {
             var emails = [];
@@ -665,6 +641,146 @@ describe("controller: SubmissionListController", function () {
             scope.advancedfeaturesBox.addBatchEmailAddressee(emails, formField);
 
             expect(emails.length).toBe(1);
+        });
+        it("batchAssignTo should assign the batch", function () {
+            scope.advancedfeaturesBox.processing = null;
+
+            scope.advancedfeaturesBox.batchAssignTo();
+            scope.$digest();
+
+            expect(scope.advancedfeaturesBox.processing).toBe(false);
+        });
+        it("batchDownloadExport should perform a download", function () {
+            var downloaded = false;
+
+            // manually override the FileSaver.saveAs method, which is installed globally.
+            var _global = typeof window === "object" && window.window === window ? window : typeof self === "object" && self.self === self ? self : typeof global === "object" && global.global === global ? global : void 0;
+            _global.saveAs = function() { downloaded = true; return true; };
+
+            var packager = {};
+            var filterId = 1;
+
+            scope.advancedfeaturesBox.exporting = null;
+
+            scope.advancedfeaturesBox.batchDownloadExport(packager, filterId);
+            scope.$digest();
+
+            expect(scope.advancedfeaturesBox.exporting).toBe(false);
+            expect(downloaded).toBe(true);
+        });
+        it("batchPublish should publish the batch", function () {
+            scope.advancedfeaturesBox.processing = null;
+
+            scope.advancedfeaturesBox.batchPublish();
+            scope.$digest();
+
+            expect(scope.advancedfeaturesBox.processing).toBe(false);
+        });
+        it("batchUpdateStatus should update the batch", function () {
+            scope.advancedfeaturesBox.processing = null;
+
+            scope.advancedfeaturesBox.batchUpdateStatus();
+            scope.$digest();
+
+            expect(scope.advancedfeaturesBox.processing).toBe(false);
+        });
+        it("disableAddBatchComment should disable functionality", function () {
+            var response;
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(true);
+
+            scope.advancedfeaturesBox.batchCommentEmail.subject = "mock subject";
+            scope.advancedfeaturesBox.batchCommentEmail.message = "mock message";
+            scope.advancedfeaturesBox.batchCommentEmail.commentVisibility = "private";
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(false);
+
+            scope.advancedfeaturesBox.batchCommentEmail.commentVisibility = "public";
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(true);
+
+            scope.advancedfeaturesBox.batchCommentEmail.sendEmailToRecipient = false;
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(false);
+
+            scope.advancedfeaturesBox.batchCommentEmail.sendEmailToRecipient = true;
+
+            scope.advancedfeaturesBox.batchCommentEmail.recipientEmails.push("example@localhost");
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(false);
+
+            scope.advancedfeaturesBox.batchCommentEmail.sendEmailToCCRecipient = true;
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(true);
+
+            scope.advancedfeaturesBox.batchCommentEmail.ccRecipientEmails.push("example@localhost");
+
+            response = scope.advancedfeaturesBox.disableAddBatchComment();
+            expect(response).toBe(false);
+        });
+        it("getBatchContactEmails should return an emails array", function () {
+            var emails = scope.advancedfeaturesBox.getBatchContactEmails();
+            expect(Array.isArray(emails)).toBe(true);
+        });
+        it("getFiltersWithColumns should return filters", function () {
+            var repoList = dataSavedFilterRepo1;
+
+            SavedFilterRepo.mock(repoList);
+
+            // @fixme: shouldn't have to do this to force getAll() to return the mocked repo list!
+            SavedFilterRepo.getAll = function() {
+                return repoList;
+            };
+
+            spyOn(repoList, "filter").and.callThrough();
+
+            // controller must be re-initialized for SavedFilterRepo.getAll changes to be accepted.
+            initializeController();
+
+            scope.advancedfeaturesBox.getFiltersWithColumns();
+
+            expect(repoList.filter).toHaveBeenCalled();
+        });
+        it("getFiltersWithoutColumns should return filters", function () {
+            var repoList = dataSavedFilterRepo1;
+
+            SavedFilterRepo.mock(repoList);
+
+            // @fixme: shouldn't have to do this to force getAll() to return the mocked repo list!
+            SavedFilterRepo.getAll = function() {
+                return repoList;
+            };
+
+            spyOn(repoList, "filter").and.callThrough();
+
+            // controller must be re-initialized for SavedFilterRepo.getAll changes to be accepted.
+            initializeController();
+
+            scope.advancedfeaturesBox.getFiltersWithoutColumns();
+
+            expect(repoList.filter).toHaveBeenCalled();
+        });
+        it("resetBatchCommentEmailModal should open a modal", function () {
+            var email = {};
+
+            spyOn(scope, "closeModal");
+
+            scope.advancedfeaturesBox.resetBatchCommentEmailModal(email);
+
+            expect(scope.closeModal).toHaveBeenCalled();
+        });
+        it("resetBatchProcess should reset the batch process", function () {
+            spyOn(scope, "closeModal");
+
+            scope.advancedfeaturesBox.resetBatchProcess();
+
+            expect(scope.closeModal).toHaveBeenCalled();
         });
         it("validateBatchEmailAddressee should validate emails", function () {
             var response;
@@ -712,61 +828,13 @@ describe("controller: SubmissionListController", function () {
             scope.advancedfeaturesBox.removeBatchEmailAddressee(emails[0], emails);
             expect(emails.length).toBe(originalLength - 1);
         });
-        it("disableAddBatchComment should disable functionality", function () {
-            var response;
-
-            response = scope.advancedfeaturesBox.disableAddBatchComment();
-            expect(response).toBe(true);
-
-            scope.advancedfeaturesBox.batchCommentEmail.subject = "mock subject";
-            scope.advancedfeaturesBox.batchCommentEmail.message = "mock message";
-            scope.advancedfeaturesBox.batchCommentEmail.commentVisibility = "private";
-
-            response = scope.advancedfeaturesBox.disableAddBatchComment();
-            expect(response).toBe(false);
-
-            scope.advancedfeaturesBox.batchCommentEmail.commentVisibility = "public";
-
-            response = scope.advancedfeaturesBox.disableAddBatchComment();
-            expect(response).toBe(true);
-
-            scope.advancedfeaturesBox.batchCommentEmail.sendEmailToRecipient = false;
-
-            response = scope.advancedfeaturesBox.disableAddBatchComment();
-            expect(response).toBe(false);
-
-            scope.advancedfeaturesBox.batchCommentEmail.sendEmailToRecipient = true;
-
-            scope.advancedfeaturesBox.batchCommentEmail.recipientEmails.push("example@localhost");
-
-            response = scope.advancedfeaturesBox.disableAddBatchComment();
-            expect(response).toBe(false);
-
-            scope.advancedfeaturesBox.batchCommentEmail.sendEmailToCCRecipient = true;
-
-            response = scope.advancedfeaturesBox.disableAddBatchComment();
-            expect(response).toBe(true);
-
-            scope.advancedfeaturesBox.batchCommentEmail.ccRecipientEmails.push("example@localhost");
-
-            response = scope.advancedfeaturesBox.disableAddBatchComment();
-            expect(response).toBe(false);
-        });
-        // TODO: more work needed for this method.
-        /*
         it("updateTemplate should update the template", function () {
-            scope.advancedfeaturesBox.updateTemplate();
-        });
-        */
-        // TODO: more work needed for this method.
-        /*
-        it("batchDownloadExport should perform a download", function () {
-            spyOn(SubmissionRepo, "batchExport");
+            var template = {
+                message: "message",
+                subject: "subject"
+            };
 
-            scope.advancedfeaturesBox.batchDownloadExport();
-
-            expect(SubmissionRepo.batchExport).toHaveBeenCalled();
+            scope.advancedfeaturesBox.updateTemplate(template);
         });
-        */
     });
 });

@@ -1,10 +1,11 @@
 describe("controller: AbstractController", function () {
 
-    var controller, q, scope, window, RestApi, WsApi;
+    var controller, q, scope, timeout, window, RestApi, WsApi;
 
     var initializeVariables = function(settings) {
-        inject(function ($q, _RestApi_, _WsApi_) {
+        inject(function ($q, $timeout, _RestApi_, _WsApi_) {
             q = $q;
+            timeout = $timeout;
             window = mockWindow();
 
             RestApi = _RestApi_;
@@ -169,21 +170,44 @@ describe("controller: AbstractController", function () {
             expect(result).toBe(true);
         });
         it("reportError should report an error", function () {
-            scope.closeModal();
-
-            scope.reportError({});
-            scope.$digest();
-
-            scope.closeModal();
-
-            RestApi.post = function () {
-                return failurePromise(q.defer(), {});
+            var alert = {
+                channel: "channel",
+                time: 0,
+                type: 0,
+                message: "message"
+            };
+            var response = {
+                data: null
             };
 
-            scope.reportError({});
+            spyOn(scope, "openModal");
+            scope.reportError(alert);
             scope.$digest();
+            expect(scope.openModal).toHaveBeenCalled();
 
-            scope.closeModal();
+            scope.openModal = function() {};
+            spyOn(scope, "openModal");
+            RestApi.post = function () {
+                return valuePromise(q.defer(), response, "reject");
+            };
+            scope.reportError(alert);
+            scope.$digest();
+            expect(scope.openModal).not.toHaveBeenCalled();
+
+            response.data = {
+                message: "EXPIRED_JWT"
+            };
+            scope.reportError(alert);
+            scope.$digest();
+            expect(scope.openModal).not.toHaveBeenCalled();
+
+            RestApi.post = function () {
+                return valuePromise(q.defer(), response, "notify", timeout);
+            };
+            scope.reportError(alert);
+            scope.$digest();
+            timeout.flush();
+            expect(scope.openModal).not.toHaveBeenCalled();
         });
     });
 

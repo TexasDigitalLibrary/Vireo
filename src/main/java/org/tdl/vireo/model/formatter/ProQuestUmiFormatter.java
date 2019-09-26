@@ -16,7 +16,7 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
         super();
         setName("ProQuestUMI");
         HashMap<String, String> templates = new HashMap<String, String>();
-        templates.put(DEFAULT_TEMPLATE_KEY, "proquest_umi");
+        templates.put("proquest_umi.xml", "proquest_umi");
         setTemplates(templates);
     }
 
@@ -119,10 +119,35 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
             case SUPPLEMENTAL_DOCUMENT_FIELD_VALUES:
                 context.setVariable(key.name(), submission.getSupplementalDocumentFieldValues());
                 break;
+            case PROQUEST_PERSON_FILENAME:
+                String lastName = submissionHelperUtility.getSubmitterLastName();
+                lastName = lastName.substring(0,1).toUpperCase()+lastName.substring(1);
+                String firstName = submissionHelperUtility.getSubmitterFirstName();
+                firstName = firstName.substring(0,1).toUpperCase()+firstName.substring(1);
+                String ufnSuffix = ".pdf"; //default
+                if(submission.getPrimaryDocumentFieldValue()!=null){
+                    String uploadedFileName = submission.getPrimaryDocumentFieldValue().getFileName();
+                    int ufnIndx;
+                    if((ufnIndx = uploadedFileName.indexOf(".")) > 0){
+                        ufnSuffix = uploadedFileName.substring(ufnIndx);
+                    }
+                }
+                context.setVariable(key.name(), lastName+"_"+firstName+ufnSuffix);
+                break;
             default:
                 break;
             }
         }
+    }
+
+    @Override
+    public String getSuffix() {
+        return ".xml";
+    }
+
+    @Override
+    public String getTemplateMode() {
+        return "XML";
     }
 
 }

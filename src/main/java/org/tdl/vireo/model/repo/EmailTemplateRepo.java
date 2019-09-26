@@ -11,6 +11,6 @@ public interface EmailTemplateRepo extends WeaverOrderedRepo<EmailTemplate>, Ema
 
     public List<EmailTemplate> findByName(String name);
 
-    public EmailTemplate findByNameAndSystemRequired(String name, Boolean isSystemRequired);
+    public EmailTemplate findByNameAndSystemRequired(String name, Boolean systemRequired);
 
 }

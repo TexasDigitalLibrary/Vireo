@@ -13,6 +13,12 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -51,6 +57,7 @@ import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
 import org.tdl.vireo.model.formatter.DSpaceSimpleFormatter;
 import org.tdl.vireo.model.formatter.ExcelFormatter;
+import org.tdl.vireo.model.formatter.Marc21Formatter;
 import org.tdl.vireo.model.formatter.MarcXML21Formatter;
 import org.tdl.vireo.model.formatter.ProQuestUmiFormatter;
 import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
@@ -75,12 +82,6 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class SystemDataLoader {
@@ -756,7 +757,7 @@ public class SystemDataLoader {
 
                     // if this System template already has a custom template
                     // (meaning one named the same but that is
-                    // !isSystemRequired)
+                    // !systemRequired)
                     if (possibleCustomTemplate != null) {
 
                         // a custom version of this System email template
@@ -771,7 +772,7 @@ public class SystemDataLoader {
                         emailTemplateRepo.save(dbTemplate);
                     }
                     // there is no custom one yet, we need to make the
-                    // dbTemplate !isSystemRequired and the save loadedTemplate
+                    // dbTemplate !systemRequired and the save loadedTemplate
                     else {
                         logger.info("Upgrading Old System Email Template and creating custom version for [" + dbTemplate.getName() + "]");
                         dbTemplate.setSystemRequired(false);
@@ -892,18 +893,18 @@ public class SystemDataLoader {
             List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
 
             for (Embargo embargoDefinition : embargoDefinitions) {
-                Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndIsSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
+                Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
 
                 if (dbEmbargo == null) {
                     dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
-                    dbEmbargo.isSystemRequired(true);
+                    dbEmbargo.setSystemRequired(true);
                     embargoRepo.save(dbEmbargo);
                 } else {
                     dbEmbargo.setDescription(embargoDefinition.getDescription());
                     dbEmbargo.setDuration(embargoDefinition.getDuration());
                     dbEmbargo.setGuarantor(embargoDefinition.getGuarantor());
                     dbEmbargo.isActive(embargoDefinition.isActive());
-                    dbEmbargo.isSystemRequired(embargoDefinition.isSystemRequired());
+                    dbEmbargo.setSystemRequired(embargoDefinition.getSystemRequired());
                     embargoRepo.save(dbEmbargo);
                 }
             }
@@ -1093,6 +1094,9 @@ public class SystemDataLoader {
         }
         if (abstractPackagerRepo.findByName("MarcXML21") == null) {
             abstractPackagerRepo.createMARC21XMLPackager("MarcXML21", new MarcXML21Formatter());
+        }
+        if (abstractPackagerRepo.findByName("Marc21") == null) {
+            abstractPackagerRepo.createMARC21Packager("Marc21", new Marc21Formatter());
         }
     }
 

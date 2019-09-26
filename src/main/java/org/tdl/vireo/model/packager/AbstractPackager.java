@@ -26,7 +26,7 @@ import edu.tamu.weaver.data.model.BaseEntity;
 public abstract class AbstractPackager<EP extends ExportPackage> extends BaseEntity implements Packager<EP> {
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
-    public AbstractFormatter formatter;
+    private AbstractFormatter formatter;
 
     @Column(unique = true)
     private String name;

@@ -3,6 +3,7 @@ package org.tdl.vireo.model.packager;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -51,7 +52,7 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
 
             // Copy the manifest
             File manifestFile = File.createTempFile(manifestName, null);
-            FileUtils.writeStringToFile(manifestFile, manifest, "UTF-8");
+            FileUtils.writeStringToFile(manifestFile, manifest, StandardCharsets.UTF_8);
 
             // Add manifest to zip
             zos.putNextEntry(new ZipEntry(manifestName));
@@ -90,7 +91,6 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
         try {
             // Add non submitted content
             for (Map.Entry<String, String> ds_entry : dsDocs.entrySet()) {
-                String docName = ds_entry.getKey();
                 String docContents = ds_entry.getValue();
                 File ff = File.createTempFile(packageName, "");
                 FileUtils.writeStringToFile(ff, docContents, "UTF-8");

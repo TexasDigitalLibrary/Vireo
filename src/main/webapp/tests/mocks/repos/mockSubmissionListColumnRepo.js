@@ -29,6 +29,5 @@ angular.module("mock.submissionListColumnRepo", []).service("SubmissionListColum
         return found;
     };
 
-
     return repo;
 });

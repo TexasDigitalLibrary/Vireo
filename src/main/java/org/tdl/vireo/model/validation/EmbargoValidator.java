@@ -19,8 +19,8 @@ public class EmbargoValidator extends BaseModelValidator {
         String isActiveProperty = "isActive";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Embargo requires an active flag", isActiveProperty, true));
 
-        String isSystemRequiredProperty = "isSystemRequired";
-        this.addInputValidator(new InputValidator(InputValidationType.required, "Embargo requires a system required flag", isSystemRequiredProperty, true));
+        String systemRequiredProperty = "systemRequired";
+        this.addInputValidator(new InputValidator(InputValidationType.required, "Embargo requires a system required flag", systemRequiredProperty, true));
 
         String guarantorProperty = "guarantor";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Embargo requires a guarantor", guarantorProperty, true));

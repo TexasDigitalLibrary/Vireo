@@ -116,7 +116,7 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
     };
 
     repo.empty = function () {
-        repo.list.length = 0;
+        repo.mockedList.length = 0;
     };
 
     repo.fetch = function () {
@@ -141,7 +141,7 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
     repo.getAllFiltered = function(predicate) {
         var filteredData = [];
 
-        angular.forEach(repo.list, function(datum) {
+        angular.forEach(repo.mockedList, function(datum) {
             if (predicate(datum)) {
                 filteredData.push(datum);
             }

@@ -6,6 +6,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
         scope: {
             profile: "=",
             configuration: "=",
+            showVocabularyWord: "&?",
             fpi: "="
         },
         link: function ($scope) {
@@ -358,6 +359,14 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             $scope.showConfirm = function() {
                 return $scope.confirm;
+            };
+
+            $scope.displayVocabularyWord = function(value, index, array) {
+                if (angular.isDefined($scope.showVocabularyWord)) {
+                    return $scope.showVocabularyWord()(value, $scope.profile);
+                }
+
+                return true;
             };
 
             var refreshFieldValues = function () {
