@@ -5,7 +5,17 @@ var dataNamedSearchFilterGroup1 = {
     namedSearchFilters: [],
     publicFlag: true,
     savedColumns: [],
-    umiRelease: true
+    umiRelease: true,
+    user: {
+        anonymous: false,
+        email: "aggieJack@library.tamu.edu",
+        exp: "1425393875282",
+        firstName: "Jack",
+        lastName: "Daniels",
+        netId: "aggieJack",
+        role: "ROLE_ADMIN",
+        uin: "123456789"
+    }
 };
 
 var dataNamedSearchFilterGroup2 = {
@@ -15,7 +25,17 @@ var dataNamedSearchFilterGroup2 = {
     publicFlag: false,
     namedSearchFilters: [],
     savedColumns: [],
-    umiRelease: false
+    umiRelease: false,
+    user: {
+        anonymous: false,
+        email: "aggieJack@library.tamu.edu",
+        exp: "1425393875282",
+        firstName: "Jack",
+        lastName: "Daniels",
+        netId: "aggieJack",
+        role: "ROLE_ADMIN",
+        uin: "123456789"
+    }
 };
 
 var dataNamedSearchFilterGroup3 = {
@@ -25,7 +45,17 @@ var dataNamedSearchFilterGroup3 = {
     publicFlag: true,
     namedSearchFilters: [],
     savedColumns: [],
-    umiRelease: true
+    umiRelease: true,
+    user: {
+        anonymous: false,
+        email: "aggieJack@library.tamu.edu",
+        exp: "1425393875282",
+        firstName: "Jack",
+        lastName: "Daniels",
+        netId: "aggieJack",
+        role: "ROLE_ADMIN",
+        uin: "123456789"
+    }
 };
 
 var dataNamedSearchFilterGroup4 = {
@@ -35,7 +65,17 @@ var dataNamedSearchFilterGroup4 = {
     publicFlag: true,
     namedSearchFilters: [],
     savedColumns: [],
-    umiRelease: false
+    umiRelease: false,
+    user: {
+        anonymous: false,
+        email: "aggieJill@library.tamu.edu",
+        exp: "1425393875282",
+        firstName: "Jill",
+        lastName: "Daniels",
+        netId: "aggieJill",
+        role: "ROLE_STUDENT",
+        uin: "987654321"
+    }
 };
 
 var dataNamedSearchFilterGroup5 = {
@@ -45,7 +85,17 @@ var dataNamedSearchFilterGroup5 = {
     publicFlag: false,
     namedSearchFilters: [],
     savedColumns: [],
-    umiRelease: false
+    umiRelease: false,
+    user: {
+        anonymous: false,
+        email: "aggieJill@library.tamu.edu",
+        exp: "1425393875282",
+        firstName: "Jill",
+        lastName: "Daniels",
+        netId: "aggieJill",
+        role: "ROLE_STUDENT",
+        uin: "987654321"
+    }
 };
 
 var dataNamedSearchFilterGroup6 = {
@@ -55,7 +105,17 @@ var dataNamedSearchFilterGroup6 = {
     publicFlag: false,
     namedSearchFilters: [],
     savedColumns: [],
-    umiRelease: true
+    umiRelease: true,
+    user: {
+        anonymous: false,
+        email: "aggieJill@library.tamu.edu",
+        exp: "1425393875282",
+        firstName: "Jill",
+        lastName: "Daniels",
+        netId: "aggieJill",
+        role: "ROLE_STUDENT",
+        uin: "987654321"
+    }
 };
 
 var mockNamedSearchFilterGroup = function($q) {

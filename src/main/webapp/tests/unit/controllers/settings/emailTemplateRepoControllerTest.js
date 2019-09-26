@@ -71,6 +71,10 @@ describe("controller: EmailTemplateRepoController", function () {
             expect(scope.insertText).toBeDefined();
             expect(typeof scope.insertText).toEqual("function");
         });
+        it("isSystemRequired should be defined", function () {
+            expect(scope.isSystemRequired).toBeDefined();
+            expect(typeof scope.isSystemRequired).toEqual("function");
+        });
         it("launchEditModal should be defined", function () {
             expect(scope.launchEditModal).toBeDefined();
             expect(typeof scope.launchEditModal).toEqual("function");
@@ -135,6 +139,25 @@ describe("controller: EmailTemplateRepoController", function () {
 
             scope.modalData.message = "already defined";
             scope.insertText("test");
+        });
+        it("isSystemRequired should return a boolean", function () {
+            var result;
+            var emailTemplate = new mockEmailTemplate(q);
+
+            emailTemplate.systemRequired = true;
+            result = scope.isSystemRequired(emailTemplate);
+            expect(result).toBe(true);
+
+            emailTemplate.systemRequired = false;
+            result = scope.isSystemRequired(emailTemplate);
+            expect(result).toBe(false);
+
+            delete emailTemplate.systemRequired;
+            result = scope.isSystemRequired(emailTemplate);
+            expect(result).toBe(false);
+
+            result = scope.isSystemRequired();
+            expect(result).toBe(false);
         });
         it("launchEditModal should open a modal", function () {
             var emailTemplate = new mockEmailTemplate(q);

@@ -1,17 +1,16 @@
 describe('model: SavedFilter', function () {
-    var model, rootScope, scope, SavedFilter, WsApi;
+    var model, rootScope, scope, WsApi;
 
     var initializeVariables = function(settings) {
-        inject(function ($rootScope, _SavedFilter_, _WsApi_) {
+        inject(function ($rootScope, _WsApi_) {
             rootScope = $rootScope;
 
-            SavedFilter = _SavedFilter_;
             WsApi = _WsApi_;
         });
     };
 
     var initializeModel = function(settings) {
-        inject(function (_WsApi_) {
+        inject(function (SavedFilter) {
             scope = rootScope.$new();
 
             model = angular.extend(new SavedFilter(), dataSavedFilter1);

@@ -36,7 +36,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
 
         $scope.showOrganizationManagement = function () {
             var selectedOrg = $scope.getSelectedOrganization();
-            return selectedOrg !== undefined && selectedOrg.id !== undefined && selectedOrg.id !== 1 || (selectedOrg.id == 1 && $scope.isAdmin());
+            return selectedOrg !== undefined && selectedOrg.id !== undefined && (selectedOrg.id !== 1 || (selectedOrg.id == 1 && $scope.isAdmin()));
         };
 
         $scope.updateOrganization = function (organization) {

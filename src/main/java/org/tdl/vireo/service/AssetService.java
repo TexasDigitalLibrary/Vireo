@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -73,7 +74,7 @@ public class AssetService {
 
     public String write(InputStream is, String relativePath) throws IOException {
         Path path = processAssetsRelativePath(relativePath);
-        String[] rawFileData = IOUtils.toString(is, "UTF-8").split(";");
+        String[] rawFileData = IOUtils.toString(is, StandardCharsets.UTF_8).split(";");
         String[] encodedData = rawFileData[1].split(",");
         byte[] fileData = Base64.getDecoder().decode(encodedData[1]);
         Files.write(path, fileData);
@@ -81,7 +82,7 @@ public class AssetService {
     }
 
     public void writeImage(InputStream inputStream, String relativePath) throws IOException {
-        String inputData = IOUtils.toString(inputStream, "UTF-8");
+        String inputData = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
         String[] imageData = inputData.split(";");
         String[] encodedData = imageData[1].split(",");
         String[] mimeData = imageData[0].split(":");

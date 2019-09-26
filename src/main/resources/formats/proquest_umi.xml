@@ -232,7 +232,7 @@
         <DISS_abstract>
             <DISS_para th:each="line : ${ABSTRACT_LINES}" th:text="${line}"></DISS_para>
         </DISS_abstract>
-        <DISS_binary th:if="${PRIMARY_DOCUMENT_FIELD_VALUE != null }" th:text="${PRIMARY_DOCUMENT_FIELD_VALUE.getFileName()}" th:attr="type=${PRIMARY_DOCUMENT_MIMETYPE}"></DISS_binary>
+        <DISS_binary th:if="${PROQUEST_PERSON_FILENAME != null }" th:text="${PROQUEST_PERSON_FILENAME}" th:attr="type=${PRIMARY_DOCUMENT_MIMETYPE}"></DISS_binary>
         <DISS_attachment th:each="fv,iter : ${SUPPLEMENTAL_DOCUMENT_FIELD_VALUES}">
             <DISS_file_name th:text="${fv.getFileName()}"></DISS_file_name>
             <DISS_file_category th:text="${SUBMISSION_HELPER.categorize(FILE_HELPER.getMimeTypeOfAsset(fv.getValue()))}"></DISS_file_category>

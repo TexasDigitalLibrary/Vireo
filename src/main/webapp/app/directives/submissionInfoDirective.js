@@ -9,6 +9,7 @@ vireo.directive("submissionInfo", function () {
             fieldProfile: '=',
             fields: '=',
             label: '@',
+            showVocabularyWord: "&?",
             stacked: '=?',
             type: '@'
         },
@@ -18,7 +19,7 @@ vireo.directive("submissionInfo", function () {
             }
         },
         controller: function ($scope, $element, $timeout) {
-            
+
             $scope.refreshFieldValue = function (fieldValue) {
                 fieldValue.refresh();
                 fieldValue.setIsValid(true);
@@ -68,9 +69,11 @@ vireo.directive("submissionInfo", function () {
             };
 
             $scope.save = function (fieldValue) {
-                fieldValue.editing = false;
-                fieldValue.updating = true;
-                save(fieldValue);
+                if (!angular.isDefined(fieldValue.updating) || !fieldValue.updating) {
+                    fieldValue.editing = false;
+                    fieldValue.updating = true;
+                    save(fieldValue);
+                }
             };
 
             $scope.saveContacts = function (fieldValue) {
@@ -90,6 +93,27 @@ vireo.directive("submissionInfo", function () {
                 fieldValue.contacts = item.contacts;
                 fieldValue.value = item.name;
                 save(fieldValue);
+            };
+
+            $scope.stopEditing = function (fieldValue) {
+                angular.forEach($scope.submission.fieldValues, function(fv) {
+                    if (fv.id === fieldValue.id) {
+                        if (fv.value === fieldValue.value) {
+                            fieldValue.editing = false;
+                        }
+
+                        return;
+                    }
+                });
+            };
+
+            $scope.toggleFieldValue = function (field, value) {
+                if (field.value === value) {
+                    $scope.stopEditing(field);
+                } else {
+                    field.value = value;
+                    $scope.save(field);
+                }
             };
 
             $scope.datepickerOptions = {};
@@ -116,7 +140,7 @@ vireo.directive("submissionInfo", function () {
                 $scope.datepickerOptions.minViewMode = "month";
                 $scope.datepickerOptions.minMode = "month";
             }
-            
+
             $scope.cancel = function (fieldValue) {
                 fieldValue.refresh();
                 fieldValue.editing = false;
@@ -130,7 +154,7 @@ vireo.directive("submissionInfo", function () {
             $scope.inputProquest = function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_PROQUEST';
             };
-            
+
             $scope.inputTel = function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_TEL';
             };
@@ -142,7 +166,7 @@ vireo.directive("submissionInfo", function () {
             $scope.inputDegreeDate = function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_DEGREEDATE';
             };
-            
+
             $scope.inputDateTime = function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_DATETIME';
             };
@@ -161,6 +185,14 @@ vireo.directive("submissionInfo", function () {
 
             $scope.setConditionalTextArea = function (fieldValue, checked) {
                 fieldValue.value = checked ? fieldValue.value : null;
+            };
+
+            $scope.displayVocabularyWord = function(value, index, array) {
+                if (angular.isDefined($scope.showVocabularyWord)) {
+                    return $scope.showVocabularyWord()(value, $scope.fieldProfile);
+                }
+
+                return true;
             };
         }
     };

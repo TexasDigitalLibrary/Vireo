@@ -1,4 +1,4 @@
-vireo.controller("SubmissionViewController", function ($controller, $q, $scope, $routeParams, CustomActionDefinitionRepo, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, SubmissionStates) {
+vireo.controller("SubmissionViewController", function ($controller, $q, $scope, $routeParams, CustomActionDefinitionRepo, EmbargoRepo, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, SubmissionStates) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -7,6 +7,8 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
     $scope.SubmissionStates = SubmissionStates;
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
+
+    $scope.embargoes = EmbargoRepo.getAll();
 
     FieldPredicateRepo.ready().then(function() {
 
@@ -111,6 +113,38 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
 
         $scope.feedbackDocuments = function(fieldValue) {
             return fieldValue.id && fieldValue.fieldPredicate.documentTypePredicate && fieldValue.fieldPredicate.value == '_doctype_feedback';
+        };
+
+        $scope.showVocabularyWord = function (vocabularyWord, fieldProfile) {
+            var result = true;
+
+            if (angular.isDefined(fieldProfile) && angular.isDefined(fieldProfile.fieldPredicate)) {
+                if (fieldProfile.fieldPredicate.value === "proquest_embargos" || fieldProfile.fieldPredicate.value === "default_embargos") {
+                    var selectedValue;
+
+                    // Always make the currently selected value visible, even if isActive is FALSE.
+                    angular.forEach($scope.submission.fieldValues, function(fieldValue) {
+                        if (fieldValue.fieldPredicate.id === fieldProfile.fieldPredicate.id) {
+                            selectedValue = fieldValue.value;
+                            return;
+                        }
+                    });
+
+                    angular.forEach($scope.embargoes, function(embargo) {
+                        if (Number(vocabularyWord.identifier) === embargo.id) {
+                            if (angular.isDefined(selectedValue) && embargo.name === selectedValue) {
+                                result = true;
+                            } else {
+                                result = embargo.isActive;
+                            }
+
+                            return;
+                        }
+                    });
+                }
+            }
+
+            return result;
         };
 
         CustomActionDefinitionRepo.listen(function(apiRes) {

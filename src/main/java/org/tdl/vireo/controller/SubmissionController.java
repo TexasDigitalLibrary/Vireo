@@ -7,6 +7,7 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -20,6 +21,9 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import java.io.ByteArrayOutputStream;
+import java.util.Optional;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -498,16 +502,11 @@ public class SubmissionController {
 
             break;
         case "MarcXML21":
-        case "ProQuest":
+        case "Marc21":
             ServletOutputStream sos = response.getOutputStream();
 
             try {
-                ZipOutputStream zos = new ZipOutputStream(sos);
-
-                // TODO: need a more dynamic way to achieve this
-                if (packagerName.equals("ProQuest")) {
-                    // TODO: add filter for UMI Publication true
-                }
+                ZipOutputStream zos = new ZipOutputStream(sos, StandardCharsets.UTF_8);
 
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
 
@@ -536,6 +535,83 @@ public class SubmissionController {
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
                 sos.print(objectMapper.writeValueAsString(apiResponse));
                 sos.close();
+            }
+            break;
+
+        case "ProQuest":
+            ServletOutputStream sos_pq = response.getOutputStream();
+
+            try {
+                ZipOutputStream zos = new ZipOutputStream(sos_pq, StandardCharsets.UTF_8);
+
+                for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
+                    String submissionName = "submission_" + submission.getId() + "/";
+
+                    List<FieldValue> fieldValues = submission.getFieldValuesByPredicateValue("first_name");
+                    Optional<String> firstNameOpt = fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
+                    String firstName = firstNameOpt.isPresent() ? firstNameOpt.get() : "";
+                    firstName = firstName.substring(0,1).toUpperCase()+firstName.substring(1);
+                    fieldValues = submission.getFieldValuesByPredicateValue("last_name");
+                    Optional<String> lastNameOpt = fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
+                    String lastName = lastNameOpt.isPresent() ? lastNameOpt.get() : "";
+                    lastName = lastName.substring(0,1).toUpperCase()+lastName.substring(1);
+                    String personName = lastName+"_"+firstName;
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    try (ZipOutputStream b = new ZipOutputStream(baos)){
+                        ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+                        if (exportPackage.isMap()) {
+                            for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
+                                b.putNextEntry(new ZipEntry(personName+"_DATA.xml"));
+                                b.write(Files.readAllBytes(fileEntry.getValue().toPath()));
+                                b.closeEntry();
+                            }
+                        }
+                        // LICENSES
+                    	for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
+                        	Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+                        	byte[] fileBytes = Files.readAllBytes(path);
+                            int sfxIndx;
+                            String licFileName = ldfv.getFileName();
+                            if((sfxIndx = licFileName.indexOf("."))>0){
+                                licFileName = licFileName.substring(0,sfxIndx).toUpperCase()+licFileName.substring(sfxIndx); 
+                            }
+                        	b.putNextEntry(new ZipEntry(personName+"_permission/"+licFileName));
+                        	b.write(fileBytes);
+                            b.closeEntry();
+                        }
+                        // PRIMARY_DOC
+                        FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
+                        Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
+                        byte[] fileBytes = Files.readAllBytes(path);
+                        String fName = primaryDoc.getFileName();
+                        int fNameIndx = fName.indexOf(".");
+                        String fType = "";//default
+                        if(fNameIndx>0){
+                            fType = fName.substring(fNameIndx);
+                        }
+                        b.putNextEntry(new ZipEntry(personName+fType));
+                        b.write(fileBytes);
+                        b.closeEntry();
+
+                    }catch(IOException ioe){
+                        ioe.printStackTrace();
+                    }
+                    zos.putNextEntry(new ZipEntry("upload_"+personName+".zip"));
+                    baos.close();
+                    zos.write(baos.toByteArray());
+                    zos.closeEntry();
+                }
+                zos.close();
+
+                response.setContentType(packager.getMimeType());
+                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+            } catch (Exception e) {
+                LOG.info("Error With Export",e);
+                response.setContentType("application/json");
+                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
+                sos_pq.print(objectMapper.writeValueAsString(apiResponse));
+                sos_pq.close();
             }
             break;
         case "DSpaceMETS":
@@ -598,8 +674,9 @@ public class SubmissionController {
             }
             break;
         case "DSpaceSimple":
+            ServletOutputStream sosDss = response.getOutputStream();
             try {
-                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+                ZipOutputStream zos = new ZipOutputStream(sosDss);
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     String submissionName = "submission_" + submission.getId() + "/";
                     zos.putNextEntry(new ZipEntry(submissionName));
@@ -661,13 +738,11 @@ public class SubmissionController {
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
+                LOG.info("Error With Export",e);
                 response.setContentType("application/json");
-
                 ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-
-                PrintWriter out = response.getWriter();
-                out.print(objectMapper.writeValueAsString(apiResponse));
-                out.close();
+                sosDss.print(objectMapper.writeValueAsString(apiResponse));
+                sosDss.close();
             }
             break;
 

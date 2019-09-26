@@ -18,6 +18,10 @@ describe("controller: HeaderController", function () {
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
+            if (settings && settings.configurable) {
+                scope.configurable = settings.configurable;
+            }
+
             controller = $controller("HeaderController", {
                 $scope: scope,
                 $location: location,
@@ -150,6 +154,7 @@ describe("controller: HeaderController", function () {
             spyOn(location, "url").and.returnValue("/admin/view");
 
             scope.viewSelect();
+            timeout.flush();
             expect(location.path).not.toHaveBeenCalled();
         });
     });

@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $route, $routeParams, $scope, DepositLocationRepo, EmailTemplateRepo, EmailRecipient, EmailRecipientType, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserService, UserSettings, SubmissionStatuses, WsApi) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $route, $routeParams, $scope, DepositLocationRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatuses, SubmissionStatusRepo, UserRepo, UserService, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -9,6 +9,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     };
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
+
+    $scope.embargoes = EmbargoRepo.getAll();
 
     var userSettings = new UserSettings();
 
@@ -65,13 +67,14 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     $scope.addCommentModal = {};
 
+    $scope.addFileData = {};
+
     $scope.errorMessage = "";
 
     $scope.dropZoneText = "Drop a file or click arrow";
 
     SubmissionRepo.fetchSubmissionById($routeParams.id).then(function(submission) {
       
-
         $scope.submission = submission;
 
         WsApi.listen("/channel/submission/" + $scope.submission.id).then(null, null, function(res) {
@@ -160,14 +163,15 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
       };
 
       $scope.addEmailAddressee = function (emails, formField) {
-        
+
         var recipient = formField.$$rawModelValue;
 
         if (recipient) {
           
           if(typeof recipient === 'string') {
+
             if(!$scope.validateEmailAddressee(formField)) return;            
-            console.log(formField);
+
             recipient = new EmailRecipient({
               name: recipient,
               type: EmailRecipientType.PLAIN_ADDRESS,
@@ -180,6 +184,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           //This is not ideal, as it assumes the attr name and attr ngModel are the same.
           $scope[formField.$$attr.name+"Invalid"] = false;
           $scope.addCommentModal[formField.$$attr.name] = "";
+          $scope.addFileData[formField.$$attr.name] = "";
         }
       };
 
@@ -296,20 +301,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             fieldValue.refresh();
         };
 
-        var resetFileData = function () {
-            
-            $scope.addFileData = {
-                selectedTemplate: $scope.emailTemplates[0],
-                sendEmailToRecipient: (userSettings.attachment_email_student_by_default === "true") || (userSettings.attachment_cc_student_advisor_by_default === "true"),
-                recipientEmails: userSettings.attachment_email_student_by_default === "true" ? [$scope.submission.submitter.email] : [],
-                sendEmailToCCRecipient: userSettings.attachment_cc_student_advisor_by_default === "true",
-                ccRecipientEmails: userSettings.attachment_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails() : [],
-                needsCorrection: userSettings.attachment_flag_submission_as_needs_corrections_by_default === "true"
-            };
-        };
-
-        resetFileData();
-
         $scope.getDocumentTypePredicates = function () {
             var documentTypePredicates = [];
             for (var i in $scope.submission.submissionWorkflowSteps) {
@@ -375,6 +366,31 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             fieldValue.refresh();
         };
 
+        $scope.resetFileData = function () {
+            $scope.closeModal();
+            $scope.errorMessage = "";
+            $scope.removeFiles();
+            
+            $scope.addFileData.uploading = false;
+            $scope.addFileData.recipientEmail = '';
+            $scope.addFileData.recipientEmails = userSettings.attachment_email_student_by_default === "true" ? [new EmailRecipient({
+                name: "Submitter",
+                type: EmailRecipientType.SUBMITTER,
+                data: "Submitter"
+              })] : [];
+            $scope.addFileData.ccRecipientEmail = '';
+            $scope.addFileData.ccRecipientEmails = userSettings.attachment_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails() : [];
+            $scope.addFileData.sendEmailToRecipient = (userSettings.attachment_email_student_by_default === "true") || (userSettings.attachment_cc_student_advisor_by_default === "true");
+            $scope.addFileData.sendEmailToCCRecipient = userSettings.attachment_cc_student_advisor_by_default === "true";
+            $scope.addFileData.subject = "";
+            $scope.addFileData.message = "";
+            $scope.addFileData.selectedTemplate = $scope.emailTemplates[0];
+            $scope.addFileData.needsCorrection = userSettings.attachment_flag_submission_as_needs_corrections_by_default === "true";
+
+        };
+
+        $scope.resetFileData();
+        
         $scope.submitAddFile = function () {
 
             $scope.addFileData.uploading = true;
@@ -432,10 +448,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                                     sendEmailToRecipient: $scope.addFileData.sendEmailToRecipient,
                                     sendEmailToCCRecipient: $scope.addFileData.sendEmailToCCRecipient
                                 }).then(function () {
-                                    $scope.resetAddFile();
+                                    $scope.resetFileData();
                                 });
                             } else {
-                                $scope.resetAddFile();
+                                $scope.resetFileData();
                             }
                         }
                     });
@@ -469,12 +485,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                 $scope.submission.needsCorrection();
             }
 
-        };
-
-        $scope.resetAddFile = function () {
-            $scope.errorMessage = "";
-            resetFileData();
-            $scope.closeModal();
         };
 
         $scope.disableSubmitAddFile = function () {
@@ -659,7 +669,39 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "submission": $scope.submission
         };
 
-        SidebarService.addBoxes([$scope.activeDocumentBox, $scope.submissionStatusBox, $scope.customActionsBox, $scope.flaggedFieldProfilesBox]);
+        $scope.showVocabularyWord = function (vocabularyWord, fieldProfile) {
+            var result = true;
+
+            if (angular.isDefined(fieldProfile) && angular.isDefined(fieldProfile.fieldPredicate)) {
+                if (fieldProfile.fieldPredicate.value === "proquest_embargos" || fieldProfile.fieldPredicate.value === "default_embargos") {
+                    var selectedValue;
+
+                    // Always make the currently selected value visible, even if isActive is FALSE.
+                    angular.forEach($scope.submission.fieldValues, function(fieldValue) {
+                        if (fieldValue.fieldPredicate.id === fieldProfile.fieldPredicate.id) {
+                            selectedValue = fieldValue.value;
+                            return;
+                        }
+                    });
+
+                    angular.forEach($scope.embargoes, function(embargo) {
+                        if (Number(vocabularyWord.identifier) === embargo.id) {
+                            if (angular.isDefined(selectedValue) && embargo.name === selectedValue) {
+                                result = true;
+                            } else {
+                                result = embargo.isActive;
+                            }
+
+                            return;
+                        }
+                    });
+                }
+            }
+
+            return result;
+        };
+
+        SidebarService.addBoxes([$scope.activeDocumentBox, $scope.submissionStatusBox, $scope.flaggedFieldProfilesBox, $scope.customActionsBox]);
 
     });
 

@@ -69,6 +69,10 @@ describe("controller: EmbargoRepoController", function () {
             expect(scope.editEmbargo).toBeDefined();
             expect(typeof scope.editEmbargo).toEqual("function");
         });
+        it("isSystemRequired should be defined", function () {
+            expect(scope.isSystemRequired).toBeDefined();
+            expect(typeof scope.isSystemRequired).toEqual("function");
+        });
         it("removeEmbargo should be defined", function () {
             expect(scope.removeEmbargo).toBeDefined();
             expect(typeof scope.removeEmbargo).toEqual("function");
@@ -121,6 +125,25 @@ describe("controller: EmbargoRepoController", function () {
 
             expect(scope.selectEmbargo).toHaveBeenCalled();
             expect(scope.openModal).toHaveBeenCalled();
+        });
+        it("isSystemRequired should return a boolean", function () {
+            var result;
+            var embargo = new mockEmbargo(q);
+
+            embargo.systemRequired = true;
+            result = scope.isSystemRequired(embargo);
+            expect(result).toBe(true);
+
+            embargo.systemRequired = false;
+            result = scope.isSystemRequired(embargo);
+            expect(result).toBe(false);
+
+            delete embargo.systemRequired;
+            result = scope.isSystemRequired(embargo);
+            expect(result).toBe(false);
+
+            result = scope.isSystemRequired();
+            expect(result).toBe(false);
         });
         it("removeEmbargo should delete a embargo", function () {
             scope.modalData = new mockEmbargo(q);
@@ -228,14 +251,31 @@ describe("controller: EmbargoRepoController", function () {
             scope.sortEmbargoesProquest("column");
             expect(scope.sortAction).toEqual("unknownProquest");
         });
-        it("updateEmbargo should should save a embargo", function () {
-            scope.modalData = new mockEmbargo(q);
+        it("updateEmbargo should should save an embargo", function () {
+            var embargo1 = new mockEmbargo(q);
+            var embargo2 = new mockEmbargo(q);
 
-            spyOn(scope.modalData, "save");
+            embargo1.systemRequired = false;
+            embargo2.systemRequired = true;
+            embargo2.isActive = false;
 
+            spyOn(embargo1, "save");
+            spyOn(EmbargoRepo, "deactivate");
+            spyOn(EmbargoRepo, "activate");
+
+            scope.modalData = embargo1;
             scope.updateEmbargo();
+            expect(embargo1.save).toHaveBeenCalled();
 
-            expect(scope.modalData.save).toHaveBeenCalled();
+            scope.modalData = embargo2;
+            scope.updateEmbargo();
+            expect(EmbargoRepo.deactivate).toHaveBeenCalled();
+            expect(embargo2.isActive).toBe(false);
+
+            embargo2.isActive = true;
+            scope.updateEmbargo();
+            expect(EmbargoRepo.activate).toHaveBeenCalled();
+            expect(embargo2.isActive).toBe(true);
         });
     });
 

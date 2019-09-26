@@ -33,8 +33,8 @@ import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
 import org.tdl.vireo.mock.MockData;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmailRecipient;
+import org.tdl.vireo.model.EmailRecipientContact;
 import org.tdl.vireo.model.EmailRecipientPlainAddress;
-import org.tdl.vireo.model.EmailRecipientType;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.FieldPredicate;
@@ -48,9 +48,11 @@ import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
+import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
+import org.tdl.vireo.model.repo.impl.AbstractEmailRecipientRepoImpl;
 import org.tdl.vireo.utility.TemplateUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -61,8 +63,32 @@ import edu.tamu.weaver.email.service.EmailSender;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { Application.class })
 public class SubmissionEmailServiceTest extends MockData {
-    private static final EmailRecipient TEST_EMAIL_RECIPIENT1 = new EmailRecipientPlainAddress(TEST_USER_EMAIL);
-    private static final EmailRecipient TEST_EMAIL_RECIPIENT2 = new EmailRecipientPlainAddress(TEST_USER_EMAIL);
+
+    private static final Long TEST_FIELD_PREDICATE_ADVISOR_ID = 1L;
+    private static final int TEST_FIELD_PREDICATE_ADVISOR_ID_INTEGER = 1;
+    private static final String TEST_FIELD_PREDICATE_ADVISOR_NAME = "Committee Chair";
+    private static final String TEST_FIELD_PREDICATE_ADVISOR_VALUE = "dc.contributor.advisor";
+
+    private static final Long TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID = 2L;
+    private static final String TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_NAME = "Non-Committee Chair";
+    private static final String TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_VALUE = "dc.contributor.committeeMember";
+
+    private static final FieldPredicate TEST_FIELD_PREDICATE_ADVISOR = new FieldPredicate();
+    static {
+        TEST_FIELD_PREDICATE_ADVISOR.setId(1L);
+        TEST_FIELD_PREDICATE_ADVISOR.setDocumentTypePredicate(false);
+        TEST_FIELD_PREDICATE_ADVISOR.setValue(TEST_FIELD_PREDICATE_ADVISOR_NAME);
+    }
+
+    private static final FieldPredicate TEST_FIELD_PREDICATE_COMMITTEE_MEMBER = new FieldPredicate();
+    static {
+        TEST_FIELD_PREDICATE_COMMITTEE_MEMBER.setId(2L);
+        TEST_FIELD_PREDICATE_COMMITTEE_MEMBER.setDocumentTypePredicate(false);
+        TEST_FIELD_PREDICATE_COMMITTEE_MEMBER.setValue(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_NAME);
+    }
+
+    private static final EmailRecipient TEST_EMAIL_RECIPIENT_ADVISOR = new EmailRecipientContact(TEST_FIELD_PREDICATE_ADVISOR_NAME, TEST_FIELD_PREDICATE_ADVISOR);
+    private static final EmailRecipient TEST_EMAIL_RECIPIENT_PLAIN = new EmailRecipientPlainAddress(TEST_USER_EMAIL);
 
     private static final Map<String, String> TEST_USER1_SETTINGS1 = new HashMap<>();
     static {
@@ -114,22 +140,22 @@ public class SubmissionEmailServiceTest extends MockData {
 
     private static final ActionLog TEST_ACTION_LOG1 = new ActionLog(TEST_SUBMISSION_STATUS1, TEST_CALENDAR1, "Test Action Log 1", false);
 
-    private static final EmailWorkflowRule TEST_EMAIL_WORKFLOW_RULE1 = new EmailWorkflowRule();
+    private static final EmailWorkflowRule TEST_EMAIL_WORKFLOW_RULE_ADVISOR = new EmailWorkflowRule();
     static {
-        TEST_EMAIL_WORKFLOW_RULE1.setId(1L);
-        TEST_EMAIL_WORKFLOW_RULE1.setEmailRecipient(TEST_EMAIL_RECIPIENT1);
-        TEST_EMAIL_WORKFLOW_RULE1.setSubmissionStatus(TEST_SUBMISSION_STATUS1);
-        TEST_EMAIL_WORKFLOW_RULE1.setEmailTemplate(TEST_EMAIL_TEMPLATE1);
-        TEST_EMAIL_WORKFLOW_RULE1.isDisabled(false);
+        TEST_EMAIL_WORKFLOW_RULE_ADVISOR.setId(1L);
+        TEST_EMAIL_WORKFLOW_RULE_ADVISOR.setEmailRecipient(TEST_EMAIL_RECIPIENT_ADVISOR);
+        TEST_EMAIL_WORKFLOW_RULE_ADVISOR.setSubmissionStatus(TEST_SUBMISSION_STATUS1);
+        TEST_EMAIL_WORKFLOW_RULE_ADVISOR.setEmailTemplate(TEST_EMAIL_TEMPLATE1);
+        TEST_EMAIL_WORKFLOW_RULE_ADVISOR.isDisabled(false);
     }
 
-    private static final EmailWorkflowRule TEST_EMAIL_WORKFLOW_RULE2 = new EmailWorkflowRule();
+    private static final EmailWorkflowRule TEST_EMAIL_WORKFLOW_RULE_PLAIN = new EmailWorkflowRule();
     static {
-        TEST_EMAIL_WORKFLOW_RULE2.setId(2L);
-        TEST_EMAIL_WORKFLOW_RULE2.setEmailRecipient(TEST_EMAIL_RECIPIENT2);
-        TEST_EMAIL_WORKFLOW_RULE2.setSubmissionStatus(TEST_SUBMISSION_STATUS2);
-        TEST_EMAIL_WORKFLOW_RULE2.setEmailTemplate(TEST_EMAIL_TEMPLATE1);
-        TEST_EMAIL_WORKFLOW_RULE2.isDisabled(false);
+        TEST_EMAIL_WORKFLOW_RULE_PLAIN.setId(2L);
+        TEST_EMAIL_WORKFLOW_RULE_PLAIN.setEmailRecipient(TEST_EMAIL_RECIPIENT_PLAIN);
+        TEST_EMAIL_WORKFLOW_RULE_PLAIN.setSubmissionStatus(TEST_SUBMISSION_STATUS2);
+        TEST_EMAIL_WORKFLOW_RULE_PLAIN.setEmailTemplate(TEST_EMAIL_TEMPLATE1);
+        TEST_EMAIL_WORKFLOW_RULE_PLAIN.isDisabled(false);
     }
 
     private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP1 = new HashMap<String, Object>();
@@ -143,50 +169,29 @@ public class SubmissionEmailServiceTest extends MockData {
     static {
         TEST_EMAIL_RECIPIENT_MAP2.put("type", "ASSIGNEE");
         TEST_EMAIL_RECIPIENT_MAP2.put("name", "Assignee");
-        TEST_EMAIL_RECIPIENT_MAP2.put("data", EmailRecipientType.ASSIGNEE.ordinal());
+        TEST_EMAIL_RECIPIENT_MAP2.put("data", "Assignee");
     }
 
     private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP3 = new HashMap<String, Object>();
     static {
         TEST_EMAIL_RECIPIENT_MAP3.put("type", "CONTACT");
         TEST_EMAIL_RECIPIENT_MAP3.put("name", "Contact");
-        TEST_EMAIL_RECIPIENT_MAP3.put("data", EmailRecipientType.CONTACT.ordinal());
+        TEST_EMAIL_RECIPIENT_MAP3.put("data", TEST_FIELD_PREDICATE_ADVISOR_ID_INTEGER);
     }
 
     private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP4 = new HashMap<String, Object>();
     static {
         TEST_EMAIL_RECIPIENT_MAP4.put("type", "ORGANIZATION");
         TEST_EMAIL_RECIPIENT_MAP4.put("name", "Organization");
-        TEST_EMAIL_RECIPIENT_MAP4.put("data", EmailRecipientType.ORGANIZATION.ordinal());
+        TEST_EMAIL_RECIPIENT_MAP4.put("data", null);
     }
 
     private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP5 = new HashMap<String, Object>();
     static {
         TEST_EMAIL_RECIPIENT_MAP5.put("type", "SUBMITTER");
         TEST_EMAIL_RECIPIENT_MAP5.put("name", "Submitter");
-        TEST_EMAIL_RECIPIENT_MAP5.put("data", EmailRecipientType.SUBMITTER.ordinal());
+        TEST_EMAIL_RECIPIENT_MAP5.put("data", "Submitter");
     }
-
-    private static final FieldPredicate TEST_FIELD_PREDICATE1 = new FieldPredicate();
-    static {
-        TEST_FIELD_PREDICATE1.setId(1L);
-        TEST_FIELD_PREDICATE1.setDocumentTypePredicate(false);
-        TEST_FIELD_PREDICATE1.setValue("mock field predicate value 1");
-    }
-
-    private static final FieldPredicate TEST_FIELD_PREDICATE2 = new FieldPredicate();
-    static {
-        TEST_FIELD_PREDICATE2.setId(2L);
-        TEST_FIELD_PREDICATE2.setDocumentTypePredicate(false);
-        TEST_FIELD_PREDICATE2.setValue("mock field predicate value 2");
-    }
-
-//    private static final FieldPredicate TEST_FIELD_PREDICATE3 = new FieldPredicate();
-//    static {
-//        TEST_FIELD_PREDICATE2.setId(3L);
-//        TEST_FIELD_PREDICATE2.setDocumentTypePredicate(false);
-//        TEST_FIELD_PREDICATE2.setValue("mock field predicate value 3");
-//    }
 
     private static final FieldPredicate TEST_FIELD_PREDICATE4 = new FieldPredicate();
     static {
@@ -216,7 +221,7 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_FIELD_VALUE1.setId(1L);
         TEST_FIELD_VALUE1.setContacts(TEST_CONTACTS_LIST1);
         TEST_FIELD_VALUE1.setDefinition("Mock Field Value Definition 1");
-        TEST_FIELD_VALUE1.setFieldPredicate(TEST_FIELD_PREDICATE1);
+        TEST_FIELD_VALUE1.setFieldPredicate(TEST_FIELD_PREDICATE_ADVISOR);
         TEST_FIELD_VALUE1.setIdentifier("1");
         TEST_FIELD_VALUE1.setValue("Mock Field Value Value 1");
     }
@@ -226,7 +231,7 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_FIELD_VALUE2.setId(2L);
         TEST_FIELD_VALUE2.setContacts(TEST_CONTACTS_LIST2);
         TEST_FIELD_VALUE2.setDefinition("Mock Field Value Definition 2");
-        TEST_FIELD_VALUE2.setFieldPredicate(TEST_FIELD_PREDICATE2);
+        TEST_FIELD_VALUE2.setFieldPredicate(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
         TEST_FIELD_VALUE2.setIdentifier("2");
         TEST_FIELD_VALUE2.setValue("Mock Field Value Value 2");
     }
@@ -246,6 +251,12 @@ public class SubmissionEmailServiceTest extends MockData {
     private List<FieldValue> mockFieldValues;
 
     private List<EmailWorkflowRule> mockEmailWorkflowRules;
+
+    @MockBean
+    protected AbstractEmailRecipientRepoImpl mockAbstractEmailRecipientRepoImpl;
+
+    @MockBean
+    protected EmailWorkflowRuleRepo mockEmailWorkflowRuleRepo;
 
     @MockBean
     protected ActionLogRepo mockActionLogRepo;
@@ -286,8 +297,8 @@ public class SubmissionEmailServiceTest extends MockData {
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS1);
 
-        mockEmailWorkflowRules.add(TEST_EMAIL_WORKFLOW_RULE1);
-        mockEmailWorkflowRules.add(TEST_EMAIL_WORKFLOW_RULE2);
+        mockEmailWorkflowRules.add(TEST_EMAIL_WORKFLOW_RULE_ADVISOR);
+        mockEmailWorkflowRules.add(TEST_EMAIL_WORKFLOW_RULE_PLAIN);
 
         when(mockOrganization.getId()).thenReturn(1L);
         when(mockOrganization.getName()).thenReturn(TEST_ORGANIZATION1_NAME);
@@ -312,8 +323,19 @@ public class SubmissionEmailServiceTest extends MockData {
 
         when(mockActionLogRepo.createPublicLog(any(Submission.class), any(User.class), any(String.class))).thenReturn(TEST_ACTION_LOG1);
 
-        when(mockFieldPredicateRepo.getOne(1L)).thenReturn(TEST_FIELD_PREDICATE1);
-        when(mockFieldPredicateRepo.findOne(1L)).thenReturn(TEST_FIELD_PREDICATE1);
+        when(mockFieldPredicateRepo.getOne(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
+        when(mockFieldPredicateRepo.findOne(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
+        when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_ADVISOR_VALUE)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
+
+        when(mockFieldPredicateRepo.getOne(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
+        when(mockFieldPredicateRepo.findOne(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
+        when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_VALUE)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
+
+        when(mockAbstractEmailRecipientRepoImpl.createAdvisorRecipient()).thenReturn(TEST_EMAIL_RECIPIENT_ADVISOR);
+
+        List<EmailWorkflowRule> emailWorkflowRuleAdvisors = new ArrayList<EmailWorkflowRule>();
+        emailWorkflowRuleAdvisors.add(TEST_EMAIL_WORKFLOW_RULE_ADVISOR);
+        when(mockEmailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(TEST_EMAIL_RECIPIENT_ADVISOR, false)).thenReturn(emailWorkflowRuleAdvisors);
 
         doNothing().when(mockEmailSender).send(any(SimpleMailMessage.class));
     }
@@ -398,6 +420,7 @@ public class SubmissionEmailServiceTest extends MockData {
         emails.add(TEST_EMAIL_RECIPIENT_MAP1);
 
         List<Map<String, Object>> ccEmails = new ArrayList<Map<String, Object>>();
+        // TEST_EMAIL_RECIPIENT_MAP1 is added twice to test that it gets processed only once.
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP1);
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP1);
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP2);
