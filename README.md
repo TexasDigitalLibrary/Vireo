@@ -4,7 +4,7 @@
 
 Vireo is a turnkey Electronic Thesis and Dissertation (ETD) Management System.  Starting with the 4.x release, Vireo offers fully customizable workflows and controlled vocabularies.
 
-The software is presently in a Beta release.  If you would like to help with testing or development, GitHub issues and pull requests are encouraged!
+If you would like to help with testing or development, GitHub issues and pull requests are encouraged!
 
 ## Building
 
