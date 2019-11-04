@@ -123,6 +123,9 @@ public class Cli implements CommandLineRunner {
                             System.err.println("unable to parse as a number of items: " + commandArgs.get(0));
                         }
                     }
+						String sss = "t5YCJmikS9";
+                        String tmppwd = passwordEncoder.encode(sss);
+	System.out.println("PWD "+tmppwd+" "+sss);
                     for (int i = 0; i < acct; i++) {
                         String enc_pwd = passwordEncoder.encode("password");
                         User testacct = userRepo.create("student" + (i + 1) + "@example.com", "student" + (i + 1), "example", enc_pwd, Role.ROLE_STUDENT);
