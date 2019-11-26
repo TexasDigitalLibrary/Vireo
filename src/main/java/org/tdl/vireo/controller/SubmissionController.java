@@ -951,6 +951,7 @@ public class SubmissionController {
         assetService.write(file.getBytes(), uri);
         JsonNode fileInfo = assetService.getAssetFileInfo(uri);
         actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") uploaded");
+        System.gc();
         return new ApiResponse(SUCCESS, uri);
     }
 
