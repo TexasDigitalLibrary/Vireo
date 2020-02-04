@@ -30,7 +30,8 @@ vireo.directive("submissiondialog", function($anchorScroll, $location) {
             };
 
             $scope.jumpToUploadFiles = function() {
-                $anchorScroll('upload-files');
+                $location.hash('upload-files');
+                $anchorScroll();
             };
         }
     };
