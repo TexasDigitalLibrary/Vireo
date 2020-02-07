@@ -9,6 +9,9 @@ security.basic.enabled: false
 
 # TODO: determine if these are required
 multipart:
+  enabled: true
+  location: ${java.io.tmpdir}
+  fileSizeThreshold: 0
   # File size limit
   maxFileSize: 100Mb
   # Total request size for a multipart/form-data
@@ -19,6 +22,9 @@ spring:
   profiles.active: ${profile}
   template.cache: false
   http.multipart:
+    enabled: true
+    location: ${java.io.tmpdir}
+    fileSizeThreshold: 0
     maxFileSize: 20MB
     maxRequestSize: 20MB
 
