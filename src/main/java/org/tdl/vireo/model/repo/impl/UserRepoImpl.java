@@ -74,7 +74,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     public void delete(User user) {
         namedSearchFilterGroupRepo.delete(user.getActiveFilter());
         userRepo.delete(user.getId());
-        simpMessagingTemplate.convertAndSend("/channel/user/delete");
+        simpMessagingTemplate.convertAndSend("/channel/user/delete", new ApiResponse(SUCCESS));
     }
 
     @Override

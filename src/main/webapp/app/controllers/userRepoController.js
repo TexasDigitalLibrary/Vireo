@@ -1,4 +1,4 @@
-vireo.controller('UserRepoController', function ($controller, $location, $q, $scope, $timeout, User, UserRepo, UserService) {
+vireo.controller('UserRepoController', function ($controller, $location, $scope, $timeout, User, UserRepo, UserService) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
