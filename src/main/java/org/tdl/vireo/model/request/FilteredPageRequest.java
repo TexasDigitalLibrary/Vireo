@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

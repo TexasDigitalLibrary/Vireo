@@ -35,12 +35,12 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
 
     @Override
     public User create(String email, String firstName, String lastName, Role role) {
-        return saveAndAddSettings(userRepo.save(new User(email, firstName, lastName, role)));
+        return saveAndAddSettings(userRepo.create(new User(email, firstName, lastName, role)));
     }
 
     @Override
     public User create(String email, String firstName, String lastName, String password, Role role) {
-        return saveAndAddSettings(userRepo.save(new User(email, firstName, lastName, password, role)));
+        return saveAndAddSettings(userRepo.create(new User(email, firstName, lastName, password, role)));
     }
 
     private User saveAndAddSettings(User user) {
@@ -53,7 +53,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
         user.setFilterColumns(defaultFiltersService.getDefaultFilter());
         user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
-        return userRepo.save(user);
+        return userRepo.update(user);
     }
 
     @Override
