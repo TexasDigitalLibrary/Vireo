@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.model.request.FilteredPageRequest;
 
 import edu.tamu.weaver.auth.annotation.WeaverCredentials;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
@@ -50,6 +51,12 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_REVIEWER')")
     public ApiResponse allUsers() {
         return new ApiResponse(SUCCESS, userRepo.findAll());
+    }
+
+    @RequestMapping("/page")
+    @PreAuthorize("hasRole('ROLE_REVIEWER')")
+    public ApiResponse page(@RequestBody FilteredPageRequest filteredPageRequest) {
+        return new ApiResponse(SUCCESS, userRepo.findAll(filteredPageRequest.getUserSpecification(), filteredPageRequest.getPageRequest()));
     }
 
     @RequestMapping("/assignable")

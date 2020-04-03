@@ -1,16 +1,30 @@
-vireo.repo("UserRepo", function UserRepo(User, WsApi) {
+vireo.repo("UserRepo", function UserRepo($timeout, TableFactory, User, WsApi) {
 
     var userRepo = this;
 
-    userRepo.getAllByRole = function(roles) {
-        var userList = [];
-        angular.forEach(userRepo.getAll(), function(user) {
-            if(roles.indexOf(user.role) != -1) {
-                userList.push(user);
-            }
-        });
-        return userList;
+    userRepo.getPageSettings = function () {
+        return table.getPageSettings();
     };
+
+    userRepo.getTableParams = function () {
+        return table.getTableParams();
+    };
+
+    userRepo.fetchPage = function (pageSettings) {
+        angular.extend(userRepo.mapping.page, {
+            'data': pageSettings ? pageSettings : table.getPageSettings()
+        });
+        return WsApi.fetch(userRepo.mapping.page);
+    };
+
+    var table = TableFactory.buildTable({
+        pageNumber: sessionStorage.getItem('users-page') ? sessionStorage.getItem('users-page') : 1,
+        pageSize: sessionStorage.getItem('users-size') ? sessionStorage.getItem('users-size') : 10,
+        filters: {},
+        counts: [5, 10, 25, 50, 100],
+        name: 'users',
+        repo: userRepo
+    });
 
     userRepo.getAssignableUsers = function(roles) {
         var assignable = [];
@@ -25,6 +39,27 @@ vireo.repo("UserRepo", function UserRepo(User, WsApi) {
         });
         return assignable;
     };
+
+    WsApi.listen(userRepo.mapping.createListen).then(null, null, function (response) {
+        $timeout(function () {
+            userRepo.reset();
+            table.getTableParams().reload();
+        }, 250);
+    });
+
+    WsApi.listen(userRepo.mapping.updateListen).then(null, null, function (response) {
+        $timeout(function () {
+            userRepo.reset();
+            table.getTableParams().reload();
+        }, 250);
+    });
+
+    WsApi.listen(userRepo.mapping.deleteListen).then(null, null, function (response) {
+        $timeout(function () {
+            userRepo.reset();
+            table.getTableParams().reload();
+        }, 250);
+    });
 
     return userRepo;
 
