@@ -35,10 +35,6 @@ describe("service: userRepo", function () {
     });
 
     describe("Are the repo methods defined", function () {
-        it("getAllByRole should be defined", function () {
-            expect(repo.getAllByRole).toBeDefined();
-            expect(typeof repo.getAllByRole).toEqual("function");
-        });
         it("getAssignableUsers should be defined", function () {
             expect(repo.getAssignableUsers).toBeDefined();
             expect(typeof repo.getAssignableUsers).toEqual("function");
@@ -46,14 +42,6 @@ describe("service: userRepo", function () {
     });
 
     describe("Do the repo methods work as expected", function () {
-        it("getAllByRole should return an array", function () {
-            var response;
-            var roles = [ "mock" ];
-
-            response = repo.getAllByRole(roles);
-
-            // TODO
-        });
         it("getAssignableUsers should return an array", function () {
             var response;
             var roles = [ "mock" ];

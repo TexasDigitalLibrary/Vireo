@@ -1,6 +1,9 @@
 package org.tdl.vireo.model.repo.impl;
 
+import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
@@ -11,6 +14,7 @@ import org.tdl.vireo.service.DefaultFiltersService;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
 
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
 
 public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> implements UserRepoCustom {
 
@@ -26,14 +30,17 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     @Autowired
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
+
     @Override
     public User create(String email, String firstName, String lastName, Role role) {
-        return saveAndAddSettings(userRepo.save(new User(email, firstName, lastName, role)));
+        return saveAndAddSettings(userRepo.create(new User(email, firstName, lastName, role)));
     }
 
     @Override
     public User create(String email, String firstName, String lastName, String password, Role role) {
-        return saveAndAddSettings(userRepo.save(new User(email, firstName, lastName, password, role)));
+        return saveAndAddSettings(userRepo.create(new User(email, firstName, lastName, password, role)));
     }
 
     private User saveAndAddSettings(User user) {
@@ -46,13 +53,28 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
         user.setFilterColumns(defaultFiltersService.getDefaultFilter());
         user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
-        return userRepo.save(user);
+        return userRepo.update(user);
+    }
+
+    @Override
+    public User create(User user) {
+        user = userRepo.save(user);
+        simpMessagingTemplate.convertAndSend("/channel/user/create", new ApiResponse(SUCCESS, user));
+        return user;
+    }
+
+    @Override
+    public User update(User user) {
+        user = userRepo.save(user);
+        simpMessagingTemplate.convertAndSend("/channel/user/update", new ApiResponse(SUCCESS, user));
+        return user;
     }
 
     @Override
     public void delete(User user) {
         namedSearchFilterGroupRepo.delete(user.getActiveFilter());
         userRepo.delete(user.getId());
+        simpMessagingTemplate.convertAndSend("/channel/user/delete", new ApiResponse(SUCCESS));
     }
 
     @Override

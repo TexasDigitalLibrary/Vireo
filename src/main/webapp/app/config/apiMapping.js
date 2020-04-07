@@ -932,6 +932,23 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'user',
             'method': 'update'
+        },
+        page: {
+            'endpoint': '/private/queue',
+            'controller': 'user',
+            'method': 'page'
+        },
+        createListen: {
+            'endpoint': '/channel',
+            'controller': 'user/create'
+        },
+        updateListen: {
+            'endpoint': '/channel',
+            'controller': 'user/update',
+        },
+        deleteListen: {
+            'endpoint': '/channel',
+            'controller': 'user/delete'
         }
     },
     UserSettings: {
