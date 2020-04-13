@@ -94,6 +94,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
                 $scope.datepickerOptions.minViewMode = "month";
                 $scope.datepickerOptions.minMode = "month";
+                $scope.datepickerOptions.maxViewMode = "month";
+                $scope.datepickerOptions.maxMode = "month";
 
             }
 
