@@ -1,5 +1,5 @@
 <div class="custom-actions">
-  <div ng-repeat="cav in box.submission.customActionValues">
+  <div ng-repeat="cav in box.submission.customActionValues | orderBy:'definition.position'">
 	<label>
 	  <input type="checkbox" value="" ng-model="cav.value" ng-change="box.updateCustomActionValue(cav)">{{cav.definition.label}}
 	</label>
