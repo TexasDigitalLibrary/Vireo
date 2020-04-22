@@ -67,7 +67,6 @@ public class TemplateUtility {
                 .replaceAll("\\{" + STUDENT_URL + "\\}", url + "/submission/" + submission.getId() + "/view")
                 .replaceAll("\\{" + SUBMISSION_URL + "\\}", url + "/submission/" + submission.getId())
                 .replaceAll("\\{" + ADVISOR_URL + "\\}", submission.getAdvisorReviewURL())
-                .replaceAll("\\{" + DEPOSIT_URI + "\\}", submission.getDepositURL())
 
                 .replaceAll("\\{" + DOCUMENT_TITLE + "\\}", findValue("dc.title", submission))
                 .replaceAll("\\{" + SUBMISSION_TYPE + "\\}", findValue("submission_type", submission));
@@ -78,6 +77,10 @@ public class TemplateUtility {
                 // and a user must be registered already to have a submission.
                 //.replaceAll("\\{" + REGISTRATION_URL + "\\}", REGISTRATION_URL);
 
+        //This template is often used before a DepositURL is set for the particular submission so we should check for null values
+        if (submission.getDepositURL() != null) {
+            compiled = compiled.replaceAll("\\{" + DEPOSIT_URI + "\\}", submission.getDepositURL());
+        }
 
         if (submission.getSubmissionStatus() != null) {
             compiled = compiled.replaceAll("\\{" + SUBMISSION_STATUS + "\\}", submission.getSubmissionStatus().getName());

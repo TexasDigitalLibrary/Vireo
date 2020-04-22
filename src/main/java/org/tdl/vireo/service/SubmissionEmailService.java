@@ -92,6 +92,7 @@ public class SubmissionEmailService {
 
         List<FieldValue> advisorList = submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
         SimpleMailMessage smm = new SimpleMailMessage();
+        smm.setFrom("vireo@tdl.org");
         List<String> recipientList = new ArrayList<>();
         advisorList.forEach(afv -> {
             for (String afvcontact : afv.getContacts()) {
@@ -135,6 +136,7 @@ public class SubmissionEmailService {
             String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
             StringBuilder recipientEmails = new StringBuilder();
             SimpleMailMessage smm = new SimpleMailMessage();
+            smm.setFrom("vireo@tdl.org");
 
             List<String> recipientEmailAddresses = buildEmailRecipients("recipientEmails", submission, data);
             smm.setTo(recipientEmailAddresses.toArray(new String[0]));
@@ -169,6 +171,7 @@ public class SubmissionEmailService {
      */
     public void sendWorkflowEmails(User user, Submission submission) {
         SimpleMailMessage smm = new SimpleMailMessage();
+        smm.setFrom("vireo@tdl.org");
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
         Map<Long, List<String>> recipientLists = new HashMap<>();
