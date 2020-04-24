@@ -703,6 +703,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         SidebarService.addBoxes([$scope.activeDocumentBox, $scope.submissionStatusBox, $scope.flaggedFieldProfilesBox, $scope.customActionsBox]);
 
+    }).catch(function(errorMessage) {
+        // handle errors
+        console.log(errorMessage);
+        $location.path("/admin/viewError");
     });
 
 });
