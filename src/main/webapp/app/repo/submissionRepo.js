@@ -15,7 +15,7 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileService, Submission
                 if (apiRes.meta.status === "SUCCESS") {
                     resolve(new Submission(apiRes.payload.Submission));
                 } else {
-                    reject();
+                    reject("A submission with the ID " + id + " does not exist.");
                 }
             });
         });
