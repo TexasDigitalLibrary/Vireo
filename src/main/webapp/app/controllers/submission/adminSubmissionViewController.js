@@ -110,7 +110,18 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             data: "Submitter"
           })] : [];
           addCommentModal.ccRecipientEmail = '';
-          addCommentModal.ccRecipientEmails = userSettings.notes_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails() : [];
+
+          addCommentModal.ccRecipientEmails = [];
+          for(var i in $scope.submission.getContactEmails()) {
+              var contact_email = $scope.submission.getContactEmails()[i];
+              if((userSettings.notes_email_student_by_default === "true")&&(contact_email.type==="SUBMITTER")){
+                  addCommentModal.ccRecipientEmails.push(contact_email);
+              }
+              if((userSettings.notes_cc_student_advisor_by_default === "true")&&(contact_email.type==="ADVISOR")){
+                  addCommentModal.ccRecipientEmails.push(contact_email);
+              }
+          }
+
           addCommentModal.sendEmailToRecipient = (addCommentModal.commentVisibility === "public" || userSettings.notes_email_student_by_default === "true") || (userSettings.notes_cc_student_advisor_by_default === "true");
           addCommentModal.sendEmailToCCRecipient = userSettings.notes_cc_student_advisor_by_default === "true";
           addCommentModal.subject = "";
@@ -379,7 +390,18 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                 data: "Submitter"
               })] : [];
             $scope.addFileData.ccRecipientEmail = '';
-            $scope.addFileData.ccRecipientEmails = userSettings.attachment_cc_student_advisor_by_default === "true" ? $scope.submission.getContactEmails() : [];
+
+            $scope.addFileData.ccRecipientEmails = [];
+            for(var i in $scope.submission.getContactEmails()) {
+                var contact_email = $scope.submission.getContactEmails()[i];
+                if((userSettings.attachment_email_student_by_default === "true")&&(contact_email.type==="SUBMITTER")){
+                    $scope.addFileData.ccRecipientEmails.push(contact_email);
+                }
+                if((userSettings.attachment_cc_student_advisor_by_default === "true")&&(contact_email.type==="ADVISOR")){
+                    $scope.addFileData.ccRecipientEmails.push(contact_email);
+                }
+            }
+
             $scope.addFileData.sendEmailToRecipient = (userSettings.attachment_email_student_by_default === "true") || (userSettings.attachment_cc_student_advisor_by_default === "true");
             $scope.addFileData.sendEmailToCCRecipient = userSettings.attachment_cc_student_advisor_by_default === "true";
             $scope.addFileData.subject = "";
