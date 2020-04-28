@@ -186,7 +186,7 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
                 resultingWorkflowStep = savedWorkflowStep;
 
             } else {
-                Boolean overridable = pendingWorkflowStep.getOverrideable();
+                Boolean overrideable = pendingWorkflowStep.getOverrideable();
                 String name = pendingWorkflowStep.getName();
 
                 List<Note> originalNotes = new ArrayList<Note>();
@@ -209,7 +209,7 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
                     aggregateFieldProfiles.add(fp);
                 }
 
-                persistedWorkflowStep.setOverrideable(overridable);
+                persistedWorkflowStep.setOverrideable(overrideable);
                 persistedWorkflowStep.setName(name);
 
                 persistedWorkflowStep.setOriginalNotes(originalNotes);
