@@ -5,6 +5,7 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +59,15 @@ public class LookAndFeelController {
 
         assetService.write(file.getBytes(), path);
 
+        ManagedConfiguration configuration = configurationRepo.findByName(setting);
+        if (configuration != null) {
+            executeLogoReset(setting);
+        }
         ManagedConfiguration newLogoConfig = configurationRepo.create(setting, path, "lookAndFeel");
 
+        //browsers cache the logo images by their name, so make the name inconsequentially different on update
+        //so they'll show the new image without requiring a refresh
+        newLogoConfig.setValue(newLogoConfig.getValue()+"?"+RandomStringUtils.randomAlphanumeric(6));
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, newLogoConfig));
         return new ApiResponse(SUCCESS, newLogoConfig);
     }
@@ -67,11 +75,14 @@ public class LookAndFeelController {
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping("/logo/reset/{setting}")
     public ApiResponse resetLogo(@PathVariable String setting) {
-        logger.info("Resetting logo " + setting);
-        Configuration systemLogo = configurationRepo.getByNameAndType(setting, lookAndFeelType);
-        Configuration defaultLogoConfig = configurationRepo.reset((ManagedConfiguration) systemLogo);
-        simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, defaultLogoConfig));
-        return new ApiResponse(SUCCESS, defaultLogoConfig);
+        return new ApiResponse(SUCCESS, executeLogoReset(setting));
     }
 
+    protected Configuration executeLogoReset(String setting) {
+	logger.info("Resetting logo " + setting);
+	Configuration systemLogo = configurationRepo.getByNameAndType(setting, lookAndFeelType);
+	Configuration defaultLogoConfig = configurationRepo.reset((ManagedConfiguration) systemLogo);
+        simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, defaultLogoConfig));
+        return defaultLogoConfig;
+    }
 }
