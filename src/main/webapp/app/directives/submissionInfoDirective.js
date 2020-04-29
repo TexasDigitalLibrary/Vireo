@@ -139,6 +139,8 @@ vireo.directive("submissionInfo", function () {
                 $scope.datepickerOptions.dateDisabled = checkDisabled;
                 $scope.datepickerOptions.minViewMode = "month";
                 $scope.datepickerOptions.minMode = "month";
+                $scope.datepickerOptions.maxViewMode = "month";
+                $scope.datepickerOptions.maxMode = "month";
             }
 
             $scope.cancel = function (fieldValue) {
