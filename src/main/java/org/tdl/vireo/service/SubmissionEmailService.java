@@ -34,7 +34,7 @@ import org.tdl.vireo.utility.TemplateUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import edu.tamu.weaver.email.service.EmailSender;
+import edu.tamu.weaver.email.service.WeaverEmailService;
 
 /**
  * Provide e-mail sending specific to the Submission process.
@@ -56,7 +56,7 @@ public class SubmissionEmailService {
     private ActionLogRepo actionLogRepo;
 
     @Autowired
-    private EmailSender emailSender;
+    private WeaverEmailService emailSender;
 
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
@@ -87,32 +87,34 @@ public class SubmissionEmailService {
             while (emailWorkflowRuleIterator.hasNext()) {
                 EmailWorkflowRule emailWorkflowRule = emailWorkflowRuleIterator.next();
                 EmailTemplate template = emailWorkflowRule.getEmailTemplate();
-        String subject = templateUtility.compileString(template.getSubject(), submission);
-        String content = templateUtility.compileTemplate(template, submission);
+                String subject = templateUtility.compileString(template.getSubject(), submission);
+                String content = templateUtility.compileTemplate(template, submission);
 
-        List<FieldValue> advisorList = submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
-        SimpleMailMessage smm = new SimpleMailMessage();
-        List<String> recipientList = new ArrayList<>();
-        advisorList.forEach(afv -> {
-            for (String afvcontact : afv.getContacts()) {
-                if (!recipientList.contains(afvcontact)) {
-                    recipientList.add(afvcontact);
-                }
-            }
-        });
+                List<FieldValue> advisorList = submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
+                SimpleMailMessage smm = new SimpleMailMessage();
+                List<String> recipientList = new ArrayList<>();
+                advisorList.forEach(afv -> {
+                  for (String afvcontact : afv.getContacts()) {
+                      if (!recipientList.contains(afvcontact)) {
+                          recipientList.add(afvcontact);
+                      }
+                  }
+                });
 
                 if (!recipientList.isEmpty()) {
-            smm.setTo(recipientList.toArray(new String[0]));
-            smm.setSubject(subject);
-            smm.setText(content);
+                    //FROM email address not utilized by WeaverEmailService unless explicitly set in SimpleMailMessage - likely needs a fix in WeaverEmailService.java
+                    smm.setFrom(emailSender.getFrom());
+                    smm.setTo(recipientList.toArray(new String[0]));
+                    smm.setSubject(subject);
+                    smm.setText(content);
 
-            emailSender.send(smm);
+                    emailSender.send(smm);
                     emailed = true;
-        }
+                }
             }
 
             if (emailed) {
-        actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
+                actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
             } else {
                 actionLogRepo.createPublicLog(submission, user, "No Advisor review emails to generate.");
             }
@@ -152,6 +154,7 @@ public class SubmissionEmailService {
                 smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
 
+            smm.setFrom(emailSender.getFrom());
             smm.setSubject(subject);
             smm.setText(templatedMessage);
 
@@ -205,6 +208,7 @@ public class SubmissionEmailService {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
                         }
 
+                        smm.setFrom(emailSender.getFrom());
                         smm.setSubject(subject);
                         smm.setText(content);
 
