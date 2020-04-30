@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.persistence.Entity;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tdl.vireo.exception.UnsupportedFormatterException;
+import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -83,10 +85,21 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                         } else if (valueAsObject instanceof Date) {
                             Date date = (Date) valueAsObject;
                             value = simpleDateFormat.format(date);
+                        } else if (valueAsObject instanceof Set && ((Set<Object>) valueAsObject).stream().allMatch(o -> o instanceof CustomActionValue)) {
+                            StringBuilder sb = new StringBuilder();
+                            ((Set<Object>) valueAsObject).forEach(o -> {
+                                CustomActionValue customActionValue = (CustomActionValue) o;
+                                if (customActionValue.getValue()) {
+                                    sb.append("☑ ");
+                                } else {
+                                    sb.append("☐ ");
+                                }
+                                sb.append(customActionValue.getDefinition().getLabel()+"\n");
+                            });
+                            value = sb.toString();
                         } else {
                             value = valueAsObject.toString();
                         }
-
                         row.put(column.getTitle(), value.toString());
                     } catch (Exception exception) {
                         logger.warn("Unable to get value from " + String.join(",", valuePath));
