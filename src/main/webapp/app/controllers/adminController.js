@@ -9,7 +9,7 @@ vireo.controller('AdminController', function ($controller, $location, $scope) {
     };
 
     $scope.isView = function () {
-        return ($location.path().indexOf("/admin/view") >= 0 && $location.path().indexOf("Error") == 0);
+        return ($location.path().indexOf("/admin/view") >= 0 && $location.path().indexOf("Error") == -1);
     };
 
     $scope.isViewError = function () {
