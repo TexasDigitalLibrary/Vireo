@@ -3,7 +3,7 @@
   <h4 class="dialog-header">Requirements Checklist:</h4>
   <div class="dialog-content" ng-class="{'dialog-open': show[0] === '-', 'dialog-closed': show[0] === '+'}">
     <ul class="dialog-actions-list">
-      <li ng-repeat="customAction in submission.customActionValues" ng-if="customAction.definition.isStudentVisible" class="cutom-action-label">
+      <li ng-repeat="customAction in submission.customActionValues | orderBy:'definition.position'" ng-if="customAction.definition.isStudentVisible" class="cutom-action-label">
         <input type="checkbox" ng-model="customAction.value" disabled/>
         <span>{{customAction.definition.label}}</span>
       </li>
