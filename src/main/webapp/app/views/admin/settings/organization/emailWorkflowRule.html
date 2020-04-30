@@ -37,8 +37,8 @@
 				</span>
 				<td ng-click="changeEmailWorkflowRuleActivationWorking=true;changeEmailWorkflowRuleActivation(rule, changeEmailWorkflowRuleActivationWorking);">
 					<span ng-if="changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-refresh spinning"></span>
-					<span ng-if="rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-pause"></span>
-					<span ng-if="!rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-play"></span>
+					<span ng-if="!rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-pause"></span>
+					<span ng-if="rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-play"></span>
 				</td>
 			</tr>
 		</tbody>

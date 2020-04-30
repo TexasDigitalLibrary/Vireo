@@ -463,6 +463,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var datepickerOptions = {
             minMode: "month",
             minViewMode: "month",
+            maxViewMode: "month",
+            maxMode: "month",
             dateDisabled: checkDisabled,
             customClass: function (dateAndMode) {
                 if (checkDisabled(dateAndMode)) return "disabled";
