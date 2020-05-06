@@ -120,4 +120,17 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
         return result;
     };
 
+    $scope.isEmbargo = function(fieldValue) {
+        return (fieldValue.fieldPredicate.value=='default_embargos' || fieldValue.fieldPredicate.value=='proquest_embargos');
+    };
+
+    $scope.sortEmbargos = function(word) {
+        var embargo = null;
+        angular.forEach($scope.embargoes, function(potentialEmbargo) {
+            if (Number(word.identifier) === potentialEmbargo.id) {
+                embargo = potentialEmbargo;
+            }
+        });
+        return embargo.position;
+    };
 });
