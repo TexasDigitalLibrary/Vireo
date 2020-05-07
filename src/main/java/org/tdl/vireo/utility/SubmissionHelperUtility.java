@@ -515,17 +515,17 @@ public class SubmissionHelperUtility {
     }
 
     public String getDegreeCollege() {
-        Optional<String> degreeCollege = getFieldValueIdentifierByPredicateValue("thesis.degree.college");
+        Optional<String> degreeCollege = getFieldValueByPredicateValue("thesis.degree.college");
         return degreeCollege.isPresent() ? degreeCollege.get() : "";
     }
 
     public String getDegreeSchool() {
-        Optional<String> degreeSchool = getFieldValueIdentifierByPredicateValue("thesis.degree.school");
+        Optional<String> degreeSchool = getFieldValueByPredicateValue("thesis.degree.school");
         return degreeSchool.isPresent() ? degreeSchool.get() : "";
     }
 
     public String getDegreeProgram() {
-        Optional<String> degreeProgram = getFieldValueIdentifierByPredicateValue("thesis.degree.program");
+        Optional<String> degreeProgram = getFieldValueByPredicateValue("thesis.degree.program");
         return degreeProgram.isPresent() ? degreeProgram.get() : "";
     }
 
