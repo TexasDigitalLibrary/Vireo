@@ -34,14 +34,14 @@ public class EmbargoRepoImpl extends AbstractWeaverOrderedRepoImpl<Embargo, Emba
     @Transactional
     public void reorder(Long src, Long dest, EmbargoGuarantor guarantor) {
         orderedEntityService.reorder(Embargo.class, src, dest, "guarantor", guarantor);
-        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, REORDER, embargoRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, REORDER, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
     }
 
     @Override
     @Transactional
     public void sort(String column, EmbargoGuarantor guarantor) {
         orderedEntityService.sort(Embargo.class, column, "guarantor", guarantor);
-        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, SORT, embargoRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, SORT, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
     }
 
     @Override
