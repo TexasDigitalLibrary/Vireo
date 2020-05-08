@@ -26,7 +26,15 @@ public class EmbargoRepoImpl extends AbstractWeaverOrderedRepoImpl<Embargo, Emba
     @Override
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
         Embargo embargo = new Embargo(name, description, duration, guarantor, isActive);
-        embargo.setPosition(embargoRepo.count() + 1);
+
+        Long embargoPosition = 1L;
+        if (embargoRepo.count() > 0) {
+            Embargo lastEmbargo = embargoRepo.findFirst1ByGuarantorOrderByPositionDesc(guarantor);
+            if (lastEmbargo != null) {
+                embargoPosition = lastEmbargo.getPosition()+1;
+            }
+        }
+        embargo.setPosition(embargoPosition);
         return super.create(embargo);
     }
 
