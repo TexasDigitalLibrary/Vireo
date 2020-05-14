@@ -19,5 +19,5 @@ public interface EmbargoRepo extends WeaverOrderedRepo<Embargo>, EntityControlle
 
     public List<Embargo> findAllByOrderByGuarantorAscPositionAsc();
 
-
+    public Embargo findFirst1ByGuarantorOrderByPositionDesc(EmbargoGuarantor guarantor);
 }
