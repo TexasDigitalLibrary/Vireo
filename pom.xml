@@ -43,11 +43,14 @@
   <repositories>
     <repository>
       <id>tamu-releases</id>
-      <url>https://maven.library.tamu.edu/content/repositories/releases</url>
+      <url>https://artifacts.library.tamu.edu/repository/maven-releases/</url>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
     </repository>
     <repository>
       <id>tamu-snapshots</id>
-      <url>https://maven.library.tamu.edu/content/repositories/snapshots</url>
+      <url>https://artifacts.library.tamu.edu/repository/maven-snapshots/</url>
     </repository>
   </repositories>
 
