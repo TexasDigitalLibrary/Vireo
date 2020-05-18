@@ -5,7 +5,9 @@ vireo.directive('dictionaryWords', function ($location, InputTypes, FieldValue, 
         scope: {
             fieldValues: "=",
             fieldProfile: "=",
-            showVocabularyWord: "&?"
+            showVocabularyWord: "&?",
+            sortEmbargosWrap: "&?",
+            isEmbargoWrap: "&?"
         },
         link: function ($scope) {
 
@@ -21,6 +23,13 @@ vireo.directive('dictionaryWords', function ($location, InputTypes, FieldValue, 
                 }
 
                 return true;
+            };
+
+            $scope.orderVocabularyWords = function(word) {
+                if (angular.isDefined($scope.isEmbargoWrap) && angular.isDefined($scope.sortEmbargosWrap) && $scope.isEmbargoWrap()($scope.fieldProfile)) {
+                    return $scope.sortEmbargosWrap()(word);
+                }
+                return word.identifier;
             };
 
         }
