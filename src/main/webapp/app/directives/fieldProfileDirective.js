@@ -7,6 +7,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             profile: "=",
             configuration: "=",
             showVocabularyWord: "&?",
+            sortEmbargos: "&?",
+            isEmbargo: "&?",
             fpi: "="
         },
         link: function ($scope) {
@@ -368,6 +370,13 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 }
 
                 return true;
+            };
+
+            $scope.orderVocabularyWords = function(word) {
+                if (angular.isDefined($scope.isEmbargo) && angular.isDefined($scope.sortEmbargos) && $scope.isEmbargo()($scope.profile)) {
+                    return $scope.sortEmbargos()(word);
+                }
+                return word.identifier;
             };
 
             var refreshFieldValues = function () {
