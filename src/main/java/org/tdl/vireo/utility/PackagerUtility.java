@@ -22,12 +22,14 @@ public class PackagerUtility {
     @Autowired
     private FormatterUtility formatterUtility;
 
+    private String TEMPLATE_KEY = "template";
+
     public ExportPackage packageExport(Packager<?> packager, Submission submission) throws Exception {
-        Map<String, String> manifest = formatterUtility.renderManifestMap(packager.getFormatter(), submission);
-        if (manifest.isEmpty()) {
+        Map<String, String> formatterMap = formatterUtility.renderManifestMap(packager.getFormatter(), submission);
+        if (formatterMap.isEmpty() || !formatterMap.containsKey(TEMPLATE_KEY)) {
             throw new UnsupportedFormatterException("Required manifest not found!");
         }
-        return packager.packageExport(submission, manifest);
+        return packager.packageExport(submission, formatterMap.get(TEMPLATE_KEY));
     }
 
     public ExportPackage packageExport(Packager<?> packager, Submission submission, List<SubmissionListColumn> columns) {
