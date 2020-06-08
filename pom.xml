@@ -19,6 +19,7 @@
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
     <version>2.x-WRO-INIT-SNAPSHOT</version>
+    <relativePath></relativePath>
   </parent>
 
   <properties>
@@ -80,6 +81,12 @@
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>reporting</artifactId>
+      <version>2.x-WRO-INIT-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.tamu.weaver</groupId>
+      <artifactId>email</artifactId>
       <version>2.x-WRO-INIT-SNAPSHOT</version>
     </dependency>
 
