@@ -5,7 +5,7 @@ import java.util.concurrent.ExecutionException;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
@@ -17,7 +17,7 @@ import edu.tamu.weaver.auth.model.Credentials;
 
 public interface SubmissionRepoCustom {
 
-    public Submission create(User submitter, Organization organization, SubmissionStatus submissionStatus, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsExcception;
+    public Submission create(User submitter, Organization organization, SubmissionStatus submissionStatus, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsException;
 
     public Submission update(Submission submission);
 
