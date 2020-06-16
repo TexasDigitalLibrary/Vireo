@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.exception.DepositException;
-import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.FieldValue;
@@ -203,7 +203,7 @@ public class SubmissionController {
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials,
-      @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsExcception {
+      @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsException {
     Submission submission = submissionRepo.create(user, organizationRepo.read(Long.valueOf(data.get("organizationId"))),
         submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME), credentials);
     actionLogRepo.createPublicLog(submission, user, "Submission created.");
