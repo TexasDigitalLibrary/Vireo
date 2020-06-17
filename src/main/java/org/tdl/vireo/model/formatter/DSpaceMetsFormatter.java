@@ -58,6 +58,9 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
             case SUBMISSION_TYPE:
                 context.setVariable(key.name(), submissionHelperUtility.getSubmissionType());
                 break;
+            case DEPOSIT_URL:
+                context.setVariable(key.name(), submission.getDepositURL());
+                break;
             case SUPPLEMENTAL_AND_SOURCE_DOCUMENT_FIELD_VALUES:
                 context.setVariable(key.name(), submission.getSupplementalAndSourceDocumentFieldValues());
                 break;
