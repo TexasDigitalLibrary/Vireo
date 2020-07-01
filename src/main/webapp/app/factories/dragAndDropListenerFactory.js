@@ -106,18 +106,6 @@ vireo.factory('DragAndDropListenerFactory', function($q, ModalService) {
                     var isSingleSorted = (listener.model.length === event.source.sortableScope.modelValue.length);
                     var src = event.source.index + 1;
                     var dest = event.dest.index + 1;
-                    if(!isSingleSorted) {
-                        var offset = 0;
-                        for(var i in listener.model) {
-                            var model = listener.model[i];
-                            if(model.id === startingObj.id) {
-                                offset = i;
-                                break;
-                            }
-                        }
-                        src = listener.model[parseInt(event.source.index) + parseInt(offset)].position;
-                        dest = listener.model[parseInt(event.dest.index) + parseInt(offset)].position;
-                    }
                     updateRequest();
                     listener.reorder(src, dest).then(function(res) {
                         var message = angular.fromJson(res.body);

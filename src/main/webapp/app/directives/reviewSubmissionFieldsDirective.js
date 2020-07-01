@@ -8,6 +8,8 @@ vireo.directive('reviewsubmissionsfields', function ($location, InputTypes, Fiel
             hideLinks: "=?",
             setActiveStep: "&",
             showVocabularyWord: "&?",
+            sortEmbargos: "&?",
+            isEmbargo: "&?",
             validate: "=?"
         },
         controller: function ($scope) {
@@ -67,6 +69,14 @@ vireo.directive('reviewsubmissionsfields', function ($location, InputTypes, Fiel
 
             $scope.jumpToStep = function (wfs, hash) {
                 $scope.$parent.setActiveStep(wfs, hash);
+            };
+
+            $scope.isEmbargoWrap = function(fieldValue) {
+                return $scope.isEmbargo()(fieldValue);
+            };
+
+            $scope.sortEmbargosWrap = function(word) {
+                return $scope.sortEmbargos()(word);
             };
 
         }

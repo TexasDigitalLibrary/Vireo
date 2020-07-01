@@ -1207,7 +1207,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
 
     @Test
-    public void testChildWorkflowStepNonOverrideableReplacedAfterParentWorkflowStepBecomesNonOverridable() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
+    public void testChildWorkflowStepNonOverrideableReplacedAfterParentWorkflowStepBecomesNonOverrideable() throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
@@ -1255,9 +1255,9 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
         parentWorkflowStep.setOverrideable(false);
 
-        WorkflowStep grandChildNonOverridableWorkflowStep = workflowStepRepo.update(parentWorkflowStep, grandChildOrganization);
+        WorkflowStep grandChildNonOverrideableWorkflowStep = workflowStepRepo.update(parentWorkflowStep, grandChildOrganization);
 
-        Long gcwsId = grandChildNonOverridableWorkflowStep.getId();
+        Long gcwsId = grandChildNonOverrideableWorkflowStep.getId();
 
         assertEquals("Wrong number of workflow steps!", 2, workflowStepRepo.count());
 
@@ -1275,18 +1275,18 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertTrue("Parent does not have workflow step!", parentOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
         assertTrue("Child does not have workflow step!", organization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
 
-        assertTrue("Grandchild does not have orginal workflow step!", grandChildOrganization.getOriginalWorkflowSteps().contains(grandChildNonOverridableWorkflowStep));
-        assertTrue("Grandchild does not have workflow step!", grandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverridableWorkflowStep));
-        assertTrue("Great grandchild does not have workflow step!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverridableWorkflowStep));
-        assertTrue("Another great grandchild does not have workflow step!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverridableWorkflowStep));
+        assertTrue("Grandchild does not have orginal workflow step!", grandChildOrganization.getOriginalWorkflowSteps().contains(grandChildNonOverrideableWorkflowStep));
+        assertTrue("Grandchild does not have workflow step!", grandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverrideableWorkflowStep));
+        assertTrue("Great grandchild does not have workflow step!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverrideableWorkflowStep));
+        assertTrue("Another great grandchild does not have workflow step!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverrideableWorkflowStep));
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         parentWorkflowStep.setOverrideable(false);
 
-        WorkflowStep childNonOverridableWorkflowStep = workflowStepRepo.update(parentWorkflowStep, organization);
+        WorkflowStep childNonOverrideableWorkflowStep = workflowStepRepo.update(parentWorkflowStep, organization);
 
-        grandChildNonOverridableWorkflowStep = workflowStepRepo.findOne(gcwsId);
+        grandChildNonOverrideableWorkflowStep = workflowStepRepo.findOne(gcwsId);
 
         parentWorkflowStep = workflowStepRepo.findOne(pwsId);
 
@@ -1301,49 +1301,49 @@ public class WorkflowStepTest extends AbstractEntityTest {
         assertTrue("Parent does not have workflow step!", parentOrganization.getOriginalWorkflowSteps().contains(parentWorkflowStep));
         assertTrue("Parent does not have workflow step!", parentOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
 
-        assertTrue("Child does not have original workflow step!", organization.getOriginalWorkflowSteps().contains(childNonOverridableWorkflowStep));
-        assertTrue("Child does not have workflow step!", organization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
+        assertTrue("Child does not have original workflow step!", organization.getOriginalWorkflowSteps().contains(childNonOverrideableWorkflowStep));
+        assertTrue("Child does not have workflow step!", organization.getAggregateWorkflowSteps().contains(childNonOverrideableWorkflowStep));
 
-        assertFalse("Grandchild still has orginal workflow step!", grandChildOrganization.getOriginalWorkflowSteps().contains(childNonOverridableWorkflowStep));
-        assertTrue("Grandchild does not have workflow step!", grandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
-        assertTrue("Great grandchild does not have workflow step!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
-        assertTrue("Another great grandchild does not have workflow step!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
+        assertFalse("Grandchild still has orginal workflow step!", grandChildOrganization.getOriginalWorkflowSteps().contains(childNonOverrideableWorkflowStep));
+        assertTrue("Grandchild does not have workflow step!", grandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverrideableWorkflowStep));
+        assertTrue("Great grandchild does not have workflow step!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverrideableWorkflowStep));
+        assertTrue("Another great grandchild does not have workflow step!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverrideableWorkflowStep));
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // should of deleted the workflow step the grandchild created when
-        // making it non overridable
+        // making it non overrideable
         assertEquals("Wrong number of workflow steps!", 2, workflowStepRepo.count());
 
         // parent would be the institution
         assertTrue("Parent does not have workflow step!", parentOrganization.getAggregateWorkflowSteps().contains(parentWorkflowStep));
         assertEquals("Parent has more than one workflow step!", 1, parentOrganization.getAggregateWorkflowSteps().size());
-        assertEquals("Parent workflow step is overridable!", true, parentOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
+        assertEquals("Parent workflow step is overrideable!", true, parentOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
 
         // child is the first organization created. set workflow step to non
-        // overridable after the granchild did
-        assertTrue("Child does not have workflow step!", organization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
+        // overrideable after the granchild did
+        assertTrue("Child does not have workflow step!", organization.getAggregateWorkflowSteps().contains(childNonOverrideableWorkflowStep));
         assertEquals("Child has more than one workflow step!", 1, organization.getAggregateWorkflowSteps().size());
-        assertEquals("Child workflow step is overridable!", false, organization.getAggregateWorkflowSteps().get(0).getOverrideable());
+        assertEquals("Child workflow step is overrideable!", false, organization.getAggregateWorkflowSteps().get(0).getOverrideable());
 
         // grandchild is the organization to first set workflow step to non
-        // overridable
-        assertTrue("Grandchild does not have child workflow step!", grandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
-        assertFalse("Grandchild still has grandchildchild workflow step!", grandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverridableWorkflowStep));
+        // overrideable
+        assertTrue("Grandchild does not have child workflow step!", grandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverrideableWorkflowStep));
+        assertFalse("Grandchild still has grandchildchild workflow step!", grandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverrideableWorkflowStep));
         assertEquals("Grandchild has more than one workflow step!", 1, grandChildOrganization.getAggregateWorkflowSteps().size());
-        assertEquals("Grandchild workflow step is overridable!", false, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
+        assertEquals("Grandchild workflow step is overrideable!", false, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
 
         // some additional children to check
-        assertTrue("Great grandchild does not have child workflow step!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
-        assertFalse("Great grandchild still has grandchildchild workflow step!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverridableWorkflowStep));
+        assertTrue("Great grandchild does not have child workflow step!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverrideableWorkflowStep));
+        assertFalse("Great grandchild still has grandchildchild workflow step!", greatGrandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverrideableWorkflowStep));
         assertEquals("Great grandchild has more than oneworkflow step!", 1, greatGrandChildOrganization.getAggregateWorkflowSteps().size());
-        assertEquals("Great grandchild workflow step is overridable!", false, greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
+        assertEquals("Great grandchild workflow step is overrideable!", false, greatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
 
         // some additional children to check
-        assertTrue("Another great grandchild does not have child workflow step!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverridableWorkflowStep));
-        assertFalse("Another great grandchild still has grandchildchild workflow step!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverridableWorkflowStep));
+        assertTrue("Another great grandchild does not have child workflow step!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(childNonOverrideableWorkflowStep));
+        assertFalse("Another great grandchild still has grandchildchild workflow step!", anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().contains(grandChildNonOverrideableWorkflowStep));
         assertEquals("Another great grandchild has more than one workflow step!", 1, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().size());
-        assertEquals("Another great grandchild workflow step is overridable!", false, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
+        assertEquals("Another great grandchild workflow step is overrideable!", false, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getOverrideable());
 
     }
 

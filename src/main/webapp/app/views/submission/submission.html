@@ -43,7 +43,7 @@
       <ul class="list-unstyled">
         <li ng-repeat="fp in activeStep.aggregateFieldProfiles | filter:{enabled: true} | filter:{hidden: false}">
           <field-profile-display profile="fp" ng-if="fp.mappedShibAttribute"></field-profile-display>
-          <field configuration="configuration" profile="fp" fpi="$index" hfp="hashFieldPredicate" ng-if="!fp.mappedShibAttribute" show-vocabulary-word="showVocabularyWord"></field>
+          <field configuration="configuration" profile="fp" fpi="$index" hfp="hashFieldPredicate" ng-if="!fp.mappedShibAttribute" show-vocabulary-word="showVocabularyWord" is-embargo="isEmbargo" sort-embargos="sortEmbargos"></field>
         </li>
       </ul>
     </div>

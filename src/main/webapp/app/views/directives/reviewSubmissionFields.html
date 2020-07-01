@@ -36,7 +36,7 @@
         <label class="control-label col-sm-3" for="aggregateFieldProfile.name" ng-class="{'danger': hasValidationViolation(aggregateFieldProfile.fieldPredicate)}">Alternative Options (Not Selected):</label>
         <div class="col-sm-9 field-values">
           <ul class="list-unstyled">
-            <dictionary-words field-profile="aggregateFieldProfile" field-values="submission.fieldValues" show-vocabulary-word="showVocabularyWord()"></dictionary-words>
+            <dictionary-words field-profile="aggregateFieldProfile" field-values="submission.fieldValues" show-vocabulary-word="showVocabularyWord()" is-embargo-wrap="isEmbargoWrap" sort-embargos-wrap="sortEmbargosWrap"></dictionary-words>
           </ul>
         </div>
       </div>
