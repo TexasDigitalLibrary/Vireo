@@ -9,6 +9,7 @@
   <div class="admin-content col-sm-10">
     <div ng-if="isList()" ng-include="'views/admin/list.html'"></div>
     <div ng-if="isView()" ng-include="'views/admin/view.html'"></div>
+    <div ng-if="isViewError()" ng-include="'views/admin/viewError.html'"></div>
     <div ng-if="isLog()" ng-include="'views/admin/log.html'"></div>
     <div ng-if="isSettings() && (isAdmin() || isManager())" ng-include="'views/admin/settings.html'"></div>
   </div>

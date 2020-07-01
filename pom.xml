@@ -19,6 +19,7 @@
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
     <version>2.x-WRO-INIT-SNAPSHOT</version>
+    <relativePath></relativePath>
   </parent>
 
   <properties>
@@ -43,11 +44,14 @@
   <repositories>
     <repository>
       <id>tamu-releases</id>
-      <url>https://maven.library.tamu.edu/content/repositories/releases</url>
+      <url>https://artifacts.library.tamu.edu/repository/maven-releases/</url>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
     </repository>
     <repository>
       <id>tamu-snapshots</id>
-      <url>https://maven.library.tamu.edu/content/repositories/snapshots</url>
+      <url>https://artifacts.library.tamu.edu/repository/maven-snapshots/</url>
     </repository>
   </repositories>
 
@@ -80,6 +84,12 @@
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>reporting</artifactId>
+      <version>2.x-WRO-INIT-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>edu.tamu.weaver</groupId>
+      <artifactId>email</artifactId>
       <version>2.x-WRO-INIT-SNAPSHOT</version>
     </dependency>
 

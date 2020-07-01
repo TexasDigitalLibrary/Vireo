@@ -26,7 +26,15 @@ public class EmbargoRepoImpl extends AbstractWeaverOrderedRepoImpl<Embargo, Emba
     @Override
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
         Embargo embargo = new Embargo(name, description, duration, guarantor, isActive);
-        embargo.setPosition(embargoRepo.count() + 1);
+
+        Long embargoPosition = 1L;
+        if (embargoRepo.count() > 0) {
+            Embargo lastEmbargo = embargoRepo.findFirst1ByGuarantorOrderByPositionDesc(guarantor);
+            if (lastEmbargo != null) {
+                embargoPosition = lastEmbargo.getPosition()+1;
+            }
+        }
+        embargo.setPosition(embargoPosition);
         return super.create(embargo);
     }
 
@@ -34,14 +42,14 @@ public class EmbargoRepoImpl extends AbstractWeaverOrderedRepoImpl<Embargo, Emba
     @Transactional
     public void reorder(Long src, Long dest, EmbargoGuarantor guarantor) {
         orderedEntityService.reorder(Embargo.class, src, dest, "guarantor", guarantor);
-        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, REORDER, embargoRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, REORDER, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
     }
 
     @Override
     @Transactional
     public void sort(String column, EmbargoGuarantor guarantor) {
         orderedEntityService.sort(Embargo.class, column, "guarantor", guarantor);
-        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, SORT, embargoRepo.findAllByOrderByPositionAsc()));
+        simpMessagingTemplate.convertAndSend(getChannel(), new ApiResponse(SUCCESS, SORT, embargoRepo.findAllByOrderByGuarantorAscPositionAsc()));
     }
 
     @Override

@@ -75,7 +75,7 @@
 								<input name="identifier" ng-if="newVW.beginAdd && !newVW.moving" class="form-control" ng-model="newVW.identifier" ng-keyup="createHotKeys($event, newVW)" autocomplete="off" vireo-autofocus-refresh="newVW.moving" vireo-autofocus="newVW.clickedCell==='identifier'">
 							</div>
 						</td>
-						<td title="'Actions'" class="actions">
+						<td title="Add" class="actions">
 							<span ng-show="newVW.beginAdd">
 								<div class="form-group">
 									<div class="btn-group" role="group">
@@ -122,10 +122,10 @@
 								<input class="form-control" ng-if="editMode(vocabularyWord)" ng-model="editableVW.identifier" autocomplete="off" vireo-autofocus-refresh="editableVW.moving" vireo-autofocus="editableVW.clickedCell==='identifier'" ng-keyup="updateHotKeys($event, vocabularyWord)" />
 							</div>
 						</td>
-						<td title="'Actions'" >
+						<td >
 							<span ng-hide="editMode(vocabularyWord)">
-								<button class="btn btn-sm btn-default" ng-click="startEditVWMode(vocabularyWord, 'name')"><span class="glyphicon glyphicon-pencil"></span></button>
-								<button class="btn btn-sm btn-danger" ng-hide="deleting" ng-click="deleting=true"><span class="glyphicon glyphicon-trash"></span></button>
+								<button class="btn btn-sm btn-default" title="Edit" ng-click="startEditVWMode(vocabularyWord, 'name')"><span class="glyphicon glyphicon-pencil"></span></button>
+								<button class="btn btn-sm btn-danger" title="Delete" ng-hide="deleting" ng-click="deleting=true"><span class="glyphicon glyphicon-trash"></span></button>
 								<div class="btn-group" role="group" ng-show="deleting">
 									<button class="btn btn-sm btn-danger disabled" disabled><span class="glyphicon glyphicon-trash"></span></button>
 									<button type="button" class="btn btn-sm btn-danger" ng-click="removeVocabularyWord(vocabularyWord)">

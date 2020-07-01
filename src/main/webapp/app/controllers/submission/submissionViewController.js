@@ -147,6 +147,20 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
             return result;
         };
 
+        $scope.isEmbargo = function(fieldValue) {
+            return (fieldValue.fieldPredicate.value=='default_embargos' || fieldValue.fieldPredicate.value=='proquest_embargos');
+        };
+
+        $scope.sortEmbargos= function(word) {
+            var embargo = null;
+            angular.forEach($scope.embargoes, function(potentialEmbargo) {
+                if (Number(word.identifier) === potentialEmbargo.id) {
+                    embargo = potentialEmbargo;
+                }
+            });
+            return embargo.position;
+        };
+
         CustomActionDefinitionRepo.listen(function(apiRes) {
             if(apiRes.meta.status === 'SUCCESS') {
                 StudentSubmissionRepo.remove($scope.submission);

@@ -1,5 +1,4 @@
-<div class="input-radio-container row" ng-repeat="word in profile.controlledVocabulary.dictionary | filter:displayVocabularyWord">
-
+<div class="input-radio-container row" ng-repeat="word in profile.controlledVocabulary.dictionary | filter:displayVocabularyWord | orderBy:orderVocabularyWords">
 	<div class="col-xs-1">
 		<label class="radio-inline">
 			<input
