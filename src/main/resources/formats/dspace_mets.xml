@@ -59,7 +59,8 @@
                     <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
                 
                     <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
-                    
+                    <dim:field mdschema="dc"  element="identifier" qualifier="uri" th:text="${DEPOSIT_URL}"></dim:field>
+
                     
                     <!-- dc.type.material = "text" // constant -->
                     <dim:field mdschema="dc" element="type" qualifier="material">text</dim:field>
