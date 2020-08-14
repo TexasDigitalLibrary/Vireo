@@ -4,12 +4,12 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
-import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 
 public class ActionLogTest extends AbstractEntityTest {
 
     @Before
-    public void setUp() throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public void setUp() throws OrganizationDoesNotAcceptSubmissionsException {
 
         assertEquals("The actionLog repository is not empty!", 0, actionLogRepo.count());
         testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);

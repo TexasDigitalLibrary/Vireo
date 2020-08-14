@@ -29,7 +29,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.tdl.vireo.Application;
-import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.mock.MockData;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmailRecipient;
@@ -289,7 +289,7 @@ public class SubmissionEmailServiceTest extends MockData {
     private SubmissionEmailService submissionEmailService;
 
     @Before
-    public void setUp() throws OrganizationDoesNotAcceptSubmissionsExcception, MessagingException {
+    public void setUp() throws OrganizationDoesNotAcceptSubmissionsException, MessagingException {
         MockitoAnnotations.initMocks(this);
         mockData = new HashMap<>();
         mockFieldValues = new ArrayList<>();
