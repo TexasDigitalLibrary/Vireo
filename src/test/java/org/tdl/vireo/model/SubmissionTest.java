@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 
 public class SubmissionTest extends AbstractEntityTest {
 
@@ -66,7 +66,7 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Override
-    public void testCreate() throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public void testCreate() throws OrganizationDoesNotAcceptSubmissionsException {
 
         Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
 
@@ -92,8 +92,8 @@ public class SubmissionTest extends AbstractEntityTest {
 
     }
 
-    @Test(expected = OrganizationDoesNotAcceptSubmissionsExcception.class)
-    public void testAcceptsSubmissions() throws OrganizationDoesNotAcceptSubmissionsExcception {
+    @Test(expected = OrganizationDoesNotAcceptSubmissionsException.class)
+    public void testAcceptsSubmissions() throws OrganizationDoesNotAcceptSubmissionsException {
         organization.setAcceptsSubmissions(false);
 
         // expect an exception when creating Submission on the Organization that doesn't accept them
@@ -102,7 +102,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     @Test(expected = DataIntegrityViolationException.class)
-    public void testDuplication() throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public void testDuplication() throws OrganizationDoesNotAcceptSubmissionsException {
 
         submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
@@ -111,7 +111,7 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Override
-    public void testDelete() throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public void testDelete() throws OrganizationDoesNotAcceptSubmissionsException {
 
         Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
 
@@ -121,7 +121,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
     @Override
     @Transactional
-    public void testCascade() throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public void testCascade() throws OrganizationDoesNotAcceptSubmissionsException {
         organization = organizationRepo.findOne(organization.getId());
         parentCategory = organizationCategoryRepo.findOne(organization.getCategory().getId());
 
@@ -207,7 +207,7 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Test
-    public void testUniqueConstraint() throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public void testUniqueConstraint() throws OrganizationDoesNotAcceptSubmissionsException {
 
         Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
 

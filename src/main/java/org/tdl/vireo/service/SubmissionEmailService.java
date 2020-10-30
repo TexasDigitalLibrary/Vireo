@@ -35,6 +35,7 @@ import org.tdl.vireo.utility.TemplateUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import edu.tamu.weaver.email.service.WeaverEmailService;
+import edu.tamu.weaver.email.service.EmailSender;
 
 /**
  * Provide e-mail sending specific to the Submission process.
@@ -56,7 +57,7 @@ public class SubmissionEmailService {
     private ActionLogRepo actionLogRepo;
 
     @Autowired
-    private WeaverEmailService emailSender;
+    private EmailSender emailSender;
 
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
@@ -103,7 +104,8 @@ public class SubmissionEmailService {
 
                 if (!recipientList.isEmpty()) {
                     //FROM email address not utilized by WeaverEmailService unless explicitly set in SimpleMailMessage - likely needs a fix in WeaverEmailService.java
-                    smm.setFrom(emailSender.getFrom());
+                    //smm.setFrom(emailSender.getFrom());
+                    smm.setFrom("vireo@tdl.org");
                     smm.setTo(recipientList.toArray(new String[0]));
                     smm.setSubject(subject);
                     smm.setText(content);
@@ -154,7 +156,8 @@ public class SubmissionEmailService {
                 smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
 
-            smm.setFrom(emailSender.getFrom());
+            //smm.setFrom(emailSender.getFrom());
+            smm.setFrom("vireo@tdl.org");
             smm.setSubject(subject);
             smm.setText(templatedMessage);
 
@@ -208,7 +211,8 @@ public class SubmissionEmailService {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
                         }
 
-                        smm.setFrom(emailSender.getFrom());
+                        //smm.setFrom(emailSender.getFrom());
+                        smm.setFrom("vireo@tdl.org");
                         smm.setSubject(subject);
                         smm.setText(content);
 

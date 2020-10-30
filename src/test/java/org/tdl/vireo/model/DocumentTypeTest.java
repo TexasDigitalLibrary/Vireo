@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsExcception;
+import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 
 public class DocumentTypeTest extends AbstractEntityTest {
 
@@ -51,7 +51,7 @@ public class DocumentTypeTest extends AbstractEntityTest {
     }
 
     @Test(expected = DataIntegrityViolationException.class)
-    public void testDeleteDocumentTypeWhileSubmissionReferencesPredicate() throws OrganizationDoesNotAcceptSubmissionsExcception {
+    public void testDeleteDocumentTypeWhileSubmissionReferencesPredicate() throws OrganizationDoesNotAcceptSubmissionsException {
 
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());

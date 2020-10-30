@@ -1,6 +1,6 @@
 package org.tdl.vireo.exception;
 
-public class OrganizationDoesNotAcceptSubmissionsExcception extends Exception {
+public class OrganizationDoesNotAcceptSubmissionsException extends Exception {
 
     private static final long serialVersionUID = 1L;
 
