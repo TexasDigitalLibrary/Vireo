@@ -57,7 +57,8 @@ public class SubmissionEmailService {
     private ActionLogRepo actionLogRepo;
 
     @Autowired
-    private EmailSender emailSender;
+    private WeaverEmailService emailSender;
+    // private EmailSender emailSender;
 
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
@@ -105,7 +106,7 @@ public class SubmissionEmailService {
                 if (!recipientList.isEmpty()) {
                     //FROM email address not utilized by WeaverEmailService unless explicitly set in SimpleMailMessage - likely needs a fix in WeaverEmailService.java
                     //smm.setFrom(emailSender.getFrom());
-                    smm.setFrom("vireo@tdl.org");
+                    smm.setFrom(emailSender.getFrom());
                     smm.setTo(recipientList.toArray(new String[0]));
                     smm.setSubject(subject);
                     smm.setText(content);
@@ -157,7 +158,7 @@ public class SubmissionEmailService {
             }
 
             //smm.setFrom(emailSender.getFrom());
-            smm.setFrom("vireo@tdl.org");
+            smm.setFrom(emailSender.getFrom());
             smm.setSubject(subject);
             smm.setText(templatedMessage);
 
@@ -212,7 +213,7 @@ public class SubmissionEmailService {
                         }
 
                         //smm.setFrom(emailSender.getFrom());
-                        smm.setFrom("vireo@tdl.org");
+                        smm.setFrom(emailSender.getFrom());
                         smm.setSubject(subject);
                         smm.setText(content);
 
