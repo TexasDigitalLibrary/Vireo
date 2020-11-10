@@ -28,6 +28,7 @@ import java.util.Optional;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -574,7 +575,7 @@ public class SubmissionController {
                             int sfxIndx;
                             String licFileName = ldfv.getFileName();
                             if((sfxIndx = licFileName.indexOf("."))>0){
-                                licFileName = licFileName.substring(0,sfxIndx).toUpperCase()+licFileName.substring(sfxIndx); 
+                                licFileName = licFileName.substring(0,sfxIndx).toUpperCase()+licFileName.substring(sfxIndx);
                             }
                         	b.putNextEntry(new ZipEntry(personName+"_permission/"+licFileName));
                         	b.write(fileBytes);
@@ -620,44 +621,13 @@ public class SubmissionController {
             try {
                 ZipOutputStream zos = new ZipOutputStream(sos_mets);
 
-                // TODO: need a more dynamic way to achieve this
-                if (packagerName.equals("ProQuest")) {
-                    // TODO: add filter for UMI Publication true
-                }
-
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
 
-                    String submissionName = "submission_" + submission.getId() + "/";
-                    StringBuilder contentsText = new StringBuilder();
+//                    String submissionName = "submission_" + submission.getId() + "/";
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-                    if (exportPackage.isMap()) {
-                        for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
-                            if (packagerName.equals("MarcXML21")) {
-                                zos.putNextEntry(new ZipEntry("MarcXML21/" + fileEntry.getKey()));
-                            } else {
-                                zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
-                            }
-                            contentsText.append("MD " + fileEntry.getKey() + "\n");
-                            zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
-                            zos.closeEntry();
-                        }
-                    }
-                    // LICENSES
-                    for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
-                        Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
-                        byte[] fileBytes = Files.readAllBytes(path);
-                        zos.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
-                        contentsText.append(ldfv.getFileName() + " bundle:LICENSE\n");
-                        zos.write(fileBytes);
-                        zos.closeEntry();
-                    }
-
-                    // PRIMARY_DOC
-                    FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
-                    Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
-                    byte[] fileBytes = Files.readAllBytes(path);
-                    zos.putNextEntry(new ZipEntry(submissionName + primaryDoc.getFileName()));
-                    contentsText.append(primaryDoc.getFileName() + "  bundle:CONTENT  primary:true\n");
+                    File exportFile = (File) exportPackage.getPayload();
+                    byte[] fileBytes =  FileUtils.readFileToByteArray(exportFile);
+                    zos.putNextEntry(new ZipEntry(exportFile.getName()));
                     zos.write(fileBytes);
                     zos.closeEntry();
                 }
