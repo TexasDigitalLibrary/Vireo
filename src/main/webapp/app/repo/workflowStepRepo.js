@@ -15,7 +15,6 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         promise.then(function (res) {
             if (res.meta.status === "INVALID") {
                 angular.extend(workflowStepRepo, res.payload);
-                console.log(workflowStepRepo);
             }
         });
         return promise;
@@ -32,7 +31,6 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         promise.then(function (res) {
             if (res.meta.status === "INVALID") {
                 angular.extend(workflowStepRepo, res.payload);
-                console.log(workflowStepRepo);
             }
         });
         return promise;
@@ -49,7 +47,6 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         promise.then(function (res) {
             if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
-                console.log(workflowStepRepo);
             }
         });
         return promise;
@@ -65,7 +62,6 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         promise.then(function (res) {
             if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
-                console.log(workflowStepRepo);
             }
         });
         return promise;
@@ -83,7 +79,6 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         promise.then(function (res) {
             if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
-                console.log(workflowStepRepo);
             }
         });
         return promise;
@@ -100,7 +95,6 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         promise.then(function (res) {
             if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
-                console.log(workflowStepRepo);
             }
         });
         return promise;
@@ -116,7 +110,6 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         promise.then(function (res) {
             if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
-                console.log(workflowStepRepo);
             }
         });
         return promise;
@@ -132,7 +125,6 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         promise.then(function (res) {
             if (angular.fromJson(res.body).meta.status === "INVALID") {
                 angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
-                console.log(workflowStepRepo);
             }
         });
         return promise;
