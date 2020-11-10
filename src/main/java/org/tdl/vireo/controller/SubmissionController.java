@@ -622,8 +622,6 @@ public class SubmissionController {
                 ZipOutputStream zos = new ZipOutputStream(sos_mets);
 
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
-
-//                    String submissionName = "submission_" + submission.getId() + "/";
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                     File exportFile = (File) exportPackage.getPayload();
                     byte[] fileBytes =  FileUtils.readFileToByteArray(exportFile);
