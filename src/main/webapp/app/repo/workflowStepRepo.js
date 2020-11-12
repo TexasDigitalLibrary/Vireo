@@ -7,6 +7,7 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
     this.addFieldProfile = function (workflowStep, fieldProfile) {
         workflowStepRepo.clearValidationResults();
         OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
+        fieldProfile.originatingWorkflowStep = workflowStep.id;
         angular.extend(this.mapping.addFieldProfile, {
             'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/add-field-profile',
             'data': fieldProfile
@@ -23,6 +24,7 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
     this.updateFieldProfile = function (workflowStep, fieldProfile) {
         workflowStepRepo.clearValidationResults();
         OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
+        fieldProfile.originatingWorkflowStep = workflowStep.id;
         angular.extend(this.mapping.updateFieldProfile, {
             'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/update-field-profile',
             'data': fieldProfile
