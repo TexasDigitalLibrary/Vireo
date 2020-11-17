@@ -154,8 +154,9 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 }
             });
         };
-        
+
         $scope.createFieldProfile = function () {
+            $scope.closeModal();
             $scope.createFieldPredicate().then(function() {
                 WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData).then(function() {
                     resetModalData();
@@ -182,6 +183,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         };
 
         $scope.updateFieldProfile = function () {
+            $scope.closeModal();
             $scope.createFieldPredicate().then(function() {
                 WorkflowStepRepo.updateFieldProfile($scope.step, $scope.modalData).then(function() {
                     resetModalData();
@@ -190,6 +192,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         };
 
         $scope.removeFieldProfile = function () {
+            $scope.closeModal();
             WorkflowStepRepo.removeFieldProfile($scope.step, $scope.modalData);
         };
 

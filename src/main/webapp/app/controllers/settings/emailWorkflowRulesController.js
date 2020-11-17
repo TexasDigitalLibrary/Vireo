@@ -35,7 +35,6 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
         };
 
         $scope.addEmailWorkflowRule = function (newTemplate, newRecipient, submissionStatus) {
-            console.log("ewrc controller: adding wf rule to recipient " + newRecipient);
             var recipient = angular.copy(newRecipient);
 
             if (recipient.type === EmailRecipientType.ORGANIZATION) {

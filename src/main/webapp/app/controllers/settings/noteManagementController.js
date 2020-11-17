@@ -61,6 +61,7 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
     $scope.resetNotes();
 
     $scope.createNote = function() {
+        $scope.closeModal();
         WorkflowStepRepo.addNote($scope.step, $scope.modalData);
     };
 
@@ -74,10 +75,12 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
     };
 
     $scope.updateNote = function() {
+        $scope.closeModal();
         WorkflowStepRepo.updateNote($scope.step, $scope.modalData);
     };
 
     $scope.removeNote = function() {
+        $scope.closeModal();
         WorkflowStepRepo.removeNote($scope.step, $scope.modalData);
     };
 
