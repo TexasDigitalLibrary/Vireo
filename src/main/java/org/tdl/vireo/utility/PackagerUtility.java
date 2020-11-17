@@ -26,10 +26,14 @@ public class PackagerUtility {
 
     public ExportPackage packageExport(Packager<?> packager, Submission submission) throws Exception {
         Map<String, String> formatterMap = formatterUtility.renderManifestMap(packager.getFormatter(), submission);
-        if (formatterMap.isEmpty() || !formatterMap.containsKey(TEMPLATE_KEY)) {
+        if (formatterMap.isEmpty()) {
             throw new UnsupportedFormatterException("Required manifest not found!");
         }
-        return packager.packageExport(submission, formatterMap.get(TEMPLATE_KEY));
+        if (!formatterMap.containsKey(TEMPLATE_KEY)) {
+            return this.packageExport(packager, submission, formatterMap);
+        } else {
+            return packager.packageExport(submission, formatterMap.get(TEMPLATE_KEY));
+        }
     }
 
     public ExportPackage packageExport(Packager<?> packager, Submission submission, List<SubmissionListColumn> columns) {
