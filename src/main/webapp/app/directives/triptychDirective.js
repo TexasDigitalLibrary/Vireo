@@ -12,7 +12,6 @@ vireo.directive("triptych", function () {
             }));
 
             OrganizationRepo.listen(function (response) {
-                console.log('org repo listen', response);
                 $timeout(function () {
                     $scope.refreshPanels();
                 }, 250);
