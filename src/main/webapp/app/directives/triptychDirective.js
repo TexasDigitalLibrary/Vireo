@@ -154,7 +154,7 @@ vireo.directive("triptych", function () {
             };
 
             $scope.refreshPanels = function () {
-                var selectedOrganization = $scope.organizations[0];
+                var selectedOrganization = $scope.getSelectedOrganization() ? $scope.getSelectedOrganization() : $scope.organizations[0];
                 var newVisiblePanel;
                 for (var i in $scope.navigation.panels) {
                     var panel = $scope.navigation.panels[i];
