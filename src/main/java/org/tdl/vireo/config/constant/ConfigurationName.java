@@ -155,6 +155,6 @@ public class ConfigurationName {
     public final static String APPLICATION_FILESIZE_MAXSIZETOTAL = "fileSize.maxFileSizeTotal";
 
     // Vireo 4 new Configuration Names
-    public final static String APPLICATION_MAIL_FROM = "mail.from";
-    public final static String APPLICATION_MAIL_REPLYTO = "mail.replyto";
+    public final static String APPLICATION_MAIL_FROM = "email.from";
+    public final static String APPLICATION_MAIL_REPLYTO = "email.replyto";
 }
