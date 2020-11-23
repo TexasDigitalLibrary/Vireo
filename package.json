@@ -25,7 +25,7 @@
     "start-dev": "wvr server -b /vireo --uid vireo-webserver"
   },
   "dependencies": {
-    "@wvr/core": "next",
+    "@wvr/core": "2.2.0",
     "angular-ui-tinymce": "0.0.19",
     "file-saver": "2.0.0",
     "ng-csv": "0.3.6",
