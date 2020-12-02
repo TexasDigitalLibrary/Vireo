@@ -56,8 +56,8 @@ public class SubmissionEmailService {
     @Autowired
     private ActionLogRepo actionLogRepo;
 
-    @Autowired
-    private WeaverEmailService weaverEmailService;
+    @Autowired (required=false)
+    private WeaverEmailService emailSender;
 
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
@@ -103,12 +103,12 @@ public class SubmissionEmailService {
                 });
 
                 if (!recipientList.isEmpty()) {
-                    smm.setFrom(weaverEmailService.getFrom());
+                    smm.setFrom(emailSender.getFrom());
                     smm.setTo(recipientList.toArray(new String[0]));
                     smm.setSubject(subject);
                     smm.setText(content);
 
-                    weaverEmailService.send(smm);
+                    emailSender.send(smm);
                     emailed = true;
                 }
             }
@@ -154,11 +154,11 @@ public class SubmissionEmailService {
                 smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
 
-            smm.setFrom(weaverEmailService.getFrom());
+            smm.setFrom(emailSender.getFrom());
             smm.setSubject(subject);
             smm.setText(templatedMessage);
 
-            weaverEmailService.send(smm);
+            emailSender.send(smm);
 
             actionLogRepo.createPublicLog(submission, user, recipientEmails.toString() + subject + ": " + templatedMessage);
         }
@@ -208,11 +208,11 @@ public class SubmissionEmailService {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
                         }
 
-                        smm.setFrom(weaverEmailService.getFrom());
+                        smm.setFrom(emailSender.getFrom());
                         smm.setSubject(subject);
                         smm.setText(content);
 
-                        weaverEmailService.send(smm);
+                        emailSender.send(smm);
                     } catch (MailException me) {
                         LOG.error("Problem sending email: " + me.getMessage());
                         recipientLists.get(templateId).remove(email);
