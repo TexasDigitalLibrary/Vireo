@@ -108,7 +108,7 @@ public class SubmissionEmailService {
                     smm.setSubject(subject);
                     smm.setText(content);
 
-                    emailSender.send(smm);
+                    weaverEmailService.send(smm);
                     emailed = true;
                 }
             }
@@ -158,7 +158,7 @@ public class SubmissionEmailService {
             smm.setSubject(subject);
             smm.setText(templatedMessage);
 
-            emailSender.send(smm);
+            weaverEmailService.send(smm);
 
             actionLogRepo.createPublicLog(submission, user, recipientEmails.toString() + subject + ": " + templatedMessage);
         }
@@ -212,7 +212,7 @@ public class SubmissionEmailService {
                         smm.setSubject(subject);
                         smm.setText(content);
 
-                        emailSender.send(smm);
+                        weaverEmailService.send(smm);
                     } catch (MailException me) {
                         LOG.error("Problem sending email: " + me.getMessage());
                         recipientLists.get(templateId).remove(email);
