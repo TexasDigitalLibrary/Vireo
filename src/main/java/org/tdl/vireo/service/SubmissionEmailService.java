@@ -57,7 +57,7 @@ public class SubmissionEmailService {
     private ActionLogRepo actionLogRepo;
 
     @Autowired
-    private WeaverEmailService emailSender;
+    private WeaverEmailService weaverEmailService;
 
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
@@ -103,7 +103,7 @@ public class SubmissionEmailService {
                 });
 
                 if (!recipientList.isEmpty()) {
-                    smm.setFrom(emailSender.getFrom());
+                    smm.setFrom(weaverEmailService.getFrom());
                     smm.setTo(recipientList.toArray(new String[0]));
                     smm.setSubject(subject);
                     smm.setText(content);
@@ -154,7 +154,7 @@ public class SubmissionEmailService {
                 smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
 
-            smm.setFrom(emailSender.getFrom());
+            smm.setFrom(weaverEmailService.getFrom());
             smm.setSubject(subject);
             smm.setText(templatedMessage);
 
@@ -208,7 +208,7 @@ public class SubmissionEmailService {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
                         }
 
-                        smm.setFrom(emailSender.getFrom());
+                        smm.setFrom(weaverEmailService.getFrom());
                         smm.setSubject(subject);
                         smm.setText(content);
 
