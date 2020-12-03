@@ -34,7 +34,6 @@ public class AppEmailConfig extends WeaverEmailConfig {
     @Value("${app.email.channel:clear}")
     private String channel;
 
-    @Bean
     @Override
     public EmailSender emailSender() {
         WeaverEmailService emailService = new WeaverEmailService();
