@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.slf4j.Logger;
@@ -56,6 +58,8 @@ public class SubmissionEmailService {
     @Autowired
     private ActionLogRepo actionLogRepo;
 
+    @Nullable
+    @Autowired
     private WeaverEmailService emailSender;
 
     @Autowired
