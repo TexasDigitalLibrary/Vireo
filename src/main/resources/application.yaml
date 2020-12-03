@@ -125,9 +125,9 @@ app:
     
   # edu.tamu.weaver.email.config.WeaverEmailConfig
   email:
-    host: localhost
-    from: bobboring@mailinator.com
-    replyTo: tedtomorrow@mailinator.com
+    host: relay.tamu.edu
+    from: noreply@library.tamu.edu
+    replyTo: helpdesk@library.tamu.edu
     # additional email configurations
     #username:
     #password:
