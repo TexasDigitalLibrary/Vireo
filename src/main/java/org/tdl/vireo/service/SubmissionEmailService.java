@@ -7,13 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -58,7 +57,6 @@ public class SubmissionEmailService {
     @Autowired
     private ActionLogRepo actionLogRepo;
 
-    @Nullable
     @Autowired
     private WeaverEmailService emailSender;
 
@@ -70,6 +68,11 @@ public class SubmissionEmailService {
 
     @Autowired
     private TemplateUtility templateUtility;
+
+    @Bean
+    public WeaverEmailService weaverEmailService()   {
+        return new WeaverEmailService();
+    }
 
     /**
      * Manually send the e-mails to the advisors for a given Submission.
