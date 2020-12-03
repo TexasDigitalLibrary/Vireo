@@ -56,7 +56,6 @@ public class SubmissionEmailService {
     @Autowired
     private ActionLogRepo actionLogRepo;
 
-    @Autowired
     private WeaverEmailService emailSender;
 
     @Autowired
