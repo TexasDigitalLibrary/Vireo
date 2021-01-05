@@ -12,6 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -67,6 +68,11 @@ public class SubmissionEmailService {
 
     @Autowired
     private TemplateUtility templateUtility;
+
+    @Bean
+    public WeaverEmailService weaverEmailService()   {
+        return new WeaverEmailService();
+    }
 
     /**
      * Manually send the e-mails to the advisors for a given Submission.
