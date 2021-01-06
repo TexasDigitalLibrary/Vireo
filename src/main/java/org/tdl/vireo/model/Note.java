@@ -14,6 +14,8 @@ import javax.persistence.UniqueConstraint;
 import org.tdl.vireo.model.inheritance.HeritableComponent;
 import org.tdl.vireo.model.validation.NoteValidator;
 
+import edu.tamu.weaver.data.resolver.BaseEntityIdResolver;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -24,12 +26,12 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 public class Note extends AbstractNote<Note> implements HeritableComponent<Note> {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Note.class, resolver = BaseEntityIdResolver.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Note originating;
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, resolver = BaseEntityIdResolver.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
 

@@ -9,24 +9,26 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import org.tdl.vireo.model.inheritance.HeritableComponent;
-import org.tdl.vireo.model.validation.FieldProfileValidator;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import org.tdl.vireo.model.inheritance.HeritableComponent;
+import org.tdl.vireo.model.validation.FieldProfileValidator;
+
+import edu.tamu.weaver.data.resolver.BaseEntityIdResolver;
 
 @Entity
 @DiscriminatorValue("Org")
 public class FieldProfile extends AbstractFieldProfile<FieldProfile> implements HeritableComponent<FieldProfile> {
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = FieldProfile.class, resolver = BaseEntityIdResolver.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private FieldProfile originating;
 
     @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = WorkflowStep.class, resolver = BaseEntityIdResolver.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private WorkflowStep originatingWorkflowStep;
 

@@ -7,9 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
@@ -32,10 +35,8 @@ import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.impl.AbstractEmailRecipientRepoImpl;
 import org.tdl.vireo.utility.TemplateUtility;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import edu.tamu.weaver.email.service.WeaverEmailService;
 import edu.tamu.weaver.email.service.EmailSender;
+import edu.tamu.weaver.email.service.WeaverEmailService;
 
 /**
  * Provide e-mail sending specific to the Submission process.
@@ -57,7 +58,7 @@ public class SubmissionEmailService {
     private ActionLogRepo actionLogRepo;
 
     @Autowired
-    private EmailSender emailSender;
+    private WeaverEmailService emailSender;
 
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
@@ -67,6 +68,11 @@ public class SubmissionEmailService {
 
     @Autowired
     private TemplateUtility templateUtility;
+
+    @Bean
+    public WeaverEmailService weaverEmailService()   {
+        return new WeaverEmailService();
+    }
 
     /**
      * Manually send the e-mails to the advisors for a given Submission.
@@ -103,9 +109,7 @@ public class SubmissionEmailService {
                 });
 
                 if (!recipientList.isEmpty()) {
-                    //FROM email address not utilized by WeaverEmailService unless explicitly set in SimpleMailMessage - likely needs a fix in WeaverEmailService.java
-                    //smm.setFrom(emailSender.getFrom());
-                    smm.setFrom("vireo@tdl.org");
+                    smm.setFrom(emailSender.getFrom());
                     smm.setTo(recipientList.toArray(new String[0]));
                     smm.setSubject(subject);
                     smm.setText(content);
@@ -156,8 +160,7 @@ public class SubmissionEmailService {
                 smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
             }
 
-            //smm.setFrom(emailSender.getFrom());
-            smm.setFrom("vireo@tdl.org");
+            smm.setFrom(emailSender.getFrom());
             smm.setSubject(subject);
             smm.setText(templatedMessage);
 
@@ -211,8 +214,7 @@ public class SubmissionEmailService {
                             smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
                         }
 
-                        //smm.setFrom(emailSender.getFrom());
-                        smm.setFrom("vireo@tdl.org");
+                        smm.setFrom(emailSender.getFrom());
                         smm.setSubject(subject);
                         smm.setText(content);
 
