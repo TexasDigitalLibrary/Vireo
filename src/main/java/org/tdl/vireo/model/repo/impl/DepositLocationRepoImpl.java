@@ -26,9 +26,16 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
     private ObjectMapper objectMapper;
 
     @Override
+    public void remove(DepositLocation depositLocation) {
+        depositLocation.setPackager(null);
+        depositLocation = depositLocationRepo.save(depositLocation);
+        super.remove(depositLocation);
+    }
+
+    @Override
     public DepositLocation create(Map<String, Object> depositLocationJson) {
 
-        Packager<?> packager = (Packager<?>) packagerRepo.findOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
+        Packager<?> packager = packagerRepo.findOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
 
         String onBehalfOf = null;
         if (depositLocationJson.get("onBehalfOf") != null) {
@@ -49,7 +56,7 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
     public DepositLocation createDetached(Map<String, Object> depositLocationJson) {
         Packager<?> packager = null;
         if (depositLocationJson.get("packager") != null) {
-            packager = (Packager<?>) packagerRepo.getOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
+            packager = packagerRepo.getOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
         }
 
         String onBehalfOf = null;
@@ -59,7 +66,7 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
 
         Integer timeout = null;
         if (depositLocationJson.get("timeout") != null) {
-            timeout = (Integer) depositLocationJson.get("timeout");
+            timeout = Integer.valueOf(depositLocationJson.get("timeout").toString());
         }
 
         return createDetached((String) depositLocationJson.get("name"), (String) depositLocationJson.get("repository"), null, (String) depositLocationJson.get("username"), (String) depositLocationJson.get("password"), onBehalfOf, packager, (String) depositLocationJson.get("depositorName"), timeout);

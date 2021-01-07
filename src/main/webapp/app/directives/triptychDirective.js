@@ -154,7 +154,7 @@ vireo.directive("triptych", function () {
             };
 
             $scope.refreshPanels = function () {
-                var selectedOrganization;
+                var selectedOrganization = $scope.getSelectedOrganization() ? $scope.getSelectedOrganization() : $scope.organizations[0];
                 var newVisiblePanel;
                 for (var i in $scope.navigation.panels) {
                     var panel = $scope.navigation.panels[i];
@@ -169,8 +169,6 @@ vireo.directive("triptych", function () {
                     } else {
                         if (panel.parent !== undefined) {
                             selectedOrganization = panel.parent.organization;
-                        } else {
-                            selectedOrganization = $scope.organizations[0];
                         }
                         remove(panel);
                     }
@@ -178,9 +176,7 @@ vireo.directive("triptych", function () {
                 if (newVisiblePanel !== undefined) {
                     setVisibility(newVisiblePanel);
                 }
-                if (selectedOrganization !== undefined) {
-                    $scope.selectOrganization(selectedOrganization);
-                }
+                $scope.selectOrganization(selectedOrganization);
             };
 
             var setVisibility = function (panel) {

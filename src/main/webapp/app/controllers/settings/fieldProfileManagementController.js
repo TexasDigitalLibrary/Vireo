@@ -154,7 +154,7 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 }
             });
         };
-        
+
         $scope.createFieldProfile = function () {
             $scope.createFieldPredicate().then(function() {
                 WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData).then(function() {

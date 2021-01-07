@@ -45,13 +45,13 @@ module.exports = function(config){
 
             'app/node_modules/file-saver/dist/FileSaver.js',
 
-            'app/node_modules/weaver-ui-core/app/config/coreConfig.js',
+            'app/node_modules/@wvr/core/app/config/coreConfig.js',
 
-            'app/node_modules/weaver-ui-core/app/components/**/*.js',
+            'app/node_modules/@wvr/core/app/components/**/*.js',
 
-            'app/node_modules/weaver-ui-core/app/core.js',
+            'app/node_modules/@wvr/core/app/core.js',
 
-            'app/node_modules/weaver-ui-core/app/**/*.js',
+            'app/node_modules/@wvr/core/app/**/*.js',
 
 
             'app/components/**/*.js',

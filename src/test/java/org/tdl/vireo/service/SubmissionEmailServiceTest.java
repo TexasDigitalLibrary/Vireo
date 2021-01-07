@@ -17,6 +17,8 @@ import java.util.Map;
 
 import javax.mail.MessagingException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,9 +57,7 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.impl.AbstractEmailRecipientRepoImpl;
 import org.tdl.vireo.utility.TemplateUtility;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import edu.tamu.weaver.email.service.EmailSender;
+import edu.tamu.weaver.email.service.WeaverEmailService;
 
 @ActiveProfiles("test")
 @RunWith(SpringRunner.class)
@@ -280,7 +280,7 @@ public class SubmissionEmailServiceTest extends MockData {
     private Submission mockSubmission;
 
     @Mock
-    private EmailSender mockEmailSender;
+    private WeaverEmailService mockEmailSender;
 
     @Mock
     private TemplateUtility mockTemplateUtility;

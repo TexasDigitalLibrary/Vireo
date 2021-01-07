@@ -5,12 +5,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
-import java.util.Map;
-import java.util.HashMap;
 
 import javax.persistence.Entity;
 
@@ -63,7 +62,6 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
 
             List<FieldValue> documentFieldValues = submission.getAllDocumentFieldValues();
             for (FieldValue documentFieldValue : documentFieldValues) {
-
                 // TODO: add file whitelist for publish
 
                 File exportFile = getAbsolutePath(documentFieldValue.getValue()).toFile();
@@ -71,7 +69,6 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
                 zos.putNextEntry(new ZipEntry(documentFieldValue.getFileName()));
                 zos.write(Files.readAllBytes(exportFile.toPath()));
                 zos.closeEntry();
-
             }
 
             zos.close();
