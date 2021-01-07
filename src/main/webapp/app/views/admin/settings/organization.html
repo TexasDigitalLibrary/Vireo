@@ -8,10 +8,9 @@
 
 	<div class="row">
 		<div id="organizationManagement" class="col-xs-12" ng-controller="OrganizationManagementController">
-			<div class="row" ng-if="showOrganizationManagement()">
+			<div class="row" ng-show="showOrganizationManagement()">
 				<div class="panel-heading">
 					<h3 class="panel-title">
-
 						<ul class="inline-list">
 							<li ng-click="activateManagementPane('edit')">
 								<span	class="management-pane-selector"
