@@ -637,7 +637,7 @@
       <id>test-client</id>
       <activation>
         <property>
-          <name>client</name>
+          <name>testClient</name>
         </property>
       </activation>
       <build>
