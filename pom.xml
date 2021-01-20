@@ -637,7 +637,7 @@
       <id>test-client</id>
       <activation>
         <property>
-          <name>client</name>
+          <name>testClient</name>
         </property>
       </activation>
       <build>
@@ -656,7 +656,7 @@
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>test</argument>
+                    <argument>test-ci</argument>
                   </arguments>
                 </configuration>
                 <goals>

@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/TexasDigitalLibrary/Vireo.svg?branch=master)](https://travis-ci.org/TexasDigitalLibrary/Vireo) [![Coverage Status](https://coveralls.io/repos/github/TexasDigitalLibrary/Vireo/badge.svg?branch=master)](https://coveralls.io/github/TexasDigitalLibrary/Vireo?branch=master)
+[![Build Status](https://github.com/TexasDigitalLibrary/Vireo/workflows/Build/badge.svg)](https://github.com/TexasDigitalLibrary/Vireo/actions?query=workflow%3ABuild)
+[![Coverage Status](https://coveralls.io/repos/github/TexasDigitalLibrary/Vireo/badge.svg)](https://coveralls.io/github/TexasDigitalLibrary/Vireo)
 
 # Vireo 4
 
