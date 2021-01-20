@@ -237,7 +237,8 @@ module.exports = function (grunt) {
         coveralls: {
             options: {
                 debug: true,
-                coverageDir: 'src/main/webapp/coverage/'
+                coverageDir: 'src/main/webapp/coverage/',
+                dryRun: true
             }
         }
 
@@ -254,8 +255,6 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-karma-coveralls');
 
     grunt.registerTask('default', ['jshint', 'copy:styles', 'clean', 'symlink']);
-
-    grunt.registerTask('coverage-preprocess', ['concat', 'usemin', 'clean', 'copy', 'symlink']);
 
     grunt.registerTask('coverage', ['jshint', 'copy:styles', 'symlink', 'coveralls']);
 

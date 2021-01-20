@@ -1,0 +1,51 @@
+name: Build
+
+on: [ push, pull_request, workflow_dispatch ]
+
+jobs:
+  java:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: "Node Cache"
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json', '**/package-lock.json') }}
+
+      - name: "Node Modules Cache"
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package.json', '**/package-lock.json') }}
+
+      - name: "Maven Cache"
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+
+      - name: "Setup Node"
+        uses: actions/setup-node@v2
+        with:
+          node-version: 10
+
+      - name: "Setup Java"
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+
+      - name: "Maven and Node Tests"
+        run: mvn clean test cobertura:cobertura jacoco:report coveralls:report -DdryRun=true -DtestClient
+
+      - name: "Combine Coverage"
+        run: jq 'reduce inputs as $i (.; .source_files += $i.source_files)' target/coveralls.json src/main/webapp/coverage/coveralls.json > coveralls.json
+
+      - name: "Send to Coveralls"
+        uses: MikeEdgar/github-action@raw_coverage_file
+        with:
+          github-token: ${{ secrets.github_token }}
+          path-to-file: './coveralls.json'
+          coverage-format: raw
