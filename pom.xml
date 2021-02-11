@@ -41,26 +41,6 @@
 
   <packaging>war</packaging>
 
-  <repositories>
-    <repository>
-      <id>tamu-releases</id>
-      <url>https://artifacts.library.tamu.edu/repository/maven-releases/</url>
-        <snapshots>
-            <enabled>false</enabled>
-        </snapshots>
-    </repository>
-    <repository>
-      <id>tamu-snapshots</id>
-      <url>https://artifacts.library.tamu.edu/repository/maven-snapshots/</url>
-    </repository>
-
-    <repository>
-      <id>mvnrepository</id>
-      <name>Maven Central Repository</name>
-      <url>https://repo1.maven.org/maven2/</url>
-    </repository>
-  </repositories>
-
   <dependencies>
 
     <dependency>
@@ -672,5 +652,20 @@
     </profile>
 
   </profiles>
+
+  <repositories>
+    <repository>
+      <id>tamu-releases</id>
+      <url>https://artifacts.library.tamu.edu/repository/maven-releases</url>
+      <releases><enabled>true</enabled></releases>
+      <snapshots><enabled>false</enabled></snapshots>
+    </repository>
+    <repository>
+      <id>tamu-snapshots</id>
+      <url>https://artifacts.library.tamu.edu/repository/maven-snapshots</url>
+      <releases><enabled>false</enabled></releases>
+      <snapshots><enabled>true</enabled></snapshots>
+    </repository>
+  </repositories>
 
 </project>
