@@ -3,7 +3,7 @@ name: Build
 on: [ push, pull_request, workflow_dispatch ]
 
 jobs:
-  java:
+  build:
     runs-on: ubuntu-latest
 
     steps:
