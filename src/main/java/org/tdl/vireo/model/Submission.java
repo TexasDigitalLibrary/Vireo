@@ -15,6 +15,7 @@ import java.util.UUID;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -38,7 +39,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 @JsonIgnoreProperties(value = { "organization" }, allowGetters = true)
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }), indexes = @Index(columnList = "submitter_id"))
 public class Submission extends ValidatingBaseEntity {
 
     @JsonView(ApiView.Partial.class)
