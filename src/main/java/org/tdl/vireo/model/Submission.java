@@ -39,7 +39,10 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 @JsonIgnoreProperties(value = { "organization" }, allowGetters = true)
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }), indexes = @Index(columnList = "submitter_id"))
+@Table(
+    uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }),
+    indexes = @Index(columnList = "submitter_id", name = "submission_submitter_id_idx")
+)
 public class Submission extends ValidatingBaseEntity {
 
     @JsonView(ApiView.Partial.class)
