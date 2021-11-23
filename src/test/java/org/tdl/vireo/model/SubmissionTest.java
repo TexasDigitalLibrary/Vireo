@@ -65,6 +65,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
     }
 
+    @Transactional
     @Override
     public void testCreate() throws OrganizationDoesNotAcceptSubmissionsException {
 
