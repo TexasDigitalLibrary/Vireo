@@ -560,7 +560,6 @@ public class Submission extends ValidatingBaseEntity {
      * @param customActionValue
      * @return
      */
-    @JsonView(Views.Partial.class)
     public CustomActionValue getCustomActionValue(CustomActionValue customActionValue) {
         for (CustomActionValue cav : this.customActionValues) {
             if (cav.getDefinition().getLabel().equals(customActionValue.getDefinition().getLabel())) {
