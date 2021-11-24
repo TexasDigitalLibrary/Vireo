@@ -59,7 +59,7 @@ public class User extends AbstractWeaverUserDetails {
     @JsonIgnore
     private String password;
 
-    @JsonView(Views.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = false)
     private String firstName;
 
@@ -67,7 +67,7 @@ public class User extends AbstractWeaverUserDetails {
     @Column(nullable = false)
     private String lastName;
 
-    @JsonView(Views.SubmissionList.class)
+    @JsonView(Views.Partial.class)
     @Column
     private String middleName;
 
