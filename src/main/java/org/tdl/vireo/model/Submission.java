@@ -29,7 +29,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.model.response.Views;
@@ -42,7 +41,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }))
 public class Submission extends ValidatingBaseEntity {
 
-    @JsonView(Views.SubmissionList.class)
+    @JsonView(Views.Partial.class)
     @ManyToOne(fetch = LAZY, optional = false)
     private User submitter;
 
@@ -60,8 +59,6 @@ public class Submission extends ValidatingBaseEntity {
 
     @JsonView(Views.SubmissionList.class)
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
-    @Fetch(FetchMode.SELECT)
-    @BatchSize(size = 20)
     private Set<FieldValue> fieldValues;
 
     @JsonView(Views.Partial.class)
@@ -479,7 +476,7 @@ public class Submission extends ValidatingBaseEntity {
     /**
      * @return
      */
-    @JsonView(Views.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     public String getCommitteeContactEmail() {
         Optional<FieldValue> optFv = this.getFieldValuesByPredicateValue("dc.contributor.advisor")
             .stream()

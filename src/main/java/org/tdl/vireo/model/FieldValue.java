@@ -10,19 +10,19 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import edu.tamu.weaver.response.ApiView;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.model.response.Views;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 public class FieldValue extends ValidatingBaseEntity {
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(columnDefinition = "text", nullable = true)
     private String value;
 
@@ -36,7 +36,7 @@ public class FieldValue extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private List<String> contacts;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @ManyToOne(optional = false)
     private FieldPredicate fieldPredicate;
 
