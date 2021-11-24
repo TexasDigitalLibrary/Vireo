@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
+import org.springframework.transaction.annotation.Transactional;
 
 public class FieldValueTest extends AbstractEntityTest {
 
@@ -12,6 +13,7 @@ public class FieldValueTest extends AbstractEntityTest {
         fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, false);
     }
 
+    @Transactional
     @Override
     public void testCreate() {
         FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
