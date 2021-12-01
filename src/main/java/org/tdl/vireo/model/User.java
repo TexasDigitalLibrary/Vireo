@@ -39,11 +39,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.UserValidator;
 
-import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
 import edu.tamu.weaver.user.model.IRole;
 
 @Entity
-public class User extends AbstractWeaverUserDetails {
+public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     private static final long serialVersionUID = -614285536644750464L;
 

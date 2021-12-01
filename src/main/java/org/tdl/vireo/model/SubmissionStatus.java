@@ -21,10 +21,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.SubmissionStatusValidator;
 
-import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
-
 @Entity
-public class SubmissionStatus extends ValidatingBaseEntity {
+public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
 
     @JsonView(Views.SubmissionList.class)
     @Column(nullable = false, unique = true)

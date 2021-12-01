@@ -37,12 +37,10 @@ import org.slf4j.LoggerFactory;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.OrganizationValidator;
 
-import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
-
 @Entity
 @JsonIgnoreProperties(value = { "aggregateWorkflowSteps", "childrenOrganizations" }, allowGetters = true)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id", "parent_organization_id" }))
-public class Organization extends ValidatingBaseEntity {
+public class Organization extends HibernateWorkaroundValidatingBaseEntity {
 
     @Transient
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
