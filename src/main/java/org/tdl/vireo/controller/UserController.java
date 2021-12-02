@@ -1,5 +1,6 @@
 package org.tdl.vireo.controller;
 
+import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.beans.BeanUtils.copyProperties;
@@ -12,10 +13,14 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
@@ -33,7 +38,7 @@ import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 @RequestMapping("/user")
 public class UserController {
 
-    private final static Logger logger = LoggerFactory.getLogger(UserController.class);
+    private final static Logger LOG = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserRepo userRepo;
@@ -78,7 +83,7 @@ public class UserController {
         // copy properties from source, arg1, to destination, arg2, excluding ..., arg3
         copyProperties(updatedUser, persistedUser, "password", "activeFilter", "savedFilters");
 
-        logger.info("Updating user with email " + persistedUser.getEmail());
+        LOG.info("Updating user with email " + persistedUser.getEmail());
         persistedUser = userRepo.save(persistedUser);
 
         userRepo.broadcast(userRepo.findAll());
@@ -99,6 +104,14 @@ public class UserController {
         userRepo.update(user);
         simpMessagingTemplate.convertAndSend("/channel/user/settings/" + user.getId(), new ApiResponse(SUCCESS, userRepo.save(user).getSettings()));
         return new ApiResponse(SUCCESS);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public ApiResponse handleExceptions(Exception exception) {
+        LOG.error(exception.getMessage(), exception);
+        return new ApiResponse(ERROR, exception.getMessage());
     }
 
 }
