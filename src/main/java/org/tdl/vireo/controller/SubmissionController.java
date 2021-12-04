@@ -104,7 +104,7 @@ import edu.tamu.weaver.validation.results.ValidationResults;
 @RequestMapping("/submission")
 public class SubmissionController {
 
-  private Logger LOG = LoggerFactory.getLogger(this.getClass());
+  private static final Logger LOG = LoggerFactory.getLogger(SubmissionController.class);
 
   private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
 
@@ -550,8 +550,6 @@ public class SubmissionController {
                 ZipOutputStream zos = new ZipOutputStream(sos_pq, StandardCharsets.UTF_8);
 
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
-                    String submissionName = "submission_" + submission.getId() + "/";
-
                     List<FieldValue> fieldValues = submission.getFieldValuesByPredicateValue("first_name");
                     Optional<String> firstNameOpt = fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
                     String firstName = firstNameOpt.isPresent() ? firstNameOpt.get() : "";

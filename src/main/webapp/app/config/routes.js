@@ -2,6 +2,13 @@ vireo.config(function ($locationProvider, $routeProvider) {
 
     $locationProvider.html5Mode(true);
 
+    var adminSubmissionViewRoute = {
+        templateUrl: 'views/admin/admin.html',
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"],
+        controller: 'AdminSubmissionViewController',
+        reloadOnUrl: false
+    };
+
     $routeProvider.when('/myprofile', {
         templateUrl: 'views/myprofile.html',
         controller: 'SettingsController',
@@ -62,12 +69,8 @@ vireo.config(function ($locationProvider, $routeProvider) {
         templateUrl: 'views/admin/admin.html',
         access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"]
     }).
-    when('/admin/view/:id/:tab', {
-        templateUrl: 'views/admin/admin.html',
-        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"],
-        controller: 'AdminSubmissionViewController',
-        reloadOnUrl: false
-    }).
+    when('/admin/view/:id/:tab', adminSubmissionViewRoute).
+    when('/admin/view/:id', adminSubmissionViewRoute).
     when('/admin/viewError', {
         templateUrl: 'views/admin/admin.html',
         access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"]
