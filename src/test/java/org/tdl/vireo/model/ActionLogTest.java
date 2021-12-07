@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 
 public class ActionLogTest extends AbstractEntityTest {
@@ -25,6 +26,7 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
     }
 
+    @Transactional
     @Override
     public void testCreate() {
         ActionLog testActionLog = actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
@@ -45,6 +47,7 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("Saved action log does not have the correct flag ", TEST_ACTION_LOG_FLAG, testActionLog.isPrivateFlag());
     }
 
+    @Transactional
     @Override
     public void testDuplication() {
         actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
@@ -52,6 +55,7 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("The action log entry was not duplicated", 2, actionLogRepo.count());
     }
 
+    @Transactional
     @Override
     public void testDelete() {
         ActionLog testActionLog = actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
@@ -59,6 +63,7 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals("The test action log was not deleted!", 0, actionLogRepo.count());
     }
 
+    @Transactional
     @Override
     public void testCascade() {
         ActionLog testActionLog = actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);

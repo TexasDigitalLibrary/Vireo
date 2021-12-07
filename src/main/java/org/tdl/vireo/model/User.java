@@ -27,31 +27,30 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.tdl.vireo.model.validation.UserValidator;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
-import edu.tamu.weaver.response.ApiView;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.tdl.vireo.model.response.Views;
+import org.tdl.vireo.model.validation.UserValidator;
+
 import edu.tamu.weaver.user.model.IRole;
 
 @Entity
-public class User extends AbstractWeaverUserDetails {
+public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     private static final long serialVersionUID = -614285536644750464L;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @Column(nullable = true)
     private String netid;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -59,15 +58,15 @@ public class User extends AbstractWeaverUserDetails {
     @JsonIgnore
     private String password;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = false)
     private String firstName;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = false)
     private String lastName;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @Column
     private String middleName;
 
@@ -76,7 +75,7 @@ public class User extends AbstractWeaverUserDetails {
     @Column(name = "value")
     private Map<String, String> settings;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @Column
     private Integer birthYear;
 

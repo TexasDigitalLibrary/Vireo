@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
+import org.springframework.transaction.annotation.Transactional;
 
 public class CustomActionValueTest extends AbstractEntityTest {
 
@@ -29,6 +30,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
         assertEquals("The customActionDefinition repository is not empty!", 1, customActionDefinitionRepo.count());
     }
 
+    @Transactional
     @Override
     public void testCreate() {
         CustomActionValue testCustomActionValue = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
@@ -39,6 +41,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
         // TODO - similar tests for custom action definition
     }
 
+    @Transactional
     @Override
     public void testDuplication() {
         CustomActionValue cav1 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
@@ -51,6 +54,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
     }
 
+    @Transactional
     @Override
     public void testDelete() {
         CustomActionValue testCustomActionValue = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
@@ -58,6 +62,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
         assertEquals("CustomActionValue was not deleted!", 0, customActionValueRepo.count());
     }
 
+    @Transactional
     @Override
     public void testCascade() {
         CustomActionValue testCustomActionValue = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);

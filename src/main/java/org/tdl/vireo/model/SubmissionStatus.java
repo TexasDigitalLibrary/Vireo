@@ -12,21 +12,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
-import org.tdl.vireo.model.validation.SubmissionStatusValidator;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import edu.tamu.weaver.response.ApiView;
-import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
+import org.tdl.vireo.model.response.Views;
+import org.tdl.vireo.model.validation.SubmissionStatusValidator;
 
 @Entity
-public class SubmissionStatus extends ValidatingBaseEntity {
+public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = false, unique = true)
     private String name;
 
@@ -54,7 +52,7 @@ public class SubmissionStatus extends ValidatingBaseEntity {
     @JsonProperty("isActive")
     private Boolean isActive;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @Column(nullable = false)
     private SubmissionState submissionState;
 

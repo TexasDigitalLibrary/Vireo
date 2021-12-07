@@ -23,12 +23,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tdl.vireo.model.validation.OrganizationValidator;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -36,26 +30,30 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import edu.tamu.weaver.response.ApiView;
-import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tdl.vireo.model.response.Views;
+import org.tdl.vireo.model.validation.OrganizationValidator;
 
 @Entity
 @JsonIgnoreProperties(value = { "aggregateWorkflowSteps", "childrenOrganizations" }, allowGetters = true)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id", "parent_organization_id" }))
-public class Organization extends ValidatingBaseEntity {
+public class Organization extends HibernateWorkaroundValidatingBaseEntity {
 
     @Transient
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = false)
     private String name;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @Column(nullable = false)
     private Boolean acceptsSubmissions = true;
 
@@ -70,13 +68,13 @@ public class Organization extends ValidatingBaseEntity {
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @ManyToOne(fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization parentOrganization;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private Set<Organization> childrenOrganizations;

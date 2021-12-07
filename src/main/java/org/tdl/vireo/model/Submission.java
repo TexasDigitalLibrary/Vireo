@@ -1,7 +1,7 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,15 +26,15 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.tdl.vireo.model.validation.SubmissionValidator;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import edu.tamu.weaver.response.ApiView;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.model.response.Views;
+import org.tdl.vireo.model.validation.SubmissionValidator;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
@@ -45,72 +45,71 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 )
 public class Submission extends ValidatingBaseEntity {
 
-    @JsonView(ApiView.Partial.class)
-    @ManyToOne(fetch = EAGER, optional = false)
+    @JsonView(Views.Partial.class)
+    @ManyToOne(fetch = LAZY, optional = false)
     private User submitter;
 
-    @JsonView(ApiView.Partial.class)
-    @ManyToOne(fetch = EAGER, optional = true)
+    @JsonView(Views.SubmissionList.class)
+    @ManyToOne(fetch = LAZY, optional = true)
     private User assignee;
 
-    @JsonView(ApiView.Partial.class)
-    @ManyToOne(fetch = EAGER, optional = false)
+    @JsonView(Views.SubmissionList.class)
+    @ManyToOne(fetch = LAZY, optional = false)
     private SubmissionStatus submissionStatus;
 
-    @JsonView(ApiView.Partial.class)
-    @ManyToOne(fetch = EAGER, optional = false)
+    @JsonView(Views.SubmissionList.class)
+    @ManyToOne(fetch = LAZY, optional = false)
     private Organization organization;
 
-    @JsonView(ApiView.Partial.class)
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
-    @Fetch(FetchMode.SELECT)
+    @JsonView(Views.SubmissionList.class)
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
-    @JsonView(ApiView.Partial.class)
-    @ManyToMany(fetch = EAGER)
+    @JsonView(Views.Partial.class)
+    @ManyToMany(fetch = LAZY)
     @Fetch(FetchMode.SELECT)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn
     private List<SubmissionWorkflowStep> submissionWorkflowSteps;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveEmbargoDate;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveApplicationDate;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar submissionDate;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)
     private Calendar approveAdvisorDate;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = true)
     private boolean approveEmbargo;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = true)
     private boolean approveApplication;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = true)
     private boolean approveAdvisor;
 
-    @JsonView(ApiView.Partial.class)
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @JsonView(Views.Partial.class)
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     private Set<CustomActionValue> customActionValues;
 
-    @OneToMany(cascade = ALL, fetch = EAGER, orphanRemoval = true)
+    @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     @JoinColumn
     private Set<ActionLog> actionLogs;
@@ -429,9 +428,11 @@ public class Submission extends ValidatingBaseEntity {
     /**
      *
      */
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     public String getLastEvent() {
-        Optional<ActionLog> actionLog = getActionLogs().stream().max(Comparator.comparing(al -> al.getActionDate()));
+        Optional<ActionLog> actionLog = getActionLogs()
+            .stream()
+            .max(Comparator.comparing(al -> al.getActionDate()));
         String lastEvent = null;
 
         if (actionLog.isPresent()) {
@@ -479,12 +480,17 @@ public class Submission extends ValidatingBaseEntity {
     /**
      * @return
      */
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     public String getCommitteeContactEmail() {
-        Optional<FieldValue> optFv = this.getFieldValuesByPredicateValue("dc.contributor.advisor").stream().findFirst();
+        Optional<FieldValue> optFv = this.getFieldValuesByPredicateValue("dc.contributor.advisor")
+            .stream()
+            .findFirst();
         String email = null;
         if (optFv.isPresent()) {
-            Optional<String> optEmail = optFv.get().getContacts().stream().findFirst();
+            Optional<String> optEmail = optFv.get()
+                .getContacts()
+                .stream()
+                .findFirst();
             if (optEmail.isPresent()) {
                 email = optEmail.get();
             }
@@ -689,6 +695,10 @@ public class Submission extends ValidatingBaseEntity {
 
     public void generateAdvisorReviewUrl(String baseUrl) {
         this.advisorReviewURL = baseUrl + "/review/" + this.getAdvisorAccessHash();
+    }
+
+    public void setAdvisorReviewURL(String advisorReviewURL) {
+        this.advisorReviewURL = advisorReviewURL;
     }
 
     public String getAdvisorReviewURL() {
