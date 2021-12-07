@@ -177,7 +177,7 @@ public class SubmissionController {
   @RequestMapping("/all-by-user")
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse getAllByUser(@WeaverUser User user) {
-    return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitter(user));
+    return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitterId(user.getId()));
   }
 
   @RequestMapping("/get-one/{submissionId}")
