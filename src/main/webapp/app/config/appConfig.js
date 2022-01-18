@@ -5,7 +5,7 @@ var appConfig = {
     'allowAnonymous': true,
     'anonymousRole': 'ROLE_ANONYMOUS',
 
-    'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/mock/auth',
+    'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/auth',
     'webService': window.location.protocol + '//' + window.location.host + window.location.base,
 
     'storageType': 'session',
@@ -31,6 +31,6 @@ var appConfig = {
     // Set this to 'admin' or 'user' if using mock AuthService
     // otherwise set to null or false
 
-    'mockRole': 'admin'
+    'mockRole': 'false'
 
 };
