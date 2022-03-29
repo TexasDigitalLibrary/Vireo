@@ -1,12 +1,13 @@
 package org.tdl.vireo.model;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotEquals;
+
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 
@@ -65,22 +66,22 @@ public class SubmissionTest extends AbstractEntityTest {
 
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void testCreate() throws OrganizationDoesNotAcceptSubmissionsException {
 
         Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
-        
+
         submission = submissionRepo.save(submission);
 
         CustomActionDefinition cad = customActionDefinitionRepo.create("My Custom Action", true);
         CustomActionValue cav = customActionValueRepo.create(submission, cad, false);
 
         organization = organizationRepo.findOne(organization.getId());
-        
+
         submission = submissionRepo.read(submission.getId());
 
         assertEquals("The repository did not save the submission!", 1, submissionRepo.count());
@@ -102,13 +103,13 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Override
-    @Test(expected = DataIntegrityViolationException.class)
+    @Transactional
     public void testDuplication() throws OrganizationDoesNotAcceptSubmissionsException {
 
         submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
         assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
         submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
-        assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
+        assertEquals("The repository didn't create the additional submission!", 2, submissionRepo.count());
     }
 
     @Override
@@ -208,7 +209,8 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Test
-    public void testUniqueConstraint() throws OrganizationDoesNotAcceptSubmissionsException {
+    @Transactional
+    public void testMultiple() throws OrganizationDoesNotAcceptSubmissionsException {
 
         Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
 
@@ -219,14 +221,21 @@ public class SubmissionTest extends AbstractEntityTest {
         organization = organizationRepo.findOne(organization.getId());
         submission = submissionRepo.save(submission);
 
-        assertEquals("The submission was not retrievable by its unique constraint!", submission, submissionRepo.findBySubmitterAndOrganization(submitter, organization));
+        List<Submission> found = submissionRepo.findAllBySubmitterAndOrganization(submitter, organization);
 
-        try {
+        assertEquals("Did not retrieve exactly one submission by submitter and organization!", 1, found.size());
+        assertEquals("The submission was not retrievable by submitter and organization!", submission, found.get(0));
 
-            submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
-            assertTrue(false);
-        } catch (Exception e) {
-            /* SUCCESS */ }
+        Submission secondSubmission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+
+        secondSubmission.addSubmissionWorkflowStep(submissionWorkflowStep);
+        submission = submissionRepo.save(submission);
+
+        found = submissionRepo.findAllBySubmitterAndOrganization(submitter, organization);
+
+        assertEquals("Did not retrieve exactly two submissions by submitter and organization!", 2, found.size());
+        assertEquals("The submission was not retrievable by submitter and organization!", secondSubmission, found.get(1));
+        assertNotEquals("The submissions retrieved by submitter and organization are the same!", found.get(0).getId(), found.get(1).getId());
     }
 
     @After
