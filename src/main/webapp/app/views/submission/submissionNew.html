@@ -3,13 +3,13 @@
     <div class="row">
       <div class="col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
         <form name="newSubmission" ng-if="ready">
-          <button ng-if="!hasSubmission(getSelectedOrganization()) && getSelectedOrganization().acceptsSubmissions" class="btn btn-primary triptych-start-submission form-control" ng-click="createSubmission(getSelectedOrganization())" ng-disabled="creatingSubmission">
+          <button ng-if="getSelectedOrganization().acceptsSubmissions" class="btn btn-primary triptych-start-submission form-control" ng-click="createSubmission(getSelectedOrganization())" ng-disabled="creatingSubmission">
             <span>Start {{getSelectedOrganization().name}} Submission <span ng-if="creatingSubmission" class="glyphicon glyphicon-refresh spinning"> </span></span>
           </button>
-          <button ng-if="hasSubmission(getSelectedOrganization())" class="btn btn-primary triptych-start-submission form-control" ng-click="gotoSubmission(getSelectedOrganization())">
+          <button ng-if="!getSelectedOrganization().acceptsSubmissions && hasSubmission(getSelectedOrganization())" class="btn btn-primary triptych-start-submission form-control" ng-click="gotoSubmission(getSelectedOrganization())">
             <span>Continue {{getSelectedOrganization().name}} Submission</span>
           </button>
-          <button ng-if="!getSelectedOrganization().acceptsSubmissions" class="btn btn-primary triptych-start-submission disabled form-control">
+          <button ng-if="!getSelectedOrganization().acceptsSubmissions && !hasSubmission(getSelectedOrganization())" class="btn btn-primary triptych-start-submission disabled form-control">
             <span>Choose an Organization that allows Submissions</span>
           </button>
         </form>
