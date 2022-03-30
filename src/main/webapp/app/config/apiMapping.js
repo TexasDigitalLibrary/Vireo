@@ -928,6 +928,11 @@ var apiMapping = {
             'controller': 'user',
             'method': 'assignable'
         },
+        unassignable: {
+            'endpoint': '/private/queue',
+            'controller': 'user',
+            'method': 'unassignable'
+        },
         update: {
             'endpoint': '/private/queue',
             'controller': 'user',

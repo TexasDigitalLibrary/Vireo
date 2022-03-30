@@ -26,11 +26,11 @@ vireo.repo("UserRepo", function UserRepo($timeout, TableFactory, User, WsApi) {
         repo: userRepo
     });
 
-    userRepo.getAssignableUsers = function(roles) {
+    userRepo.getAssignableUsers = function() {
         var assignable = [];
         WsApi.fetch(userRepo.mapping.assignable).then(function(response) {
             var resObj = angular.fromJson(response.body);
-            if(resObj.meta.status === 'SUCCESS') {
+            if (resObj.meta.status === 'SUCCESS') {
                 var users = resObj.payload['ArrayList<User>'];
                 for(var i in users) {
                     assignable.push(new User(users[i]));
@@ -38,6 +38,24 @@ vireo.repo("UserRepo", function UserRepo($timeout, TableFactory, User, WsApi) {
             }
         });
         return assignable;
+    };
+
+    userRepo.getUnassignableUsers = function() {
+        var unassignable = [];
+
+        WsApi.fetch(userRepo.mapping.unassignable).then(function(response) {
+            var resObj = angular.fromJson(response.body);
+
+            if (resObj.meta.status === 'SUCCESS') {
+                var users = resObj.payload['ArrayList<User>'];
+
+                for (var i in users) {
+                    unassignable.push(new User(users[i]));
+                }
+            }
+        });
+
+        return unassignable;
     };
 
     WsApi.listen(userRepo.mapping.createListen).then(null, null, function (response) {
