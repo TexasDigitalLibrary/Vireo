@@ -146,23 +146,23 @@
 
   </main>
 
-  <footer class="footer">
+  <footer class="footer" ng-controller="FooterController">
     <div class="container">
       <ul class="inline-list">
         <li>&copy; Vireo
           <span app-version></span>
         </li>
         <li>
-          <a href="#">Webmaster</a>
+          <a href="{{webmaster}}">Webmaster</a>
         </li>
         <li>
-          <a href="#">Legal</a>
+          <a href="{{legal}}">Legal</a>
         </li>
         <li>
-          <a href="#">Comments</a>
+          <a href="{{comments}}">Comments</a>
         </li>
         <li>
-          <a href="#">Accessibility</a>
+          <a href="{{accessibility}}">Accessibility</a>
         </li>
       </ul>
     </div>
@@ -411,6 +411,7 @@
   <script src="controllers/abstractController.js"></script>
   <script src="controllers/adminController.js"></script>
   <script src="controllers/headerController.js"></script>
+  <script src="controllers/footerController.js"></script>
   <script src="controllers/applicationSettingsController.js"></script>
   <script src="controllers/organizationSettingsController.js"></script>
   <script src="controllers/workflowManagementController.js"></script>

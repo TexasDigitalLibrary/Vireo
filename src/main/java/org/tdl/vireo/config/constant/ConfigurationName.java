@@ -33,6 +33,19 @@ public class ConfigurationName {
     /** The replyTo address attached to every email by default **/
     public final static String EMAIL_REPLY_TO = "email_reply_to";
 
+    // Website links shown on the Footer.
+    /** Provide a link to the webmaster, such as an e-mail link. */
+    public final static String FOOTER_LINK_WEBMASTER = "footer.link_webmaster";
+
+    /** Provide a link to the legal, such as an URL link. */
+    public final static String FOOTER_LINK_LEGAL = "footer.link_legal";
+
+    /** Provide a link to the comments, such as an e-mail link. */
+    public final static String FOOTER_LINK_COMMENTS = "footer.link_comments";
+
+    /** Provide a link to the accessibility, such as an URL link. */
+    public final static String FOOTER_LINK_ACCESSIBILITY = "footer.link_accessibility";
+
     // Theme settings
     /** Background main color */
     public final static String THEME_PATH = "theme_path";
