@@ -27,9 +27,8 @@ angular.module("mock.userService", []).service("UserService", function ($q) {
     };
 
     service.setCurrentUser = function (user) {
-        currentUser = mockModel(user);
-
-        sessionStorage.role = toMock.role;
+        currentUser = user;
+        sessionStorage.role = currentUser.role;
     };
 
     service.userEvents = function () {

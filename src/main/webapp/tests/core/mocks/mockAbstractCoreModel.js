@@ -90,6 +90,5 @@ var mockModel = function (modelName, $q, mockDataObj) {
     model._syncShadow = function() {
     };
 
-
     return model;
 };
