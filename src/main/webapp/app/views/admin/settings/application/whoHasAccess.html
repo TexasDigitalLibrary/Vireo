@@ -1,7 +1,7 @@
-<div ng-controller="UserRepoController">
+<div ng-controller="WhoHasAccessController">
     <div class="row">
         <div class="col-md-12">
-            <button class="btn btn-default modal-add-btn" ng-click="openModal('#addMemberModal')">
+            <button class="btn btn-default modal-add-btn" ng-click="openAddMemberModal()">
                 Add Member
             </button>
 
@@ -16,7 +16,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="u in users | filter:{role: '!ROLE_STUDENT'}" ng-init="setRole(u)">
+                    <tr ng-repeat="u in assignableUsers" ng-init="setRole(u)">
                         <td>{{u.firstName}} {{u.lastName}}</td>
                         <td>{{u.email}}</td>
                         <td>
@@ -31,9 +31,9 @@
 
     </div>
 
-    <modal 
+    <modal
         modal-id="addMemberModal"
-        modal-view="views/modals/whoHasAccessModal.html" 
+        modal-view="views/modals/addMemberModal.html"
         modal-header-class="modal-header-primary"
         modal-keyboard="false"
         wvr-modal-backdrop="static">
