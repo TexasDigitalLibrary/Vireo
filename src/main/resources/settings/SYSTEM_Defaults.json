@@ -25,6 +25,20 @@
       "new_submission_header_text":"Choose Your Organization"
     }
   ],
+  "footer":[
+    {
+      "link_webmaster":"dev@tdl.org"
+    },
+    {
+      "link_legal":"dev@tdl.org"
+    },
+    {
+      "link_comments":"dev@tdl.org"
+    },
+    {
+      "link_accessibility":"dev@tdl.org"
+    }
+  ],
   "orcid":[
     {
       "orcid_validation":true
