@@ -106,6 +106,7 @@ public class ConfigurationName {
     public final static String APPLICATION_MAIL_PASSWORD = "mail.pass";
     public final static String APPLICATION_MAIL_CHANNEL = "mail.channel";
     public final static String APPLICATION_MAIL_PROTOCOL = "mail.protocol";
+    public final static String APPLICATION_MAIL_ENCODING = "mail.encoding";
     public final static String APPLICATION_AUTH_FORCE_SSL = "auth.forceSSL";
     public final static String APPLICATION_AUTH_PASS_ENABLED = "auth.pass.enabled";
     public final static String APPLICATION_AUTH_PASS_VISIBLE = "auth.pass.visible";
