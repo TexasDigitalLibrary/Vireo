@@ -110,6 +110,7 @@ public class SubmissionEmailService {
 
                 if (!recipientList.isEmpty()) {
                     smm.setFrom(emailSender.getFrom());
+                    smm.setReplyTo(emailSender.getReplyTo());
                     smm.setTo(recipientList.toArray(new String[0]));
                     smm.setSubject(subject);
                     smm.setText(content);
@@ -161,6 +162,7 @@ public class SubmissionEmailService {
             }
 
             smm.setFrom(emailSender.getFrom());
+            smm.setReplyTo(emailSender.getReplyTo());
             smm.setSubject(subject);
             smm.setText(templatedMessage);
 
@@ -215,6 +217,7 @@ public class SubmissionEmailService {
                         }
 
                         smm.setFrom(emailSender.getFrom());
+                        smm.setReplyTo(emailSender.getReplyTo());
                         smm.setSubject(subject);
                         smm.setText(content);
 
