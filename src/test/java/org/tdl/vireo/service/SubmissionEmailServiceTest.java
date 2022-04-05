@@ -3,6 +3,7 @@ package org.tdl.vireo.service;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -192,6 +193,13 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_EMAIL_RECIPIENT_MAP5.put("data", "Submitter");
     }
 
+    private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP6 = new HashMap<String, Object>();
+    static {
+        TEST_EMAIL_RECIPIENT_MAP6.put("type", "ADVISOR");
+        TEST_EMAIL_RECIPIENT_MAP6.put("name", "Advisor");
+        TEST_EMAIL_RECIPIENT_MAP6.put("data", "Advisor");
+    }
+
     private static final FieldPredicate TEST_FIELD_PREDICATE4 = new FieldPredicate();
     static {
         TEST_FIELD_PREDICATE4.setId(4L);
@@ -336,10 +344,6 @@ public class SubmissionEmailServiceTest extends MockData {
         emailWorkflowRuleAdvisors.add(TEST_EMAIL_WORKFLOW_RULE_ADVISOR);
         when(mockEmailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(TEST_EMAIL_RECIPIENT_ADVISOR, false)).thenReturn(emailWorkflowRuleAdvisors);
 
-        doCallRealMethod().when(mockEmailSender).sendEmail(any(String.class), any(String.class), any(String.class));
-        doCallRealMethod().when(mockEmailSender).sendEmail(any(String[].class), any(String.class), any(String.class));
-        doCallRealMethod().when(mockEmailSender).sendEmail(any(String.class), any(String[].class), any(String.class), any(String.class));
-
         doNothing().when(mockEmailSender).send(any(MimeMessage.class));
         doNothing().when(mockEmailSender).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
     }
@@ -362,6 +366,26 @@ public class SubmissionEmailServiceTest extends MockData {
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS3);
+
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String.class), any(String.class));
+        reset(mockEmailSender);
+    }
+
+    @Test
+    public void testSendAdvisorEmailsWithoutRules() throws MessagingException {
+        mockEmailWorkflowRules.clear();
+
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
+        verify(mockEmailSender, never()).sendEmail(any(String[].class), any(String.class), any(String.class));
+        reset(mockEmailSender);
+    }
+
+    @Test
+    public void testSendAdvisorEmailsThrowMessagingException() throws MessagingException {
+        doThrow(MessagingException.class).when(mockEmailSender).sendEmail(any(String[].class), any(String.class), any(String.class));
+
+        mockFieldValues.add(TEST_FIELD_VALUE3);
 
         submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
         verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String.class), any(String.class));
@@ -395,7 +419,27 @@ public class SubmissionEmailServiceTest extends MockData {
     }
 
     @Test
+    public void testSendAutomatedEmailsThrowMessagingException() throws MessagingException, JsonProcessingException, IOException {
+        doThrow(MessagingException.class).when(mockEmailSender).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+
+        List<Map<String, Object>> emails = new ArrayList<Map<String, Object>>();
+        emails.add(TEST_EMAIL_RECIPIENT_MAP1);
+
+        mockData.put("commentVisibility", "public");
+        mockData.put("message", "Mock Message.");
+        mockData.put("recipientEmails", emails);
+        mockData.put("sendEmailToRecipient", true);
+        TEST_USER.setSettings(TEST_USER1_SETTINGS4);
+
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+        reset(mockEmailSender);
+    }
+
+    @Test
     public void testSendWorkflowEmails() throws MessagingException {
+        doCallRealMethod().when(mockEmailSender).sendEmail(any(String.class), any(String.class), any(String.class));
+
         submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission);
         verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
         reset(mockEmailSender);
@@ -419,6 +463,15 @@ public class SubmissionEmailServiceTest extends MockData {
         reset(mockEmailSender);
     }
 
+    @Test
+    public void testSendWorkflowEmailsThrowMessagingException() throws MessagingException, JsonProcessingException, IOException {
+        doThrow(MessagingException.class).when(mockEmailSender).sendEmail(any(String.class), any(String.class), any(String.class));
+
+        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission);
+        verify(mockEmailSender, times(1)).sendEmail(any(String.class), any(String.class), any(String.class));
+        reset(mockEmailSender);
+    }
+
     private void doTestSendAutomatedEmails(boolean cc) throws JsonProcessingException, IOException, MessagingException {
         List<Map<String, Object>> emails = new ArrayList<Map<String, Object>>();
         emails.add(TEST_EMAIL_RECIPIENT_MAP1);
@@ -431,6 +484,7 @@ public class SubmissionEmailServiceTest extends MockData {
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP3);
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP4);
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP5);
+        ccEmails.add(TEST_EMAIL_RECIPIENT_MAP6);
 
         submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
         verify(mockEmailSender, never()).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
