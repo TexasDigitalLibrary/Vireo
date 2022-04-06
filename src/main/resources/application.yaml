@@ -115,8 +115,8 @@ app:
 
   # edu.tamu.weaver.auth.service.UserCredentialsService
   authority.admins: admin@tdl.org,aggieJack@tamu.edu
-  
-  
+
+
   security:
     # edu.tamu.weaver.auth.service.CryptoService
     secret: verysecretsecret
@@ -134,6 +134,7 @@ app:
     #port: 587
     #protocol: smtp
     #channel: starttls
+    #encoding: UTF8
 
   # edu.tamu.weaver.reporting.controller.ReportingController
   reporting.address: reporting@tdl.org
