@@ -2,7 +2,6 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -67,7 +66,7 @@ public class Submission extends ValidatingBaseEntity {
     private Set<FieldValue> fieldValues;
 
     @JsonView(Views.Partial.class)
-    @ManyToMany(fetch = EAGER)
+    @ManyToMany(fetch = LAZY)
     @Fetch(FetchMode.SELECT)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "submission_id", "submission_workflow_steps_id", "submissionWorkflowSteps_order" }))
     @OrderColumn

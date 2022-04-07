@@ -1,7 +1,6 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.FetchType.EAGER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class FieldValue extends ValidatingBaseEntity {
     @Column(nullable = true)
     private String definition;
 
-    @ElementCollection(fetch = EAGER)
+    @ElementCollection(fetch = LAZY)
     @Fetch(FetchMode.SELECT)
     private List<String> contacts;
 
