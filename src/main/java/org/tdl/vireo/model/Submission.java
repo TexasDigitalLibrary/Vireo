@@ -26,22 +26,24 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonView;
-
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.SubmissionValidator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 @JsonIgnoreProperties(value = { "organization" }, allowGetters = true)
 @Table(
-    uniqueConstraints = @UniqueConstraint(columnNames = { "submitter_id", "organization_id" }),
-    indexes = @Index(columnList = "submitter_id", name = "submission_submitter_id_idx")
+    indexes = {
+        @Index(columnList = "submitter_id", name = "submission_submitter_id_idx"),
+        @Index(columnList = "submitter_id, organization_id", name = "submission_organization_idx")
+    }
 )
 public class Submission extends ValidatingBaseEntity {
 
@@ -591,6 +593,18 @@ public class Submission extends ValidatingBaseEntity {
         });
         return fielsValues;
     }
+
+    @JsonIgnore
+    public List<FieldValue> getFieldValuesByPredicateValueStartsWith(String predicateValue) {
+        List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+        getFieldValues().forEach(fieldValue -> {
+            if (fieldValue.getFieldPredicate().getValue().startsWith(predicateValue)) {
+                fieldValues.add(fieldValue);
+            }
+        });
+        return fieldValues;
+    }   
+
 
     @JsonIgnore
     public FieldValue getFieldValueByValueAndPredicate(String value, FieldPredicate fieldPredicate) {

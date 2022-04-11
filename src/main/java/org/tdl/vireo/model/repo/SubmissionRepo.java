@@ -11,7 +11,7 @@ import edu.tamu.weaver.data.model.repo.WeaverRepo;
 
 public interface SubmissionRepo extends WeaverRepo<Submission>, SubmissionRepoCustom {
 
-    public Submission findBySubmitterAndOrganization(User submitter, Organization organization);
+    public List<Submission> findAllBySubmitterAndOrganization(User submitter, Organization organization);
 
     public List<Submission> findByOrganization(Organization organization);
 

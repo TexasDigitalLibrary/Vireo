@@ -38,7 +38,7 @@ var dataUser4 = {
     firstName: "Test",
     lastName: "User1",
     netId: "user1",
-    role: "ROLE_ADMIN",
+    role: "ROLE_MANAGER",
     uin: "111111111"
 };
 
@@ -49,7 +49,7 @@ var dataUser5 = {
     firstName: "Test",
     lastName: "User2",
     netId: "user2",
-    role: "ROLE_STUDENT",
+    role: "ROLE_REVIEWER",
     uin: "222222222"
 };
 
@@ -60,7 +60,7 @@ var dataUser6 = {
     firstName: "Test",
     lastName: "User3",
     netId: "user3",
-    role: "ROLE_STUDENT",
+    role: "ROLE_ANONYMOUS",
     uin: "333333333"
 };
 

@@ -70,6 +70,16 @@ public class UserController {
         List<User> assignable = new ArrayList<User>();
         assignable.addAll(userRepo.findAllByRole(Role.ROLE_ADMIN));
         assignable.addAll(userRepo.findAllByRole(Role.ROLE_MANAGER));
+        assignable.addAll(userRepo.findAllByRole(Role.ROLE_REVIEWER));
+        return new ApiResponse(SUCCESS, assignable);
+    }
+
+    @RequestMapping("/unassignable")
+    @PreAuthorize("hasRole('ROLE_REVIEWER')")
+    public ApiResponse allUnassignableUsers() {
+        List<User> assignable = new ArrayList<User>();
+        assignable.addAll(userRepo.findAllByRole(Role.ROLE_STUDENT));
+        assignable.addAll(userRepo.findAllByRole(Role.ROLE_ANONYMOUS));
         return new ApiResponse(SUCCESS, assignable);
     }
 

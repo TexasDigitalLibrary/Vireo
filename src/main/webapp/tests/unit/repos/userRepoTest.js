@@ -16,6 +16,9 @@ describe("service: userRepo", function () {
         inject(function ($injector, UserRepo) {
             scope = rootScope.$new();
 
+            mockedUser = mockParameterModel(q, mockUser);
+            mockedRepo = new mockRepo("UserRepo", q);
+
             repo = $injector.get('UserRepo');
         });
     };
@@ -51,12 +54,45 @@ describe("service: userRepo", function () {
     describe("Do the repo methods work as expected", function () {
         it("getAssignableUsers should return an array", function () {
             var response;
-            var roles = [ "mock" ];
 
-            response = repo.getAssignableUsers(roles);
+            var data1 = mockedRepo.mockCopy(dataUser1);
+            var data2 = mockedRepo.mockCopy(dataUser4);
+            var data3 = mockedRepo.mockCopy(dataUser5);
+
+            var payload = {
+                "ArrayList<User>": [
+                    data1,
+                    data2,
+                    data3
+                ]
+            };
+
+            WsApi.mockFetchResponse({ type: "payload", payload: payload });
+
+            response = repo.getAssignableUsers();
             scope.$digest();
 
-            // TODO
+            expect(response.length).toBe(3);
+        });
+        it("getUnassignableUsers should return an array", function () {
+            var response;
+
+            var data1 = mockedRepo.mockCopy(dataUser3);
+            var data2 = mockedRepo.mockCopy(dataUser6);
+
+            var payload = {
+                "ArrayList<User>": [
+                    data1,
+                    data2
+                ]
+            };
+
+            WsApi.mockFetchResponse({ type: "payload", payload: payload });
+
+            response = repo.getUnassignableUsers();
+            scope.$digest();
+
+            expect(response.length).toBe(2);
         });
     });
 });

@@ -7,13 +7,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import javax.mail.MessagingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.EmailRecipient;
@@ -35,15 +33,14 @@ import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.impl.AbstractEmailRecipientRepoImpl;
 import org.tdl.vireo.utility.TemplateUtility;
 
-import edu.tamu.weaver.email.service.EmailSender;
-import edu.tamu.weaver.email.service.WeaverEmailService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * Provide e-mail sending specific to the Submission process.
  *
  * E-mails are built utilizing SimpleMailMessage and then sent via EmailSender.
  *
- * @see EmailSender
+ * @see VireoEmailSender
  * @see SimpleMailMessage
  */
 @Service
@@ -58,9 +55,6 @@ public class SubmissionEmailService {
     private ActionLogRepo actionLogRepo;
 
     @Autowired
-    private WeaverEmailService emailSender;
-
-    @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
     @Autowired
@@ -69,10 +63,8 @@ public class SubmissionEmailService {
     @Autowired
     private TemplateUtility templateUtility;
 
-    @Bean
-    public WeaverEmailService weaverEmailService()   {
-        return new WeaverEmailService();
-    }
+    @Autowired
+    private VireoEmailSender emailSender;
 
     /**
      * Manually send the e-mails to the advisors for a given Submission.
@@ -98,7 +90,7 @@ public class SubmissionEmailService {
                 String content = templateUtility.compileTemplate(template, submission);
 
                 List<FieldValue> advisorList = submission.getFieldValuesByPredicateValue("dc.contributor.advisor");
-                SimpleMailMessage smm = new SimpleMailMessage();
+
                 List<String> recipientList = new ArrayList<>();
                 advisorList.forEach(afv -> {
                   for (String afvcontact : afv.getContacts()) {
@@ -109,13 +101,14 @@ public class SubmissionEmailService {
                 });
 
                 if (!recipientList.isEmpty()) {
-                    smm.setFrom(emailSender.getFrom());
-                    smm.setTo(recipientList.toArray(new String[0]));
-                    smm.setSubject(subject);
-                    smm.setText(content);
+                    try {
+                        String[] to = recipientList.toArray(new String[0]);
+                        emailSender.sendEmail(to, subject, content);
 
-                    emailSender.send(smm);
-                    emailed = true;
+                        emailed = true;
+                    } catch (MessagingException me) {
+                        LOG.error("Problem sending email: " + me.getMessage());
+                    }
                 }
             }
 
@@ -142,31 +135,33 @@ public class SubmissionEmailService {
             String subject = templateUtility.compileString((String) data.get("subject"), submission);
             String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
             StringBuilder recipientEmails = new StringBuilder();
-            SimpleMailMessage smm = new SimpleMailMessage();
 
             List<String> recipientEmailAddresses = buildEmailRecipients("recipientEmails", submission, data);
-            smm.setTo(recipientEmailAddresses.toArray(new String[0]));
 
-            recipientEmails.append("Email sent to: [ " + String.join(";", recipientEmailAddresses) + " ]; ");
+            try {
+                String[] to = recipientEmailAddresses.toArray(new String[0]);
+                String[] cc = new String[] { };
+                String[] bcc = new String[] { };
 
-            if (data.containsKey("sendEmailToCCRecipient") && (boolean) data.get("sendEmailToCCRecipient")) {
-                List<String> ccRecipientEmailAddresses = buildEmailRecipients("ccRecipientEmails", submission, data);
-                smm.setCc(ccRecipientEmailAddresses.toArray(new String[0]));
-                recipientEmails.append(" and cc to: [ " + String.join(";", ccRecipientEmailAddresses) + " ]; ");
+                recipientEmails.append("Email sent to: [ " + String.join(";", recipientEmailAddresses) + " ]; ");
+
+                if (data.containsKey("sendEmailToCCRecipient") && (boolean) data.get("sendEmailToCCRecipient")) {
+                    List<String> ccRecipientEmailAddresses = buildEmailRecipients("ccRecipientEmails", submission, data);
+                    cc = ccRecipientEmailAddresses.toArray(new String[0]);
+                    recipientEmails.append(" and cc to: [ " + String.join(";", ccRecipientEmailAddresses) + " ]; ");
+                }
+
+                if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
+                    String preferredEmail = user.getSetting("preferedEmail");
+                    bcc = new String[] { preferredEmail == null ? user.getEmail() : preferredEmail } ;
+                }
+
+                emailSender.sendEmail(to, cc, bcc, subject, templatedMessage);
+
+                actionLogRepo.createPublicLog(submission, user, recipientEmails.toString() + subject + ": " + templatedMessage);
+            } catch (MessagingException me) {
+                LOG.error("Problem sending email: " + me.getMessage());
             }
-
-            if (user.getSetting("ccEmail") != null && user.getSetting("ccEmail").equals("true")) {
-                String preferredEmail = user.getSetting("preferedEmail");
-                smm.setBcc(preferredEmail == null ? user.getEmail() : preferredEmail);
-            }
-
-            smm.setFrom(emailSender.getFrom());
-            smm.setSubject(subject);
-            smm.setText(templatedMessage);
-
-            emailSender.send(smm);
-
-            actionLogRepo.createPublicLog(submission, user, recipientEmails.toString() + subject + ": " + templatedMessage);
         }
     }
 
@@ -177,7 +172,6 @@ public class SubmissionEmailService {
      * @param submission Associated Submission.
      */
     public void sendWorkflowEmails(User user, Submission submission) {
-        SimpleMailMessage smm = new SimpleMailMessage();
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
         Map<Long, List<String>> recipientLists = new HashMap<>();
@@ -205,21 +199,14 @@ public class SubmissionEmailService {
                     recipientLists.get(templateId).add(email);
 
                     try {
-                        LOG.debug("\tSending email to recipient at address " + email);
-
-                        smm.setTo(email);
-
                         if ("true".equals(user.getSetting("ccEmail"))) {
                             String preferedEmail = user.getSetting("preferedEmail");
-                            smm.setBcc(preferedEmail == null ? user.getEmail() : preferedEmail);
+                            String bcc = preferedEmail == null ? user.getEmail() : preferedEmail;
+                            emailSender.sendEmail(email, new String[] { bcc }, subject, content);
+                        } else {
+                            emailSender.sendEmail(email, subject, content);
                         }
-
-                        smm.setFrom(emailSender.getFrom());
-                        smm.setSubject(subject);
-                        smm.setText(content);
-
-                        emailSender.send(smm);
-                    } catch (MailException me) {
+                    } catch (MessagingException me) {
                         LOG.error("Problem sending email: " + me.getMessage());
                         recipientLists.get(templateId).remove(email);
                     }

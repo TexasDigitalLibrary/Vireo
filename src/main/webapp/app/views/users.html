@@ -1,9 +1,5 @@
 <div class="management-table" ng-controller="UserRepoController">
   <div ng-if="isManager() || isAdmin()" class="col-12">
-		<!-- <div class="panel panel-default users-container">
-			<div class="panel-heading">
-				<h3 class="panel-title">Users</h3>
-      </div> -->
       <weaver-table weaver-table="weaverTable" ng-if="weaverTable">
         <weaver-table-controls></weaver-table-controls>
 
