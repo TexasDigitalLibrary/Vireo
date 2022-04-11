@@ -595,6 +595,18 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     @JsonIgnore
+    public List<FieldValue> getFieldValuesByPredicateValueStartsWith(String predicateValue) {
+        List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+        getFieldValues().forEach(fieldValue -> {
+            if (fieldValue.getFieldPredicate().getValue().startsWith(predicateValue)) {
+                fieldValues.add(fieldValue);
+            }
+        });
+        return fieldValues;
+    }   
+
+
+    @JsonIgnore
     public FieldValue getFieldValueByValueAndPredicate(String value, FieldPredicate fieldPredicate) {
         FieldValue foundFieldValue = null;
         for (FieldValue fieldValue : getFieldValues()) {
