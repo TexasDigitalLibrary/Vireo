@@ -72,11 +72,11 @@ vireo.directive('reviewsubmissionsfields', function ($location, InputTypes, Fiel
             };
 
             $scope.isEmbargoWrap = function(fieldValue) {
-                return $scope.isEmbargo()(fieldValue);
+                return $scope.isEmbargo(fieldValue);
             };
 
             $scope.sortEmbargosWrap = function(word) {
-                return $scope.sortEmbargos()(word);
+                return $scope.sortEmbargos(word);
             };
 
         }
