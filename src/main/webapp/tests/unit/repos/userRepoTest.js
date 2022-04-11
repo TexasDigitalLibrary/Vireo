@@ -6,6 +6,8 @@ describe("service: userRepo", function () {
             q = $q;
             rootScope = $rootScope;
 
+            mockedUser = mockParameterModel(q, mockUser);
+
             WsApi = _WsApi_;
         });
     };

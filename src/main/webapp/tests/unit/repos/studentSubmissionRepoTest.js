@@ -1,11 +1,13 @@
 describe("service: studentSubmissionRepo", function () {
-    var q, repo, rootScope, mockedRepo, scope, timeout, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, timeout, User, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, $timeout, _WsApi_) {
             q = $q;
             rootScope = $rootScope;
             timeout = $timeout;
+
+            mockedUser = mockParameterModel(q, mockUser);
 
             WsApi = _WsApi_;
         });
@@ -15,7 +17,7 @@ describe("service: studentSubmissionRepo", function () {
         inject(function ($injector, StudentSubmissionRepo) {
             scope = rootScope.$new();
 
-            repo = StudentSubmissionRepo;
+            repo = $injector.get('StudentSubmissionRepo');
         });
     };
 
@@ -23,6 +25,12 @@ describe("service: studentSubmissionRepo", function () {
         module("core");
         module("vireo");
         module("mock.submission");
+        module("mock.user", function($provide) {
+            User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
         module("mock.wsApi");
 
         initializeVariables();

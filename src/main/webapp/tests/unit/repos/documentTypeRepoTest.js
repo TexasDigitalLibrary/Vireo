@@ -1,10 +1,12 @@
 describe("service: documentTypeRepo", function () {
-    var q, repo, rootScope, mockedRepo, scope, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, User, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, _WsApi_) {
             q = $q;
             rootScope = $rootScope;
+
+            mockedUser = mockParameterModel(q, mockUser);
 
             WsApi = _WsApi_;
         });
@@ -14,13 +16,19 @@ describe("service: documentTypeRepo", function () {
         inject(function ($injector, DocumentTypeRepo) {
             scope = rootScope.$new();
 
-            repo = DocumentTypeRepo;
+            repo = $injector.get('DocumentTypeRepo');
         });
     };
 
     beforeEach(function() {
         module("core");
         module("vireo");
+        module("mock.user", function($provide) {
+            User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
         module("mock.wsApi");
 
         initializeVariables();

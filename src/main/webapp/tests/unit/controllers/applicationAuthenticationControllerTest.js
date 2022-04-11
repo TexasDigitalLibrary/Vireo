@@ -1,15 +1,18 @@
 describe("controller: ApplicationAuthenticationController", function () {
 
-    var controller, scope, WsApi;
+    var controller, q, scope, mockedUser, User, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, _WsApi_) {
+            q = $q;
+            mockedUser = mockParameterModel(q, mockUser);
+
             WsApi = _WsApi_;
         });
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $rootScope, _ModalService_, _RestApi_, _StorageService_, _UserService_, _ValidationStore_) {
+        inject(function ($controller, $location, $rootScope, _ModalService_, _RestApi_, _StorageService_, _User_, _UserService_, _ValidationStore_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -22,6 +25,7 @@ describe("controller: ApplicationAuthenticationController", function () {
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
+                User: _User_,
                 UserService: _UserService_,
                 ValidationStore: _ValidationStore_,
                 WsApi: WsApi
@@ -40,7 +44,12 @@ describe("controller: ApplicationAuthenticationController", function () {
         module("mock.modalService");
         module("mock.restApi");
         module("mock.storageService");
-        module("mock.user");
+        module("mock.user", function($provide) {
+            User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
         module("mock.userService");
         module("mock.validationStore");
         module("mock.wsApi");
