@@ -2,6 +2,7 @@ package org.tdl.vireo.model.repo;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.User;
@@ -26,6 +27,28 @@ public interface SubmissionRepo extends WeaverRepo<Submission>, SubmissionRepoCu
     public Submission findByCustomActionValuesDefinitionLabel(String label);
 
     public Long countByOrganizationId(Long id);
+
+    @EntityGraph(attributePaths = {
+        "submitter",
+        "assignee",
+        "submissionStatus",
+        "organization",
+        "fieldValues",
+        "submissionWorkflowSteps",
+        "approveEmbargoDate",
+        "approveApplicationDate",
+        "submissionDate",
+        "approveAdvisorDate",
+        "approveEmbargo",
+        "approveApplication",
+        "approveAdvisor",
+        "customActionValues",
+        "reviewerNotes",
+        "advisorAccessHash",
+        "advisorReviewURL",
+        "depositURL"
+     })
+    public Submission findGraphForEmailById(Long id);
 
     @Override
     public Submission update(Submission submission);

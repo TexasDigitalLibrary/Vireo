@@ -15,9 +15,9 @@ public class EmailRecipientAssignee extends AbstractEmailRecipient implements Em
     @Override
     public List<String> getEmails(Submission submission) {
         List<String> emails = new ArrayList<String>();
-        User adssignee = submission.getAssignee();
-        if(adssignee != null) {
-          emails.add(adssignee.getSetting("preferedEmail"));
+        User assignee = submission.getAssignee();
+        if(assignee != null) {
+          emails.add(assignee.getSetting("preferedEmail"));
         }
         return emails;
     }

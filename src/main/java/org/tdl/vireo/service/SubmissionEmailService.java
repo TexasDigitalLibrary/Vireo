@@ -30,6 +30,7 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
+import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.impl.AbstractEmailRecipientRepoImpl;
 import org.tdl.vireo.utility.TemplateUtility;
 
@@ -61,6 +62,9 @@ public class SubmissionEmailService {
     private FieldPredicateRepo fieldPredicateRepo;
 
     @Autowired
+    private SubmissionRepo submissionRepo;
+
+    @Autowired
     private TemplateUtility templateUtility;
 
     @Autowired
@@ -72,7 +76,9 @@ public class SubmissionEmailService {
      * @param user Associated User.
      * @param submission Associated Submission.
      */
-    public void sendAdvisorEmails(User user, Submission submission) {
+    public void sendAdvisorEmails(User user, Long submissionId) {
+        Submission submission = submissionRepo.findGraphForEmailById(submissionId);
+
         EmailRecipient advisorRecipient = abstractEmailRecipientRepoImpl.createAdvisorRecipient();
         List<EmailWorkflowRule> emailWorkflowRules = emailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(advisorRecipient, false);
 
@@ -130,17 +136,24 @@ public class SubmissionEmailService {
      * @throws JsonProcessingException
      * @throws IOException
      */
-    public void sendAutomatedEmails(User user, Submission submission, Map<String, Object> data) throws JsonProcessingException, IOException {
+    public void sendAutomatedEmails(User user, Long submissionId, Map<String, Object> data) throws JsonProcessingException, IOException {
+        Submission submission = submissionRepo.findGraphForEmailById(submissionId);
+
         if (data.containsKey("sendEmailToRecipient") && (boolean) data.get("sendEmailToRecipient")) {
             String subject = templateUtility.compileString((String) data.get("subject"), submission);
             String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
             StringBuilder recipientEmails = new StringBuilder();
 
             List<String> recipientEmailAddresses = buildEmailRecipients("recipientEmails", submission, data);
+            List<String> recipientCcEmailAddresses = new ArrayList<>();
+
+            if (data.containsKey("sendEmailToCCRecipient") && (boolean) data.get("sendEmailToCCRecipient")) {
+                recipientCcEmailAddresses = buildEmailRecipients("ccRecipientEmails", submission, data);
+            }
 
             try {
                 String[] to = recipientEmailAddresses.toArray(new String[0]);
-                String[] cc = new String[] { };
+                String[] cc = recipientCcEmailAddresses.toArray(new String[0]);
                 String[] bcc = new String[] { };
 
                 recipientEmails.append("Email sent to: [ " + String.join(";", recipientEmailAddresses) + " ]; ");
@@ -169,9 +182,10 @@ public class SubmissionEmailService {
      * Process workflow and send e-mails as needed for the given submission.
      *
      * @param user Associated User.
-     * @param submission Associated Submission.
+     * @param submissionId The ID of the submission.
      */
-    public void sendWorkflowEmails(User user, Submission submission) {
+    public void sendWorkflowEmails(User user, Long submissionId) {
+        Submission submission = submissionRepo.findGraphForEmailById(submissionId);
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
         Map<Long, List<String>> recipientLists = new HashMap<>();
@@ -230,7 +244,6 @@ public class SubmissionEmailService {
     private List<String> buildEmailRecipients(String property, Submission submission, Map<String, Object> data) {
         List<String> recipients = new ArrayList<>();
         List<HashMap<String, Object>> emails = (List<HashMap<String, Object>>) data.get(property);
-
         emails.forEach(emailRecipientMap -> {
             EmailRecipient recipient = buildEmailRecipient(emailRecipientMap, submission);
             if (recipient != null) {
@@ -273,7 +286,7 @@ public class SubmissionEmailService {
         case CONTACT: {
           String label = (String) emailRecipientMap.get("name");
           FieldPredicate fp = fieldPredicateRepo.getOne(new Long((Integer)emailRecipientMap.get("data")));
-          if(label != null & fp != null) {
+          if (label != null & fp != null) {
             recipient = new EmailRecipientContact(label, fp);
           }
           break;

@@ -87,7 +87,7 @@ public class VireoEmailSender extends JavaMailSenderImpl implements EmailSender 
         mm.setSubject(subject);
         mm.setText(content, false);
 
-        LOG.debug("\tSending email with subject '" + subject + "' from " + vireoEmailConfig.getFrom() + " to: [ " + String.join(";", to) + " ]; ");
+        LOG.debug("\tSending email with subject '" + subject + "' from " + vireoEmailConfig.getFrom() + " to: [ " + String.join("; ", to) + " ], cc: [ " + String.join(";", cc) + " ], bcc: [ " + String.join(";", bcc) + " ]; ");
         send(message);
     }
 
