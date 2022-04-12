@@ -215,6 +215,7 @@ public class SubmissionController {
     return new ApiResponse(SUCCESS, submission);
   }
 
+  @Transactional
   @RequestMapping("/delete/{submissionId}")
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse deleteSubmission(@WeaverUser User user, @PathVariable Long submissionId) {
