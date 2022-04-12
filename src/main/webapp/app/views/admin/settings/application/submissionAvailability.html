@@ -27,28 +27,27 @@
 		<div class="col-md-10 col-md-offset-1">
 
 			<validatedinput
-							id="semesterValue"
+				id="semesterValue"
 	            type="text"
-	            label="Current submission semester"
+	            label="Current Submission Semester"
 	            model="settings.configurable.application.current_semester"
 	            property="value"
 	            validations="settings.configurable.application.current_semester.getValidations()"
 	            confirm="updateConfiguration('application', 'current_semester')"
 	            form-view="true"
-	            tool-tip="Month Year (e.g. May 2020)">
+	            tool-tip="Enter the current semester for which submissions are being accepted. Format as Month Year (e.g. May 2020).">
 	        </validatedinput>
 
-      <validatedinput
-              id="grantorValue"
+      		<validatedinput
+            	id="grantorValue"
 	            type="text"
-	            label="Degree Granting School"
+	            label="Institution Name"
 	            model="settings.configurable.application.grantor"
 	            property="value"
 	            validations="settings.configurable.application.grantor.getValidations()"
 	            confirm="updateConfiguration('application', 'grantor')"
 	            form-view="true"
-	            hint="The full name of the institution awarding degrees."
-	            tool-tip="The full name of the institution awarding degrees.">
+	            tool-tip="Enter the full name of the institution awarding degrees.">
 	        </validatedinput>
 
 	    </div>

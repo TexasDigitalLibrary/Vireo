@@ -143,7 +143,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":"Enter your ORCID author identifier. If you do not have an ORCID iD, get one at <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
+          "help":"Enter your ORCID author identifier (ID). If you do not have an ORCID ID, you may register here <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
           "htmlTooltip":true,
           "gloss": "ORCID"
         },
@@ -189,7 +189,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":"Enter the full year in which you were born. For example 1985.",
+          "help":"Enter the year in which you were born. (e.g. 2000)",
           "gloss": "Year of Birth"
         },
         {
@@ -208,7 +208,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":"Your degree granting institution.",
+          "help":"Enter the name of your degree granting institution.",
           "gloss": "School"
         },
         {
@@ -229,7 +229,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter the college you belong to.",
+          "help":"Enter the name of your college.",
           "gloss": "College",
           "controlledVocabulary": {
             "name":"Colleges",
@@ -252,7 +252,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":"Enter the program you belong to.",
+          "help":"Enter the name of your program.",
           "gloss": "Program",
           "controlledVocabulary":{
             "name":"Programs",
@@ -277,7 +277,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter the department you belong to.",
+          "help":"Enter the name of your department.",
           "gloss": "Department",
           "controlledVocabulary":{
             "name":"Departments",
@@ -302,7 +302,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Choose the type of degree you are seeking.",
+          "help":"Select your degree type.",
           "gloss": "Degree",
           "controlledVocabulary":{
             "name":"Degrees",
@@ -328,7 +328,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter the discipline you specialized in.",
+          "help":"Enter the name of your major discipline.",
           "gloss": "Major",
           "controlledVocabulary":{
             "name":"Majors",
@@ -353,7 +353,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter a phone number where you can be reached even after you have left school",
+          "help":"Enter a phone number where you can be reached after graduating.",
           "gloss": "Permanent Phone"
         },
         {
@@ -374,7 +374,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter an address where you can be reached even after you complete and leave school.",
+          "help":"Enter an address where you can be reached after graduating.",
           "gloss": "Permanent Address"
         },
         {
@@ -395,7 +395,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter an email address you will always have.",
+          "help":"Enter an email address where you can be reached after graduating.",
           "gloss": "Permanent Email"
         },
         {
@@ -414,7 +414,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":"Enter a phone number where you can be reached.",
+          "help":"Enter your current phone number if different from your permanent phone number.",
           "gloss": "Current Phone"
         },
         {
@@ -433,7 +433,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":"Enter an address where you can be reached.",
+          "help":"Enter your current address if different from your permanent address.",
           "gloss": "Current Address"
         }
       ]
@@ -470,7 +470,6 @@
           "flagged":false,
           "logged":true,
           "usage":"",
-          "help":"By checking here you agree to the above license in its entirety.",
           "gloss": "License Agreement"
         },
         {
@@ -498,7 +497,7 @@
     },
     {
       "name":"Document Information",
-      "instructions": "<h4>Instructions:</h4><p>In this step you describe your thesis or dissertation. Please make sure that the information entered below matches the information contained in your document.</p>",
+      "instructions": "<h4>Instructions:</h4><p>Describe your thesis or dissertation. Please make sure that the information entered below matches the information contained in your document.</p>",
       "overrideable":true,
       "originatingOrganization":{
         "name":"Institution",
@@ -576,7 +575,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Example: May 2008",
+          "help":"Select your graduation month. Format: May 2022",
           "gloss": "Graduation Semester",
           "controlledVocabulary":{
             "name":"Graduation Months",
@@ -599,7 +598,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":"Format: mm/dd/yyyy",
+          "help":"Select your defense date. Format: mm/dd/yyyy",
           "gloss": "Defense Date"
         },
         {
@@ -620,7 +619,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Choose the type of your submission.",
+          "help":"Select your submission type.",
           "gloss": "Submission Type",
           "controlledVocabulary":{
             "name":"Submission Types",
@@ -645,7 +644,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Provide the abstract of your document.",
+          "help":"Enter the abstract for your document.",
           "gloss": "Abstract"
         },
         {
@@ -666,7 +665,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.",
+          "help":"Enter keywords for your document. You may enter multiple keywords. You may enter multiple keywords by selecting the + sign.",
           "gloss": "Keywords"
         },
         {
@@ -687,7 +686,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Provide a primary subject, and up to two additional subjects.",
+          "help":"Enter subjects for your document. You may enter multiple subjects by selecting the + sign.",
           "gloss": "Subjects",
           "controlledVocabulary":{
             "name":"Subjects",
@@ -710,7 +709,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":"Provide the primary language of your document.",
+          "help":"Select the primary language of your document.",
           "gloss": "Language",
           "controlledVocabulary":{
             "name":"Languages",
@@ -760,7 +759,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter the names and email addresses of your non-chairing committee members.",
+          "help":"Enter the names and email addresses of your non-chairing committee members. You may enter multiple committee members by selecting the + sign.",
           "gloss": "Non-Chairing Committee Members",
           "controlledVocabulary":{
             "name":"Committee Members",
@@ -804,7 +803,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"With your advisor's approval you may request a delay in the publication (embargo) of your work.",
+          "help":"Select the default emborgo for the publication of your work. If you are unsure, you should discuss the options with your advisor.",
           "gloss": "Default Embargos",
           "controlledVocabulary":{
             "name":"Default Embargos",
@@ -827,7 +826,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":" With your advisor's approval you may request a delay in the publication (embargo) of your work.",
+          "help":"Select the ProQuest emborgo for the publication of your work. If you are unsure, you should discuss the options with your advisor.",
           "gloss": "ProQuest Embargos",
           "controlledVocabulary":{
             "name":"Proquest Embargos",
@@ -942,7 +941,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":"Upload additional administrative files such as a signed graduation release form or other local administrative requirement.",
+          "help":"Upload additional administrative files such as a signed graduation release form or other local administrative files.",
           "gloss": "Administrative Files"
         },
         {
