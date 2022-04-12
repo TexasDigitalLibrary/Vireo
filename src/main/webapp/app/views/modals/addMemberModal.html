@@ -10,33 +10,17 @@
         <form action="/admin/settings/members/search">
             <div class="row">
                 <div class="col-sm-12">
-
-                <form>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <div class="input-group-addon"><i class="search"></i></div>
-                            <input type="text" class="form-control" placeholder="Filter" ng-model="search">
-                        </div>
-                    </div>
-                </form>
-
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Add</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="clickable" ng-repeat="u in unassignableUsers | filter:search" ng-click="selectUser(u)">
-                            <td>{{u.firstName}} {{u.lastName}}</td>
-                            <td>{{u.email}}</td>
-                            <td><button ng-click="updateRole(u, 'ROLE_REVIEWER')" type="button" class="btn btn-primary">Add</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-
+                    <table ng-table="unassignableUsersTable" class="table table-hover table-striped" show-filter="true">
+                        <tbody>
+                            <tr class="clickable" ng-repeat="u in $data" ng-click="selectUser(u)">
+                                <td data-title="'Name'" filter="{ 'name': 'text' }">{{u.name}}</td>
+                                <td data-title="'E-mail'">{{u.email}}</td>
+                                <td data-title="'Role'">
+                                    <button ng-click="updateRole(u, 'ROLE_REVIEWER')" type="button" class="btn btn-primary">Add</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
