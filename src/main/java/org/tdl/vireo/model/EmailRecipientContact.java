@@ -36,8 +36,9 @@ public class EmailRecipientContact extends AbstractEmailRecipient implements Ema
             LOG.debug("Looking at field value " + fv.getValue() + "(" + fv.getId() + ") gotten from submission " + submission.getId() + "'s predicates matching " + getFieldPredicate().getValue() + "(" + getFieldPredicate().getId());
             for (String contact : fv.getContacts()) {
                 LOG.debug("That field value has a contact value of " + contact);
-                if (!emails.contains(contact))
+                if (!emails.contains(contact)) {
                     emails.add(contact);
+                }
             }
         }
         return emails;

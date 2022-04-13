@@ -27,11 +27,6 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -92,6 +87,11 @@ import org.tdl.vireo.service.SubmissionEmailService;
 import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.weaver.auth.annotation.WeaverCredentials;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
@@ -242,7 +242,7 @@ public class SubmissionController {
     String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
 
     if (commentVisibility.equals("public")) {
-        submissionEmailService.sendAutomatedEmails(user, submission, data);
+        submissionEmailService.sendAutomatedEmails(user, submission.getId(), data);
     } else {
       String subject = (String) data.get("subject");
       String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
@@ -252,36 +252,36 @@ public class SubmissionController {
     return new ApiResponse(SUCCESS);
   }
 
-  @RequestMapping(value = "/{submissionId}/send-email", method = RequestMethod.POST)
-  @PreAuthorize("hasRole('REVIEWER')")
-  public ApiResponse sendEmail(@WeaverUser User user, @PathVariable Long submissionId,
-      @RequestBody Map<String, Object> data) throws JsonProcessingException, IOException {
-    submissionEmailService.sendAutomatedEmails(user, submissionRepo.read(submissionId), data);
-    return new ApiResponse(SUCCESS);
-  }
+    @RequestMapping(value = "/{submissionId}/send-email", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('REVIEWER')")
+    public ApiResponse sendEmail(@WeaverUser User user, @PathVariable Long submissionId,
+        @RequestBody Map<String, Object> data) throws JsonProcessingException, IOException {
 
+        submissionEmailService.sendAutomatedEmails(user, submissionId, data);
+        return new ApiResponse(SUCCESS);
+    }
 
     @RequestMapping(value = "/batch-comment")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse batchComment(@WeaverUser User user, @RequestBody Map<String, Object> data) {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
-            Map<String, Object> subMessage = new HashMap<String, Object>(data);
-            if (data.get("commentVisibility").toString().equalsIgnoreCase("public")) {
-                if (data.containsKey("sendEmailToRecipient") && (boolean) data.get("sendEmailToRecipient")) {
-                    subMessage.put("recipientEmail", subMessage.get("recipientEmail"));
+
+            String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
+
+            if (commentVisibility.equals("public")) {
+                try {
+                    submissionEmailService.sendAutomatedEmails(user, sub.getId(), data);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                if (data.containsKey("sendEmailToCCRecipient") && (boolean) data.get("sendEmailToCCRecipient")) {
-                    subMessage.put("ccRecipientEmail", subMessage.get("ccRecipientEmail"));
-                }
-            }
-            try {
-              addComment(user, sub.getId(), subMessage);
-            } catch (IOException e) {
-              e.printStackTrace();
+            } else {
+              String subject = (String) data.get("subject");
+              String templatedMessage = templateUtility.compileString((String) data.get("message"), sub);
+              actionLogRepo.createPrivateLog(sub, user, subject + ": " + templatedMessage);
             }
         });
-        return new ApiResponse(SUCCESS);
 
+        return new ApiResponse(SUCCESS);
     }
 
     @RequestMapping(value = "/{submissionId}/update-field-value/{fieldProfileId}", method = RequestMethod.POST)
@@ -393,7 +393,7 @@ public class SubmissionController {
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
-        submissionEmailService.sendWorkflowEmails(user, submission);
+        submissionEmailService.sendWorkflowEmails(user, submission.getId());
         return response;
     }
 
@@ -403,7 +403,7 @@ public class SubmissionController {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(submission -> {
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName(submissionStatusName);
             submission = submissionRepo.updateStatus(submission, submissionStatus, user);
-            submissionEmailService.sendWorkflowEmails(user, submission);
+            submissionEmailService.sendWorkflowEmails(user, submission.getId());
         });
         return new ApiResponse(SUCCESS);
 
@@ -445,7 +445,7 @@ public class SubmissionController {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
 
-        submissionEmailService.sendWorkflowEmails(user, submission);
+        submissionEmailService.sendWorkflowEmails(user, submission.getId());
 
         return response;
     }
@@ -977,7 +977,7 @@ public class SubmissionController {
     @RequestMapping("/{submissionId}/send-advisor-email")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse sendAdvisorEmail(@WeaverUser User user, @PathVariable Long submissionId) {
-        submissionEmailService.sendAdvisorEmails(user, submissionRepo.read(submissionId));
+        submissionEmailService.sendAdvisorEmails(user, submissionId);
         return new ApiResponse(SUCCESS);
     }
 
