@@ -10,7 +10,7 @@
                     label="Hierarchical Organization Management:"
                     scope-value="settings.configurable.application.hierarchical.value"
                     toggle-options="{{organizationHierarchicalOptions}}"
-                    tool-tip="Allow/disallow hierarchical organization management.">
+                    tool-tip="Toggle button to allow or disallow hierarchical organization management.">
                 </toggleButton>
             </div>
         </div>
@@ -24,7 +24,7 @@
                     property="value"
                     confirm="updateConfiguration('application', 'new_submission_header_text')"
                     form-view="true"
-                    tool-tip="This text will appear as a header if an organization needs to be selected before starting a new submission.">
+                    tool-tip="Enter text to be displayed as a header on the organization selection page for new submissions.">
                 </validatedinput>
             </div>
         </div>
@@ -39,7 +39,10 @@
                     Add Organization Category
                 </button>
 
-                <div class="glyphicon glyphicon-info-sign opaque glyiphicon-span-adjust" tooltip="Dialog in which allows to create new organization category."></div>
+                <div
+                    class="glyphicon glyphicon-info-sign opaque glyiphicon-span-adjust"
+                    tooltip="Select to create new organization category.">
+                </div>
 
                 <p ng-if="organizationCategories.length == 0">Add new Organization Category</p>
 

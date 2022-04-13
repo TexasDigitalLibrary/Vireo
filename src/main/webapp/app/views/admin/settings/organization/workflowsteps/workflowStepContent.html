@@ -10,7 +10,7 @@
             validations="workflowStepRepo.getValidations()"
             confirm="updateWorkflowStep(step)"
             form-view="true"
-            tool-tip="todo">
+            tool-tip="Enter the workflow step name.">
         </validatedinput>
   	</div>
 
@@ -60,7 +60,7 @@
 						Add Field
 					</button>
 
-					<div class="glyphicon glyphicon-info-sign glyiphicon-span-adjust" tooltip="Dialog in which allows to create new field."></div>
+					<div class="glyphicon glyphicon-info-sign glyiphicon-span-adjust" tooltip="Select to add a new field."></div>
 
 					<p ng-if="step.aggregateFieldProfiles.length == 0">Add New Field</p>
 
@@ -140,7 +140,7 @@
 						Add Note
 					</button>
 
-					<div class="glyphicon glyphicon-info-sign glyiphicon-span-adjust" tooltip="Dialog in which allows to create new note."></div>
+					<div class="glyphicon glyphicon-info-sign glyiphicon-span-adjust" tooltip="Select to add a new note."></div>
 
 					<p ng-if="step.aggregateNotes.length == 0">Add New Note</p>
 
