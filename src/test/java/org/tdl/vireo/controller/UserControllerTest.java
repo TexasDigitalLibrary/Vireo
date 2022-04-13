@@ -20,7 +20,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -63,14 +65,13 @@ public class UserControllerTest {
     private static final User TEST_USER_4 = new User(TEST_USER_4_EMAIL, TEST_USER_4_FIRST_NAME, TEST_USER_4_LAST_NAME, TEST_USER_4_ROLE);
     private static final User TEST_USER_5 = new User(TEST_USER_5_EMAIL, TEST_USER_5_FIRST_NAME, TEST_USER_5_LAST_NAME, TEST_USER_5_ROLE);
 
-    private static final List<User> TEST_USER_LIST = new ArrayList<User>(Arrays.asList(TEST_USER_1, TEST_USER_2, TEST_USER_3, TEST_USER_4, TEST_USER_5));
-    private static final List<User> TEST_USER_LIST_ADMIN = new ArrayList<User>(Arrays.asList(TEST_USER_1));
-    private static final List<User> TEST_USER_LIST_REVIEWER = new ArrayList<User>(Arrays.asList(TEST_USER_2));
-    private static final List<User> TEST_USER_LIST_MANAGER = new ArrayList<User>(Arrays.asList(TEST_USER_3));
-    private static final List<User> TEST_USER_LIST_STUDENT = new ArrayList<User>(Arrays.asList(TEST_USER_4));
-    private static final List<User> TEST_USER_LIST_ANONYMOUS = new ArrayList<User>(Arrays.asList(TEST_USER_5));
+    private static final List<User> TEST_USER_LIST = new ArrayList<>(Arrays.asList(TEST_USER_1, TEST_USER_2, TEST_USER_3, TEST_USER_4, TEST_USER_5));
+    private static final List<User> TEST_USER_LIST_ASSIGNED = new ArrayList<>(Arrays.asList(TEST_USER_1, TEST_USER_2, TEST_USER_3));
+    private static final List<User> TEST_USER_LIST_UNASSIGNED = new ArrayList<>(Arrays.asList(TEST_USER_4, TEST_USER_5));
+    private static final List<User> TEST_USER_LIST_PAGE_ASSIGNED = new ArrayList<>(Arrays.asList(TEST_USER_1));
+    private static final List<User> TEST_USER_LIST_PAGE_UNASSIGNED = new ArrayList<>(Arrays.asList(TEST_USER_4));
 
-    private static final Page<User> TEST_USER_PAGE = new PageImpl<User>(TEST_USER_LIST);
+    private static final Page<User> TEST_USER_PAGE = new PageImpl<>(TEST_USER_LIST);
 
     @Mock
     private UserRepo userRepo;
@@ -82,11 +83,6 @@ public class UserControllerTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
         when(userRepo.findAll(Matchers.<Specification<User>>any(), any(Pageable.class))).thenReturn(TEST_USER_PAGE);
-        when(userRepo.findAllByRole(Role.ROLE_ADMIN)).thenReturn(TEST_USER_LIST_ADMIN);
-        when(userRepo.findAllByRole(Role.ROLE_REVIEWER)).thenReturn(TEST_USER_LIST_REVIEWER);
-        when(userRepo.findAllByRole(Role.ROLE_MANAGER)).thenReturn(TEST_USER_LIST_MANAGER);
-        when(userRepo.findAllByRole(Role.ROLE_STUDENT)).thenReturn(TEST_USER_LIST_STUDENT);
-        when(userRepo.findAllByRole(Role.ROLE_ANONYMOUS)).thenReturn(TEST_USER_LIST_ANONYMOUS);
     }
 
     @Test
@@ -101,30 +97,66 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testAllAssignableusers() {
-        ApiResponse response = userController.allAssignableUsers();
+    public void testAllAssignableUsers() {
+        when(userRepo.findAllByRoleIn(any(), any(Sort.class))).thenReturn(TEST_USER_LIST_ASSIGNED);
+
+        Pageable pageable = new PageRequest(0, 1);
+        ApiResponse response = userController.allAssignableUsers(0, "", pageable);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        ArrayList<User> users = (ArrayList<User>) response.getPayload().get("ArrayList<User>");
+        ArrayList<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
 
-        assertEquals(3, users.size());
+        assertEquals(TEST_USER_LIST_ASSIGNED.size(), users.size());
         assertTrue(users.contains(TEST_USER_1));
         assertTrue(users.contains(TEST_USER_2));
         assertTrue(users.contains(TEST_USER_3));
     }
 
     @Test
-    public void testAllUnassignableusers() {
-        ApiResponse response = userController.allUnassignableUsers();
+    public void testAllAssignableUsersPaginated() {
+        when(userRepo.findAllByRoleIn(any(), any(Pageable.class))).thenReturn(TEST_USER_LIST_PAGE_ASSIGNED);
+
+        Pageable pageable = new PageRequest(0, 1);
+        ApiResponse response = userController.allAssignableUsers(1, "", pageable);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        ArrayList<User> users = (ArrayList<User>) response.getPayload().get("ArrayList<User>");
+        ArrayList<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
 
-        assertEquals(2, users.size());
+        assertEquals(TEST_USER_LIST_PAGE_ASSIGNED.size(), users.size());
+        assertTrue(users.contains(TEST_USER_1));
+    }
+
+    @Test
+    public void testAllUnassignableUsers() {
+        when(userRepo.findAllByRoleIn(any(), any(Sort.class))).thenReturn(TEST_USER_LIST_UNASSIGNED);
+
+        Pageable pageable = new PageRequest(0, 1);
+        ApiResponse response = userController.allUnassignableUsers(0, "", pageable);
+
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        ArrayList<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
+
+        assertEquals(TEST_USER_LIST_UNASSIGNED.size(), users.size());
         assertTrue(users.contains(TEST_USER_4));
         assertTrue(users.contains(TEST_USER_5));
+    }
+
+    @Test
+    public void testAllUnassignablePaginated() {
+        when(userRepo.findAllByRoleIn(any(), any(Pageable.class))).thenReturn(TEST_USER_LIST_PAGE_UNASSIGNED);
+
+        Pageable pageable = new PageRequest(0, 1);
+        ApiResponse response = userController.allUnassignableUsers(1, "", pageable);
+
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        ArrayList<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
+
+        assertEquals(TEST_USER_LIST_PAGE_UNASSIGNED.size(), users.size());
+        assertTrue(users.contains(TEST_USER_4));
     }
 
 }
