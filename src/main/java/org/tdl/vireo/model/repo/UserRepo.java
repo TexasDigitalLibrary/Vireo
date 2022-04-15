@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.custom.UserRepoCustom;
@@ -15,8 +16,18 @@ public interface UserRepo extends AbstractWeaverUserRepo<User>, UserRepoCustom {
 
     public User findByEmail(String email);
 
-    public List<User> findAllByRole(IRole role);
+    public List<User> findAllByRoleIn(List<IRole> role, Sort sort);
+
+    public List<User> findAllByRoleIn(List<IRole> role, Pageable pageable);
+
+    public List<User> findAllByRoleInAndNameContainsIgnoreCase(List<IRole> role, String name, Sort sort);
+
+    public List<User> findAllByRoleInAndNameContainsIgnoreCase(List<IRole> role, String name, Pageable pageable);
 
     public Page<User> findAll(Specification<User> specification, Pageable pageable);
+
+    public Long countByRoleIn(List<IRole> role);
+
+    public Long countByRoleInAndNameContainsIgnoreCase(List<IRole> role, String name);
 
 }

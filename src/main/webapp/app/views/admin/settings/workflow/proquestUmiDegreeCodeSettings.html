@@ -11,7 +11,7 @@
                 validations="settings.configurable.proquest_umi_degree_code.proquest_institution_code.getValidations()"
                 confirm="updateConfiguration('proquest_umi_degree_code', 'proquest_institution_code')"
                 form-view="true"
-                tool-tip="The code assigned by ProQuest to identify the institution associated with all submissions when submitting to their catalogue.">
+                tool-tip="Enter the ProQuest ID assigned to the institution.">
             </validatedinput>
         </div>
 
@@ -21,7 +21,7 @@
       	        label="Indexed by Search Engines"
       	        scope-value="settings.configurable.proquest_umi_degree_code.proquest_indexing.value"
       	        toggle-options="{{proquestIndexingOptions}}"
-      	        tool-tip="todo">
+      	        tool-tip="Toggle button to allow or disallow indexing by search engines.">
       	    </togglebutton>
         </div>
 
@@ -67,7 +67,7 @@
         				typeahead-select-on-blur="true"
                 typeahead-on-select="saveDegree(degree)"/>
         			<span class="input-group-addon">
-        				<span ng-if="!inProgress[degree.id]" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
+        				<span ng-if="!inProgress[degree.id]" class="glyphicon glyphicon-info-sign opaque" tooltip="Enter a ProQuest degree code for this degree."></span>
         				<span ng-if="inProgress[degree.id]" class="glyphicon glyphicon-refresh opaque spinning"></span>
         			</span>
         		</div>
@@ -97,7 +97,7 @@
         				typeahead-select-on-blur="true"
                 typeahead-on-select="saveDegree(degree)"/>
         			<span class="input-group-addon">
-        				<span ng-if="!inProgress[degree.id]" class="glyphicon glyphicon-info-sign opaque" tooltip="Assign a Proquest degree code to this degree"></span>
+        				<span ng-if="!inProgress[degree.id]" class="glyphicon glyphicon-info-sign opaque" tooltip="Enter a ProQuest degree code for this degree."></span>
         				<span ng-if="inProgress[degree.id]" class="glyphicon glyphicon-refresh opaque spinning"></span>
         			</span>
         		</div>

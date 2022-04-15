@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Formula;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.tdl.vireo.model.response.Views;
@@ -59,16 +60,19 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
     private String password;
 
     @JsonView(Views.SubmissionList.class)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "first_name")
     private String firstName;
 
     @JsonView(Views.SubmissionList.class)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "last_name")
     private String lastName;
 
     @JsonView(Views.Partial.class)
-    @Column
+    @Column(name = "middle_name")
     private String middleName;
+
+    @Formula("CONCAT(first_name, ' ', last_name)")
+    private String name;
 
     @ElementCollection(fetch = EAGER)
     @MapKeyColumn(name = "setting")
@@ -238,6 +242,14 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
      */
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**

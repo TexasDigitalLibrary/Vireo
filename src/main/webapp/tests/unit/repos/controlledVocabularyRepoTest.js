@@ -1,5 +1,5 @@
 describe("service: controlledVocabularyRepo", function () {
-    var q, repo, rootScope, mockedRepo, scope, FileService, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, FileService, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, _FileService_, _WsApi_) {
@@ -15,7 +15,8 @@ describe("service: controlledVocabularyRepo", function () {
         inject(function ($injector, ControlledVocabularyRepo) {
             scope = rootScope.$new();
 
-            repo = ControlledVocabularyRepo;
+            mockedUser = mockParameterModel(q, mockUser);
+            repo = $injector.get('ControlledVocabularyRepo');
         });
     };
 
@@ -26,6 +27,12 @@ describe("service: controlledVocabularyRepo", function () {
         module("mock.fileService", function($provide) {
             FileService = {};
             $provide.value("FileService", FileService);
+        });
+        module("mock.user", function($provide) {
+            User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
         });
         module("mock.vocabularyWord");
         module("mock.wsApi");

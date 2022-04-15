@@ -2,11 +2,16 @@ package org.tdl.vireo.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doNothing;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +21,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.auth.controller.AuthController;
@@ -24,6 +30,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.VireoEmailSender;
 
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
@@ -34,6 +41,9 @@ public class AuthControllerTest extends AbstractControllerTest {
     public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
 
     public static Long emailTemplatePosition = 0L;
+
+    @MockBean
+    private VireoEmailSender mockEmailSender;
 
     @Mock
     private UserRepo userRepo;
@@ -73,7 +83,7 @@ public class AuthControllerTest extends AbstractControllerTest {
     }
 
     @Before
-    public void setup() {
+    public void setup() throws MessagingException {
         MockitoAnnotations.initMocks(this);
 
         mockUsers = Arrays.asList(new User[] { TEST_USER, TEST_USER2, TEST_USER3, TEST_USER4 });
@@ -129,6 +139,12 @@ public class AuthControllerTest extends AbstractControllerTest {
             }
         });
 
+        doCallRealMethod().when(mockEmailSender).sendEmail(any(String.class), any(String.class), any(String.class));
+        doCallRealMethod().when(mockEmailSender).sendEmail(any(String[].class), any(String.class), any(String.class));
+        doCallRealMethod().when(mockEmailSender).sendEmail(any(String.class), any(String[].class), any(String.class), any(String.class));
+
+        doNothing().when(mockEmailSender).send(any(MimeMessage.class));
+        doNothing().when(mockEmailSender).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
     }
 
     @Test

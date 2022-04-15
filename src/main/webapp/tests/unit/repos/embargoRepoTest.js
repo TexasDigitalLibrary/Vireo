@@ -1,10 +1,12 @@
 describe("service: embargoRepo", function () {
-    var q, repo, rootScope, mockedRepo, scope, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, User, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, _WsApi_) {
             q = $q;
-            rootScope = $rootScope;
+            rootScope = $rootScope
+
+            mockedUser = mockParameterModel(q, mockUser);
 
             WsApi = _WsApi_;
         });
@@ -14,13 +16,19 @@ describe("service: embargoRepo", function () {
         inject(function ($injector, EmbargoRepo) {
             scope = rootScope.$new();
 
-            repo = EmbargoRepo;
+            repo = $injector.get('EmbargoRepo');
         });
     };
 
     beforeEach(function() {
         module("core");
         module("vireo");
+        module("mock.user", function($provide) {
+            User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
         module("mock.wsApi");
 
         initializeVariables();

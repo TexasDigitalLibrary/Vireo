@@ -1,10 +1,12 @@
 describe("service: workflowStepRepo", function () {
-    var q, repo, rootScope, mockedRepo, scope, OrganizationRepo, RestApi, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, OrganizationRepo, RestApi, User, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, _OrganizationRepo_, _RestApi_, _WsApi_) {
             q = $q;
             rootScope = $rootScope;
+
+            mockedUser = mockParameterModel(q, mockUser);
 
             OrganizationRepo = _OrganizationRepo_;
             RestApi = _RestApi_;
@@ -16,7 +18,7 @@ describe("service: workflowStepRepo", function () {
         inject(function ($injector, WorkflowStepRepo) {
             scope = rootScope.$new();
 
-            repo = WorkflowStepRepo;
+            repo = $injector.get('WorkflowStepRepo');
         });
     };
 
@@ -28,6 +30,12 @@ describe("service: workflowStepRepo", function () {
         module("mock.organization");
         module("mock.organizationRepo");
         module("mock.restApi");
+        module("mock.user", function($provide) {
+            User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
         module("mock.workflowStep");
         module("mock.wsApi");
 

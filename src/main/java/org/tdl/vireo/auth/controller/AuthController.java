@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.mail.MessagingException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.service.VireoEmailSender;
 import org.tdl.vireo.utility.TemplateUtility;
 
 import edu.tamu.weaver.auth.controller.WeaverAuthController;
@@ -62,6 +64,9 @@ public class AuthController extends WeaverAuthController {
     @Autowired
     private VireoUserCredentialsService vireoUserCredentialsService;
 
+    @Autowired
+    protected VireoEmailSender emailSender;
+
     @RequestMapping(value = "/register", method = { POST, GET })
     public ApiResponse registration(@RequestBody(required = false) Map<String, String> data, @RequestParam Map<String, String> parameters) {
 
@@ -89,8 +94,8 @@ public class AuthController extends WeaverAuthController {
 
             try {
                 emailSender.sendEmail(email, emailTemplate.getSubject(), content);
-            } catch (javax.mail.MessagingException e) {
-                logger.debug("Unable to send email! " + email);
+            } catch (MessagingException e) {
+                logger.debug("Unable to send email " + email + ", because: " + e.getMessage());
                 return new ApiResponse(ERROR, "Unable to send email! " + email);
             }
 

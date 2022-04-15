@@ -119,7 +119,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         update();
 
-        var assignableUsers = UserRepo.getAssignableUsers();
+        var assignableUsers = UserRepo.getAssignableUsers(0, 0);
         var savedFilters = SavedFilterRepo.getAll();
         var emailTemplates = EmailTemplateRepo.getAll();
         var emailValidationPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
