@@ -1,14 +1,13 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.dao.DataIntegrityViolationException;
-
 public class DegreeTest extends AbstractEntityTest {
 
-    @Before
+    @BeforeEach
     public void setup() {
         degreeLevel = degreeLevelRepo.create(TEST_DEGREE_LEVEL);
     }
@@ -16,9 +15,9 @@ public class DegreeTest extends AbstractEntityTest {
     @Override
     public void testCreate() {
         Degree degree = degreeRepo.create(TEST_DEGREE_NAME, degreeLevel);
-        assertEquals("The repository did not save the entity!", 1, degreeRepo.count());
-        assertEquals("Saved entity did not contain the name!", TEST_DEGREE_NAME, degree.getName());
-        assertEquals("Saved entity did not contain the degree level!", degreeLevel.getName(), degree.getLevel().getName());
+        assertEquals(1, degreeRepo.count(), "The repository did not save the entity!");
+        assertEquals(TEST_DEGREE_NAME, degree.getName(), "Saved entity did not contain the name!");
+        assertEquals(degreeLevel.getName(), degree.getLevel().getName(), "Saved entity did not contain the degree level!");
     }
 
     @Override
@@ -29,14 +28,14 @@ public class DegreeTest extends AbstractEntityTest {
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */
         }
-        assertEquals("The repository duplicated entity!", 1, degreeRepo.count());
+        assertEquals(1, degreeRepo.count(), "The repository duplicated entity!");
     }
 
     @Override
     public void testDelete() {
         Degree degree = degreeRepo.create(TEST_DEGREE_NAME, degreeLevel);
         degreeRepo.delete(degree);
-        assertEquals("The entity was not deleted!", 0, degreeRepo.count());
+        assertEquals(0, degreeRepo.count(), "The entity was not deleted!");
     }
 
     @Override
@@ -44,7 +43,7 @@ public class DegreeTest extends AbstractEntityTest {
 
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         degreeRepo.deleteAll();
         degreeLevelRepo.deleteAll();

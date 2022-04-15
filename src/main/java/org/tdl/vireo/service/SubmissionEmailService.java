@@ -285,7 +285,7 @@ public class SubmissionEmailService {
         }
         case CONTACT: {
           String label = (String) emailRecipientMap.get("name");
-          FieldPredicate fp = fieldPredicateRepo.getOne(new Long((Integer)emailRecipientMap.get("data")));
+          FieldPredicate fp = fieldPredicateRepo.findById(new Long((Integer)emailRecipientMap.get("data"))).get();
           if (label != null & fp != null) {
             recipient = new EmailRecipientContact(label, fp);
           }

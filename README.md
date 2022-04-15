@@ -19,9 +19,9 @@ Vireo build is done with [Maven](https://maven.apache.org/). The build is config
 
 **Ending trailing slash is required for spring.config.location**
 
-The external configuration directory is where an application.yaml file can be added to override default properties. When packaging the application define `config.uri`, which will template context.xml file with the `spring.config.location` system variable for container deployment.
+The external configuration directory is where an application.yml file can be added to override default properties. When packaging the application define `config.uri`, which will template context.xml file with the `spring.config.location` system variable for container deployment.
 
-When running for development define `spring.config.location` to externalize the configuration. If running for development and using an external configuration, do not define `assets.uri`. It will have to be configured manually in the external application.yaml.
+When running for development define `spring.config.location` to externalize the configuration. If running for development and using an external configuration, do not define `assets.uri`. It will have to be configured manually in the external application.yml.
 
 **External configuration is recommended for production deployment**
 
@@ -154,7 +154,7 @@ Currently, in order to have Tomcat know where the external configuration directo
 </Context>
 ```
 
-2) Update [application.yaml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yaml)
+2) Update [application.yml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yml)
 
 
 ### Deploy to Tomcat
@@ -187,7 +187,7 @@ $ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 
 **if not specifying assets.uri during build the assets will be stored under the vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes**
 
-**if not specifying config.uri during build the application.yaml will be under the Vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes/application.yaml**
+**if not specifying config.uri during build the application.yml will be under the Vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes/application.yml**
 
 **if deployed from default WAR package and would like to externalize the config, you will have to edit /opt/tomcat/webapps/vireo/META-INF/context.xml***
 
@@ -200,7 +200,7 @@ java -jar target/vireo-4.0.0-SNAPSHOT.war
 
 ## Configuring
 
-* [application.yaml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yaml)
+* [application.yml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yml)
   * application configurations
 
 * [theme-defaults.json](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/theme-defaults.json)

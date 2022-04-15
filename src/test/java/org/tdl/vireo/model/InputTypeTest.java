@@ -1,24 +1,24 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 
 public class InputTypeTest extends AbstractEntityTest {
 
     @Override
     public void testCreate() {
         InputType inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
-        assertEquals("The repository did not save the entity!", 1, inputTypeRepo.count());
-        assertEquals("Saved entity did not contain the value!", TEST_FIELD_PROFILE_INPUT_TEXT_NAME, inputType.getName());
+        assertEquals(1, inputTypeRepo.count(), "The repository did not save the entity!");
+        assertEquals(TEST_FIELD_PROFILE_INPUT_TEXT_NAME, inputType.getName(), "Saved entity did not contain the value!");
     }
 
     @Override
     public void testDelete() {
         InputType inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
         inputTypeRepo.delete(inputType);
-        assertEquals("The entity was not deleted!", 0, inputTypeRepo.count());
+        assertEquals(0, inputTypeRepo.count(), "The entity was not deleted!");
     }
 
     @Override
@@ -37,7 +37,7 @@ public class InputTypeTest extends AbstractEntityTest {
         // nothing to cascade
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         inputTypeRepo.deleteAll();
     }

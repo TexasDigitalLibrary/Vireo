@@ -20,7 +20,7 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
     @Transactional
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
 
-        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findOne(existing(fieldProfile));
+        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findById(existing(fieldProfile));
 
         if (submissionfieldProfile == null) {
             submissionfieldProfile = new SubmissionFieldProfile();

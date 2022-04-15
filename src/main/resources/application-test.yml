@@ -1,0 +1,47 @@
+spring:
+  config:
+    import: file:src/main/resources/application.yml
+
+# logging (is overwritten by logback-test.xml)
+logging:
+  level:
+    com.zaxxer: ERROR
+    org:
+      apache: ERROR
+      tdl: ERROR
+      hibernate: OFF
+      springframework: ERROR
+    edu.tamu: ERROR
+    ro.isdc.wro: ERROR
+  file:
+    name: logs/vireo-test.log
+
+info:
+  build:
+    production: false
+
+app:
+  assets.uri: classpath:/
+
+  security:
+    # edu.tamu.weaver.auth.service.CryptoService
+    secret: verysecretsecret
+    # edu.tamu.weaver.filter.CorsFilter
+    allow-access: http://localhost:9000
+
+# edu.tamu.weaver.token.service.TokenService
+auth:
+  security.jwt:
+    secret: verysecretsecret
+    issuer: localhost
+    duration: 1
+
+  # edu.tamu.weaver.token.provider.controller.TokenController
+  path: /auth
+
+# edu.tamu.weaver.wro.service.ThemeManagerService
+theme:
+  manager: false
+  default.css:
+  defaults.location:
+  initialize: false

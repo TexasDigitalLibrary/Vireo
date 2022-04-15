@@ -45,7 +45,7 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
         originatingOrganization.addOriginalWorkflowStep(workflowStep);
         organizationRepo.save(originatingOrganization);
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
-        return workflowStepRepo.findOne(workflowStep.getId());
+        return workflowStepRepo.findById(workflowStep.getId()).get();
     }
 
     public WorkflowStep reorderFieldProfiles(Organization requestingOrganization, WorkflowStep workflowStep, int src, int dest) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
@@ -143,7 +143,7 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
 
         WorkflowStep resultingWorkflowStep = null;
 
-        WorkflowStep persistedWorkflowStep = workflowStepRepo.findOne(pendingWorkflowStep.getId());
+        WorkflowStep persistedWorkflowStep = workflowStepRepo.findById(pendingWorkflowStep.getId()).get();
 
         pendingWorkflowStep.setOriginatingOrganization(persistedWorkflowStep.getOriginatingOrganization());
 
@@ -174,7 +174,7 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
                     }
                 }
 
-                requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
+                requestingOrganization = organizationRepo.findById(requestingOrganization.getId()).get();
 
                 requestingOrganization.addAggregateWorkflowStep(savedWorkflowStep, requestingOrganization.getAggregateWorkflowSteps().indexOf(savedWorkflowStep));
                 organizationRepo.save(requestingOrganization);
@@ -244,7 +244,7 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
                 WorkflowStep newWorkflowStep = workflowStepRepo.save(clonedWorkflowStep);
                 logger.info("Created new Workflow Step " + newWorkflowStep.getName() + "(" + newWorkflowStep.getId() + ")" + " originating at Org " + requestingOrganization.getName() + "(" + requestingOrganization.getId() + ")");
 
-                requestingOrganization = organizationRepo.findOne(requestingOrganizationId);
+                requestingOrganization = organizationRepo.findById(requestingOrganizationId).get();
 
                 // in descendant organizations, replace this overriden workflow step with the override
                 for (Organization organization : getContainingDescendantOrganization(requestingOrganization, persistedWorkflowStep)) {
@@ -312,7 +312,7 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
     public void delete(WorkflowStep workflowStep) {
 
         // allows for delete by iterating through findAll, while still deleting descendents
-        if (workflowStepRepo.findOne(workflowStep.getId()) != null) {
+        if (workflowStepRepo.findById(workflowStep.getId()).isPresent()) {
 
             Organization originatingOrganization = workflowStep.getOriginatingOrganization();
 
@@ -353,7 +353,7 @@ public class WorkflowStepRepoImpl extends AbstractWeaverRepoImpl<WorkflowStep, W
 
             deleteDescendantsOfStep(workflowStep);
 
-            workflowStepRepo.delete(workflowStep.getId());
+            workflowStepRepo.deleteById(workflowStep.getId());
         }
 
     }

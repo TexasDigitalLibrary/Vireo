@@ -1,20 +1,17 @@
 package org.tdl.vireo.service;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.tdl.vireo.Application;
 
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { Application.class })
 public class OrderedEntityServiceTest {
 
-    @Before
+    @BeforeEach
     public void setup() {
 
     }
@@ -44,7 +41,7 @@ public class OrderedEntityServiceTest {
 
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
 
     }

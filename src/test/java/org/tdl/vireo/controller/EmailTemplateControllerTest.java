@@ -1,21 +1,21 @@
 package org.tdl.vireo.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.model.EmailTemplate;
@@ -25,6 +25,7 @@ import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
 
 @ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 public class EmailTemplateControllerTest extends AbstractControllerTest {
 
     @Mock
@@ -37,10 +38,8 @@ public class EmailTemplateControllerTest extends AbstractControllerTest {
 
     private static List<EmailTemplate> mockEmailTemplates;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-
         mockEmailTemplate = new EmailTemplate(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
         mockEmailTemplates = new ArrayList<EmailTemplate>(Arrays.asList(new EmailTemplate[] { mockEmailTemplate }));
 
@@ -56,16 +55,15 @@ public class EmailTemplateControllerTest extends AbstractControllerTest {
         TEST_CREDENTIALS.setEmail(TEST_USER_EMAIL);
         TEST_CREDENTIALS.setRole(TEST_USER_ROLE.toString());
 
-        when(emailTemplateRepo.findAll()).thenReturn(mockEmailTemplates);
-        when(emailTemplateRepo.findAllByOrderByPositionAsc()).thenReturn(mockEmailTemplates);
-        when(emailTemplateRepo.findOne(any(Long.class))).thenReturn(mockEmailTemplate);
-        when(emailTemplateRepo.getOne(any(Long.class))).thenReturn(mockEmailTemplate);
-        when(emailTemplateRepo.create(any(String.class), any(String.class), any(String.class))).thenReturn(mockEmailTemplate);
-        when(emailTemplateRepo.update(any(EmailTemplate.class))).thenReturn(mockEmailTemplate);
+        lenient().when(emailTemplateRepo.findAll()).thenReturn(mockEmailTemplates);
+        lenient().when(emailTemplateRepo.findAllByOrderByPositionAsc()).thenReturn(mockEmailTemplates);
+        lenient().when(emailTemplateRepo.getById(any(Long.class))).thenReturn(mockEmailTemplate);
+        lenient().when(emailTemplateRepo.create(any(String.class), any(String.class), any(String.class))).thenReturn(mockEmailTemplate);
+        lenient().when(emailTemplateRepo.update(any(EmailTemplate.class))).thenReturn(mockEmailTemplate);
 
-        doNothing().when(emailTemplateRepo).remove(any(EmailTemplate.class));
-        doNothing().when(emailTemplateRepo).reorder(any(Long.class), any(Long.class));
-        doNothing().when(emailTemplateRepo).sort(any(String.class));
+        lenient().doNothing().when(emailTemplateRepo).remove(any(EmailTemplate.class));
+        lenient().doNothing().when(emailTemplateRepo).reorder(any(Long.class), any(Long.class));
+        lenient().doNothing().when(emailTemplateRepo).sort(any(String.class));
     }
 
     @Test

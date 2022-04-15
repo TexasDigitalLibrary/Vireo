@@ -1,12 +1,10 @@
 package org.tdl.vireo.integration;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.tdl.vireo.Application;
@@ -16,7 +14,6 @@ import org.tdl.vireo.service.SystemDataLoader;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { Application.class })
 public abstract class AbstractIntegrationTest extends MockData {
 
@@ -33,10 +30,10 @@ public abstract class AbstractIntegrationTest extends MockData {
 
     protected MockMvc mockMvc;
 
-    @Before
+    @BeforeEach
     public abstract void setup();
 
-    @After
+    @AfterEach
     public abstract void cleanup();
 
 }

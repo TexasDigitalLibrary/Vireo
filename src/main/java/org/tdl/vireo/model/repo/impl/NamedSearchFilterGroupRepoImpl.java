@@ -63,7 +63,7 @@ public class NamedSearchFilterGroupRepoImpl extends AbstractWeaverRepoImpl<Named
         namedSearchFilterGroup.setUser(null);
         namedSearchFilterGroup.setNamedSearchFilters(null);
         namedSearchFilterGroup.setSavedColumns(null);
-        namedSearchFilterGroupRepo.delete(namedSearchFilterGroup.getId());
+        namedSearchFilterGroupRepo.deleteById(namedSearchFilterGroup.getId());
     }
 
     private NamedSearchFilterGroup createInMemory(User user) {

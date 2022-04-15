@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.boot.context.embedded.tomcat.TomcatConnectorCustomizer;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
+import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -18,7 +18,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -31,7 +31,7 @@ import edu.tamu.weaver.validation.resolver.WeaverValidatedModelMethodProcessor;
 @Configuration
 @EntityScan(basePackages = { "org.tdl.vireo.model" })
 @EnableJpaRepositories(basePackages = { "org.tdl.vireo.model.repo" })
-public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
+public class AppWebMvcConfig implements WebMvcConfigurer {
 
     private static final Logger logger = LoggerFactory.getLogger(AppWebMvcConfig.class);
 
@@ -48,8 +48,8 @@ public class AppWebMvcConfig extends WebMvcConfigurerAdapter {
     private String publicFolder;
 
     @Bean
-    public TomcatEmbeddedServletContainerFactory containerFactory() {
-        TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
+    public TomcatServletWebServerFactory containerFactory() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
         factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
             @Override
             public void customize(Connector connector) {

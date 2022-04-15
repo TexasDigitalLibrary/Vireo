@@ -340,7 +340,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         jdbcTemplate.queryForList(queryBuilder.getQuery()).forEach(row -> {
             ids.add((Long) row.get("ID"));
         });
-        return submissionRepo.findAll(ids);
+        return submissionRepo.findAllById(ids);
     }
 
     @Override
@@ -357,7 +357,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         List<Submission> submissions = new ArrayList<Submission>();
 
-        List<Submission> unordered = submissionRepo.findAll(ids);
+        List<Submission> unordered = submissionRepo.findAllById(ids);
 
         // order them
         for (Long id : ids) {
@@ -372,7 +372,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         int offset = pageable.getPageSize() * pageable.getPageNumber();
         int limit = pageable.getPageSize();
-        return new PageImpl<Submission>(submissions, new PageRequest((int) Math.floor(offset / limit), limit), total);
+        return new PageImpl<Submission>(submissions, PageRequest.of((int) Math.floor(offset / limit), limit), total);
     }
 
     private QueryStrings craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {

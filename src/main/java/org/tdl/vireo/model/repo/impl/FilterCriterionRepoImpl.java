@@ -25,11 +25,11 @@ public class FilterCriterionRepoImpl extends AbstractWeaverRepoImpl<FilterCriter
         if (!actualGloss.isPresent()) {
             gloss = value;
         }
-        Optional<FilterCriterion> filterCriterion = filterCriterionRepo.findByValueAndGloss(value, gloss);
-        if (filterCriterion.isPresent()) {
-            return filterCriterion.get();
+        FilterCriterion filterCriterion = filterCriterionRepo.findByValueAndGloss(value, gloss);
+        if (filterCriterion == null) {
+            return filterCriterionRepo.save(new FilterCriterion(value, gloss));
         }
-        return filterCriterionRepo.save(new FilterCriterion(value, gloss));
+        return filterCriterion;
     }
 
     @Override

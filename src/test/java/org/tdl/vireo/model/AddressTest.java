@@ -1,41 +1,41 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 public class AddressTest extends AbstractEntityTest {
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        assertEquals("The address repository is not empty!", 0, addressRepo.count());
+        assertEquals(0, addressRepo.count(), "The address repository is not empty!");
     }
 
     @Override
     public void testCreate() {
         Address testAddress = addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
-        assertEquals("The testAddress was not created", 1, addressRepo.count());
-        assertEquals("Created address does not contain the correct address1", TEST_ADDRESS1, testAddress.getAddress1());
-        assertEquals("Created address does not contain the correct address2 ", TEST_ADDRESS2, testAddress.getAddress2());
-        assertEquals("Created address does not contain the correct city ", TEST_CITY, testAddress.getCity());
-        assertEquals("Created address does not contain the correct state ", TEST_STATE, testAddress.getState());
-        assertEquals("Created address does not contain the correct postalCode ", TEST_POSTAL_CODE, testAddress.getPostalCode());
-        assertEquals("Created address does not contain the correct country ", TEST_COUNTRY, testAddress.getCountry());
+        assertEquals(1, addressRepo.count(), "The testAddress was not created");
+        assertEquals(TEST_ADDRESS1, testAddress.getAddress1(), "Created address does not contain the correct address1");
+        assertEquals(TEST_ADDRESS2, testAddress.getAddress2(), "Created address does not contain the correct address2 ");
+        assertEquals(TEST_CITY, testAddress.getCity(), "Created address does not contain the correct city ");
+        assertEquals(TEST_STATE, testAddress.getState(), "Created address does not contain the correct state ");
+        assertEquals(TEST_POSTAL_CODE, testAddress.getPostalCode(), "Created address does not contain the correct postalCode ");
+        assertEquals(TEST_COUNTRY, testAddress.getCountry(), "Created address does not contain the correct country ");
     }
 
     @Override
     public void testDuplication() {
         addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
         addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
-        assertEquals("Duplicate address entry is not saved", 2, addressRepo.count());
+        assertEquals(2, addressRepo.count(), "Duplicate address entry is not saved");
     }
 
     @Override
     public void testDelete() {
         Address testAddress = addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
         addressRepo.delete(testAddress);
-        assertEquals("The contact info was not deleted", 0, addressRepo.count());
+        assertEquals(0, addressRepo.count(), "The contact info was not deleted");
     }
 
     @Override
@@ -43,7 +43,7 @@ public class AddressTest extends AbstractEntityTest {
 
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         addressRepo.deleteAll();
     }

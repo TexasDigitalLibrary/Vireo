@@ -11,8 +11,8 @@ import org.springframework.context.annotation.Profile;
 public class AppH2ConsoleConfig {
 
     @Bean
-    public ServletRegistrationBean h2servletRegistration() {
-        ServletRegistrationBean registrationBean = new ServletRegistrationBean(new WebServlet());
+    public ServletRegistrationBean<WebServlet> h2servletRegistration() {
+        ServletRegistrationBean<WebServlet> registrationBean = new ServletRegistrationBean<>(new WebServlet());
         registrationBean.addUrlMappings("/admin/h2console/*");
         registrationBean.addInitParameter("-webAllowOthers", "true");
         return registrationBean;

@@ -156,7 +156,7 @@ public class UserController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse update(@WeaverValidatedModel User updatedUser) {
 
-        User persistedUser = userRepo.findOne(updatedUser.getId());
+        User persistedUser = userRepo.findById(updatedUser.getId()).get();
         // Awesome BeanUtils from Apache commons, included with Spring
         // copy properties from source, arg1, to destination, arg2, excluding ..., arg3
         copyProperties(updatedUser, persistedUser, "password", "activeFilter", "savedFilters");

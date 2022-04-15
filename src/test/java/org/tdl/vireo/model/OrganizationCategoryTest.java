@@ -1,8 +1,8 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class OrganizationCategoryTest extends AbstractEntityTest {
@@ -10,8 +10,8 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
     @Override
     public void testCreate() {
         OrganizationCategory category = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
-        assertEquals("The repository did not save the Entity!", 1, organizationCategoryRepo.count());
-        assertEquals("Saved entity did not contain the correct Name!", TEST_CATEGORY_NAME, category.getName());
+        assertEquals(1, organizationCategoryRepo.count(), "The repository did not save the Entity!");
+        assertEquals(TEST_CATEGORY_NAME, category.getName(), "Saved entity did not contain the correct Name!");
     }
 
     @Override
@@ -22,14 +22,14 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */
         }
-        assertEquals("The repository duplicated Entity!", 1, organizationCategoryRepo.count());
+        assertEquals(1, organizationCategoryRepo.count(), "The repository duplicated Entity!");
     }
 
     @Override
     public void testDelete() {
         OrganizationCategory category = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         organizationCategoryRepo.delete(category);
-        assertEquals("Entity did not delete!", 0, organizationCategoryRepo.count());
+        assertEquals(0, organizationCategoryRepo.count(), "Entity did not delete!");
     }
 
     @Override
@@ -38,13 +38,13 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
 
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, category);
 
-        assertEquals("The organization category repository is empty!", 1, organizationCategoryRepo.count());
+        assertEquals(1, organizationCategoryRepo.count(), "The organization category repository is empty!");
 
-        assertEquals("The organization repository is empty!", 1, organizationRepo.count());
+        assertEquals(1, organizationRepo.count(), "The organization repository is empty!");
 
-        assertEquals("Saved entity did not contain the correct Name!", TEST_ORGANIZATION_NAME, organization.getName());
+        assertEquals(TEST_ORGANIZATION_NAME, organization.getName(), "Saved entity did not contain the correct Name!");
 
-        assertEquals("Organization category dit not have the correct Name!", TEST_CATEGORY_NAME, organization.getCategory().getName());
+        assertEquals(TEST_CATEGORY_NAME, organization.getCategory().getName(), "Organization category dit not have the correct Name!");
 
         try {
             organizationCategoryRepo.delete(category);
@@ -52,13 +52,13 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
             /* SUCCESS */
         }
 
-        assertEquals("Organization category which is assigned to an organization was deleted!", 1, organizationCategoryRepo.count());
+        assertEquals(1, organizationCategoryRepo.count(), "Organization category which is assigned to an organization was deleted!");
 
-        assertEquals("Organization was deleted!", 1, organizationRepo.count());
+        assertEquals(1, organizationRepo.count(), "Organization was deleted!");
 
         OrganizationCategory anotherCategory = organizationCategoryRepo.create("Another Catagory");
 
-        assertEquals("The organization category repository had the incorrect count!", 2, organizationCategoryRepo.count());
+        assertEquals(2, organizationCategoryRepo.count(), "The organization category repository had the incorrect count!");
 
         organization.setCategory(anotherCategory);
 
@@ -66,12 +66,12 @@ public class OrganizationCategoryTest extends AbstractEntityTest {
 
         organizationCategoryRepo.delete(category);
 
-        assertEquals("Organization category was not deleted!", 1, organizationCategoryRepo.count());
+        assertEquals(1, organizationCategoryRepo.count(), "Organization category was not deleted!");
 
-        assertEquals("Organization was deleted!", 1, organizationRepo.count());
+        assertEquals(1, organizationRepo.count(), "Organization was deleted!");
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         organizationRepo.deleteAll();
 

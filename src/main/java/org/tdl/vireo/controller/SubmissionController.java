@@ -209,8 +209,11 @@ public class SubmissionController {
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials,
       @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsException {
-    Submission submission = submissionRepo.create(user, organizationRepo.read(Long.valueOf(data.get("organizationId"))),
-        submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME), credentials);
+    Submission submission = submissionRepo.create(user,
+        organizationRepo.findById(Long.valueOf(data.get("organizationId"))).get(),
+        submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME),
+        credentials
+    );
     actionLogRepo.createPublicLog(submission, user, "Submission created.");
     return new ApiResponse(SUCCESS, submission);
   }
@@ -288,7 +291,7 @@ public class SubmissionController {
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse updateFieldValue(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String fieldProfileId, @RequestBody FieldValue fieldValue) {
         ApiResponse apiResponse = null;
-        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.findById(Long.parseLong(fieldProfileId)).get();
         ValidationResults validationResults = getValidationResults(submissionFieldProfile.getId().toString(), fieldValue);
         if (validationResults.isValid()) {
             Map<String, String> orcidErrors = new HashMap<String, String>();
@@ -309,7 +312,7 @@ public class SubmissionController {
 
                 } else {
 
-                    FieldValue oldFieldValue = fieldValueRepo.findOne(fieldValue.getId());
+                    FieldValue oldFieldValue = fieldValueRepo.findById(fieldValue.getId()).get();
                     String oldValue = oldFieldValue.getValue();
                     fieldValue = fieldValueRepo.save(fieldValue);
 
@@ -348,7 +351,7 @@ public class SubmissionController {
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse validateFieldValue(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String fieldProfileId, @RequestBody FieldValue fieldValue) {
         ApiResponse apiResponse = null;
-        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId));
+        SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.findById(Long.parseLong(fieldProfileId)).get();
         ValidationResults validationResults = getValidationResults(submissionFieldProfile.getId().toString(), fieldValue);
         if (validationResults.isValid()) {
             apiResponse = new ApiResponse(SUCCESS, validationResults.getMessages());
@@ -359,7 +362,7 @@ public class SubmissionController {
     }
 
     private ValidationResults getValidationResults(String fieldProfileId, FieldValue fieldValue) {
-        fieldValue.setModelValidator(new FieldValueValidator(submissionFieldProfileRepo.getOne(Long.parseLong(fieldProfileId))));
+        fieldValue.setModelValidator(new FieldValueValidator(submissionFieldProfileRepo.findById(Long.parseLong(fieldProfileId)).get()));
         return fieldValue.validate(fieldValue);
     }
 
@@ -370,7 +373,7 @@ public class SubmissionController {
     @RequestMapping(value = "/{submissionId}/update-custom-action-value", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse updateCustomActionValue(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
-        Submission submission = submissionRepo.getOne(submissionId);
+        Submission submission = submissionRepo.findById(submissionId).get();
         ApiResponse response = new ApiResponse(SUCCESS, customActionValueRepo.update(customActionValue));
         actionLogRepo.createPublicLog(submission, user, "Custom action " + customActionValue.getDefinition().getLabel() + " " + (customActionValue.getValue() ? "set" : "unset"));
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/custom-action-values", response);
@@ -420,7 +423,7 @@ public class SubmissionController {
             SubmissionStatus submissionStatus = submissionStatusRepo.findByName("Published");
             if (submissionStatus != null) {
 
-                DepositLocation depositLocation = depositLocationRepo.findOne(depositLocationId);
+                DepositLocation depositLocation = depositLocationRepo.findById(depositLocationId).get();
 
                 if (depositLocation != null) {
 
@@ -453,7 +456,7 @@ public class SubmissionController {
     @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping("/batch-export/{packagerName}/{filterId}")
     public void batchExportWithFilter(HttpServletResponse response, @WeaverUser User user, @PathVariable String packagerName, @PathVariable Long filterId) throws IOException {
-        NamedSearchFilterGroup filter = namedSearchFilterGroupRepo.findOne(filterId);
+        NamedSearchFilterGroup filter = namedSearchFilterGroupRepo.findById(filterId).get();
         processBatchExport(response, user, packagerName, filter);
     }
 
@@ -747,7 +750,7 @@ public class SubmissionController {
         ApiResponse response = new ApiResponse(SUCCESS);
         SubmissionStatus submissionStatus = submissionStatusRepo.findByName("Published");
         if (submissionStatus != null) {
-            DepositLocation depositLocation = depositLocationRepo.findOne(depositLocationId);
+            DepositLocation depositLocation = depositLocationRepo.findById(depositLocationId).get();
             if (depositLocation != null) {
                 Depositor depositor = depositorService.getDepositor(depositLocation.getDepositorName());
                 if (depositor != null) {
@@ -885,7 +888,7 @@ public class SubmissionController {
     public ApiResponse querySubmission(@WeaverUser User user, @PathVariable Integer page, @PathVariable Integer size, @RequestBody List<SubmissionListColumn> submissionListColumns) throws ExecutionException {
         long startTime = System.nanoTime();
         NamedSearchFilterGroup activeFilter = user.getActiveFilter();
-        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : submissionListColumns, new PageRequest(page, size));
+        Page<Submission> submissions = submissionRepo.pageableDynamicSubmissionQuery(activeFilter, activeFilter.getColumnsFlag() ? activeFilter.getSavedColumns() : submissionListColumns, PageRequest.of(page, size));
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
         LOG.info("Dynamic query took " + duration / 1000000000.0 + " seconds");
@@ -944,7 +947,7 @@ public class SubmissionController {
     public ApiResponse removeFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable Long fieldValueId) throws IOException {
         ApiResponse apiResponse = new ApiResponse(SUCCESS);
         int hash = user.getEmail().hashCode();
-        FieldValue fileFieldValue = fieldValueRepo.findOne(fieldValueId);
+        FieldValue fileFieldValue = fieldValueRepo.findById(fieldValueId).get();
         String documentType = fileFieldValue.getFieldPredicate().getValue();
         String uri = fileFieldValue.getValue();
         if (user.getRole().equals(Role.ROLE_STUDENT) && documentType.equals("_doctype_license")) {

@@ -17,20 +17,23 @@ spring:
     maxFileSize: 20MB
     maxRequestSize: 20MB
 
+  sql:
+    init:
+      platform: h2
+      #platform: postgresql
+      #platform: mysql
+
   datasource:
     # H2
-    platform: h2
     url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     # url: jdbc:h2:file:./vireoh2.db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
 
     # PostgreSQL
-    #platform: postgresql
     #url: jdbc:postgresql://localhost:5432/vireo
     #driverClassName: org.postgresql.Driver
 
     # MySQL
-    #platform: mysql
     #url: jdbc:mysql://localhost/vireo
     #driverClassName: com.mysql.jdbc.Driver
 
@@ -50,15 +53,24 @@ spring:
     #database-platform: org.hibernate.dialect.PostgreSQLDialect
     # MySQL
     #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-  
+
     generate-ddl: true
     show-sql: false
     hibernate.ddl-auto: create-drop
     properties.hibernate.event.merge.entity_copy_observer: allow
+    open-in-view: true
 
   thymeleaf:
     cache: false
     model: LEGACYHTML5
+
+  main:
+
+    # Bean overriding is necessary for TokenAuthorizationFilter.
+    allow-bean-definition-overriding: true
+
+    # Circular bean dependency between appWebMvcConfig and userRepoImpl.
+    allow-circular-references: true
 
 
 # logging
@@ -70,7 +82,8 @@ logging:
       springframework: INFO
     edu.tamu: INFO
     ro.isdc.wro: INFO
-  file: logs/vireo.log
+  file:
+    name: logs/vireo.log
 
 
 # generated values
@@ -111,7 +124,7 @@ app:
     secret: verysecretsecret
     # edu.tamu.weaver.filter.CorsFilter
     allow-access: http://localhost:9000
-    
+
   # edu.tamu.weaver.email.config.WeaverEmailConfig
   email:
     host: relay.tamu.edu
@@ -127,10 +140,10 @@ app:
 
   # edu.tamu.weaver.reporting.controller.ReportingController
   reporting.address: reporting@tdl.org
-  
+
   # edu.tamu.weaver.validation.controller.ValidationsController
   model.packages: org.tdl.vireo.model
-  
+
   # edu.tamu.weaver.utility.HttpUtility
   http.timeout: 10000
 
@@ -170,7 +183,7 @@ wro:
 # NOTE: weaver-wro dependency will not be able to access class when deployed as jar
 theme:
   managerService: org.tdl.vireo.service.VireoThemeManagerService
-  # define the location of sass/css files 
+  # define the location of sass/css files
   default.css: sass/app.scss
   cacheReloadUrl: ${app.url}/wro/wroAPI/reloadCache
 

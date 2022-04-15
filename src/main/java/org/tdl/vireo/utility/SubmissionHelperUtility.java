@@ -3,21 +3,19 @@ package org.tdl.vireo.utility;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Calendar;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.tdl.vireo.model.Address;
 import org.tdl.vireo.model.Configuration;
-import org.tdl.vireo.model.DefaultConfiguration;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.service.DefaultSettingsService;
 import org.tdl.vireo.service.ProquestCodesService;
 
 import com.google.i18n.phonenumbers.NumberParseException;

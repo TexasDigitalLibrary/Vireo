@@ -1,6 +1,6 @@
 package org.tdl.vireo.service;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -16,20 +16,20 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.mock.MockData;
@@ -60,7 +60,7 @@ import org.tdl.vireo.utility.TemplateUtility;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = { Application.class })
 public class SubmissionEmailServiceTest extends MockData {
 
@@ -295,9 +295,8 @@ public class SubmissionEmailServiceTest extends MockData {
     @InjectMocks
     private SubmissionEmailService submissionEmailService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws OrganizationDoesNotAcceptSubmissionsException, MessagingException {
-        MockitoAnnotations.initMocks(this);
         mockData = new HashMap<>();
         mockFieldValues = new ArrayList<>();
         mockEmailWorkflowRules = new ArrayList<>();
@@ -319,23 +318,19 @@ public class SubmissionEmailServiceTest extends MockData {
         when(mockSubmission.getFieldValuesByPredicateValue(any(String.class))).thenReturn(mockFieldValues);
         when(mockSubmission.getFieldValuesByInputType(any(InputType.class))).thenReturn(mockFieldValues);
 
-        when(mockInputTypeRepo.getOne(1L)).thenReturn(TEST_INPUT_TYPE1);
-        when(mockInputTypeRepo.findOne(1L)).thenReturn(TEST_INPUT_TYPE1);
+        when(mockInputTypeRepo.getById(1L)).thenReturn(TEST_INPUT_TYPE1);
         when(mockInputTypeRepo.findByName(any(String.class))).thenReturn(TEST_INPUT_TYPE1);
 
-        when(mockEmailTemplateRepo.getOne(1L)).thenReturn(TEST_EMAIL_TEMPLATE1);
-        when(mockEmailTemplateRepo.findOne(1L)).thenReturn(TEST_EMAIL_TEMPLATE1);
+        when(mockEmailTemplateRepo.findById(1L)).thenReturn(Optional.of(TEST_EMAIL_TEMPLATE1));
         when(mockEmailTemplateRepo.findByName(any(String.class))).thenReturn(TEST_EMAIL_TEMPLATES1);
         when(mockEmailTemplateRepo.findByNameAndSystemRequired(any(String.class), any(Boolean.class))).thenReturn(TEST_EMAIL_TEMPLATE1);
 
         when(mockActionLogRepo.createPublicLog(any(Submission.class), any(User.class), any(String.class))).thenReturn(TEST_ACTION_LOG1);
 
-        when(mockFieldPredicateRepo.getOne(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
-        when(mockFieldPredicateRepo.findOne(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
+        when(mockFieldPredicateRepo.getById(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
         when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_ADVISOR_VALUE)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
 
-        when(mockFieldPredicateRepo.getOne(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
-        when(mockFieldPredicateRepo.findOne(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
+        when(mockFieldPredicateRepo.getById(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
         when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_VALUE)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
 
         when(mockSubmissionRepo.findGraphForEmailById(mockSubmission.getId())).thenReturn(mockSubmission);

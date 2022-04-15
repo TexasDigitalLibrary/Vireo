@@ -9,6 +9,6 @@ import edu.tamu.weaver.data.model.repo.WeaverRepo;
 
 public interface SubmissionFieldProfileRepo extends WeaverRepo<SubmissionFieldProfile>, JpaSpecificationExecutor<SubmissionFieldProfile>, SubmissionFieldProfileRepoCustom {
 
-    public SubmissionFieldProfile findOne(Specification<SubmissionFieldProfile> specification);
+    public SubmissionFieldProfile findById(Specification<SubmissionFieldProfile> specification);
 
 }

@@ -26,7 +26,7 @@ public class NoteRepoImpl extends HeritableRepoImpl<Note, NoteRepo> implements N
         originatingWorkflowStep.addOriginalNote(note);
         workflowStepRepo.save(originatingWorkflowStep);
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
-        return noteRepo.findOne(note.getId());
+        return noteRepo.findById(note.getId()).get();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class NoteRepoImpl extends HeritableRepoImpl<Note, NoteRepo> implements N
         originatingWorkflowStep.addOriginalNote(note);
         workflowStepRepo.save(originatingWorkflowStep);
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
-        return noteRepo.findOne(note.getId());
+        return noteRepo.findById(note.getId()).get();
     }
 
     @Override

@@ -1,15 +1,15 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
 
 public class DepositLocationTest extends AbstractEntityTest {
 
-    @Before
+    @BeforeEach
     public void setup() {
         packager = abstractPackagerRepo.createDSpaceMetsPackager("DSpaceMETS", new DSpaceMetsFormatter());
     }
@@ -17,9 +17,9 @@ public class DepositLocationTest extends AbstractEntityTest {
     @Override
     public void testCreate() {
         DepositLocation depositLocation = depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, packager, TEST_DEPOSIT_DEPOSITOR, DepositLocation.DEFAULT_TIMEOUT);
-        assertEquals("The deposit location name was wrong!", depositLocation.getName(), TEST_DEPOSIT_LOCATION_NAME);
-        assertEquals("The default deposit location timeout was wrong!", depositLocation.getTimeout(), DepositLocation.DEFAULT_TIMEOUT);
-        assertEquals("The desposit location was not saved!", 1, depositLocationRepo.count());
+        assertEquals(depositLocation.getName(), TEST_DEPOSIT_LOCATION_NAME, "The deposit location name was wrong!");
+        assertEquals(depositLocation.getTimeout(), DepositLocation.DEFAULT_TIMEOUT, "The default deposit location timeout was wrong!");
+        assertEquals(1, depositLocationRepo.count(), "The desposit location was not saved!");
     }
 
     @Override
@@ -29,14 +29,14 @@ public class DepositLocationTest extends AbstractEntityTest {
             depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, packager, TEST_DEPOSIT_DEPOSITOR, DepositLocation.DEFAULT_TIMEOUT);
         } catch (DataIntegrityViolationException e) {
         }
-        assertEquals("The desposit location was duplicated!", 1, depositLocationRepo.count());
+        assertEquals(1, depositLocationRepo.count(), "The desposit location was duplicated!");
     }
 
     @Override
     public void testDelete() {
         DepositLocation depositLocation = depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, packager, TEST_DEPOSIT_DEPOSITOR, DepositLocation.DEFAULT_TIMEOUT);
         depositLocationRepo.delete(depositLocation);
-        assertEquals("The desposit location was not deleted!", 0, depositLocationRepo.count());
+        assertEquals(0, depositLocationRepo.count(), "The desposit location was not deleted!");
     }
 
     @Override
@@ -44,7 +44,7 @@ public class DepositLocationTest extends AbstractEntityTest {
 
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         depositLocationRepo.deleteAll();
         abstractPackagerRepo.deleteAll();

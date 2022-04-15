@@ -1,8 +1,8 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.config.constant.ConfigurationName;
 
@@ -12,9 +12,9 @@ public class ConfigurationTest extends AbstractEntityTest {
     public void testCreate() {
         // set vireo.install.dir
         ManagedConfiguration installPath = configurationRepo.create(TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY, TEST_VIREO_INSTALL_DIR, "application");
-        assertEquals("The install path configuration name was wrong!", TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY, ConfigurationName.SUBMISSIONS_OPEN);
-        assertEquals("The install path configuration value was wrong!", TEST_VIREO_INSTALL_DIR, installPath.getValue());
-        assertEquals("The configuration was not saved!", 1, configurationRepo.count());
+        assertEquals(TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY, ConfigurationName.SUBMISSIONS_OPEN, "The install path configuration name was wrong!");
+        assertEquals(TEST_VIREO_INSTALL_DIR, installPath.getValue(), "The install path configuration value was wrong!");
+        assertEquals(1, configurationRepo.count(), "The configuration was not saved!");
     }
 
     @Override
@@ -25,21 +25,21 @@ public class ConfigurationTest extends AbstractEntityTest {
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
 
-        assertEquals("The configuration was duplicated!", 1, configurationRepo.count());
+        assertEquals(1, configurationRepo.count(), "The configuration was duplicated!");
     }
 
     @Override
     public void testDelete() {
         ManagedConfiguration configToDelete = configurationRepo.create(TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY, TEST_VIREO_INSTALL_DIR, "application");
         configurationRepo.delete(configToDelete);
-        assertEquals("The configuration was not deleted!", 0, configurationRepo.count());
+        assertEquals(0, configurationRepo.count(), "The configuration was not deleted!");
     }
 
     @Override
     public void testCascade() {
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         configurationRepo.deleteAll();
     }

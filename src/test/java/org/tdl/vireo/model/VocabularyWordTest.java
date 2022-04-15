@@ -1,26 +1,26 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class VocabularyWordTest extends AbstractEntityTest {
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        assertEquals("VocabularyWord repo was not empty!", 0, vocabularyWordRepo.count());
+        assertEquals(0, vocabularyWordRepo.count(), "VocabularyWord repo was not empty!");
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
     }
 
     @Override
     public void testCreate() {
         vocabularyWord = vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
-        assertEquals("VocabularyWord Repo did not save the vocab word!", 1, vocabularyWordRepo.count());
-        assertEquals("VocabularyWord Repo did not save the correct vocab word!", TEST_CONTROLLED_VOCABULARY_WORD, vocabularyWord.getName());
-        assertEquals("VocabularyWord Repo did not save the correct vocab definition!", TEST_CONTROLLED_VOCABULARY_DEFINITION, vocabularyWord.getDefinition());
-        assertEquals("VocabularyWord Repo did not save the correct vocab identifier!", TEST_CONTROLLED_VOCABULARY_IDENTIFIER, vocabularyWord.getIdentifier());
+        assertEquals(1, vocabularyWordRepo.count(), "VocabularyWord Repo did not save the vocab word!");
+        assertEquals(TEST_CONTROLLED_VOCABULARY_WORD, vocabularyWord.getName(), "VocabularyWord Repo did not save the correct vocab word!");
+        assertEquals(TEST_CONTROLLED_VOCABULARY_DEFINITION, vocabularyWord.getDefinition(), "VocabularyWord Repo did not save the correct vocab definition!");
+        assertEquals(TEST_CONTROLLED_VOCABULARY_IDENTIFIER, vocabularyWord.getIdentifier(), "VocabularyWord Repo did not save the correct vocab identifier!");
     }
 
     @Override
@@ -29,25 +29,25 @@ public class VocabularyWordTest extends AbstractEntityTest {
         try {
             vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
         } catch (DataIntegrityViolationException e) { /* SUCCESS */ }
-        assertEquals("The repository persisted duplicate vocabulary words with the same name and controlled vocabulary!", 1, vocabularyWordRepo.count());
+        assertEquals(1, vocabularyWordRepo.count(), "The repository persisted duplicate vocabulary words with the same name and controlled vocabulary!");
     }
 
     @Override
     public void testDelete() {
         vocabularyWord = vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
         vocabularyWordRepo.delete(vocabularyWord);
-        assertEquals("Vocabulary word did not delete!", 0, vocabularyWordRepo.count());
+        assertEquals(0, vocabularyWordRepo.count(), "Vocabulary word did not delete!");
     }
 
     @Override
     public void testCascade() {
         vocabularyWord = vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
         vocabularyWordRepo.delete(vocabularyWord);
-        assertEquals("Vocabulary word did not delete!", 0, vocabularyWordRepo.count());
-        assertEquals("The controlled vocabulary was deleted!", 1, controlledVocabularyRepo.count());
+        assertEquals(0, vocabularyWordRepo.count(), "Vocabulary word did not delete!");
+        assertEquals(1, controlledVocabularyRepo.count(), "The controlled vocabulary was deleted!");
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         controlledVocabularyRepo.findAll().forEach(cv -> {
             controlledVocabularyRepo.delete(cv);

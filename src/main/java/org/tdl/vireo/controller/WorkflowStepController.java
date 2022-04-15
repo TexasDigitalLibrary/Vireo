@@ -61,7 +61,7 @@ public class WorkflowStepController {
 
     @RequestMapping("/get/{workflowStepId}")
     public ApiResponse getStepById(@PathVariable Long workflowStepId) {
-        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
+        WorkflowStep workflowStep = workflowStepRepo.findById(workflowStepId).get();
         return (workflowStep != null) ? new ApiResponse(SUCCESS, workflowStep) : new ApiResponse(ERROR, "No workflow step for id [" + workflowStepId.toString() + "]");
     }
 
@@ -69,8 +69,8 @@ public class WorkflowStepController {
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, JsonProcessingException, ComponentNotPresentOnOrgException {
-        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
-        Organization requestingOrganization = organizationRepo.findOne(requestingOrgId);
+        WorkflowStep workflowStep = workflowStepRepo.findById(workflowStepId).get();
+        Organization requestingOrganization = organizationRepo.findById(requestingOrgId).get();
         if (!requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
@@ -91,7 +91,7 @@ public class WorkflowStepController {
             }
             fieldProfile.setMappedShibAttribute(persistedMappedShibAttribute);
         }
-        fieldProfileRepo.update(fieldProfile, organizationRepo.findOne(requestingOrgId));
+        fieldProfileRepo.update(fieldProfile, organizationRepo.findById(requestingOrgId).get());
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return new ApiResponse(SUCCESS);
     }
@@ -100,9 +100,9 @@ public class WorkflowStepController {
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
-        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
-        FieldProfile persistedFieldProfile = fieldProfileRepo.findOne(fieldProfile.getId());
-        fieldProfileRepo.removeFromWorkflowStep(organizationRepo.findOne(requestingOrgId), workflowStep, persistedFieldProfile);
+        WorkflowStep workflowStep = workflowStepRepo.findById(workflowStepId).get();
+        FieldProfile persistedFieldProfile = fieldProfileRepo.findById(fieldProfile.getId()).get();
+        fieldProfileRepo.removeFromWorkflowStep(organizationRepo.findById(requestingOrgId).get(), workflowStep, persistedFieldProfile);
         // If the field profile is being removed from its originating workflow step by the organization that originates that step, then it should be deleted.
         if (persistedFieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId()) && workflowStep.getOriginatingOrganization().getId().equals(requestingOrgId)) {
             fieldProfileRepo.delete(persistedFieldProfile);
@@ -115,8 +115,8 @@ public class WorkflowStepController {
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = LIST_REORDER, model = FieldProfile.class, params = { "2", "3", "1", "aggregateFieldProfiles" }) })
     public ApiResponse reorderFieldProfiles(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @PathVariable Integer src, @PathVariable Integer dest) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
-        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
-        workflowStepRepo.reorderFieldProfiles(organizationRepo.findOne(requestingOrgId), workflowStep, src, dest);
+        WorkflowStep workflowStep = workflowStepRepo.findById(workflowStepId).get();
+        workflowStepRepo.reorderFieldProfiles(organizationRepo.findById(requestingOrgId).get(), workflowStep, src, dest);
         organizationRepo.broadcast(requestingOrgId);
         return new ApiResponse(SUCCESS);
     }
@@ -125,8 +125,8 @@ public class WorkflowStepController {
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse addNote(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel Note note) throws WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
-        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
-        Organization requestingOrganization = organizationRepo.findOne(requestingOrgId);
+        WorkflowStep workflowStep = workflowStepRepo.findById(workflowStepId).get();
+        Organization requestingOrganization = organizationRepo.findById(requestingOrgId).get();
         if (!requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
@@ -139,7 +139,7 @@ public class WorkflowStepController {
     @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/update-note", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = UPDATE) })
     public ApiResponse updateNote(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel Note note) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
-        noteRepo.update(note, organizationRepo.findOne(requestingOrgId));
+        noteRepo.update(note, organizationRepo.findById(requestingOrgId).get());
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return new ApiResponse(SUCCESS);
     }
@@ -148,9 +148,9 @@ public class WorkflowStepController {
     @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-note", method = POST)
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeNote(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel Note note) throws NumberFormatException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
-        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
-        Note persistedNote = noteRepo.findOne(note.getId());
-        noteRepo.removeFromWorkflowStep(organizationRepo.findOne(requestingOrgId), workflowStep, persistedNote);
+        WorkflowStep workflowStep = workflowStepRepo.findById(workflowStepId).get();
+        Note persistedNote = noteRepo.findById(note.getId()).get();
+        noteRepo.removeFromWorkflowStep(organizationRepo.findById(requestingOrgId).get(), workflowStep, persistedNote);
         if (persistedNote.getOriginatingWorkflowStep().getId().equals(workflowStep.getId())) {
             noteRepo.delete(persistedNote);
         }
@@ -162,8 +162,8 @@ public class WorkflowStepController {
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(method = { @WeaverValidation.Method(value = LIST_REORDER, model = WorkflowStep.class, params = { "2", "3", "1", "aggregateNotes" }) })
     public ApiResponse reorderNotes(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @PathVariable Integer src, @PathVariable Integer dest) throws NumberFormatException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
-        WorkflowStep workflowStep = workflowStepRepo.findOne(workflowStepId);
-        workflowStepRepo.reorderNotes(organizationRepo.findOne(requestingOrgId), workflowStep, src, dest);
+        WorkflowStep workflowStep = workflowStepRepo.findById(workflowStepId).get();
+        workflowStepRepo.reorderNotes(organizationRepo.findById(requestingOrgId).get(), workflowStep, src, dest);
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         return new ApiResponse(SUCCESS);
     }
