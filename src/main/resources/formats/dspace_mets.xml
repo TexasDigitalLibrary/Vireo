@@ -57,6 +57,23 @@
                     <!-- TODO -->
                 
                     <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
+                    <dim:field
+                      th:if="${ GRANTOR != null }"
+                      mdschema="thesis" element="degree" qualifier="grantor"
+                      th:text="${GRANTOR}">
+                    </dim:field>
+
+                    <dim:field
+                      th:if="${ GRADUATION_YEAR_MONTH != null }"
+                      mdschema="dc" element="date" qualifier="created"
+                      th:text="${GRADUATION_YEAR_MONTH}">
+                    </dim:field>
+                    <dim:field
+                      th:if="${ GRADUATION_MONTH_YEAR != null }"
+                      mdschema="dc" element="date" qualifier="submitted"
+                      th:text="${GRADUATION_MONTH_YEAR}">
+                    </dim:field>
+
                 
                     <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
                     <dim:field mdschema="dc" element="identifier" qualifier="uri" th:text="${DEPOSIT_URL}"></dim:field> 
