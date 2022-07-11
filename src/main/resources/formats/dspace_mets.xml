@@ -54,8 +54,6 @@
                       th:text="${ fv.value }">
                     </dim:field>
                     
-                    <!-- TODO -->
-                
                     <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
                     <dim:field
                       th:if="${ GRANTOR != null }"
