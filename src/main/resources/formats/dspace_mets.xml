@@ -160,7 +160,7 @@
                        MIMETYPE=${ PRIMARY_DOCUMENT_MIMETYPE }">
                 <FLocat
                     LOCTYPE="URL"
-                    th:attr="'xlink:href'=${ PRIMARY_DOCUMENT_FIELD_VALUE.getFileName() }"/>
+                    th:attr="'xlink:href'=${ PRIMARY_DOCUMENT_FIELD_VALUE.getExportFileName() }"/>
             </file>
             
             <!-- Supplemental And Source Documents -->
@@ -172,7 +172,7 @@
                        SEQ=${ iter.index + 2 }">
                 <FLocat
                     LOCTYPE="URL"
-                    th:attr="'xlink:href'=${ fv.getFileName() }"/>
+                    th:attr="'xlink:href'=${ fv.getExportFileName() }"/>
             </file>
             
         </fileGrp>
