@@ -514,6 +514,21 @@ public class SubmissionHelperUtility {
         return degreeLevel.isPresent() ? degreeLevel.get() : "";
     }
 
+    public String getDegreeCodeLevelStr() {
+        Optional<String> degreeCode = getFieldValueDefinitionByPredicateValue("thesis.degree.name");
+        return degreeCode.isPresent() ? degreeCode.get().toLowerCase() : "";
+    }
+
+    public String getDegreeCodeStr() {
+        Optional<String> degreeCode = getFieldValueIdentifierByPredicateValue("thesis.degree.name");
+        return degreeCode.isPresent() ? degreeCode.get() : "";
+    }
+
+    public String getDegreeCodeProc() {
+        Optional<String> degreeCode = getFieldValueDefinitionByPredicateValue("thesis.degree.name");
+        return degreeCode.isPresent() ? degreeCode.get().toUpperCase().substring(0,1) : "";
+    }
+
     public String getDegreeCollege() {
         Optional<String> degreeCollege = getFieldValueByPredicateValue("thesis.degree.college");
         return degreeCollege.isPresent() ? degreeCollege.get() : "";
