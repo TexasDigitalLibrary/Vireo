@@ -27,6 +27,8 @@ import com.tupilabs.human_name_parser.HumanNameParserParser;
 
 import edu.tamu.weaver.context.SpringContext;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 public class SubmissionHelperUtility {
 
     private final static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -611,30 +613,10 @@ public class SubmissionHelperUtility {
     public int getEmbargoCode() {
         int embargoCode = 0;
         Optional<FieldValue> proquestEmbargo = getFirstFieldValueByPredicateValue("proquest_embargos");
-        Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
-        Optional<FieldValue> embargo = proquestEmbargo.isPresent() ? proquestEmbargo : defaultEmbargo.isPresent() ? defaultEmbargo : Optional.empty();
-        if (embargo.isPresent()) {
-            String duration = embargo.get().getIdentifier();
-            if (duration != null) {
-                int d = Integer.valueOf(duration);
-                if (d == 0) {
-                    embargoCode = 0;
-                } else if (d <= 6) {
-                    embargoCode = 1;
-                } else if (d <= 12) {
-                    embargoCode = 2;
-                } else {
-                    embargoCode = 3;
-                }
-            } else {
-                if (proquestEmbargo.isPresent()) {
-                    // proquest flexible delayed release, configured in SYSTEM_Defaults under proquest_umi_degree_code
-                    embargoCode = 4;
-                } else {
-                    // The vireo embargo is tagged as indefinite, so the best we can do with UMI is 2 years.
-                    embargoCode = 3;
-                }
-            }
+        if (proquestEmbargo.isPresent()) {
+          embargoCode = 4;
+        } else {
+          embargoCode = 3;
         }
         return embargoCode;
     }
@@ -680,7 +662,25 @@ public class SubmissionHelperUtility {
     }
 
     public String getProQuestFormatRestrictionRemove() {
-        return getSettingByNameAndType("format_restriction_remove", "proquest_umi_degree_code").getValue();
+        String proquestLiftDateStr = "";
+        Optional<String> dateIssued = getFieldValueByPredicateValue("dc.date.issued");
+        if(dateIssued.isPresent()){
+          String dateIssuedStr = dateIssued.get();
+          Optional<FieldValue> proquestEmbargo = getFirstFieldValueByPredicateValue("proquest_embargos");
+          if (proquestEmbargo.isPresent()) {
+            String proquestDuration = proquestEmbargo.get().getIdentifier();
+            if (proquestDuration != null) {
+                int d = Integer.valueOf(proquestDuration);
+                try {
+                  java.util.Date proquestLiftDate = DateUtils.addMonths(dateTimeFormat.parse(dateIssuedStr),d);
+                  proquestLiftDateStr = dateFormat.format(proquestLiftDate);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+          }
+        }
+        return proquestLiftDateStr;
     }
 
     public String getProQuestInstitutionCode() {
