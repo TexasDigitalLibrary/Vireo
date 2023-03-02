@@ -81,6 +81,9 @@ public class DSpaceMetsFormatter extends AbstractFormatter {
             case GRANTOR:
                 context.setVariable(key.name(), submissionHelperUtility.getGrantor());
                 break;
+            case EMBARGO_LIFT_DATE:
+                context.setVariable(key.name(), submissionHelperUtility.getEmbargoLiftDate());
+                break;
             default:
                 break;
             }

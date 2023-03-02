@@ -661,6 +661,28 @@ public class SubmissionHelperUtility {
         return getSettingByNameAndType("format_restriction_code", "proquest_umi_degree_code").getValue();
     }
 
+    public String getEmbargoLiftDate() {
+        String defaultEmbargoLiftDateStr = "";
+        Optional<String> dateIssued = getFieldValueByPredicateValue("dc.date.issued");
+        if(dateIssued.isPresent()){
+            String dateIssuedStr = dateIssued.get();
+            Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
+            if (defaultEmbargo.isPresent()) {
+                String defaultEmbargoDuration = defaultEmbargo.get().getIdentifier();
+                if (defaultEmbargoDuration != null) {
+                    int duration = Integer.valueOf(defaultEmbargoDuration);
+                    try {
+                        java.util.Date defaultEmbargoLiftDate = DateUtils.addMonths(dateTimeFormat.parse(dateIssuedStr),duration);
+                        defaultEmbargoLiftDateStr = dateFormat.format(defaultEmbargoLiftDate);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        return defaultEmbargoLiftDateStr;
+    }  
+
     public String getProQuestFormatRestrictionRemove() {
         String proquestLiftDateStr = "";
         Optional<String> dateIssued = getFieldValueByPredicateValue("dc.date.issued");
