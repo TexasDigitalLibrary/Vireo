@@ -674,7 +674,7 @@ public class SubmissionHelperUtility {
                     int duration = Integer.valueOf(defaultEmbargoDuration);
                     try {
                         java.util.Date defaultEmbargoLiftDate = DateUtils.addMonths(dateTimeFormat.parse(dateIssuedStr),duration);
-                        defaultEmbargoLiftDateStr = dateFormat.format(defaultEmbargoLiftDate);
+                        defaultEmbargoLiftDateStr = dateTimeFormat.format(defaultEmbargoLiftDate);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
