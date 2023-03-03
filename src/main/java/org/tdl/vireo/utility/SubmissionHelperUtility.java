@@ -587,7 +587,8 @@ public class SubmissionHelperUtility {
     }
 
     public List<FieldValue> getKeywordFieldValues() {
-        return submission.getFieldValuesByPredicateValue("keywords");
+        //return submission.getFieldValuesByPredicateValue("keywords");
+        return submission.getFieldValuesByPredicateValue("dc.subject.other");
     }
 
     public List<FieldValue> getCommitteeMemberFieldValues() {
@@ -669,7 +670,7 @@ public class SubmissionHelperUtility {
             Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
             if (defaultEmbargo.isPresent()) {
                 String defaultEmbargoDuration = defaultEmbargo.get().getIdentifier();
-                if (defaultEmbargoDuration != null) {
+                if ((defaultEmbargoDuration != null)&&(defaultEmbargoDuration.length() > 0)) {
                     int duration = Integer.valueOf(defaultEmbargoDuration);
                     try {
                         java.util.Date defaultEmbargoLiftDate = DateUtils.addMonths(dateTimeFormat.parse(dateIssuedStr),duration);
