@@ -108,13 +108,6 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                         } else if (valueAsObject instanceof User){
                             User user = (User) valueAsObject;
                             value = user.getName().toString();
-                        } else if (valueAsObject instanceof Set && ((Set<Object>) valueAsObject).stream().allMatch(o -> o instanceof SubmissionStatus)) {
-                            StringBuilder sb = new StringBuilder();
-                            ((Set<Object>) valueAsObject).forEach(o -> {
-                                SubmissionStatus submissionStatus = (SubmissionStatus) o;
-                                sb.append(submissionStatus.getName().toString()+"\n");
-                            });
-                            value = sb.toString();
                         } else {
                             value = valueAsObject.toString();
                         }
