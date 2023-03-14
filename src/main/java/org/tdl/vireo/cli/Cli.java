@@ -158,15 +158,6 @@ public class Cli implements CommandLineRunner {
                     break;
 
                 case "generate":
-                    Organization org = organizationRepo.findAll().get(0);
-
-                    if (!org.getAcceptsSubmissions()) {
-                        org.setAcceptsSubmissions(true);
-                        org = organizationRepo.save(org);
-                    }
-
-                    SubmissionStatus state = submissionStatusRepo.findAll().get(0);
-
                     if (commandArgs.size() > 0) {
                         try {
                             num = Integer.parseInt(commandArgs.get(0));
@@ -178,16 +169,38 @@ public class Cli implements CommandLineRunner {
                     SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
                     SimpleDateFormat emailDate = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss_");
 
+                    Organization org = organizationRepo.findAll().get(0);
+
                     int idOffset = userRepo.findAll().toArray().length;
+                    User helpfulHarry = null;
+
+                    if (expansive) {
+                        helpfulHarry = userRepo.create("harry" + emailDate.format(Calendar.getInstance().getTime()) + (idOffset++) + "@help.ful", "Harry", "Helpful " + idOffset, Role.ROLE_STUDENT);
+                    }
+
+                    if (!org.getAcceptsSubmissions()) {
+                        org.setAcceptsSubmissions(true);
+                        org = organizationRepo.save(org);
+                    }
+
+                    List<SubmissionStatus> statuses = submissionStatusRepo.findAll();
+                    Random random = new Random();
 
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
                         Calendar now = Calendar.getInstance();
-                        User submitter = userRepo.create("bob" + emailDate.format(now.getTime()) + (idOffset + i + 1) + "@boring.bob", "bob", "boring", Role.ROLE_STUDENT);
+                        User submitter = userRepo.create("bob" + emailDate.format(now.getTime()) + (idOffset + i + 1) + "@boring.bob", "bob", "boring " + (idOffset + i + 1), Role.ROLE_STUDENT);
                         Credentials credentials = new Credentials();
                         credentials.setFirstName("Bob");
-                        credentials.setLastName("Boring");
+                        credentials.setLastName("Boring " + (idOffset + i + 1));
                         credentials.setEmail("bob@boring.bob");
                         credentials.setRole(Role.ROLE_STUDENT.name());
+
+                        SubmissionStatus state = statuses.get(0);
+
+                        // Status is chosen completely randomly for every option available when expansive is enabled.
+                        if (expansive) {
+                            state = statuses.get(random.nextInt(statuses.size()));
+                        }
 
                         Submission sub = submissionRepo.create(submitter, org, state, credentials);
 
@@ -195,6 +208,11 @@ public class Cli implements CommandLineRunner {
                         sub.setApproveAdvisorDate(getRandomDate());
                         sub.setApproveApplicationDate(getRandomDate());
                         sub.setApproveEmbargoDate(getRandomDate());
+
+                        // %30 chance to be assigned to helpful harry.
+                        if (expansive && random.nextInt(10) < 3) {
+                            sub.setAssignee(helpfulHarry);
+                        }
 
                         generateActionLogs(sub, submitter, expansive);
 
