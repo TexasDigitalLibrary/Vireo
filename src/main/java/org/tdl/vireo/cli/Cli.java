@@ -8,12 +8,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Organization;
@@ -81,6 +79,10 @@ public class Cli implements CommandLineRunner {
 
             Scanner reader = new Scanner(System.in); // Reading from System.in
             boolean expansive = false;
+            Random random = new Random();
+
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat emailDate = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss_");
 
             System.out.print(PROMPT);
 
@@ -112,10 +114,6 @@ public class Cli implements CommandLineRunner {
                     System.out.println("\nGoodbye.");
                     running = false;
                     break;
-                case "expansive":
-                    expansive = !expansive;
-                    System.out.println("\nSet expansive = " + (expansive ? "true" : "false") + ".");
-                    break;
 
                 case "accounts":
                     int acct = 0;
@@ -141,6 +139,7 @@ public class Cli implements CommandLineRunner {
                     break;
 
                 case "admin_accounts":
+                {
                     int admin_acct = 0;
                     if (commandArgs.size() > 0) {
                         try {
@@ -156,8 +155,15 @@ public class Cli implements CommandLineRunner {
                         userRepo.saveAndFlush(testacct);
                     }
                     break;
+                }
+
+                case "expansive":
+                    expansive = !expansive;
+                    System.out.println("\nSet expansive = " + (expansive ? "true" : "false") + ".");
+                    break;
 
                 case "generate":
+                {
                     if (commandArgs.size() > 0) {
                         try {
                             num = Integer.parseInt(commandArgs.get(0));
@@ -166,16 +172,13 @@ public class Cli implements CommandLineRunner {
                         }
                     }
 
-                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-                    SimpleDateFormat emailDate = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss_");
-
                     Organization org = organizationRepo.findAll().get(0);
 
                     int idOffset = userRepo.findAll().toArray().length;
                     User helpfulHarry = null;
 
                     if (expansive) {
-                        helpfulHarry = userRepo.create("harry" + emailDate.format(Calendar.getInstance().getTime()) + (idOffset++) + "@help.ful", "Harry", "Helpful " + idOffset, Role.ROLE_STUDENT);
+                        helpfulHarry = createHelpfulHarry(idOffset++, emailDate);
                     }
 
                     if (!org.getAcceptsSubmissions()) {
@@ -184,7 +187,6 @@ public class Cli implements CommandLineRunner {
                     }
 
                     List<SubmissionStatus> statuses = submissionStatusRepo.findAll();
-                    Random random = new Random();
 
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
                         Calendar now = Calendar.getInstance();
@@ -256,6 +258,7 @@ public class Cli implements CommandLineRunner {
                     System.out.println("\rGenerated " + num + " submissions.");
                     itemsGenerated += num;
                     break;
+                }
 
                 case "":
                     break;
@@ -284,6 +287,11 @@ public class Cli implements CommandLineRunner {
         date.add(Calendar.MONTH, rm);
         date.add(Calendar.DATE, random.nextInt(32 - date.get(Calendar.DAY_OF_MONTH)));
         return date;
+    }
+
+    private User createHelpfulHarry(int offset, SimpleDateFormat formatter) {
+        String dateString = formatter.format(Calendar.getInstance().getTime());
+        return userRepo.create("harry" + dateString + offset + "@help.ful", "Harry", "Helpful " + offset, Role.ROLE_REVIEWER);
     }
 
     private void generateActionLogs(Submission sub, User submitter, boolean expansive) {
