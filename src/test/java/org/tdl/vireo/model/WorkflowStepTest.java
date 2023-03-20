@@ -1264,8 +1264,6 @@ public class WorkflowStepTest extends AbstractEntityTest {
 
         WorkflowStep grandChildNonOverrideableWorkflowStep = workflowStepRepo.update(parentWorkflowStep, grandChildOrganization);
 
-        Long gcwsId = grandChildNonOverrideableWorkflowStep.getId();
-
         assertEquals(2, workflowStepRepo.count(), "Wrong number of workflow steps!");
 
         parentWorkflowStep = workflowStepRepo.findById(pwsId).get();
