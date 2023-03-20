@@ -19,9 +19,9 @@ public class NoteTest extends AbstractEntityTest {
     public void setUp() {
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
         workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
     }
 
     @Override
@@ -70,36 +70,36 @@ public class NoteTest extends AbstractEntityTest {
     public void testInheritNoteViaPointer() throws ComponentNotPresentOnOrgException {
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         parentOrganization.addChildOrganization(childOrganization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        childOrganization = organizationRepo.getById(childOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        childOrganization = organizationRepo.findById(childOrganization.getId()).get();
 
         Organization grandchildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandchildOrganization = organizationRepo.getById(grandchildOrganization.getId());
+        grandchildOrganization = organizationRepo.findById(grandchildOrganization.getId()).get();
 
         childOrganization.addChildOrganization(grandchildOrganization);
         childOrganization = organizationRepo.save(childOrganization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME, parentOrganization);
 
         Note note = noteRepo.create(parentWorkflowStep, TEST_NOTE_NAME, TEST_NOTE_TEXT);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        childOrganization = organizationRepo.getById(childOrganization.getId());
-        grandchildOrganization = organizationRepo.getById(grandchildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        childOrganization = organizationRepo.findById(childOrganization.getId()).get();
+        grandchildOrganization = organizationRepo.findById(grandchildOrganization.getId()).get();
 
         assertTrue(parentOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().contains(note), "The parent organization's workflow did not contain the original note!");
         assertTrue(childOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().contains(note), "The child organization's workflow did not contain the original note!");
@@ -123,9 +123,9 @@ public class NoteTest extends AbstractEntityTest {
             assertTrue(false, "The note did not update beacuase it's owning workflow step is non overrideable!");
         }
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        childOrganization = organizationRepo.getById(childOrganization.getId());
-        grandchildOrganization = organizationRepo.getById(grandchildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        childOrganization = organizationRepo.findById(childOrganization.getId()).get();
+        grandchildOrganization = organizationRepo.findById(grandchildOrganization.getId()).get();
 
         assertEquals(noteText, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(0).getText(), "The parent's note's text did not update");
         assertEquals(noteText, childOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(0).getText(), "The child's note's text did not update");
@@ -139,22 +139,22 @@ public class NoteTest extends AbstractEntityTest {
         Assertions.assertThrows(HeritableModelNonOverrideableException.class, () -> {
 
             Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-            parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+            parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-            workflowStep = workflowStepRepo.getById(workflowStep.getId());
+            workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
             Note note = noteRepo.create(workflowStep, TEST_NOTE_NAME, TEST_NOTE_TEXT);
 
             note.setOverrideable(false);
 
-            organization = organizationRepo.getById(organization.getId());
+            organization = organizationRepo.findById(organization.getId()).get();
 
             // actually set the note to non overrideable on parent first
             note = noteRepo.update(note, organization);
 
             assertFalse(note.getOverrideable(), "The note was not made non-overrideable!");
 
-            childOrganization = organizationRepo.getById(childOrganization.getId());
+            childOrganization = organizationRepo.findById(childOrganization.getId()).get();
 
             note.setName("Updated Name");
 
@@ -167,24 +167,24 @@ public class NoteTest extends AbstractEntityTest {
 
         Assertions.assertThrows(WorkflowStepNonOverrideableException.class, () -> {
             Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-            parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+            parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-            workflowStep = workflowStepRepo.getById(workflowStep.getId());
+            workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
             Note note = noteRepo.create(workflowStep, TEST_NOTE_NAME, TEST_NOTE_TEXT);
 
-            organization = organizationRepo.getById(organization.getId());
-            workflowStep = workflowStepRepo.getById(workflowStep.getId());
+            organization = organizationRepo.findById(organization.getId()).get();
+            workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
             workflowStep.setOverrideable(false);
 
             workflowStep = workflowStepRepo.update(workflowStep, organization);
 
-            note = noteRepo.getById(note.getId());
+            note = noteRepo.findById(note.getId()).get();
 
-            childOrganization = organizationRepo.getById(childOrganization.getId());
+            childOrganization = organizationRepo.findById(childOrganization.getId()).get();
 
-            workflowStep = workflowStepRepo.getById(workflowStep.getId());
+            workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
             assertEquals(workflowStep, note.getOriginatingWorkflowStep(), "The note's originating workflow step is not the intended workflow step!");
 
@@ -202,22 +202,22 @@ public class NoteTest extends AbstractEntityTest {
     public void testCanOverrideNonOverrideableAtOriginatingOrg() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         Note note = noteRepo.create(workflowStep, TEST_NOTE_NAME, TEST_NOTE_TEXT);
 
         note.setOverrideable(false);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         // actually set the note to non overrideable on parent first
         note = noteRepo.update(note, organization);
 
         assertFalse(note.getOverrideable(), "The note was not made non-overrideable!");
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         String updatedName = "Updated Name", updatedText = "Updated Text";
 
@@ -237,29 +237,29 @@ public class NoteTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -275,17 +275,17 @@ public class NoteTest extends AbstractEntityTest {
         String note1Name = TEST_NOTE_NAME + " 1", note2Name = TEST_NOTE_NAME + " 2", note3Name = TEST_NOTE_NAME + " 3";
 
         Note n1 = noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         Note n2 = noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         Note n3 = noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -312,17 +312,17 @@ public class NoteTest extends AbstractEntityTest {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -343,11 +343,11 @@ public class NoteTest extends AbstractEntityTest {
 
         noteRepo.delete(n1);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -391,54 +391,54 @@ public class NoteTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
         String note1Name = TEST_NOTE_NAME + " 1", note2Name = TEST_NOTE_NAME + " 2", note3Name = TEST_NOTE_NAME + " 3";
 
         Note n1 = noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         Note n2 = noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         Note n3 = noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         Long n1Id = n1.getId();
         Long n2Id = n2.getId();
         Long n3Id = n3.getId();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         assertEquals(n1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(0), "The parentOrganization's aggregate workflow step's first aggregate note was not as expected!");
         assertEquals(n2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1), "The parentOrganization's aggregate workflow step's second aggregate note was not as expected!");
@@ -460,16 +460,16 @@ public class NoteTest extends AbstractEntityTest {
         assertEquals(n2, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1), "The anotherGreatGrandChildOrganization's aggregate workflow step's second aggregate note was not as expected!");
         assertEquals(n3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(2), "The anotherGreatGrandChildOrganization's aggregate workflow step's third aggregate note was not as expected!");
 
-        n1 = noteRepo.getById(n1Id);
-        n2 = noteRepo.getById(n2Id);
+        n1 = noteRepo.findById(n1Id).get();
+        n2 = noteRepo.findById(n2Id).get();
 
         workflowStep = workflowStepRepo.swapNotes(parentOrganization, workflowStep, n1, n2);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         assertEquals(n2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(0), "The parentOrganization's aggregate workflow step's first aggregate note was not as expected!");
         assertEquals(n1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1), "The parentOrganization's aggregate workflow step's second aggregate note was not as expected!");
@@ -491,16 +491,16 @@ public class NoteTest extends AbstractEntityTest {
         assertEquals(n1, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1), "The anotherGreatGrandChildOrganization's aggregate workflow step's second aggregate note was not as expected!");
         assertEquals(n3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(2), "The anotherGreatGrandChildOrganization's aggregate workflow step's third aggregate note was not as expected!");
 
-        n2 = noteRepo.getById(n2Id);
-        n3 = noteRepo.getById(n3Id);
+        n2 = noteRepo.findById(n2Id).get();
+        n3 = noteRepo.findById(n3Id).get();
 
         workflowStep = workflowStepRepo.swapNotes(parentOrganization, workflowStep, n2, n3);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         assertEquals(n3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(0), "The parentOrganization's aggregate workflow step's first aggregate note was not as expected!");
         assertEquals(n1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1), "The parentOrganization's aggregate workflow step's second aggregate note was not as expected!");
@@ -522,17 +522,17 @@ public class NoteTest extends AbstractEntityTest {
         assertEquals(n1, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(1), "The anotherGreatGrandChildOrganization's aggregate workflow step's second aggregate note was not as expected!");
         assertEquals(n2, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateNotes().get(2), "The anotherGreatGrandChildOrganization's aggregate workflow step's third aggregate note was not as expected!");
 
-        n1 = noteRepo.getById(n1Id);
-        n3 = noteRepo.getById(n3Id);
+        n1 = noteRepo.findById(n1Id).get();
+        n3 = noteRepo.findById(n3Id).get();
 
         // creates a new workflow step
         workflowStepRepo.swapNotes(organization, workflowStep, n1, n3);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         WorkflowStep newWorkflowStep = organization.getOriginalWorkflowSteps().get(0);
 
@@ -577,58 +577,58 @@ public class NoteTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
         organization.addChildOrganization(grandChildOrganization);
         organization = organizationRepo.save(organization);
 
         Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         grandChildOrganization.addChildOrganization(greatGrandChildOrganization);
         grandChildOrganization = organizationRepo.save(grandChildOrganization);
 
         Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         grandChildOrganization.addChildOrganization(anotherGreatGrandChildOrganization);
         grandChildOrganization = organizationRepo.save(grandChildOrganization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
         Note note = noteRepo.create(workflowStep, TEST_NOTE_NAME, TEST_NOTE_TEXT);
 
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         Long originalNoteId = note.getId();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -654,14 +654,14 @@ public class NoteTest extends AbstractEntityTest {
         // request the change at the level of the child organization
         Note updatedNote = noteRepo.update(note, organization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         // pointer to note became updatedNote, must fetch it agains
-        note = noteRepo.getById(originalNoteId);
+        note = noteRepo.findById(originalNoteId).get();
 
         // There should be a new workflow step on the child organization that is distinct from the original workflowStep
         WorkflowStep updatedWorkflowStep = organization.getAggregateWorkflowSteps().get(0);
@@ -688,56 +688,56 @@ public class NoteTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
         String note1Name = TEST_NOTE_NAME + " 1", note2Name = TEST_NOTE_NAME + " 2", note3Name = TEST_NOTE_NAME + " 3";
 
         /* Note n1 = */ noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         Note n2 = noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         /* Note n3 = */ noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         n2.setName("Updated Name!");
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         Note n2Updated = noteRepo.update(n2, grandChildOrganization);
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         WorkflowStep newWSWithNewNoteViaOriginals = grandChildOrganization.getOriginalWorkflowSteps().get(0);
         WorkflowStep newWSWithNewNoteViaAggregation = grandChildOrganization.getAggregateWorkflowSteps().get(0);
@@ -760,44 +760,44 @@ public class NoteTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization, so get rid of the one at the middle org
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         // now we have an org hierarchy with a parent, child, and grandchild
         /////////////////////////////////////////////////////////////////////////
         String note1Name = TEST_NOTE_NAME + " 1", note2Name = TEST_NOTE_NAME + " 2", note3Name = TEST_NOTE_NAME + " 3";
 
         /* Note n1 = */ noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         Note n2 = noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         /* Note n3 = */ noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         // now we have three notes originating at the topmost org
         //////////////////////////////////////////////////////////////////////
@@ -809,9 +809,9 @@ public class NoteTest extends AbstractEntityTest {
 
         Note n2updatedAtGrandchild = noteRepo.update(n2, grandChildOrganization);
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
-        n2 = noteRepo.getById(n2Id);
+        n2 = noteRepo.findById(n2Id).get();
 
         // ensure that a new note got made at the grandchild after this override (to non-overrideable :) )
         // old n2 should still be overrideable
@@ -822,13 +822,13 @@ public class NoteTest extends AbstractEntityTest {
         assertEquals(1, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().size(), "A new Note didn't get originated at an org that overrode it!");
         assertTrue(grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().contains(n2updatedAtGrandchild), "A new Note didn't get originated at an org that overrode it!");
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         // TODO: make the note non-overrideable at the child org
         n2.setOverrideable(false);
         Note n2updatedAtChild = noteRepo.update(n2, organization);
 
-        n2 = noteRepo.getById(n2Id);
+        n2 = noteRepo.findById(n2Id).get();
 
         // ensure that a new note got made at the child after this override (to non-overrideable :) )
         // old n2 should still be overrideable
@@ -836,7 +836,7 @@ public class NoteTest extends AbstractEntityTest {
         // old n2 should be different from the new n2 updated at the grandchild
         assertFalse(n2.getId().equals(n2updatedAtChild.getId()), "Note updated at child didn't get duplicated!");
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         assertFalse(grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalNotes().contains(n2updatedAtChild), "Grand child inherited original note from child organization");
 
@@ -861,50 +861,50 @@ public class NoteTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
         String note1Name = TEST_NOTE_NAME + " 1", note2Name = TEST_NOTE_NAME + " 2", note3Name = TEST_NOTE_NAME + " 3";
 
         Note n1 = noteRepo.create(workflowStep, note1Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         /* Note n2 = */ noteRepo.create(workflowStep, note2Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         /* Note n3 = */ noteRepo.create(workflowStep, note3Name, TEST_NOTE_TEXT);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         // override the note at the child
         n1.setName("Updated Name!");

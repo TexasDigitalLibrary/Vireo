@@ -21,12 +21,12 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals(0, languageRepo.count(), "The repository was not empty!");
         assertEquals(0, fieldProfileRepo.count(), "The repository was not empty!");
         assertEquals(0, fieldPredicateRepo.count(), "The repository was not empty!");
-        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
+        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, Boolean.valueOf(false));
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
         workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
         inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
     }
 
@@ -92,36 +92,36 @@ public class FieldProfileTest extends AbstractEntityTest {
     public void testInheritFieldProfileViaPointer() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         parentOrganization.addChildOrganization(childOrganization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        childOrganization = organizationRepo.getById(childOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        childOrganization = organizationRepo.findById(childOrganization.getId()).get();
 
         Organization grandchildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandchildOrganization = organizationRepo.getById(grandchildOrganization.getId());
+        grandchildOrganization = organizationRepo.findById(grandchildOrganization.getId()).get();
 
         childOrganization.addChildOrganization(grandchildOrganization);
         childOrganization = organizationRepo.save(childOrganization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep parentWorkflowStep = workflowStepRepo.create(TEST_PARENT_WORKFLOW_STEP_NAME, parentOrganization);
 
         FieldProfile fieldProfile = fieldProfileRepo.create(parentWorkflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        childOrganization = organizationRepo.getById(childOrganization.getId());
-        grandchildOrganization = organizationRepo.getById(grandchildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        childOrganization = organizationRepo.findById(childOrganization.getId()).get();
+        grandchildOrganization = organizationRepo.findById(grandchildOrganization.getId()).get();
 
         FieldProfile parentFieldProfile = parentOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().get(0);
         FieldProfile childFieldProfile = childOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().get(0);
@@ -144,8 +144,8 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         fieldProfileRepo.update(parentFieldProfile, parentOrganization);
 
-        childFieldProfile = fieldProfileRepo.getById(childFieldProfile.getId());
-        grandchildFieldProfile = fieldProfileRepo.getById(grandchildFieldProfile.getId());
+        childFieldProfile = fieldProfileRepo.findById(childFieldProfile.getId()).get();
+        grandchildFieldProfile = fieldProfileRepo.findById(grandchildFieldProfile.getId()).get();
 
         // *********************************************************************************************************************************************************//
         // *********************************************************************************************************************************************************//
@@ -163,22 +163,22 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         Assertions.assertThrows(HeritableModelNonOverrideableException.class, () -> {
             Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-            parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+            parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-            workflowStep = workflowStepRepo.getById(workflowStep.getId());
+            workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
             FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
             fieldProfile.setOverrideable(false);
 
-            organization = organizationRepo.getById(organization.getId());
+            organization = organizationRepo.findById(organization.getId()).get();
 
             // actually set the note to non overrideable on parent first
             fieldProfile = fieldProfileRepo.update(fieldProfile, organization);
 
             assertFalse(fieldProfile.getOverrideable(), "The field profile was not made non-overrideable!");
 
-            childOrganization = organizationRepo.getById(childOrganization.getId());
+            childOrganization = organizationRepo.findById(childOrganization.getId()).get();
 
             fieldProfile.getFieldPredicate().setValue("Updated Value");
 
@@ -192,24 +192,24 @@ public class FieldProfileTest extends AbstractEntityTest {
         Assertions.assertThrows(WorkflowStepNonOverrideableException.class, () -> {
 
             Organization childOrganization = organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-            parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+            parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-            workflowStep = workflowStepRepo.getById(workflowStep.getId());
+            workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
             FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
-            organization = organizationRepo.getById(organization.getId());
-            workflowStep = workflowStepRepo.getById(workflowStep.getId());
+            organization = organizationRepo.findById(organization.getId()).get();
+            workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
             workflowStep.setOverrideable(false);
 
             workflowStep = workflowStepRepo.update(workflowStep, organization);
 
-            fieldProfile = fieldProfileRepo.getById(fieldProfile.getId());
+            fieldProfile = fieldProfileRepo.findById(fieldProfile.getId()).get();
 
-            childOrganization = organizationRepo.getById(childOrganization.getId());
+            childOrganization = organizationRepo.findById(childOrganization.getId()).get();
 
-            workflowStep = workflowStepRepo.getById(workflowStep.getId());
+            workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
             assertEquals(workflowStep, fieldProfile.getOriginatingWorkflowStep(), "The field profile's originating workflow step is not the intended workflow step!");
 
@@ -227,13 +227,13 @@ public class FieldProfileTest extends AbstractEntityTest {
     public void testCanOverrideNonOverrideableAtOriginatingOrg() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
 
         organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
 
         FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         fieldProfile.setOverrideable(false);
 
@@ -260,29 +260,29 @@ public class FieldProfileTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -295,24 +295,24 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
-        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", Boolean.valueOf(false));
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", Boolean.valueOf(false));
 
         FieldProfile fp = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -339,17 +339,17 @@ public class FieldProfileTest extends AbstractEntityTest {
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -370,11 +370,11 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         fieldProfileRepo.delete(fp);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -418,58 +418,58 @@ public class FieldProfileTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
-        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
-        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", Boolean.valueOf(false));
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", Boolean.valueOf(false));
 
         FieldProfile fp1 = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         FieldProfile fp3 = fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         Long fp1Id = fp1.getId();
         Long fp2Id = fp2.getId();
         Long fp3Id = fp3.getId();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         assertEquals(fp1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0), "The parentOrganization's aggregate workflow step's first aggregate field profile was not as expected!");
         assertEquals(fp2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1), "The parentOrganization's aggregate workflow step's second aggregate field profile was not as expected!");
@@ -491,16 +491,16 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals(fp2, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1), "The anotherGreatGrandChildOrganization's aggregate workflow step's second aggregate field profile was not as expected!");
         assertEquals(fp3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2), "The anotherGreatGrandChildOrganization's aggregate workflow step's third aggregate field profile was not as expected!");
 
-        fp1 = fieldProfileRepo.getById(fp1Id);
-        fp2 = fieldProfileRepo.getById(fp2Id);
+        fp1 = fieldProfileRepo.findById(fp1Id).get();
+        fp2 = fieldProfileRepo.findById(fp2Id).get();
 
         workflowStep = workflowStepRepo.swapFieldProfiles(parentOrganization, workflowStep, fp1, fp2);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         assertEquals(fp2, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0), "The parentOrganization's aggregate workflow step's first aggregate field profile was not as expected!");
         assertEquals(fp1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1), "The parentOrganization's aggregate workflow step's second aggregate field profile was not as expected!");
@@ -522,16 +522,16 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals(fp1, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1), "The anotherGreatGrandChildOrganization's aggregate workflow step's second aggregate field profile was not as expected!");
         assertEquals(fp3, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2), "The anotherGreatGrandChildOrganization's aggregate workflow step's third aggregate field profile was not as expected!");
 
-        fp2 = fieldProfileRepo.getById(fp2Id);
-        fp3 = fieldProfileRepo.getById(fp3Id);
+        fp2 = fieldProfileRepo.findById(fp2Id).get();
+        fp3 = fieldProfileRepo.findById(fp3Id).get();
 
         workflowStep = workflowStepRepo.swapFieldProfiles(parentOrganization, workflowStep, fp2, fp3);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         assertEquals(fp3, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(0), "The parentOrganization's aggregate workflow step's first aggregate field profile was not as expected!");
         assertEquals(fp1, parentOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1), "The parentOrganization's aggregate workflow step's second aggregate field profile was not as expected!");
@@ -553,17 +553,17 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals(fp1, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(1), "The anotherGreatGrandChildOrganization's aggregate workflow step's second aggregate field profile was not as expected!");
         assertEquals(fp2, anotherGreatGrandChildOrganization.getAggregateWorkflowSteps().get(0).getAggregateFieldProfiles().get(2), "The anotherGreatGrandChildOrganization's aggregate workflow step's third aggregate field profile was not as expected!");
 
-        fp1 = fieldProfileRepo.getById(fp1Id);
-        fp3 = fieldProfileRepo.getById(fp3Id);
+        fp1 = fieldProfileRepo.findById(fp1Id).get();
+        fp3 = fieldProfileRepo.findById(fp3Id).get();
 
         // creates a new workflow step
         workflowStepRepo.swapFieldProfiles(organization, workflowStep, fp1, fp3);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         WorkflowStep newWorkflowStep = organization.getOriginalWorkflowSteps().get(0);
 
@@ -608,44 +608,44 @@ public class FieldProfileTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
         organization.addChildOrganization(grandChildOrganization);
         organization = organizationRepo.save(organization);
 
         Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         grandChildOrganization.addChildOrganization(greatGrandChildOrganization);
         grandChildOrganization = organizationRepo.save(grandChildOrganization);
 
         Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         grandChildOrganization.addChildOrganization(anotherGreatGrandChildOrganization);
         grandChildOrganization = organizationRepo.save(grandChildOrganization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
@@ -653,11 +653,11 @@ public class FieldProfileTest extends AbstractEntityTest {
 
         Long originalFieldProfileId = fieldProfile.getId();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -683,14 +683,14 @@ public class FieldProfileTest extends AbstractEntityTest {
         // request the change at the level of the child organization
         FieldProfile updatedFieldProfile = fieldProfileRepo.update(fieldProfile, organization);
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
 
         // pointer to fieldProfile became updatedFieldProfile, must fetch it agains
-        fieldProfile = fieldProfileRepo.getById(originalFieldProfileId);
+        fieldProfile = fieldProfileRepo.findById(originalFieldProfileId).get();
 
         // There should be a new workflow step on the child organization that is distinct from the original workflowStep
         WorkflowStep updatedWorkflowStep = organization.getAggregateWorkflowSteps().get(0);
@@ -717,61 +717,61 @@ public class FieldProfileTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
-        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
-        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", Boolean.valueOf(false));
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", Boolean.valueOf(false));
 
         fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         // now, override the second step at the grandchild and ensure that the new step is the second step at the grandchild and at the great grandchildren
         fp2.setHelp("help!");
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
         FieldProfile fp2Updated = fieldProfileRepo.update(fp2, grandChildOrganization);
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
         WorkflowStep newWSWithNewFPViaAggregation = grandChildOrganization.getAggregateWorkflowSteps().get(0);
         WorkflowStep newWSWithNewFPViaOriginals = grandChildOrganization.getOriginalWorkflowSteps().get(0);
@@ -788,52 +788,52 @@ public class FieldProfileTest extends AbstractEntityTest {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
         Long wsId = workflowStep.getId();
 
         // put a field profile on the parent org's workflow step
-        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
-        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", Boolean.valueOf(false));
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", Boolean.valueOf(false));
 
         /* FieldProfile fp1 = */ fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(wsId);
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(wsId).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         FieldProfile fp2 = fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(wsId);
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(wsId).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         /* FieldProfile fp3 = */ fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(wsId);
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(wsId).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         long fp2Id = fp2.getId();
         fp2.setOverrideable(false);
 
         FieldProfile fp2updatedAtGrandchild = fieldProfileRepo.update(fp2, grandChildOrganization);
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        fp2 = fieldProfileRepo.getById(fp2Id);
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        fp2 = fieldProfileRepo.findById(fp2Id).get();
 
         // ensure that a new note got made at the grandchild after this override (to non-overrideable :) )
         // old n2 should still be overrideable
@@ -843,14 +843,14 @@ public class FieldProfileTest extends AbstractEntityTest {
         assertEquals(1, grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().size(), "A new FieldProfile didn't get originated at an org that overrode it!");
         assertTrue(grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp2updatedAtGrandchild), "A new FieldProfile didn't get originated at an org that overrode it!");
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         // TODO: make the note non-overrideable at the child org
         fp2.setOverrideable(false);
         FieldProfile fp2updatedAtChild = fieldProfileRepo.update(fp2, organization);
 
-        organization = organizationRepo.getById(organization.getId());
-        fp2 = fieldProfileRepo.getById(fp2Id);
+        organization = organizationRepo.findById(organization.getId()).get();
+        fp2 = fieldProfileRepo.findById(fp2Id).get();
 
         // ensure that a new note got made at the child after this override (to non-overrideable :) )
         // old n2 should still be overrideable
@@ -858,7 +858,7 @@ public class FieldProfileTest extends AbstractEntityTest {
         // old n2 should be different from the new n2 updated at the grandchild
         assertFalse(fp2.getId().equals(fp2updatedAtChild.getId()), "FieldProfile updated at child didn't get duplicated!");
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         assertFalse(grandChildOrganization.getAggregateWorkflowSteps().get(0).getOriginalFieldProfiles().contains(fp2updatedAtChild), "Grand child inherited original field profile from child organization");
 
@@ -882,56 +882,56 @@ public class FieldProfileTest extends AbstractEntityTest {
     public void testDeleteFPAtDescendantOrgAndDuplicateWSIsDeletedToo() throws HeritableModelNonOverrideableException, WorkflowStepNonOverrideableException, ComponentNotPresentOnOrgException {
         // this test calls for adding a single workflowstep to the parent organization
         workflowStepRepo.delete(workflowStep);
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
         parentOrganization.addChildOrganization(organization);
         parentOrganization = organizationRepo.save(parentOrganization);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization grandChildOrganization = organizationRepo.create(TEST_GRAND_CHILD_ORGANIZATION_NAME, organization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
-        organization = organizationRepo.getById(organization.getId());
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
 
         Organization greatGrandChildOrganization = organizationRepo.create("TestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        greatGrandChildOrganization = organizationRepo.getById(greatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        greatGrandChildOrganization = organizationRepo.findById(greatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         Organization anotherGreatGrandChildOrganization = organizationRepo.create("AnotherTestGreatGrandchildOrganizationName", grandChildOrganization, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
 
-        anotherGreatGrandChildOrganization = organizationRepo.getById(anotherGreatGrandChildOrganization.getId());
-        grandChildOrganization = organizationRepo.getById(grandChildOrganization.getId());
+        anotherGreatGrandChildOrganization = organizationRepo.findById(anotherGreatGrandChildOrganization.getId()).get();
+        grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
-        parentOrganization = organizationRepo.getById(parentOrganization.getId());
+        parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
 
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);
 
         // put a field profile on the parent org's workflow step
         // and go ahead and put on a couple more field profiles for good measure
-        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", new Boolean(false));
-        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", new Boolean(false));
+        FieldPredicate fieldPredicate2 = fieldPredicateRepo.create("foo.bar", Boolean.valueOf(false));
+        FieldPredicate fieldPredicate3 = fieldPredicateRepo.create("bar.foo", Boolean.valueOf(false));
 
         FieldProfile fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         /* FieldProfile fp2 = */ fieldProfileRepo.create(workflowStep, fieldPredicate2, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
         /* FieldProfile fp3 = */ fieldProfileRepo.create(workflowStep, fieldPredicate3, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        workflowStep = workflowStepRepo.getById(workflowStep.getId());
-        fieldPredicate = fieldPredicateRepo.getById(fieldPredicate.getId());
+        workflowStep = workflowStepRepo.findById(workflowStep.getId()).get();
+        fieldPredicate = fieldPredicateRepo.findById(fieldPredicate.getId()).get();
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         // override the field profile at the child
         fieldProfile.setHelp("help!");

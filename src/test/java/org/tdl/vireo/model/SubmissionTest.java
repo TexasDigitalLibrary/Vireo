@@ -34,11 +34,11 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals(1, organizationCategoryRepo.count(), "The category does not exist!");
 
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.getById(parentCategory.getId());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
         assertEquals(1, organizationRepo.count(), "The organization does not exist!");
 
         workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
         assertEquals(1, workflowStepRepo.count(), "The workflow step does not exist!");
 
         submissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(workflowStep);
@@ -82,7 +82,7 @@ public class SubmissionTest extends AbstractEntityTest {
         CustomActionDefinition cad = customActionDefinitionRepo.create("My Custom Action", true);
         CustomActionValue cav = customActionValueRepo.create(submission, cad, false);
 
-        organization = organizationRepo.getById(organization.getId());
+        organization = organizationRepo.findById(organization.getId()).get();
 
         submission = submissionRepo.read(submission.getId());
 
@@ -131,8 +131,8 @@ public class SubmissionTest extends AbstractEntityTest {
     @Test
     @Transactional
     public void testCascade() throws OrganizationDoesNotAcceptSubmissionsException {
-        organization = organizationRepo.getById(organization.getId());
-        parentCategory = organizationCategoryRepo.getById(organization.getCategory().getId());
+        organization = organizationRepo.findById(organization.getId()).get();
+        parentCategory = organizationCategoryRepo.findById(organization.getCategory().getId()).get();
 
         WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, organization);
         SubmissionWorkflowStep severableSubmissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(severableWorkflowStep);
@@ -146,7 +146,7 @@ public class SubmissionTest extends AbstractEntityTest {
         Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
 
         ActionLog severableActionLog = actionLogRepo.create(submission, submitter, TEST_SUBMISSION_STATUS_ACTION_LOG_ACTION_DATE, TEST_SUBMISSION_STATUS_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATUS_ACTION_LOG_FLAG);
-        submission = submissionRepo.getById(submission.getId());
+        submission = submissionRepo.findById(submission.getId()).get();
 
         int numSteps = submission.getSubmissionWorkflowSteps().size();
         // TODO: assert that the brand new submission has only the ones it gets from its org
@@ -165,7 +165,7 @@ public class SubmissionTest extends AbstractEntityTest {
         submission.addActionLog(severableActionLog);
         submission = submissionRepo.save(submission);
 
-        severableSubmissionWorkflowStep = submissionWorkflowStepRepo.getById(severableSubmissionWorkflowStep.getId());
+        severableSubmissionWorkflowStep = submissionWorkflowStepRepo.findById(severableSubmissionWorkflowStep.getId()).get();
 
         // test remove pointer workflow step and make sure the workflow step is
         // no longer associated but still exists
@@ -185,7 +185,7 @@ public class SubmissionTest extends AbstractEntityTest {
         // should delete the orphan field value, so decrement our expected count.
         fieldValueCount--;
         submissionFieldValueCount--;
-        FieldValue orphan = fieldValueRepo.getById(severableFieldValueId);
+        FieldValue orphan = fieldValueRepo.findById(severableFieldValueId).get();
         assertEquals(null, orphan, "The field value was orphaned! ");
         assertEquals(submissionFieldValueCount, submission.getFieldValues().size(), "The field value was not removed!");
         assertEquals(fieldValueCount, fieldValueRepo.count(), "The field value was orphaned!");
@@ -224,8 +224,8 @@ public class SubmissionTest extends AbstractEntityTest {
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
 
-        submissionWorkflowStep = submissionWorkflowStepRepo.getById(submissionWorkflowStep.getId());
-        organization = organizationRepo.getById(organization.getId());
+        submissionWorkflowStep = submissionWorkflowStepRepo.findById(submissionWorkflowStep.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
         submission = submissionRepo.save(submission);
 
         List<Submission> found = submissionRepo.findAllBySubmitterAndOrganization(submitter, organization);

@@ -11,7 +11,7 @@ public class FieldPredicateTest extends AbstractEntityTest {
     @Override
     @Test
     public void testCreate() {
-        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
+        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, Boolean.valueOf(false));
         assertEquals(1, fieldPredicateRepo.count(), "The repository did not save the entity!");
         assertEquals(TEST_FIELD_PREDICATE_VALUE, fieldPredicate.getValue(), "Saved entity did not contain the value!");
     }
@@ -19,9 +19,9 @@ public class FieldPredicateTest extends AbstractEntityTest {
     @Override
     @Test
     public void testDuplication() {
-        fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
+        fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, Boolean.valueOf(false));
         try {
-            fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
+            fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, Boolean.valueOf(false));
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
         assertEquals(1, fieldPredicateRepo.count(), "The repository duplicated entity!");
@@ -30,7 +30,7 @@ public class FieldPredicateTest extends AbstractEntityTest {
     @Override
     @Test
     public void testDelete() {
-        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
+        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, Boolean.valueOf(false));
         fieldPredicateRepo.delete(fieldPredicate);
         assertEquals(0, fieldPredicateRepo.count(), "The entity was not deleted!");
     }

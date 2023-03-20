@@ -82,7 +82,7 @@ public class SubmissionStatusTest extends AbstractEntityTest {
 
         // test remove severable child transition submission state
         parentSubmissionState.removeTransitionSubmissionStatus(transition1SubmissionState);
-        transition1SubmissionState = submissionStatusRepo.getById(transition1SubmissionState.getId());
+        transition1SubmissionState = submissionStatusRepo.findById(transition1SubmissionState.getId()).get();
         assertNotEquals(null, transition1SubmissionState, "The severable transition1 submission state was deleted!");
         parentSubmissionState = submissionStatusRepo.save(parentSubmissionState);
         assertEquals(0, parentSubmissionState.getTransitionSubmissionStatuses().size(), "The parent submission state had incorrect number of transition submission states (after detatch)!");
@@ -94,14 +94,14 @@ public class SubmissionStatusTest extends AbstractEntityTest {
 
         // test delete parent submission state transition
         submissionStatusRepo.delete(parentSubmissionState);
-        transition1SubmissionState = submissionStatusRepo.getById(transition1SubmissionState.getId());
+        transition1SubmissionState = submissionStatusRepo.findById(transition1SubmissionState.getId()).get();
         assertNotEquals(null, transition1SubmissionState, "The child transition submission state was deleted!");
         assertEquals(2, submissionStatusRepo.count(), "The child transition submission state was deleted!");
         assertEquals(1, transition1SubmissionState.getTransitionSubmissionStatuses().size(), "The child transition submission state was deleted!");
 
         // test delete child submission state transition
         submissionStatusRepo.delete(transition1SubmissionState);
-        transition2SubmissionState = submissionStatusRepo.getById(transition2SubmissionState.getId());
+        transition2SubmissionState = submissionStatusRepo.findById(transition2SubmissionState.getId()).get();
         assertNotEquals(null, transition2SubmissionState, "The grandchild transition submission state was deleted!");
         assertEquals(1, submissionStatusRepo.count(), "The child transition submission state was deleted!");
 
