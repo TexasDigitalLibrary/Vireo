@@ -2,6 +2,8 @@ package org.tdl.vireo.model.repo.impl;
 
 import static org.tdl.vireo.model.repo.specification.SubmissionFieldProfileSpecifications.existing;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.FieldProfile;
@@ -20,9 +22,10 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
     @Transactional
     public SubmissionFieldProfile create(FieldProfile fieldProfile) {
 
-        SubmissionFieldProfile submissionfieldProfile = submissionFieldProfileRepo.findById(existing(fieldProfile));
+        Optional<SubmissionFieldProfile> potentialSubmissionfieldProfile = submissionFieldProfileRepo.findOne(existing(fieldProfile));
 
-        if (submissionfieldProfile == null) {
+        SubmissionFieldProfile submissionfieldProfile;
+        if (!potentialSubmissionfieldProfile.isPresent()) {
             submissionfieldProfile = new SubmissionFieldProfile();
 
             submissionfieldProfile.setFieldPredicate(fieldProfile.getFieldPredicate());
@@ -41,6 +44,8 @@ public class SubmissionFieldProfileRepoImpl extends AbstractWeaverRepoImpl<Submi
             submissionfieldProfile.setEnabled(fieldProfile.getEnabled());
 
             submissionfieldProfile = submissionFieldProfileRepo.save(submissionfieldProfile);
+        } else {
+            submissionfieldProfile = potentialSubmissionfieldProfile.get();
         }
 
         return submissionfieldProfile;

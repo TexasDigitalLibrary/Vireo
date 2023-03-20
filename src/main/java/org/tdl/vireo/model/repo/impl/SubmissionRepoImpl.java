@@ -112,7 +112,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     @Value("${app.document.path:private/}")
     private String documentPath;
 
-    @Autowired
     public SubmissionRepoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
