@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
@@ -306,40 +307,40 @@ public class SubmissionEmailServiceTest extends MockData {
         mockEmailWorkflowRules.add(TEST_EMAIL_WORKFLOW_RULE_ADVISOR);
         mockEmailWorkflowRules.add(TEST_EMAIL_WORKFLOW_RULE_PLAIN);
 
-        when(mockOrganization.getId()).thenReturn(1L);
-        when(mockOrganization.getName()).thenReturn(TEST_ORGANIZATION1_NAME);
-        when(mockOrganization.getCategory()).thenReturn(TEST_ORGANIZATION_CATEGORY1);
-        when(mockOrganization.getAggregateEmailWorkflowRules()).thenReturn(mockEmailWorkflowRules);
+        lenient().when(mockOrganization.getId()).thenReturn(1L);
+        lenient().when(mockOrganization.getName()).thenReturn(TEST_ORGANIZATION1_NAME);
+        lenient().when(mockOrganization.getCategory()).thenReturn(TEST_ORGANIZATION_CATEGORY1);
+        lenient().when(mockOrganization.getAggregateEmailWorkflowRules()).thenReturn(mockEmailWorkflowRules);
 
-        when(mockSubmission.getOrganization()).thenReturn(mockOrganization);
-        when(mockSubmission.getSubmissionStatus()).thenReturn(TEST_SUBMISSION_STATUS1);
-        when(mockSubmission.getSubmitter()).thenReturn(TEST_USER);
+        lenient().when(mockSubmission.getOrganization()).thenReturn(mockOrganization);
+        lenient().when(mockSubmission.getSubmissionStatus()).thenReturn(TEST_SUBMISSION_STATUS1);
+        lenient().when(mockSubmission.getSubmitter()).thenReturn(TEST_USER);
 
-        when(mockSubmission.getFieldValuesByPredicateValue(any(String.class))).thenReturn(mockFieldValues);
-        when(mockSubmission.getFieldValuesByInputType(any(InputType.class))).thenReturn(mockFieldValues);
+        lenient().when(mockSubmission.getFieldValuesByPredicateValue(any(String.class))).thenReturn(mockFieldValues);
+        lenient().when(mockSubmission.getFieldValuesByInputType(any(InputType.class))).thenReturn(mockFieldValues);
 
-        when(mockInputTypeRepo.getById(1L)).thenReturn(TEST_INPUT_TYPE1);
-        when(mockInputTypeRepo.findByName(any(String.class))).thenReturn(TEST_INPUT_TYPE1);
+        lenient().when(mockInputTypeRepo.getById(1L)).thenReturn(TEST_INPUT_TYPE1);
+        lenient().when(mockInputTypeRepo.findByName(any(String.class))).thenReturn(TEST_INPUT_TYPE1);
 
-        when(mockEmailTemplateRepo.findById(1L)).thenReturn(Optional.of(TEST_EMAIL_TEMPLATE1));
-        when(mockEmailTemplateRepo.findByName(any(String.class))).thenReturn(TEST_EMAIL_TEMPLATES1);
-        when(mockEmailTemplateRepo.findByNameAndSystemRequired(any(String.class), any(Boolean.class))).thenReturn(TEST_EMAIL_TEMPLATE1);
+        lenient().when(mockEmailTemplateRepo.findById(1L)).thenReturn(Optional.of(TEST_EMAIL_TEMPLATE1));
+        lenient().when(mockEmailTemplateRepo.findByName(any(String.class))).thenReturn(TEST_EMAIL_TEMPLATES1);
+        lenient().when(mockEmailTemplateRepo.findByNameAndSystemRequired(any(String.class), any(Boolean.class))).thenReturn(TEST_EMAIL_TEMPLATE1);
 
-        when(mockActionLogRepo.createPublicLog(any(Submission.class), any(User.class), any(String.class))).thenReturn(TEST_ACTION_LOG1);
+        lenient().when(mockActionLogRepo.createPublicLog(any(Submission.class), any(User.class), any(String.class))).thenReturn(TEST_ACTION_LOG1);
 
-        when(mockFieldPredicateRepo.getById(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
-        when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_ADVISOR_VALUE)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
+        lenient().when(mockFieldPredicateRepo.getById(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
+        lenient().when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_ADVISOR_VALUE)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
 
-        when(mockFieldPredicateRepo.getById(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
-        when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_VALUE)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
+        lenient().when(mockFieldPredicateRepo.getById(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
+        lenient().when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_VALUE)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
 
-        when(mockSubmissionRepo.findGraphForEmailById(mockSubmission.getId())).thenReturn(mockSubmission);
+        lenient().when(mockSubmissionRepo.findGraphForEmailById(mockSubmission.getId())).thenReturn(mockSubmission);
 
-        when(mockAbstractEmailRecipientRepoImpl.createAdvisorRecipient()).thenReturn(TEST_EMAIL_RECIPIENT_ADVISOR);
+        lenient().when(mockAbstractEmailRecipientRepoImpl.createAdvisorRecipient()).thenReturn(TEST_EMAIL_RECIPIENT_ADVISOR);
 
         List<EmailWorkflowRule> emailWorkflowRuleAdvisors = new ArrayList<EmailWorkflowRule>();
         emailWorkflowRuleAdvisors.add(TEST_EMAIL_WORKFLOW_RULE_ADVISOR);
-        when(mockEmailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(TEST_EMAIL_RECIPIENT_ADVISOR, false)).thenReturn(emailWorkflowRuleAdvisors);
+        lenient().when(mockEmailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(TEST_EMAIL_RECIPIENT_ADVISOR, false)).thenReturn(emailWorkflowRuleAdvisors);
 
         doNothing().when(mockEmailSender).send(any(MimeMessage.class));
         doNothing().when(mockEmailSender).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
