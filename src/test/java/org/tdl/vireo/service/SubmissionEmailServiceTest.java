@@ -1,6 +1,7 @@
 package org.tdl.vireo.service;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -9,7 +10,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -354,19 +354,19 @@ public class SubmissionEmailServiceTest extends MockData {
 
         mockFieldValues.add(TEST_FIELD_VALUE3);
         submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission.getId());
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS2);
 
         submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission.getId());
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS3);
 
         submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission.getId());
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
     }
 
@@ -386,7 +386,7 @@ public class SubmissionEmailServiceTest extends MockData {
         mockFieldValues.add(TEST_FIELD_VALUE3);
 
         submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission.getId());
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
     }
 
@@ -412,7 +412,7 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_USER.setSettings(TEST_USER1_SETTINGS4);
 
         submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
     }
 
@@ -430,13 +430,13 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_USER.setSettings(TEST_USER1_SETTINGS4);
 
         submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
     }
 
     @Test
     public void testSendAutomatedEmailsThrowMessagingException() throws MessagingException, JsonProcessingException, IOException {
-        doThrow(MessagingException.class).when(mockEmailSender).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+        doThrow(MessagingException.class).when(mockEmailSender).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
 
         List<Map<String, Object>> emails = new ArrayList<Map<String, Object>>();
         emails.add(TEST_EMAIL_RECIPIENT_MAP1);
@@ -448,7 +448,7 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_USER.setSettings(TEST_USER1_SETTINGS4);
 
         submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
     }
 
@@ -457,19 +457,19 @@ public class SubmissionEmailServiceTest extends MockData {
         doCallRealMethod().when(mockEmailSender).sendEmail(any(String.class), any(String.class), any(String.class));
 
         submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission.getId());
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String.class), isNull(), isNull());
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS2);
 
         submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission.getId());
-        verify(mockEmailSender, times(1)).sendEmail(any(String.class), any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String.class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS3);
 
         submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission.getId());
-        verify(mockEmailSender, times(1)).sendEmail(any(String.class), any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String.class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         mockEmailWorkflowRules.clear();
@@ -484,7 +484,7 @@ public class SubmissionEmailServiceTest extends MockData {
         doThrow(MessagingException.class).when(mockEmailSender).sendEmail(any(String.class), any(String.class), any(String.class));
 
         submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission.getId());
-        verify(mockEmailSender, times(1)).sendEmail(any(String.class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String.class), isNull(), isNull());
         reset(mockEmailSender);
     }
 
@@ -519,7 +519,7 @@ public class SubmissionEmailServiceTest extends MockData {
         mockData.put("sendEmailToCCRecipient", cc);
 
         submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         mockData.put("commentVisibility", "private");
@@ -536,13 +536,13 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_USER.setSettings(TEST_USER1_SETTINGS2);
 
         submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS3);
 
         submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
-        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
     }
 
