@@ -7,35 +7,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: "Node Cache"
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package.json', '**/package-lock.json') }}
+          key: ${{ runner.os }}-cache-node-${{ hashFiles('**/package.json') }}
 
       - name: "Node Modules Cache"
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
-          path: node_modules
-          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/package.json', '**/package-lock.json') }}
-
-      - name: "Maven Cache"
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          path: $GITHUB_WORKSPACE/repo/node_modules
+          key: ${{ runner.os }}-cache-node_modules-${{ hashFiles('**/package.json') }}
 
       - name: "Setup Node"
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: 10
 
       - name: "Setup Java"
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          java-version: 11
+          distribution: 'adopt'
+          cache: 'maven'
 
       - name: "Maven and Node Tests"
         run: mvn clean test cobertura:cobertura jacoco:report coveralls:report -DdryRun=true -DtestClient
