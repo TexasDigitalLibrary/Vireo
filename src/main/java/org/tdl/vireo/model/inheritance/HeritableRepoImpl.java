@@ -289,7 +289,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
     public void delete(M heritableModel) {
 
         // allows for delete by iterating through findAll, while still deleting descendents
-        if (heritableRepo.findById(heritableModel.getId()) != null) {
+        if (heritableRepo.findById(heritableModel.getId()).isPresent()) {
 
             WorkflowStep originatingWorkflowStep = heritableModel.getOriginatingWorkflowStep();
 
