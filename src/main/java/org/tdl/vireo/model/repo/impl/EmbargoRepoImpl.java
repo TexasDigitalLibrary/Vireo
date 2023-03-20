@@ -40,7 +40,7 @@ public class EmbargoRepoImpl extends AbstractWeaverOrderedRepoImpl<Embargo, Emba
     @Autowired
     private EntityManager entityManager;
 
-    private static final Long one = new Long(1);
+    private static final Long one = Long.valueOf(1);
 
     @Override
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
