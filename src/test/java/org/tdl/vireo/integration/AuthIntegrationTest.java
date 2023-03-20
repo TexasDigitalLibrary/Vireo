@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -35,6 +37,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Override
+    @BeforeEach
     public void setup() {
         systemDataLoader.loadSystemDefaults();
 
@@ -64,6 +67,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
         data.put("lastName", TEST_USER_LAST_NAME);
         data.put("userPassword", TEST_USER_PASSWORD);
         data.put("confirm", TEST_USER_CONFIRM);
+        System.out.println("\n\n" + mockMvc + "\n\n");
         mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.convertValue(data, JsonNode.class).toString().getBytes("utf-8"))
@@ -92,6 +96,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Override
+    @AfterEach
     public void cleanup() {
         namedSearchFilterRepo.findAll().forEach(nsf -> {
             namedSearchFilterRepo.delete(nsf);

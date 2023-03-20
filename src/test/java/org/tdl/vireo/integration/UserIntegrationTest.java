@@ -1,5 +1,7 @@
 package org.tdl.vireo.integration;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Override
+    @BeforeEach
     public void setup() {
 
         systemDataLoader.loadSystemDefaults();
@@ -51,6 +54,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Override
+    @AfterEach
     public void cleanup() {
         namedSearchFilterRepo.findAll().forEach(nsf -> {
             namedSearchFilterRepo.delete(nsf);
