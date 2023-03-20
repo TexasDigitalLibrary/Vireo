@@ -392,7 +392,6 @@ public class WorkflowStepTest extends AbstractEntityTest {
         WorkflowStep newWorkflowStep = workflowStepRepo.update(workflowStep, workflowStep.getOriginatingOrganization());
 
         parentOrganization = organizationRepo.findById(parentOrganization.getId()).get();
-        organization = organizationRepo.findById(organization.getId()).get();
         grandChildOrganization = organizationRepo.findById(grandChildOrganization.getId()).get();
 
         // get old workflow step back. pointer changed!
@@ -1293,8 +1292,6 @@ public class WorkflowStepTest extends AbstractEntityTest {
         parentWorkflowStep.setOverrideable(false);
 
         WorkflowStep childNonOverrideableWorkflowStep = workflowStepRepo.update(parentWorkflowStep, organization);
-
-        grandChildNonOverrideableWorkflowStep = workflowStepRepo.findById(gcwsId).get();
 
         parentWorkflowStep = workflowStepRepo.findById(pwsId).get();
 
