@@ -67,6 +67,9 @@ public abstract class AbstractControllerTest extends MockData {
     private Environment env;
 
     @Mock
+    protected TokenService tokenService;
+
+    @Mock
     protected MockEmailService mockEmailService;
 
     @Spy
@@ -76,10 +79,6 @@ public abstract class AbstractControllerTest extends MockData {
     @Spy
     @InjectMocks
     protected CryptoService cryptoService;
-
-    @Spy
-    @InjectMocks
-    protected TokenService tokenService;
 
     @Spy
     @InjectMocks

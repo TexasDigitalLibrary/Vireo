@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -67,10 +68,6 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         ReflectionTestUtils.setField(httpUtility, HTTP_DEFAULT_TIMEOUT_NAME, HTTP_DEFAULT_TIMEOUT_VALUE);
         ReflectionTestUtils.setField(cryptoService, SECRET_PROPERTY_NAME, SECRET_VALUE);
-        ReflectionTestUtils.setField(tokenService, AUTH_SECRET_KEY_PROPERTY_NAME, AUTH_SECRET_KEY_VALUE);
-        ReflectionTestUtils.setField(tokenService, AUTH_ISSUER_KEY_PROPERTY_NAME, AUTH_ISSUER_KEY_VALUE);
-        ReflectionTestUtils.setField(tokenService, AUTH_DURATION_PROPERTY_NAME, AUTH_DURATION_VALUE);
-        ReflectionTestUtils.setField(tokenService, AUTH_KEY_PROPERTY_NAME, AUTH_KEY_VALUE);
 
         TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
         TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);
@@ -161,9 +158,18 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         testRegister();
 
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
         data.put("email", TEST_USER_EMAIL);
         data.put("userPassword", TEST_USER_PASSWORD);
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("lastName", TEST_USER_LAST_NAME);
+        claims.put("firstName", TEST_USER_FIRST_NAME);
+        claims.put("netid", null);
+        claims.put("uin", TEST_USER_EMAIL);
+        claims.put("email", TEST_USER_EMAIL);
+
+        when(tokenService.createToken(TEST_USER_EMAIL, claims)).thenReturn("jwt");
 
         ApiResponse response = authController.login(data);
 
