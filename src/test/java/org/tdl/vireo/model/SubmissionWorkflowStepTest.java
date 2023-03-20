@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionNoteRepo;
@@ -40,6 +41,7 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
 
         // SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
@@ -51,6 +53,7 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         // SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
         // SubmissionWorkflowStep sws2 = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
@@ -58,6 +61,7 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         // TODO:
         // SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
@@ -74,6 +78,7 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         // TODO Auto-generated method stub
 

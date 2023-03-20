@@ -5,11 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class ControlledVocabularyTest extends AbstractEntityTest {
 
     @Override
+    @Test
     public void testCreate() throws ClassNotFoundException {
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
         assertEquals(1, controlledVocabularyRepo.count(), "The repository did not save the entity!");
@@ -39,6 +41,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
         try {
@@ -53,6 +56,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
         controlledVocabularyRepo.delete(controlledVocabulary);
@@ -60,6 +64,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
 

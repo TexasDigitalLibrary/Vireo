@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class EmailTemplateTest extends AbstractEntityTest {
@@ -15,6 +16,7 @@ public class EmailTemplateTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         EmailTemplate emailTemplate = emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
         assertEquals(1, emailTemplateRepo.count(), "The repository did not save the emailTemplate!");
@@ -23,6 +25,7 @@ public class EmailTemplateTest extends AbstractEntityTest {
         assertEquals(TEST_EMAIL_TEMPLATE_SUBJECT, emailTemplate.getSubject(), "Saved submission did not contain the correct Subject!");
     }
 
+    @Test
     public void testUpdate() {
         EmailTemplate testEmailTemplate = emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
         assertEquals(1, emailTemplateRepo.count(), "Embargo Repo did not save the email template!");
@@ -42,6 +45,7 @@ public class EmailTemplateTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
         assertEquals(1, emailTemplateRepo.count(), "The repository didn't persist emailTemplate!");
@@ -53,6 +57,7 @@ public class EmailTemplateTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         EmailTemplate emailTemplate = emailTemplateRepo.create(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
         emailTemplateRepo.delete(emailTemplate);
@@ -61,6 +66,7 @@ public class EmailTemplateTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
 
 public class CustomActionValueTest extends AbstractEntityTest {
@@ -32,6 +33,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
     @Transactional
     @Override
+    @Test
     public void testCreate() {
         CustomActionValue testCustomActionValue = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
         assertEquals(1, customActionValueRepo.count(), "The custom action value was not created in the repository");
@@ -43,6 +45,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
     @Transactional
     @Override
+    @Test
     public void testDuplication() {
         CustomActionValue cav1 = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
         testSubmission = submissionRepo.read(testSubmission.getId());
@@ -56,6 +59,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
     @Transactional
     @Override
+    @Test
     public void testDelete() {
         CustomActionValue testCustomActionValue = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
         customActionValueRepo.delete(testCustomActionValue);
@@ -64,6 +68,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
     @Transactional
     @Override
+    @Test
     public void testCascade() {
         CustomActionValue testCustomActionValue = customActionValueRepo.create(testSubmission, testCustomActionDefinition, TEST_CUSTOM_ACTION_VALUE);
         customActionValueRepo.delete(testCustomActionValue);

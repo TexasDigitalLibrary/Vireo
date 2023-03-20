@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -481,16 +480,12 @@ public abstract class AbstractEntityTest {
 
     private Credentials credentials;
 
-    @Test
     public abstract void testCreate() throws Exception;
 
-    @Test
     public abstract void testDuplication() throws Exception;
 
-    @Test
     public abstract void testDelete() throws Exception;
 
-    @Test
     public abstract void testCascade() throws Exception;
 
     protected Credentials getCredentials() {

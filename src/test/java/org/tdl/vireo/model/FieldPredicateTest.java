@@ -3,11 +3,13 @@ package org.tdl.vireo.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class FieldPredicateTest extends AbstractEntityTest {
 
     @Override
+    @Test
     public void testCreate() {
         FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         assertEquals(1, fieldPredicateRepo.count(), "The repository did not save the entity!");
@@ -15,6 +17,7 @@ public class FieldPredicateTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         try {
@@ -25,6 +28,7 @@ public class FieldPredicateTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
         fieldPredicateRepo.delete(fieldPredicate);
@@ -32,6 +36,7 @@ public class FieldPredicateTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }

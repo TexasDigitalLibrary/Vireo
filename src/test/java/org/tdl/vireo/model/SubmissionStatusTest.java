@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class SubmissionStatusTest extends AbstractEntityTest {
 
     @Override
+    @Test
     public void testCreate() {
         SubmissionStatus parentSubmissionState = submissionStatusRepo.create(TEST_PARENT_SUBMISSION_STATUS_NAME, TEST_PARENT_SUBMISSION_STATUS_ARCHIVED, TEST_PARENT_SUBMISSION_STATUS_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATUS_DELETABLE, TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATUS_ACTIVE, null);
         SubmissionStatus transitionSubmissionState = submissionStatusRepo.create(TEST_TRANSITION1_SUBMISSION_STATUS_NAME, TEST_TRANSITION_SUBMISSION_STATUS_ARCHIVED, TEST_TRANSITION_SUBMISSION_STATUS_PUBLISHABLE, TEST_TRANSITION_SUBMISSION_STATUS_DELETABLE, TEST_TRANSITION_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_TRANSITION_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_TRANSITION_SUBMISSION_STATUS_ACTIVE, null);
@@ -37,6 +39,7 @@ public class SubmissionStatusTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         submissionStatusRepo.create(TEST_PARENT_SUBMISSION_STATUS_NAME, TEST_PARENT_SUBMISSION_STATUS_ARCHIVED, TEST_PARENT_SUBMISSION_STATUS_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATUS_DELETABLE, TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATUS_ACTIVE, null);
         try {
@@ -47,6 +50,7 @@ public class SubmissionStatusTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         SubmissionStatus parentSubmissionState = submissionStatusRepo.create(TEST_PARENT_SUBMISSION_STATUS_NAME, TEST_PARENT_SUBMISSION_STATUS_ARCHIVED, TEST_PARENT_SUBMISSION_STATUS_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATUS_DELETABLE, TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATUS_ACTIVE, null);
         submissionStatusRepo.delete(parentSubmissionState);
@@ -54,6 +58,7 @@ public class SubmissionStatusTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         // create states
         SubmissionStatus parentSubmissionState = submissionStatusRepo.create(TEST_PARENT_SUBMISSION_STATUS_NAME, TEST_PARENT_SUBMISSION_STATUS_ARCHIVED, TEST_PARENT_SUBMISSION_STATUS_PUBLISHABLE, TEST_PARENT_SUBMISSION_STATUS_DELETABLE, TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_PARENT_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_PARENT_SUBMISSION_STATUS_ACTIVE, null);

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 public class UserTest extends AbstractEntityTest {
 
@@ -13,6 +14,7 @@ public class UserTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         assertEquals(1, userRepo.count(), "The user repository did not save the user!");
@@ -23,6 +25,7 @@ public class UserTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         try {
@@ -35,6 +38,7 @@ public class UserTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         userRepo.delete(testUser);
@@ -42,6 +46,7 @@ public class UserTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         Address currentAddress = addressRepo.create(TEST_CURRENT_ADDRESS1, TEST_CURRENT_ADDRESS2, TEST_CURRENT_CITY, TEST_CURRENT_STATE, TEST_CURRENT_POSTAL_CODE, TEST_CURRENT_COUNTRY);
         assertEquals(1, addressRepo.count(), "The address does not exist!");

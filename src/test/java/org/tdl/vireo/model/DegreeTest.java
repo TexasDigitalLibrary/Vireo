@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 public class DegreeTest extends AbstractEntityTest {
 
@@ -13,6 +14,7 @@ public class DegreeTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         Degree degree = degreeRepo.create(TEST_DEGREE_NAME, degreeLevel);
         assertEquals(1, degreeRepo.count(), "The repository did not save the entity!");
@@ -21,6 +23,7 @@ public class DegreeTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         degreeRepo.create(TEST_DEGREE_NAME, degreeLevel);
         try {
@@ -32,6 +35,7 @@ public class DegreeTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         Degree degree = degreeRepo.create(TEST_DEGREE_NAME, degreeLevel);
         degreeRepo.delete(degree);
@@ -39,6 +43,7 @@ public class DegreeTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }

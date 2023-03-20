@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class CustomActionDefinitionTest extends AbstractEntityTest {
@@ -14,6 +15,7 @@ public class CustomActionDefinitionTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         CustomActionDefinition testCustomActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
         assertEquals(1, customActionDefinitionRepo.count(), "The custom action definition repository is not empty");
@@ -22,6 +24,7 @@ public class CustomActionDefinitionTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
 
@@ -34,6 +37,7 @@ public class CustomActionDefinitionTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         CustomActionDefinition customActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
         customActionDefinitionRepo.delete(customActionDefinition);
@@ -41,6 +45,7 @@ public class CustomActionDefinitionTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }

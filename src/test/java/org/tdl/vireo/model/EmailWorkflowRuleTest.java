@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class EmailWorkflowRuleTest extends AbstractEntityTest {
 
@@ -17,6 +18,7 @@ public class EmailWorkflowRuleTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         EmailWorkflowRule notifyEverybodyOfImportantDoings = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
         assertTrue(emailWorkflowRuleRepo.count() == 1, "We didn't have enough email workflow rules in the repo!");
@@ -26,6 +28,7 @@ public class EmailWorkflowRuleTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
         emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
@@ -34,6 +37,7 @@ public class EmailWorkflowRuleTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         EmailWorkflowRule ruleToDelete = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
         assertEquals(1, emailWorkflowRuleRepo.count(), "Didn't create the rule!");
@@ -42,6 +46,7 @@ public class EmailWorkflowRuleTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         EmailWorkflowRule ruleToCascade = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
         emailWorkflowRuleRepo.delete(ruleToCascade);

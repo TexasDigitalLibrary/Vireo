@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ContactInfoTest extends AbstractEntityTest {
 
@@ -15,6 +16,7 @@ public class ContactInfoTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         ContactInfo testContactInfo = contactInfoRepo.create(testAddress, TEST_PHONE, TEST_EMAIL);
         assertEquals(1, contactInfoRepo.count(), "The contact info is not created");
@@ -24,6 +26,7 @@ public class ContactInfoTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         contactInfoRepo.create(testAddress, TEST_PHONE, TEST_EMAIL);
         contactInfoRepo.create(testAddress, TEST_PHONE, TEST_EMAIL);
@@ -31,6 +34,7 @@ public class ContactInfoTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         ContactInfo testContactInfo = contactInfoRepo.create(testAddress, TEST_PHONE, TEST_EMAIL);
         contactInfoRepo.delete(testContactInfo);
@@ -38,6 +42,7 @@ public class ContactInfoTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         ContactInfo testContactInfo = contactInfoRepo.create(testAddress, TEST_PHONE, TEST_EMAIL);
         contactInfoRepo.delete(testContactInfo);

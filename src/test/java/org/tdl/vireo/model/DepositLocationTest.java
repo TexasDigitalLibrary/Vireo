@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
 
@@ -15,6 +16,7 @@ public class DepositLocationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         DepositLocation depositLocation = depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, packager, TEST_DEPOSIT_DEPOSITOR, DepositLocation.DEFAULT_TIMEOUT);
         assertEquals(depositLocation.getName(), TEST_DEPOSIT_LOCATION_NAME, "The deposit location name was wrong!");
@@ -23,6 +25,7 @@ public class DepositLocationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, packager, TEST_DEPOSIT_DEPOSITOR, DepositLocation.DEFAULT_TIMEOUT);
         try {
@@ -33,6 +36,7 @@ public class DepositLocationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         DepositLocation depositLocation = depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, packager, TEST_DEPOSIT_DEPOSITOR, DepositLocation.DEFAULT_TIMEOUT);
         depositLocationRepo.delete(depositLocation);
@@ -40,6 +44,7 @@ public class DepositLocationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }

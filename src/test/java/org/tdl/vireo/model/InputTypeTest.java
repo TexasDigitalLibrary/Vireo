@@ -4,10 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 public class InputTypeTest extends AbstractEntityTest {
 
     @Override
+    @Test
     public void testCreate() {
         InputType inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
         assertEquals(1, inputTypeRepo.count(), "The repository did not save the entity!");
@@ -15,6 +17,7 @@ public class InputTypeTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         InputType inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
         inputTypeRepo.delete(inputType);
@@ -22,6 +25,7 @@ public class InputTypeTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
         try {
@@ -33,6 +37,7 @@ public class InputTypeTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         // nothing to cascade
     }

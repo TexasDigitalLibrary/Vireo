@@ -36,6 +36,7 @@ public class OrganizationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         parentOrganization.addEmail(TEST_PARENT_EMAIL);
@@ -57,6 +58,7 @@ public class OrganizationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         organizationRepo.create(TEST_CHILD_ORGANIZATION_NAME, parentOrganization, parentCategory);
@@ -73,6 +75,7 @@ public class OrganizationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         Organization organization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
         organizationRepo.delete(organization);
@@ -80,6 +83,7 @@ public class OrganizationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
 
         // create categories
@@ -366,7 +370,7 @@ public class OrganizationTest extends AbstractEntityTest {
         Organization parentOrganization = organizationRepo.create(TEST_PARENT_ORGANIZATION_NAME, parentCategory);
 
         childCategory = organizationCategoryRepo.create(TEST_CHILD_CATEGORY_NAME);
-        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
+        fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, Boolean.valueOf(false));
         inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
 
         WorkflowStep parentWSOne = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, parentOrganization);

@@ -3,12 +3,14 @@ package org.tdl.vireo.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.config.constant.ConfigurationName;
 
 public class ConfigurationTest extends AbstractEntityTest {
 
     @Override
+    @Test
     public void testCreate() {
         // set vireo.install.dir
         ManagedConfiguration installPath = configurationRepo.create(TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY, TEST_VIREO_INSTALL_DIR, "application");
@@ -18,6 +20,7 @@ public class ConfigurationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         configurationRepo.create(TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY, TEST_VIREO_INSTALL_DIR, "application");
         try {
@@ -29,6 +32,7 @@ public class ConfigurationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         ManagedConfiguration configToDelete = configurationRepo.create(TEST_VIREO_CONFIG_SUBMISSIONS_OPEN_KEY, TEST_VIREO_INSTALL_DIR, "application");
         configurationRepo.delete(configToDelete);
@@ -36,6 +40,7 @@ public class ConfigurationTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
     }
 

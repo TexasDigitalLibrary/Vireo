@@ -22,6 +22,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, new Boolean(false));
@@ -40,6 +41,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         workflowStepRepo.delete(workflowStep);
@@ -47,6 +49,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         try {
@@ -58,6 +61,7 @@ public class WorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         WorkflowStep workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
         organization = organizationRepo.getById(organization.getId());

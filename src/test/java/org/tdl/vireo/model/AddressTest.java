@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class AddressTest extends AbstractEntityTest {
 
@@ -13,6 +14,7 @@ public class AddressTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         Address testAddress = addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
         assertEquals(1, addressRepo.count(), "The testAddress was not created");
@@ -25,6 +27,7 @@ public class AddressTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
         addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
@@ -32,6 +35,7 @@ public class AddressTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         Address testAddress = addressRepo.create(TEST_ADDRESS1, TEST_ADDRESS2, TEST_CITY, TEST_STATE, TEST_POSTAL_CODE, TEST_COUNTRY);
         addressRepo.delete(testAddress);
@@ -39,6 +43,7 @@ public class AddressTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }

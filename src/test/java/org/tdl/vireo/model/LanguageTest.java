@@ -3,6 +3,7 @@ package org.tdl.vireo.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.model.repo.LanguageRepo;
@@ -13,6 +14,7 @@ public class LanguageTest extends AbstractEntityTest {
     private LanguageRepo languageRepo;
 
     @Override
+    @Test
     public void testCreate() {
         Language language = languageRepo.create(TEST_LANGUAGE_NAME);
         assertEquals(1, languageRepo.count(), "The entity was not created!");
@@ -20,6 +22,7 @@ public class LanguageTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         languageRepo.create(TEST_LANGUAGE_NAME);
         try {
@@ -31,6 +34,7 @@ public class LanguageTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         Language language = languageRepo.create(TEST_LANGUAGE_NAME);
         languageRepo.delete(language);
@@ -38,6 +42,7 @@ public class LanguageTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }

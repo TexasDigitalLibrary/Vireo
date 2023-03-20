@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class EmbargoTest extends AbstractEntityTest {
@@ -14,6 +15,7 @@ public class EmbargoTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         Embargo testEmbargo = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         assertEquals(1, embargoRepo.count(), "Embargo Repo did not save the embargo!");
@@ -22,6 +24,7 @@ public class EmbargoTest extends AbstractEntityTest {
         assertEquals(TEST_EMBARGO_DURATION, testEmbargo.getDuration(), "Embargo Repo did not save the correct embargo duration!");
     }
 
+    @Test
     public void testUpdate() {
         Embargo testEmbargo = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         assertEquals(1, embargoRepo.count(), "Embargo Repo did not save the embargo!");
@@ -43,6 +46,7 @@ public class EmbargoTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         assertEquals(1, embargoRepo.count(), "The repository didn't persist embargo!");
@@ -54,6 +58,7 @@ public class EmbargoTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         Embargo testEmbargo = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
         embargoRepo.delete(testEmbargo);
@@ -61,6 +66,7 @@ public class EmbargoTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         // nothing to cascade
     }

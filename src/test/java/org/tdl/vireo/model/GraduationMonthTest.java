@@ -3,11 +3,13 @@ package org.tdl.vireo.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class GraduationMonthTest extends AbstractEntityTest {
 
     @Override
+    @Test
     public void testCreate() {
         GraduationMonth graduationMonth = graduationMonthRepo.create(TEST_GRADUATION_MONTH);
         assertEquals(1, graduationMonthRepo.count(), "The repository did not save the entity!");
@@ -15,6 +17,7 @@ public class GraduationMonthTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         graduationMonthRepo.create(TEST_GRADUATION_MONTH);
         try {
@@ -26,6 +29,7 @@ public class GraduationMonthTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         GraduationMonth graduationMonth = graduationMonthRepo.create(TEST_GRADUATION_MONTH);
         graduationMonthRepo.delete(graduationMonth);
@@ -33,6 +37,7 @@ public class GraduationMonthTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }

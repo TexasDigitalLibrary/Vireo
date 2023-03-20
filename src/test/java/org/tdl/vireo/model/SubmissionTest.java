@@ -68,6 +68,7 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     @Transactional
     public void testCreate() throws OrganizationDoesNotAcceptSubmissionsException {
 
@@ -106,6 +107,7 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     @Transactional
     public void testDuplication() throws OrganizationDoesNotAcceptSubmissionsException {
 
@@ -116,6 +118,7 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() throws OrganizationDoesNotAcceptSubmissionsException {
 
         Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
@@ -125,6 +128,7 @@ public class SubmissionTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     @Transactional
     public void testCascade() throws OrganizationDoesNotAcceptSubmissionsException {
         organization = organizationRepo.getById(organization.getId());

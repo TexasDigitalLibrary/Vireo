@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
 
 public class FieldValueTest extends AbstractEntityTest {
@@ -15,6 +16,7 @@ public class FieldValueTest extends AbstractEntityTest {
 
     @Transactional
     @Override
+    @Test
     public void testCreate() {
         FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
         fieldValue.setValue(TEST_FIELD_VALUE);
@@ -25,6 +27,7 @@ public class FieldValueTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
         fieldValueRepo.delete(fieldValue);
@@ -32,11 +35,13 @@ public class FieldValueTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
 
     }
 
     @Override
+    @Test
     public void testCascade() {
         FieldValue fieldValue = fieldValueRepo.create(fieldPredicate);
         fieldValueRepo.delete(fieldValue);

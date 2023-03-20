@@ -25,6 +25,7 @@ public class NoteTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         Note note = noteRepo.create(workflowStep, TEST_NOTE_NAME, TEST_NOTE_TEXT);
         assertEquals(1, noteRepo.count(), "The entity was not created!");
@@ -33,6 +34,7 @@ public class NoteTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         noteRepo.create(workflowStep, TEST_NOTE_NAME, TEST_NOTE_TEXT);
         try {
@@ -43,6 +45,7 @@ public class NoteTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         Note note = noteRepo.create(workflowStep, TEST_NOTE_NAME, TEST_NOTE_TEXT);
         noteRepo.delete(note);
@@ -50,6 +53,7 @@ public class NoteTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         Note note = noteRepo.create(workflowStep, TEST_NOTE_NAME, TEST_NOTE_TEXT);
         assertEquals(1, noteRepo.count(), "The entity was not created!");

@@ -20,21 +20,25 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
 
     }
 
     @Override
+    @Test
     public void testDuplication() {
 
     }
 
     @Override
+    @Test
     public void testDelete() {
 
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }

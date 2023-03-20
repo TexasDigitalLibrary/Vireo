@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class VocabularyWordTest extends AbstractEntityTest {
@@ -15,6 +16,7 @@ public class VocabularyWordTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
         vocabularyWord = vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
         assertEquals(1, vocabularyWordRepo.count(), "VocabularyWord Repo did not save the vocab word!");
@@ -24,6 +26,7 @@ public class VocabularyWordTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDuplication() {
         vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
         try {
@@ -33,6 +36,7 @@ public class VocabularyWordTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testDelete() {
         vocabularyWord = vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
         vocabularyWordRepo.delete(vocabularyWord);
@@ -40,6 +44,7 @@ public class VocabularyWordTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCascade() {
         vocabularyWord = vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
         vocabularyWordRepo.delete(vocabularyWord);
