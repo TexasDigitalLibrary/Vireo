@@ -67,7 +67,7 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
         data.put("lastName", TEST_USER_LAST_NAME);
         data.put("userPassword", TEST_USER_PASSWORD);
         data.put("confirm", TEST_USER_CONFIRM);
-        System.out.println("\n\n" + mockMvc + "\n\n");
+
         mockMvc.perform(post("/auth/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.convertValue(data, JsonNode.class).toString().getBytes("utf-8"))

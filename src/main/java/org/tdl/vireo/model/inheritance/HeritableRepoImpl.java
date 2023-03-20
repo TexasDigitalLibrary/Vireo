@@ -286,9 +286,9 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
     }
 
     @SuppressWarnings("unchecked")
-    public void deleteById(M heritableModel) {
+    public void delete(M heritableModel) {
 
-        // allows for deleteById by iterating through findAll, while still deleting descendents
+        // allows for delete by iterating through findAll, while still deleting descendents
         if (heritableRepo.findById(heritableModel.getId()) != null) {
 
             WorkflowStep originatingWorkflowStep = heritableModel.getOriginatingWorkflowStep();
@@ -318,7 +318,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
     private void deleteDescendantsOfHeritableModel(M heritableModel) {
         heritableRepo.findByOriginating(heritableModel).forEach(desendantHeritableModel -> {
             logger.info("Deleting component " + desendantHeritableModel.getId() + " off step  " + desendantHeritableModel.getOriginatingWorkflowStep().getName());
-            deleteById(desendantHeritableModel);
+            delete(desendantHeritableModel);
         });
     }
 
@@ -399,7 +399,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
         }
 
         for (M n : heritableModelsToDelete) {
-            deleteById(n);
+            delete(n);
         }
     }
 
