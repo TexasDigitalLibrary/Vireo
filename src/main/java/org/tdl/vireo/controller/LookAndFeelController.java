@@ -65,9 +65,9 @@ public class LookAndFeelController {
         }
         ManagedConfiguration newLogoConfig = configurationRepo.create(setting, path, "lookAndFeel");
 
-        // browsers cache the logo images by their name, so make the name inconsequentially different on update
-        // so they'll show the new image without requiring a refresh
-        newLogoConfig.setValue(newLogoConfig.getValue() + "?" + RandomStringUtils.randomAlphanumeric(6));
+        //browsers cache the logo images by their name, so make the name inconsequentially different on update
+        //so they'll show the new image without requiring a refresh
+        newLogoConfig.setValue(newLogoConfig.getValue()+"?" + RandomStringUtils.randomAlphanumeric(6));
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, newLogoConfig));
         return new ApiResponse(SUCCESS, newLogoConfig);
     }
