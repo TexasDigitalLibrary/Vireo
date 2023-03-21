@@ -393,10 +393,11 @@ public class SubmissionController {
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission status name " + submissionStatusName);
             }
+            submissionEmailService.sendWorkflowEmails(user, submission.getId());
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
-        submissionEmailService.sendWorkflowEmails(user, submission.getId());
+
         return response;
     }
 
@@ -409,7 +410,6 @@ public class SubmissionController {
             submissionEmailService.sendWorkflowEmails(user, submission.getId());
         });
         return new ApiResponse(SUCCESS);
-
     }
 
     @RequestMapping("/{submissionId}/publish/{depositLocationId}")
@@ -444,11 +444,11 @@ public class SubmissionController {
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission status name Published");
             }
+
+            submissionEmailService.sendWorkflowEmails(user, submission.getId());
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
-
-        submissionEmailService.sendWorkflowEmails(user, submission.getId());
 
         return response;
     }
