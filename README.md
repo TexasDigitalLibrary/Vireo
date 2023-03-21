@@ -63,7 +63,7 @@ $ mvn clean spring-boot:run -Dproduction
 $ mvn clean package -DskipTests -Dproduction -Dassets.uri=file:/opt/vireo/ -Dconfig.uri=file:/opt/vireo/config/
 ```
 
-If build succeeds, you should have both a `vireo-4.0.0-SNAPSHOT.war` and a `vireo-4.0.0-SNAPSHOT-install.zip` in the `target/` directory. When building for production required static assets are copied into the packaged war file and the index.html template is optimized for production. For development a symlink is used to allow the application to access required static assets.
+If build succeeds, you should have both a `vireo-4.1.4.war` and a `vireo-4.1.4-install.zip` in the `target/` directory. When building for production required static assets are copied into the packaged war file and the index.html template is optimized for production. For development a symlink is used to allow the application to access required static assets.
 
 #### Apache Reverse Proxy Config
 
@@ -108,20 +108,13 @@ $ npm run test
 $ mvn clean test -Dclient
 ```
 
-### e2e
-
-```bash
-$ mvn clean spring-boot:run
-$ npm run protractor
-```
-
 ## Deploying from Zip Package
 
 Unzip package into preferred directory (or any directory you choose):
 
 ```bash
 $ cd /opt/vireo
-$ unzip vireo-4.0.0-SNAPSHOT-install.zip
+$ unzip vireo-4.1.4-install.zip
 ```
 
 ### Directory Structure of installed package
@@ -176,13 +169,13 @@ ln -s /opt/vireo/webapp /opt/tomcat/webapps/ROOT
 Copy war file into Tomcat webapps directory (your location may vary -- this is an example):
 
 ```bash
-$ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/vireo.war
+$ cp ~/vireo-4.1.4.war /usr/local/tomcat/webapps/vireo.war
 ```
 
 or as root:
 
 ```bash
-$ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+$ cp ~/vireo-4.1.4.war /usr/local/tomcat/webapps/ROOT.war
 ```
 
 **if not specifying assets.uri during build the assets will be stored under the vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes**
@@ -195,7 +188,7 @@ $ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 ## Running WAR as a stand-alone Spring Boot application
 
 ```bash
-java -jar target/vireo-4.0.0-SNAPSHOT.war
+java -jar target/vireo-4.1.4.war
 ```
 
 ## Configuring

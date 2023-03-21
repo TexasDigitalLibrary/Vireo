@@ -4,11 +4,13 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <name>Vireo</name>
-  <description>Vireo Thesis and Dissertation Submission System</description>
-  <version>4.1.0</version>
   <groupId>org.tdl</groupId>
   <artifactId>vireo</artifactId>
+  <version>4.1.4</version>
+
+  <name>Vireo</name>
+  <description>Vireo Thesis and Dissertation Submission System</description>
+
   <url>https://github.com/TexasDigitalLibrary/Vireo</url>
   <organization>
     <name>TDL</name>
@@ -23,11 +25,12 @@
   </parent>
 
   <properties>
+    <java.version>11</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <tomcat.version>7.0.59</tomcat.version>
-    <exec-maven-plugin-version>3.0.0</exec-maven-plugin-version>
-    <maven-filtering-version>3.2.0</maven-filtering-version>
-    <maven-war-plugin-version>3.2.0</maven-war-plugin-version>
-    <maven-jar-plugin-version>3.2.2</maven-jar-plugin-version>
     <profile>default</profile>
     <production>false</production>
     <!-- must be valid uri with scheme file or classpath -->
@@ -98,6 +101,7 @@
       <artifactId>thymeleaf-extras-springsecurity5</artifactId>
     </dependency>
 
+    <!-- remove if not needed -->
     <dependency>
       <groupId>net.sourceforge.nekohtml</groupId>
       <artifactId>nekohtml</artifactId>
@@ -132,6 +136,7 @@
       <artifactId>commons-httpclient</artifactId>
       <version>3.1</version>
     </dependency>
+    <!-- upgrade to -->
     <!-- <dependency>
       <groupId>org.apache.httpcomponents.client5</groupId>
       <artifactId>httpclient5</artifactId>
@@ -200,6 +205,7 @@
       </exclusions>
     </dependency>
 
+    <!-- remove if not needed -->
     <dependency>
       <groupId>xom</groupId>
       <artifactId>xom</artifactId>
@@ -262,6 +268,71 @@
 
   <build>
 
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>application.yml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>dist</directory>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/webapp/app</directory>
+        <filtering>false</filtering>
+        <!-- would be better to exclude what is causing CI to fail -->
+        <includes>
+          <include>**/*.html</include>
+          <include>**/*.gif</include>
+          <include>**/*.png</include>
+          <include>**/*.svg</include>
+          <include>**/*.eot</include>
+          <include>**/*.ttf</include>
+          <include>**/*.woff</include>
+          <include>**/*.woff2</include>
+        </includes>
+        <excludes>
+          <exclude>**/sha.js/</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>src/main/webapp/app/resources/styles</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/*.css</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>node_modules/@wvr/core/app/resources/styles</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/*.css</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>node_modules/bootstrap-sass/assets</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>fonts/**</exclude>
+          <exclude>images/**</exclude>
+          <exclude>javascript/**</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>node_modules/ng-sortable/dist</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>ng-sortable.min.css</include>
+        </includes>
+      </resource>
+    </resources>
+
     <plugins>
 
       <plugin>
@@ -271,7 +342,7 @@
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-filtering</artifactId>
-            <version>${maven-filtering-version}</version>
+            <version>3.2.0</version>
           </dependency>
         </dependencies>
         <configuration>
@@ -301,12 +372,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>${maven-jar-plugin-version}</version>
+        <version>3.2.2</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-filtering</artifactId>
-            <version>${maven-filtering-version}</version>
+            <version>3.2.0</version>
           </dependency>
         </dependencies>
         <configuration>
@@ -317,18 +388,93 @@
               <mainClass>org.tdl.vireo.Application</mainClass>
             </manifest>
           </archive>
+          <webResources>
+            <webResource>
+              <filtering>true</filtering>
+              <directory>src/main/resources</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <includes>
+                <include>application.yaml</include>
+              </includes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>src/main/resources</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <includes>
+                <include>*/**</include>
+              </includes>
+              <exclude>application.yaml</exclude>
+            </webResource>
+            <webResource>
+              <directory>dist</directory>
+              <filtering>false</filtering>
+            </webResource>
+            <webResource>
+              <directory>src/main/webapp/app</directory>
+              <filtering>false</filtering>
+              <!-- would be better to exclude what is causing CI to fail -->
+              <includes>
+                <include>**/*.html</include>
+                <include>**/*.gif</include>
+                <include>**/*.png</include>
+                <include>**/*.svg</include>
+                <include>**/*.eot</include>
+                <include>**/*.ttf</include>
+                <include>**/*.woff</include>
+                <include>**/*.woff2</include>
+              </includes>
+              <excludes>
+                <exclude>**/sha.js/</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>src/main/webapp/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>node_modules/@wvr/core/app/resources/styles</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>**/*.css</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <filtering>false</filtering>
+              <directory>node_modules/bootstrap-sass/assets</directory>
+              <targetPath>WEB-INF/classes</targetPath>
+              <excludes>
+                <exclude>fonts/**</exclude>
+                <exclude>images/**</exclude>
+                <exclude>javascript/**</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
+              <directory>node_modules/ng-sortable/dist</directory>
+              <filtering>false</filtering>
+              <targetPath>WEB-INF/classes</targetPath>
+              <includes>
+                <include>ng-sortable.min.css</include>
+              </includes>
+            </webResource>
+          </webResources>
         </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>${maven-war-plugin-version}</version>
+        <version>3.2.0</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-filtering</artifactId>
-            <version>${maven-filtering-version}</version>
+            <version>3.2.0</version>
           </dependency>
         </dependencies>
         <configuration>
@@ -366,6 +512,28 @@
               </excludes>
             </webResource>
             <webResource>
+              <directory>dist</directory>
+              <filtering>false</filtering>
+            </webResource>
+            <webResource>
+              <directory>src/main/webapp/app</directory>
+              <filtering>false</filtering>
+              <!-- would be better to exclude what is causing CI to fail -->
+              <includes>
+                <include>**/*.html</include>
+                <include>**/*.gif</include>
+                <include>**/*.png</include>
+                <include>**/*.svg</include>
+                <include>**/*.eot</include>
+                <include>**/*.ttf</include>
+                <include>**/*.woff</include>
+                <include>**/*.woff2</include>
+              </includes>
+              <excludes>
+                <exclude>**/sha.js/</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
               <directory>src/main/webapp/app/resources/styles</directory>
               <filtering>false</filtering>
               <targetPath>WEB-INF/classes</targetPath>
@@ -390,6 +558,14 @@
                 <exclude>images/**</exclude>
                 <exclude>javascript/**</exclude>
               </excludes>
+            </webResource>
+            <webResource>
+              <directory>node_modules/ng-sortable/dist</directory>
+              <filtering>false</filtering>
+              <targetPath>WEB-INF/classes</targetPath>
+              <includes>
+                <include>ng-sortable.min.css</include>
+              </includes>
             </webResource>
           </webResources>
         </configuration>
@@ -467,33 +643,6 @@
         </dependencies>
       </plugin>
 
-      <plugin>
-        <groupId>org.asciidoctor</groupId>
-        <artifactId>asciidoctor-maven-plugin</artifactId>
-        <version>1.5.7.1</version>
-        <executions>
-          <execution>
-            <id>generate-docs</id>
-            <phase>test</phase>
-            <goals>
-              <goal>process-asciidoc</goal>
-            </goals>
-            <configuration>
-              <backend>html</backend>
-              <doctype>book</doctype>
-              <sourceDocumentName>index.adoc</sourceDocumentName>
-            </configuration>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.springframework.restdocs</groupId>
-            <artifactId>spring-restdocs-asciidoctor</artifactId>
-            <version>2.0.6.RELEASE</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-
     </plugins>
 
     <pluginManagement>
@@ -525,42 +674,6 @@
       </plugins>
     </pluginManagement>
 
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>application.yml</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>src/main/webapp/app/resources/styles</directory>
-        <filtering>false</filtering>
-        <excludes>
-          <exclude>**/*.css</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>node_modules/@wvr/core/app/resources/styles</directory>
-        <filtering>false</filtering>
-        <excludes>
-          <exclude>**/*.css</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>node_modules/bootstrap-sass/assets</directory>
-        <filtering>false</filtering>
-        <excludes>
-          <exclude>fonts/**</exclude>
-          <exclude>images/**</exclude>
-          <exclude>javascript/**</exclude>
-        </excludes>
-      </resource>
-    </resources>
-
   </build>
 
   <profiles>
@@ -574,7 +687,6 @@
       </activation>
       <properties>
         <npm-extension>.cmd</npm-extension>
-        <grunt-extension>.cmd</grunt-extension>
       </properties>
     </profile>
 
@@ -587,7 +699,6 @@
       </activation>
       <properties>
         <npm-extension></npm-extension>
-        <grunt-extension></grunt-extension>
       </properties>
     </profile>
 
@@ -603,7 +714,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>${exec-maven-plugin-version}</version>
+            <version>3.0.0</version>
             <executions>
 
               <!-- NPM Install -->
@@ -621,15 +732,15 @@
                 </goals>
               </execution>
 
-              <!-- Grunt Default -->
+              <!-- Webpack Build -->
               <execution>
-                <id>exec-npm-run-grunt</id>
+                <id>exec-npm-run-build</id>
                 <phase>generate-sources</phase>
                 <configuration>
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>grunt</argument>
+                    <argument>build</argument>
                   </arguments>
                 </configuration>
                 <goals>
@@ -658,7 +769,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>${exec-maven-plugin-version}</version>
+            <version>3.0.0</version>
             <executions>
 
               <!-- NPM Install -->
@@ -676,16 +787,19 @@
                 </goals>
               </execution>
 
-              <!-- Grunt Deploy -->
+              <!-- Webpack Build -->
               <execution>
-                <id>exec-npm-run-grunt-deploy</id>
+                <id>exec-npm-run-build</id>
                 <phase>generate-sources</phase>
                 <configuration>
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>grunt:deploy</argument>
+                    <argument>build</argument>
                   </arguments>
+                  <environmentVariables>
+                    <NODE_ENV>production</NODE_ENV>
+                  </environmentVariables>
                 </configuration>
                 <goals>
                   <goal>exec</goal>
@@ -710,8 +824,39 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>${exec-maven-plugin-version}</version>
+            <version>3.0.0</version>
             <executions>
+
+              <!-- NPM Install -->
+              <execution>
+                <id>exec-npm-install</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- Webpack Build -->
+              <execution>
+                <id>exec-npm-run-build</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>build</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
 
               <!-- Karma Testing for AngularJS -->
               <execution>
@@ -721,7 +866,7 @@
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>test-ci</argument>
+                    <argument>test:ci</argument>
                   </arguments>
                 </configuration>
                 <goals>

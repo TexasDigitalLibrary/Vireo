@@ -151,7 +151,7 @@ public class SubmissionHelperUtility {
             }
         }
 
-        if (matcher.matches()) {
+        if (matcher != null && matcher.matches()) {
             cntry = reverse(matcher.group(1));
             zip = reverse(matcher.group(2));
             state = reverse(matcher.group(3));

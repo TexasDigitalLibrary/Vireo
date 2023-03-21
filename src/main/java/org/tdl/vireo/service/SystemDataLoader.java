@@ -878,23 +878,20 @@ public class SystemDataLoader {
     }
 
     private void loadSubmissionListColumnsFilters() {
-
-        List<SubmissionListColumn> defaultFilterColumns = null;
         try {
-            defaultFilterColumns = objectMapper.readValue(getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
+            List<SubmissionListColumn> defaultFilterColumns = objectMapper.readValue(getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
+
+            for (SubmissionListColumn defaultFilterColumn : defaultFilterColumns) {
+                SubmissionListColumn dbDefaultFilterColumn = submissionListColumnRepo.findByTitle(defaultFilterColumn.getTitle());
+                if (dbDefaultFilterColumn != null) {
+                    defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
+                } else {
+                    logger.warn("Unable to find default filter for column " + defaultFilterColumn.getTitle() + "!");
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        for (SubmissionListColumn defaultFilterColumn : defaultFilterColumns) {
-            SubmissionListColumn dbDefaultFilterColumn = submissionListColumnRepo.findByTitle(defaultFilterColumn.getTitle());
-            if (dbDefaultFilterColumn != null) {
-                defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
-            } else {
-                logger.warn("Unable to find default filter for column " + defaultFilterColumn.getTitle() + "!");
-            }
-        }
-
     }
 
     private List<String> getAllSystemEmailTemplateNames() {
@@ -982,7 +979,7 @@ public class SystemDataLoader {
 
                 FieldPredicate dbFieldPredicate = fieldPredicateRepo.findByValue(fieldPredicate.getValue());
                 if (dbFieldPredicate == null) {
-                    dbFieldPredicate = fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(true));
+                    dbFieldPredicate = fieldPredicateRepo.create(fieldPredicate.getValue(), Boolean.valueOf(true));
                 } else {
                     dbFieldPredicate.setValue(fieldPredicate.getValue());
                     dbFieldPredicate.setDocumentTypePredicate(fieldPredicate.getDocumentTypePredicate());

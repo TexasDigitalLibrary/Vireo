@@ -24,7 +24,7 @@ jobs:
       - name: "Setup Node"
         uses: actions/setup-node@v3
         with:
-          node-version: 10
+          node-version: 16
 
       - name: "Setup Java"
         uses: actions/setup-java@v3
@@ -37,7 +37,9 @@ jobs:
         run: mvn clean test jacoco:report coveralls:report -DdryRun=true -DtestClient
 
       - name: "Combine Coverage"
-        run: jq 'reduce inputs as $i (.; .source_files += $i.source_files)' target/coveralls.json src/main/webapp/coverage/coveralls.json > coveralls.json
+        run: |
+          cat coverage/lcov.info | node node_modules/coveralls/bin/coveralls.js -s > coverage/coveralls.json
+          jq 'reduce inputs as $i (.; .source_files += $i.source_files)' target/coveralls.json coverage/coveralls.json > coveralls.json
 
       - name: "Send to Coveralls"
         uses: MikeEdgar/github-action@raw_coverage_file

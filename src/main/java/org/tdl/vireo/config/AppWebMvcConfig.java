@@ -41,8 +41,8 @@ public class AppWebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private List<HttpMessageConverter<?>> converters;
 
-    @Value("${info.build.production:false}")
-    private boolean production;
+    @Value("${app.config.path:classpath:/appConfig.js}")
+    private String appConfigPath;
 
     @Value("${app.public.folder:public}")
     private String publicFolder;
@@ -61,14 +61,13 @@ public class AppWebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        if (!production) {
-            logger.info("/node_modules/** -> file:" + Application.getRootPath() + "node_modules/");
-            registry.addResourceHandler("/node_modules/**").addResourceLocations("file:" + Application.getRootPath() + "node_modules/");
-        }
-        logger.info("/public/** -> file:" + Application.getAssetsPath() + publicFolder + "/");
-        registry.addResourceHandler("/**").addResourceLocations("/app/");
+        registry.addResourceHandler("/appConfig.js").addResourceLocations(appConfigPath);
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/");
+
         registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.getAssetsPath() + publicFolder + "/");
         registry.setOrder(Integer.MAX_VALUE - 2);
+
+        logger.info("/public/** -> file:" + Application.getAssetsPath() + publicFolder + "/");
     }
 
     @Override

@@ -1,6 +1,6 @@
 var appConfig = {
 
-    'version': '4.1.3',
+    'version': '4.1.4',
 
     'allowAnonymous': true,
     'anonymousRole': 'ROLE_ANONYMOUS',
@@ -18,7 +18,7 @@ var appConfig = {
         'debug': true
     },
 
-    'stompDebug': false,
+    'stompDebug': ${STOMP_DEBUG},
 
     /*
     	Determines the type of connection stomp will attempt to make with the service.

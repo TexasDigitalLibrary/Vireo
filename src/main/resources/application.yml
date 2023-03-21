@@ -1,10 +1,14 @@
 server:
   port: 9000
-  contextPath:
+  servlet:
+    context-path:
 
 
-# TODO: determine if this is required
-security.basic.enabled: false
+# file size limit
+multipart:
+  maxFileSize: 20MB
+  # Total request size for a multipart/form-data
+  maxRequestSize: 20MB
 
 
 spring:
@@ -146,6 +150,9 @@ app:
 
   # edu.tamu.weaver.utility.HttpUtility
   http.timeout: 10000
+
+  config:
+    path: classpath:/appConfig.js
 
 
 # edu.tamu.weaver.token.service.TokenService
