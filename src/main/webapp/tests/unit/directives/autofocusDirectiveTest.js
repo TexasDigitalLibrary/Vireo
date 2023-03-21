@@ -1,61 +1,58 @@
 describe('directive: vireoAutofocus', function () {
-    var compile, defaults, httpBackend, rootScope, scope, templateCache, window;
+    var compile, httpBackend, rootScope, scope, templateCache, window, directive, MockedUser;
 
-    var initializeVariables = function(settings) {
-        inject(function ($compile, $httpBackend, $rootScope, $templateCache, $window) {
+    var initializeVariables = function () {
+        inject(function ($q, $compile, $httpBackend, $rootScope, $templateCache, $window) {
             compile = $compile;
             httpBackend = $httpBackend;
             rootScope = $rootScope;
             templateCache = $templateCache;
             window = $window;
+            MockedUser = new mockUser($q);
         });
     };
 
-    var initializeDirective = function(settings) {
-        inject(function (AbstractAppModel) {
+    var initializeDirective = function () {
+        inject(function () {
             scope = rootScope.$new();
 
-            defaults = {
+            var element = '<vireo-autofocus';
+            var directiveProperties = {
                 vireoAutofocus: "",
                 vireoAutofocusRefresh: ""
             };
-        });
-    };
 
-    var createDirective = function(properties) {
-        var directive = '<vireo-autofocus';
-        var directiveProperties = defaults;
-
-        if (properties) {
-            angular.forEach(properties, function(value, key) {
-                directiveProperties[key] = value;
+            angular.forEach(directiveProperties, function(value, key) {
+                element += " " + key + "=\"" + value + "\"";
             });
-        }
 
-        angular.forEach(directiveProperties, function(value, key) {
-            directive += " " + key + "=\"" + value + "\"";
+            element += '></vireo-autofocus>';
+
+            directive = compile(element)(scope);
+
+            scope.$digest();
         });
-
-        directive += '></vireo-autofocus>';
-
-        return angular.element(directive);
     };
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module("mock.user", function ($provide) {
+            var User = function () {
+                return MockedUser;
+            };
+            $provide.value("User", User);
+        });
+        module("mock.userService");
 
+        installPromiseMatchers();
         initializeVariables();
-        initializeDirective();
     });
 
     describe('Does the directive compile', function () {
         it('should be defined', function () {
-            var directive = createDirective();
-            var compiled = compile(directive)(scope);
-            scope.$digest();
-
-            expect(compiled).toBeDefined();
+            initializeDirective();
+            expect(directive).toBeDefined();
         });
     });
 });

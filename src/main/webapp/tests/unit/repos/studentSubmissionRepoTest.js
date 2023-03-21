@@ -1,5 +1,5 @@
 describe("service: studentSubmissionRepo", function () {
-    var q, repo, rootScope, mockedRepo, mockedUser, scope, timeout, User, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, timeout, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, $timeout, _WsApi_) {
@@ -26,11 +26,12 @@ describe("service: studentSubmissionRepo", function () {
         module("vireo");
         module("mock.submission");
         module("mock.user", function($provide) {
-            User = function() {
+            var User = function() {
                 return mockedUser;
             };
             $provide.value("User", User);
         });
+        module("mock.userService");
         module("mock.wsApi");
 
         initializeVariables();

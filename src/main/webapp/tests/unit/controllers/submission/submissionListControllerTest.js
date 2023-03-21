@@ -420,7 +420,7 @@ describe("controller: SubmissionListController", function () {
         });
         it("getUserById should return a user", function () {
             var response;
-            var user = new mockUser(1);
+            var user = new mockUser(q);
             user.mock(dataUser2);
 
             response = scope.getUserById(dataUser2.id);

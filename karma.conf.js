@@ -48,10 +48,11 @@ module.exports = function (config) {
       'src/main/webapp/app/constants/**/*.js',
       'src/main/webapp/app/controllers/**/*.js',
       'src/main/webapp/app/directives/**/*.js',
-      'src/main/webapp/app/services/**/*.js',
       'src/main/webapp/app/factories/**/*.js',
+      'src/main/webapp/app/filters/**/*.js',
       'src/main/webapp/app/model/**/*.js',
       'src/main/webapp/app/repo/**/*.js',
+      'src/main/webapp/app/services/**/*.js',
 
       'src/main/webapp/tests/core/**/*.js',
       'src/main/webapp/tests/mocks/**/*.js',

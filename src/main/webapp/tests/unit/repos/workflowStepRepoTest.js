@@ -1,5 +1,5 @@
 describe("service: workflowStepRepo", function () {
-    var q, repo, rootScope, mockedRepo, mockedUser, scope, OrganizationRepo, RestApi, User, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, OrganizationRepo, RestApi, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, _OrganizationRepo_, _RestApi_, _WsApi_) {
@@ -31,11 +31,12 @@ describe("service: workflowStepRepo", function () {
         module("mock.organizationRepo");
         module("mock.restApi");
         module("mock.user", function($provide) {
-            User = function() {
+            var User = function() {
                 return mockedUser;
             };
             $provide.value("User", User);
         });
+        module("mock.userService");
         module("mock.workflowStep");
         module("mock.wsApi");
 

@@ -1,47 +1,48 @@
 describe('directive: usersettings', function () {
-    var compile, defaults, httpBackend, rootScope, scope, templateCache, window, UserSettings;
+    var compile, directive, httpBackend, rootScope, scope, templateCache, window, UserSettings, MockedUser;
 
-    var initializeVariables = function(settings) {
-        inject(function ($compile, $httpBackend, $rootScope, $templateCache, $window) {
+    var initializeVariables = function () {
+        inject(function ($q, $compile, $httpBackend, $rootScope, $templateCache, $window) {
             compile = $compile;
             httpBackend = $httpBackend;
             rootScope = $rootScope;
             templateCache = $templateCache;
             window = $window;
+            MockedUser = new mockUser($q);
         });
     };
 
-    var initializeDirective = function(settings) {
+    var initializeDirective = function () {
         inject(function (AbstractAppModel, _UserSettings_) {
             scope = rootScope.$new();
 
-            defaults = {
+            var element = '<usersettings';
+            var directiveProperties = {
+
             };
-        });
-    };
 
-    var createDirective = function(properties) {
-        var directive = '<usersettings';
-        var directiveProperties = defaults;
-
-        if (properties) {
-            angular.forEach(properties, function(value, key) {
-                directiveProperties[key] = value;
+            angular.forEach(directiveProperties, function(value, key) {
+                element += " " + key + "=\"" + value + "\"";
             });
-        }
 
-        angular.forEach(directiveProperties, function(value, key) {
-            directive += " " + key + "=\"" + value + "\"";
+            element += '></usersettings>';
+
+            directive = compile(element)(scope);
+
+            scope.$digest();
         });
-
-        directive += '></usersettings>';
-
-        return angular.element(directive);
     };
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module("mock.user", function ($provide) {
+            var User = function () {
+                return MockedUser;
+            };
+            $provide.value("User", User);
+        });
+        module("mock.userService");
 
         // TODO: implement a settings mock, such that module('mock.UserSettings') can instead be called.
         module(function($provide) {
@@ -55,19 +56,15 @@ describe('directive: usersettings', function () {
             $provide.value('UserSettings', UserSettings);
         });
 
+        installPromiseMatchers();
         initializeVariables();
-        initializeDirective();
     });
 
-/*
     describe('Does the directive compile', function () {
         it('should be defined', function () {
-            var directive = createDirective();
-            var compiled = compile(directive)(scope);
-            scope.$digest();
-
-            expect(compiled).toBeDefined();
+            // initializeDirective();
+            // expect(directive).toBeDefined();
         });
     });
-*/
+
 });

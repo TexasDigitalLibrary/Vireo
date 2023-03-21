@@ -1,5 +1,5 @@
 describe("service: submissionRepo", function () {
-    var q, repo, rootScope, mockedRepo, mockedUser, scope, FileService, User, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, FileService, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, _FileService_, _WsApi_) {
@@ -32,11 +32,12 @@ describe("service: submissionRepo", function () {
         module("mock.packager");
         module("mock.submissionStatus");
         module("mock.user", function($provide) {
-            User = function() {
+            var User = function() {
                 return mockedUser;
             };
             $provide.value("User", User);
         });
+        module("mock.userService");
         module("mock.wsApi");
 
         initializeVariables();

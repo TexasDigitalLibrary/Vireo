@@ -36,6 +36,7 @@ describe("service: abstractAppRepo", function () {
             };
             $provide.value("User", User);
         });
+        module('mock.userService');
         module("mock.wsApi");
 
         initializeVariables();
