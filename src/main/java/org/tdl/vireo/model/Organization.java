@@ -30,6 +30,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
+
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
@@ -40,7 +42,7 @@ import org.tdl.vireo.model.validation.OrganizationValidator;
 @Entity
 @JsonIgnoreProperties(value = { "aggregateWorkflowSteps", "childrenOrganizations" }, allowGetters = true)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id", "parent_organization_id" }))
-public class Organization extends HibernateWorkaroundValidatingBaseEntity {
+public class Organization extends ValidatingBaseEntity {
 
     @Transient
     private Logger LOG = LoggerFactory.getLogger(this.getClass());

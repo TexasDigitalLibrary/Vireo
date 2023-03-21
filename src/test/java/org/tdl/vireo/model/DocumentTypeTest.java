@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
@@ -59,7 +58,6 @@ public class DocumentTypeTest extends AbstractEntityTest {
     }
 
     @Test
-    @Disabled("Disabled until ByteBuddyInterceptor is in unnamed module of loader 'app' resolved!")
     public void testDeleteDocumentTypeWhileSubmissionReferencesPredicate() throws OrganizationDoesNotAcceptSubmissionsException {
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         assertEquals(1, organizationCategoryRepo.count(), "The category does not exist!");

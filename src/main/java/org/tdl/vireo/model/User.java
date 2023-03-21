@@ -27,11 +27,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Formula;
@@ -40,10 +35,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.UserValidator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
 import edu.tamu.weaver.user.model.IRole;
 
 @Entity
-public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
+public class User extends AbstractWeaverUserDetails {
 
     private static final long serialVersionUID = -614285536644750464L;
 
