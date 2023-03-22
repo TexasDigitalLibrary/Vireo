@@ -3,23 +3,25 @@ server:
   servlet:
     context-path:
 
-
-# file size limit
-multipart:
-  maxFileSize: 20MB
-  # Total request size for a multipart/form-data
-  maxRequestSize: 20MB
-
-
 spring:
   profiles.active: ${profile}
+
+  servlet:
+    # file size limit
+    multipart:
+      enabled: true
+      location: ${java.io.tmpdir}
+      fileSizeThreshold: 0
+      maxFileSize: 20MB
+      # Total request size for a multipart/form-data
+      maxRequestSize: 20MB
+
+  h2:
+    console:
+      enabled: false
+      path: /admin/h2console
+
   template.cache: false
-  http.multipart:
-    enabled: true
-    location: ${java.io.tmpdir}
-    fileSizeThreshold: 0
-    maxFileSize: 20MB
-    maxRequestSize: 20MB
 
   sql:
     init:
