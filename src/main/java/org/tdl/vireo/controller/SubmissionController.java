@@ -240,9 +240,18 @@ public class SubmissionController {
     Submission submission = submissionRepo.read(submissionId);
 
     String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
+    Boolean sendEmailToRecipient = data.get("sendEmailToRecipient") != null ? (Boolean) data.get("sendEmailToRecipient") : true;
+
+    data.forEach((key, value) -> System.out.println(key + ":" + value));
 
     if (commentVisibility.equals("public")) {
-        submissionEmailService.sendAutomatedEmails(user, submission.getId(), data);
+        if (sendEmailToRecipient.equals(true)) {
+            submissionEmailService.sendAutomatedEmails(user, submission.getId(), data);
+        } else{
+            String subject = (String) data.get("subject");
+            String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
+            actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
+        }   
     } else {
       String subject = (String) data.get("subject");
       String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
@@ -267,12 +276,21 @@ public class SubmissionController {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
 
             String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
+            Boolean sendEmailToRecipient = data.get("sendEmailToRecipient") != null ? (Boolean) data.get("sendEmailToRecipient") : true;
+
+            data.forEach((key, value) -> System.out.println(key + ":" + value));
 
             if (commentVisibility.equals("public")) {
-                try {
-                    submissionEmailService.sendAutomatedEmails(user, sub.getId(), data);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (sendEmailToRecipient.equals(true)) {
+                    try {
+                        submissionEmailService.sendAutomatedEmails(user, sub.getId(), data);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    String subject = (String) data.get("subject");
+                    String templatedMessage = templateUtility.compileString((String) data.get("message"), sub);
+                    actionLogRepo.createPublicLog(sub, user, subject + ": " + templatedMessage);
                 }
             } else {
               String subject = (String) data.get("subject");
