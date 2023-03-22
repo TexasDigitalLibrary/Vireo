@@ -319,7 +319,6 @@
         <directory>node_modules/bootstrap-sass/assets</directory>
         <filtering>false</filtering>
         <excludes>
-          <exclude>fonts/**</exclude>
           <exclude>images/**</exclude>
           <exclude>javascript/**</exclude>
         </excludes>
@@ -449,7 +448,6 @@
               <directory>node_modules/bootstrap-sass/assets</directory>
               <targetPath>WEB-INF/classes</targetPath>
               <excludes>
-                <exclude>fonts/**</exclude>
                 <exclude>images/**</exclude>
                 <exclude>javascript/**</exclude>
               </excludes>
@@ -554,7 +552,6 @@
               <filtering>false</filtering>
               <targetPath>WEB-INF/classes</targetPath>
               <excludes>
-                <exclude>fonts/**</exclude>
                 <exclude>images/**</exclude>
                 <exclude>javascript/**</exclude>
               </excludes>
