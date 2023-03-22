@@ -416,7 +416,9 @@ public class SystemDataLoader {
                 systemOrganization = organization;
             }
 
-            organization.setAggregateWorkflowSteps(processWorkflowSteps(organization, systemOrganization.getOriginalWorkflowSteps()));
+            List<WorkflowStep> systemOrganizationWorkflowSteps = new ArrayList<>(systemOrganization.getOriginalWorkflowSteps());
+
+            organization.setAggregateWorkflowSteps(processWorkflowSteps(organization, systemOrganizationWorkflowSteps));
 
             organization = organizationRepo.save(organization);
 
@@ -443,7 +445,9 @@ public class SystemDataLoader {
                 newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
             }
 
-            for (FieldProfile fieldProfile : workflowStep.getOriginalFieldProfiles()) {
+            List<FieldProfile> originalFieldProfiles = new ArrayList<>(workflowStep.getOriginalFieldProfiles());
+
+            for (FieldProfile fieldProfile : originalFieldProfiles) {
                 // check to see if the FieldPredicate exists
                 FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getFieldPredicate().getValue());
 
