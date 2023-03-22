@@ -106,7 +106,7 @@ public class Submission extends ValidatingBaseEntity {
     @Column(nullable = true)
     private boolean approveAdvisor;
 
-    @JsonView(Views.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     private Set<CustomActionValue> customActionValues;
