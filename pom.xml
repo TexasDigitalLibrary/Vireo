@@ -19,7 +19,7 @@
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
     <version>2.1.1-SNAPSHOT</version>
-    <relativePath></relativePath>
+    <relativePath/>
   </parent>
 
   <properties>
@@ -103,7 +103,7 @@
     <dependency>
       <groupId>org.thymeleaf</groupId>
       <artifactId>thymeleaf-spring4</artifactId>
-      <version>3.0.6.RELEASE</version><!--$NO-MVN-MAN-VER$ -->
+      <version>3.0.15.RELEASE</version><!--$NO-MVN-MAN-VER$ -->
     </dependency>
 
     <dependency>
@@ -433,7 +433,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <execute />
+                    <execute/>
                   </action>
                 </pluginExecution>
               </pluginExecutions>
@@ -504,8 +504,8 @@
         </os>
       </activation>
       <properties>
-        <npm-extension></npm-extension>
-        <grunt-extension></grunt-extension>
+        <npm-extension/>
+        <grunt-extension/>
       </properties>
     </profile>
 
