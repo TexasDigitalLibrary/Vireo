@@ -19,7 +19,7 @@
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
     <version>2.1.1-SNAPSHOT</version>
-    <relativePath></relativePath>
+    <relativePath/>
   </parent>
 
   <properties>
@@ -188,7 +188,7 @@
     <dependency>
       <groupId>com.googlecode.libphonenumber</groupId>
       <artifactId>libphonenumber</artifactId>
-      <version>8.8.1</version>
+      <version>8.13.7</version>
     </dependency>
 
     <dependency>
@@ -433,7 +433,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <execute />
+                    <execute/>
                   </action>
                 </pluginExecution>
               </pluginExecutions>
@@ -504,8 +504,8 @@
         </os>
       </activation>
       <properties>
-        <npm-extension></npm-extension>
-        <grunt-extension></grunt-extension>
+        <npm-extension/>
+        <grunt-extension/>
       </properties>
     </profile>
 
