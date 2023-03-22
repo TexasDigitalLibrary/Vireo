@@ -10,16 +10,18 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
-
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.model.response.Views;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class FieldValue extends ValidatingBaseEntity {
 
     @JsonView(Views.SubmissionList.class)
@@ -38,6 +40,7 @@ public class FieldValue extends ValidatingBaseEntity {
 
     @JsonView(Views.SubmissionList.class)
     @ManyToOne(optional = false, fetch = LAZY)
+    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private FieldPredicate fieldPredicate;
 
     public FieldValue() {
