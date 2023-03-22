@@ -536,7 +536,7 @@ describe("controller: AdminSubmissionViewController", function () {
             scope.addCommentModal.sendEmailToRecipient = false;
 
             response = scope.disableAddComment();
-            expect(response).toBe(true);
+            expect(response).toBe(false);
 
             scope.addCommentModal.subject = undefined;
             scope.addCommentModal.commentVisibility = "private";
