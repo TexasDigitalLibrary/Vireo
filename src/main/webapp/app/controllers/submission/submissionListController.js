@@ -802,7 +802,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var disabledFilterColumnOptions = createDisabledColumnOptions();
 
         $scope.viewSubmission = function (submission) {
-            $location.path("/admin/view/" + submission.id);
+            $location.path("/admin/view/" + submission.id + "/" + submission.submissionWorkflowSteps[0].id);
         };
 
         SidebarService.addBoxes([{
