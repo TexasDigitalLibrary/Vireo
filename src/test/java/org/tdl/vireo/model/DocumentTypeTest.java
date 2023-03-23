@@ -4,10 +4,15 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
 public class DocumentTypeTest extends AbstractEntityTest {
+
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
     @Override
     public void testCreate() {
@@ -85,7 +90,7 @@ public class DocumentTypeTest extends AbstractEntityTest {
         assertEquals("The user does not exist!", 1, userRepo.count());
 
         // Create a Submission
-        submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         documentTypeRepo.delete(documentType);
     }

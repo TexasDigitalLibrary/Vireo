@@ -1,5 +1,6 @@
 package org.tdl.vireo.cli;
 
+import edu.tamu.weaver.auth.model.Credentials;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,9 +8,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.FieldPredicate;
@@ -22,15 +23,12 @@ import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
-
-import edu.tamu.weaver.auth.model.Credentials;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Activate the Vireo command line interface by passing the console argument to Maven
@@ -62,6 +60,9 @@ public class Cli implements CommandLineRunner {
 
     @Autowired
     private ActionLogRepo actionLogRepo;
+
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -183,7 +184,7 @@ public class Cli implements CommandLineRunner {
                         credentials.setEmail("bob@boring.bob");
                         credentials.setRole(Role.ROLE_STUDENT.name());
 
-                        Submission sub = submissionRepo.create(submitter, org, state, credentials);
+                        Submission sub = submissionRepo.create(submitter, org, state, credentials, customActionDefinitionRepo.findAll());
 
                         sub.setSubmissionDate(getRandomDate());
                         sub.setApproveAdvisorDate(getRandomDate());
