@@ -22,6 +22,7 @@ import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
@@ -58,6 +59,9 @@ public class Cli implements CommandLineRunner {
 
     @Autowired
     private ActionLogRepo actionLogRepo;
+
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -204,7 +208,7 @@ public class Cli implements CommandLineRunner {
                             state = statuses.get(random.nextInt(statuses.size()));
                         }
 
-                        Submission sub = submissionRepo.create(submitter, org, state, credentials);
+                        Submission sub = submissionRepo.create(submitter, org, state, credentials, customActionDefinitionRepo.findAll());
 
                         sub.setSubmissionDate(getRandomDate());
                         sub.setApproveAdvisorDate(getRandomDate());

@@ -5,9 +5,14 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
 import org.junit.Before;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
 public class CustomActionValueTest extends AbstractEntityTest {
+
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
     @Before
     public void setUp() throws Exception {
@@ -22,7 +27,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME));
 
-        testSubmission = submissionRepo.create(testUser, organization, submissionStatus, getCredentials());
+        testSubmission = submissionRepo.create(testUser, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         assertEquals("The submission repository is not empty!", 1, submissionRepo.count());
 
