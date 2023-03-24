@@ -132,6 +132,24 @@ public class SubmissionListController {
     }
 
     @PreAuthorize("hasRole('REVIEWER')")
+    @RequestMapping(value = "/update-sort", method = POST)
+    public ApiResponse updateSort(@WeaverUser User user, @RequestBody List<SubmissionListColumn> submissionViewColumns) {
+        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+
+        for (SubmissionListColumn submissionViewColumn : submissionViewColumns) {
+            if (submissionViewColumn.getSortOrder() == 1) {
+                activeFilter.setSortColumnTitle(submissionViewColumn.getTitle());
+                activeFilter.setSortDirection(submissionViewColumn.getSort());
+                break;
+            }
+        }
+
+        activeFilter = namedSearchFilterGroupRepo.update(activeFilter);
+
+        return new ApiResponse(SUCCESS, activeFilter);
+    }
+
+    @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping(value = "/set-active-filter", method = POST)
     public ApiResponse setActiveFilter(@WeaverUser User user, @RequestBody NamedSearchFilterGroup namedSearchFilterGroup) {
 
