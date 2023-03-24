@@ -1,30 +1,12 @@
-vireo.repo("UserRepo", function UserRepo($timeout, TableFactory, User, WsApi) {
+vireo.repo("UserRepo", function UserRepo(User, WsApi) {
 
     var userRepo = this;
 
-    userRepo.getPageSettings = function () {
-        return table.getPageSettings();
-    };
-
-    userRepo.getTableParams = function () {
-        return table.getTableParams();
-    };
-
     userRepo.fetchPage = function (pageSettings) {
-        angular.extend(userRepo.mapping.page, {
-            'data': pageSettings ? pageSettings : table.getPageSettings()
-        });
-        return WsApi.fetch(userRepo.mapping.page);
-    };
+        var endpoint = angular.extend({}, userRepo.mapping.page, { data: pageSettings });
 
-    var table = TableFactory.buildTable({
-        pageNumber: sessionStorage.getItem('users-page') ? sessionStorage.getItem('users-page') : 1,
-        pageSize: sessionStorage.getItem('users-size') ? sessionStorage.getItem('users-size') : 10,
-        filters: {},
-        counts: [5, 10, 25, 50, 100],
-        name: 'users',
-        repo: userRepo
-    });
+        return WsApi.fetch(endpoint);
+    };
 
     userRepo.getAssignableUsers = function(page, size, name) {
         var assignable = [];
@@ -107,27 +89,6 @@ vireo.repo("UserRepo", function UserRepo($timeout, TableFactory, User, WsApi) {
 
         return WsApi.fetch(userRepo.mapping.unassignableTotal);
     };
-
-    WsApi.listen(userRepo.mapping.createListen).then(null, null, function (response) {
-        $timeout(function () {
-            userRepo.reset();
-            table.getTableParams().reload();
-        }, 250);
-    });
-
-    WsApi.listen(userRepo.mapping.updateListen).then(null, null, function (response) {
-        $timeout(function () {
-            userRepo.reset();
-            table.getTableParams().reload();
-        }, 250);
-    });
-
-    WsApi.listen(userRepo.mapping.deleteListen).then(null, null, function (response) {
-        $timeout(function () {
-            userRepo.reset();
-            table.getTableParams().reload();
-        }, 250);
-    });
 
     return userRepo;
 

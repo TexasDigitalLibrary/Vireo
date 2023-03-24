@@ -10,6 +10,8 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
 
     $scope.embargoes = EmbargoRepo.getAll();
 
+    $scope.actionLogDelay = 2000;
+
     FieldPredicateRepo.ready().then(function() {
 
         var deleteFile = function (fieldValue) {

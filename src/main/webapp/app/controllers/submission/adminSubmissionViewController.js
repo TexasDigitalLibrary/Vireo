@@ -12,6 +12,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     $scope.embargoes = EmbargoRepo.getAll();
 
+    $scope.actionLogDelay = 2000;
     var userSettings = new UserSettings();
 
     var submissionStatuses = SubmissionStatusRepo.getAll();
