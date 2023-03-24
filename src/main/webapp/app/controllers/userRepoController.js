@@ -1,4 +1,4 @@
-vireo.controller('UserRepoController', function ($controller, $location, $scope, $timeout, User, UserRepo, UserService) {
+vireo.controller('UserRepoController', function ($controller, $location, $scope, $timeout, TableFactory, User, UserRepo, UserService) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
@@ -6,9 +6,18 @@ vireo.controller('UserRepoController', function ($controller, $location, $scope,
 
     $scope.userRepo = UserRepo;
 
+    $scope.table = TableFactory.buildTable({
+        pageNumber: sessionStorage.getItem('users-page') ? sessionStorage.getItem('users-page') : 1,
+        pageSize: sessionStorage.getItem('users-size') ? sessionStorage.getItem('users-size') : 10,
+        filters: {},
+        counts: [5, 10, 25, 50, 100],
+        name: 'users',
+        repo: $scope.userRepo
+    });
+
     $scope.weaverTable = {
-        pageSettings: $scope.userRepo.getPageSettings(),
-        tableParams: $scope.userRepo.getTableParams(),
+        pageSettings: $scope.table.getPageSettings(),
+        tableParams: $scope.table.getTableParams(),
         columns: [{
             gloss: 'Email',
             property: 'email',
@@ -39,7 +48,14 @@ vireo.controller('UserRepoController', function ($controller, $location, $scope,
         }]
     };
 
-    $scope.tableParams = UserRepo.getTableParams();
+    $scope.table = TableFactory.buildTable({
+        pageNumber: sessionStorage.getItem('users-page') ? sessionStorage.getItem('users-page') : 1,
+        pageSize: sessionStorage.getItem('users-size') ? sessionStorage.getItem('users-size') : 10,
+        filters: {},
+        counts: [5, 10, 25, 50, 100],
+        name: 'users',
+        repo: $scope.userRepo
+    });
 
     $scope.roles = {};
 

@@ -14,7 +14,7 @@ describe("controller: UserRepoController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $route, $rootScope, _ModalService_, _RestApi_, _StorageService_, _User_, _UserRepo_, _UserService_) {
+        inject(function ($controller, $location, $route, $rootScope, _ModalService_, _RestApi_, _StorageService_, _TableFactory_, _User_, _UserRepo_, _UserService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -32,6 +32,7 @@ describe("controller: UserRepoController", function () {
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
+                TableFactory: _TableFactory_,
                 User: _User_,
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,

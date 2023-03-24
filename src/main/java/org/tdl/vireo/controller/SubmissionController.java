@@ -4,6 +4,16 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.INVALID;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tamu.weaver.auth.annotation.WeaverCredentials;
+import edu.tamu.weaver.auth.annotation.WeaverUser;
+import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.data.model.ApiPage;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.results.ValidationResults;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +33,8 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -70,6 +78,7 @@ import org.tdl.vireo.model.export.ExportPackage;
 import org.tdl.vireo.model.packager.AbstractPackager;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
@@ -87,18 +96,6 @@ import org.tdl.vireo.service.SubmissionEmailService;
 import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
-
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import edu.tamu.weaver.auth.annotation.WeaverCredentials;
-import edu.tamu.weaver.auth.annotation.WeaverUser;
-import edu.tamu.weaver.auth.model.Credentials;
-import edu.tamu.weaver.data.model.ApiPage;
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.validation.results.ValidationResults;
 
 @RestController
 @RequestMapping("/submission")
@@ -132,6 +129,9 @@ public class SubmissionController {
 
   @Autowired
   private SubmissionStatusRepo submissionStatusRepo;
+
+  @Autowired
+  private CustomActionDefinitionRepo customActionDefinitionRepo;
 
   @Autowired
   private SubmissionEmailService submissionEmailService;
@@ -209,12 +209,16 @@ public class SubmissionController {
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials,
       @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsException {
-    Submission submission = submissionRepo.create(user,
-        organizationRepo.findById(Long.valueOf(data.get("organizationId"))).get(),
-        submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME),
-        credentials
+
+    Submission submission = submissionRepo.create(
+      user,
+      organizationRepo.read(Long.valueOf(data.get("organizationId"))),
+      submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME),
+      credentials,
+      customActionDefinitionRepo.findAll()
     );
     actionLogRepo.createPublicLog(submission, user, "Submission created.");
+
     return new ApiResponse(SUCCESS, submission);
   }
 
@@ -243,9 +247,18 @@ public class SubmissionController {
     Submission submission = submissionRepo.read(submissionId);
 
     String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
+    Boolean sendEmailToRecipient = data.get("sendEmailToRecipient") != null ? (Boolean) data.get("sendEmailToRecipient") : true;
+
+    data.forEach((key, value) -> System.out.println(key + ":" + value));
 
     if (commentVisibility.equals("public")) {
-        submissionEmailService.sendAutomatedEmails(user, submission.getId(), data);
+        if (sendEmailToRecipient.equals(true)) {
+            submissionEmailService.sendAutomatedEmails(user, submission.getId(), data);
+        } else{
+            String subject = (String) data.get("subject");
+            String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
+            actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
+        }   
     } else {
       String subject = (String) data.get("subject");
       String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
@@ -270,12 +283,21 @@ public class SubmissionController {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
 
             String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
+            Boolean sendEmailToRecipient = data.get("sendEmailToRecipient") != null ? (Boolean) data.get("sendEmailToRecipient") : true;
+
+            data.forEach((key, value) -> System.out.println(key + ":" + value));
 
             if (commentVisibility.equals("public")) {
-                try {
-                    submissionEmailService.sendAutomatedEmails(user, sub.getId(), data);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (sendEmailToRecipient.equals(true)) {
+                    try {
+                        submissionEmailService.sendAutomatedEmails(user, sub.getId(), data);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    String subject = (String) data.get("subject");
+                    String templatedMessage = templateUtility.compileString((String) data.get("message"), sub);
+                    actionLogRepo.createPublicLog(sub, user, subject + ": " + templatedMessage);
                 }
             } else {
               String subject = (String) data.get("subject");

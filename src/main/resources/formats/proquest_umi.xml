@@ -184,7 +184,7 @@
         </DISS_author>
     </DISS_authorship>
      
-    <DISS_description page_count="" th:attr="type=${DEGREE_LEVEL},external_id=${PROQUEST_EXTERNAL_ID},apply_for_copyright=${PROQUEST_APPLY_FOR_COPYRIGHT}">
+    <DISS_description page_count="" th:attr="type=${DEGREE_LEVEL_STR},external_id=${PROQUEST_EXTERNAL_ID},apply_for_copyright=${PROQUEST_APPLY_FOR_COPYRIGHT}">
         <DISS_title th:text="${TITLE}"></DISS_title>
         
         <DISS_dates th:if="${SUBMITTER_GRADUATION_DATE.length() > 0}">
@@ -192,13 +192,13 @@
             <DISS_accept_date th:text="${SUBMITTER_GRADUATION_DATE}"></DISS_accept_date>
         </DISS_dates>
 
-        <DISS_degree th:text="${PROQUEST_DEGREE_CODE}"></DISS_degree>
+        <DISS_degree th:text="${DEGREE_CODE_STR}"></DISS_degree>
 
         <DISS_institution>
             <DISS_inst_code th:text="${PROQUEST_INSTITUTION_CODE}"></DISS_inst_code>
             <DISS_inst_name th:text="${APPLICATION_GRANTOR}"></DISS_inst_name>
             <DISS_inst_contact th:text="${DEPARTMENT}"></DISS_inst_contact>
-            <DISS_processing_code th:text="${DEGREE_LEVEL}"></DISS_processing_code>
+            <DISS_processing_code th:text="${DEGREE_LEVEL_PQ_PROCCODE}"></DISS_processing_code>
         </DISS_institution>
 
         <DISS_advisor th:each="committeeChairFieldValue : ${COMMITTEE_CHAIR_FIELD_VALUES}" th:if="${committeeChairFieldValue.getValue().length() > 0}">

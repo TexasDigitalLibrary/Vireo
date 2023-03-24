@@ -66,7 +66,7 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
 
                 File exportFile = getAbsolutePath(documentFieldValue.getValue()).toFile();
 
-                zos.putNextEntry(new ZipEntry(documentFieldValue.getFileName()));
+                zos.putNextEntry(new ZipEntry(documentFieldValue.getExportFileName()));
                 zos.write(Files.readAllBytes(exportFile.toPath()));
                 zos.closeEntry();
             }

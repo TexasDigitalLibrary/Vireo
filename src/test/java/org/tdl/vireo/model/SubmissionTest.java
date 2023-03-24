@@ -9,10 +9,16 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
 public class SubmissionTest extends AbstractEntityTest {
+
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
     @BeforeEach
     public void setUp() {
@@ -72,7 +78,7 @@ public class SubmissionTest extends AbstractEntityTest {
     @Transactional
     public void testCreate() throws OrganizationDoesNotAcceptSubmissionsException {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
@@ -102,7 +108,7 @@ public class SubmissionTest extends AbstractEntityTest {
 
         // expect an exception when creating Submission on the Organization that doesn't accept them
         Assertions.assertThrows(OrganizationDoesNotAcceptSubmissionsException.class, () -> {
-            submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+            submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
         });
     }
 
@@ -110,18 +116,19 @@ public class SubmissionTest extends AbstractEntityTest {
     @Test
     @Transactional
     public void testDuplication() throws OrganizationDoesNotAcceptSubmissionsException {
+        List<CustomActionDefinition> actions = customActionDefinitionRepo.findAll();
 
-        submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
-        assertEquals(1, submissionRepo.count(), "The repository didn't persist submission!");
-        submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
-        assertEquals(2, submissionRepo.count(), "The repository didn't create the additional submission!");
+        submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), actions);
+        assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
+        submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), actions);
+        assertEquals("The repository didn't create the additional submission!", 2, submissionRepo.count());
     }
 
     @Override
     @Test
     public void testDelete() throws OrganizationDoesNotAcceptSubmissionsException {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         submissionRepo.delete(submission);
         assertEquals(0, submissionRepo.count(), "Submission did not delete!");
@@ -143,7 +150,7 @@ public class SubmissionTest extends AbstractEntityTest {
         severableFieldValue.setValue("Remove me from the submission!");
         Long severableFieldValueId = severableFieldValue.getId();
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         ActionLog severableActionLog = actionLogRepo.create(submission, submitter, TEST_SUBMISSION_STATUS_ACTION_LOG_ACTION_DATE, TEST_SUBMISSION_STATUS_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATUS_ACTION_LOG_FLAG);
         submission = submissionRepo.findById(submission.getId()).get();
@@ -219,7 +226,9 @@ public class SubmissionTest extends AbstractEntityTest {
     @Transactional
     public void testMultiple() throws OrganizationDoesNotAcceptSubmissionsException {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        List<CustomActionDefinition> actions= customActionDefinitionRepo.findAll();
+
+        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), actions);
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
@@ -233,7 +242,7 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals(1, found.size(), "Did not retrieve exactly one submission by submitter and organization!");
         assertEquals(submission, found.get(0), "The submission was not retrievable by submitter and organization!");
 
-        Submission secondSubmission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        Submission secondSubmission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), actions);
 
         secondSubmission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission = submissionRepo.save(submission);

@@ -12,6 +12,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     $scope.embargoes = EmbargoRepo.getAll();
 
+    $scope.actionLogDelay = 2000;
     var userSettings = new UserSettings();
 
     var submissionStatuses = SubmissionStatusRepo.getAll();
@@ -158,6 +159,11 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
                                 $scope.addCommentModal.message === undefined ||
                                 $scope.addCommentModal.message === "";
                   }
+              } else {
+                  disable = $scope.addCommentModal.subject === undefined ||
+                            $scope.addCommentModal.subject === "" ||
+                            $scope.addCommentModal.message === undefined ||
+                            $scope.addCommentModal.message === "";
               }
           } else {
               if ($scope.addCommentModal.commentVisibility == 'private') {

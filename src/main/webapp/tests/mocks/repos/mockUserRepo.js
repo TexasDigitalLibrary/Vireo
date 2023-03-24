@@ -41,13 +41,5 @@ angular.module("mock.userRepo", []).service("UserRepo", function($q) {
         return payloadPromise($q.defer(), payload);
     };
 
-    repo.getPageSettings = function () {
-
-    };
-
-    repo.getTableParams = function () {
-
-    };
-
     return repo;
 });

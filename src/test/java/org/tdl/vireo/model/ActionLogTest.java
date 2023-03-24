@@ -5,10 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
 public class ActionLogTest extends AbstractEntityTest {
+
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
     @BeforeEach
     public void setUp() throws OrganizationDoesNotAcceptSubmissionsException {
@@ -22,7 +28,7 @@ public class ActionLogTest extends AbstractEntityTest {
         parentCategory = organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME);
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
 
-        testSubmission = submissionRepo.create(testUser, organization, submissionStatus, getCredentials());
+        testSubmission = submissionRepo.create(testUser, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         assertEquals(1, submissionRepo.count(), "The submission repository is not empty!");
     }

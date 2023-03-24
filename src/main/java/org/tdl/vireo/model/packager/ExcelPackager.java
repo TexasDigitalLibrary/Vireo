@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tdl.vireo.exception.UnsupportedFormatterException;
 import org.tdl.vireo.model.CustomActionValue;
+import org.tdl.vireo.model.SubmissionStatus;
+import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionListColumn;
@@ -75,6 +77,9 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                 if (column.getValuePath().size() > 0) {
                     String[] valuePath = column.getValuePath().toArray(new String[column.getValuePath().size()]);
                     try {
+                        if(column.getValuePath().size() > 1){
+                             valuePath = new String[] {valuePath[0]};
+                        }
                         Object valueAsObject = EntityUtility.getValueFromPath(submission, valuePath);
 
                         String value;
@@ -97,6 +102,12 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                                 sb.append(customActionValue.getDefinition().getLabel()+"\n");
                             });
                             value = sb.toString();
+                        } else if (valueAsObject instanceof SubmissionStatus){
+                            SubmissionStatus submissionStatus = (SubmissionStatus) valueAsObject;
+                            value = submissionStatus.getName().toString();
+                        } else if (valueAsObject instanceof User){
+                            User user = (User) valueAsObject;
+                            value = user.getName().toString();
                         } else {
                             value = valueAsObject.toString();
                         }

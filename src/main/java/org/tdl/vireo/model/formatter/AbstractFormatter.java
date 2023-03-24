@@ -98,7 +98,7 @@ public abstract class AbstractFormatter extends BaseEntity implements Formatter 
                 context.setVariable(key.name(), submissionHelperUtility.getProQuestSaleRestrictionCode());
                 break;
             case PROQUEST_SALE_RESTRICTION_REMOVE:
-                context.setVariable(key.name(), submissionHelperUtility.getProQuestSaleRestrictionRemove());
+                context.setVariable(key.name(), submissionHelperUtility.getProQuestFormatRestrictionRemove());
                 break;
             default:
                 break;

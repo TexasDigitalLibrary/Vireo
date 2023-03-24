@@ -5,10 +5,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
 public class DocumentTypeTest extends AbstractEntityTest {
+
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
     @Override
     @Test
@@ -91,7 +97,7 @@ public class DocumentTypeTest extends AbstractEntityTest {
         assertEquals(1, userRepo.count(), "The user does not exist!");
 
         // Create a Submission
-        submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
             documentTypeRepo.delete(documentType);

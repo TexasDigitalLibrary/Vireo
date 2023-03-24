@@ -6,9 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
 public class CustomActionValueTest extends AbstractEntityTest {
+
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -23,7 +29,7 @@ public class CustomActionValueTest extends AbstractEntityTest {
 
         Organization organization = organizationRepo.create(TEST_ORGANIZATION_NAME, organizationCategoryRepo.create(TEST_ORGANIZATION_CATEGORY_NAME));
 
-        testSubmission = submissionRepo.create(testUser, organization, submissionStatus, getCredentials());
+        testSubmission = submissionRepo.create(testUser, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         assertEquals(1, submissionRepo.count(), "The submission repository is not empty!");
 
