@@ -515,7 +515,7 @@
         },
         {
           "name":"multipleKeywords",
-          "text":"You can enter multiple keywords. Use semi-colons ( ; ) to separate the entries.",
+          "text":"Enter one keyword or key phrase per entry field."
           "originatingWorkflowStep":{
             "name":"Verify Personal Information"
           }
