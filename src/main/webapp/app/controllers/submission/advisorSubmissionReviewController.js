@@ -14,6 +14,8 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
 
     $scope.advisorSubmissionRepoReady = false;
 
+    $scope.actionLogDelay = 1000;
+
     AdvisorSubmissionRepo.fetchSubmissionByHash($routeParams.advisorAccessHash).then(function (submissions) {
         $scope.advisorSubmissionRepoReady = true;
         $scope.submission = submissions;

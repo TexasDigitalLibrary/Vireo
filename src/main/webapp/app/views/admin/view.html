@@ -52,7 +52,7 @@
 
     <modal modal-id="addCommentModal" modal-view="views/modals/view/addCommentModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
 
-    <actionlog ng-if="submission" submission="submission" ready="submisisonReady"></actionlog>
+    <actionlog ng-if="submission" submission="submission" ready="submisisonReady" delay="{{::actionLogDelay}}"></actionlog>
 
   </div>
 
