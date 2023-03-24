@@ -117,11 +117,10 @@ public class SubmissionTest extends AbstractEntityTest {
     @Transactional
     public void testDuplication() throws OrganizationDoesNotAcceptSubmissionsException {
         List<CustomActionDefinition> actions = customActionDefinitionRepo.findAll();
-
         submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), actions);
-        assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
+        assertEquals(1, submissionRepo.count(), "The repository didn't persist submission!");
         submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), actions);
-        assertEquals("The repository didn't create the additional submission!", 2, submissionRepo.count());
+        assertEquals(2, submissionRepo.count(), "The repository didn't create the additional submission!");
     }
 
     @Override
