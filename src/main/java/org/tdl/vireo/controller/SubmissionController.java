@@ -218,6 +218,7 @@ public class SubmissionController {
       customActionDefinitionRepo.findAll()
     );
 
+    actionLogRepo.createPublicLog(submission, user, "Submission created.");
     return new ApiResponse(SUCCESS, submission);
   }
 
