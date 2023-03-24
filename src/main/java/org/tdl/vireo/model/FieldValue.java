@@ -144,4 +144,14 @@ public class FieldValue extends ValidatingBaseEntity {
         return fileName;
     }
 
+    @JsonIgnore
+    public String getExportFileName() {
+        String fullFileName = value.substring(value.lastIndexOf("/") + 1, value.length());
+        String fileName = fullFileName;
+        if((fullFileName.contains("PRIMARY") && !fullFileName.contains("archived")) || fullFileName.toLowerCase().endsWith(".txt")){
+          fileName = fullFileName.substring(fullFileName.indexOf("-") + 1, fullFileName.length());
+        }
+        return fileName;
+    }
+
 }
