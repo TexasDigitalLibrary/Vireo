@@ -116,6 +116,7 @@ public class Submission extends ValidatingBaseEntity {
     @JoinColumn
     private Set<ActionLog> actionLogs;
 
+    @JsonView(Views.SubmissionList.class)
     @Column(columnDefinition = "TEXT")
     private String reviewerNotes;
 

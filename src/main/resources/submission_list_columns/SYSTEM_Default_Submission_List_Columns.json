@@ -118,7 +118,7 @@
   {
     "title": "Notes",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["reviewerNotes"],
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"
