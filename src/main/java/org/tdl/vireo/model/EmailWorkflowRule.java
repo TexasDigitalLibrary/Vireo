@@ -5,21 +5,20 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;
 
 @Entity
+@Table(name = "email_workflow_rule")
 public class EmailWorkflowRule extends ValidatingBaseEntity {
 
     @Column

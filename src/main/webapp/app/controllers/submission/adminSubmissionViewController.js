@@ -80,7 +80,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         WsApi.listen("/channel/submission/" + $scope.submission.id).then(null, null, function(res) {
             var apiRes = angular.fromJson(res.body);
-            surgicalFieldValueUpdate(apiRes.payload.Submission);
+            surgicalFieldValueUpdate(angular.isDefined(apiRes.payload.SimpleSubmission) ? apiRes.payload.SimpleSubmission : apiRes.payload.Submission);
         });
 
         $scope.title = $scope.submission.submitter.lastName + ', ' + $scope.submission.submitter.firstName + ' (' + $scope.submission.organization.name + ')';
@@ -346,7 +346,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
             if (fieldPredicate !== undefined) {
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldPredicate);
-                if (angular.isDefined(fieldProfile.controlledVocabulary)) {
+                if (fieldProfile !== null && angular.isDefined(fieldProfile.controlledVocabulary)) {
                     var cv = fieldProfile.controlledVocabulary;
                     pattern = "";
                     for (i in cv.dictionary) {
@@ -585,11 +585,15 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         var getLastActionDate = function() {
+            if ($scope.submission.actionLogs === null) return null;
+
             var index = $scope.submission.actionLogs.length - 1;
             return $scope.submission.actionLogs[index].actionDate;
         };
 
         var getLastActionEntry = function() {
+          if ($scope.submission.actionLogs === null) return null;
+
             var index = $scope.submission.actionLogs.length - 1;
             return $scope.submission.actionLogs[index].entry;
         };

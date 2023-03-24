@@ -2,19 +2,18 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.FetchType.EAGER;
 
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.MapKeyColumn;
-
+import javax.persistence.Table;
 import org.tdl.vireo.model.validation.InputTypeValidator;
 
-import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
-
 @Entity
+@Table(name = "input_type")
 public class InputType extends ValidatingBaseEntity {
 
     @Column(unique = true, nullable = false)

@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate", "input_type_id" }))
+@Table(name = "submission_list_column", uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate", "input_type_id" }))
 public class SubmissionListColumn extends ValidatingBaseEntity {
 
     @ManyToOne(fetch = EAGER, optional = false)
@@ -228,7 +228,7 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
 
     /**
      *
-     * @return
+     * @return TRUE if visible, FALSE otherwise.
      */
     public Boolean getVisible() {
         return visible;
@@ -244,7 +244,7 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
 
     /**
      *
-     * @return
+     * @return TRUE if exact match, FALSE otherwise.
      */
     public Boolean getExactMatch() {
         return exactMatch;

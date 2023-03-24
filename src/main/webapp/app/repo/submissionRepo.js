@@ -13,7 +13,8 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileService, Submission
             fetchPromise.then(function (res) {
                 var apiRes = angular.fromJson(res.body);
                 if (apiRes.meta.status === "SUCCESS") {
-                    resolve(new Submission(apiRes.payload.Submission));
+                    resolve(new Submission(angular.isDefined(apiRes.payload.SimpleSubmission) ? apiRes.payload.SimpleSubmission : apiRes.payload.Submission
+                    ));
                 } else {
                     reject("A submission with the ID " + id + " does not exist.");
                 }

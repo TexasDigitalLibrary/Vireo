@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -87,8 +88,12 @@ import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
+import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.model.repo.simple.SimpleFieldValueRepo;
+import org.tdl.vireo.model.repo.simple.SimpleSubmissionRepo;
 import org.tdl.vireo.model.response.Views;
+import org.tdl.vireo.model.simple.SimpleSubmission;
 import org.tdl.vireo.model.validation.FieldValueValidator;
 import org.tdl.vireo.service.AssetService;
 import org.tdl.vireo.service.DepositorService;
@@ -101,142 +106,178 @@ import org.tdl.vireo.utility.TemplateUtility;
 @RequestMapping("/submission")
 public class SubmissionController {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SubmissionController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SubmissionController.class);
 
-  private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
+    private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
 
-  private static final String NEEDS_CORRECTION_SUBMISSION_STATUS_NAME = "Needs Correction";
+    private static final String NEEDS_CORRECTION_SUBMISSION_STATUS_NAME = "Needs Correction";
 
-  private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME = "Corrections Received";
+    private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME = "Corrections Received";
 
-  @Autowired
-  private UserRepo userRepo;
+    @Autowired
+    private UserRepo userRepo;
 
-  @Autowired
-  private SubmissionRepo submissionRepo;
+    @Autowired
+    private SubmissionRepo submissionRepo;
 
-  @Autowired
-  private FieldValueRepo fieldValueRepo;
+    @Autowired
+    private SimpleSubmissionRepo simpleSubmissionRepo;
 
-  @Autowired
-  private SubmissionFieldProfileRepo submissionFieldProfileRepo;
+    @Autowired
+    private FieldValueRepo fieldValueRepo;
 
-  @Autowired
-  private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
+    @Autowired
+    private SimpleFieldValueRepo simpleFieldValueRepo;
 
-  @Autowired
-  private OrganizationRepo organizationRepo;
+    @Autowired
+    private SubmissionFieldProfileRepo submissionFieldProfileRepo;
 
-  @Autowired
-  private SubmissionStatusRepo submissionStatusRepo;
+    @Autowired
+    private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
 
-  @Autowired
-  private CustomActionDefinitionRepo customActionDefinitionRepo;
+    @Autowired
+    private OrganizationRepo organizationRepo;
 
-  @Autowired
-  private SubmissionEmailService submissionEmailService;
+    @Autowired
+    private SubmissionStatusRepo submissionStatusRepo;
 
-  @Autowired
-  private TemplateUtility templateUtility;
+    @Autowired
+    private SubmissionWorkflowStepRepo submissionWorkflowStepRepo;
 
-  @Autowired
-  private AssetService assetService;
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
-  @Autowired
-  private ConfigurationRepo configurationRepo;
+    @Autowired
+    private SubmissionEmailService submissionEmailService;
 
-  @Autowired
-  private ActionLogRepo actionLogRepo;
+    @Autowired
+    private TemplateUtility templateUtility;
 
-  @Autowired
-  private DepositLocationRepo depositLocationRepo;
+    @Autowired
+    private AssetService assetService;
 
-  @Autowired
-  private DepositorService depositorService;
+    @Autowired
+    private ConfigurationRepo configurationRepo;
 
-  @Autowired
-  private PackagerUtility packagerUtility;
+    @Autowired
+    private ActionLogRepo actionLogRepo;
 
-  @Autowired
-  private SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    private DepositLocationRepo depositLocationRepo;
 
-  @Autowired
-  private ObjectMapper objectMapper;
+    @Autowired
+    private DepositorService depositorService;
 
-  @Autowired
-  private CustomActionValueRepo customActionValueRepo;
+    @Autowired
+    private PackagerUtility packagerUtility;
 
-  @Value("${app.document.folder:private}")
-  private String documentFolder;
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
-  @Value("${app.documentType.rename:}")
-  private String documentTypesToRename;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-  @RequestMapping("/all")
-  @PreAuthorize("hasRole('REVIEWER')")
-  public ApiResponse getAll() {
-    return new ApiResponse(SUCCESS, submissionRepo.findAll());
-  }
+    @Autowired
+    private CustomActionValueRepo customActionValueRepo;
 
-  @RequestMapping("/all-by-user")
-  @PreAuthorize("hasRole('STUDENT')")
-  public ApiResponse getAllByUser(@WeaverUser User user) {
-    return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitterId(user.getId()));
-  }
+    @Value("${app.document.folder:private}")
+    private String documentFolder;
 
-  @RequestMapping("/get-one/{submissionId}")
-  @PreAuthorize("hasRole('STUDENT')")
-  public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
-    Submission submission = null;
-    if (user.getRole().ordinal() <= Role.ROLE_REVIEWER.ordinal()) {
-      submission = submissionRepo.read(submissionId);
-    } else {
-      submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
-    }
-    if (submission == null) {
-      return new ApiResponse(ERROR, "Submission not found");
-    }
-    return new ApiResponse(SUCCESS, submission);
-  }
+    @Value("${app.documentType.rename:}")
+    private String documentTypesToRename;
 
-  @RequestMapping("/advisor-review/{submissionHash}")
-  public ApiResponse getOne(@PathVariable String submissionHash) {
-    Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
-    return new ApiResponse(SUCCESS, submission);
-  }
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('REVIEWER')")
+    public ApiResponse getAll() {
+        List<Submission> all = new ArrayList<Submission>();
 
-  @RequestMapping(value = "/create", method = RequestMethod.POST)
-  @PreAuthorize("hasRole('STUDENT')")
-  public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials,
-      @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsException {
-
-    Submission submission = submissionRepo.create(
-      user,
-      organizationRepo.read(Long.valueOf(data.get("organizationId"))),
-      submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME),
-      credentials,
-      customActionDefinitionRepo.findAll()
-    );
-
-    return new ApiResponse(SUCCESS, submission);
-  }
-
-  @Transactional
-  @RequestMapping("/delete/{submissionId}")
-  @PreAuthorize("hasRole('STUDENT')")
-  public ApiResponse deleteSubmission(@WeaverUser User user, @PathVariable Long submissionId) {
-    Submission submissionToDelete = submissionRepo.read(submissionId);
-
-    ApiResponse response = new ApiResponse(SUCCESS);
-    if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail())
-        || user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
-      submissionRepo.delete(submissionToDelete);
-    } else {
-      response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
+        // TODO: Consider changing logic like this can be recreated to populate a list of ids, use those list of ids to make a single query fetch for say field values.
+        //       Then walk through and map the values. This would reduce the number of queries made but at a cost of more loop processing here. 
+        simpleSubmissionRepo.findAll().stream().forEach(submission -> {
+            submission.setFieldValues(simpleFieldValueRepo.findAllBySubmissionId(submission.getId()));
+            submission.setLastAction(actionLogRepo.findLastEvent(submission.getId()));
+            all.add(SimpleSubmission.toSubmission(submission));
+        });
+        return new ApiResponse(SUCCESS, all);
     }
 
-    return response;
-  }
+    @RequestMapping("/all-by-user")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse getAllByUser(@WeaverUser User user) {
+        List<Submission> all = new ArrayList<Submission>();
+
+        // TODO: Consider changing logic like this can be recreated to populate a list of ids, use those list of ids to make a single query fetch for say field values.
+        //       Then walk through and map the values. This would reduce the number of queries made but at a cost of more loop processing here. 
+        simpleSubmissionRepo.findAllBySubmitterId(user.getId()).stream().forEach(submission -> {
+            submission.setFieldValues(simpleFieldValueRepo.findAllBySubmissionId(submission.getId()));
+            submission.setLastAction(actionLogRepo.findLastEvent(submission.getId()));
+            all.add(SimpleSubmission.toSubmission(submission));
+        });
+        return new ApiResponse(SUCCESS, all);
+    }
+
+    @RequestMapping("/get-one/{submissionId}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
+
+        SimpleSubmission submission = (user.getRole().ordinal() <= Role.ROLE_REVIEWER.ordinal()) 
+            ? simpleSubmissionRepo.findById(submissionId)
+            : simpleSubmissionRepo.findBySubmitterIdAndId(user.getId(), submissionId);
+
+        if (submission == null) {
+            return new ApiResponse(ERROR, "Submission not found");
+        }
+
+        submission.setFieldValues(simpleFieldValueRepo.findAllBySubmissionId(submission.getId()));
+        submission.setActionLogs(actionLogRepo.findAll(submission.getId()));
+        submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.findBySubmissionId(submission.getId()));
+
+        return new ApiResponse(SUCCESS, SimpleSubmission.toSubmission(submission));
+    }
+
+    @RequestMapping("/advisor-review/{advisorAccessHash}")
+    public ApiResponse getOne(@PathVariable String advisorAccessHash) {
+        SimpleSubmission submission = simpleSubmissionRepo.findByAdvisorAccessHash(advisorAccessHash);
+        submission.setFieldValues(simpleFieldValueRepo.findAllBySubmissionId(submission.getId()));
+        submission.setActionLogs(actionLogRepo.findAll(submission.getId()));
+
+        return new ApiResponse(SUCCESS, SimpleSubmission.toSubmission(submission));
+    }
+
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials,
+            @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsException {
+
+        Submission submission = submissionRepo.create(
+            user,
+            organizationRepo.read(Long.valueOf(data.get("organizationId"))),
+            submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME),
+            credentials,
+            customActionDefinitionRepo.findAll()
+        );
+
+        actionLogRepo.createPublicLog(submission, user, "Submission created.");
+        return new ApiResponse(SUCCESS, submission);
+    }
+
+    @Transactional
+    @RequestMapping("/delete/{submissionId}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse deleteSubmission(@WeaverUser User user, @PathVariable Long submissionId) {
+        Submission submissionToDelete = submissionRepo.read(submissionId);
+
+        ApiResponse response = new ApiResponse(SUCCESS);
+        if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail())
+                || user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
+
+            submissionRepo.delete(submissionToDelete);
+        } else {
+            response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
+        }
+
+        return response;
+    }
 
   @RequestMapping(value = "/{submissionId}/add-comment", method = RequestMethod.POST)
   @PreAuthorize("hasRole('STUDENT')")

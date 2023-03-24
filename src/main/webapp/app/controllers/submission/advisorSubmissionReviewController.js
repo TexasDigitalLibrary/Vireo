@@ -50,16 +50,17 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
     $scope.addComment = function () {
         $scope.approval.updating = true;
         $scope.submission.updateAdvisorApproval($scope.approval).then(function (res) {
-        var responseSubmission = angular.fromJson(res.body).payload.Submission;
+            var payload = angular.fromJson(res.body).payload;
+            var responseSubmission = angular.isDefined(payload.SimpleSubmission) ? payload.SimpleSubmission : payload.Submission;
 
-        // This should be done through a broadcast and not explicitly like this.
-        $scope.submission.approveAdvisorDate = responseSubmission.approveAdvisorDate;
-        $scope.submission.approveEmbargoDate = responseSubmission.approveEmbargoDate;
-        $scope.submission.approveAdvisor = responseSubmission.approveAdvisor;
-        $scope.submission.approveEmbargo = responseSubmission.approveEmbargo;
+            // This should be done through a broadcast and not explicitly like this.
+            $scope.submission.approveAdvisorDate = responseSubmission.approveAdvisorDate;
+            $scope.submission.approveEmbargoDate = responseSubmission.approveEmbargoDate;
+            $scope.submission.approveAdvisor = responseSubmission.approveAdvisor;
+            $scope.submission.approveEmbargo = responseSubmission.approveEmbargo;
 
-        resetApproveProxy();
-        $scope.messages.push(message);
+            resetApproveProxy();
+            $scope.messages.push(message);
         });
     };
 

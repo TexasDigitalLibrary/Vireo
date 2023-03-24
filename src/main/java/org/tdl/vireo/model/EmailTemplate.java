@@ -10,7 +10,7 @@ import org.tdl.vireo.model.validation.EmailTemplateValidator;
 import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "systemRequired" }) })
+@Table(name = "email_template", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "systemRequired" }) })
 public class EmailTemplate extends ValidatingOrderedBaseEntity {
 
     @Column(nullable = false)

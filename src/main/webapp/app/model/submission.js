@@ -75,7 +75,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
             angular.forEach(submission.submissionWorkflowSteps, function (submissionWorkflowStep) {
                 angular.forEach(submissionWorkflowStep.aggregateFieldProfiles, function (fp) {
                     var fieldValuesByFieldPredicate = submission.getFieldValuesByFieldPredicate(fp.fieldPredicate);
-                    if (!fieldValuesByFieldPredicate.length) {
+                    if (!fieldValuesByFieldPredicate.length && submission.fieldValues) {
                         submission.fieldValues.push(createEmptyFieldValue(fp.fieldPredicate));
                     }
                 });

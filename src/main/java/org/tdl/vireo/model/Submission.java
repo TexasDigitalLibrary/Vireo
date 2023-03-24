@@ -24,6 +24,7 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
@@ -40,6 +41,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Entity
 @JsonIgnoreProperties(value = { "organization" }, allowGetters = true)
 @Table(
+    name = "submission",
     indexes = {
         @Index(columnList = "submitter_id", name = "submission_submitter_id_idx"),
         @Index(columnList = "submitter_id, organization_id", name = "submission_organization_idx")
@@ -128,6 +130,9 @@ public class Submission extends ValidatingBaseEntity {
 
     @Column(nullable = true)
     private String depositURL;
+
+    @Transient
+    private ActionLog lastAction;
 
     public Submission() {
         setModelValidator(new SubmissionValidator());
@@ -433,13 +438,18 @@ public class Submission extends ValidatingBaseEntity {
      */
     @JsonView(Views.Partial.class)
     public String getLastEvent() {
+        String lastEvent = null;
+
+        if (lastAction != null) {
+            lastEvent = lastAction.getEntry();
+        } else if (getActionLogs() != null) {
         Optional<ActionLog> actionLog = getActionLogs()
             .stream()
             .max(Comparator.comparing(al -> al.getActionDate()));
-        String lastEvent = null;
 
         if (actionLog.isPresent()) {
             lastEvent = actionLog.get().getEntry();
+        }
         }
 
         return lastEvent;
@@ -515,6 +525,16 @@ public class Submission extends ValidatingBaseEntity {
         this.depositURL = depositURL;
     }
 
+    @JsonIgnore
+    public ActionLog getLastAction() {
+        return lastAction;
+    }
+
+    @JsonIgnore
+    public void setLastAction(ActionLog lastAction) {
+        this.lastAction = lastAction;
+    }
+
     /**
      * @return the customActionValues
      */
@@ -587,22 +607,26 @@ public class Submission extends ValidatingBaseEntity {
     @JsonIgnore
     public List<FieldValue> getFieldValuesByPredicateValue(String predicateValue) {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        if (getFieldValues() != null) {
         getFieldValues().forEach(fieldValue -> {
             if (fieldValue.getFieldPredicate().getValue().equals(predicateValue)) {
                 fielsValues.add(fieldValue);
             }
         });
+        }
         return fielsValues;
     }
 
     @JsonIgnore
     public List<FieldValue> getFieldValuesByPredicateValueStartsWith(String predicateValue) {
         List<FieldValue> fieldValues = new ArrayList<FieldValue>();
+        if (getFieldValues() != null) {
         getFieldValues().forEach(fieldValue -> {
             if (fieldValue.getFieldPredicate().getValue().startsWith(predicateValue)) {
                 fieldValues.add(fieldValue);
             }
         });
+        }
         return fieldValues;
     }   
 
@@ -610,11 +634,13 @@ public class Submission extends ValidatingBaseEntity {
     @JsonIgnore
     public FieldValue getFieldValueByValueAndPredicate(String value, FieldPredicate fieldPredicate) {
         FieldValue foundFieldValue = null;
+        if (getFieldValues() != null) {
         for (FieldValue fieldValue : getFieldValues()) {
             if (fieldValue.getValue().equals(value) && fieldValue.getFieldPredicate().equals(fieldPredicate)) {
                 foundFieldValue = fieldValue;
                 break;
             }
+        }
         }
         return foundFieldValue;
     }
@@ -624,6 +650,7 @@ public class Submission extends ValidatingBaseEntity {
 
         List<FieldValue> fieldValues = new ArrayList<FieldValue>();
 
+        if (getSubmissionWorkflowSteps() != null) {
         getSubmissionWorkflowSteps().forEach(submissionWorkflowSteps -> {
             submissionWorkflowSteps.getAggregateFieldProfiles().forEach(afp -> {
                 if (afp.getInputType().equals(inputType)) {
@@ -632,6 +659,7 @@ public class Submission extends ValidatingBaseEntity {
                 }
             });
         });
+        }
 
         return fieldValues;
     }
@@ -639,10 +667,12 @@ public class Submission extends ValidatingBaseEntity {
     @JsonIgnore
     public List<FieldValue> getAllDocumentFieldValues() {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        if (getFieldValues() != null) {
         for (FieldValue fieldValue : getFieldValues()) {
             if (fieldValue.getFieldPredicate().getDocumentTypePredicate()) {
                 fielsValues.add(fieldValue);
             }
+        }
         }
         return fielsValues;
     }
@@ -650,11 +680,13 @@ public class Submission extends ValidatingBaseEntity {
     @JsonIgnore
     public FieldValue getPrimaryDocumentFieldValue() {
         FieldValue primaryDocumentFieldValue = null;
+        if (getFieldValues() != null) {
         for (FieldValue fieldValue : getFieldValues()) {
             if (fieldValue.getFieldPredicate().getValue().equals("_doctype_primary")) {
                 primaryDocumentFieldValue = fieldValue;
                 break;
             }
+        }
         }
         return primaryDocumentFieldValue;
     }
@@ -662,10 +694,12 @@ public class Submission extends ValidatingBaseEntity {
     @JsonIgnore
     public List<FieldValue> getLicenseDocumentFieldValues() {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        if (getFieldValues() != null) {
         for (FieldValue fieldValue : getFieldValues()) {
             if (fieldValue.getFieldPredicate().getValue().equals("_doctype_license")) {
                 fielsValues.add(fieldValue);
             }
+        }
         }
         return fielsValues;
     }
@@ -673,10 +707,12 @@ public class Submission extends ValidatingBaseEntity {
     @JsonIgnore
     public List<FieldValue> getSupplementalAndSourceDocumentFieldValues() {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        if (getFieldValues() != null) {
         for (FieldValue fieldValue : getFieldValues()) {
             if (fieldValue.getFieldPredicate().getValue().equals("_doctype_supplemental") || fieldValue.getFieldPredicate().getValue().equals("_doctype_source")) {
                 fielsValues.add(fieldValue);
             }
+        }
         }
         return fielsValues;
     }
@@ -684,10 +720,12 @@ public class Submission extends ValidatingBaseEntity {
     @JsonIgnore
     public List<FieldValue> getSupplementalDocumentFieldValues() {
         List<FieldValue> fielsValues = new ArrayList<FieldValue>();
+        if (getFieldValues() != null) {
         for (FieldValue fieldValue : getFieldValues()) {
             if (fieldValue.getFieldPredicate().getValue().equals("_doctype_supplemental")) {
                 fielsValues.add(fieldValue);
             }
+        }
         }
         return fielsValues;
     }
@@ -697,6 +735,7 @@ public class Submission extends ValidatingBaseEntity {
 
         List<SubmissionFieldProfile> submissionFieldProfiles = new ArrayList<SubmissionFieldProfile>();
 
+        if (getSubmissionWorkflowSteps() != null) {
         getSubmissionWorkflowSteps().forEach(submissionWorkflowSteps -> {
             submissionWorkflowSteps.getAggregateFieldProfiles().forEach(afp -> {
                 if (afp.getInputType().getName().equals(inputType)) {
@@ -704,6 +743,7 @@ public class Submission extends ValidatingBaseEntity {
                 }
             });
         });
+        }
 
         return submissionFieldProfiles;
     }

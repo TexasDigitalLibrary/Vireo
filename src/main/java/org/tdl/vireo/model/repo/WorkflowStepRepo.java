@@ -1,12 +1,10 @@
 package org.tdl.vireo.model.repo;
 
+import edu.tamu.weaver.data.model.repo.WeaverRepo;
 import java.util.List;
-
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.repo.custom.WorkflowStepRepoCustom;
-
-import edu.tamu.weaver.data.model.repo.WeaverRepo;
 
 public interface WorkflowStepRepo extends WeaverRepo<WorkflowStep>, WorkflowStepRepoCustom {
 

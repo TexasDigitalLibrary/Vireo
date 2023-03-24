@@ -1,20 +1,18 @@
 package org.tdl.vireo.model;
 
-import java.util.regex.Pattern;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
-
-import org.tdl.vireo.model.validation.FieldPredicateValidator;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
-
 import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
+import java.util.regex.Pattern;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+import org.tdl.vireo.model.validation.FieldPredicateValidator;
 
 @Entity
+@Table(name = "field_predicate")
 public class FieldPredicate extends ValidatingBaseEntity {
 
     @Transient
