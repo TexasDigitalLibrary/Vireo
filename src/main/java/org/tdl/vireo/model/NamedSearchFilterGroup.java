@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -50,6 +52,13 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
 
     @Column(nullable = false)
     private Boolean umiRelease;
+
+    @Column(nullable = true)
+    private String sortColumnTitle;
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private Sort sortDirection;
 
     @OrderColumn
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
@@ -126,6 +135,22 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
      */
     public Boolean getUmiRelease() {
         return umiRelease;
+    }
+
+    public String getSortColumnTitle() {
+        return sortColumnTitle;
+    }
+
+    public void setSortColumnTitle(String sortColumnTitle) {
+        this.sortColumnTitle = sortColumnTitle;
+    }
+
+    public Sort getSortDirection() {
+        return sortDirection;
+    }
+
+    public void setSortDirection(Sort sortDirection) {
+        this.sortDirection = sortDirection;
     }
 
     public List<SubmissionListColumn> getSavedColumns() {

@@ -97,6 +97,13 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
                     $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
 
+                    angular.forEach($scope.userColumns, function (userColumn) {
+                        if ($scope.activeFilters.sortColumnTitle === userColumn.title) {
+                            userColumn.sortOrder = 1;
+                            userColumn.sort = $scope.activeFilters.sortDirection;
+                        }
+                    });
+
                     $scope.excludedColumns = [];
 
                     angular.copy($scope.userColumns, $scope.excludedColumns);
@@ -725,7 +732,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 }
             });
 
-            query();
+            ManagerSubmissionListColumnRepo.updateSubmissionListColumnSort($scope.userColumns).then(function () {
+                query();
+            });
 
         };
 
