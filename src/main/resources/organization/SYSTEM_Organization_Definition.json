@@ -515,7 +515,7 @@
         },
         {
           "name":"multipleKeywords",
-          "text":"Enter one keyword or key phrase per entry field."
+          "text":"Enter one keyword or key phrase per entry field.",
           "originatingWorkflowStep":{
             "name":"Verify Personal Information"
           }
