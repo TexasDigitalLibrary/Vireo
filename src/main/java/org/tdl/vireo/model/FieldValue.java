@@ -40,7 +40,6 @@ public class FieldValue extends ValidatingBaseEntity {
 
     @JsonView(Views.SubmissionList.class)
     @ManyToOne(optional = false, fetch = LAZY)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private FieldPredicate fieldPredicate;
 
     public FieldValue() {
