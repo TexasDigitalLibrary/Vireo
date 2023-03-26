@@ -12,9 +12,12 @@ import javax.persistence.MapKeyColumn;
 
 import org.tdl.vireo.model.validation.InputTypeValidator;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class InputType extends ValidatingBaseEntity {
 
     @Column(unique = true, nullable = false)

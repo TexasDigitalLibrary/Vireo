@@ -7,12 +7,14 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.OrganizationCategoryValidator;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
 public class OrganizationCategory extends ValidatingBaseEntity {
 

@@ -334,7 +334,7 @@ public class SubmissionEmailServiceTest extends MockData {
         lenient().when(mockFieldPredicateRepo.getById(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
         lenient().when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_VALUE)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
 
-        lenient().when(mockSubmissionRepo.findGraphForEmailById(mockSubmission.getId())).thenReturn(mockSubmission);
+        lenient().when(mockSubmissionRepo.findById(mockSubmission.getId())).thenReturn(Optional.of(mockSubmission));
 
         lenient().when(mockAbstractEmailRecipientRepoImpl.createAdvisorRecipient()).thenReturn(TEST_EMAIL_RECIPIENT_ADVISOR);
 

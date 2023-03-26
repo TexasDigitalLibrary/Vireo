@@ -18,11 +18,14 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.tdl.vireo.model.validation.ControlledVocabularyValidator;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import edu.tamu.weaver.context.SpringContext;
 import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 @Configurable
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
 
     final static Logger logger = LoggerFactory.getLogger(ControlledVocabulary.class);
