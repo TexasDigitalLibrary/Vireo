@@ -6,6 +6,19 @@ server:
 spring:
   profiles.active: ${profile}
 
+  jackson:
+    parser:
+      allow-unquoted-control-chars: true
+      allow-backslash-escaping-any-character: true
+    mapper:
+      default-view-inclusion: false
+    deserialization:
+      fail-on-unknown-properties: false
+      fail-on-unresolved-object-ids: false
+    serialization:
+      indent-output: true
+      fail-on-empty-beans: false
+
   servlet:
     # file size limit
     multipart:
@@ -21,8 +34,6 @@ spring:
       enabled: false
       path: /admin/h2console
 
-  template.cache: false
-
   sql:
     init:
       platform: h2
@@ -32,7 +43,7 @@ spring:
   datasource:
     # H2
     url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    # url: jdbc:h2:file:./vireoh2.db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    #url: jdbc:h2:file:./vireoh2.db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
 
     # PostgreSQL
@@ -47,11 +58,6 @@ spring:
     username: vireo
     password: vireo
 
-    # common database config -- might be needed for postgres
-    defaultAutoCommit: false
-    test-on-borrow: true
-    validation-query: select version();
-
   jpa:
     # H2
     database-platform: org.hibernate.dialect.H2Dialect
@@ -61,14 +67,19 @@ spring:
     #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
     generate-ddl: true
-    show-sql: false
     hibernate.ddl-auto: create-drop
-    properties.hibernate.event.merge.entity_copy_observer: allow
+
     open-in-view: true
+
+    properties:
+      hibernate:
+        event.merge.entity_copy_observer: allow
+
+    show-sql: false
 
   thymeleaf:
     cache: false
-    model: LEGACYHTML5
+    mode: LEGACYHTML5
 
   main:
 
