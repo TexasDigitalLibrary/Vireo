@@ -2,22 +2,34 @@ vireo.repo("SubmissionRepo", function SubmissionRepo($q, FileService, Submission
 
     var submissionRepo = this;
 
+    var lastSubmissionId;
+    var lastSubmission;
+
     // additional repo methods and variables
 
     submissionRepo.fetchSubmissionById = function (id) {
         return $q(function(resolve, reject) {
-            angular.extend(submissionRepo.mapping.one, {
-                'method': 'get-one/' + id
-            });
-            var fetchPromise = WsApi.fetch(submissionRepo.mapping.one);
-            fetchPromise.then(function (res) {
-                var apiRes = angular.fromJson(res.body);
-                if (apiRes.meta.status === "SUCCESS") {
-                    resolve(new Submission(apiRes.payload.Submission));
-                } else {
-                    reject("A submission with the ID " + id + " does not exist.");
-                }
-            });
+
+            if (lastSubmission && lastSubmissionId === id) {
+                resolve(lastSubmission);
+            } else {
+
+                angular.extend(submissionRepo.mapping.one, {
+                    'method': 'get-one/' + id
+                });
+                var fetchPromise = WsApi.fetch(submissionRepo.mapping.one);
+                fetchPromise.then(function (res) {
+                    var apiRes = angular.fromJson(res.body);
+                    if (apiRes.meta.status === "SUCCESS") {
+                        lastSubmissionId = id;
+                        lastSubmission = new Submission(apiRes.payload.Submission);
+                        resolve(lastSubmission);
+                    } else {
+                        reject("A submission with the ID " + id + " does not exist.");
+                    }
+                });
+
+            }
         });
     };
 

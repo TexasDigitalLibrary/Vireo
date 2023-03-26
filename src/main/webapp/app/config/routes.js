@@ -68,6 +68,12 @@ vireo.config(function ($locationProvider, $routeProvider) {
         controller: 'AdminSubmissionViewController',
         reloadOnUrl: false
     }).
+    when('/admin/view/:id', {
+        templateUrl: 'views/admin/admin.html',
+        access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"],
+        controller: 'AdminSubmissionPreViewController',
+        reloadOnUrl: false
+    }).
     when('/admin/viewError', {
         templateUrl: 'views/admin/admin.html',
         access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"]
