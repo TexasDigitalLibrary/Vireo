@@ -78,7 +78,7 @@ public class SubmissionEmailService {
      * @param submission Associated Submission.
      */
     public void sendAdvisorEmails(User user, Long submissionId) {
-        Submission submission = submissionRepo.findGraphForEmailById(submissionId);
+        Submission submission = submissionRepo.findById(submissionId).get();
 
         EmailRecipient advisorRecipient = abstractEmailRecipientRepoImpl.createAdvisorRecipient();
         List<EmailWorkflowRule> emailWorkflowRules = emailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(advisorRecipient, false);
@@ -138,7 +138,7 @@ public class SubmissionEmailService {
      * @throws IOException
      */
     public void sendAutomatedEmails(User user, Long submissionId, Map<String, Object> data) throws JsonProcessingException, IOException {
-        Submission submission = submissionRepo.findGraphForEmailById(submissionId);
+        Submission submission = submissionRepo.findById(submissionId).get();
 
         if (data.containsKey("sendEmailToRecipient") && (boolean) data.get("sendEmailToRecipient")) {
             String subject = templateUtility.compileString((String) data.get("subject"), submission);
@@ -186,7 +186,7 @@ public class SubmissionEmailService {
      * @param submissionId The ID of the submission.
      */
     public void sendWorkflowEmails(User user, Long submissionId) {
-        Submission submission = submissionRepo.findGraphForEmailById(submissionId);
+        Submission submission = submissionRepo.findById(submissionId).get();
 
         List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
         Map<Long, List<String>> recipientLists = new HashMap<>();

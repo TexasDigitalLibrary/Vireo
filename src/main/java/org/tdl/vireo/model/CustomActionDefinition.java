@@ -3,19 +3,23 @@ package org.tdl.vireo.model;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.CustomActionDefinitionValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 public class CustomActionDefinition extends ValidatingOrderedBaseEntity {
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false, unique = true, length = 255)
     private String label;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     @JsonProperty("isStudentVisible")
     private Boolean isStudentVisible;

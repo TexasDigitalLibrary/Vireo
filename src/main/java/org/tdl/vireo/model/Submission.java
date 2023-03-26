@@ -19,6 +19,10 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -42,9 +46,108 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(
     indexes = {
         @Index(columnList = "submitter_id", name = "submission_submitter_id_idx"),
-        @Index(columnList = "submitter_id, organization_id", name = "submission_organization_idx")
+        @Index(columnList = "submitter_id, organization_id", name = "submission_organization_idx"),
     }
 )
+@NamedEntityGraphs({
+    @NamedEntityGraph(
+        name = "graph.Submission.List",
+        attributeNodes = {
+            @NamedAttributeNode(value = "assignee", subgraph = "subgraph.user"),
+            @NamedAttributeNode(value = "submissionStatus", subgraph = "subgraph.submissionStatus"),
+            @NamedAttributeNode(value = "organization", subgraph = "subgraph.organization"),
+            // @NamedAttributeNode(value = "fieldValues", subgraph = "subgraph.fieldValues"),
+            // @NamedAttributeNode(value = "customActionValues", subgraph = "subgraph.customActionValues"),
+        },
+        subgraphs = {
+            @NamedSubgraph(
+                name = "subgraph.user",
+                attributeNodes = {}
+            ),
+            @NamedSubgraph(
+                name = "subgraph.submissionStatus",
+                attributeNodes = {}
+            ),
+            @NamedSubgraph(
+                name = "subgraph.organization",
+                attributeNodes = {
+                    @NamedAttributeNode(value = "category"),
+                }
+            ),
+            // @NamedSubgraph(
+            //     name = "subgraph.fieldValues",
+            //     attributeNodes = {
+            //         @NamedAttributeNode(value = "fieldPredicate", subgraph = "subgraph.fieldPredicate"),
+            //     }
+            // ),
+            // @NamedSubgraph(
+            //     name = "subgraph.fieldPredicate",
+            //     attributeNodes = {}
+            // ),
+            // @NamedSubgraph(
+            //     name = "subgraph.customActionValues",
+            //     attributeNodes = {
+            //         @NamedAttributeNode(value = "definition"),
+            //     }
+            // ),
+        }
+    ),
+    @NamedEntityGraph(
+        name = "graph.Submission.Individual",
+        attributeNodes = {
+            @NamedAttributeNode(value = "submitter", subgraph = "subgraph.user"),
+            @NamedAttributeNode(value = "assignee", subgraph = "subgraph.user"),
+            @NamedAttributeNode(value = "submissionStatus", subgraph = "subgraph.submissionStatus"),
+            @NamedAttributeNode(value = "organization", subgraph = "subgraph.organization"),
+            // @NamedAttributeNode(value = "fieldValues", subgraph = "subgraph.fieldValues"),
+            // @NamedAttributeNode(value = "submissionWorkflowSteps", subgraph = "subgraph.submissionWorkflowSteps"),
+            // @NamedAttributeNode(value = "customActionValues", subgraph = "subgraph.customActionValues"),
+        },
+        subgraphs = {
+            @NamedSubgraph(
+                name = "subgraph.user",
+                attributeNodes = {
+                    @NamedAttributeNode(value = "currentContactInfo"),
+                    @NamedAttributeNode(value = "permanentContactInfo"),
+                }
+            ),
+            @NamedSubgraph(
+                name = "subgraph.submissionStatus",
+                attributeNodes = {}
+            ),
+            @NamedSubgraph(
+                name = "subgraph.organization",
+                attributeNodes = {
+                    @NamedAttributeNode(value = "category"),
+                }
+            ),
+            // @NamedSubgraph(
+            //     name = "subgraph.fieldValues",
+            //     attributeNodes = {
+            //         @NamedAttributeNode(value = "contacts"),
+            //         @NamedAttributeNode(value = "fieldPredicate", subgraph = "subgraph.fieldPredicate"),
+            //     }
+            // ),
+            // @NamedSubgraph(
+            //     name = "subgraph.fieldPredicate",
+            //     attributeNodes = {}
+            // ),
+            // @NamedSubgraph(
+            //     name = "subgraph.submissionWorkflowSteps",
+            //     attributeNodes = {
+            //         @NamedAttributeNode(value = "aggregateFieldProfiles"),
+            //         @NamedAttributeNode(value = "aggregateNotes"),
+            //     }
+            // ),
+            // @NamedSubgraph(
+            //     name = "subgraph.customActionValues",
+            //     attributeNodes = {
+            //         @NamedAttributeNode(value = "definition"),
+            //     }
+            // ),
+        }
+    )
+})
 public class Submission extends ValidatingBaseEntity {
 
     @JsonView(Views.Partial.class)
@@ -111,6 +214,7 @@ public class Submission extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private Set<CustomActionValue> customActionValues;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     @JoinColumn
@@ -120,12 +224,15 @@ public class Submission extends ValidatingBaseEntity {
     @Column(columnDefinition = "TEXT")
     private String reviewerNotes;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private String advisorAccessHash;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private String advisorReviewURL;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private String depositURL;
 
