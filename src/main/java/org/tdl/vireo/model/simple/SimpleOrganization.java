@@ -47,7 +47,7 @@ public class SimpleOrganization implements Serializable {
     @Transient
     private List<WorkflowStep> aggregateWorkflowSteps;
 
-    @Column(name = "parent_organization_id", insertable = false, updatable = false, nullable = false)
+    @Column(name = "parent_organization_id", insertable = false, updatable = false, nullable = true)
     private Long parentOrganizationId;
 
     @Transient
