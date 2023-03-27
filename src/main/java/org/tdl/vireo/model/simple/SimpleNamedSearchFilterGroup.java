@@ -1,14 +1,21 @@
 package org.tdl.vireo.model.simple;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import org.hibernate.annotations.Immutable;
+import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.model.Sort;
+import org.tdl.vireo.model.SubmissionListColumn;
 
 @Entity
 @Immutable
@@ -37,6 +44,19 @@ public class SimpleNamedSearchFilterGroup implements Serializable {
 
     @Column(insertable = false, updatable = false, nullable = false)
     private Boolean umiRelease;
+
+    @Column(insertable = false, updatable = false, nullable = true)
+    private String sortColumnTitle;
+
+    @Column(insertable = false, updatable = false, nullable = true)
+    @Enumerated(EnumType.STRING)
+    private Sort sortDirection;
+
+    @Transient
+    private List<SubmissionListColumn> savedColumns;
+
+    @Transient
+    private Set<NamedSearchFilter> namedSearchFilters;
 
     public Long getId() {
         return id;
@@ -84,6 +104,38 @@ public class SimpleNamedSearchFilterGroup implements Serializable {
 
     public void setUmiRelease(Boolean umiRelease) {
         this.umiRelease = umiRelease;
+    }
+
+    public String getSortColumnTitle() {
+        return sortColumnTitle;
+    }
+
+    public void setSortColumnTitle(String sortColumnTitle) {
+        this.sortColumnTitle = sortColumnTitle;
+    }
+
+    public Sort getSortDirection() {
+        return sortDirection;
+    }
+
+    public void setSortDirection(Sort sortDirection) {
+        this.sortDirection = sortDirection;
+    }
+
+    public List<SubmissionListColumn> getSavedColumns() {
+        return savedColumns;
+    }
+
+    public void setSavedColumns(List<SubmissionListColumn> savedColumns) {
+        this.savedColumns = savedColumns;
+    }
+
+    public Set<NamedSearchFilter> getNamedSearchFilters() {
+        return namedSearchFilters;
+    }
+
+    public void setNamedSearchFilters(Set<NamedSearchFilter> namedSearchFilters) {
+        this.namedSearchFilters = namedSearchFilters;
     }
 
 }
