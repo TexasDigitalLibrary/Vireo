@@ -13,6 +13,9 @@
       <a href="#">{{word.name}}</a>
     </li>
   </ul>
+  <button class="btn btn-danger" ng-if="fieldValue.value">
+    <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)"></span>
+  </button>
   <button type="button" class="btn dropdown-help" disabled>
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
