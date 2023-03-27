@@ -1,27 +1,30 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 
 public class CustomActionDefinitionTest extends AbstractEntityTest {
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        assertEquals("The CustomActionDefinition repository is not empty!", 0, customActionDefinitionRepo.count());
+        assertEquals(0, customActionDefinitionRepo.count(), "The CustomActionDefinition repository is not empty!");
     }
 
     @Override
+    @Test
     public void testCreate() {
         CustomActionDefinition testCustomActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
-        assertEquals("The custom action definition repository is not empty", 1, customActionDefinitionRepo.count());
-        assertEquals("Saved Custom Action definition does not contain correct label", TEST_CUSTOM_ACTION_DEFINITION_LABEL, testCustomActionDefinition.getLabel());
-        assertEquals("Saved Custom Action definition does not contain correct studentVisibility flag", TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT, testCustomActionDefinition.isStudentVisible());
+        assertEquals(1, customActionDefinitionRepo.count(), "The custom action definition repository is not empty");
+        assertEquals(TEST_CUSTOM_ACTION_DEFINITION_LABEL, testCustomActionDefinition.getLabel(), "Saved Custom Action definition does not contain correct label");
+        assertEquals(TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT, testCustomActionDefinition.isStudentVisible(), "Saved Custom Action definition does not contain correct studentVisibility flag");
     }
 
     @Override
+    @Test
     public void testDuplication() {
         customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
 
@@ -30,22 +33,24 @@ public class CustomActionDefinitionTest extends AbstractEntityTest {
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
 
-        assertEquals("Custom Action Definition entry was duplicated", 1, customActionDefinitionRepo.count());
+        assertEquals(1, customActionDefinitionRepo.count(), "Custom Action Definition entry was duplicated");
     }
 
     @Override
+    @Test
     public void testDelete() {
         CustomActionDefinition customActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
         customActionDefinitionRepo.delete(customActionDefinition);
-        assertEquals("Custom Action Definition was not deleted from the repository", 0, customActionDefinitionRepo.count());
+        assertEquals(0, customActionDefinitionRepo.count(), "Custom Action Definition was not deleted from the repository");
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         customActionValueRepo.deleteAll();
         customActionDefinitionRepo.deleteAll();

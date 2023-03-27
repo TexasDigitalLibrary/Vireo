@@ -66,7 +66,7 @@ public class EmbargoController {
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping(value = "/activate/{id}")
     public ApiResponse activateEmbargo(@PathVariable Long id) {
-        Embargo embargo = embargoRepo.findOne(id);
+        Embargo embargo = embargoRepo.findById(id).get();
         logger.info("Activating Embargo with name " + embargo.getName());
         embargo.isActive(true);
         return new ApiResponse(SUCCESS, embargoRepo.update(embargo));
@@ -75,7 +75,7 @@ public class EmbargoController {
     @PreAuthorize("hasRole('MANAGER')")
     @PostMapping(value = "/deactivate/{id}")
     public ApiResponse deactivateEmbargo(@PathVariable Long id) {
-        Embargo embargo = embargoRepo.findOne(id);
+        Embargo embargo = embargoRepo.findById(id).get();
         logger.info("Deactivating Embargo with name " + embargo.getName());
         embargo.isActive(false);
         return new ApiResponse(SUCCESS, embargoRepo.update(embargo));
@@ -97,6 +97,7 @@ public class EmbargoController {
     public ApiResponse sortEmbargoes(@PathVariable String guarantorString, @PathVariable String column) {
         logger.info("Sorting Embargoes with guarantor " + guarantorString + " by " + column);
         EmbargoGuarantor guarantor = EmbargoGuarantor.fromString(guarantorString);
+
         embargoRepo.sort(column, guarantor);
         return new ApiResponse(SUCCESS);
     }

@@ -113,7 +113,7 @@ public class ControlledVocabularyController {
     public ApiResponse updateControlledVocabulary(@WeaverValidatedModel ControlledVocabulary controlledVocabulary) {
         String name = controlledVocabulary.getName();
         Long id = controlledVocabulary.getId();
-        controlledVocabulary = controlledVocabularyRepo.findOne(id);
+        controlledVocabulary = controlledVocabularyRepo.findById(id).get();
         logger.info("Updating controlled vocabulary with name " + controlledVocabulary.getName());
         controlledVocabulary.setName(name);
         controlledVocabulary = controlledVocabularyRepo.update(controlledVocabulary);
@@ -290,7 +290,7 @@ public class ControlledVocabularyController {
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/add-vocabulary-word/{cvId}", method = POST)
     public ApiResponse addVocabularyWord(@PathVariable Long cvId, @RequestBody VocabularyWord vocabularyWord) {
-        ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
+        ControlledVocabulary cv = controlledVocabularyRepo.findById(cvId).get();
         vocabularyWord = vocabularyWordRepo.create(cv, vocabularyWord.getName(), vocabularyWord.getDefinition(), vocabularyWord.getIdentifier(), vocabularyWord.getContacts());
         controlledVocabularyRepo.broadcast(cv.getId());
         return new ApiResponse(SUCCESS, vocabularyWord);
@@ -306,8 +306,8 @@ public class ControlledVocabularyController {
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/remove-vocabulary-word/{cvId}/{vwId}")
     public ApiResponse removeVocabularyWord(@PathVariable Long cvId, @PathVariable Long vwId) {
-        ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
-        VocabularyWord vw = vocabularyWordRepo.findOne(vwId);
+        ControlledVocabulary cv = controlledVocabularyRepo.findById(cvId).get();
+        VocabularyWord vw = vocabularyWordRepo.findById(vwId).get();
         cv.removeValue(vw);
         cv = controlledVocabularyRepo.update(cv);
         return new ApiResponse(SUCCESS, cv);
@@ -323,7 +323,7 @@ public class ControlledVocabularyController {
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/update-vocabulary-word/{cvId}", method = RequestMethod.POST)
     public ApiResponse updateVocabularyWord(@PathVariable Long cvId, @RequestBody VocabularyWord vw) {
-        ControlledVocabulary cv = controlledVocabularyRepo.findOne(cvId);
+        ControlledVocabulary cv = controlledVocabularyRepo.findById(cvId).get();
         vw.setControlledVocabulary(cv);
         vw = vocabularyWordRepo.update(vw);
         controlledVocabularyRepo.broadcast(cv.getId());
@@ -332,7 +332,8 @@ public class ControlledVocabularyController {
 
     private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, MultipartFile file) throws IOException {
 
-        Iterable<CSVRecord> records = CSVFormat.RFC4180.withHeader("name", "definition", "identifier", "contacts").parse(new InputStreamReader(file.getInputStream()));
+        CSVFormat csv = CSVFormat.RFC4180.builder().setHeader("name", "definition", "identifier", "contacts").build();
+        Iterable<CSVRecord> records = csv.parse(new InputStreamReader(file.getInputStream()));
 
         List<VocabularyWord> newWords = new ArrayList<VocabularyWord>();
         List<VocabularyWord> repeatedWords = new ArrayList<VocabularyWord>();

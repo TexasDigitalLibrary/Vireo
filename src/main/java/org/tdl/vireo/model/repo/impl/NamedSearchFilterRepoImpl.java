@@ -51,11 +51,11 @@ public class NamedSearchFilterRepoImpl extends AbstractWeaverRepoImpl<NamedSearc
 
         namedSearchFilter.setFilters(new HashSet<FilterCriterion>());
 
-        namedSearchFilterRepo.delete(namedSearchFilter.getId());
+        namedSearchFilterRepo.deleteById(namedSearchFilter.getId());
 
         filterCriteria.forEach(filterCriterion -> {
             if (namedSearchFilterRepo.findByFilterCriteriaId(filterCriterion.getId()).isEmpty()) {
-                filterCriterionRepo.delete(filterCriteria);
+                filterCriterionRepo.deleteAllInBatch(filterCriteria);
             }
         });
     }

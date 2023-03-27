@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 
@@ -285,9 +286,10 @@ public class SubmissionEmailService {
         }
         case CONTACT: {
           String label = (String) emailRecipientMap.get("name");
-          FieldPredicate fp = fieldPredicateRepo.getOne(new Long((Integer)emailRecipientMap.get("data")));
-          if (label != null & fp != null) {
-            recipient = new EmailRecipientContact(label, fp);
+          
+          Optional<FieldPredicate> fp = fieldPredicateRepo.findById(Long.valueOf((int) emailRecipientMap.get("data")));
+          if (label != null & fp.isPresent()) {
+            recipient = new EmailRecipientContact(label, fp.get());
           }
           break;
         }

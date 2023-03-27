@@ -27,11 +27,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Formula;
@@ -40,10 +35,18 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.UserValidator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
 import edu.tamu.weaver.user.model.IRole;
 
 @Entity
-public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+public class User extends AbstractWeaverUserDetails {
 
     private static final long serialVersionUID = -614285536644750464L;
 
@@ -168,7 +171,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param netid
-     *            the netid to set
+     *              the netid to set
      */
     public void setNetid(String netid) {
         this.netid = netid;
@@ -183,7 +186,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param email
-     *            the email to set
+     *              the email to set
      */
     public void setEmail(String email) {
         this.email = email;
@@ -193,7 +196,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
      * Stores an encoded password
      *
      * @param password
-     *            the password to set
+     *                 the password to set
      */
     public void setPassword(String password) {
         this.password = password;
@@ -208,7 +211,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param firstName
-     *            the firstName to set
+     *                  the firstName to set
      */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -223,7 +226,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param lastName
-     *            the lastName to set
+     *                 the lastName to set
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
@@ -238,7 +241,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param middleName
-     *            the middleName to set
+     *                   the middleName to set
      */
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
@@ -291,7 +294,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param birthYear
-     *            the birthYear to set
+     *                  the birthYear to set
      */
     public void setBirthYear(Integer birthYear) {
         this.birthYear = birthYear;
@@ -306,7 +309,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param shibbolethAffiliations
-     *            the shibbolethAffiliations to set
+     *                               the shibbolethAffiliations to set
      */
     public void setShibbolethAffiliations(Set<String> shibbolethAffiliations) {
         this.shibbolethAffiliations = shibbolethAffiliations;
@@ -335,7 +338,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param currentContactInfo
-     *            the currentContactInfo to set
+     *                           the currentContactInfo to set
      */
     public void setCurrentContactInfo(ContactInfo currentContactInfo) {
         this.currentContactInfo = currentContactInfo;
@@ -350,7 +353,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param permanentContactInfo
-     *            the permanentContactInfo to set
+     *                             the permanentContactInfo to set
      */
     public void setPermanentContactInfo(ContactInfo permanentContactInfo) {
         this.permanentContactInfo = permanentContactInfo;
@@ -365,7 +368,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param orcid
-     *            the orcid to set
+     *              the orcid to set
      */
     public void setOrcid(String orcid) {
         this.orcid = orcid;
@@ -392,7 +395,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param pageSize
-     *            the pageSize to set
+     *                 the pageSize to set
      */
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
@@ -407,7 +410,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param submissionViewColumn
-     *            the submissionViewColumn to set
+     *                             the submissionViewColumn to set
      */
     public void setSubmissionViewColumns(List<SubmissionListColumn> submissionViewColumns) {
         this.submissionViewColumns = submissionViewColumns;
@@ -432,7 +435,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param activeFilter
-     *            the activeFilter to set
+     *                     the activeFilter to set
      */
     public void setActiveFilter(NamedSearchFilterGroup activeFilter) {
         this.activeFilter = activeFilter;
@@ -447,7 +450,7 @@ public class User extends HibernateWorkaroundAbstractWeaverUserDetails {
 
     /**
      * @param savedFilters
-     *            the savedFilters to set
+     *                     the savedFilters to set
      */
     public void setSavedFilters(List<NamedSearchFilterGroup> savedFilters) {
         this.savedFilters = savedFilters;

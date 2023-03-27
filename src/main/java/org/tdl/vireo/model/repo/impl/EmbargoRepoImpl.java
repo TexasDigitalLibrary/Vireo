@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
@@ -24,7 +23,6 @@ import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.custom.EmbargoRepoCustom;
 
-import edu.tamu.weaver.data.model.OrderedBaseEntity;
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverOrderedRepoImpl;
 import edu.tamu.weaver.data.service.OrderedEntityService;
 import edu.tamu.weaver.response.ApiResponse;
@@ -42,7 +40,7 @@ public class EmbargoRepoImpl extends AbstractWeaverOrderedRepoImpl<Embargo, Emba
     @Autowired
     private EntityManager entityManager;
 
-    private static final Long one = new Long(1);
+    private static final Long one = Long.valueOf(1);
 
     @Override
     public Embargo create(String name, String description, Integer duration, EmbargoGuarantor guarantor, boolean isActive) {
@@ -81,7 +79,7 @@ public class EmbargoRepoImpl extends AbstractWeaverOrderedRepoImpl<Embargo, Emba
         Long position = embargo.getPosition();
         String whereProp = "guarantor";
         Object whereVal = embargo.getGuarantor();
-        embargoRepo.delete(id);
+        embargoRepo.deleteById(id);
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         Class<?> clazz = embargoRepo.getModelClass();
         CriteriaUpdate<Object> update = (CriteriaUpdate<Object>) cb.createCriteriaUpdate(clazz);

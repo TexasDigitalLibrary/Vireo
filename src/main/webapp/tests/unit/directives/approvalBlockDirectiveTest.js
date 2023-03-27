@@ -1,13 +1,14 @@
 describe('directive: approvalblock', function () {
-    var compile, defaults, httpBackend, rootScope, scope, templateCache, window;
+    var compile, defaults, httpBackend, rootScope, scope, templateCache, window, MockedUser;
 
     var initializeVariables = function(settings) {
-        inject(function ($compile, $httpBackend, $rootScope, $templateCache, $window) {
+        inject(function ($q, $compile, $httpBackend, $rootScope, $templateCache, $window) {
             compile = $compile;
             httpBackend = $httpBackend;
             rootScope = $rootScope;
             templateCache = $templateCache;
             window = $window;
+            MockedUser = new mockUser($q);
         });
     };
 
@@ -48,6 +49,13 @@ describe('directive: approvalblock', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
+        module("mock.user", function ($provide) {
+            var User = function () {
+              return MockedUser;
+            };
+            $provide.value("User", User);
+        });
+        module("mock.userService");
 
         initializeVariables();
         initializeDirective();

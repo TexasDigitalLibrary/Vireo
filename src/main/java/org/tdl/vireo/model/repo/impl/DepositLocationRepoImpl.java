@@ -35,7 +35,7 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
     @Override
     public DepositLocation create(Map<String, Object> depositLocationJson) {
 
-        Packager<?> packager = packagerRepo.findOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
+        Packager<?> packager = packagerRepo.findById(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong()).get();
 
         String onBehalfOf = null;
         if (depositLocationJson.get("onBehalfOf") != null) {
@@ -56,7 +56,7 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
     public DepositLocation createDetached(Map<String, Object> depositLocationJson) {
         Packager<?> packager = null;
         if (depositLocationJson.get("packager") != null) {
-            packager = packagerRepo.getOne(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong());
+            packager = packagerRepo.findById(objectMapper.convertValue(depositLocationJson.get("packager"), JsonNode.class).get("id").asLong()).get();
         }
 
         String onBehalfOf = null;

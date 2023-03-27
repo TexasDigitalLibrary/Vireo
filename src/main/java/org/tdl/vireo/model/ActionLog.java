@@ -10,12 +10,15 @@ import javax.persistence.TemporalType;
 
 import org.tdl.vireo.model.validation.ActionLogValidator;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**
  *
  */
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class ActionLog extends ValidatingBaseEntity {
 
     @ManyToOne(optional = false)

@@ -15,6 +15,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 public abstract class AbstractSpecification<E> implements Specification<E> {
 
+    private static final long serialVersionUID = 415433340112106015L;
+
     protected Map<String, String[]> filters;
 
     public AbstractSpecification(Map<String, String[]> filters) {

@@ -90,9 +90,9 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                         } else if (valueAsObject instanceof Date) {
                             Date date = (Date) valueAsObject;
                             value = simpleDateFormat.format(date);
-                        } else if (valueAsObject instanceof Set && ((Set<Object>) valueAsObject).stream().allMatch(o -> o instanceof CustomActionValue)) {
+                        } else if (valueAsObject instanceof Set && ((Set<?>) valueAsObject).stream().allMatch(o -> o instanceof CustomActionValue)) {
                             StringBuilder sb = new StringBuilder();
-                            ((Set<Object>) valueAsObject).forEach(o -> {
+                            ((Set<?>) valueAsObject).forEach(o -> {
                                 CustomActionValue customActionValue = (CustomActionValue) o;
                                 if (customActionValue.getValue()) {
                                     sb.append("☑ ");

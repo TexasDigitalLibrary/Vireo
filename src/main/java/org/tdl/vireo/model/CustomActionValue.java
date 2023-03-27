@@ -4,10 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonView;
-
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.CustomActionValueValidator;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
@@ -16,6 +17,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
  *
  */
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class CustomActionValue extends ValidatingBaseEntity {
 
     @JsonView(Views.SubmissionList.class)

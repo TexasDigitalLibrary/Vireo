@@ -1,9 +1,10 @@
 package org.tdl.vireo.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,13 +14,14 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
@@ -36,6 +38,7 @@ import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
 
 @ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 public class AuthControllerTest extends AbstractControllerTest {
 
     public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
@@ -59,78 +62,44 @@ public class AuthControllerTest extends AbstractControllerTest {
 
     private static List<User> mockUsers;
 
-    public User findByEmail(String email) {
-        for (User user : mockUsers) {
-            if (user.getEmail().equals(email)) {
-                return user;
-            }
-        }
-        return null;
-    }
-
-    public User updateUser(User updatedUser) {
-        for (User user : mockUsers) {
-            if (user.getEmail().equals(updatedUser.getEmail())) {
-                user.setEmail(updatedUser.getEmail());
-                user.setFirstName(updatedUser.getFirstName());
-                user.setLastName(updatedUser.getLastName());
-                user.setPassword(updatedUser.getPassword());
-                user.setRole(updatedUser.getRole());
-                return user;
-            }
-        }
-        return null;
-    }
-
-    @Before
+    @BeforeEach
     public void setup() throws MessagingException {
-        MockitoAnnotations.initMocks(this);
-
         mockUsers = Arrays.asList(new User[] { TEST_USER, TEST_USER2, TEST_USER3, TEST_USER4 });
 
         ReflectionTestUtils.setField(httpUtility, HTTP_DEFAULT_TIMEOUT_NAME, HTTP_DEFAULT_TIMEOUT_VALUE);
-
         ReflectionTestUtils.setField(cryptoService, SECRET_PROPERTY_NAME, SECRET_VALUE);
-
-        ReflectionTestUtils.setField(tokenService, AUTH_SECRET_KEY_PROPERTY_NAME, AUTH_SECRET_KEY_VALUE);
-
-        ReflectionTestUtils.setField(tokenService, AUTH_ISSUER_KEY_PROPERTY_NAME, AUTH_ISSUER_KEY_VALUE);
-
-        ReflectionTestUtils.setField(tokenService, AUTH_DURATION_PROPERTY_NAME, AUTH_DURATION_VALUE);
-
-        ReflectionTestUtils.setField(tokenService, AUTH_KEY_PROPERTY_NAME, AUTH_KEY_VALUE);
 
         TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
         TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);
         TEST_CREDENTIALS.setEmail(TEST_USER_EMAIL);
         TEST_CREDENTIALS.setRole(TEST_USER_ROLE.toString());
 
-        Mockito.when(userRepo.findAll()).thenReturn(mockUsers);
+        Mockito.lenient().when(userRepo.findAll()).thenReturn(mockUsers);
 
         ReflectionTestUtils.setField(authController, "url", "localhost:9000");
 
-        Mockito.when(vireoUserCredentialsService.createUserFromRegistration(any(String.class), any(String.class), any(String.class), any(String.class))).then(new Answer<Object>() {
+        Mockito.lenient().when(vireoUserCredentialsService.createUserFromRegistration(any(String.class), any(String.class), any(String.class), any(String.class))).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 return userRepo.save(new User((String) invocation.getArguments()[0], (String) invocation.getArguments()[1], (String) invocation.getArguments()[2], (String) invocation.getArguments()[3], TEST_USER_ROLE));
             }
         });
 
-        Mockito.when(userRepo.findByEmail(any(String.class))).then(new Answer<Object>() {
+        Mockito.lenient().when(userRepo.findByEmail(any(String.class))).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 return findByEmail((String) invocation.getArguments()[0]);
             }
         });
 
-        Mockito.when(userRepo.save(any(User.class))).then(new Answer<Object>() {
+        Mockito.lenient().when(userRepo.save(any(User.class))).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 return updateUser((User) invocation.getArguments()[0]);
             }
         });
 
-        Mockito.when(emailTemplateRepo.findByNameOverride(REGISTRATION_TEMPLATE)).then(new Answer<Object>() {
+        Mockito.lenient().when(emailTemplateRepo.findByNameOverride(REGISTRATION_TEMPLATE)).then(new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 EmailTemplate emailTemplate = new EmailTemplate(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
@@ -189,13 +158,45 @@ public class AuthControllerTest extends AbstractControllerTest {
 
         testRegister();
 
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
         data.put("email", TEST_USER_EMAIL);
         data.put("userPassword", TEST_USER_PASSWORD);
+
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("lastName", TEST_USER_LAST_NAME);
+        claims.put("firstName", TEST_USER_FIRST_NAME);
+        claims.put("netid", null);
+        claims.put("uin", TEST_USER_EMAIL);
+        claims.put("email", TEST_USER_EMAIL);
+
+        when(tokenService.createToken(TEST_USER_EMAIL, claims)).thenReturn("jwt");
 
         ApiResponse response = authController.login(data);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+    }
+
+    private User findByEmail(String email) {
+        for (User user : mockUsers) {
+            if (user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    private User updateUser(User updatedUser) {
+        for (User user : mockUsers) {
+            if (user.getEmail().equals(updatedUser.getEmail())) {
+                user.setEmail(updatedUser.getEmail());
+                user.setFirstName(updatedUser.getFirstName());
+                user.setLastName(updatedUser.getLastName());
+                user.setPassword(updatedUser.getPassword());
+                user.setRole(updatedUser.getRole());
+                return user;
+            }
+        }
+        return null;
     }
 
 }

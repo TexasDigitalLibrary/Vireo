@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.formatter.Formatter;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring4.SpringTemplateEngine;
-import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 
 @Service
 public class FormatterUtility {

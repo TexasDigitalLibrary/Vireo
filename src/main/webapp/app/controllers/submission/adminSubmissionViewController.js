@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $route, $routeParams, $scope, DepositLocationRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatuses, SubmissionStatusRepo, UserRepo, UserService, UserSettings, WsApi) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $routeParams, $scope, DepositLocationRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatuses, SubmissionStatusRepo, UserRepo, UserService, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -13,6 +13,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     $scope.embargoes = EmbargoRepo.getAll();
 
     $scope.actionLogDelay = 2000;
+
     var userSettings = new UserSettings();
 
     var submissionStatuses = SubmissionStatusRepo.getAll();
@@ -64,7 +65,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.submission.fetchDocumentTypeFileInfo();
     };
 
-    $scope.loaded = true;
+    $scope.loaded = false;
 
     $scope.addCommentModal = {};
 
@@ -77,6 +78,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     SubmissionRepo.fetchSubmissionById($routeParams.id).then(function(submission) {
 
         $scope.submission = submission;
+
+        $scope.loaded = true;
 
         WsApi.listen("/channel/submission/" + $scope.submission.id).then(null, null, function(res) {
             var apiRes = angular.fromJson(res.body);

@@ -1,8 +1,8 @@
 package org.tdl.vireo.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +25,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -35,7 +35,8 @@ import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
 
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class UserControllerTest {
 
     private static final String TEST_USER_1_EMAIL = "User 1 email";
@@ -79,35 +80,36 @@ public class UserControllerTest {
     @InjectMocks
     private UserController userController;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-        when(userRepo.findAll(Matchers.<Specification<User>>any(), any(Pageable.class))).thenReturn(TEST_USER_PAGE);
+
     }
 
     @Test
     public void testPage() {
+        when(userRepo.findAll(Mockito.<Specification<User>>any(), any(Pageable.class))).thenReturn(TEST_USER_PAGE);
+
         FilteredPageRequest fpr = new FilteredPageRequest();
         fpr.setPageNumber(0);
         fpr.setPageSize(2);
         ApiResponse response = userController.page(fpr);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
-        verify(userRepo, times(1)).findAll(Matchers.<Specification<User>>any(), any(Pageable.class));
+        verify(userRepo, times(1)).findAll(Mockito.<Specification<User>>any(), any(Pageable.class));
     }
 
     @Test
     public void testAllAssignableUsers() {
         when(userRepo.findAllByRoleIn(any(), any(Sort.class))).thenReturn(TEST_USER_LIST_ASSIGNED);
 
-        Pageable pageable = new PageRequest(0, 1);
+        Pageable pageable = PageRequest.of(0, TEST_USER_LIST_ASSIGNED.size());
         ApiResponse response = userController.allAssignableUsers(0, "", pageable);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        ArrayList<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
+        List<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
 
-        assertEquals(TEST_USER_LIST_ASSIGNED.size(), users.size());
+        assertEquals(pageable.getPageSize(), users.size());
         assertTrue(users.contains(TEST_USER_1));
         assertTrue(users.contains(TEST_USER_2));
         assertTrue(users.contains(TEST_USER_3));
@@ -117,14 +119,14 @@ public class UserControllerTest {
     public void testAllAssignableUsersPaginated() {
         when(userRepo.findAllByRoleIn(any(), any(Pageable.class))).thenReturn(TEST_USER_LIST_PAGE_ASSIGNED);
 
-        Pageable pageable = new PageRequest(0, 1);
+        Pageable pageable = PageRequest.of(0, TEST_USER_LIST_PAGE_ASSIGNED.size());
         ApiResponse response = userController.allAssignableUsers(1, "", pageable);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        ArrayList<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
+        List<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
 
-        assertEquals(TEST_USER_LIST_PAGE_ASSIGNED.size(), users.size());
+        assertEquals(pageable.getPageSize(), users.size());
         assertTrue(users.contains(TEST_USER_1));
     }
 
@@ -132,14 +134,14 @@ public class UserControllerTest {
     public void testAllUnassignableUsers() {
         when(userRepo.findAllByRoleIn(any(), any(Sort.class))).thenReturn(TEST_USER_LIST_UNASSIGNED);
 
-        Pageable pageable = new PageRequest(0, 1);
+        Pageable pageable = PageRequest.of(0, TEST_USER_LIST_UNASSIGNED.size());
         ApiResponse response = userController.allUnassignableUsers(0, "", pageable);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        ArrayList<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
+        List<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
 
-        assertEquals(TEST_USER_LIST_UNASSIGNED.size(), users.size());
+        assertEquals(pageable.getPageSize(), users.size());
         assertTrue(users.contains(TEST_USER_4));
         assertTrue(users.contains(TEST_USER_5));
     }
@@ -148,14 +150,14 @@ public class UserControllerTest {
     public void testAllUnassignablePaginated() {
         when(userRepo.findAllByRoleIn(any(), any(Pageable.class))).thenReturn(TEST_USER_LIST_PAGE_UNASSIGNED);
 
-        Pageable pageable = new PageRequest(0, 1);
+        Pageable pageable = PageRequest.of(0, TEST_USER_LIST_PAGE_UNASSIGNED.size());
         ApiResponse response = userController.allUnassignableUsers(1, "", pageable);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        ArrayList<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
+        List<?> users = (ArrayList<?>) response.getPayload().get("ArrayList<User>");
 
-        assertEquals(TEST_USER_LIST_PAGE_UNASSIGNED.size(), users.size());
+        assertEquals(pageable.getPageSize(), users.size());
         assertTrue(users.contains(TEST_USER_4));
     }
 

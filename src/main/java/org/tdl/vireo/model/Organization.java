@@ -23,13 +23,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
@@ -37,10 +30,20 @@ import org.slf4j.LoggerFactory;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.OrganizationValidator;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
+
 @Entity
-@JsonIgnoreProperties(value = { "aggregateWorkflowSteps", "childrenOrganizations" }, allowGetters = true)
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id", "parent_organization_id" }))
-public class Organization extends HibernateWorkaroundValidatingBaseEntity {
+public class Organization extends ValidatingBaseEntity {
 
     @Transient
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
@@ -63,6 +66,7 @@ public class Organization extends HibernateWorkaroundValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private List<WorkflowStep> originalWorkflowSteps;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "aggregate_workflow_steps_id", "aggregateWorkflowSteps_order" }))
     @OrderColumn
@@ -74,6 +78,7 @@ public class Organization extends HibernateWorkaroundValidatingBaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Organization parentOrganization;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @JsonView(Views.Partial.class)
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)

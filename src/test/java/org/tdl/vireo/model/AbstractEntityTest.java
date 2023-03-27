@@ -5,12 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.packager.Packager;
@@ -55,7 +52,6 @@ import org.tdl.vireo.service.EntityControlledVocabularyService;
 import edu.tamu.weaver.auth.model.Credentials;
 
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { Application.class })
 public abstract class AbstractEntityTest {
 
@@ -484,16 +480,12 @@ public abstract class AbstractEntityTest {
 
     private Credentials credentials;
 
-    @Test
     public abstract void testCreate() throws Exception;
 
-    @Test
     public abstract void testDuplication() throws Exception;
 
-    @Test
     public abstract void testDelete() throws Exception;
 
-    @Test
     public abstract void testCascade() throws Exception;
 
     protected Credentials getCredentials() {

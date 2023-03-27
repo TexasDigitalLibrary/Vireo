@@ -1,8 +1,9 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.After;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.model.repo.LanguageRepo;
@@ -13,13 +14,15 @@ public class LanguageTest extends AbstractEntityTest {
     private LanguageRepo languageRepo;
 
     @Override
+    @Test
     public void testCreate() {
         Language language = languageRepo.create(TEST_LANGUAGE_NAME);
-        assertEquals("The entity was not created!", 1, languageRepo.count());
-        assertEquals("The entity did not have the correct name!", TEST_LANGUAGE_NAME, language.getName());
+        assertEquals(1, languageRepo.count(), "The entity was not created!");
+        assertEquals(TEST_LANGUAGE_NAME, language.getName(), "The entity did not have the correct name!");
     }
 
     @Override
+    @Test
     public void testDuplication() {
         languageRepo.create(TEST_LANGUAGE_NAME);
         try {
@@ -27,22 +30,24 @@ public class LanguageTest extends AbstractEntityTest {
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */
         }
-        assertEquals("The repository duplicated entity!", 1, languageRepo.count());
+        assertEquals(1, languageRepo.count(), "The repository duplicated entity!");
     }
 
     @Override
+    @Test
     public void testDelete() {
         Language language = languageRepo.create(TEST_LANGUAGE_NAME);
         languageRepo.delete(language);
-        assertEquals("The entity was not deleted!", 0, languageRepo.count());
+        assertEquals(0, languageRepo.count(), "The entity was not deleted!");
     }
 
     @Override
+    @Test
     public void testCascade() {
 
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         languageRepo.deleteAll();
     }

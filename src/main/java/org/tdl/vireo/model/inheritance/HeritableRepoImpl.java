@@ -98,7 +98,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
 
         Long phmId = componentCWithChanges.getId();
 
-        M componentC = heritableRepo.findOne(phmId);
+        M componentC = heritableRepo.findById(phmId).get();
 
         boolean componentIsOverrideable = componentC.getOverrideable();
 
@@ -170,7 +170,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
 
                 M newHeritableComponent = heritableRepo.save(cloneHeritableComponent);
 
-                requestingOrganization = organizationRepo.findOne(requestingOrganization.getId());
+                requestingOrganization = organizationRepo.findById(requestingOrganization.getId()).get();
 
                 // TODO: test
                 // in component aggregations at descendants of the WS, make components derived from pendingHeritableModel now originate from the clone
@@ -227,7 +227,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
 
             logger.info("Created new component " + newHeritableModel.getId());
 
-            stepT = workflowStepRepo.findOne(stepT.getId());
+            stepT = workflowStepRepo.findById(stepT.getId()).get();
 
             stepT.getOriginalHeritableModels(newHeritableModel.getClass()).add(newHeritableModel);
 
@@ -235,7 +235,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
 
             stepT = workflowStepRepo.save(stepT);
 
-            stepS = workflowStepRepo.findOne(stepS.getId());
+            stepS = workflowStepRepo.findById(stepS.getId()).get();
 
             requestingOrganization.replaceAggregateWorkflowStep(stepS, stepT);
 
@@ -289,7 +289,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
     public void delete(M heritableModel) {
 
         // allows for delete by iterating through findAll, while still deleting descendents
-        if (heritableRepo.findOne(heritableModel.getId()) != null) {
+        if (heritableRepo.findById(heritableModel.getId()).isPresent()) {
 
             WorkflowStep originatingWorkflowStep = heritableModel.getOriginatingWorkflowStep();
 
@@ -310,7 +310,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
 
             deleteDescendantsOfHeritableModel(heritableModel);
 
-            heritableRepo.delete(heritableModel.getId());
+            heritableRepo.deleteById(heritableModel.getId());
             organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         }
     }

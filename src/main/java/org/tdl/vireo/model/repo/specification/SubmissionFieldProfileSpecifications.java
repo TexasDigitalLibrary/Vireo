@@ -25,6 +25,8 @@ public class SubmissionFieldProfileSpecifications {
     public static Specification<SubmissionFieldProfile> existing(FieldProfile fieldProfile) {
         return new Specification<SubmissionFieldProfile>() {
 
+            private static final long serialVersionUID = -1220545498320954688L;
+
             private final static String ID_NAME = "id";
 
             @Override

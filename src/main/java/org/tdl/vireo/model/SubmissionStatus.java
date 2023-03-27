@@ -12,17 +12,21 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 
+import org.tdl.vireo.model.response.Views;
+import org.tdl.vireo.model.validation.SubmissionStatusValidator;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import org.tdl.vireo.model.response.Views;
-import org.tdl.vireo.model.validation.SubmissionStatusValidator;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+public class SubmissionStatus extends ValidatingBaseEntity {
 
     @JsonView(Views.SubmissionList.class)
     @Column(nullable = false, unique = true)
@@ -96,7 +100,7 @@ public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
 
     /**
      * @param name
-     *            the name to set
+     *             the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -111,7 +115,7 @@ public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
 
     /**
      * @param isArchived
-     *            the archived to set
+     *                   the archived to set
      */
     public void isArchived(Boolean isArchived) {
         this.isArchived = isArchived;
@@ -126,7 +130,7 @@ public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
 
     /**
      * @param isPublishable
-     *            the publishable to set
+     *                      the publishable to set
      */
     public void isPublishable(Boolean isPublishable) {
         this.isPublishable = isPublishable;
@@ -141,7 +145,7 @@ public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
 
     /**
      * @param isDeletable
-     *            the deletable to set
+     *                    the deletable to set
      */
     public void isDeletable(Boolean isDeletable) {
         this.isDeletable = isDeletable;
@@ -156,7 +160,7 @@ public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
 
     /**
      * @param isEditableByReviewer
-     *            the editableByReviewer to set
+     *                             the editableByReviewer to set
      */
     public void isEditableByReviewer(Boolean isEditableByReviewer) {
         this.isEditableByReviewer = isEditableByReviewer;
@@ -171,7 +175,7 @@ public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
 
     /**
      * @param isEditableByStudent
-     *            the editableByStudent to set
+     *                            the editableByStudent to set
      */
     public void isEditableByStudent(Boolean isEditableByStudent) {
         this.isEditableByStudent = isEditableByStudent;
@@ -186,7 +190,7 @@ public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
 
     /**
      * @param isActive
-     *            the active to set
+     *                 the active to set
      */
     public void isActive(Boolean isActive) {
         this.isActive = isActive;
@@ -201,7 +205,7 @@ public class SubmissionStatus extends HibernateWorkaroundValidatingBaseEntity {
 
     /**
      * @param transitionSubmissionStatuses
-     *            the transitionSubmissionStates to set
+     *                                     the transitionSubmissionStates to set
      */
     public void setTransitionSubmissionStatuses(List<SubmissionStatus> transitionSubmissionStates) {
         this.transitionSubmissionStatuses = transitionSubmissionStates;

@@ -29,11 +29,12 @@ describe("service: controlledVocabularyRepo", function () {
             $provide.value("FileService", FileService);
         });
         module("mock.user", function($provide) {
-            User = function() {
+            var User = function() {
                 return mockedUser;
             };
             $provide.value("User", User);
         });
+        module("mock.userService");
         module("mock.vocabularyWord");
         module("mock.wsApi");
 

@@ -19,9 +19,9 @@ Vireo build is done with [Maven](https://maven.apache.org/). The build is config
 
 **Ending trailing slash is required for spring.config.location**
 
-The external configuration directory is where an application.yaml file can be added to override default properties. When packaging the application define `config.uri`, which will template context.xml file with the `spring.config.location` system variable for container deployment.
+The external configuration directory is where an application.yml file can be added to override default properties. When packaging the application define `config.uri`, which will template context.xml file with the `spring.config.location` system variable for container deployment.
 
-When running for development define `spring.config.location` to externalize the configuration. If running for development and using an external configuration, do not define `assets.uri`. It will have to be configured manually in the external application.yaml.
+When running for development define `spring.config.location` to externalize the configuration. If running for development and using an external configuration, do not define `assets.uri`. It will have to be configured manually in the external application.yml.
 
 **External configuration is recommended for production deployment**
 
@@ -63,7 +63,7 @@ $ mvn clean spring-boot:run -Dproduction
 $ mvn clean package -DskipTests -Dproduction -Dassets.uri=file:/opt/vireo/ -Dconfig.uri=file:/opt/vireo/config/
 ```
 
-If build succeeds, you should have both a `vireo-4.0.0-SNAPSHOT.war` and a `vireo-4.0.0-SNAPSHOT-install.zip` in the `target/` directory. When building for production required static assets are copied into the packaged war file and the index.html template is optimized for production. For development a symlink is used to allow the application to access required static assets.
+If build succeeds, you should have both a `vireo-4.1.4.war` and a `vireo-4.1.4-install.zip` in the `target/` directory. When building for production required static assets are copied into the packaged war file and the index.html template is optimized for production. For development a symlink is used to allow the application to access required static assets.
 
 #### Apache Reverse Proxy Config
 
@@ -108,20 +108,13 @@ $ npm run test
 $ mvn clean test -Dclient
 ```
 
-### e2e
-
-```bash
-$ mvn clean spring-boot:run
-$ npm run protractor
-```
-
 ## Deploying from Zip Package
 
 Unzip package into preferred directory (or any directory you choose):
 
 ```bash
 $ cd /opt/vireo
-$ unzip vireo-4.0.0-SNAPSHOT-install.zip
+$ unzip vireo-4.1.4-install.zip
 ```
 
 ### Directory Structure of installed package
@@ -154,7 +147,7 @@ Currently, in order to have Tomcat know where the external configuration directo
 </Context>
 ```
 
-2) Update [application.yaml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yaml)
+2) Update [application.yml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yml)
 
 
 ### Deploy to Tomcat
@@ -176,18 +169,18 @@ ln -s /opt/vireo/webapp /opt/tomcat/webapps/ROOT
 Copy war file into Tomcat webapps directory (your location may vary -- this is an example):
 
 ```bash
-$ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/vireo.war
+$ cp ~/vireo-4.1.4.war /usr/local/tomcat/webapps/vireo.war
 ```
 
 or as root:
 
 ```bash
-$ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+$ cp ~/vireo-4.1.4.war /usr/local/tomcat/webapps/ROOT.war
 ```
 
 **if not specifying assets.uri during build the assets will be stored under the vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes**
 
-**if not specifying config.uri during build the application.yaml will be under the Vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes/application.yaml**
+**if not specifying config.uri during build the application.yml will be under the Vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes/application.yml**
 
 **if deployed from default WAR package and would like to externalize the config, you will have to edit /opt/tomcat/webapps/vireo/META-INF/context.xml***
 
@@ -195,12 +188,12 @@ $ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 ## Running WAR as a stand-alone Spring Boot application
 
 ```bash
-java -jar target/vireo-4.0.0-SNAPSHOT.war
+java -jar target/vireo-4.1.4.war
 ```
 
 ## Configuring
 
-* [application.yaml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yaml)
+* [application.yml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yml)
   * application configurations
 
 * [theme-defaults.json](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/theme-defaults.json)

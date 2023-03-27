@@ -1,29 +1,107 @@
-h2/
-bin/
-logs/
-public/
-target/
-private/
-node_modules/
+### Git ###
+!.gitkeep
 
-.vscode/
-.apt_generated/
 
-.tmp
+### STS ###
+.apt_generated
+.classpath
+.factorypath
 .project
 .settings
-.classpath
-.sass-cache
-.factorypath
-.tern-project
-.externalToolBuilders
+.springBeans
+.sts4-cache
 
 
-*.log*
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
 
-*.db*
 
-src/main/webapp/coverage/
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
 
+/.nb-gradle/
+
+
+### VS Code ###
+.vscode/
+
+dump.rdb
+
+
+### BlueJ ###
+*.ctxt
+
+
+### OS Specific ###
+.DS_Store
+.tmp/
+
+tmp/
+
+
+### Node / NPM ###
+coverage/
+logs/
+node_modules/
+
+.npmrc
+
+npm-debug.log
 package-lock.json
 
+
+### Virtual Machine ###
+hs_err_pid*
+replay_pid*
+
+
+### Java ###
+.mtj.tmp/
+
+*.class
+*.log
+
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+
+### Maven ###
+logs/
+target/
+
+.classpth
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+.project
+
+buildNumber.properties
+dependency-reduced-pom.xml
+pom.xml.next
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+
+### Weaver ###
+dist/
+
+
+### Project Specific ###
+.env*
+
+!**/src/main/**
+!**/src/test/**
+
+*.mv.db

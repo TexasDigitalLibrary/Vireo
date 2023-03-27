@@ -10,19 +10,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.DefaultConfiguration;
 import org.tdl.vireo.model.Degree;
@@ -82,6 +79,14 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 @Service
 public class SystemDataLoader {
@@ -180,6 +185,7 @@ public class SystemDataLoader {
     @Autowired
     private DefaultSettingsService defaultSettingsService;
 
+    @Transactional
     public void loadSystemData() {
 
         logger.info("Loading default languages");
@@ -410,7 +416,9 @@ public class SystemDataLoader {
                 systemOrganization = organization;
             }
 
-            organization.setAggregateWorkflowSteps(processWorkflowSteps(organization, systemOrganization.getOriginalWorkflowSteps()));
+            List<WorkflowStep> systemOrganizationWorkflowSteps = new ArrayList<>(systemOrganization.getOriginalWorkflowSteps());
+
+            organization.setAggregateWorkflowSteps(processWorkflowSteps(organization, systemOrganizationWorkflowSteps));
 
             organization = organizationRepo.save(organization);
 
@@ -433,11 +441,13 @@ public class SystemDataLoader {
 
             // create new workflow step if not already exists
             if (newWorkflowStep == null) {
-                organization = organizationRepo.findOne(organization.getId());
+                organization = organizationRepo.findById(organization.getId()).get();
                 newWorkflowStep = workflowStepRepo.create(workflowStep.getName(), organization);
             }
 
-            for (FieldProfile fieldProfile : workflowStep.getOriginalFieldProfiles()) {
+            List<FieldProfile> originalFieldProfiles = new ArrayList<>(workflowStep.getOriginalFieldProfiles());
+
+            for (FieldProfile fieldProfile : originalFieldProfiles) {
                 // check to see if the FieldPredicate exists
                 FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(fieldProfile.getFieldPredicate().getValue());
 
@@ -482,7 +492,7 @@ public class SystemDataLoader {
 
                 // create new FieldProfile if not already exists
                 if (newFieldProfile == null) {
-                    newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
+                    newWorkflowStep = workflowStepRepo.findById(newWorkflowStep.getId()).get();
                     newFieldProfile = fieldProfileRepo.create(newWorkflowStep, fieldPredicate, inputType, fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getHidden(), fieldProfile.getFlagged(), fieldProfile.getLogged(), fieldProfile.getControlledVocabulary(), fieldProfile.getMappedShibAttribute(), fieldProfile.getDefaultValue());
                 }
 
@@ -502,7 +512,7 @@ public class SystemDataLoader {
                 // create new Note if not already exists
                 if (newNote == null) {
                     newNote = noteRepo.create(newWorkflowStep, note.getName(), note.getText());
-                    newWorkflowStep = workflowStepRepo.findOne(newWorkflowStep.getId());
+                    newWorkflowStep = workflowStepRepo.findById(newWorkflowStep.getId()).get();
                 }
 
                 notes.add(newNote);
@@ -522,7 +532,7 @@ public class SystemDataLoader {
 
     private void processEmailWorflowRules() {
 
-        Organization organization = organizationRepo.findOne(1L);
+        Organization organization = organizationRepo.findById(1L).get();
 
         try {
             Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
@@ -593,21 +603,43 @@ public class SystemDataLoader {
     }
 
     private void loadSubmissionStatuses() {
-
         try {
+            File statusesFile = getFileFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses.json");
+            File transitionsFile = getFileFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses_Transitions.json");
+
             // read and map json to SubmissionStatus
-            SubmissionStatus systemSubmissionStatus = objectMapper.readValue(getFileFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses.json"), SubmissionStatus.class);
+            TypeFactory tf = TypeFactory.defaultInstance();
+            CollectionType type = tf.constructCollectionType(ArrayList.class, SubmissionStatus.class);
+            List<SubmissionStatus> systemSubmissionStatuses = objectMapper.readValue(statusesFile, type);
 
-            // check to see if the SubmissionStatus exists
-            SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(systemSubmissionStatus.getName());
+            systemSubmissionStatuses.forEach(ss -> {
+                SubmissionStatus found = submissionStatusRepo.findByName(ss.getName());
 
-            // create new SubmissionStatus if not already exists
-            if (newSubmissionStatus == null) {
-                newSubmissionStatus = submissionStatusRepo.create(systemSubmissionStatus.getName(), systemSubmissionStatus.isArchived(), systemSubmissionStatus.isPublishable(), systemSubmissionStatus.isDeletable(), systemSubmissionStatus.isEditableByReviewer(), systemSubmissionStatus.isEditableByStudent(), systemSubmissionStatus.isActive(), systemSubmissionStatus.getSubmissionState());
+                if (found == null) {
+                    ss.setTransitionSubmissionStatuses(new ArrayList<>());
+                    found = submissionStatusRepo.create(ss.getName(), ss.isArchived(), ss.isPublishable(), ss.isDeletable(), ss.isEditableByReviewer(), ss.isEditableByStudent(), ss.isActive(), ss.getSubmissionState());
+                }
+            });
 
-                newSubmissionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(systemSubmissionStatus));
+            type = tf.constructCollectionType(ArrayList.class, HashMap.class);
+            List<HashMap<?, ?>> transitions = objectMapper.readValue(transitionsFile, type);
+
+            for (Map<?, ?> transition : transitions) {
+                List<SubmissionStatus> list = new ArrayList<>();
+                Long transitionId = ((Integer) transition.get("id")).longValue();
+                SubmissionStatus ss = submissionStatusRepo.findById(transitionId).get();
+
+                for (Object idObject : (ArrayList<?>) transition.get("transitionSubmissionStatuses")) {
+                    Long id = ((Integer) idObject).longValue();
+                    Optional<SubmissionStatus> submissionStatus = submissionStatusRepo.findById(id);
+                    if (submissionStatus.isPresent()) {
+                        list.add(submissionStatus.get());
+                    }
+                }
+
+                ss.setTransitionSubmissionStatuses(list);
+                submissionStatusRepo.save(ss);
             }
-
         } catch (IOException e) {
             throw new IllegalStateException("Unable to generate system organization", e);
         }
@@ -850,23 +882,20 @@ public class SystemDataLoader {
     }
 
     private void loadSubmissionListColumnsFilters() {
-
-        List<SubmissionListColumn> defaultFilterColumns = null;
         try {
-            defaultFilterColumns = objectMapper.readValue(getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
+            List<SubmissionListColumn> defaultFilterColumns = objectMapper.readValue(getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
+
+            for (SubmissionListColumn defaultFilterColumn : defaultFilterColumns) {
+                SubmissionListColumn dbDefaultFilterColumn = submissionListColumnRepo.findByTitle(defaultFilterColumn.getTitle());
+                if (dbDefaultFilterColumn != null) {
+                    defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
+                } else {
+                    logger.warn("Unable to find default filter for column " + defaultFilterColumn.getTitle() + "!");
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        for (SubmissionListColumn defaultFilterColumn : defaultFilterColumns) {
-            SubmissionListColumn dbDefaultFilterColumn = submissionListColumnRepo.findByTitle(defaultFilterColumn.getTitle());
-            if (dbDefaultFilterColumn != null) {
-                defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
-            } else {
-                logger.warn("Unable to find default filter for column " + defaultFilterColumn.getTitle() + "!");
-            }
-        }
-
     }
 
     private List<String> getAllSystemEmailTemplateNames() {
@@ -954,7 +983,7 @@ public class SystemDataLoader {
 
                 FieldPredicate dbFieldPredicate = fieldPredicateRepo.findByValue(fieldPredicate.getValue());
                 if (dbFieldPredicate == null) {
-                    dbFieldPredicate = fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(true));
+                    dbFieldPredicate = fieldPredicateRepo.create(fieldPredicate.getValue(), Boolean.valueOf(true));
                 } else {
                     dbFieldPredicate.setValue(fieldPredicate.getValue());
                     dbFieldPredicate.setDocumentTypePredicate(fieldPredicate.getDocumentTypePredicate());
@@ -1053,9 +1082,7 @@ public class SystemDataLoader {
                     while (cellIterator.hasNext()) {
 
                         Cell cell = cellIterator.next();
-
-                        if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-
+                        if (cell.getCellType() == CellType.STRING) {
                             String cellValue = cell.getStringCellValue();
                             if (code == null) {
                                 code = cellValue;

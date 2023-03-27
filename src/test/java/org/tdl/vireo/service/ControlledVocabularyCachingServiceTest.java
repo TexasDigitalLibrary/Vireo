@@ -1,25 +1,24 @@
 package org.tdl.vireo.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Date;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ContextConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.model.ControlledVocabularyCache;
 
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
 @SpringBootTest(classes = { Application.class })
+@ContextConfiguration
 public class ControlledVocabularyCachingServiceTest {
 
     @Value("${app.cvcache.duration}")
@@ -32,7 +31,7 @@ public class ControlledVocabularyCachingServiceTest {
     @Autowired
     private ControlledVocabularyCachingService controlledVocabularyCachingService;
 
-    @Before
+    @BeforeEach
     public void setup() {
         TEST_TIME_STAMP = new Date().getTime();
     }
@@ -80,7 +79,7 @@ public class ControlledVocabularyCachingServiceTest {
         assertEquals(true, controlledVocabularyCachingService.doesControlledVocabularyExist(TEST_CONTROLLED_VOCABULARY_NAME));
     }
 
-    @After
+    @AfterEach
     public void cleanup() {
         controlledVocabularyCachingService.clearCache();
     }

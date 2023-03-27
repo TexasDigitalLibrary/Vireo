@@ -1,61 +1,59 @@
 describe('directive: legendbox', function () {
-    var compile, defaults, httpBackend, rootScope, scope, templateCache, window;
+    var compile, directive, httpBackend, rootScope, scope, templateCache, window, MockedUser;
 
-    var initializeVariables = function(settings) {
-        inject(function ($compile, $httpBackend, $rootScope, $templateCache, $window) {
+    var initializeVariables = function () {
+        inject(function ($q, $compile, $httpBackend, $rootScope, $templateCache, $window) {
             compile = $compile;
             httpBackend = $httpBackend;
             rootScope = $rootScope;
             templateCache = $templateCache;
             window = $window;
+            MockedUser = new mockUser($q);
         });
     };
 
-    var initializeDirective = function(settings) {
-        inject(function (AbstractAppModel) {
+    var initializeDirective = function () {
+        inject(function () {
             scope = rootScope.$new();
 
-            defaults = {
+            var element = '<legendbox';
+            var directiveProperties = {
+
             };
 
-            httpBackend.whenGET('views/directives/legendBox.html').respond('<div></div>');
-        });
-    };
-
-    var createDirective = function(properties) {
-        var directive = '<legendbox';
-        var directiveProperties = defaults;
-
-        if (properties) {
-            angular.forEach(properties, function(value, key) {
-                directiveProperties[key] = value;
+            angular.forEach(directiveProperties, function(value, key) {
+                element += " " + key + "=\"" + value + "\"";
             });
-        }
 
-        angular.forEach(directiveProperties, function(value, key) {
-            directive += " " + key + "=\"" + value + "\"";
+            element += '></legendbox>';
+
+            httpBackend.whenGET('views/directives/legendBox.html').respond('<div></div>');
+
+            directive = compile(element)(scope);
+
+            scope.$digest();
         });
-
-        directive += '></legendbox>';
-
-        return angular.element(directive);
     };
 
     beforeEach(function() {
         module('core');
         module('vireo');
+        module("mock.user", function ($provide) {
+            var User = function () {
+                return MockedUser;
+            };
+            $provide.value("User", User);
+        });
+        module("mock.userService");
 
+        installPromiseMatchers();
         initializeVariables();
-        initializeDirective();
     });
 
     describe('Does the directive compile', function () {
         it('should be defined', function () {
-            var directive = createDirective();
-            var compiled = compile(directive)(scope);
-            scope.$digest();
-
-            expect(compiled).toBeDefined();
+            initializeDirective();
+            expect(directive).toBeDefined();
         });
     });
 });
