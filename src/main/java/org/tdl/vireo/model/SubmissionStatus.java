@@ -32,26 +32,32 @@ public class SubmissionStatus extends ValidatingBaseEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     @JsonProperty("isArchived")
     private Boolean isArchived;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     @JsonProperty("isPublishable")
     private Boolean isPublishable;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     @JsonProperty("isDeletable")
     private Boolean isDeletable;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     @JsonProperty("isEditableByReviewer")
     private Boolean isEditableByReviewer;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     @JsonProperty("isEditableByStudent")
     private Boolean isEditableByStudent;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     @JsonProperty("isActive")
     private Boolean isActive;

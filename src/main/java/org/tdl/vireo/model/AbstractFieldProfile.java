@@ -11,7 +11,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.response.Views;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
@@ -21,47 +24,61 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step_id", "field_predicate_id", "fp_type", "overrideable" }))
 public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private FieldPredicate fieldPredicate;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private InputType inputType;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean repeatable;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean optional;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean hidden;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean logged;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true, name = "`usage`", columnDefinition = "text") // "usage" is a keyword in sql
     private String usage;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true, columnDefinition = "text")
     private String help;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private String gloss;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
     private ControlledVocabulary controlledVocabulary;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
     private ManagedConfiguration mappedShibAttribute;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private Boolean flagged;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(columnDefinition = "text", nullable = true)
     private String defaultValue;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private Boolean enabled;
 

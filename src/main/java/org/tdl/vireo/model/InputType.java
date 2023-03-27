@@ -10,9 +10,11 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.MapKeyColumn;
 
+import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.InputTypeValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
@@ -20,15 +22,19 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class InputType extends ValidatingBaseEntity {
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(unique = true, nullable = false)
     private String name;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column
     private String validationPattern;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column
     private String validationMessage;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ElementCollection(fetch = EAGER)
     @MapKeyColumn(name = "property")
     @Column(name = "validation")
