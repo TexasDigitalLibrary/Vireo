@@ -473,6 +473,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
 
         submission.fileInfo = function (fieldValue) {
             angular.extend(this.getMapping().fileInfo, {
+                method: submission.id + '/file-info',
                 data: {
                     'uri': fieldValue.value
                 }

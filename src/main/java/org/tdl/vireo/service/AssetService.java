@@ -32,6 +32,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.utility.FileHelperUtility;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -92,18 +94,31 @@ public class AssetService {
         ImageIO.write(image, fileExtension, Files.newOutputStream(path));
     }
 
-    public JsonNode getAssetFileInfo(String relativePath) throws IOException {
+    public JsonNode getAssetFileInfo(String relativePath, Submission submission) throws IOException {
         Path path = Paths.get(FileHelperUtility.getAssetAbsolutePath(relativePath));
         BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
         Map<String, Object> fileInfo = new HashMap<String, Object>();
         String fileName = path.getFileName().toString();
+        String abbreviatedFilename = fileName.substring(fileName.indexOf('-') + 1);
         String readableFileSize = FileUtils.byteCountToDisplaySize(attr.size());
-        fileInfo.put("name", fileName.substring(fileName.indexOf('-') + 1));
+        fileInfo.put("name", abbreviatedFilename);
         fileInfo.put("type", fileHelperUtility.getMimeTypeOfAsset(relativePath));
         fileInfo.put("time", attr.creationTime().toMillis());
         fileInfo.put("size", attr.size());
         fileInfo.put("readableSize", readableFileSize);
         fileInfo.put("uploaded", true);
+
+        List<ActionLog> actionLogs = new ArrayList<>(submission.getActionLogs());
+
+        Collections.sort(actionLogs, (o1, o2) -> o2.getActionDate().compareTo(o1.getActionDate()));
+
+        for (ActionLog actionLog : submission.getActionLogs()) {
+            if (actionLog.getEntry().contains(abbreviatedFilename)) {
+                fileInfo.put("uploader", actionLog.getUser().getName());
+                break;
+            }
+        }
+
         return objectMapper.valueToTree(fileInfo);
     }
 

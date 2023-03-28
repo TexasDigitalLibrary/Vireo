@@ -74,7 +74,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="documentFieldValue in submission.fieldValues | documentFieldValuePerProfile | orderBy: '-fileInfo.time'" ng-if="documentFieldValue.id">
-          <td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
+          <td>{{documentFieldValue.fileInfo.uploader ? documentFieldValue.fileInfo.uploader : submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
           <td>
             <a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a>
           </td>
