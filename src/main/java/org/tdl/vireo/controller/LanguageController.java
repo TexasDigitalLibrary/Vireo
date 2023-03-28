@@ -40,7 +40,7 @@ public class LanguageController {
     private ProquestCodesService proquestCodesService;
 
     /**
-     * @return
+     * @return The api response.
      */
     @RequestMapping("/all")
     @PreAuthorize("hasRole('MANAGER')")
@@ -49,7 +49,7 @@ public class LanguageController {
     }
 
     /**
-     * @return
+     * @return The api response.
      */
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/create", method = POST)
@@ -60,7 +60,7 @@ public class LanguageController {
     }
 
     /**
-     * @return
+     * @return The api response.
      */
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/update", method = POST)
@@ -71,7 +71,7 @@ public class LanguageController {
     }
 
     /**
-     * @return
+     * @return The api response.
      */
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/remove", method = POST)
@@ -117,7 +117,7 @@ public class LanguageController {
     }
 
     /**
-     * @return
+     * @return The api response.
      */
     @RequestMapping("/proquest")
     @PreAuthorize("hasRole('MANAGER')")

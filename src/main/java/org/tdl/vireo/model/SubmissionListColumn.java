@@ -103,8 +103,7 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     }
 
     /**
-     * @param title
-     *            the title to set
+     * @param title the title to set
      */
     public void setTitle(String title) {
         this.title = title;
@@ -118,8 +117,7 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     }
 
     /**
-     * @param predicate
-     *            the predicate to set
+     * @param predicate the predicate to set
      */
     public void setPredicate(String predicate) {
         this.predicate = predicate;
@@ -133,8 +131,7 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     }
 
     /**
-     * @param valuePath
-     *            the valuePath to set
+     * @param valuePath the valuePath to set
      */
     public void setValuePath(List<String> valuePath) {
         this.valuePath = valuePath;
@@ -148,15 +145,13 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     }
 
     /**
-     * @param filters
-     *            the filters to set
+     * @param filters the filters to set
      */
     public void setFilters(Set<String> filters) {
         this.filters = filters;
     }
 
     /**
-     *
      * @param filter
      */
     public void addFilter(String filter) {
@@ -166,7 +161,6 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param filters
      */
     public void addAllFilters(Set<String> filters) {
@@ -174,7 +168,6 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     }
 
     /**
-     *
      * @param filter
      */
     public void removeFilter(String filter) {
@@ -189,8 +182,7 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     }
 
     /**
-     * @param inputType
-     *            the inputType to set
+     * @param inputType the inputType to set
      */
     public void setInputType(InputType inputType) {
         this.inputType = inputType;
@@ -204,11 +196,38 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     }
 
     /**
-     * @param sortOrder
-     *            the sortOrder to set
+     * @param sortOrder the sortOrder to set
      */
     public void setSortOrder(Integer sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    /**
+     * @return the visible
+     */
+    public Boolean getVisible() {
+        return visible;
+    }
+
+    /**
+     * @param visible the visible to set
+     */
+    public void setVisible(Boolean visible) {
+        this.visible = visible;
+    }
+
+    /**
+     * @return the exactMatch
+     */
+    public Boolean getExactMatch() {
+        return exactMatch;
+    }
+
+    /**
+     * @param exactMatch the exactMatch to set
+     */
+    public void setExactMatch(Boolean exactMatch) {
+        this.exactMatch = exactMatch;
     }
 
     /**
@@ -219,43 +238,10 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     }
 
     /**
-     * @param sort
-     *            the sort to set
+     * @param sort the sort to set
      */
     public void setSort(Sort sort) {
         this.sort = sort;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Boolean getVisible() {
-        return visible;
-    }
-
-    /**
-     *
-     * @param visible
-     */
-    public void setVisible(Boolean visible) {
-        this.visible = visible;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public Boolean getExactMatch() {
-        return exactMatch;
-    }
-
-    /**
-     *
-     * @param exactMatch
-     */
-    public void setExactMatch(Boolean exactMatch) {
-        this.exactMatch = exactMatch;
     }
 
     /**
@@ -266,8 +252,7 @@ public class SubmissionListColumn extends ValidatingBaseEntity {
     }
 
     /**
-     * @param status
-     *            the status to set
+     * @param status the status to set
      */
     public void setStatus(String status) {
         this.status = status;

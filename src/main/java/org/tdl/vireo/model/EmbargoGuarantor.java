@@ -23,7 +23,8 @@ public enum EmbargoGuarantor {
      * Takes a string, makes it uppercase and sees if we have a matching enum value for it.
      *
      * @param from
-     * @return
+     *
+     * @return The object derived from the string.
      */
     public static EmbargoGuarantor fromString(String from) {
         if (from != null) {

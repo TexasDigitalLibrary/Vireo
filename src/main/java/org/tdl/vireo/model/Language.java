@@ -21,6 +21,7 @@ public class Language extends ValidatingOrderedBaseEntity implements EntityContr
     }
 
     /**
+     * Initializer.
      *
      * @param name
      */
@@ -29,16 +30,14 @@ public class Language extends ValidatingOrderedBaseEntity implements EntityContr
     }
 
     /**
-     *
-     * @return
+     * @return the name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;

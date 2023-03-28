@@ -90,6 +90,9 @@ public class Organization extends ValidatingBaseEntity {
     @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, fetch = EAGER)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
+    /**
+     * Initializer.
+     */
     public Organization() {
         setModelValidator(new OrganizationValidator());
         setOriginalWorkflowSteps(new ArrayList<WorkflowStep>());
@@ -101,6 +104,7 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Initializer.
      *
      * @param name
      */
@@ -111,6 +115,7 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Initializer.
      *
      * @param name
      * @param category
@@ -120,6 +125,9 @@ public class Organization extends ValidatingBaseEntity {
         setCategory(category);
     }
 
+    /**
+     * @return True.
+     */
     public boolean isComplete() {
         return true;
     }
@@ -132,24 +140,21 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
-     * @return
+     * @return the category
      */
     public OrganizationCategory getCategory() {
         return category;
     }
 
     /**
-     *
-     * @param catagory
+     * @param category the category to set
      */
     public void setCategory(OrganizationCategory category) {
         this.category = category;
@@ -206,10 +211,12 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Replace the workflow step.
      *
-     * @param ws1
-     * @param ws2
-     * @return
+     * @param ws1 The workflow step to replace.
+     * @param ws2 The workflow step to replace with.
+     *
+     * @return True on replaced and false otherwise.
      */
     public boolean replaceOriginalWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {
         boolean res = false;
@@ -262,7 +269,6 @@ public class Organization extends ValidatingBaseEntity {
         getChildrenOrganizations().forEach(childOrganization -> {
             childOrganization.addAggregateWorkflowStep(aggregateWorkflowStep);
         });
-
     }
 
     /**
@@ -277,10 +283,12 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Replace the workflow step.
      *
-     * @param ws1
-     * @param ws2
-     * @return
+     * @param ws1 The workflow step to replace.
+     * @param ws2 The workflow step to replace with.
+     *
+     * @return True on replaced and false otherwise.
      */
     public boolean replaceAggregateWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {
         boolean res = false;
@@ -302,10 +310,12 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Swap the workflow step.
      *
-     * @param ws1
-     * @param ws2
-     * @return
+     * @param ws1 The workflow step to swap.
+     * @param ws2 The workflow step to swap with.
+     *
+     * @return True on swapped and false otherwise.
      */
     public boolean swapAggregateWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {
         boolean res = false;
@@ -329,8 +339,7 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
-     * @param parentOrganizations
-     *            the parentOrganizations to set
+     * @param parentOrganization the parentOrganizations to set.
      */
     public void setParentOrganization(Organization parentOrganization) {
         this.parentOrganization = parentOrganization;
@@ -425,8 +434,9 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Remove the workflow rule.
      *
-     * @param emailWorkflowRules
+     * @param emailWorkflowRule The workflow rule to remove.
      */
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
         getEmailWorkflowRules().remove(emailWorkflowRule);

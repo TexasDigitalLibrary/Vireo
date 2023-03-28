@@ -5,7 +5,7 @@ var appConfig = {
     'allowAnonymous': true,
     'anonymousRole': 'ROLE_ANONYMOUS',
 
-    'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/mock/auth',
+    'authService': ${AUTH_SERVICE_URL},
     'webService': window.location.protocol + '//' + window.location.host + window.location.base,
 
     'storageType': 'session',

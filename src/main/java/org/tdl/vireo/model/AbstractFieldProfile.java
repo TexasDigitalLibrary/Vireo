@@ -11,7 +11,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.response.Views;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
@@ -21,47 +24,61 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step_id", "field_predicate_id", "fp_type", "overrideable" }))
 public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private FieldPredicate fieldPredicate;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private InputType inputType;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean repeatable;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean optional;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean hidden;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean logged;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true, name = "`usage`", columnDefinition = "text") // "usage" is a keyword in sql
     private String usage;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true, columnDefinition = "text")
     private String help;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private String gloss;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
     private ControlledVocabulary controlledVocabulary;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @ManyToOne(cascade = { REFRESH }, fetch = EAGER)
     private ManagedConfiguration mappedShibAttribute;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private Boolean flagged;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(columnDefinition = "text", nullable = true)
     private String defaultValue;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private Boolean enabled;
 
@@ -73,8 +90,7 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param fieldPredicate
-     *            the fieldPredicate to set
+     * @param fieldPredicate the fieldPredicate to set
      */
     public void setFieldPredicate(FieldPredicate fieldPredicate) {
         this.fieldPredicate = fieldPredicate;
@@ -88,8 +104,7 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param inputType
-     *            the inputType to set
+     * @param inputType the inputType to set
      */
     public void setInputType(InputType inputType) {
         this.inputType = inputType;
@@ -103,103 +118,122 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param repeatable
-     *            the repeatable to set
+     * @param repeatable the repeatable to set
      */
     public void setRepeatable(Boolean repeatable) {
         this.repeatable = repeatable;
     }
 
     /**
-     * @return
+     * @return the optional
      */
     public Boolean getOptional() {
         return optional;
     }
 
     /**
-     * @param optional
+     * @param optional the optional to set
      */
     public void setOptional(Boolean optional) {
         this.optional = optional;
     }
 
     /**
-     * @return
+     * @return the hidden
      */
     public Boolean getHidden() {
         return hidden;
     }
 
     /**
-     * @param hidden
+     * @param hidden the hidden to set
      */
     public void setHidden(Boolean hidden) {
         this.hidden = hidden;
     }
 
     /**
-     * @return
+     * @return the logged
      */
     public Boolean getLogged() {
         return logged;
     }
 
     /**
-     * @param logged
+     * @param logged the logged to set
      */
     public void setLogged(Boolean logged) {
         this.logged = logged;
     }
 
     /**
-     * @return
+     * @return the usage
      */
     public String getUsage() {
         return usage;
     }
 
     /**
-     * @param usage
+     * @param usage the usage to set
      */
     public void setUsage(String usage) {
         this.usage = usage;
     }
 
     /**
-     * @return
+     * @return the help
      */
     public String getHelp() {
         return help;
     }
 
     /**
-     * @param help
+     * @param help the help to set
      */
     public void setHelp(String help) {
         this.help = help;
     }
 
     /**
-     * @return
+     * @return the gloss
      */
     public String getGloss() {
         return gloss;
     }
 
     /**
-     * @param gloss
+     * @param gloss the gloss to set
      */
     public void setGloss(String gloss) {
         this.gloss = gloss;
     }
 
+    /**
+     * @return the controlledVocabulary
+     */
     public ControlledVocabulary getControlledVocabulary() {
         return controlledVocabulary;
     }
 
+    /**
+     * @param controlledVocabulary the controlledVocabulary to set
+     */
     public void setControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         this.controlledVocabulary = controlledVocabulary;
+    }
+
+    /**
+     * @return the mappedShibAttribute
+     */
+    public ManagedConfiguration getMappedShibAttribute() {
+        return mappedShibAttribute;
+    }
+
+    /**
+     * @param mappedShibAttribute the mappedShibAttribute to set
+     */
+    public void setMappedShibAttribute(ManagedConfiguration mappedShibAttribute) {
+        this.mappedShibAttribute = mappedShibAttribute;
     }
 
     /**
@@ -210,22 +244,21 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param flagged
-     *            the flagged to set
+     * @param flagged the flagged to set
      */
     public void setFlagged(Boolean flagged) {
         this.flagged = flagged;
     }
 
     /**
-     * @return
+     * @return the defaultValue
      */
     public String getDefaultValue() {
         return defaultValue;
     }
 
     /**
-     * @param defaultValue
+     * @param defaultValue the defaultValue to set
      */
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
@@ -239,26 +272,10 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param enabled
-     *            the enabled to set
+     * @param enabled the enabled to set
      */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    /**
-     * @return the mappedShibAttribute
-     */
-    public ManagedConfiguration getMappedShibAttribute() {
-        return mappedShibAttribute;
-    }
-
-    /**
-     * @param mappedShibAttribute
-     *            the mappedShibAttribute to set
-     */
-    public void setMappedShibAttribute(ManagedConfiguration mappedShibAttribute) {
-        this.mappedShibAttribute = mappedShibAttribute;
     }
 
 }

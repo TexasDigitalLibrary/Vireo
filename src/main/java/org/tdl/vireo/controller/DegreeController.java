@@ -96,8 +96,9 @@ public class DegreeController {
     }
 
     /**
+     * Get the proquest language codes.
      *
-     * @return
+     * @return The response.
      */
     @RequestMapping("/proquest")
     @PreAuthorize("hasRole('MANAGER')")

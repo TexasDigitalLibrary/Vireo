@@ -19,6 +19,10 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
@@ -42,9 +46,108 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(
     indexes = {
         @Index(columnList = "submitter_id", name = "submission_submitter_id_idx"),
-        @Index(columnList = "submitter_id, organization_id", name = "submission_organization_idx")
+        @Index(columnList = "submitter_id, organization_id", name = "submission_organization_idx"),
     }
 )
+@NamedEntityGraphs({
+    @NamedEntityGraph(
+        name = "graph.Submission.List",
+        attributeNodes = {
+            @NamedAttributeNode(value = "assignee", subgraph = "subgraph.user"),
+            @NamedAttributeNode(value = "submissionStatus", subgraph = "subgraph.submissionStatus"),
+            @NamedAttributeNode(value = "organization", subgraph = "subgraph.organization"),
+            // @NamedAttributeNode(value = "fieldValues", subgraph = "subgraph.fieldValues"),
+            // @NamedAttributeNode(value = "customActionValues", subgraph = "subgraph.customActionValues"),
+        },
+        subgraphs = {
+            @NamedSubgraph(
+                name = "subgraph.user",
+                attributeNodes = {}
+            ),
+            @NamedSubgraph(
+                name = "subgraph.submissionStatus",
+                attributeNodes = {}
+            ),
+            @NamedSubgraph(
+                name = "subgraph.organization",
+                attributeNodes = {
+                    @NamedAttributeNode(value = "category"),
+                }
+            ),
+            // @NamedSubgraph(
+            //     name = "subgraph.fieldValues",
+            //     attributeNodes = {
+            //         @NamedAttributeNode(value = "fieldPredicate", subgraph = "subgraph.fieldPredicate"),
+            //     }
+            // ),
+            // @NamedSubgraph(
+            //     name = "subgraph.fieldPredicate",
+            //     attributeNodes = {}
+            // ),
+            // @NamedSubgraph(
+            //     name = "subgraph.customActionValues",
+            //     attributeNodes = {
+            //         @NamedAttributeNode(value = "definition"),
+            //     }
+            // ),
+        }
+    ),
+    @NamedEntityGraph(
+        name = "graph.Submission.Individual",
+        attributeNodes = {
+            @NamedAttributeNode(value = "submitter", subgraph = "subgraph.user"),
+            @NamedAttributeNode(value = "assignee", subgraph = "subgraph.user"),
+            @NamedAttributeNode(value = "submissionStatus", subgraph = "subgraph.submissionStatus"),
+            @NamedAttributeNode(value = "organization", subgraph = "subgraph.organization"),
+            // @NamedAttributeNode(value = "fieldValues", subgraph = "subgraph.fieldValues"),
+            // @NamedAttributeNode(value = "submissionWorkflowSteps", subgraph = "subgraph.submissionWorkflowSteps"),
+            // @NamedAttributeNode(value = "customActionValues", subgraph = "subgraph.customActionValues"),
+        },
+        subgraphs = {
+            @NamedSubgraph(
+                name = "subgraph.user",
+                attributeNodes = {
+                    @NamedAttributeNode(value = "currentContactInfo"),
+                    @NamedAttributeNode(value = "permanentContactInfo"),
+                }
+            ),
+            @NamedSubgraph(
+                name = "subgraph.submissionStatus",
+                attributeNodes = {}
+            ),
+            @NamedSubgraph(
+                name = "subgraph.organization",
+                attributeNodes = {
+                    @NamedAttributeNode(value = "category"),
+                }
+            ),
+            // @NamedSubgraph(
+            //     name = "subgraph.fieldValues",
+            //     attributeNodes = {
+            //         @NamedAttributeNode(value = "contacts"),
+            //         @NamedAttributeNode(value = "fieldPredicate", subgraph = "subgraph.fieldPredicate"),
+            //     }
+            // ),
+            // @NamedSubgraph(
+            //     name = "subgraph.fieldPredicate",
+            //     attributeNodes = {}
+            // ),
+            // @NamedSubgraph(
+            //     name = "subgraph.submissionWorkflowSteps",
+            //     attributeNodes = {
+            //         @NamedAttributeNode(value = "aggregateFieldProfiles"),
+            //         @NamedAttributeNode(value = "aggregateNotes"),
+            //     }
+            // ),
+            // @NamedSubgraph(
+            //     name = "subgraph.customActionValues",
+            //     attributeNodes = {
+            //         @NamedAttributeNode(value = "definition"),
+            //     }
+            // ),
+        }
+    )
+})
 public class Submission extends ValidatingBaseEntity {
 
     @JsonView(Views.Partial.class)
@@ -111,6 +214,7 @@ public class Submission extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private Set<CustomActionValue> customActionValues;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     @JoinColumn
@@ -120,12 +224,15 @@ public class Submission extends ValidatingBaseEntity {
     @Column(columnDefinition = "TEXT")
     private String reviewerNotes;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private String advisorAccessHash;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private String advisorReviewURL;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private String depositURL;
 
@@ -141,7 +248,7 @@ public class Submission extends ValidatingBaseEntity {
 
     /**
      * @param submitter
-     * @param submissionStatus
+     * @param organization
      */
     public Submission(User submitter, Organization organization) {
         this();
@@ -152,6 +259,7 @@ public class Submission extends ValidatingBaseEntity {
 
     /**
      * @param submitter
+     * @param organization
      * @param submissionStatus
      */
     public Submission(User submitter, Organization organization, SubmissionStatus submissionStatus) {
@@ -167,22 +275,21 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @param submitter
+     * @param submitter the submitter to set
      */
     public void setSubmitter(User submitter) {
         this.submitter = submitter;
     }
 
     /**
-     * @return
+     * @return the assignee
      */
     public User getAssignee() {
         return assignee;
     }
 
     /**
-     * @param assignee
-     *            the assignee to set
+     * @param assignee the assignee to set
      */
     public void setAssignee(User assignee) {
         this.assignee = assignee;
@@ -196,8 +303,7 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @param submissionStatus
-     *            the submissionStatus to set
+     * @param submissionStatus the submissionStatus to set
      */
     public void setSubmissionStatus(SubmissionStatus submissionStatus) {
         this.submissionStatus = submissionStatus;
@@ -211,26 +317,24 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @param organization
-     *            the organization to set
+     * @param organization the organization to set
      */
     public void setOrganization(Organization organization) {
         this.organization = organization;
     }
 
     /**
-     * @return the fieldvalues
+     * @return the fieldValues
      */
     public Set<FieldValue> getFieldValues() {
         return fieldValues;
     }
 
     /**
-     * @param fieldvalues
-     *            the fieldvalues to set
+     * @param fieldValues the fieldValues to set
      */
-    public void setFieldValues(Set<FieldValue> fieldvalues) {
-        this.fieldValues = fieldvalues;
+    public void setFieldValues(Set<FieldValue> fieldValues) {
+        this.fieldValues = fieldValues;
     }
 
     /**
@@ -255,25 +359,52 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @param list
-     *            the submissionWorkflowSteps to set
+     * @param submissionWorkflowSteps the submissionWorkflowSteps to set
      */
-    public void setSubmissionWorkflowSteps(List<SubmissionWorkflowStep> list) {
-        this.submissionWorkflowSteps = list;
+    public void setSubmissionWorkflowSteps(List<SubmissionWorkflowStep> submissionWorkflowSteps) {
+        this.submissionWorkflowSteps = submissionWorkflowSteps;
     }
 
     /**
-     * @param submissionWorkflowStep
+     * @param submissionWorkflowStep the submissionWorkflowStep to add.
      */
     public void addSubmissionWorkflowStep(SubmissionWorkflowStep submissionWorkflowStep) {
         getSubmissionWorkflowSteps().add(submissionWorkflowStep);
     }
 
     /**
-     * @param submissionWorkflowStep
+     * @param submissionWorkflowStep the submissionWorkflowStep to remove.
      */
     public void removeSubmissionWorkflowStep(SubmissionWorkflowStep submissionWorkflowStep) {
         getSubmissionWorkflowSteps().remove(submissionWorkflowStep);
+    }
+
+    /**
+     * @return the approveEmbargoDate
+     */
+    public Calendar getApproveEmbargoDate() {
+        return approveEmbargoDate;
+    }
+
+    /**
+     * @param approveEmbargoDate the approveEmbargoDate to set
+     */
+    public void setApproveEmbargoDate(Calendar approveEmbargoDate) {
+        this.approveEmbargoDate = approveEmbargoDate;
+    }
+
+    /**
+     * @return the approveApplicationDate
+     */
+    public Calendar getApproveApplicationDate() {
+        return approveApplicationDate;
+    }
+
+    /**
+     * @param approveApplicationDate the approveApplicationDate to set
+     */
+    public void setApproveApplicationDate(Calendar approveApplicationDate) {
+        this.approveApplicationDate = approveApplicationDate;
     }
 
     /**
@@ -284,71 +415,42 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @param submissionDate
-     *            the submissionDate to set
+     * @param submissionDate the submissionDate to set
      */
     public void setSubmissionDate(Calendar submissionDate) {
         this.submissionDate = submissionDate;
     }
 
     /**
-     * @param approveEmbargoDate
-     */
-    public void setApproveEmbargoDate(Calendar approveEmbargoDate) {
-        this.approveEmbargoDate = approveEmbargoDate;
-    }
-
-    /**
-     * @return
-     */
-    public Calendar getApproveEmbargoDate() {
-        return approveEmbargoDate;
-    }
-
-    /**
-     * @return
-     */
-    public Calendar getApproveApplicationDate() {
-        return approveApplicationDate;
-    }
-
-    /**
-     * @param approveApplicationDate
-     */
-    public void setApproveApplicationDate(Calendar approveApplicationDate) {
-        this.approveApplicationDate = approveApplicationDate;
-    }
-
-    /**
-     * @return
+     * @return the approveAdvisorDate
      */
     public Calendar getApproveAdvisorDate() {
         return approveAdvisorDate;
     }
 
     /**
-     * @param approvalDate
+     * @param approveAdvisorDate the approveAdvisorDate to set
      */
-    public void setApproveAdvisorDate(Calendar approvalDate) {
-        this.approveAdvisorDate = approvalDate;
+    public void setApproveAdvisorDate(Calendar approveAdvisorDate) {
+        this.approveAdvisorDate = approveAdvisorDate;
     }
 
     /**
-     * @return
+     * @return the approveEmbargo
      */
     public boolean getApproveEmbargo() {
         return approveEmbargo;
     }
 
     /**
-     * @param approveEmbargo
+     * @param approveEmbargo the approveEmbargo to set
      */
     public void setApproveEmbargo(boolean approveEmbargo) {
         this.approveEmbargo = approveEmbargo;
     }
 
     /**
-     * 
+     * Clear the embargo and the embargo date.
      */
     public void clearApproveEmbargo() {
         this.approveEmbargoDate = null;
@@ -356,21 +458,21 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @return
+     * @return the approveApplication
      */
-    public boolean getApproveApplication() {
+    public boolean isApproveApplication() {
         return approveApplication;
     }
 
     /**
-     * @param approveApplication
+     * @param approveApplication the approveApplication to set
      */
     public void setApproveApplication(boolean approveApplication) {
         this.approveApplication = approveApplication;
     }
 
     /**
-     * 
+     * Clear the approve application and the approve application date.
      */
     public void clearApproveApplication() {
         this.approveApplicationDate = null;
@@ -378,21 +480,21 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @return
+     * @return the approveAdvisor
      */
     public boolean getApproveAdvisor() {
         return approveAdvisor;
     }
 
     /**
-     * @param approveApplication
+     * @param approveAdvisor the approveAdvisor to set
      */
     public void setApproveAdvisor(boolean approveAdvisor) {
         this.approveAdvisor = approveAdvisor;
     }
 
     /**
-     * 
+     * Clear the approve advisor and the approve advisor date.
      */
     public void clearApproveAdvisor() {
         this.approveAdvisorDate = null;
@@ -400,15 +502,14 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @return the actionLog
+     * @return the actionLogs
      */
     public Set<ActionLog> getActionLogs() {
         return actionLogs;
     }
 
     /**
-     * @param actionLog
-     *            the actionLog to set
+     * @param actionLogs the actionLogs to set
      */
     public void setActionLogs(Set<ActionLog> actionLogs) {
         this.actionLogs = actionLogs;
@@ -446,7 +547,7 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @return
+     * @return The reviewer notes.
      */
     public String getReviewerNotes() {
         return reviewerNotes;
@@ -460,28 +561,28 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * 
+     * Generate the advisor access hash.
      */
     private void generateAdvisorAccessHash() {
         setAdvisorAccessHash(UUID.randomUUID().toString().replace("-", ""));
     }
 
     /**
-     * @param string
-     */
-    public void setAdvisorAccessHash(String string) {
-        advisorAccessHash = string;
-    }
-
-    /**
-     * @return
+     * @return the advisorAccessHash
      */
     public String getAdvisorAccessHash() {
         return advisorAccessHash;
     }
 
     /**
-     * @return
+     * @param advisorAccessHash the advisorAccessHash to set
+     */
+    public void setAdvisorAccessHash(String advisorAccessHash) {
+        this.advisorAccessHash = advisorAccessHash;
+    }
+
+    /**
+     * @return The committee contact e-mail.
      */
     @JsonView(Views.SubmissionList.class)
     public String getCommitteeContactEmail() {
@@ -502,20 +603,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @return
-     */
-    public String getDepositURL() {
-        return depositURL;
-    }
-
-    /**
-     * @param depositURL
-     */
-    public void setDepositURL(String depositURL) {
-        this.depositURL = depositURL;
-    }
-
-    /**
      * @return the customActionValues
      */
     public Set<CustomActionValue> getCustomActionValues() {
@@ -523,11 +610,24 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     * @param customActionValues
-     *            the customActionValues to set
+     * @param customActionValues the customActionValues to set
      */
     public void setCustomActionValues(Set<CustomActionValue> customActionValues) {
         this.customActionValues = customActionValues;
+    }
+
+    /**
+     * @return the depositURL
+     */
+    public String getDepositURL() {
+        return depositURL;
+    }
+
+    /**
+     * @param depositURL the depositURL to set
+     */
+    public void setDepositURL(String depositURL) {
+        this.depositURL = depositURL;
     }
 
     /**
@@ -546,7 +646,7 @@ public class Submission extends ValidatingBaseEntity {
 
     /**
      * @param customActionValue
-     * @return
+     * @return The edited custom action value.
      */
     public CustomActionValue editCustomActionValue(CustomActionValue customActionValue) {
         for (CustomActionValue cav : this.customActionValues) {
@@ -562,7 +662,7 @@ public class Submission extends ValidatingBaseEntity {
 
     /**
      * @param customActionValue
-     * @return
+     * @return The custom action value.
      */
     public CustomActionValue getCustomActionValue(CustomActionValue customActionValue) {
         for (CustomActionValue cav : this.customActionValues) {

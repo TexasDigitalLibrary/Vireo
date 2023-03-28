@@ -7,6 +7,10 @@ import javax.persistence.Inheritance;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.response.Views;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
@@ -15,9 +19,11 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step_id", "name", "n_type", "overrideable" }))
 public abstract class AbstractNote<N> extends ValidatingBaseEntity {
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private String name;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false, columnDefinition = "text")
     private String text;
 

@@ -4,16 +4,6 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.INVALID;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.tamu.weaver.auth.annotation.WeaverCredentials;
-import edu.tamu.weaver.auth.annotation.WeaverUser;
-import edu.tamu.weaver.auth.model.Credentials;
-import edu.tamu.weaver.data.model.ApiPage;
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.validation.results.ValidationResults;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -33,8 +23,10 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -96,6 +88,18 @@ import org.tdl.vireo.service.SubmissionEmailService;
 import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.tamu.weaver.auth.annotation.WeaverCredentials;
+import edu.tamu.weaver.auth.annotation.WeaverUser;
+import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.data.model.ApiPage;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.results.ValidationResults;
 
 @RestController
 @RequestMapping("/submission")
@@ -184,6 +188,7 @@ public class SubmissionController {
     return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitterId(user.getId()));
   }
 
+  @JsonView(Views.SubmissionIndividual.class)
   @RequestMapping("/get-one/{submissionId}")
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
@@ -199,6 +204,7 @@ public class SubmissionController {
     return new ApiResponse(SUCCESS, submission);
   }
 
+  @JsonView(Views.SubmissionIndividual.class)
   @RequestMapping("/advisor-review/{submissionHash}")
   public ApiResponse getOne(@PathVariable String submissionHash) {
     Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
