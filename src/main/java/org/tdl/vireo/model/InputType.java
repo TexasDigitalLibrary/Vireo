@@ -63,33 +63,54 @@ public class InputType extends ValidatingBaseEntity {
     }
 
     /**
-     * @param text
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * @return the validationPattern
+     */
     public String getValidationPattern() {
         return validationPattern;
     }
 
-    public void setValidationPattern(String pattern) {
-        validationPattern = pattern;
+    /**
+     * @param validationPattern the validationPattern to set
+     */
+    public void setValidationPattern(String validationPattern) {
+        this.validationPattern = validationPattern;
     }
 
+    /**
+     * @return the validationMessage
+     */
     public String getValidationMessage() {
         return validationMessage;
     }
 
-    public void setValidationMessage(String message) {
-        validationMessage = message;
+    /**
+     * @param validationMessage the validationMessage to set
+     */
+    public void setValidationMessage(String validationMessage) {
+        this.validationMessage = validationMessage;
     }
 
+    /**
+     * Get the validation.
+     *
+     * @return A map of the validations.
+     */
     public Map<String, Validation> getValidation() {
         return validation;
     }
 
+    /**
+     * Set the validations map.
+     *
+     * @param validation The map to replace the current validations with.
+     */
     public void setValidation(Map<String, Validation> validation) {
         this.validation = validation;
     }

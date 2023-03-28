@@ -49,8 +49,9 @@ public class FieldValue extends ValidatingBaseEntity {
     }
 
     /**
+     * Initializer.
      *
-     * @param predicate
+     * @param fieldPredicate The fieldPredicate to set.
      */
     public FieldValue(FieldPredicate fieldPredicate) {
         this();
@@ -58,8 +59,10 @@ public class FieldValue extends ValidatingBaseEntity {
     }
 
     /**
+     * Initializer.
      *
-     * @param predicate
+     * @param fieldPredicate The fieldPredicate to set.
+     * @param contacts The array of contacts to set.
      */
     public FieldValue(FieldPredicate fieldPredicate, List<String> contacts) {
         this(fieldPredicate);
@@ -74,48 +77,49 @@ public class FieldValue extends ValidatingBaseEntity {
     }
 
     /**
-     * @param value
-     *            the value to set
+     * @param value the value to set
      */
     public void setValue(String value) {
         this.value = value;
     }
 
     /**
-     * 
-     * @return
+     * @return the identifier
      */
     public String getIdentifier() {
         return identifier;
     }
 
     /**
-     * 
-     * @param identifier
+     * @param identifier the identifier to set
      */
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
+    /**
+     * @return the definition
+     */
     public String getDefinition() {
         return definition;
     }
 
+    /**
+     * @param definition the definition to set
+     */
     public void setDefinition(String definition) {
         this.definition = definition;
     }
 
     /**
-     * 
-     * @return
+     * @return the contacts
      */
     public List<String> getContacts() {
         return contacts;
     }
 
     /**
-     * 
-     * @param contacts
+     * @param contacts the contacts to set
      */
     public void setContacts(List<String> contacts) {
         this.contacts = new ArrayList<String>();
@@ -127,15 +131,14 @@ public class FieldValue extends ValidatingBaseEntity {
     }
 
     /**
-     * @return the predicate
+     * @return the fieldPredicate
      */
     public FieldPredicate getFieldPredicate() {
         return fieldPredicate;
     }
 
     /**
-     * @param predicate
-     *            the predicate to set
+     * @param fieldPredicate the fieldPredicate to set
      */
     public void setFieldPredicate(FieldPredicate fieldPredicate) {
         this.fieldPredicate = fieldPredicate;

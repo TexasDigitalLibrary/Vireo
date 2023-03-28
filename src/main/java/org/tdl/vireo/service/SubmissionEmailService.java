@@ -75,7 +75,6 @@ public class SubmissionEmailService {
      * Manually send the e-mails to the advisors for a given Submission.
      *
      * @param user Associated User.
-     * @param submission Associated Submission.
      */
     public void sendAdvisorEmails(User user, Long submissionId) {
         Submission submission = submissionRepo.findById(submissionId).get();
@@ -131,7 +130,7 @@ public class SubmissionEmailService {
      * Send an e-mail associated with the given user and submission.
      *
      * @param user Associated User.
-     * @param submission Associated Submission.
+     * @param submissionId ID of the associated Submission.
      * @param data Mapping of data.
      *
      * @throws JsonProcessingException

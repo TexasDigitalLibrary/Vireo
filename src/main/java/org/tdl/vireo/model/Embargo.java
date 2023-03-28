@@ -164,7 +164,8 @@ public class Embargo extends ValidatingOrderedBaseEntity implements EntityContro
      * Assumes that the incoming Object embargo is @Valid
      *
      * @param obj
-     * @return
+     *
+     * @return True if equals and false otherwise.
      */
     @Override
     public boolean equals(Object obj) {

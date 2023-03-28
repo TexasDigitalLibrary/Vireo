@@ -42,7 +42,8 @@ public class ControlledVocabularyCachingService {
     /**
      *
      * @param controlledVocabularyName
-     * @return
+     *
+     * @return The ControlledVocabularyCache.
      */
     public ControlledVocabularyCache getControlledVocabularyCache(String controlledVocabularyName) {
         return cvCacheMap.get(controlledVocabularyName);
@@ -51,21 +52,22 @@ public class ControlledVocabularyCachingService {
     /**
      *
      * @param controlledVocabularyName
-     * @return
+     *
+     * @return True if exists and false otherwise.
      */
     public boolean doesControlledVocabularyExist(String controlledVocabularyName) {
         return cvCacheMap.get(controlledVocabularyName) != null;
     }
 
     /**
-     *
+     * Clear the cache.
      */
     public void clearCache() {
         cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
     }
 
     /**
-     *
+     * Clear the cache at a scheduled interval.
      */
     @Scheduled(fixedDelay = 1800000)
     public void cleanCache() {

@@ -29,7 +29,6 @@ public class OrganizationCategory extends ValidatingBaseEntity {
     /**
      *
      * @param name
-     * @param level
      */
     public OrganizationCategory(String name) {
         this();
@@ -37,16 +36,14 @@ public class OrganizationCategory extends ValidatingBaseEntity {
     }
 
     /**
-     *
-     * @return String name
+     * @return the name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
