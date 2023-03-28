@@ -67,7 +67,7 @@ spring:
     #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
     generate-ddl: true
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: update
 
     open-in-view: true
 
@@ -118,7 +118,7 @@ app:
 
   # value generated from property assets.uri
   # either defined in pom.xml or via package argument
-  # i.e. `mvn clean package -Dassets.uri=file:/opt/vireo/`
+  # i.e. `mvn clean package -Dassets.uri=file:/var/vireo/`
   assets.uri: ${assets.uri}
 
   public.folder: public
