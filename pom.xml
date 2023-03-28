@@ -33,10 +33,10 @@
     <profile>default</profile>
     <production>false</production>
     <!-- must be valid uri with scheme file or classpath -->
-    <!-- e.g. file:/opt/vireo, classpath:/assets -->
+    <!-- e.g. file:/var/vireo, classpath:/assets -->
     <assets.uri>classpath:/</assets.uri>
     <!-- must be valid uri with scheme file or classpath -->
-    <!-- e.g. file:/opt/vireo/config, classpath:/config -->
+    <!-- e.g. file:/var/vireo/config, classpath:/config -->
     <config.uri>classpath:/config/</config.uri>
   </properties>
 
