@@ -10,6 +10,8 @@ import java.util.Random;
 import java.util.Scanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.tdl.vireo.model.FieldPredicate;
@@ -32,13 +34,14 @@ import org.tdl.vireo.model.repo.UserRepo;
 /**
  * Activate the Vireo command line interface by passing the console argument to Maven
  *
- * mvn clean spring-boot:run -Drun.arguments=console
+ * mvn clean spring-boot:run -Dspring-boot.run.arguments="console"
  * 
  * NOTE: will enable allow submissions on institution
  * 
  * @author James Creel
  * @author Jeremy Huff
  */
+@Order(value = Ordered.LOWEST_PRECEDENCE)
 @Component
 public class Cli implements CommandLineRunner {
 
@@ -67,9 +70,9 @@ public class Cli implements CommandLineRunner {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... arg0) throws Exception {
+    public void run(String... args) throws Exception {
         boolean runConsole = false;
-        for (String s : arg0) {
+        for (String s : args) {
             if (s.equals("console")) {
                 runConsole = true;
                 break;
