@@ -18,6 +18,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,9 +32,12 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.utility.FileHelperUtility;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -44,6 +48,9 @@ public class AssetService {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private ActionLogRepo actionLogRepo;
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
@@ -108,15 +115,14 @@ public class AssetService {
         fileInfo.put("readableSize", readableFileSize);
         fileInfo.put("uploaded", true);
 
-        List<ActionLog> actionLogs = new ArrayList<>(submission.getActionLogs());
+        Calendar creationDate = Calendar.getInstance();
 
-        Collections.sort(actionLogs, (o1, o2) -> o2.getActionDate().compareTo(o1.getActionDate()));
+        creationDate.setTimeInMillis(attr.creationTime().toMillis());
 
-        for (ActionLog actionLog : submission.getActionLogs()) {
-            if (actionLog.getEntry().contains(abbreviatedFilename)) {
-                fileInfo.put("uploader", actionLog.getUser().getName());
-                break;
-            }
+        Page<ActionLog> actionLogs = actionLogRepo.findBySubmissionIdAndEntryLikeAndBeforeActionDate(submission.getId(), abbreviatedFilename, creationDate, PageRequest.of(0, 1));
+
+        if (!actionLogs.isEmpty()) {
+            fileInfo.put("uploader", actionLogs.getContent().get(0).getUser().getName());
         }
 
         return objectMapper.valueToTree(fileInfo);
