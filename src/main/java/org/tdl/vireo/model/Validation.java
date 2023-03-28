@@ -2,9 +2,15 @@ package org.tdl.vireo.model;
 
 import javax.persistence.Embeddable;
 
+import org.tdl.vireo.model.response.Views;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 @Embeddable
 public class Validation {
+    @JsonView(Views.SubmissionIndividual.class)
     private String pattern;
+    @JsonView(Views.SubmissionIndividual.class)
     private String message;
 
     public Validation() {

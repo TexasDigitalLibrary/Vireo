@@ -74,6 +74,7 @@ public class User extends AbstractWeaverUserDetails {
     @Column(name = "middle_name")
     private String middleName;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Formula("CONCAT(first_name, ' ', last_name)")
     private String name;
 
@@ -90,19 +91,24 @@ public class User extends AbstractWeaverUserDetails {
     @CollectionTable(name = "shibboleth_affiliations")
     private Set<String> shibbolethAffiliations;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @OneToOne(cascade = { DETACH, MERGE, REMOVE }, fetch = EAGER, orphanRemoval = true, optional = true)
     private ContactInfo currentContactInfo;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @OneToOne(cascade = { DETACH, MERGE, REMOVE }, fetch = EAGER, orphanRemoval = true, optional = true)
     private ContactInfo permanentContactInfo;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column
     private String orcid;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Integer pageSize;
 

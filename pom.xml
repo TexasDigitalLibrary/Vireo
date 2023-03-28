@@ -284,9 +284,6 @@
           <include>**/*.woff</include>
           <include>**/*.woff2</include>
         </includes>
-        <excludes>
-          <exclude>**/sha.js/</exclude>
-        </excludes>
       </resource>
       <resource>
         <directory>src/main/webapp/app/resources/styles</directory>
@@ -410,9 +407,6 @@
                 <include>**/*.woff</include>
                 <include>**/*.woff2</include>
               </includes>
-              <excludes>
-                <exclude>**/sha.js/</exclude>
-              </excludes>
             </webResource>
             <webResource>
               <filtering>false</filtering>

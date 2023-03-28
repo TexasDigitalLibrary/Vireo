@@ -27,15 +27,17 @@ import org.tdl.vireo.model.validation.NamedSearchFilterValidator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-@JsonIgnoreProperties(value = { "user" }, allowGetters = true)
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
 public class NamedSearchFilterGroup extends ValidatingBaseEntity {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ManyToOne(optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = User.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)

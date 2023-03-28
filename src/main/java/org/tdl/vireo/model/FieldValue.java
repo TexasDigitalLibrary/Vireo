@@ -28,9 +28,11 @@ public class FieldValue extends ValidatingBaseEntity {
     @Column(columnDefinition = "text", nullable = true)
     private String value;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private String identifier;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private String definition;
 

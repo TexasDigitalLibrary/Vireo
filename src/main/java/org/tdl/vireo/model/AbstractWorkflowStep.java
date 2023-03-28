@@ -11,25 +11,34 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OrderColumn;
 
+import org.tdl.vireo.model.response.Views;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @MappedSuperclass
 public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, FP, N>, FP extends AbstractFieldProfile<FP>, N extends AbstractNote<N>> extends ValidatingBaseEntity {
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private String name;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean overrideable;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<FP> aggregateFieldProfiles;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<N> aggregateNotes;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(columnDefinition = "text")
     private String instructions;
 

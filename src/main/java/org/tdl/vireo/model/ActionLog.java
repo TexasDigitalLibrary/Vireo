@@ -8,9 +8,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.ActionLogValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
@@ -27,13 +29,16 @@ public class ActionLog extends ValidatingBaseEntity {
     @ManyToOne(optional = true)
     private User user;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar actionDate;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false, columnDefinition = "text")
     private String entry;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private boolean privateFlag;
 
