@@ -101,12 +101,6 @@
       <artifactId>thymeleaf-extras-springsecurity5</artifactId>
     </dependency>
 
-    <!-- remove if not needed -->
-    <dependency>
-      <groupId>net.sourceforge.nekohtml</groupId>
-      <artifactId>nekohtml</artifactId>
-    </dependency>
-
     <dependency>
       <groupId>com.github.steveash.hnp</groupId>
       <artifactId>human-name-parser</artifactId>
