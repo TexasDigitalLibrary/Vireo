@@ -30,7 +30,6 @@
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <tomcat.version>7.0.59</tomcat.version>
     <profile>default</profile>
     <production>false</production>
     <!-- must be valid uri with scheme file or classpath -->
@@ -383,7 +382,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
+              <classpathPrefix>libs/</classpathPrefix>
               <mainClass>org.tdl.vireo.Application</mainClass>
             </manifest>
           </archive>
@@ -479,7 +478,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
+              <classpathPrefix>libs/</classpathPrefix>
               <mainClass>org.tdl.vireo.Application</mainClass>
             </manifest>
           </archive>
@@ -589,7 +588,7 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <outputDirectory>${project.build.directory}/libs</outputDirectory>
             </configuration>
           </execution>
         </executions>

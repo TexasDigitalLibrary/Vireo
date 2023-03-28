@@ -1,3 +1,4 @@
+<a name="readme-top"></a>
 [![Build Status](https://github.com/TexasDigitalLibrary/Vireo/workflows/Build/badge.svg)](https://github.com/TexasDigitalLibrary/Vireo/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/TexasDigitalLibrary/Vireo/badge.svg)](https://coveralls.io/github/TexasDigitalLibrary/Vireo)
 
@@ -54,6 +55,8 @@ or run as production
 ```bash
 $ mvn clean spring-boot:run -Dproduction
 ```
+
+<div align="right">(<a href="#readme-top">back to top</a>)</div>
 
 **Building or running with -Dproduction will change the index.html template at src/main/resources/templates/index.html**
 
@@ -129,6 +132,8 @@ drwxrwxrwx  7 root  root  238 Sep  3 11:20 webapp
 * logs - where vireo log files are stored
 * webapp - the extracted WAR file
 
+<div align="right">(<a href="#readme-top">back to top</a>)</div>
+
 ### Recommended Hardware Configuration
 
 *  2 CPUs
@@ -149,6 +154,22 @@ Currently, in order to have Tomcat know where the external configuration directo
 
 2) Update [application.yml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yml)
 
+<div align="right">(<a href="#readme-top">back to top</a>)</div>
+
+### Deploy with Docker
+
+A quick and easy deployment method using `docker-compose` is described in the [Deployment Guide][deployment-guide].
+
+For _advanced use cases_, or when `docker-compose` is unavailable, the use of `docker` or `npm`/`mvn` is also described in the [Deployment Guide][deployment-guide].
+
+Deployment, in general, may look something like this:
+
+```shell
+cp example.env .env
+
+# Make any changes to the .env files before here.
+docker-compose up
+```
 
 ### Deploy to Tomcat
 
@@ -191,6 +212,8 @@ $ cp ~/vireo-4.1.4.war /usr/local/tomcat/webapps/ROOT.war
 java -jar target/vireo-4.1.4.war
 ```
 
+<div align="right">(<a href="#readme-top">back to top</a>)</div>
+
 ## Configuring
 
 * [application.yml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yml)
@@ -231,3 +254,7 @@ java -jar target/vireo-4.1.4.war
 ### Customization of default values
 
 Information on customizing default values can be found in the [advanced customization](https://github.com/TexasDigitalLibrary/Vireo/blob/master/ADVANCED_CUSTOMIZATION.md) documentation.
+
+<div align="right">(<a href="#readme-top">back to top</a>)</div>
+
+[deployment-guide]: DEPLOYING.md
