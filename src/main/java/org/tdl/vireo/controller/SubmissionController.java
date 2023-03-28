@@ -240,6 +240,7 @@ public class SubmissionController {
         SimpleSubmission submission = simpleSubmissionRepo.findByAdvisorAccessHash(advisorAccessHash);
         submission.setFieldValues(simpleFieldValueRepo.findAllBySubmissionId(submission.getId()));
         submission.setActionLogs(actionLogRepo.findAll(submission.getId()));
+        submission.setSubmissionWorkflowSteps(submissionWorkflowStepRepo.findBySubmissionId(submission.getId()));
 
         return new ApiResponse(SUCCESS, SimpleSubmission.toSubmission(submission));
     }
