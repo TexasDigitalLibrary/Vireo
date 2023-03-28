@@ -80,8 +80,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
@@ -95,8 +94,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     }
 
     /**
-     * @param repository
-     *            the repository to set
+     * @param repository the repository to set
      */
     public void setRepository(String repository) {
         this.repository = repository;
@@ -110,8 +108,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     }
 
     /**
-     * @param collection
-     *            the collection to set
+     * @param collection the collection to set
      */
     public void setCollection(String collection) {
         this.collection = collection;
@@ -125,8 +122,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     }
 
     /**
-     * @param username
-     *            the username to set
+     * @param username the username to set
      */
     public void setUsername(String username) {
         this.username = username;
@@ -140,8 +136,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     }
 
     /**
-     * @param password
-     *            the password to set
+     * @param password the password to set
      */
     public void setPassword(String password) {
         this.password = password;
@@ -155,8 +150,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     }
 
     /**
-     * @param onBehalfOf
-     *            the onBehalfOf to set
+     * @param onBehalfOf the onBehalfOf to set
      */
     public void setOnBehalfOf(String onBehalfOf) {
         this.onBehalfOf = onBehalfOf;
@@ -170,23 +164,21 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     }
 
     /**
-     * @param packager
-     *            the packager to set
+     * @param packager the packager to set
      */
     public void setPackager(Packager<?> packager) {
         this.packager = packager;
     }
 
     /**
-     * @return the depositor
+     * @return the depositorName
      */
     public String getDepositorName() {
         return depositorName;
     }
 
     /**
-     * @param depositor
-     *            the depositor to set
+     * @param depositorName the depositorName to set
      */
     public void setDepositorName(String depositorName) {
         this.depositorName = depositorName;
@@ -200,10 +192,10 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     }
 
     /**
-     * @param timeout
-     *            the timeout to set
+     * @param timeout the timeout to set
      */
     public void setTimeout(Integer timeout) {
         this.timeout = timeout;
     }
+
 }

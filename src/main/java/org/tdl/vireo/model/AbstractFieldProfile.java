@@ -73,8 +73,7 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param fieldPredicate
-     *            the fieldPredicate to set
+     * @param fieldPredicate the fieldPredicate to set
      */
     public void setFieldPredicate(FieldPredicate fieldPredicate) {
         this.fieldPredicate = fieldPredicate;
@@ -88,8 +87,7 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param inputType
-     *            the inputType to set
+     * @param inputType the inputType to set
      */
     public void setInputType(InputType inputType) {
         this.inputType = inputType;
@@ -103,103 +101,122 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param repeatable
-     *            the repeatable to set
+     * @param repeatable the repeatable to set
      */
     public void setRepeatable(Boolean repeatable) {
         this.repeatable = repeatable;
     }
 
     /**
-     * @return
+     * @return the optional
      */
     public Boolean getOptional() {
         return optional;
     }
 
     /**
-     * @param optional
+     * @param optional the optional to set
      */
     public void setOptional(Boolean optional) {
         this.optional = optional;
     }
 
     /**
-     * @return
+     * @return the hidden
      */
     public Boolean getHidden() {
         return hidden;
     }
 
     /**
-     * @param hidden
+     * @param hidden the hidden to set
      */
     public void setHidden(Boolean hidden) {
         this.hidden = hidden;
     }
 
     /**
-     * @return
+     * @return the logged
      */
     public Boolean getLogged() {
         return logged;
     }
 
     /**
-     * @param logged
+     * @param logged the logged to set
      */
     public void setLogged(Boolean logged) {
         this.logged = logged;
     }
 
     /**
-     * @return
+     * @return the usage
      */
     public String getUsage() {
         return usage;
     }
 
     /**
-     * @param usage
+     * @param usage the usage to set
      */
     public void setUsage(String usage) {
         this.usage = usage;
     }
 
     /**
-     * @return
+     * @return the help
      */
     public String getHelp() {
         return help;
     }
 
     /**
-     * @param help
+     * @param help the help to set
      */
     public void setHelp(String help) {
         this.help = help;
     }
 
     /**
-     * @return
+     * @return the gloss
      */
     public String getGloss() {
         return gloss;
     }
 
     /**
-     * @param gloss
+     * @param gloss the gloss to set
      */
     public void setGloss(String gloss) {
         this.gloss = gloss;
     }
 
+    /**
+     * @return the controlledVocabulary
+     */
     public ControlledVocabulary getControlledVocabulary() {
         return controlledVocabulary;
     }
 
+    /**
+     * @param controlledVocabulary the controlledVocabulary to set
+     */
     public void setControlledVocabulary(ControlledVocabulary controlledVocabulary) {
         this.controlledVocabulary = controlledVocabulary;
+    }
+
+    /**
+     * @return the mappedShibAttribute
+     */
+    public ManagedConfiguration getMappedShibAttribute() {
+        return mappedShibAttribute;
+    }
+
+    /**
+     * @param mappedShibAttribute the mappedShibAttribute to set
+     */
+    public void setMappedShibAttribute(ManagedConfiguration mappedShibAttribute) {
+        this.mappedShibAttribute = mappedShibAttribute;
     }
 
     /**
@@ -210,22 +227,21 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param flagged
-     *            the flagged to set
+     * @param flagged the flagged to set
      */
     public void setFlagged(Boolean flagged) {
         this.flagged = flagged;
     }
 
     /**
-     * @return
+     * @return the defaultValue
      */
     public String getDefaultValue() {
         return defaultValue;
     }
 
     /**
-     * @param defaultValue
+     * @param defaultValue the defaultValue to set
      */
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
@@ -239,26 +255,10 @@ public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
     }
 
     /**
-     * @param enabled
-     *            the enabled to set
+     * @param enabled the enabled to set
      */
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    /**
-     * @return the mappedShibAttribute
-     */
-    public ManagedConfiguration getMappedShibAttribute() {
-        return mappedShibAttribute;
-    }
-
-    /**
-     * @param mappedShibAttribute
-     *            the mappedShibAttribute to set
-     */
-    public void setMappedShibAttribute(ManagedConfiguration mappedShibAttribute) {
-        this.mappedShibAttribute = mappedShibAttribute;
     }
 
 }

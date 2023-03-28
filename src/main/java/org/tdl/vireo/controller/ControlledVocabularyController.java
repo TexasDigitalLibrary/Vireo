@@ -75,8 +75,8 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to request controlled vocabulary by name.
      *
-     * @param name
-     *            Name of controlled vocabulary
+     * @param name Name of controlled vocabulary
+     *
      * @return ApiResponse with requested controlled vocabulary
      */
     @RequestMapping("/{name}")
@@ -87,8 +87,8 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to create a new controlled vocabulary.
      *
-     * @param data
-     *            Json input data from request
+     * @param controlledVocabulary The controlled controlledVocabulary.
+     *
      * @return ApiResponse with indicating success or error
      */
     @PreAuthorize("hasRole('MANAGER')")
@@ -103,8 +103,8 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to update controlled vocabulary.
      *
-     * @param data
-     *            Json input data with request
+     * @param controlledVocabulary The controlled controlledVocabulary.
+     *
      * @return ApiResponse indicating success or error
      */
     @PreAuthorize("hasRole('MANAGER')")
@@ -123,8 +123,8 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to remove controlled vocabulary by provided index
      *
-     * @param data
-     *            Json input data with request
+     * @param controlledVocabulary The controlled controlledVocabulary.
+     *
      * @return ApiResponse indicating success or error
      */
     @PreAuthorize("hasRole('MANAGER')")
@@ -139,10 +139,10 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to reorder controlled vocabulary.
      *
-     * @param src
-     *            source position
-     * @param dest
-     *            destination position
+     * @param src source position
+     *
+     * @param dest destination position
+     *
      * @return ApiResponse indicating success
      */
     @RequestMapping("/reorder/{src}/{dest}")
@@ -157,8 +157,8 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to sort controlled vocabulary.
      *
-     * @param column
-     *            column to sort by
+     * @param column column to sort by
+     *
      * @return ApiResponse indicating success
      */
     @RequestMapping("/sort/{column}")
@@ -173,8 +173,8 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to export controlled vocabulary to populate csv
      *
-     * @param name
-     *            name of controlled vocabulary to export
+     * @param name name of controlled vocabulary to export
+     *
      * @return ApiResponse with map containing csv content
      */
     @RequestMapping("/export/{name}")
@@ -201,8 +201,8 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to get the import status of a given controlled vocabulary.
      *
-     * @param name
-     *            controlled vocabulary name
+     * @param name controlled vocabulary name
+     *
      * @return ApiResponse with a boolean whether import in progress or not
      */
     @RequestMapping("/status/{name}")
@@ -227,13 +227,13 @@ public class ControlledVocabularyController {
     }
 
     /**
-     * Enpoint to compare a csv of controlled vocabulary to an existing controlled vocabulary.
+     * Endpoint to compare a csv of controlled vocabulary to an existing controlled vocabulary.
      *
-     * @param name
-     *            controlled vocabulary to compare with
-     * @param inputStream
-     *            csv bitstream
+     * @param name controlled vocabulary to compare with
+     * @param file The file request parameter.
+     *
      * @return ApiResponse with map of new words, updating words, and duplicate words
+     *
      * @throws IOException
      */
     // TODO: implement controller advice to catch exception and handle gracefully
@@ -249,8 +249,8 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to import controlled vocabulary after confirmation.
      *
-     * @param name
-     *            controlled vocabulary name
+     * @param name controlled vocabulary name
+     *
      * @return ApiReponse indicating success
      */
     @RequestMapping(value = "/import/{name}")
@@ -281,10 +281,11 @@ public class ControlledVocabularyController {
     }
 
     /**
-     * Endpoint to add a blank vocabulart word to a controlled vocabulary.
+     * Endpoint to add a blank vocabulary word to a controlled vocabulary.
      *
-     * @param name
-     *            controlled vocabulary name
+     * @param cvId The path parameter representing the ControlledVocabulary ID.
+     * @param vocabularyWord controlled vocabulary word.
+     *
      * @return ApiReponse indicating success
      */
     @PreAuthorize("hasRole('MANAGER')")
@@ -299,8 +300,9 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to remove a vocabulary word from a controlled vocabulary.
      *
-     * @param name
-     *            controlled vocabulary name
+     * @param cvId The path parameter representing the ControlledVocabulary ID.
+     * @param vwId The path parameter representing the VocabularyWord ID.
+     *
      * @return ApiReponse indicating success
      */
     @PreAuthorize("hasRole('MANAGER')")
@@ -316,8 +318,9 @@ public class ControlledVocabularyController {
     /**
      * Endpoint to update a vocabulary word on a controlled vocabulary.
      *
-     * @param name
-     *            controlled vocabulary name
+     * @param cvId The path parameter representing the ControlledVocabulary ID.
+     * @param vw The VocabularyWord.
+     *
      * @return ApiReponse indicating success
      */
     @PreAuthorize("hasRole('MANAGER')")
