@@ -204,6 +204,7 @@ public class SubmissionController {
     return new ApiResponse(SUCCESS, submission);
   }
 
+  @JsonView(Views.SubmissionIndividual.class)
   @RequestMapping("/advisor-review/{submissionHash}")
   public ApiResponse getOne(@PathVariable String submissionHash) {
     Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
