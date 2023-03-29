@@ -40,6 +40,48 @@ The **development** deployment can also use `docker-compose` in the same way.
 
 <div align="right">(<a href="#readme-top">back to top</a>)</div>
 
+## Publishing Vireo Docker image
+
+> see example.env
+
+***login to docker registry***
+
+Connect to docker hub or deploy Harbor and connect to it.
+
+```env
+IMAGE_HOST=tdl.org
+IMAGE_VERSION=0.0.1
+SERVICE_PROJECT=vireo
+```
+
+Build an image not from cache while ensuring short commit hash matches for all three and remember this may only publish 1 pre-release image and 1 release image.
+
+```shell
+git rev-parse --short HEAD
+// output paste after SNAPSHOT-
+docker build --no-cache -t tdl.org/vireo/vireo:0.0.1-SNAPSHOT- .
+docker push tdl.org/vireo/vireo:0.0.1-SNAPSHOT-
+```
+
+If demo approved and no commits after snapshot, copy tag as release candidate.
+
+```shell
+git rev-parse --short HEAD
+// output paste after SNAPSHOT-
+docker tag tdl.org/vireo/vireo:0.0.1-SNAPSHOT- tdl.org/vireo/vireo:0.0.1-RC1
+docker push tdl.org/vireo/vireo:0.0.1-RC1
+```
+
+If approved for production and no commits after snapshot, copy tag as release.
+
+```shell
+git rev-parse --short HEAD
+
+docker tag tdl.org/vireo/vireo:0.0.1-RC1 tdl.org/vireo/vireo:0.0.1
+docker push tdl.org/vireo/vireo:0.0.1
+```
+
+If commit hash changed goto GitHub and figure out why, pick posibly new intended publishing commit and try again.
 
 ## Deployment using only Docker
 
