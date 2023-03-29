@@ -15,9 +15,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -31,7 +33,12 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.utility.FileHelperUtility;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -44,6 +51,9 @@ public class AssetService {
     private ObjectMapper objectMapper;
 
     @Autowired
+    private ActionLogRepo actionLogRepo;
+
+    @Autowired
     private ResourcePatternResolver resourcePatternResolver;
 
     private final FileHelperUtility fileHelperUtility = new FileHelperUtility();
@@ -52,8 +62,16 @@ public class AssetService {
         Files.write(processAssetsRelativePath(relativePath), data);
     }
 
-    public void copy(String oldRelativePath, String newRelativePath) throws IOException {
-        Files.copy(getAssetsAbsolutePath(oldRelativePath), getAssetsAbsolutePath(newRelativePath), StandardCopyOption.REPLACE_EXISTING);
+    public void rename(String oldRelativePath, String newRelativePath) throws IOException {
+        Path oldPath = getAssetsAbsolutePath(oldRelativePath);
+        Path newPath = getAssetsAbsolutePath(newRelativePath);
+
+        BasicFileAttributes attr = Files.readAttributes(oldPath, BasicFileAttributes.class);
+        Long creationTime = attr.creationTime().toMillis();
+
+        Files.move(oldPath, newPath, StandardCopyOption.REPLACE_EXISTING);
+
+        Files.setAttribute(newPath, "creationTime", FileTime.fromMillis(creationTime));
     }
 
     public String find(String relativeFolderPath, String name) {
@@ -69,7 +87,7 @@ public class AssetService {
     }
 
     public void delete(String relativePath) throws IOException {
-        Files.delete(Paths.get(FileHelperUtility.getAssetAbsolutePath(relativePath)));
+        Files.delete(getAssetsAbsolutePath(relativePath));
     }
 
     public String write(InputStream is, String relativePath) throws IOException {
@@ -92,18 +110,33 @@ public class AssetService {
         ImageIO.write(image, fileExtension, Files.newOutputStream(path));
     }
 
-    public JsonNode getAssetFileInfo(String relativePath) throws IOException {
-        Path path = Paths.get(FileHelperUtility.getAssetAbsolutePath(relativePath));
+    public JsonNode getAssetFileInfo(String relativePath, Submission submission) throws IOException {
+        Path path = getAssetsAbsolutePath(relativePath);
         BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
         Map<String, Object> fileInfo = new HashMap<String, Object>();
         String fileName = path.getFileName().toString();
+        String name = fileName.substring(fileName.indexOf('-') + 1);
         String readableFileSize = FileUtils.byteCountToDisplaySize(attr.size());
-        fileInfo.put("name", fileName.substring(fileName.indexOf('-') + 1));
+        fileInfo.put("name", name);
         fileInfo.put("type", fileHelperUtility.getMimeTypeOfAsset(relativePath));
         fileInfo.put("time", attr.creationTime().toMillis());
         fileInfo.put("size", attr.size());
         fileInfo.put("readableSize", readableFileSize);
         fileInfo.put("uploaded", true);
+
+        Calendar creationDate = Calendar.getInstance();
+
+        creationDate.setTimeInMillis(attr.creationTime().toMillis());
+
+        // current best hack to identify the user whom originally uploaded the file
+        String fileIdentifier = (name + " (" + readableFileSize + ")").replace("archived-", "");
+
+        Page<ActionLog> actionLogs = actionLogRepo.findBySubmissionIdAndEntryLikeAndBeforeActionDate(submission.getId(), fileIdentifier, creationDate, PageRequest.of(0, 1));
+
+        if (!actionLogs.isEmpty()) {
+            fileInfo.put("uploader", actionLogs.getContent().get(0).getUser().getName());
+        }
+
         return objectMapper.valueToTree(fileInfo);
     }
 
@@ -112,7 +145,7 @@ public class AssetService {
     }
 
     private Path processAssetsRelativePath(String relativePath) throws IOException {
-        Path path = Paths.get(FileHelperUtility.getAssetAbsolutePath(relativePath));
+        Path path = getAssetsAbsolutePath(relativePath);
         Path parentDir = path.getParent();
         if (!Files.exists(parentDir)) {
             Files.createDirectories(parentDir);

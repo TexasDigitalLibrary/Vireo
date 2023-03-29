@@ -931,48 +931,56 @@ public class SubmissionController {
         response.getOutputStream().flush();
     }
 
-    @RequestMapping(value = "/file-info", method = RequestMethod.POST)
-    public ApiResponse submissionFileInfo(@RequestBody Map<String, String> requestData) throws IOException {
-        return new ApiResponse(SUCCESS, assetService.getAssetFileInfo(requestData.get("uri")));
+    @RequestMapping(value = "/{submissionId}/file-info", method = RequestMethod.POST)
+    public ApiResponse submissionFileInfo(@PathVariable Long submissionId, @RequestBody Map<String, String> requestData) throws IOException {
+        String uri = requestData.get("uri");
+        Submission submission = submissionRepo.read(submissionId);
+
+        return new ApiResponse(SUCCESS, assetService.getAssetFileInfo(uri, submission));
     }
 
     @RequestMapping(value = "/{submissionId}/{documentType}/upload-file", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse uploadFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestParam MultipartFile file) throws IOException {
+        Submission submission = submissionRepo.read(submissionId);
+
         int hash = user.getEmail().hashCode();
+
         String fileName = file.getOriginalFilename();
 
         String fileExtension = FilenameUtils.getExtension(fileName).equals("pdf") ? FilenameUtils.getExtension(fileName) : "pdf";
 
         if (documentTypesToRename.contains(documentType)) {
-            String lastName = user.getLastName().toUpperCase();
+            String lastName = submission.getSubmitter().getLastName().toUpperCase();
             int year = Calendar.getInstance().get(Calendar.YEAR);
             fileName = lastName + "-" + documentType + "-" + String.valueOf(year) + "." + fileExtension;
         }
 
         String uri = documentFolder + File.separator + hash + File.separator + System.currentTimeMillis() + "-" + fileName;
         assetService.write(file.getBytes(), uri);
-        JsonNode fileInfo = assetService.getAssetFileInfo(uri);
-        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") uploaded");
+        JsonNode fileInfo = assetService.getAssetFileInfo(uri, submission);
+        actionLogRepo.createPublicLog(submission, user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") uploaded");
         return new ApiResponse(SUCCESS, uri);
     }
 
     @RequestMapping(value = "/{submissionId}/{documentType}/rename-file", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse renameFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
+        Submission submission = submissionRepo.read(submissionId);
+
         String newName = requestData.get("newName");
         String oldUri = requestData.get("uri");
-        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
-        assetService.copy(oldUri, newUri);
-        assetService.delete(oldUri);
-        JsonNode fileInfo = assetService.getAssetFileInfo(newUri);
-        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") renamed");
+        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf(File.separator) + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
+        assetService.rename(oldUri, newUri);
+        JsonNode fileInfo = assetService.getAssetFileInfo(newUri, submission);
+        actionLogRepo.createPublicLog(submission, user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") renamed");
         return new ApiResponse(SUCCESS, newUri);
     }
 
     @RequestMapping("/{submissionId}/{fieldValueId}/remove-file")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse removeFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable Long fieldValueId) throws IOException {
+        Submission submission = submissionRepo.read(submissionId);
         ApiResponse apiResponse = new ApiResponse(SUCCESS);
         int hash = user.getEmail().hashCode();
         FieldValue fileFieldValue = fieldValueRepo.findById(fieldValueId).get();
@@ -982,9 +990,9 @@ public class SubmissionController {
             apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
         } else {
             if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
-                JsonNode fileInfo = assetService.getAssetFileInfo(uri);
+                JsonNode fileInfo = assetService.getAssetFileInfo(uri, submission);
                 assetService.delete(uri);
-                actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") removed");
+                actionLogRepo.createPublicLog(submission, user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") removed");
             } else {
                 apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
             }
@@ -995,13 +1003,13 @@ public class SubmissionController {
     @RequestMapping(value = "/{submissionId}/{documentType}/archive-file", method = RequestMethod.POST)
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse archiveFile(@WeaverUser User user, @PathVariable Long submissionId, @PathVariable String documentType, @RequestBody Map<String, String> requestData) throws IOException {
+        Submission submission = submissionRepo.read(submissionId);
         String name = requestData.get("name");
         String oldUri = requestData.get("uri");
-        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
-        assetService.copy(oldUri, newUri);
-        assetService.delete(oldUri);
-        JsonNode fileInfo = assetService.getAssetFileInfo(newUri);
-        actionLogRepo.createPublicLog(submissionRepo.read(submissionId), user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") archived");
+        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf(File.separator) + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
+        assetService.rename(oldUri, newUri);
+        JsonNode fileInfo = assetService.getAssetFileInfo(newUri, submission);
+        actionLogRepo.createPublicLog(submission, user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") archived");
         return new ApiResponse(SUCCESS, newUri);
     }
 

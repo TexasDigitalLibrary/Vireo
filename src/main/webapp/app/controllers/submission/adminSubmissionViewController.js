@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $routeParams, $scope, DepositLocationRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatuses, SubmissionStatusRepo, UserRepo, UserService, UserSettings, WsApi) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $routeParams, $scope, $timeout, DepositLocationRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatuses, SubmissionStatusRepo, UserRepo, UserService, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -283,11 +283,13 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.deleteDocumentFieldValue = function (fieldValue) {
             fieldValue.updating = true;
-            FileUploadService.removeFile($scope.submission, fieldValue).then(function () {
-                $scope.closeModal();
-                $scope.confirm = false;
-                delete fieldValue.updating;
-            });
+            $scope.closeModal();
+            $timeout(function() {
+                FileUploadService.removeFile($scope.submission, fieldValue).then(function () {
+                    $scope.confirm = false;
+                    delete fieldValue.updating;
+                });
+            }, 250);
         };
 
         $scope.saveDocumentFieldValue = function (fieldValue) {
@@ -422,13 +424,13 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
             var fieldValue;
 
-            if($scope.addFileData.addFileSelection === 'replace') {
-                if($scope.submission.primaryDocumentFieldValue !== undefined) {
+            if ($scope.addFileData.addFileSelection === 'replace') {
+                if ($scope.submission.primaryDocumentFieldValue !== undefined) {
                     fieldValue = $scope.submission.primaryDocumentFieldValue;
                 } else {
                     for(var i in $scope.fieldPredicates) {
                         var fieldPredicate = $scope.fieldPredicates[i];
-                        if(fieldPredicate.value === '_doctype_primary') {
+                        if (fieldPredicate.value === '_doctype_primary') {
                             fieldValue = new FieldValue({
                                 fieldPredicate: fieldPredicate
                             });

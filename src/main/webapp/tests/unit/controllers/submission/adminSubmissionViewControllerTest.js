@@ -459,6 +459,7 @@ describe("controller: AdminSubmissionViewController", function () {
 
             scope.deleteDocumentFieldValue(new mockFieldPredicate(q));
             scope.$digest();
+            timeout.flush();
 
             expect(scope.confirm).toBe(false);
             expect(scope.closeModal).toHaveBeenCalled();
