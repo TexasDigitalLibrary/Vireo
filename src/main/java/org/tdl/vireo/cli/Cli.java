@@ -214,9 +214,30 @@ public class Cli implements CommandLineRunner {
                         Submission sub = submissionRepo.create(submitter, org, state, credentials, customActionDefinitionRepo.findAll());
 
                         sub.setSubmissionDate(getRandomDate());
-                        sub.setApproveAdvisorDate(getRandomDate());
-                        sub.setApproveApplicationDate(getRandomDate());
-                        sub.setApproveEmbargoDate(getRandomDate());
+
+                        if (random.nextInt(10) < 3) {
+                            sub.setApproveAdvisorDate(getRandomDate());
+                            sub.setApproveAdvisor(random.nextInt(10) < 5);
+                        } else {
+                            sub.setApproveAdvisorDate(null);
+                            sub.setApproveAdvisor(false);
+                        }
+
+                        if (random.nextInt(10) < 3) {
+                            sub.setApproveApplicationDate(getRandomDate());
+                            sub.setApproveApplication(random.nextInt(10) < 5);
+                        } else {
+                            sub.setApproveApplicationDate(null);
+                            sub.setApproveApplication(false);
+                        }
+
+                        if (random.nextInt(10) < 3) {
+                            sub.setApproveEmbargoDate(getRandomDate());
+                            sub.setApproveEmbargo(random.nextInt(10) < 5);
+                        } else {
+                            sub.setApproveEmbargoDate(null);
+                            sub.setApproveEmbargo(false);
+                        }
 
                         // %30 chance to be assigned to helpful harry.
                         if (expansive && random.nextInt(10) < 3) {

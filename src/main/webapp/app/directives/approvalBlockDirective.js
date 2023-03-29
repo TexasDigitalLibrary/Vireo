@@ -4,10 +4,10 @@ vireo.directive("approvalblock", function() {
             return "views/directives/approvalBlock.html";
         },
         scope: {
- 			type: "=",
-			approvalProxy: "=",
-			status: "=",
-			statusDate: "="
+            type: "=",
+            approvalProxy: "=",
+            status: "=",
+            statusDate: "="
         }
     };
 });
