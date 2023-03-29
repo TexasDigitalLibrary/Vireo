@@ -162,6 +162,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
                         if (submission.primaryDocumentFieldValue !== undefined && submission.primaryDocumentFieldValue !== null && fieldValue.id === submission.primaryDocumentFieldValue.id) {
                             delete submission.primaryDocumentFieldValue;
                         }
+                        submission.addFieldValue(fieldValue.fieldPredicate);
                         break;
                     }
                 }
@@ -296,6 +297,15 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
         };
 
         submission.addFieldValue = function (fieldPredicate) {
+
+            for (var i = submission.fieldValues.length - 1; i >= 0; i--) {
+                var fv = submission.fieldValues[i];
+                if (fv.fieldPredicate.id === fieldPredicate.id && (fv.value === "" || !fv.value)) {
+                    submission.fieldValues.splice(i, 1);
+                    break;
+                }
+            }
+
             var emptyFieldValue = createEmptyFieldValue(fieldPredicate);
             submission.fieldValues.push(emptyFieldValue);
             return emptyFieldValue;
@@ -374,6 +384,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
                     } else {
                         updatedFieldValue = apiRes.payload.FieldValue;
                     }
+
                     fieldValue.setIsValid(true);
                     if (fieldValue.fieldPredicate.documentTypePredicate) {
                         delete fieldValue.fileInfo;
