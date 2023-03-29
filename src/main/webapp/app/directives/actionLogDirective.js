@@ -1,4 +1,4 @@
-vireo.directive("actionlog", function($timeout, NgTableParams) {
+vireo.directive("actionlog", function($filter, $timeout, NgTableParams) {
     return {
         templateUrl: "views/directives/actionLog.html",
         restrict: 'E',
@@ -9,26 +9,34 @@ vireo.directive("actionlog", function($timeout, NgTableParams) {
         },
         link: function($scope) {
 
+            var debounce = null;
+
             $scope.tableParams = new NgTableParams({
                 sorting: {
                     id: "desc"
                 }
             }, {
-                counts: [],
-                dataset: $scope.submission.actionLogs
+                total: $scope.submission.actionLogs.length,
+                dataset: $scope.submission.actionLogs,
+                getData: function(params) {
+                    var data = [];
+                    angular.extend(data, $scope.submission.actionLogs);
+
+                    params.total(data.length);
+                    data = $filter('orderBy')(data, params.orderBy());
+                    return data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                }
             });
 
-            if (angular.isDefined($scope.submission.actionLogListenPromise)) {
-                $scope.submission.actionLogListenPromise.then(null, null, function() {
-                    if (angular.isUndefined($scope.debounce)) {
-                        $scope.debounce = function() {
+            if (angular.isDefined($scope.submission.actionLogListenReloadDefer)) {
+                $scope.submission.actionLogListenReloadDefer.promise.then(null, null, function(actionLogs) {
+                    if (debounce === null) {
+                        debounce = function() {
                             $scope.tableParams.reload();
-
-                            // Do not use "null" because isUndefined() does not trigger for null.
-                            $scope.debounce = undefined;
+                            debounce = null;
                         };
 
-                        $timeout($scope.debounce, $scope.delay);
+                        $timeout(debounce, $scope.delay);
                     }
                 });
             }
