@@ -177,7 +177,7 @@ public class SubmissionController {
   private String documentTypesToRename;
 
   @RequestMapping("/all")
-  @PreAuthorize("hasRole('REVIEWER')")
+  @PreAuthorize("hasRole('ADMIN')")
   public ApiResponse getAll() {
     return new ApiResponse(SUCCESS, submissionRepo.findAll());
   }
