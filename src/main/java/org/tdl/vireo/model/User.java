@@ -78,6 +78,7 @@ public class User extends AbstractWeaverUserDetails {
     @Formula("CONCAT(first_name, ' ', last_name)")
     private String name;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ElementCollection(fetch = EAGER)
     @MapKeyColumn(name = "setting")
     @Column(name = "value")

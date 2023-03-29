@@ -26,6 +26,7 @@ public class ActionLog extends ValidatingBaseEntity {
     @ManyToOne(optional = false)
     private SubmissionStatus submissionStatus;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ManyToOne(optional = true)
     private User user;
 
