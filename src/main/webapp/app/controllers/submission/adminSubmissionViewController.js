@@ -424,13 +424,13 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
             var fieldValue;
 
-            if($scope.addFileData.addFileSelection === 'replace') {
-                if($scope.submission.primaryDocumentFieldValue !== undefined) {
+            if ($scope.addFileData.addFileSelection === 'replace') {
+                if ($scope.submission.primaryDocumentFieldValue !== undefined) {
                     fieldValue = $scope.submission.primaryDocumentFieldValue;
                 } else {
                     for(var i in $scope.fieldPredicates) {
                         var fieldPredicate = $scope.fieldPredicates[i];
-                        if(fieldPredicate.value === '_doctype_primary') {
+                        if (fieldPredicate.value === '_doctype_primary') {
                             fieldValue = new FieldValue({
                                 fieldPredicate: fieldPredicate
                             });

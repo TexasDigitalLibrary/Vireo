@@ -970,9 +970,8 @@ public class SubmissionController {
 
         String newName = requestData.get("newName");
         String oldUri = requestData.get("uri");
-        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
-        assetService.copy(oldUri, newUri);
-        assetService.delete(oldUri);
+        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf(File.separator) + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
+        assetService.rename(oldUri, newUri);
         JsonNode fileInfo = assetService.getAssetFileInfo(newUri, submission);
         actionLogRepo.createPublicLog(submission, user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") renamed");
         return new ApiResponse(SUCCESS, newUri);
@@ -1007,9 +1006,8 @@ public class SubmissionController {
         Submission submission = submissionRepo.read(submissionId);
         String name = requestData.get("name");
         String oldUri = requestData.get("uri");
-        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf('/') + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
-        assetService.copy(oldUri, newUri);
-        assetService.delete(oldUri);
+        String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf(File.separator) + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
+        assetService.rename(oldUri, newUri);
         JsonNode fileInfo = assetService.getAssetFileInfo(newUri, submission);
         actionLogRepo.createPublicLog(submission, user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") archived");
         return new ApiResponse(SUCCESS, newUri);
