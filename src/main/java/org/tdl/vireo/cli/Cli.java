@@ -334,28 +334,26 @@ public class Cli implements CommandLineRunner {
 
         // %20 chance to only have the created log.
         if (random < 2) {
+            System.out.println("\rGenerating expansive submission action log without additional logs for submission " + sub.getId() + ".");
             return;
         }
 
         // %60 chance to have a small random amount of logs.
-        int total = new Random().nextInt(20) + 1;
+        int total = new Random().nextInt(20);
         boolean isPrivate = false;
         boolean bySubmitter = true;
         String percent = "[60%] ";
 
         // %20 chance to have a large random amount of logs.
         if (random > 7) {
-            total = new Random().nextInt(500) + 1;
+            total = new Random().nextInt(500);
             percent = "[20%] ";
         }
 
         random = total;
+        System.out.println("\rGenerating expansive submission action log with " + total + " additional logs for submission " + sub.getId() + ".");
 
-        if (total > 1) {
-            System.out.println("\rGenerating expansive submission action log with " + total + " additional logs for submission " + sub.getId() + ".");
-        }
-
-        while (--random > 0) {
+        while (random-- > 0) {
             // Use ~%22 chance of private.
             isPrivate = new Random().nextInt(9) < 2 ? true : false;
 
@@ -367,14 +365,14 @@ public class Cli implements CommandLineRunner {
                     sub,
                     submitter,
                     Calendar.getInstance(),
-                    new String(percent + random + " of " + total + (isPrivate ? " [private]" : "") + "."),
+                    new String(percent + (random + 1) + " of " + total + (isPrivate ? " [private]" : "") + "."),
                     isPrivate
                 );
             } else {
                 actionLogRepo.create(
                     sub,
                     Calendar.getInstance(),
-                    new String(percent + random + " of " + total + (isPrivate ? " [private]" : "") + " [no submitter]."),
+                    new String(percent + (random + 1) + " of " + total + (isPrivate ? " [private]" : "") + " [no submitter]."),
                     isPrivate
                 );
             }
