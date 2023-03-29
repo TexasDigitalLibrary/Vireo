@@ -16,9 +16,9 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
 
     $scope.actionLogDelay = 1000;
 
-    AdvisorSubmissionRepo.fetchSubmissionByHash($routeParams.advisorAccessHash).then(function (submissions) {
+    AdvisorSubmissionRepo.fetchSubmissionByHash($routeParams.advisorAccessHash).then(function (submission) {
         $scope.advisorSubmissionRepoReady = true;
-        $scope.submission = submissions;
+        $scope.submission = submission;
         resetApproveProxy();
         $scope.submission.fetchDocumentTypeFileInfo();
     });
