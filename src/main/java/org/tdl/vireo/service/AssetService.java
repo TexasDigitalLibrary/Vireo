@@ -115,9 +115,9 @@ public class AssetService {
         BasicFileAttributes attr = Files.readAttributes(path, BasicFileAttributes.class);
         Map<String, Object> fileInfo = new HashMap<String, Object>();
         String fileName = path.getFileName().toString();
-        String abbreviatedFilename = fileName.substring(fileName.indexOf('-') + 1);
+        String name = fileName.substring(fileName.indexOf('-') + 1);
         String readableFileSize = FileUtils.byteCountToDisplaySize(attr.size());
-        fileInfo.put("name", abbreviatedFilename);
+        fileInfo.put("name", name);
         fileInfo.put("type", fileHelperUtility.getMimeTypeOfAsset(relativePath));
         fileInfo.put("time", attr.creationTime().toMillis());
         fileInfo.put("size", attr.size());
@@ -128,7 +128,10 @@ public class AssetService {
 
         creationDate.setTimeInMillis(attr.creationTime().toMillis());
 
-        Page<ActionLog> actionLogs = actionLogRepo.findBySubmissionIdAndEntryLikeAndBeforeActionDate(submission.getId(), abbreviatedFilename, creationDate, PageRequest.of(0, 1));
+        // current best hack to identify the user whom originally uploaded the file
+        String fileIdentifier = (name + " (" + readableFileSize + ")").replace("archived-", "");
+
+        Page<ActionLog> actionLogs = actionLogRepo.findBySubmissionIdAndEntryLikeAndBeforeActionDate(submission.getId(), fileIdentifier, creationDate, PageRequest.of(0, 1));
 
         if (!actionLogs.isEmpty()) {
             fileInfo.put("uploader", actionLogs.getContent().get(0).getUser().getName());

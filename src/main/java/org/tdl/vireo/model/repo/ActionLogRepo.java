@@ -23,7 +23,7 @@ public interface ActionLogRepo extends WeaverRepo<ActionLog>, ActionLogRepoCusto
      * Column action_logs_id is join column representing submission id.
      * Returning Page as JPQL does not support LIMIT.
      */
-    @Query("SELECT al FROM ActionLog al WHERE action_logs_id = :submission_id and al.entry LIKE %:filename% AND al.actionDate >= :creation_date ORDER BY al.actionDate ASC")
-    public Page<ActionLog> findBySubmissionIdAndEntryLikeAndBeforeActionDate(@Param("submission_id") Long submissionId, @Param("filename") String abbreviatedFilename, @Param("creation_date") Calendar creationDate, Pageable pageable);
+    @Query("SELECT al FROM ActionLog al WHERE action_logs_id = :submission_id and al.entry LIKE %:file_identifier% AND al.actionDate >= :creation_date ORDER BY al.actionDate ASC")
+    public Page<ActionLog> findBySubmissionIdAndEntryLikeAndBeforeActionDate(@Param("submission_id") Long submissionId, @Param("file_identifier") String fileIdentifier, @Param("creation_date") Calendar creationDate, Pageable pageable);
 
 }
