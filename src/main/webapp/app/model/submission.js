@@ -88,10 +88,12 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
             });
 
             submission.actionLogListenPromise = WsApi.listen(apiMapping.Submission.actionLogListen);
+            submission.actionLogListenReloadDefer = $q.defer();
 
             submission.actionLogListenPromise.then(null, null, function (response) {
                 var newActionLog = angular.fromJson(response.body).payload.ActionLog;
                 submission.actionLogs.push(new ActionLog(newActionLog));
+                submission.actionLogListenReloadDefer.notify(submission.actionLogs);
             });
 
             angular.extend(apiMapping.Submission.customActionValuesListen, {
