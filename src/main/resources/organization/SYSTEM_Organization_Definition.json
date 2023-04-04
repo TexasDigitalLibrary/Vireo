@@ -665,7 +665,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter keywords for your document. You may enter multiple keywords. You may enter multiple keywords by selecting the + sign.",
+          "help":"Enter keywords for your document. You may enter multiple keywords by selecting the + sign.",
           "gloss": "Keywords"
         },
         {
