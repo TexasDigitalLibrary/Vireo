@@ -67,10 +67,8 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
         });
 
         submission.before(function() {
-          submission.organization = new Organization(submission.organization);
-        });
+            submission.organization = new Organization(submission.organization);
 
-        submission.before(function () {
             instantiateFieldValues();
 
             // populate fieldValues with models for empty values
@@ -82,25 +80,22 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
                     }
                 });
             });
-        });
 
-        submission.before(function () {
+            instantiateActionLogs();
 
-          instantiateActionLogs();
+            angular.extend(apiMapping.Submission.actionLogListen, {
+              'method': submission.id + '/action-logs'
+            });
 
-          angular.extend(apiMapping.Submission.actionLogListen, {
-            'method': submission.id + '/action-logs'
-          });
+            submission.actionLogListenPromise = WsApi.listen(apiMapping.Submission.actionLogListen);
+            submission.actionLogListenReloadDefer = $q.defer();
 
-          submission.actionLogListenPromise = WsApi.listen(apiMapping.Submission.actionLogListen);
+            submission.actionLogListenPromise.then(null, null, function (response) {
+                var newActionLog = angular.fromJson(response.body).payload.ActionLog;
+                submission.actionLogs.push(new ActionLog(newActionLog));
+                submission.actionLogListenReloadDefer.notify(submission.actionLogs);
+            });
 
-          submission.actionLogListenPromise.then(null, null, function (response) {
-            var newActionLog = angular.fromJson(response.body).payload.ActionLog;
-            submission.actionLogs.push(new ActionLog(newActionLog));
-          });
-        });
-
-        submission.before(function () {
             angular.extend(apiMapping.Submission.customActionValuesListen, {
                 'method': submission.id + '/custom-action-values'
             });
@@ -119,9 +114,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
                     submission.customActionValues.push(cav);
                 }
             });
-        });
 
-        submission.before(function () {
             angular.extend(apiMapping.Submission.fieldValuesListen, {
                 'method': submission.id + '/field-values'
             });
@@ -158,9 +151,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
                     enrichDocumentTypeFieldValue(fieldValue);
                 }
             });
-        });
 
-        submission.before(function () {
             angular.extend(apiMapping.Submission.fieldValueRemovedListen, {
                 'method': submission.id + '/removed-field-value'
             });
@@ -173,6 +164,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
                         if (submission.primaryDocumentFieldValue !== undefined && submission.primaryDocumentFieldValue !== null && fieldValue.id === submission.primaryDocumentFieldValue.id) {
                             delete submission.primaryDocumentFieldValue;
                         }
+                        submission.addFieldValue(fieldValue.fieldPredicate);
                         break;
                     }
                 }
@@ -307,6 +299,15 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
         };
 
         submission.addFieldValue = function (fieldPredicate) {
+
+            for (var i = submission.fieldValues.length - 1; i >= 0; i--) {
+                var fv = submission.fieldValues[i];
+                if (fv.fieldPredicate.id === fieldPredicate.id && (fv.value === "" || !fv.value)) {
+                    submission.fieldValues.splice(i, 1);
+                    break;
+                }
+            }
+
             var emptyFieldValue = createEmptyFieldValue(fieldPredicate);
             submission.fieldValues.push(emptyFieldValue);
             return emptyFieldValue;
@@ -385,6 +386,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
                     } else {
                         updatedFieldValue = apiRes.payload.FieldValue;
                     }
+
                     fieldValue.setIsValid(true);
                     if (fieldValue.fieldPredicate.documentTypePredicate) {
                         delete fieldValue.fileInfo;
@@ -484,6 +486,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
 
         submission.fileInfo = function (fieldValue) {
             angular.extend(this.getMapping().fileInfo, {
+                method: submission.id + '/file-info',
                 data: {
                     'uri': fieldValue.value
                 }

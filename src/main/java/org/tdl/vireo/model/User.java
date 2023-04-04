@@ -29,29 +29,32 @@ import javax.persistence.OrderColumn;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.Formula;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.UserValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
-import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.user.model.IRole;
 
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class User extends AbstractWeaverUserDetails {
 
     private static final long serialVersionUID = -614285536644750464L;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @Column(nullable = true)
     private String netid;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -59,24 +62,29 @@ public class User extends AbstractWeaverUserDetails {
     @JsonIgnore
     private String password;
 
-    @JsonView(ApiView.Partial.class)
-    @Column(nullable = false)
+    @JsonView(Views.SubmissionList.class)
+    @Column(nullable = false, name = "first_name")
     private String firstName;
 
-    @JsonView(ApiView.Partial.class)
-    @Column(nullable = false)
+    @JsonView(Views.SubmissionList.class)
+    @Column(nullable = false, name = "last_name")
     private String lastName;
 
-    @JsonView(ApiView.Partial.class)
-    @Column
+    @JsonView(Views.Partial.class)
+    @Column(name = "middle_name")
     private String middleName;
 
+    @JsonView(Views.SubmissionIndividual.class)
+    @Formula("CONCAT(first_name, ' ', last_name)")
+    private String name;
+
+    @JsonView(Views.SubmissionIndividual.class)
     @ElementCollection(fetch = EAGER)
     @MapKeyColumn(name = "setting")
     @Column(name = "value")
     private Map<String, String> settings;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @Column
     private Integer birthYear;
 
@@ -84,19 +92,24 @@ public class User extends AbstractWeaverUserDetails {
     @CollectionTable(name = "shibboleth_affiliations")
     private Set<String> shibbolethAffiliations;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @OneToOne(cascade = { DETACH, MERGE, REMOVE }, fetch = EAGER, orphanRemoval = true, optional = true)
     private ContactInfo currentContactInfo;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @OneToOne(cascade = { DETACH, MERGE, REMOVE }, fetch = EAGER, orphanRemoval = true, optional = true)
     private ContactInfo permanentContactInfo;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column
     private String orcid;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Integer pageSize;
 
@@ -164,8 +177,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param netid
-     *            the netid to set
+     * @param netid the netid to set
      */
     public void setNetid(String netid) {
         this.netid = netid;
@@ -179,21 +191,10 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param email
-     *            the email to set
+     * @param email the email to set
      */
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    /**
-     * Stores an encoded password
-     *
-     * @param password
-     *            the password to set
-     */
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     /**
@@ -204,8 +205,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param firstName
-     *            the firstName to set
+     * @param firstName the firstName to set
      */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
@@ -219,8 +219,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param lastName
-     *            the lastName to set
+     * @param lastName the lastName to set
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
@@ -234,31 +233,58 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param middleName
-     *            the middleName to set
+     * @param middleName the middleName to set
      */
     public void setMiddleName(String middleName) {
         this.middleName = middleName;
     }
 
     /**
-     * @param Key
-     *            return the setting by key
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @param password the password to set
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    /**
+     * @param role the role to set
+     */
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    /**
+     * @param key The key of the setting to get the value of.
+     *
+     * @return The value associated with the passed key.
      */
     public String getSetting(String key) {
         return settings.get(key);
     }
 
     /**
-     * @param Key
-     *            return the setting by key
+     * @param key The key of the setting to assign the value of.
      */
     public void putSetting(String key, String value) {
         settings.put(key, value);
     }
 
     /**
-     * returns the settings map
+     * @return the settings map
      */
     public Map<String, String> getSettings() {
         return settings;
@@ -279,8 +305,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param birthYear
-     *            the birthYear to set
+     * @param birthYear the birthYear to set
      */
     public void setBirthYear(Integer birthYear) {
         this.birthYear = birthYear;
@@ -294,8 +319,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param shibbolethAffiliations
-     *            the shibbolethAffiliations to set
+     * @param shibbolethAffiliations the shibbolethAffiliations to set
      */
     public void setShibbolethAffiliations(Set<String> shibbolethAffiliations) {
         this.shibbolethAffiliations = shibbolethAffiliations;
@@ -323,8 +347,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param currentContactInfo
-     *            the currentContactInfo to set
+     * @param currentContactInfo the currentContactInfo to set
      */
     public void setCurrentContactInfo(ContactInfo currentContactInfo) {
         this.currentContactInfo = currentContactInfo;
@@ -338,8 +361,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param permanentContactInfo
-     *            the permanentContactInfo to set
+     * @param permanentContactInfo the permanentContactInfo to set
      */
     public void setPermanentContactInfo(ContactInfo permanentContactInfo) {
         this.permanentContactInfo = permanentContactInfo;
@@ -353,8 +375,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param orcid
-     *            the orcid to set
+     * @param orcid the orcid to set
      */
     public void setOrcid(String orcid) {
         this.orcid = orcid;
@@ -380,34 +401,42 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param pageSize
-     *            the pageSize to set
+     * @param pageSize the pageSize to set
      */
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
 
     /**
-     * @return the submissionViewColumn
+     * @return the submissionViewColumns
      */
     public List<SubmissionListColumn> getSubmissionViewColumns() {
         return submissionViewColumns;
     }
 
     /**
-     * @param submissionViewColumn
-     *            the submissionViewColumn to set
+     * @param submissionViewColumns the submissionViewColumns to set
      */
     public void setSubmissionViewColumns(List<SubmissionListColumn> submissionViewColumns) {
         this.submissionViewColumns = submissionViewColumns;
     }
 
+    /**
+     * Add a submission column.
+     *
+     * @param submissionViewColumn The submissionViewColumn to add.
+     */
     public void addSubmissionViewColumn(SubmissionListColumn submissionViewColumn) {
         if (!this.submissionViewColumns.contains(submissionViewColumn)) {
             this.submissionViewColumns.add(submissionViewColumn);
         }
     }
 
+    /**
+     * Remove a submission column.
+     *
+     * @param submissionViewColumn The submissionViewColumn to remove.
+     */
     public void removeSubmissionViewColumn(SubmissionListColumn submissionViewColumn) {
         this.submissionViewColumns.remove(submissionViewColumn);
     }
@@ -420,8 +449,7 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param activeFilter
-     *            the activeFilter to set
+     * @param activeFilter the activeFilter to set
      */
     public void setActiveFilter(NamedSearchFilterGroup activeFilter) {
         this.activeFilter = activeFilter;
@@ -435,23 +463,37 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * @param savedFilters
-     *            the savedFilters to set
+     * @param savedFilters the savedFilters to set
      */
     public void setSavedFilters(List<NamedSearchFilterGroup> savedFilters) {
         this.savedFilters = savedFilters;
     }
 
+    /**
+     * Add a saved filter.
+     *
+     * @param savedFilter The saved filter to add.
+     */
     public void addSavedFilter(NamedSearchFilterGroup savedFilter) {
         if (!this.savedFilters.contains(savedFilter)) {
             this.savedFilters.add(savedFilter);
         }
     }
 
+    /**
+     * Remove a saved filter.
+     *
+     * @param savedFilter The saved filter to remove.
+     */
     public void removeSavedFilter(NamedSearchFilterGroup savedFilter) {
         this.savedFilters.remove(savedFilter);
     }
 
+    /**
+     * Load a filter.
+     *
+     * @param filter The filter to load.
+     */
     public void loadActiveFilter(NamedSearchFilterGroup filter) {
 
         this.activeFilter.setSavedColumns(filter.getSavedColumns());
@@ -461,10 +503,16 @@ public class User extends AbstractWeaverUserDetails {
 
     }
 
+    /**
+     * @return the filterColumns
+     */
     public List<SubmissionListColumn> getFilterColumns() {
         return filterColumns;
     }
 
+    /**
+     * @param filterColumns the filterColumns to set
+     */
     public void setFilterColumns(List<SubmissionListColumn> filterColumns) {
         this.filterColumns = filterColumns;
     }

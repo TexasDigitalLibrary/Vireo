@@ -52,7 +52,7 @@
 
     <modal modal-id="addCommentModal" modal-view="views/modals/view/addCommentModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
 
-    <actionlog ng-if="submission" submission="submission" ready="submisisonReady"></actionlog>
+    <actionlog ng-if="submission" submission="submission" ready="submisisonReady" delay="{{::actionLogDelay}}"></actionlog>
 
   </div>
 
@@ -74,7 +74,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="documentFieldValue in submission.fieldValues | documentFieldValuePerProfile | orderBy: '-fileInfo.time'" ng-if="documentFieldValue.id">
-          <td>{{submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
+          <td>{{documentFieldValue.fileInfo.uploader ? documentFieldValue.fileInfo.uploader : submission.submitter.firstName + ' ' + submission.submitter.lastName}}</td>
           <td>
             <a href ng-click="getFile(documentFieldValue)">{{documentFieldValue.fileInfo.name}}</a>
           </td>

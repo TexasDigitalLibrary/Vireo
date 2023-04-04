@@ -16,7 +16,7 @@ public interface OrganizationRepo extends WeaverRepo<Organization>, Organization
 
     public List<Organization> findByOriginalWorkflowStepsId(Long workflowStepId);
 
-    public List<Organization> findByCategory(String name, OrganizationCategory category);
+    public List<Organization> findAllByNameAndCategory(String name, OrganizationCategory category);
 
     public Organization findByNameAndCategory(String name, OrganizationCategory category);
 

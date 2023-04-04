@@ -78,7 +78,7 @@ public class FieldProfileRepoImpl extends HeritableRepoImpl<FieldProfile, FieldP
             submissionListColumnRepo.create(gloss, Sort.NONE, fieldPredicate.getValue(), inputType);
         }
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
-        return fieldProfileRepo.findOne(fieldProfile.getId());
+        return fieldProfileRepo.findById(fieldProfile.getId()).get();
     }
 
     @Override

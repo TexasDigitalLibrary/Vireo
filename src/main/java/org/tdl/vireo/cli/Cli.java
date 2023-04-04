@@ -1,5 +1,6 @@
 package org.tdl.vireo.cli;
 
+import edu.tamu.weaver.auth.model.Credentials;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,11 +8,12 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Organization;
@@ -22,26 +24,24 @@ import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 
-import edu.tamu.weaver.auth.model.Credentials;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 /**
  * Activate the Vireo command line interface by passing the console argument to Maven
  *
- * mvn clean spring-boot:run -Drun.arguments=console
+ * mvn clean spring-boot:run -Dspring-boot.run.arguments="console"
  * 
  * NOTE: will enable allow submissions on institution
  * 
  * @author James Creel
  * @author Jeremy Huff
  */
+@Order(value = Ordered.LOWEST_PRECEDENCE)
 @Component
 public class Cli implements CommandLineRunner {
 
@@ -64,12 +64,15 @@ public class Cli implements CommandLineRunner {
     private ActionLogRepo actionLogRepo;
 
     @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
+
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    public void run(String... arg0) throws Exception {
+    public void run(String... args) throws Exception {
         boolean runConsole = false;
-        for (String s : arg0) {
+        for (String s : args) {
             if (s.equals("console")) {
                 runConsole = true;
                 break;
@@ -82,6 +85,11 @@ public class Cli implements CommandLineRunner {
             final String PROMPT = "\n" + (char) 27 + "[36mvireo>" + (char) 27 + "[37m ";
 
             Scanner reader = new Scanner(System.in); // Reading from System.in
+            boolean expansive = false;
+            Random random = new Random();
+
+            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat emailDate = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss_");
 
             System.out.print(PROMPT);
 
@@ -138,6 +146,7 @@ public class Cli implements CommandLineRunner {
                     break;
 
                 case "admin_accounts":
+                {
                     int admin_acct = 0;
                     if (commandArgs.size() > 0) {
                         try {
@@ -153,18 +162,15 @@ public class Cli implements CommandLineRunner {
                         userRepo.saveAndFlush(testacct);
                     }
                     break;
+                }
+
+                case "expansive":
+                    expansive = !expansive;
+                    System.out.println("\nSet expansive = " + (expansive ? "true" : "false") + ".");
+                    break;
 
                 case "generate":
-
-                    Organization org = organizationRepo.findAll().get(0);
-
-                    if (!org.getAcceptsSubmissions()) {
-                        org.setAcceptsSubmissions(true);
-                        org = organizationRepo.save(org);
-                    }
-
-                    SubmissionStatus state = submissionStatusRepo.findAll().get(0);
-
+                {
                     if (commandArgs.size() > 0) {
                         try {
                             num = Integer.parseInt(commandArgs.get(0));
@@ -173,28 +179,72 @@ public class Cli implements CommandLineRunner {
                         }
                     }
 
-                    SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+                    Organization org = organizationRepo.findAll().get(0);
+
+                    int idOffset = userRepo.findAll().toArray().length;
+                    User helpfulHarry = null;
+
+                    if (expansive) {
+                        helpfulHarry = createHelpfulHarry(idOffset++, emailDate);
+                    }
+
+                    if (!org.getAcceptsSubmissions()) {
+                        org.setAcceptsSubmissions(true);
+                        org = organizationRepo.save(org);
+                    }
+
+                    List<SubmissionStatus> statuses = submissionStatusRepo.findAll();
 
                     for (int i = itemsGenerated; i < num + itemsGenerated; i++) {
-                        User submitter = userRepo.create("bob" + (i + 1) + "@boring.bob", "bob", "boring", Role.ROLE_STUDENT);
+                        Calendar now = Calendar.getInstance();
+                        User submitter = userRepo.create("bob" + emailDate.format(now.getTime()) + (idOffset + i + 1) + "@boring.bob", "bob", "boring " + (idOffset + i + 1), Role.ROLE_STUDENT);
                         Credentials credentials = new Credentials();
                         credentials.setFirstName("Bob");
-                        credentials.setLastName("Boring");
+                        credentials.setLastName("Boring " + (idOffset + i + 1));
                         credentials.setEmail("bob@boring.bob");
                         credentials.setRole(Role.ROLE_STUDENT.name());
 
-                        Submission sub = submissionRepo.create(submitter, org, state, credentials);
+                        SubmissionStatus state = statuses.get(0);
+
+                        // Status is chosen completely randomly for every option available when expansive is enabled.
+                        if (expansive) {
+                            state = statuses.get(random.nextInt(statuses.size()));
+                        }
+
+                        Submission sub = submissionRepo.create(submitter, org, state, credentials, customActionDefinitionRepo.findAll());
 
                         sub.setSubmissionDate(getRandomDate());
-                        sub.setApproveAdvisorDate(getRandomDate());
-                        sub.setApproveApplicationDate(getRandomDate());
-                        sub.setApproveEmbargoDate(getRandomDate());
 
-                        Calendar date = Calendar.getInstance();
-                        String entry = new String("Submission created.");
-                        ActionLog log = actionLogRepo.create(sub, date, entry, false);
-                        log.setActionDate(date);
-                        log.setEntry(entry);
+                        if (random.nextInt(10) < 3) {
+                            sub.setApproveAdvisorDate(getRandomDate());
+                            sub.setApproveAdvisor(random.nextInt(10) < 5);
+                        } else {
+                            sub.setApproveAdvisorDate(null);
+                            sub.setApproveAdvisor(false);
+                        }
+
+                        if (random.nextInt(10) < 3) {
+                            sub.setApproveApplicationDate(getRandomDate());
+                            sub.setApproveApplication(random.nextInt(10) < 5);
+                        } else {
+                            sub.setApproveApplicationDate(null);
+                            sub.setApproveApplication(false);
+                        }
+
+                        if (random.nextInt(10) < 3) {
+                            sub.setApproveEmbargoDate(getRandomDate());
+                            sub.setApproveEmbargo(random.nextInt(10) < 5);
+                        } else {
+                            sub.setApproveEmbargoDate(null);
+                            sub.setApproveEmbargo(false);
+                        }
+
+                        // %30 chance to be assigned to helpful harry.
+                        if (expansive && random.nextInt(10) < 3) {
+                            sub.setAssignee(helpfulHarry);
+                        }
+
+                        generateActionLogs(sub, submitter, expansive);
 
                         for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
                             for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
@@ -231,12 +281,12 @@ public class Cli implements CommandLineRunner {
                         submissionRepo.saveAndFlush(sub);
 
                         System.out.print("\r" + (i - itemsGenerated) + " of " + num + " generated...");
-
                     }
 
                     System.out.println("\rGenerated " + num + " submissions.");
                     itemsGenerated += num;
                     break;
+                }
 
                 case "":
                     break;
@@ -265,6 +315,68 @@ public class Cli implements CommandLineRunner {
         date.add(Calendar.MONTH, rm);
         date.add(Calendar.DATE, random.nextInt(32 - date.get(Calendar.DAY_OF_MONTH)));
         return date;
+    }
+
+    private User createHelpfulHarry(int offset, SimpleDateFormat formatter) {
+        String dateString = formatter.format(Calendar.getInstance().getTime());
+        return userRepo.create("harry" + dateString + offset + "@help.ful", "Harry", "Helpful " + offset, Role.ROLE_REVIEWER);
+    }
+
+    private void generateActionLogs(Submission sub, User submitter, boolean expansive) {
+        actionLogRepo.create(sub, submitter, Calendar.getInstance(), new String("Submission created."), false);
+
+        // Only provide large data set when expansive parameter is provided.
+        if (!expansive) {
+            return;
+        }
+
+        int random = new Random().nextInt(10);
+
+        // %20 chance to only have the created log.
+        if (random < 2) {
+            System.out.println("\rGenerating expansive submission action log without additional logs for submission " + sub.getId() + ".");
+            return;
+        }
+
+        // %60 chance to have a small random amount of logs.
+        int total = new Random().nextInt(20);
+        boolean isPrivate = false;
+        boolean bySubmitter = true;
+        String percent = "[60%] ";
+
+        // %20 chance to have a large random amount of logs.
+        if (random > 7) {
+            total = new Random().nextInt(500);
+            percent = "[20%] ";
+        }
+
+        random = total;
+        System.out.println("\rGenerating expansive submission action log with " + total + " additional logs for submission " + sub.getId() + ".");
+
+        while (random-- > 0) {
+            // Use ~%22 chance of private.
+            isPrivate = new Random().nextInt(9) < 2 ? true : false;
+
+            // %15 chance to not be by submitter.
+            bySubmitter = new Random().nextInt(20) > 2;
+
+            if (bySubmitter) {
+                actionLogRepo.create(
+                    sub,
+                    submitter,
+                    Calendar.getInstance(),
+                    new String(percent + (random + 1) + " of " + total + (isPrivate ? " [private]" : "") + "."),
+                    isPrivate
+                );
+            } else {
+                actionLogRepo.create(
+                    sub,
+                    Calendar.getInstance(),
+                    new String(percent + (random + 1) + " of " + total + (isPrivate ? " [private]" : "") + " [no submitter]."),
+                    isPrivate
+                );
+            }
+        }
     }
 
 }

@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, CustomActionValueRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -97,6 +97,13 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
                     $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
 
+                    angular.forEach($scope.userColumns, function (userColumn) {
+                        if ($scope.activeFilters.sortColumnTitle === userColumn.title) {
+                            userColumn.sortOrder = 1;
+                            userColumn.sort = $scope.activeFilters.sortDirection;
+                        }
+                    });
+
                     $scope.excludedColumns = [];
 
                     angular.copy($scope.userColumns, $scope.excludedColumns);
@@ -119,7 +126,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         update();
 
-        var assignableUsers = UserRepo.getAssignableUsers();
+        var assignableUsers = UserRepo.getAssignableUsers(0, 0);
         var savedFilters = SavedFilterRepo.getAll();
         var emailTemplates = EmailTemplateRepo.getAll();
         var emailValidationPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
@@ -725,7 +732,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 }
             });
 
-            query();
+            ManagerSubmissionListColumnRepo.updateSubmissionListColumnSort($scope.userColumns).then(function () {
+                query();
+            });
 
         };
 
@@ -802,7 +811,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var disabledFilterColumnOptions = createDisabledColumnOptions();
 
         $scope.viewSubmission = function (submission) {
-            $location.path("/admin/view/" + submission.id + "/" + submission.submissionWorkflowSteps[0].id);
+            $location.path("/admin/view/" + submission.id);
         };
 
         SidebarService.addBoxes([{

@@ -1,22 +1,26 @@
 describe("controller: UserRepoController", function () {
 
-    var controller, q, scope, timeout, WsApi;
+    var controller, q, scope, timeout, mockedUser, User, UserService, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $timeout, _WsApi_) {
             q = $q;
             timeout = $timeout;
 
+            mockedUser = mockParameterModel(q, mockUser);
+
             WsApi = _WsApi_;
         });
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $route, $rootScope, _ModalService_, _RestApi_, _StorageService_, _UserRepo_, _UserService_) {
+        inject(function ($controller, $location, $route, $rootScope, _ModalService_, _RestApi_, _StorageService_, _TableFactory_, _User_, _UserRepo_, _UserService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
+
+            UserService = _UserService_;
 
             controller = $controller("UserRepoController", {
                 $location: $location,
@@ -28,7 +32,8 @@ describe("controller: UserRepoController", function () {
                 ModalService: _ModalService_,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
-                User: mockParameterModel(q, mockUser),
+                TableFactory: _TableFactory_,
+                User: _User_,
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,
                 WsApi: WsApi
@@ -47,7 +52,12 @@ describe("controller: UserRepoController", function () {
         module("mock.modalService");
         module("mock.restApi");
         module("mock.storageService");
-        module("mock.user");
+        module("mock.user", function($provide) {
+            User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
         module("mock.userRepo");
         module("mock.userService");
         module("mock.wsApi");
@@ -195,20 +205,26 @@ describe("controller: UserRepoController", function () {
             var user = mockUser(q);
             var response;
 
-            user.mock(dataUser2);
+            user.mock(dataUser1);
+            user.role = "ROLE_ADMIN";
+
+            scope.user = mockUser(q);
+            scope.user.mock(dataUser1);
+            scope.user.role = "ROLE_ADMIN";
+
+            response = scope.disableUpdateRole(user);
+            expect(response).toBe(true);
+
+            user.role = "ROLE_NO_MATCH";
+
+            response = scope.disableUpdateRole(user);
+            expect(response).toBe(true);
+
+            user.role = scope.user.role;
+            user.email = "different";
 
             response = scope.disableUpdateRole(user);
             expect(response).toBe(false);
-
-            initializeController({role: "ROLE_MANAGER"});
-
-            response = scope.disableUpdateRole(user);
-            expect(response).toBe(true);
-
-            user.mock(dataUser1);
-
-            response = scope.disableUpdateRole(user);
-            expect(response).toBe(true);
         });
         it("setRole should assign the role", function () {
             var user = mockUser(q);

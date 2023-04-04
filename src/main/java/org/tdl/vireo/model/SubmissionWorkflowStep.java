@@ -7,8 +7,11 @@ import javax.persistence.Entity;
 
 import org.tdl.vireo.model.validation.SubmissionWorkflowStepValidator;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 @Entity
 @DiscriminatorValue("Sub")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class SubmissionWorkflowStep extends AbstractWorkflowStep<SubmissionWorkflowStep, SubmissionFieldProfile, SubmissionNote> {
 
     public SubmissionWorkflowStep() {

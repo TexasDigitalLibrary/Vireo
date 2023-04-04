@@ -9,12 +9,14 @@ import javax.persistence.Transient;
 import org.tdl.vireo.model.validation.FieldPredicateValidator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class FieldPredicate extends ValidatingBaseEntity {
 
     @Transient

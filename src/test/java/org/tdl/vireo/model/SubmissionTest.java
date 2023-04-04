@@ -1,43 +1,51 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.dao.DataIntegrityViolationException;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
 public class SubmissionTest extends AbstractEntityTest {
 
-    @Before
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
+
+    @BeforeEach
     public void setUp() {
-        assertEquals("The submission repository was not empty!", 0, submissionRepo.count());
+        assertEquals(0, submissionRepo.count(), "The submission repository was not empty!");
 
         submitter = userRepo.create(TEST_SUBMISSION_SUBMITTER_EMAIL, TEST_SUBMISSION_SUBMITTER_FIRSTNAME, TEST_SUBMISSION_SUBMITTER_LASTNAME, TEST_SUBMISSION_SUBMITTER_ROLE);
-        assertEquals("The user does not exist!", 1, userRepo.count());
+        assertEquals(1, userRepo.count(), "The user does not exist!");
 
         graduateOfficeEmployee1 = userRepo.create(TEST_SUBMISSION_REVIEWER1_EMAIL, TEST_SUBMISSION_REVIEWER1_FIRSTNAME, TEST_SUBMISSION_REVIEWER1_LASTNAME, TEST_SUBMISSION_REVIEWER1_ROLE);
-        assertEquals("The first reviewer does not exist!", 2, userRepo.count());
+        assertEquals(2, userRepo.count(), "The first reviewer does not exist!");
 
         graduateOfficeEmployee1 = userRepo.create(TEST_SUBMISSION_REVIEWER2_EMAIL, TEST_SUBMISSION_REVIEWER1_FIRSTNAME, TEST_SUBMISSION_REVIEWER1_LASTNAME, TEST_SUBMISSION_REVIEWER1_ROLE);
-        assertEquals("The second reviewer does not exist!", 3, userRepo.count());
+        assertEquals(3, userRepo.count(), "The second reviewer does not exist!");
 
         submissionStatus = submissionStatusRepo.create(TEST_SUBMISSION_STATUS_NAME, TEST_SUBMISSION_STATUS_ARCHIVED, TEST_SUBMISSION_STATUS_PUBLISHABLE, TEST_SUBMISSION_STATUS_DELETABLE, TEST_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATUS_ACTIVE, null);
-        assertEquals("The submission state does not exist!", 1, submissionStatusRepo.count());
+        assertEquals(1, submissionStatusRepo.count(), "The submission state does not exist!");
 
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
-        assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
+        assertEquals(1, organizationCategoryRepo.count(), "The category does not exist!");
 
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-        assertEquals("The organization does not exist!", 1, organizationRepo.count());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
+        assertEquals(1, organizationRepo.count(), "The organization does not exist!");
 
         workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
-        organization = organizationRepo.findOne(organization.getId());
-        assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
+        organization = organizationRepo.findById(organization.getId()).get();
+        assertEquals(1, workflowStepRepo.count(), "The workflow step does not exist!");
 
         submissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(workflowStep);
 
@@ -46,84 +54,91 @@ public class SubmissionTest extends AbstractEntityTest {
         inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
 
         fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        assertEquals("The field profile does not exist!", 1, fieldProfileRepo.count());
+        assertEquals(1, fieldProfileRepo.count(), "The field profile does not exist!");
 
         SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.create(fieldProfile);
-        assertEquals("The submission field profile does not exist!", 1, submissionFieldProfileRepo.count());
+        assertEquals(1, submissionFieldProfileRepo.count(), "The submission field profile does not exist!");
 
         fieldValue = fieldValueRepo.create(submissionFieldProfile.getFieldPredicate());
         fieldValue.setValue(TEST_FIELD_VALUE);
         fieldValue = fieldValueRepo.save(fieldValue);
-        assertEquals("The field value does not exist!", 1, fieldValueRepo.count());
-        assertEquals("The field value did not have the correct value!", TEST_FIELD_VALUE, fieldValue.getValue());
+        assertEquals(1, fieldValueRepo.count(), "The field value does not exist!");
+        assertEquals(TEST_FIELD_VALUE, fieldValue.getValue(), "The field value did not have the correct value!");
 
         embargoType = embargoRepo.create(TEST_EMBARGO_TYPE_NAME, TEST_EMBARGO_TYPE_DESCRIPTION, TEST_EMBARGO_TYPE_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
-        assertEquals("The embargo type does not exist!", 1, embargoRepo.count());
+        assertEquals(1, embargoRepo.count(), "The embargo type does not exist!");
 
         testCustomActionDefinition = customActionDefinitionRepo.create(TEST_CUSTOM_ACTION_DEFINITION_LABEL, TEST_CUSTOM_ACTION_DEFINITION_VISIBLE_BY_STUDENT);
-        assertEquals("The customActionDefinition repository is not 1!", 1, customActionDefinitionRepo.count());
+        assertEquals(1, customActionDefinitionRepo.count(), "The customActionDefinition repository is not 1!");
 
     }
 
     @Override
+    @Test
+    @Transactional
     public void testCreate() throws OrganizationDoesNotAcceptSubmissionsException {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
-        
+
         submission = submissionRepo.save(submission);
 
         CustomActionDefinition cad = customActionDefinitionRepo.create("My Custom Action", true);
         CustomActionValue cav = customActionValueRepo.create(submission, cad, false);
 
-        organization = organizationRepo.findOne(organization.getId());
-        
+        organization = organizationRepo.findById(organization.getId()).get();
+
         submission = submissionRepo.read(submission.getId());
 
-        assertEquals("The repository did not save the submission!", 1, submissionRepo.count());
-        assertEquals("Saved submission did not contain the correct state!", submissionStatus, submission.getSubmissionStatus());
-        assertEquals("Saved submission did not contain the correct submitter!", submitter, submission.getSubmitter());
-        assertEquals("Saved submission did not contain the correct organization!", submission.getOrganization(), organization);
-        assertEquals("Saved submission did not contain the correct submission workflow step!", true, submission.getSubmissionWorkflowSteps().contains(submissionWorkflowStep));
-        assertEquals("Saved submission did not contain the correct field value!", true, submission.getFieldValues().contains(fieldValue));
-        assertEquals("Saved submission did not contain the correct custom action value!", true, submission.getCustomActionValues().contains(cav));
+        assertEquals(1, submissionRepo.count(), "The repository did not save the submission!");
+        assertEquals(submissionStatus, submission.getSubmissionStatus(), "Saved submission did not contain the correct state!");
+        assertEquals(submitter, submission.getSubmitter(), "Saved submission did not contain the correct submitter!");
+        assertEquals(submission.getOrganization(), organization, "Saved submission did not contain the correct organization!");
+        assertEquals(true, submission.getSubmissionWorkflowSteps().contains(submissionWorkflowStep), "Saved submission did not contain the correct submission workflow step!");
+        assertEquals(true, submission.getFieldValues().contains(fieldValue), "Saved submission did not contain the correct field value!");
+        assertEquals(true, submission.getCustomActionValues().contains(cav), "Saved submission did not contain the correct custom action value!");
 
     }
 
-    @Test(expected = OrganizationDoesNotAcceptSubmissionsException.class)
+    @Test
     public void testAcceptsSubmissions() throws OrganizationDoesNotAcceptSubmissionsException {
         organization.setAcceptsSubmissions(false);
 
         // expect an exception when creating Submission on the Organization that doesn't accept them
-        submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        Assertions.assertThrows(OrganizationDoesNotAcceptSubmissionsException.class, () -> {
+            submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
+        });
     }
 
     @Override
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test
+    @Transactional
     public void testDuplication() throws OrganizationDoesNotAcceptSubmissionsException {
-
-        submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
-        assertEquals("The repository didn't persist submission!", 1, submissionRepo.count());
-        submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
-        assertEquals("The repository duplicated the submission!", 1, submissionRepo.count());
+        List<CustomActionDefinition> actions = customActionDefinitionRepo.findAll();
+        submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), actions);
+        assertEquals(1, submissionRepo.count(), "The repository didn't persist submission!");
+        submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), actions);
+        assertEquals(2, submissionRepo.count(), "The repository didn't create the additional submission!");
     }
 
     @Override
+    @Test
     public void testDelete() throws OrganizationDoesNotAcceptSubmissionsException {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         submissionRepo.delete(submission);
-        assertEquals("Submission did not delete!", 0, submissionRepo.count());
+        assertEquals(0, submissionRepo.count(), "Submission did not delete!");
     }
 
     @Override
+    @Test
     @Transactional
     public void testCascade() throws OrganizationDoesNotAcceptSubmissionsException {
-        organization = organizationRepo.findOne(organization.getId());
-        parentCategory = organizationCategoryRepo.findOne(organization.getCategory().getId());
+        organization = organizationRepo.findById(organization.getId()).get();
+        parentCategory = organizationCategoryRepo.findById(organization.getCategory().getId()).get();
 
         WorkflowStep severableWorkflowStep = workflowStepRepo.create(TEST_SEVERABLE_WORKFLOW_STEP_NAME, organization);
         SubmissionWorkflowStep severableSubmissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(severableWorkflowStep);
@@ -134,14 +149,14 @@ public class SubmissionTest extends AbstractEntityTest {
         severableFieldValue.setValue("Remove me from the submission!");
         Long severableFieldValueId = severableFieldValue.getId();
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
         ActionLog severableActionLog = actionLogRepo.create(submission, submitter, TEST_SUBMISSION_STATUS_ACTION_LOG_ACTION_DATE, TEST_SUBMISSION_STATUS_ACTION_LOG_ENTRY, TEST_SUBMISSION_STATUS_ACTION_LOG_FLAG);
-        submission = submissionRepo.findOne(submission.getId());
+        submission = submissionRepo.findById(submission.getId()).get();
 
         int numSteps = submission.getSubmissionWorkflowSteps().size();
         // TODO: assert that the brand new submission has only the ones it gets from its org
-        assertEquals("The submission didn't get its org's workflow!", organization.getAggregateWorkflowSteps().size(), submission.getSubmissionWorkflowSteps().size());
+        assertEquals(organization.getAggregateWorkflowSteps().size(), submission.getSubmissionWorkflowSteps().size(), "The submission didn't get its org's workflow!");
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         numSteps++;
@@ -156,17 +171,17 @@ public class SubmissionTest extends AbstractEntityTest {
         submission.addActionLog(severableActionLog);
         submission = submissionRepo.save(submission);
 
-        severableSubmissionWorkflowStep = submissionWorkflowStepRepo.findOne(severableSubmissionWorkflowStep.getId());
+        severableSubmissionWorkflowStep = submissionWorkflowStepRepo.findById(severableSubmissionWorkflowStep.getId()).get();
 
         // test remove pointer workflow step and make sure the workflow step is
         // no longer associated but still exists
         submission.removeSubmissionWorkflowStep(severableSubmissionWorkflowStep);
         numSteps--;
         submission = submissionRepo.save(submission);
-        assertEquals("The workflow step was not removed!", numSteps, submission.getSubmissionWorkflowSteps().size());
+        assertEquals(numSteps, submission.getSubmissionWorkflowSteps().size(), "The workflow step was not removed!");
 
         // 2 submission workflow steps added during the create method!
-        assertEquals("The workflow step was deleted!", 4, submissionWorkflowStepRepo.count());
+        assertEquals(4, submissionWorkflowStepRepo.count(), "The workflow step was deleted!");
 
         long fieldValueCount = fieldValueRepo.count();
         long submissionFieldValueCount = submission.getFieldValues().size();
@@ -176,59 +191,69 @@ public class SubmissionTest extends AbstractEntityTest {
         // should delete the orphan field value, so decrement our expected count.
         fieldValueCount--;
         submissionFieldValueCount--;
-        FieldValue orphan = fieldValueRepo.findOne(severableFieldValueId);
-        assertEquals("The field value was orphaned! ", null, orphan);
-        assertEquals("The field value was not removed!", submissionFieldValueCount, submission.getFieldValues().size());
-        assertEquals("The field value was orphaned!", fieldValueCount, fieldValueRepo.count());
+
+        assertEquals(false, fieldValueRepo.findById(severableFieldValueId).isPresent(), "The field value was orphaned! ");
+        assertEquals(submissionFieldValueCount, submission.getFieldValues().size(), "The field value was not removed!");
+        assertEquals(fieldValueCount, fieldValueRepo.count(), "The field value was orphaned!");
 
         // From here on we test the actual cascade:
 
         // test delete submission and make sure:
         // the submission is deleted
         submissionRepo.delete(submission);
-        assertEquals("Submission was not deleted!", 0, submissionRepo.count());
+        assertEquals(0, submissionRepo.count(), "Submission was not deleted!");
 
         // the submission state is not deleted
         // the organization is not deleted
-        assertEquals("The submission state was deleted!", 1, submissionStatusRepo.count());
-        assertEquals("The organization was deleted!", 1, organizationRepo.count());
+        assertEquals(1, submissionStatusRepo.count(), "The submission state was deleted!");
+        assertEquals(1, organizationRepo.count(), "The organization was deleted!");
 
         // the field values are deleted
         // the workflow steps are not deleted
         // the actionlog is deleted
-        assertEquals("The field values were orphaned!", 0, fieldValueRepo.count());
-        assertEquals("The workflow steps were deleted!", 2, workflowStepRepo.count());
-        assertEquals("The action log was  orphaned!", 0, actionLogRepo.count());
-        assertEquals("The embargo type was deleted!", 1, embargoRepo.count());
+        assertEquals(0, fieldValueRepo.count(), "The field values were orphaned!");
+        assertEquals(2, workflowStepRepo.count(), "The workflow steps were deleted!");
+        assertEquals(0, actionLogRepo.count(), "The action log was  orphaned!");
+        assertEquals(1, embargoRepo.count(), "The embargo type was deleted!");
 
         // and, going another level deep on the cascade from field values to their predicates,
         // see that the field predicate was not deleted.
-        assertEquals("The field predicate was deleted!", 1, fieldPredicateRepo.count());
+        assertEquals(1, fieldPredicateRepo.count(), "The field predicate was deleted!");
     }
 
     @Test
-    public void testUniqueConstraint() throws OrganizationDoesNotAcceptSubmissionsException {
+    @Transactional
+    public void testMultiple() throws OrganizationDoesNotAcceptSubmissionsException {
 
-        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        List<CustomActionDefinition> actions= customActionDefinitionRepo.findAll();
+
+        Submission submission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), actions);
 
         submission.addSubmissionWorkflowStep(submissionWorkflowStep);
         submission.addFieldValue(fieldValue);
 
-        submissionWorkflowStep = submissionWorkflowStepRepo.findOne(submissionWorkflowStep.getId());
-        organization = organizationRepo.findOne(organization.getId());
+        submissionWorkflowStep = submissionWorkflowStepRepo.findById(submissionWorkflowStep.getId()).get();
+        organization = organizationRepo.findById(organization.getId()).get();
         submission = submissionRepo.save(submission);
 
-        assertEquals("The submission was not retrievable by its unique constraint!", submission, submissionRepo.findBySubmitterAndOrganization(submitter, organization));
+        List<Submission> found = submissionRepo.findAllBySubmitterAndOrganization(submitter, organization);
 
-        try {
+        assertEquals(1, found.size(), "Did not retrieve exactly one submission by submitter and organization!");
+        assertEquals(submission, found.get(0), "The submission was not retrievable by submitter and organization!");
 
-            submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
-            assertTrue(false);
-        } catch (Exception e) {
-            /* SUCCESS */ }
+        Submission secondSubmission = submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), actions);
+
+        secondSubmission.addSubmissionWorkflowStep(submissionWorkflowStep);
+        submission = submissionRepo.save(submission);
+
+        found = submissionRepo.findAllBySubmitterAndOrganization(submitter, organization);
+
+        assertEquals(2, found.size(), "Did not retrieve exactly two submissions by submitter and organization!");
+        assertEquals(secondSubmission, found.get(1), "The submission was not retrievable by submitter and organization!");
+        assertNotEquals(found.get(0).getId(), found.get(1).getId(), "The submissions retrieved by submitter and organization are the same!");
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         submissionRepo.deleteAll();
         submissionStatusRepo.deleteAll();

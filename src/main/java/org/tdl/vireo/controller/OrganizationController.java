@@ -154,7 +154,7 @@ public class OrganizationController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse deleteWorkflowStep(@PathVariable Long requestingOrgId, @WeaverValidatedModel WorkflowStep workflowStep) {
         Organization requestingOrg = organizationRepo.read(requestingOrgId);
-        WorkflowStep workflowStepToDelete = workflowStepRepo.findOne(workflowStep.getId());
+        WorkflowStep workflowStepToDelete = workflowStepRepo.findById(workflowStep.getId()).get();
         workflowStepRepo.removeFromOrganization(requestingOrg, workflowStepToDelete);
         return new ApiResponse(SUCCESS);
     }
@@ -163,7 +163,7 @@ public class OrganizationController {
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse shiftWorkflowStepUp(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepID) {
         Organization requestingOrg = organizationRepo.read(requestingOrgId);
-        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(workflowStepID);
+        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findById(workflowStepID).get();
         int workflowStepToShiftIndex = requestingOrg.getAggregateWorkflowSteps().indexOf(workflowStepToShiftUp);
         if (workflowStepToShiftIndex - 1 > -1) {
             WorkflowStep workflowStepToShiftDown = requestingOrg.getAggregateWorkflowSteps().get(workflowStepToShiftIndex - 1);
@@ -176,7 +176,7 @@ public class OrganizationController {
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse shiftWorkflowStepDown(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepID) {
         Organization requestingOrg = organizationRepo.read(requestingOrgId);
-        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findOne(workflowStepID);
+        WorkflowStep workflowStepToShiftUp = workflowStepRepo.findById(workflowStepID).get();
         int workflowStepToShiftIndex = requestingOrg.getAggregateWorkflowSteps().indexOf(workflowStepToShiftUp);
         if (workflowStepToShiftIndex + 1 < requestingOrg.getAggregateWorkflowSteps().size()) {
             WorkflowStep workflowStepToShiftDown = requestingOrg.getAggregateWorkflowSteps().get(workflowStepToShiftIndex + 1);
@@ -192,9 +192,9 @@ public class OrganizationController {
         ApiResponse response = new ApiResponse(SUCCESS);
 
         Organization org = organizationRepo.read(requestingOrgId);
-        SubmissionStatus submissionStatus = submissionStatusRepo.findOne(Long.valueOf((Integer) data.get("submissionStatusId")));
+        SubmissionStatus submissionStatus = submissionStatusRepo.findById(Long.valueOf((Integer) data.get("submissionStatusId"))).get();
         JsonNode recipientNode = objectMapper.convertValue(data, JsonNode.class).get("recipient");
-        EmailTemplate emailTemplate = emailTemplateRepo.findOne(Long.valueOf((Integer) data.get("templateId")));
+        EmailTemplate emailTemplate = emailTemplateRepo.findById(Long.valueOf((Integer) data.get("templateId"))).get();
 
         EmailRecipient emailRecipient = buildRecipient(recipientNode);
 
@@ -216,9 +216,9 @@ public class OrganizationController {
         ApiResponse response = new ApiResponse(SUCCESS);
 
         JsonNode recipientNode = objectMapper.convertValue(data, JsonNode.class).get("recipient");
-        EmailTemplate emailTemplate = emailTemplateRepo.findOne(Long.valueOf((Integer) data.get("templateId")));
+        EmailTemplate emailTemplate = emailTemplateRepo.findById(Long.valueOf((Integer) data.get("templateId"))).get();
 
-        EmailWorkflowRule emailWorkflowRuleToUpdate = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
+        EmailWorkflowRule emailWorkflowRuleToUpdate = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
 
         EmailRecipient emailRecipient = buildRecipient(recipientNode);
 
@@ -244,7 +244,7 @@ public class OrganizationController {
     public ApiResponse removeEmailWorkflowRule(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) throws SystemEmailRuleNotDeleteableException {
 
         Organization org = organizationRepo.read(requestingOrgId);
-        EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
+        EmailWorkflowRule rule = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
 
         if (rule.isSystem()) {
             throw new SystemEmailRuleNotDeleteableException();
@@ -263,7 +263,7 @@ public class OrganizationController {
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse changeEmailWorkflowRuleActivation(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) {
 
-        EmailWorkflowRule rule = emailWorkflowRuleRepo.findOne(emailWorkflowRuleId);
+        EmailWorkflowRule rule = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
 
         rule.isDisabled(!rule.isDisabled());
 
@@ -305,7 +305,7 @@ public class OrganizationController {
             break;
         }
         case "CONTACT": {
-            FieldPredicate recipientPredicate = fieldPredicateRepo.findOne(recipientNode.get("data").asLong());
+            FieldPredicate recipientPredicate = fieldPredicateRepo.findById(recipientNode.get("data").asLong()).get();
             emailRecipient = abstractEmailRecipientRepo.createContactRecipient(recipientNode.get("name").asText(), recipientPredicate);
             break;
         }

@@ -5,7 +5,7 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +67,7 @@ public class LookAndFeelController {
 
         //browsers cache the logo images by their name, so make the name inconsequentially different on update
         //so they'll show the new image without requiring a refresh
-        newLogoConfig.setValue(newLogoConfig.getValue()+"?"+RandomStringUtils.randomAlphanumeric(6));
+        newLogoConfig.setValue(newLogoConfig.getValue()+"?" + RandomStringUtils.randomAlphanumeric(6));
         simpMessagingTemplate.convertAndSend("/channel/settings/configurable", new ApiResponse(SUCCESS, newLogoConfig));
         return new ApiResponse(SUCCESS, newLogoConfig);
     }

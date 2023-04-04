@@ -1,10 +1,13 @@
 describe("service: abstractAppRepo", function () {
-    var q, repo, rootScope, mockedRepo, scope, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, User, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, _WsApi_) {
             q = $q;
             rootScope = $rootScope;
+
+            mockedRepo = new mockRepo("AbstractAppRepo", q);
+            mockedUser = mockParameterModel(q, mockUser);
 
             WsApi = _WsApi_;
         });
@@ -14,7 +17,6 @@ describe("service: abstractAppRepo", function () {
         inject(function ($injector) {
             scope = rootScope.$new();
 
-            mockedRepo = new mockRepo("AbstractAppRepo", q);
             repo = $injector.get("AbstractAppRepo")();
 
             // FIXME: find a way to get something like `angular.extend(new mockRepo("AbstractAppRepo", q), $injector.get("AbstractAppRepo")())` or `repo = AbstractAppRepo` to work.
@@ -28,6 +30,13 @@ describe("service: abstractAppRepo", function () {
         module("core");
         module("vireo");
         module("mock.fieldPredicate");
+        module("mock.user", function($provide) {
+            User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
+        module('mock.userService');
         module("mock.wsApi");
 
         initializeVariables();

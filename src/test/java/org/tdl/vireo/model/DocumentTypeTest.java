@@ -1,68 +1,80 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
+import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
 public class DocumentTypeTest extends AbstractEntityTest {
 
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
+
     @Override
+    @Test
     public void testCreate() {
         DocumentType documentType = documentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
-        assertEquals("The document type name was wrong!", documentType.getName(), TEST_DOCUMENT_TYPE_NAME);
-        assertEquals("The associated field predicate was wrong!", documentType.getFieldPredicate().getValue(), "_doctype_" + TEST_DOCUMENT_TYPE_NAME.toLowerCase().replace(' ', '_'));
+        assertEquals(documentType.getName(), TEST_DOCUMENT_TYPE_NAME, "The document type name was wrong!");
+        assertEquals(documentType.getFieldPredicate().getValue(), "_doctype_" + TEST_DOCUMENT_TYPE_NAME.toLowerCase().replace(' ', '_'), "The associated field predicate was wrong!");
     }
 
     @Override
+    @Test
     public void testDuplication() {
         documentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
         try {
             documentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
         } catch (DataIntegrityViolationException e) {
             /* SUCCESS */ }
-        assertEquals("The document type was duplicated!", 1, documentTypeRepo.count());
+        assertEquals(1, documentTypeRepo.count(), "The document type was duplicated!");
     }
 
     @Override
+    @Test
     public void testDelete() {
         DocumentType documentType = documentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
         documentTypeRepo.delete(documentType);
-        assertEquals("The document type was not deleted!", 0, documentTypeRepo.count());
+        assertEquals(0, documentTypeRepo.count(), "The document type was not deleted!");
     }
 
     @Override
+    @Test
     public void testCascade() {
         DocumentType documentType = documentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
-        assertEquals("The document type was not created!", 1, documentTypeRepo.count());
-        assertEquals("The field predicate was not created!", 1, fieldPredicateRepo.count());
+        assertEquals(1, documentTypeRepo.count(), "The document type was not created!");
+        assertEquals(1, fieldPredicateRepo.count(), "The field predicate was not created!");
         documentTypeRepo.delete(documentType);
-        assertEquals("The document type was not deleted!", 0, documentTypeRepo.count());
-        assertEquals("The field predicate was duplicated!", 0, fieldPredicateRepo.count());
+        assertEquals(0, documentTypeRepo.count(), "The document type was not deleted!");
+        assertEquals(0, fieldPredicateRepo.count(), "The field predicate was duplicated!");
 
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test
     public void testFieldPredicateDeleteFailure() {
         DocumentType documentType = documentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);
-        fieldPredicateRepo.delete(documentType.getFieldPredicate());
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+            fieldPredicateRepo.delete(documentType.getFieldPredicate());
+        });
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test
     public void testDeleteDocumentTypeWhileSubmissionReferencesPredicate() throws OrganizationDoesNotAcceptSubmissionsException {
-
         parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
-        assertEquals("The category does not exist!", 1, organizationCategoryRepo.count());
+        assertEquals(1, organizationCategoryRepo.count(), "The category does not exist!");
 
         organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
-        parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-        assertEquals("The organization does not exist!", 1, organizationRepo.count());
+        parentCategory = organizationCategoryRepo.findById(parentCategory.getId()).get();
+        assertEquals(1, organizationRepo.count(), "The organization does not exist!");
 
         workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
-        organization = organizationRepo.findOne(organization.getId());
-        assertEquals("The workflow step does not exist!", 1, workflowStepRepo.count());
+        organization = organizationRepo.findById(organization.getId()).get();
+        assertEquals(1, workflowStepRepo.count(), "The workflow step does not exist!");
 
         submissionWorkflowStep = submissionWorkflowStepRepo.cloneWorkflowStep(workflowStep);
 
@@ -74,7 +86,7 @@ public class DocumentTypeTest extends AbstractEntityTest {
         fieldPredicate = fieldPredicateRepo.findByValue("_doctype_" + TEST_DOCUMENT_TYPE_NAME.toLowerCase().replace(' ', '_'));
 
         fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, inputType, TEST_FIELD_PROFILE_USAGE, TEST_GLOSS, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL, TEST_FIELD_PROFILE_FLAGGED, TEST_FIELD_PROFILE_LOGGED, TEST_FIELD_PROFILE_DEFAULT_VALUE);
-        assertEquals("The field profile does not exist!", 1, fieldProfileRepo.count());
+        assertEquals(1, fieldProfileRepo.count(), "The field profile does not exist!");
 
         // Create a submitter.
         submitter = userRepo.create(TEST_SUBMISSION_SUBMITTER_EMAIL, TEST_SUBMISSION_SUBMITTER_FIRSTNAME, TEST_SUBMISSION_SUBMITTER_LASTNAME, TEST_SUBMISSION_SUBMITTER_ROLE);
@@ -82,15 +94,17 @@ public class DocumentTypeTest extends AbstractEntityTest {
         // Create a submission state
         submissionStatus = submissionStatusRepo.create(TEST_SUBMISSION_STATUS_NAME, TEST_SUBMISSION_STATUS_ARCHIVED, TEST_PARENT_SUBMISSION_STATUS_PUBLISHABLE, TEST_SUBMISSION_STATUS_DELETABLE, TEST_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATUS_ACTIVE, null);
 
-        assertEquals("The user does not exist!", 1, userRepo.count());
+        assertEquals(1, userRepo.count(), "The user does not exist!");
 
         // Create a Submission
-        submissionRepo.create(submitter, organization, submissionStatus, getCredentials());
+        submissionRepo.create(submitter, organization, submissionStatus, getCredentials(), customActionDefinitionRepo.findAll());
 
-        documentTypeRepo.delete(documentType);
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
+            documentTypeRepo.delete(documentType);
+        });
     }
 
-    @After
+    @AfterEach
     public void cleanUp() {
         submissionRepo.deleteAll();
         submissionStatusRepo.deleteAll();

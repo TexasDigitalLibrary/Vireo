@@ -31,17 +31,14 @@ angular.module("mock.userRepo", []).service("UserRepo", function($q) {
         return found;
     };
 
-    repo.getAssignableUsers = function (roles) {
+    repo.getAssignableUsers = function () {
         var payload = repo.fetch();
         return payloadPromise($q.defer(), payload);
     };
 
-    repo.getPageSettings = function () {
-
-    };
-
-    repo.getTableParams = function () {
-
+    repo.getUnassignableUsers = function () {
+        var payload = repo.fetch();
+        return payloadPromise($q.defer(), payload);
     };
 
     return repo;

@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $route, $routeParams, $scope, DepositLocationRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatuses, SubmissionStatusRepo, UserRepo, UserService, UserSettings, WsApi) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $routeParams, $scope, $timeout, DepositLocationRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatuses, SubmissionStatusRepo, UserRepo, UserService, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -11,6 +11,8 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
     $scope.embargoes = EmbargoRepo.getAll();
+
+    $scope.actionLogDelay = 2000;
 
     var userSettings = new UserSettings();
 
@@ -63,7 +65,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         $scope.submission.fetchDocumentTypeFileInfo();
     };
 
-    $scope.loaded = true;
+    $scope.loaded = false;
 
     $scope.addCommentModal = {};
 
@@ -74,8 +76,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     $scope.dropZoneText = "Drop a file or click arrow";
 
     SubmissionRepo.fetchSubmissionById($routeParams.id).then(function(submission) {
-      
+
         $scope.submission = submission;
+
+        $scope.loaded = true;
 
         WsApi.listen("/channel/submission/" + $scope.submission.id).then(null, null, function(res) {
             var apiRes = angular.fromJson(res.body);
@@ -100,7 +104,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.resetCommentModal = function (addCommentModal) {
           $scope.closeModal();
-          
+
           addCommentModal.adding = false;
           addCommentModal.commentVisibility = userSettings.notes_mark_comment_as_private_by_default ? "private" : "public";
           addCommentModal.recipientEmail = '';
@@ -145,24 +149,29 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
           if ($scope.addCommentModal.commentVisibility == 'public') {
               if ($scope.addCommentModal.sendEmailToRecipient) {
                   if ($scope.addCommentModal.sendEmailToCCRecipient) {
-                      disable = $scope.addCommentModal.recipientEmails.length === 0 || 
-                                $scope.addCommentModal.ccRecipientEmails.length === 0 || 
-                                $scope.addCommentModal.subject === undefined || 
-                                $scope.addCommentModal.subject === "" || 
+                      disable = $scope.addCommentModal.recipientEmails.length === 0 ||
+                                $scope.addCommentModal.ccRecipientEmails.length === 0 ||
+                                $scope.addCommentModal.subject === undefined ||
+                                $scope.addCommentModal.subject === "" ||
                                 $scope.addCommentModal.message === undefined ||
                                 $scope.addCommentModal.message === "";
                   } else {
-                      disable = $scope.addCommentModal.recipientEmails.length === 0 || 
-                                $scope.addCommentModal.subject === undefined || 
-                                $scope.addCommentModal.subject === "" || 
+                      disable = $scope.addCommentModal.recipientEmails.length === 0 ||
+                                $scope.addCommentModal.subject === undefined ||
+                                $scope.addCommentModal.subject === "" ||
                                 $scope.addCommentModal.message === undefined ||
                                 $scope.addCommentModal.message === "";
                   }
+              } else {
+                  disable = $scope.addCommentModal.subject === undefined ||
+                            $scope.addCommentModal.subject === "" ||
+                            $scope.addCommentModal.message === undefined ||
+                            $scope.addCommentModal.message === "";
               }
           } else {
               if ($scope.addCommentModal.commentVisibility == 'private') {
-                  disable = $scope.addCommentModal.subject === undefined || 
-                          $scope.addCommentModal.subject === "" || 
+                  disable = $scope.addCommentModal.subject === undefined ||
+                          $scope.addCommentModal.subject === "" ||
                           $scope.addCommentModal.message === undefined ||
                           $scope.addCommentModal.message === "";
               }
@@ -175,10 +184,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         var recipient = formField.$$rawModelValue;
 
         if (recipient) {
-          
-          if(typeof recipient === 'string') {
 
-            if(!$scope.validateEmailAddressee(formField)) return;            
+          if (typeof recipient === 'string') {
+
+            if (!$scope.validateEmailAddressee(formField)) return;
 
             recipient = new EmailRecipient({
               name: recipient,
@@ -186,7 +195,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
               data: recipient
             });
           }
-          
+
           emails.push(recipient);
 
           //This is not ideal, as it assumes the attr name and attr ngModel are the same.
@@ -207,7 +216,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
               break;
             }
           }
-        }        
+        }
         $scope[formField.$$attr.name+"Invalid"] = formField.$invalid && !valueIsContact;
         return  !$scope[formField.$$attr.name+"Invalid"];
       };
@@ -274,11 +283,13 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         $scope.deleteDocumentFieldValue = function (fieldValue) {
             fieldValue.updating = true;
-            FileUploadService.removeFile($scope.submission, fieldValue).then(function () {
-                $scope.closeModal();
-                $scope.confirm = false;
-                delete fieldValue.updating;
-            });
+            $scope.closeModal();
+            $timeout(function() {
+                FileUploadService.removeFile($scope.submission, fieldValue).then(function () {
+                    $scope.confirm = false;
+                    delete fieldValue.updating;
+                });
+            }, 250);
         };
 
         $scope.saveDocumentFieldValue = function (fieldValue) {
@@ -378,7 +389,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             $scope.closeModal();
             $scope.errorMessage = "";
             $scope.removeFiles();
-            
+
             $scope.addFileData.uploading = false;
             $scope.addFileData.recipientEmail = '';
             $scope.addFileData.recipientEmails = userSettings.attachment_email_student_by_default === "true" ? [new EmailRecipient({
@@ -406,20 +417,20 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         $scope.resetFileData();
-        
+
         $scope.submitAddFile = function () {
 
             $scope.addFileData.uploading = true;
 
             var fieldValue;
 
-            if($scope.addFileData.addFileSelection === 'replace') {
-                if($scope.submission.primaryDocumentFieldValue !== undefined) {
+            if ($scope.addFileData.addFileSelection === 'replace') {
+                if ($scope.submission.primaryDocumentFieldValue !== undefined) {
                     fieldValue = $scope.submission.primaryDocumentFieldValue;
                 } else {
                     for(var i in $scope.fieldPredicates) {
                         var fieldPredicate = $scope.fieldPredicates[i];
-                        if(fieldPredicate.value === '_doctype_primary') {
+                        if (fieldPredicate.value === '_doctype_primary') {
                             fieldValue = new FieldValue({
                                 fieldPredicate: fieldPredicate
                             });
@@ -611,7 +622,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "SubmissionStatusRepo": SubmissionStatusRepo,
             "submissionStatuses": submissionStatuses,
             "advanced": true,
-            "assignableUsers": UserRepo.getAssignableUsers(),
+            "assignableUsers": UserRepo.getAssignableUsers(0, 0),
             "user": UserService.getCurrentUser(),
             "sending": false,
             "sendAdvisorEmail": function () {

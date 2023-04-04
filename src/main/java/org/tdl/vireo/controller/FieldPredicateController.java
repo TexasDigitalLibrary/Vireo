@@ -67,7 +67,7 @@ public class FieldPredicateController {
     @WeaverValidation(business = { @WeaverValidation.Business(value = CREATE) })
     public ApiResponse createFieldPredicate(@WeaverValidatedModel FieldPredicate fieldPredicate) {
         logger.info("Creating Field Predicate:  " + fieldPredicate.getValue());
-        return new ApiResponse(SUCCESS, fieldPredicateRepo.create(fieldPredicate.getValue(), new Boolean(false)));
+        return new ApiResponse(SUCCESS, fieldPredicateRepo.create(fieldPredicate.getValue(), Boolean.valueOf(false)));
     }
 
     /**

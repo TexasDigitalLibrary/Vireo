@@ -1,10 +1,18 @@
 vireo.repo("ManagerSubmissionListColumnRepo", function ManagerSubmissionListColumnRepo(WsApi) {
 
     var managerSubmissionListColumnRepo = this;
-    
+
     this.updateSubmissionListColumns = function(columns, pageSize) {
         angular.extend(managerSubmissionListColumnRepo.mapping.update, {
             'method': 'update-user-columns/' + pageSize,
+            'data': columns
+        });
+        return WsApi.fetch(managerSubmissionListColumnRepo.mapping.update);
+    };
+
+    this.updateSubmissionListColumnSort = function(columns) {
+        angular.extend(managerSubmissionListColumnRepo.mapping.update, {
+            'method': 'update-sort',
             'data': columns
         });
         return WsApi.fetch(managerSubmissionListColumnRepo.mapping.update);

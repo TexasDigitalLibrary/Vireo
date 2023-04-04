@@ -1,6 +1,8 @@
 package org.tdl.vireo.integration;
 
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
@@ -18,6 +20,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     private LanguageRepo languageRepo;
 
     @Override
+    @BeforeEach
     public void setup() {
 
         systemDataLoader.loadSystemDefaults();
@@ -94,6 +97,7 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
     }
 
     @Override
+    @AfterEach
     public void cleanup() {
         controlledVocabularyRepo.findAll().forEach(cv -> {
             controlledVocabularyRepo.delete(cv);

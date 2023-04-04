@@ -1,10 +1,12 @@
 describe("service: organizationRepo", function () {
-    var q, repo, rootScope, mockedRepo, scope, RestApi, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, RestApi, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, _RestApi_, _WsApi_) {
             q = $q;
             rootScope = $rootScope;
+
+            mockedUser = mockParameterModel(q, mockUser);
 
             RestApi = _RestApi_;
             WsApi = _WsApi_;
@@ -15,7 +17,7 @@ describe("service: organizationRepo", function () {
         inject(function ($injector, OrganizationRepo) {
             scope = rootScope.$new();
 
-            repo = OrganizationRepo;
+            repo = $injector.get('OrganizationRepo');
         });
     };
 
@@ -24,6 +26,13 @@ describe("service: organizationRepo", function () {
         module("vireo");
         module("mock.organization");
         module("mock.restApi");
+        module("mock.user", function($provide) {
+            var User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
+        module("mock.userService");
         module("mock.workflowStep");
         module("mock.wsApi");
 

@@ -27,35 +27,36 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.OrganizationValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
-import edu.tamu.weaver.response.ApiView;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-@JsonIgnoreProperties(value = { "aggregateWorkflowSteps", "childrenOrganizations" }, allowGetters = true)
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "category_id", "parent_organization_id" }))
 public class Organization extends ValidatingBaseEntity {
 
     @Transient
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = false)
     private String name;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.SubmissionList.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private OrganizationCategory category;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @Column(nullable = false)
     private Boolean acceptsSubmissions = true;
 
@@ -65,18 +66,20 @@ public class Organization extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private List<WorkflowStep> originalWorkflowSteps;
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @CollectionTable(uniqueConstraints = @UniqueConstraint(columnNames = { "organization_id", "aggregate_workflow_steps_id", "aggregateWorkflowSteps_order" }))
     @OrderColumn
     private List<WorkflowStep> aggregateWorkflowSteps;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonView(Views.Partial.class)
     @ManyToOne(fetch = EAGER, optional = true)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private Organization parentOrganization;
 
-    @JsonView(ApiView.Partial.class)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonView(Views.Partial.class)
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)
     private Set<Organization> childrenOrganizations;
@@ -87,6 +90,9 @@ public class Organization extends ValidatingBaseEntity {
     @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, fetch = EAGER)
     private List<EmailWorkflowRule> emailWorkflowRules;
 
+    /**
+     * Initializer.
+     */
     public Organization() {
         setModelValidator(new OrganizationValidator());
         setOriginalWorkflowSteps(new ArrayList<WorkflowStep>());
@@ -98,6 +104,7 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Initializer.
      *
      * @param name
      */
@@ -108,6 +115,7 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Initializer.
      *
      * @param name
      * @param category
@@ -117,6 +125,9 @@ public class Organization extends ValidatingBaseEntity {
         setCategory(category);
     }
 
+    /**
+     * @return True.
+     */
     public boolean isComplete() {
         return true;
     }
@@ -129,24 +140,21 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
-     * @return
+     * @return the category
      */
     public OrganizationCategory getCategory() {
         return category;
     }
 
     /**
-     *
-     * @param catagory
+     * @param category the category to set
      */
     public void setCategory(OrganizationCategory category) {
         this.category = category;
@@ -203,10 +211,12 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Replace the workflow step.
      *
-     * @param ws1
-     * @param ws2
-     * @return
+     * @param ws1 The workflow step to replace.
+     * @param ws2 The workflow step to replace with.
+     *
+     * @return True on replaced and false otherwise.
      */
     public boolean replaceOriginalWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {
         boolean res = false;
@@ -259,7 +269,6 @@ public class Organization extends ValidatingBaseEntity {
         getChildrenOrganizations().forEach(childOrganization -> {
             childOrganization.addAggregateWorkflowStep(aggregateWorkflowStep);
         });
-
     }
 
     /**
@@ -274,10 +283,12 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Replace the workflow step.
      *
-     * @param ws1
-     * @param ws2
-     * @return
+     * @param ws1 The workflow step to replace.
+     * @param ws2 The workflow step to replace with.
+     *
+     * @return True on replaced and false otherwise.
      */
     public boolean replaceAggregateWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {
         boolean res = false;
@@ -299,10 +310,12 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Swap the workflow step.
      *
-     * @param ws1
-     * @param ws2
-     * @return
+     * @param ws1 The workflow step to swap.
+     * @param ws2 The workflow step to swap with.
+     *
+     * @return True on swapped and false otherwise.
      */
     public boolean swapAggregateWorkflowStep(WorkflowStep ws1, WorkflowStep ws2) {
         boolean res = false;
@@ -326,8 +339,7 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
-     * @param parentOrganizations
-     *            the parentOrganizations to set
+     * @param parentOrganization the parentOrganizations to set.
      */
     public void setParentOrganization(Organization parentOrganization) {
         this.parentOrganization = parentOrganization;
@@ -422,8 +434,9 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Remove the workflow rule.
      *
-     * @param emailWorkflowRules
+     * @param emailWorkflowRule The workflow rule to remove.
      */
     public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
         getEmailWorkflowRules().remove(emailWorkflowRule);

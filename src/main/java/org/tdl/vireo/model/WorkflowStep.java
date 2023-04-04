@@ -74,21 +74,6 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     * @return the originatingWorkflowStep
-     */
-    public WorkflowStep getOriginatingWorkflowStep() {
-        return originatingWorkflowStep;
-    }
-
-    /**
-     * @param originatingWorkflowStep
-     *            the originatingWorkflowStep to set
-     */
-    public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
-        this.originatingWorkflowStep = originatingWorkflowStep;
-    }
-
-    /**
      * @return the originatingOrganization
      */
     public Organization getOriginatingOrganization() {
@@ -96,32 +81,42 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     * @param originatingOrganization
-     *            the originatingOrganization to set
+     * @param originatingOrganization the originatingOrganization to set
      */
     public void setOriginatingOrganization(Organization originatingOrganization) {
         this.originatingOrganization = originatingOrganization;
     }
 
     /**
-     *
-     * @return
+     * @return the originatingWorkflowStep
+     */
+    public WorkflowStep getOriginatingWorkflowStep() {
+        return originatingWorkflowStep;
+    }
+
+    /**
+     * @param originatingWorkflowStep the originatingWorkflowStep to set
+     */
+    public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
+        this.originatingWorkflowStep = originatingWorkflowStep;
+    }
+
+    /**
+     * @return the originalFieldProfiles
      */
     public List<FieldProfile> getOriginalFieldProfiles() {
         return originalFieldProfiles;
     }
 
     /**
-     *
-     * @param param
+     * @param originalFieldProfiles the originalFieldProfiles to set
      */
     public void setOriginalFieldProfiles(List<FieldProfile> originalFieldProfiles) {
         this.originalFieldProfiles = originalFieldProfiles;
     }
 
     /**
-     *
-     * @param fieldProfile
+     * @param originalFieldProfile
      */
     public void addOriginalFieldProfile(FieldProfile originalFieldProfile) {
         if (!getOriginalFieldProfiles().contains(originalFieldProfile)) {
@@ -131,8 +126,7 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     *
-     * @param fieldProfile
+     * @param originalFieldProfile
      */
     public void removeOriginalFieldProfile(FieldProfile originalFieldProfile) {
         getOriginalFieldProfiles().remove(originalFieldProfile);
@@ -140,10 +134,12 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
+     * Replace the field profile.
      *
-     * @param fp1
-     * @param fp2
-     * @return
+     * @param fp1 The FieldProfile to replace.
+     * @param fp2 The FieldProfile to replace with.
+     *
+     * @return True if replaced and false otherwise.
      */
     public boolean replaceOriginalFieldProfile(FieldProfile fp1, FieldProfile fp2) {
         boolean res = false;
@@ -162,9 +158,9 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
     }
 
     /**
-     *
      * @param fieldPredicate
-     * @return
+     *
+     * @return The fieldPredicate.
      */
     public FieldProfile getFieldProfileByPredicate(FieldPredicate fieldPredicate) {
         for (FieldProfile fieldProfile : getOriginalFieldProfiles()) {
@@ -174,10 +170,16 @@ public class WorkflowStep extends AbstractWorkflowStep<WorkflowStep, FieldProfil
         return null;
     }
 
+    /**
+     * @return the originalNotes
+     */
     public List<Note> getOriginalNotes() {
         return originalNotes;
     }
 
+    /**
+     * @param originalNotes the originalNotes to set
+     */
     public void setOriginalNotes(List<Note> originalNotes) {
         this.originalNotes = originalNotes;
     }

@@ -31,6 +31,7 @@ describe('model: Submission', function () {
         module('mock.fileService');
         //module('mock.organization');
         module('mock.user');
+        module('mock.userService');
         module('mock.wsApi');
 
         initializeVariables();

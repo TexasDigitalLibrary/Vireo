@@ -181,7 +181,9 @@ vireo.directive("triptych", function () {
 
             var setVisibility = function (panel) {
                 var closingPromise;
-                var visible = panel.organization.childrenOrganizations.length > 0;
+                var visible = panel.organization &&
+                    panel.organization.childrenOrganizations &&
+                    panel.organization.childrenOrganizations.length > 0;
                 if (panel.visible && !visible) {
                     closingPromise = close(panel);
                 }

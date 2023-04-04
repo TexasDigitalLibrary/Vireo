@@ -7,6 +7,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.validation.ManagedConfigurationValidator;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 /**
@@ -14,6 +16,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
  *
  */
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name" }))
 public class ManagedConfiguration extends ValidatingBaseEntity implements Configuration {
 

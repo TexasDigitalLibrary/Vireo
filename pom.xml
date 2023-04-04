@@ -4,11 +4,13 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <name>Vireo</name>
-  <description>Vireo Thesis and Dissertation Submission System</description>
-  <version>4.1.0</version>
   <groupId>org.tdl</groupId>
   <artifactId>vireo</artifactId>
+  <version>4.1.4</version>
+
+  <name>Vireo</name>
+  <description>Vireo Thesis and Dissertation Submission System</description>
+
   <url>https://github.com/TexasDigitalLibrary/Vireo</url>
   <organization>
     <name>TDL</name>
@@ -18,21 +20,23 @@
   <parent>
     <groupId>edu.tamu.weaver</groupId>
     <artifactId>webservice-parent</artifactId>
-    <version>2.1.1-SNAPSHOT</version>
-    <relativePath></relativePath>
+    <version>2.1.1-RC19</version>
+    <relativePath/>
   </parent>
 
   <properties>
-    <tomcat.version>7.0.59</tomcat.version>
-    <exec-maven-plugin-version>1.6.0</exec-maven-plugin-version>
-    <maven-filtering-version>3.1.1</maven-filtering-version>
+    <java.version>11</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <profile>default</profile>
     <production>false</production>
     <!-- must be valid uri with scheme file or classpath -->
-    <!-- e.g. file:/opt/vireo, classpath:/assets -->
+    <!-- e.g. file:/var/vireo, classpath:/assets -->
     <assets.uri>classpath:/</assets.uri>
     <!-- must be valid uri with scheme file or classpath -->
-    <!-- e.g. file:/opt/vireo/config, classpath:/config -->
+    <!-- e.g. file:/var/vireo/config, classpath:/config -->
     <config.uri>classpath:/config/</config.uri>
   </properties>
 
@@ -43,79 +47,171 @@
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>auth</artifactId>
-      <version>2.1.1-SNAPSHOT</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>token-provider</artifactId>
-      <version>2.1.1-SNAPSHOT</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>validation</artifactId>
-      <version>2.1.1-SNAPSHOT</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>wro</artifactId>
-      <version>2.1.1-SNAPSHOT</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>reporting</artifactId>
-      <version>2.1.1-SNAPSHOT</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>edu.tamu.weaver</groupId>
       <artifactId>email</artifactId>
-      <version>2.1.1-SNAPSHOT</version>
+      <version>${project.parent.version}</version>
     </dependency>
 
     <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>2.3.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.poi</groupId>
-      <artifactId>poi</artifactId>
-      <version>3.17</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-csv</artifactId>
-      <version>1.5</version>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.thymeleaf</groupId>
       <artifactId>thymeleaf</artifactId>
-      <version>3.0.6.RELEASE</version><!--$NO-MVN-MAN-VER$ -->
     </dependency>
 
     <dependency>
       <groupId>org.thymeleaf</groupId>
-      <artifactId>thymeleaf-spring4</artifactId>
-      <version>3.0.6.RELEASE</version><!--$NO-MVN-MAN-VER$ -->
+      <artifactId>thymeleaf-spring5</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.thymeleaf.extras</groupId>
-      <artifactId>thymeleaf-extras-springsecurity4</artifactId>
-      <version>3.0.2.RELEASE</version><!--$NO-MVN-MAN-VER$ -->
+      <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.steveash.hnp</groupId>
+      <artifactId>human-name-parser</artifactId>
+      <version>0.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>commons-lang</groupId>
+          <artifactId>commons-lang</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>com.googlecode.libphonenumber</groupId>
+      <artifactId>libphonenumber</artifactId>
+      <version>8.13.7</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-fileupload</groupId>
+      <artifactId>commons-fileupload</artifactId>
+      <version>1.5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-httpclient</groupId>
+      <artifactId>commons-httpclient</artifactId>
+      <version>3.1</version>
+    </dependency>
+    <!-- upgrade to -->
+    <!-- <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+      <version>5.2.1</version>
+    </dependency> -->
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-csv</artifactId>
+      <version>1.10.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>5.2.3</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId>
+      <version>1.28.5</version>
+      <exclusions>
+        <exclusion>
+          <groupId>xom</groupId>
+          <artifactId>xom</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.swordapp</groupId>
+      <artifactId>sword-common</artifactId>
+      <version>1.1</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-io</groupId>
+          <artifactId>commons-io</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-fileupload</groupId>
+          <artifactId>commons-fileupload</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-httpclient</groupId>
+          <artifactId>commons-httpclient</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xom</groupId>
+          <artifactId>xom</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -125,15 +221,14 @@
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.10.19</version>
+      <artifactId>mockito-junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -152,54 +247,73 @@
     <dependency>
       <groupId>com.jayway.jsonpath</groupId>
       <artifactId>json-path-assert</artifactId>
-      <version>2.2.0</version><!--$NO-MVN-MAN-VER$ -->
       <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>net.sourceforge.nekohtml</groupId>
-      <artifactId>nekohtml</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.tika</groupId>
-      <artifactId>tika-core</artifactId>
-      <version>1.22</version>
-      <exclusions>
-        <exclusion>
-          <groupId>xom</groupId>
-          <artifactId>xom</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.swordapp</groupId>
-      <artifactId>sword-common</artifactId>
-      <version>1.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.servlet</groupId>
-          <artifactId>servlet-api</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.googlecode.libphonenumber</groupId>
-      <artifactId>libphonenumber</artifactId>
-      <version>8.8.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.steveash.hnp</groupId>
-      <artifactId>human-name-parser</artifactId>
-      <version>0.1</version>
     </dependency>
 
   </dependencies>
 
   <build>
+
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>application.yml</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+      <resource>
+        <directory>dist</directory>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/webapp/app</directory>
+        <filtering>false</filtering>
+        <!-- would be better to exclude what is causing CI to fail -->
+        <includes>
+          <include>**/*.html</include>
+          <include>**/*.gif</include>
+          <include>**/*.png</include>
+          <include>**/*.svg</include>
+          <include>**/*.eot</include>
+          <include>**/*.ttf</include>
+          <include>**/*.woff</include>
+          <include>**/*.woff2</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>src/main/webapp/app/resources/styles</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/*.css</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>node_modules/@wvr/core/app/resources/styles</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>**/*.css</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>node_modules/bootstrap-sass/assets</directory>
+        <filtering>false</filtering>
+        <excludes>
+          <exclude>images/**</exclude>
+          <exclude>javascript/**</exclude>
+        </excludes>
+      </resource>
+      <resource>
+        <directory>node_modules/ng-sortable/dist</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>ng-sortable.min.css</include>
+        </includes>
+      </resource>
+    </resources>
 
     <plugins>
 
@@ -210,7 +324,7 @@
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-filtering</artifactId>
-            <version>${maven-filtering-version}</version>
+            <version>3.2.0</version>
           </dependency>
         </dependencies>
         <configuration>
@@ -227,23 +341,32 @@
           </execution>
         </executions>
       </plugin>
-
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.22.2</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>2.22.2</version>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.0.2</version>
+        <version>3.2.2</version>
         <dependencies>
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-filtering</artifactId>
-            <version>${maven-filtering-version}</version>
+            <version>3.2.0</version>
           </dependency>
         </dependencies>
         <configuration>
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
+              <classpathPrefix>libs/</classpathPrefix>
               <mainClass>org.tdl.vireo.Application</mainClass>
             </manifest>
           </archive>
@@ -266,6 +389,25 @@
               <exclude>application.yaml</exclude>
             </webResource>
             <webResource>
+              <directory>dist</directory>
+              <filtering>false</filtering>
+            </webResource>
+            <webResource>
+              <directory>src/main/webapp/app</directory>
+              <filtering>false</filtering>
+              <!-- would be better to exclude what is causing CI to fail -->
+              <includes>
+                <include>**/*.html</include>
+                <include>**/*.gif</include>
+                <include>**/*.png</include>
+                <include>**/*.svg</include>
+                <include>**/*.eot</include>
+                <include>**/*.ttf</include>
+                <include>**/*.woff</include>
+                <include>**/*.woff2</include>
+              </includes>
+            </webResource>
+            <webResource>
               <filtering>false</filtering>
               <directory>src/main/webapp/app/resources/styles</directory>
               <targetPath>WEB-INF/classes</targetPath>
@@ -286,10 +428,17 @@
               <directory>node_modules/bootstrap-sass/assets</directory>
               <targetPath>WEB-INF/classes</targetPath>
               <excludes>
-                <exclude>fonts/**</exclude>
                 <exclude>images/**</exclude>
                 <exclude>javascript/**</exclude>
               </excludes>
+            </webResource>
+            <webResource>
+              <directory>node_modules/ng-sortable/dist</directory>
+              <filtering>false</filtering>
+              <targetPath>WEB-INF/classes</targetPath>
+              <includes>
+                <include>ng-sortable.min.css</include>
+              </includes>
             </webResource>
           </webResources>
         </configuration>
@@ -303,66 +452,97 @@
           <dependency>
             <groupId>org.apache.maven.shared</groupId>
             <artifactId>maven-filtering</artifactId>
-            <version>${maven-filtering-version}</version>
+            <version>3.2.0</version>
           </dependency>
         </dependencies>
         <configuration>
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <classpathPrefix>lib/</classpathPrefix>
+              <classpathPrefix>libs/</classpathPrefix>
               <mainClass>org.tdl.vireo.Application</mainClass>
             </manifest>
           </archive>
           <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
           <webResources>
             <webResource>
-              <filtering>true</filtering>
               <directory>src/main/webapp/META-INF</directory>
+              <filtering>true</filtering>
               <targetPath>META-INF</targetPath>
             </webResource>
             <webResource>
-              <filtering>true</filtering>
               <directory>src/main/resources</directory>
+              <filtering>true</filtering>
               <targetPath>WEB-INF/classes</targetPath>
               <includes>
-                <include>application.yaml</include>
+                <include>application.yml</include>
               </includes>
             </webResource>
             <webResource>
-              <filtering>false</filtering>
               <directory>src/main/resources</directory>
+              <filtering>false</filtering>
               <targetPath>WEB-INF/classes</targetPath>
               <includes>
                 <include>*/**</include>
               </includes>
-              <exclude>application.yaml</exclude>
+              <excludes>
+                <exclude>application.yml</exclude>
+              </excludes>
             </webResource>
             <webResource>
+              <directory>dist</directory>
               <filtering>false</filtering>
+            </webResource>
+            <webResource>
+              <directory>src/main/webapp/app</directory>
+              <filtering>false</filtering>
+              <!-- would be better to exclude what is causing CI to fail -->
+              <includes>
+                <include>**/*.html</include>
+                <include>**/*.gif</include>
+                <include>**/*.png</include>
+                <include>**/*.svg</include>
+                <include>**/*.eot</include>
+                <include>**/*.ttf</include>
+                <include>**/*.woff</include>
+                <include>**/*.woff2</include>
+              </includes>
+              <excludes>
+                <exclude>**/sha.js/</exclude>
+              </excludes>
+            </webResource>
+            <webResource>
               <directory>src/main/webapp/app/resources/styles</directory>
+              <filtering>false</filtering>
               <targetPath>WEB-INF/classes</targetPath>
               <excludes>
                 <exclude>**/*.css</exclude>
               </excludes>
             </webResource>
             <webResource>
-              <filtering>false</filtering>
               <directory>node_modules/@wvr/core/app/resources/styles</directory>
+              <filtering>false</filtering>
               <targetPath>WEB-INF/classes</targetPath>
               <excludes>
                 <exclude>**/*.css</exclude>
               </excludes>
             </webResource>
             <webResource>
-              <filtering>false</filtering>
               <directory>node_modules/bootstrap-sass/assets</directory>
+              <filtering>false</filtering>
               <targetPath>WEB-INF/classes</targetPath>
               <excludes>
-                <exclude>fonts/**</exclude>
                 <exclude>images/**</exclude>
                 <exclude>javascript/**</exclude>
               </excludes>
+            </webResource>
+            <webResource>
+              <directory>node_modules/ng-sortable/dist</directory>
+              <filtering>false</filtering>
+              <targetPath>WEB-INF/classes</targetPath>
+              <includes>
+                <include>ng-sortable.min.css</include>
+              </includes>
             </webResource>
           </webResources>
         </configuration>
@@ -389,7 +569,7 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <outputDirectory>${project.build.directory}/libs</outputDirectory>
             </configuration>
           </execution>
         </executions>
@@ -410,6 +590,34 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eluder.coveralls</groupId>
+        <artifactId>coveralls-maven-plugin</artifactId>
+        <configuration>
+          <repoToken/>
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
     </plugins>
@@ -443,42 +651,6 @@
       </plugins>
     </pluginManagement>
 
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>application.yaml</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-      </resource>
-      <resource>
-        <directory>src/main/webapp/app/resources/styles</directory>
-        <filtering>false</filtering>
-        <excludes>
-          <exclude>**/*.css</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>node_modules/@wvr/core/app/resources/styles</directory>
-        <filtering>false</filtering>
-        <excludes>
-          <exclude>**/*.css</exclude>
-        </excludes>
-      </resource>
-      <resource>
-        <directory>node_modules/bootstrap-sass/assets</directory>
-        <filtering>false</filtering>
-        <excludes>
-          <exclude>fonts/**</exclude>
-          <exclude>images/**</exclude>
-          <exclude>javascript/**</exclude>
-        </excludes>
-      </resource>
-    </resources>
-
   </build>
 
   <profiles>
@@ -492,7 +664,6 @@
       </activation>
       <properties>
         <npm-extension>.cmd</npm-extension>
-        <grunt-extension>.cmd</grunt-extension>
       </properties>
     </profile>
 
@@ -505,7 +676,6 @@
       </activation>
       <properties>
         <npm-extension></npm-extension>
-        <grunt-extension></grunt-extension>
       </properties>
     </profile>
 
@@ -521,7 +691,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>${exec-maven-plugin-version}</version>
+            <version>3.0.0</version>
             <executions>
 
               <!-- NPM Install -->
@@ -539,15 +709,15 @@
                 </goals>
               </execution>
 
-              <!-- Grunt Default -->
+              <!-- Webpack Build -->
               <execution>
-                <id>exec-npm-run-grunt</id>
+                <id>exec-npm-run-build</id>
                 <phase>generate-sources</phase>
                 <configuration>
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>grunt</argument>
+                    <argument>build</argument>
                   </arguments>
                 </configuration>
                 <goals>
@@ -576,7 +746,7 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>${exec-maven-plugin-version}</version>
+            <version>3.0.0</version>
             <executions>
 
               <!-- NPM Install -->
@@ -594,16 +764,19 @@
                 </goals>
               </execution>
 
-              <!-- Grunt Deploy -->
+              <!-- Webpack Build -->
               <execution>
-                <id>exec-npm-run-grunt-deploy</id>
+                <id>exec-npm-run-build</id>
                 <phase>generate-sources</phase>
                 <configuration>
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>grunt:deploy</argument>
+                    <argument>build</argument>
                   </arguments>
+                  <environmentVariables>
+                    <NODE_ENV>production</NODE_ENV>
+                  </environmentVariables>
                 </configuration>
                 <goals>
                   <goal>exec</goal>
@@ -628,8 +801,39 @@
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
-            <version>${exec-maven-plugin-version}</version>
+            <version>3.0.0</version>
             <executions>
+
+              <!-- NPM Install -->
+              <execution>
+                <id>exec-npm-install</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>install</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
+
+              <!-- Webpack Build -->
+              <execution>
+                <id>exec-npm-run-build</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <executable>npm${npm-extension}</executable>
+                  <arguments>
+                    <argument>run</argument>
+                    <argument>build</argument>
+                  </arguments>
+                </configuration>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+              </execution>
 
               <!-- Karma Testing for AngularJS -->
               <execution>
@@ -639,7 +843,7 @@
                   <executable>npm${npm-extension}</executable>
                   <arguments>
                     <argument>run</argument>
-                    <argument>test-ci</argument>
+                    <argument>test:ci</argument>
                   </arguments>
                 </configuration>
                 <goals>

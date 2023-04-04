@@ -1,7 +1,7 @@
 package org.tdl.vireo.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -10,14 +10,15 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.repo.EmbargoRepo;
@@ -26,6 +27,7 @@ import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
 
 @ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 public class EmbargoControllerTest extends AbstractControllerTest {
 
     protected static final String EMBARGO_NAME = "Embargo Name";
@@ -44,101 +46,106 @@ public class EmbargoControllerTest extends AbstractControllerTest {
 
     private static List<Embargo> mockEmbargoes;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
-
         mockEmbargo = new Embargo(EMBARGO_NAME, EMBARGO_DESCRIPTION, EMBARGO_DURATION, EMBARGO_GUARANTOR, EMBARGO_IS_ACTIVE);
+        mockEmbargo.setId(1L);
+
         mockEmbargoes = new ArrayList<Embargo>(Arrays.asList(new Embargo[] { mockEmbargo }));
-
-        ReflectionTestUtils.setField(httpUtility, HTTP_DEFAULT_TIMEOUT_NAME, HTTP_DEFAULT_TIMEOUT_VALUE);
-        ReflectionTestUtils.setField(cryptoService, SECRET_PROPERTY_NAME, SECRET_VALUE);
-        ReflectionTestUtils.setField(tokenService, AUTH_SECRET_KEY_PROPERTY_NAME, AUTH_SECRET_KEY_VALUE);
-        ReflectionTestUtils.setField(tokenService, AUTH_ISSUER_KEY_PROPERTY_NAME, AUTH_ISSUER_KEY_VALUE);
-        ReflectionTestUtils.setField(tokenService, AUTH_DURATION_PROPERTY_NAME, AUTH_DURATION_VALUE);
-        ReflectionTestUtils.setField(tokenService, AUTH_KEY_PROPERTY_NAME, AUTH_KEY_VALUE);
-
-        TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
-        TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);
-        TEST_CREDENTIALS.setEmail(TEST_USER_EMAIL);
-        TEST_CREDENTIALS.setRole(TEST_USER_ROLE.toString());
-
-        when(embargoRepo.findAll()).thenReturn(mockEmbargoes);
-        when(embargoRepo.findAllByOrderByPositionAsc()).thenReturn(mockEmbargoes);
-        when(embargoRepo.findAllByOrderByGuarantorAscPositionAsc()).thenReturn(mockEmbargoes);
-        when(embargoRepo.findOne(any(Long.class))).thenReturn(mockEmbargo);
-        when(embargoRepo.getOne(any(Long.class))).thenReturn(mockEmbargo);
-        when(embargoRepo.create(any(String.class), any(String.class), any(Integer.class), any(EmbargoGuarantor.class), any(Boolean.class))).thenReturn(mockEmbargo);
-        when(embargoRepo.update(any(Embargo.class))).thenReturn(mockEmbargo);
-
-        doNothing().when(embargoRepo).remove(any(Embargo.class));
-        doNothing().when(embargoRepo).reorder(any(Long.class), any(Long.class));
-        doNothing().when(embargoRepo).reorder(any(Long.class), any(Long.class), any(EmbargoGuarantor.class));
-        doNothing().when(embargoRepo).sort(any(String.class));
-        doNothing().when(embargoRepo).sort(any(String.class), any(EmbargoGuarantor.class));
     }
 
     @Test
-    public void testgetEmbargo() {
-        ApiResponse response = embargoController.getEmbargoes();
+    public void testGetEmbargo() {
+        when(embargoRepo.findAllByOrderByGuarantorAscPositionAsc()).thenReturn(mockEmbargoes);
 
+        ApiResponse response = embargoController.getEmbargoes();
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
-        verify(embargoRepo, times(1)).findAllByOrderByGuarantorAscPositionAsc();
+
+        List<?> embargoes = (ArrayList<?>) response.getPayload().get("ArrayList<Embargo>");
+        assertEquals(mockEmbargoes.size(), embargoes.size());
     }
 
     @Test
     public void testCreateEmbargo() {
-        ApiResponse response = embargoController.createEmbargo(mockEmbargo);
+        when(embargoRepo.create(any(String.class), any(String.class), any(Integer.class), any(EmbargoGuarantor.class), any(Boolean.class))).thenReturn(mockEmbargo);
 
+        ApiResponse response = embargoController.createEmbargo(mockEmbargo);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
-        verify(embargoRepo, times(1)).create(any(String.class), any(String.class), any(Integer.class), any(EmbargoGuarantor.class), any(Boolean.class));
+
+        Embargo embargo = (Embargo) response.getPayload().get("Embargo");
+        assertEquals(mockEmbargo, embargo);
     }
 
     @Test
     public void testUpdateEmbargo() {
-        ApiResponse response = embargoController.updateEmbargo(mockEmbargo);
+        when(embargoRepo.update(any(Embargo.class))).thenReturn(mockEmbargo);
 
+        ApiResponse response = embargoController.updateEmbargo(mockEmbargo);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
-        verify(embargoRepo, times(1)).update(any(Embargo.class));
+
+        Embargo embargo = (Embargo) response.getPayload().get("Embargo");
+        assertEquals(mockEmbargo, embargo);
     }
 
     @Test
     public void testRemoveEmbargo() {
-        ApiResponse response = embargoController.removeEmbargo(mockEmbargo);
+        doNothing().when(embargoRepo).remove(any(Embargo.class));
 
+        ApiResponse response = embargoController.removeEmbargo(mockEmbargo);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
         verify(embargoRepo, times(1)).remove(any(Embargo.class));
     }
 
     @Test
     public void testActivateEmbargo() {
-        ApiResponse response = embargoController.activateEmbargo(mockEmbargo.getId());
+        Embargo updatedEmbargo = mockEmbargo;
+        updatedEmbargo.isActive(true);
+        mockEmbargo.isActive(false);
 
+        when(embargoRepo.findById(any(Long.class))).thenReturn(Optional.of(mockEmbargo));
+        when(embargoRepo.update(any(Embargo.class))).thenReturn(updatedEmbargo);
+
+        ApiResponse response = embargoController.activateEmbargo(mockEmbargo.getId());
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
-        verify(embargoRepo, times(1)).update(any(Embargo.class));
+
+        Embargo embargo = (Embargo) response.getPayload().get("Embargo");
+        assertEquals(updatedEmbargo, embargo);
     }
 
     @Test
     public void testDeactivateEmbargo() {
-        ApiResponse response = embargoController.deactivateEmbargo(mockEmbargo.getId());
+        Embargo updatedEmbargo = mockEmbargo;
+        updatedEmbargo.isActive(false);
+        mockEmbargo.isActive(true);
 
+        when(embargoRepo.findById(any(Long.class))).thenReturn(Optional.of(mockEmbargo));
+        when(embargoRepo.update(any(Embargo.class))).thenReturn(updatedEmbargo);
+
+        ApiResponse response = embargoController.deactivateEmbargo(mockEmbargo.getId());
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
-        verify(embargoRepo, times(1)).update(any(Embargo.class));
+
+        Embargo embargo = (Embargo) response.getPayload().get("Embargo");
+        assertEquals(updatedEmbargo, embargo);
     }
 
     @Test
-    public void testReorderEmbargos() {
-        ApiResponse response = embargoController.reorderEmbargoes(EmbargoGuarantor.DEFAULT.toString(), 1L, 2L);
+    public void testReorderEmbargoes() {
+        doNothing().when(embargoRepo).reorder(any(Long.class), any(Long.class), any(EmbargoGuarantor.class));
 
+        ApiResponse response = embargoController.reorderEmbargoes(EmbargoGuarantor.DEFAULT.toString(), 1L, 2L);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
         verify(embargoRepo, times(1)).reorder(any(Long.class), any(Long.class), any(EmbargoGuarantor.class));
     }
 
     @Test
-    public void testSortEmbargos() {
-        ApiResponse response = embargoController.sortEmbargoes("test", EmbargoGuarantor.DEFAULT.toString());
+    public void testSortEmbargoes() {
+        doNothing().when(embargoRepo).sort(any(String.class), any(EmbargoGuarantor.class));
 
+        ApiResponse response = embargoController.sortEmbargoes(EmbargoGuarantor.DEFAULT.toString(), "test");
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
         verify(embargoRepo, times(1)).sort(any(String.class), any(EmbargoGuarantor.class));
     }
 

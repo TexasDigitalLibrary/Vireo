@@ -45,6 +45,20 @@ public class NamedSearchFilter extends ValidatingBaseEntity {
     }
 
     /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
      * @return the submissionListColumn
      */
     public SubmissionListColumn getSubmissionListColumn() {
@@ -52,8 +66,7 @@ public class NamedSearchFilter extends ValidatingBaseEntity {
     }
 
     /**
-     * @param submissionListColumn
-     *            the submissionListColumn to set
+     * @param submissionListColumn the submissionListColumn to set
      */
     public void setSubmissionListColumn(SubmissionListColumn submissionListColumn) {
         this.submissionListColumn = submissionListColumn;
@@ -65,52 +78,49 @@ public class NamedSearchFilter extends ValidatingBaseEntity {
     }
 
     /**
-     * @return the filters
+     * @return The filter criterion.
      */
     public Set<FilterCriterion> getFilters() {
         return filterCriteria;
     }
 
     /**
-     * @param filterStrings
-     *            the filterStrings to set
+     * @param filterCriteria The filter criterion to set.
      */
     public void setFilters(Set<FilterCriterion> filterCriteria) {
         this.filterCriteria = filterCriteria;
     }
 
+    /**
+     * Add the filter criterion.
+     *
+     * @param filterCriterion The filter criterion to add.
+     */
     public void addFilter(FilterCriterion filterCriterion) {
         filterCriteria.add(filterCriterion);
     }
 
-    public void removeFilter(FilterCriterion filter) {
-        filterCriteria.remove(filter);
+    /**
+     * Remove the filter criterion.
+     *
+     * @param filterCriterion The filter criterion to remove.
+     */
+    public void removeFilter(FilterCriterion filterCriterion) {
+        this.filterCriteria.remove(filterCriterion);
     }
 
-    public Boolean getAllColumnSearch() {
-        return allColumnSearch;
+    /**
+     * @return the filterCriteria
+     */
+    public Set<FilterCriterion> getFilterCriteria() {
+        return filterCriteria;
     }
 
-    public void setAllColumnSearch(Boolean allColumnSearch) {
-        this.allColumnSearch = allColumnSearch;
-    }
-
-    public Boolean getExactMatch() {
-        return exactMatch;
-    }
-
-    public void setExactMatch(Boolean exactMatch) {
-        this.exactMatch = exactMatch;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+    /**
+     * Get the filter values from the filter criterion.
+     *
+     * @return A set of filter values.
+     */
     public Set<String> getFilterValues() {
 
         Set<String> filterValues = new HashSet<String>();
@@ -121,6 +131,11 @@ public class NamedSearchFilter extends ValidatingBaseEntity {
         return filterValues;
     }
 
+    /**
+     * Get the filter glosses from the filter criterion.
+     *
+     * @return A set of filter glosses.
+     */
     public Set<String> getFilterGlosses() {
 
         Set<String> filterGlosses = new HashSet<String>();
@@ -129,6 +144,41 @@ public class NamedSearchFilter extends ValidatingBaseEntity {
         });
 
         return filterGlosses;
+    }
+
+    /**
+     * @param filterCriteria the filterCriteria to set
+     */
+    public void setFilterCriteria(Set<FilterCriterion> filterCriteria) {
+        this.filterCriteria = filterCriteria;
+    }
+
+    /**
+     * @return the allColumnSearch
+     */
+    public Boolean getAllColumnSearch() {
+        return allColumnSearch;
+    }
+
+    /**
+     * @param allColumnSearch the allColumnSearch to set
+     */
+    public void setAllColumnSearch(Boolean allColumnSearch) {
+        this.allColumnSearch = allColumnSearch;
+    }
+
+    /**
+     * @return the exactMatch
+     */
+    public Boolean getExactMatch() {
+        return exactMatch;
+    }
+
+    /**
+     * @param exactMatch the exactMatch to set
+     */
+    public void setExactMatch(Boolean exactMatch) {
+        this.exactMatch = exactMatch;
     }
 
 }

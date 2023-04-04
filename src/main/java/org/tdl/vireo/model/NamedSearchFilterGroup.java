@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -25,15 +27,17 @@ import org.tdl.vireo.model.validation.NamedSearchFilterValidator;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-@JsonIgnoreProperties(value = { "user" }, allowGetters = true)
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "user_id", "name" }) })
 public class NamedSearchFilterGroup extends ValidatingBaseEntity {
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ManyToOne(optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = User.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
@@ -50,6 +54,13 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
 
     @Column(nullable = false)
     private Boolean umiRelease;
+
+    @Column(nullable = true)
+    private String sortColumnTitle;
+
+    @Column(nullable = true)
+    @Enumerated(EnumType.STRING)
+    private Sort sortDirection;
 
     @OrderColumn
     @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
@@ -126,6 +137,22 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
      */
     public Boolean getUmiRelease() {
         return umiRelease;
+    }
+
+    public String getSortColumnTitle() {
+        return sortColumnTitle;
+    }
+
+    public void setSortColumnTitle(String sortColumnTitle) {
+        this.sortColumnTitle = sortColumnTitle;
+    }
+
+    public Sort getSortDirection() {
+        return sortDirection;
+    }
+
+    public void setSortDirection(Sort sortDirection) {
+        this.sortDirection = sortDirection;
     }
 
     public List<SubmissionListColumn> getSavedColumns() {

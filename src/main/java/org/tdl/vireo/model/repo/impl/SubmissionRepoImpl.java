@@ -5,6 +5,9 @@ import static edu.tamu.weaver.response.ApiAction.DELETE;
 import static edu.tamu.weaver.response.ApiAction.UPDATE;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
+import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,9 +24,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
-
 import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +53,6 @@ import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
@@ -62,10 +62,6 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 import org.tdl.vireo.service.AssetService;
-
-import edu.tamu.weaver.auth.model.Credentials;
-import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
-import edu.tamu.weaver.response.ApiResponse;
 
 public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, SubmissionRepo> implements SubmissionRepoCustom {
 
@@ -93,9 +89,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     private InputTypeRepo inputTypeRepo;
 
     @Autowired
-    private CustomActionDefinitionRepo customActionDefinitionRepo;
-
-    @Autowired
     private CustomActionValueRepo customActionValueRepo;
 
     @Autowired
@@ -112,21 +105,20 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     @Value("${app.document.path:private/}")
     private String documentPath;
 
-    @Autowired
     public SubmissionRepoImpl(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     @Override
     @Transactional
-    public Submission create(User submitter, Organization organization, SubmissionStatus startingStatus, Credentials credentials) throws OrganizationDoesNotAcceptSubmissionsException {
+    public Submission create(User submitter, Organization organization, SubmissionStatus startingStatus, Credentials credentials, List<CustomActionDefinition> customActions) throws OrganizationDoesNotAcceptSubmissionsException {
         if (organization.getAcceptsSubmissions().equals(false)) {
             throw new OrganizationDoesNotAcceptSubmissionsException();
         }
 
         Submission submission = submissionRepo.save(new Submission(submitter, organization, startingStatus));
 
-        for (CustomActionDefinition cad : customActionDefinitionRepo.findAll()) {
+        for (CustomActionDefinition cad : customActions) {
             customActionValueRepo.create(submission, cad, false);
         }
 
@@ -340,7 +332,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         jdbcTemplate.queryForList(queryBuilder.getQuery()).forEach(row -> {
             ids.add((Long) row.get("ID"));
         });
-        return submissionRepo.findAll(ids);
+        return submissionRepo.findAllById(ids);
     }
 
     @Override
@@ -357,7 +349,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         List<Submission> submissions = new ArrayList<Submission>();
 
-        List<Submission> unordered = submissionRepo.findAll(ids);
+        List<Submission> unordered = submissionRepo.findAllById(ids);
 
         // order them
         for (Long id : ids) {
@@ -372,7 +364,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         int offset = pageable.getPageSize() * pageable.getPageNumber();
         int limit = pageable.getPageSize();
-        return new PageImpl<Submission>(submissions, new PageRequest((int) Math.floor(offset / limit), limit), total);
+        return new PageImpl<Submission>(submissions, PageRequest.of((int) Math.floor(offset / limit), limit), total);
     }
 
     private QueryStrings craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {

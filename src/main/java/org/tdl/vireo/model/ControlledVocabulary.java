@@ -15,25 +15,33 @@ import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.ControlledVocabularyValidator;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 
 import edu.tamu.weaver.context.SpringContext;
 import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 @Configurable
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
 
     final static Logger logger = LoggerFactory.getLogger(ControlledVocabulary.class);
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false, unique = true)
     private String name;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @OneToMany(cascade = { ALL }, fetch = EAGER, mappedBy = "controlledVocabulary", orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     private List<VocabularyWord> dictionary;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean isEntityProperty;
 

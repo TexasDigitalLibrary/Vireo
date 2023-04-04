@@ -1,12 +1,13 @@
 describe("controller: AdminSubmissionViewController", function () {
 
-    var controller, location, q, scope, timeout, EmailTemplateRepo, FileUploadService, SubmissionRepo, UserSettings, WsApi;
+    var controller, location, q, scope, timeout, mockedUser, EmailTemplateRepo, FileUploadService, SubmissionRepo, User, UserSettings, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $timeout, $location, _EmailTemplateRepo_, _FileUploadService_, _SubmissionRepo_, _UserSettings_, _WsApi_) {
             q = $q;
             timeout = $timeout;
             location = $location;
+            mockedUser = mockParameterModel(q, mockUser);
 
             EmailTemplateRepo = _EmailTemplateRepo_;
             FileUploadService = _FileUploadService_;
@@ -17,7 +18,7 @@ describe("controller: AdminSubmissionViewController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($anchorScroll, $controller, $q, $route, $routeParams, $rootScope, _DepositLocationRepo_, _EmailRecipient_, _EmailRecipientType_, _EmbargoRepo_, _FieldPredicateRepo_, _FieldValue_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionStatuses_, _SubmissionStatusRepo_, _UserRepo_, _UserService_) {
+        inject(function ($anchorScroll, $controller, $q, $route, $routeParams, $rootScope, _DepositLocationRepo_, _EmailRecipient_, _EmailRecipientType_, _EmbargoRepo_, _FieldPredicateRepo_, _FieldValue_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionStatuses_, _SubmissionStatusRepo_, _User_, _UserRepo_, _UserService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -45,6 +46,7 @@ describe("controller: AdminSubmissionViewController", function () {
                 SubmissionRepo: SubmissionRepo,
                 SubmissionStatuses: _SubmissionStatuses_,
                 SubmissionStatusRepo: _SubmissionStatusRepo_,
+                User: _User_,
                 UserRepo: _UserRepo_,
                 UserService: _UserService_,
                 UserSettings: mockParameterConstructor(UserSettings),
@@ -77,7 +79,12 @@ describe("controller: AdminSubmissionViewController", function () {
         module("mock.submission");
         module("mock.submissionRepo");
         module("mock.submissionStatusRepo");
-        module("mock.user");
+        module("mock.user", function($provide) {
+            User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
         module("mock.userRepo");
         module("mock.userService");
         module("mock.userSettings");
@@ -452,6 +459,7 @@ describe("controller: AdminSubmissionViewController", function () {
 
             scope.deleteDocumentFieldValue(new mockFieldPredicate(q));
             scope.$digest();
+            timeout.flush();
 
             expect(scope.confirm).toBe(false);
             expect(scope.closeModal).toHaveBeenCalled();
@@ -529,7 +537,7 @@ describe("controller: AdminSubmissionViewController", function () {
             scope.addCommentModal.sendEmailToRecipient = false;
 
             response = scope.disableAddComment();
-            expect(response).toBe(true);
+            expect(response).toBe(false);
 
             scope.addCommentModal.subject = undefined;
             scope.addCommentModal.commentVisibility = "private";

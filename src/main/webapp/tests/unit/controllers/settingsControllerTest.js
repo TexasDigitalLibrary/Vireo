@@ -1,18 +1,19 @@
 describe("controller: SettingsController", function () {
 
-    var controller, q, scope, timeout, StudentSubmissionRepo, SubmissionStates, WsApi;
+    var controller, q, scope, timeout, mockedUser, User, StudentSubmissionRepo, SubmissionStates, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $timeout, _WsApi_) {
             q = $q;
             timeout = $timeout;
+            mockedUser = mockParameterModel(q, mockUser);
 
             WsApi = _WsApi_;
         });
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $injector, $rootScope, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _SubmissionStates_, _UserService_) {
+        inject(function ($controller, $injector, $rootScope, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _SubmissionStates_, _User_, _UserService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -31,7 +32,7 @@ describe("controller: SettingsController", function () {
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 StudentSubmissionRepo: settings && settings.StudentSubmissionRepo ? settings.StudentSubmissionRepo :  _StudentSubmissionRepo_,
-                User: mockParameterModel(q, mockUser),
+                User: _User_,
                 UserService: _UserService_,
                 WsApi: WsApi
             });
@@ -55,7 +56,12 @@ describe("controller: SettingsController", function () {
         module("mock.storageService");
         module("mock.studentSubmission");
         module("mock.studentSubmissionRepo");
-        module("mock.user");
+        module("mock.user", function($provide) {
+            User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
         module("mock.userService");
         module("mock.wsApi");
 

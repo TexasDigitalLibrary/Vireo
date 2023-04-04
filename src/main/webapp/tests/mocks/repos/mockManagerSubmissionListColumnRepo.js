@@ -34,5 +34,10 @@ angular.module("mock.managerSubmissionListColumnRepo", []).service("ManagerSubmi
         return payloadPromise($q.defer(), payload);
     };
 
+    repo.updateSubmissionListColumnSort = function (columns) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
     return repo;
 });

@@ -41,9 +41,9 @@ public class FilteredPageRequest {
         });
         PageRequest pageRequest;
         if (orders.isEmpty()) {
-            pageRequest = new PageRequest(pageNumber > 0 ? pageNumber - 1 : 0, pageSize > 0 ? pageSize : 10);
+            pageRequest = PageRequest.of(pageNumber > 0 ? pageNumber - 1 : 0, pageSize > 0 ? pageSize : 10);
         } else {
-            pageRequest = new PageRequest(pageNumber > 0 ? pageNumber - 1 : 0, pageSize > 0 ? pageSize : 10, new Sort(orders));
+            pageRequest = PageRequest.of(pageNumber > 0 ? pageNumber - 1 : 0, pageSize > 0 ? pageSize : 10, Sort.by(orders));
         }
         return pageRequest;
     }

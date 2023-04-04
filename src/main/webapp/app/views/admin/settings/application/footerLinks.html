@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <validatedinput
+            id="webmaster-value"
+            type="text"
+            label="Webmaster Link"
+            model="settings.configurable.footer.link_webmaster"
+            property="value"
+            validations="settings.configurable.footer.footer_link_webmaster.getValidations()"
+            confirm="updateConfiguration('footer', 'link_webmaster')"
+            form-view="true"
+            tool-tip="A URL to a page regarding the webmaster or an e-mail link to the webmaster.">
+        </validatedinput>
+
+        <validatedinput
+            id="legal-value"
+            type="text"
+            label="Legal Link"
+            model="settings.configurable.footer.link_legal"
+            property="value"
+            validations="settings.configurable.footer.footer_link_webmaster.getValidations()"
+            confirm="updateConfiguration('footer', 'link_legal')"
+            form-view="true"
+            tool-tip="A URL to a page regarding the legal or an e-mail for a legal related purposes.">
+        </validatedinput>
+
+        <validatedinput
+            id="comments-value"
+            type="text"
+            label="Comments Link"
+            model="settings.configurable.footer.link_comments"
+            property="value"
+            validations="settings.configurable.footer.footer_link_webmaster.getValidations()"
+            confirm="updateConfiguration('footer', 'link_comments')"
+            form-view="true"
+            tool-tip="A URL to a page regarding comments or an e-mail for receiving comments.">
+        </validatedinput>
+
+        <validatedinput
+            id="accessibility-value"
+            type="text"
+            label="Accessibility Link"
+            model="settings.configurable.footer.link_accessibility"
+            property="value"
+            validations="settings.configurable.footer.footer_link_webmaster.getValidations()"
+            confirm="updateConfiguration('footer', 'link_accessibility')"
+            form-view="true"
+            tool-tip="A URL to a page regarding the accessibility or an e-mail for a accessibility related purposes.">
+        </validatedinput>
+    </div>
+</div>

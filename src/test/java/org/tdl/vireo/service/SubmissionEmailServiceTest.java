@@ -1,12 +1,15 @@
 package org.tdl.vireo.service;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,22 +17,20 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.mock.MockData;
@@ -57,10 +58,10 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.impl.AbstractEmailRecipientRepoImpl;
 import org.tdl.vireo.utility.TemplateUtility;
 
-import edu.tamu.weaver.email.service.WeaverEmailService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
+@ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = { Application.class })
 public class SubmissionEmailServiceTest extends MockData {
 
@@ -193,6 +194,13 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_EMAIL_RECIPIENT_MAP5.put("data", "Submitter");
     }
 
+    private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP6 = new HashMap<String, Object>();
+    static {
+        TEST_EMAIL_RECIPIENT_MAP6.put("type", "ADVISOR");
+        TEST_EMAIL_RECIPIENT_MAP6.put("name", "Advisor");
+        TEST_EMAIL_RECIPIENT_MAP6.put("data", "Advisor");
+    }
+
     private static final FieldPredicate TEST_FIELD_PREDICATE4 = new FieldPredicate();
     static {
         TEST_FIELD_PREDICATE4.setId(4L);
@@ -273,6 +281,9 @@ public class SubmissionEmailServiceTest extends MockData {
     @MockBean
     private FieldPredicateRepo mockFieldPredicateRepo;
 
+    @MockBean
+    private VireoEmailSender mockEmailSender;
+
     @Mock
     private Organization mockOrganization;
 
@@ -280,17 +291,13 @@ public class SubmissionEmailServiceTest extends MockData {
     private Submission mockSubmission;
 
     @Mock
-    private WeaverEmailService mockEmailSender;
-
-    @Mock
     private TemplateUtility mockTemplateUtility;
 
     @InjectMocks
     private SubmissionEmailService submissionEmailService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws OrganizationDoesNotAcceptSubmissionsException, MessagingException {
-        MockitoAnnotations.initMocks(this);
         mockData = new HashMap<>();
         mockFieldValues = new ArrayList<>();
         mockEmailWorkflowRules = new ArrayList<>();
@@ -300,82 +307,101 @@ public class SubmissionEmailServiceTest extends MockData {
         mockEmailWorkflowRules.add(TEST_EMAIL_WORKFLOW_RULE_ADVISOR);
         mockEmailWorkflowRules.add(TEST_EMAIL_WORKFLOW_RULE_PLAIN);
 
-        when(mockOrganization.getId()).thenReturn(1L);
-        when(mockOrganization.getName()).thenReturn(TEST_ORGANIZATION1_NAME);
-        when(mockOrganization.getCategory()).thenReturn(TEST_ORGANIZATION_CATEGORY1);
-        when(mockOrganization.getAggregateEmailWorkflowRules()).thenReturn(mockEmailWorkflowRules);
+        lenient().when(mockOrganization.getId()).thenReturn(1L);
+        lenient().when(mockOrganization.getName()).thenReturn(TEST_ORGANIZATION1_NAME);
+        lenient().when(mockOrganization.getCategory()).thenReturn(TEST_ORGANIZATION_CATEGORY1);
+        lenient().when(mockOrganization.getAggregateEmailWorkflowRules()).thenReturn(mockEmailWorkflowRules);
 
-        when(mockSubmission.getOrganization()).thenReturn(mockOrganization);
-        when(mockSubmission.getSubmissionStatus()).thenReturn(TEST_SUBMISSION_STATUS1);
-        when(mockSubmission.getSubmitter()).thenReturn(TEST_USER);
+        lenient().when(mockSubmission.getOrganization()).thenReturn(mockOrganization);
+        lenient().when(mockSubmission.getSubmissionStatus()).thenReturn(TEST_SUBMISSION_STATUS1);
+        lenient().when(mockSubmission.getSubmitter()).thenReturn(TEST_USER);
 
-        when(mockSubmission.getFieldValuesByPredicateValue(any(String.class))).thenReturn(mockFieldValues);
-        when(mockSubmission.getFieldValuesByInputType(any(InputType.class))).thenReturn(mockFieldValues);
+        lenient().when(mockSubmission.getFieldValuesByPredicateValue(any(String.class))).thenReturn(mockFieldValues);
+        lenient().when(mockSubmission.getFieldValuesByInputType(any(InputType.class))).thenReturn(mockFieldValues);
 
-        when(mockInputTypeRepo.getOne(1L)).thenReturn(TEST_INPUT_TYPE1);
-        when(mockInputTypeRepo.findOne(1L)).thenReturn(TEST_INPUT_TYPE1);
-        when(mockInputTypeRepo.findByName(any(String.class))).thenReturn(TEST_INPUT_TYPE1);
+        lenient().when(mockInputTypeRepo.getById(1L)).thenReturn(TEST_INPUT_TYPE1);
+        lenient().when(mockInputTypeRepo.findByName(any(String.class))).thenReturn(TEST_INPUT_TYPE1);
 
-        when(mockEmailTemplateRepo.getOne(1L)).thenReturn(TEST_EMAIL_TEMPLATE1);
-        when(mockEmailTemplateRepo.findOne(1L)).thenReturn(TEST_EMAIL_TEMPLATE1);
-        when(mockEmailTemplateRepo.findByName(any(String.class))).thenReturn(TEST_EMAIL_TEMPLATES1);
-        when(mockEmailTemplateRepo.findByNameAndSystemRequired(any(String.class), any(Boolean.class))).thenReturn(TEST_EMAIL_TEMPLATE1);
+        lenient().when(mockEmailTemplateRepo.findById(1L)).thenReturn(Optional.of(TEST_EMAIL_TEMPLATE1));
+        lenient().when(mockEmailTemplateRepo.findByName(any(String.class))).thenReturn(TEST_EMAIL_TEMPLATES1);
+        lenient().when(mockEmailTemplateRepo.findByNameAndSystemRequired(any(String.class), any(Boolean.class))).thenReturn(TEST_EMAIL_TEMPLATE1);
 
-        when(mockActionLogRepo.createPublicLog(any(Submission.class), any(User.class), any(String.class))).thenReturn(TEST_ACTION_LOG1);
+        lenient().when(mockActionLogRepo.createPublicLog(any(Submission.class), any(User.class), any(String.class))).thenReturn(TEST_ACTION_LOG1);
 
-        when(mockFieldPredicateRepo.getOne(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
-        when(mockFieldPredicateRepo.findOne(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
-        when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_ADVISOR_VALUE)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
+        lenient().when(mockFieldPredicateRepo.getById(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
+        lenient().when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_ADVISOR_VALUE)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
 
-        when(mockFieldPredicateRepo.getOne(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
-        when(mockFieldPredicateRepo.findOne(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
-        when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_VALUE)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
+        lenient().when(mockFieldPredicateRepo.getById(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_ID)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
+        lenient().when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER_VALUE)).thenReturn(TEST_FIELD_PREDICATE_COMMITTEE_MEMBER);
 
-        when(mockAbstractEmailRecipientRepoImpl.createAdvisorRecipient()).thenReturn(TEST_EMAIL_RECIPIENT_ADVISOR);
+        lenient().when(mockSubmissionRepo.findById(mockSubmission.getId())).thenReturn(Optional.of(mockSubmission));
+
+        lenient().when(mockAbstractEmailRecipientRepoImpl.createAdvisorRecipient()).thenReturn(TEST_EMAIL_RECIPIENT_ADVISOR);
 
         List<EmailWorkflowRule> emailWorkflowRuleAdvisors = new ArrayList<EmailWorkflowRule>();
         emailWorkflowRuleAdvisors.add(TEST_EMAIL_WORKFLOW_RULE_ADVISOR);
-        when(mockEmailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(TEST_EMAIL_RECIPIENT_ADVISOR, false)).thenReturn(emailWorkflowRuleAdvisors);
+        lenient().when(mockEmailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(TEST_EMAIL_RECIPIENT_ADVISOR, false)).thenReturn(emailWorkflowRuleAdvisors);
 
-        doNothing().when(mockEmailSender).send(any(SimpleMailMessage.class));
+        doNothing().when(mockEmailSender).send(any(MimeMessage.class));
+        doNothing().when(mockEmailSender).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
     }
 
     @Test
     public void testSendAdvisorEmails() throws MessagingException {
-        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
-        verify(mockEmailSender, never()).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, never()).sendEmail(any(String[].class), any(String.class), any(String.class));
         reset(mockEmailSender);
 
         mockFieldValues.add(TEST_FIELD_VALUE3);
-        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
-        verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS2);
 
-        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
-        verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS3);
 
-        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission);
-        verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
     }
 
     @Test
-    public void testSendAutomatedEmails1() throws JsonProcessingException, IOException {
+    public void testSendAdvisorEmailsWithoutRules() throws MessagingException {
+        mockEmailWorkflowRules.clear();
+
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, never()).sendEmail(any(String[].class), any(String.class), any(String.class));
+        reset(mockEmailSender);
+    }
+
+    @Test
+    public void testSendAdvisorEmailsThrowMessagingException() throws MessagingException {
+        doThrow(MessagingException.class).when(mockEmailSender).sendEmail(any(String[].class), any(String.class), any(String.class));
+
+        mockFieldValues.add(TEST_FIELD_VALUE3);
+
+        submissionEmailService.sendAdvisorEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), isNull(), isNull());
+        reset(mockEmailSender);
+    }
+
+    @Test
+    public void testSendAutomatedEmails1() throws JsonProcessingException, IOException, MessagingException {
         doTestSendAutomatedEmails(false);
     }
 
     @Test
-    public void testSendAutomatedEmails2() throws JsonProcessingException, IOException {
+    public void testSendAutomatedEmails2() throws JsonProcessingException, IOException, MessagingException {
         doTestSendAutomatedEmails(true);
     }
 
     @Test
-    public void testSendAutomatedEmails3() throws JsonProcessingException, IOException {
+    public void testSendAutomatedEmails3() throws JsonProcessingException, IOException, MessagingException {
         List<Map<String, Object>> emails = new ArrayList<Map<String, Object>>();
         emails.add(TEST_EMAIL_RECIPIENT_MAP1);
 
@@ -385,37 +411,84 @@ public class SubmissionEmailServiceTest extends MockData {
         mockData.put("sendEmailToRecipient", true);
         TEST_USER.setSettings(TEST_USER1_SETTINGS4);
 
-        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
-        verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
     }
 
     @Test
-    public void testSendWorkflowEmails() {
-        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission);
-        verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
+    public void testSendAutomatedEmailsWithCc() throws JsonProcessingException, IOException, MessagingException {
+        List<Map<String, Object>> emails = new ArrayList<Map<String, Object>>();
+        emails.add(TEST_EMAIL_RECIPIENT_MAP1);
+
+        mockData.put("commentVisibility", "public");
+        mockData.put("message", "Mock Message.");
+        mockData.put("recipientEmails", emails);
+        mockData.put("sendEmailToRecipient", true);
+        mockData.put("sendEmailToCCRecipient", true);
+        mockData.put("ccRecipientEmails", emails);
+        TEST_USER.setSettings(TEST_USER1_SETTINGS4);
+
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
+        reset(mockEmailSender);
+    }
+
+    @Test
+    public void testSendAutomatedEmailsThrowMessagingException() throws MessagingException, JsonProcessingException, IOException {
+        doThrow(MessagingException.class).when(mockEmailSender).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
+
+        List<Map<String, Object>> emails = new ArrayList<Map<String, Object>>();
+        emails.add(TEST_EMAIL_RECIPIENT_MAP1);
+
+        mockData.put("commentVisibility", "public");
+        mockData.put("message", "Mock Message.");
+        mockData.put("recipientEmails", emails);
+        mockData.put("sendEmailToRecipient", true);
+        TEST_USER.setSettings(TEST_USER1_SETTINGS4);
+
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
+        reset(mockEmailSender);
+    }
+
+    @Test
+    public void testSendWorkflowEmails() throws MessagingException {
+        doCallRealMethod().when(mockEmailSender).sendEmail(any(String.class), any(String.class), any(String.class));
+
+        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, times(1)).sendEmail(any(String.class), isNull(), isNull());
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS2);
 
-        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission);
-        verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, times(1)).sendEmail(any(String.class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS3);
 
-        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission);
-        verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, times(1)).sendEmail(any(String.class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         mockEmailWorkflowRules.clear();
 
-        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission);
-        verify(mockEmailSender, never()).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, never()).sendEmail(any(String.class), any(String[].class), any(String.class), any(String.class));
         reset(mockEmailSender);
     }
 
-    private void doTestSendAutomatedEmails(boolean cc) throws JsonProcessingException, IOException {
+    @Test
+    public void testSendWorkflowEmailsThrowMessagingException() throws MessagingException, JsonProcessingException, IOException {
+        doThrow(MessagingException.class).when(mockEmailSender).sendEmail(any(String.class), any(String.class), any(String.class));
+
+        submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission.getId());
+        verify(mockEmailSender, times(1)).sendEmail(any(String.class), isNull(), isNull());
+        reset(mockEmailSender);
+    }
+
+    private void doTestSendAutomatedEmails(boolean cc) throws JsonProcessingException, IOException, MessagingException {
         List<Map<String, Object>> emails = new ArrayList<Map<String, Object>>();
         emails.add(TEST_EMAIL_RECIPIENT_MAP1);
 
@@ -427,9 +500,10 @@ public class SubmissionEmailServiceTest extends MockData {
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP3);
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP4);
         ccEmails.add(TEST_EMAIL_RECIPIENT_MAP5);
+        ccEmails.add(TEST_EMAIL_RECIPIENT_MAP6);
 
-        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
-        verify(mockEmailSender, never()).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
+        verify(mockEmailSender, never()).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
         reset(mockEmailSender);
 
         mockData.put("commentVisibility", "public");
@@ -437,23 +511,23 @@ public class SubmissionEmailServiceTest extends MockData {
         mockData.put("recipientEmails", emails);
         mockData.put("ccRecipientEmails", ccEmails);
 
-        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
-        verify(mockEmailSender, never()).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
+        verify(mockEmailSender, never()).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
         reset(mockEmailSender);
 
         mockData.put("sendEmailToRecipient", true);
         mockData.put("sendEmailToCCRecipient", cc);
 
-        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
-        verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         mockData.put("commentVisibility", "private");
         mockData.put("sendEmailToRecipient", false);
         mockData.put("sendEmailToCCRecipient", false);
 
-        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
-        verify(mockEmailSender, never()).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
+        verify(mockEmailSender, never()).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
         reset(mockEmailSender);
 
         mockData.put("commentVisibility", "public");
@@ -461,14 +535,14 @@ public class SubmissionEmailServiceTest extends MockData {
         mockData.put("sendEmailToCCRecipient", cc);
         TEST_USER.setSettings(TEST_USER1_SETTINGS2);
 
-        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
-        verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
 
         TEST_USER.setSettings(TEST_USER1_SETTINGS3);
 
-        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission, mockData);
-        verify(mockEmailSender, times(1)).send(any(SimpleMailMessage.class));
+        submissionEmailService.sendAutomatedEmails(TEST_USER, mockSubmission.getId(), mockData);
+        verify(mockEmailSender, times(1)).sendEmail(any(String[].class), any(String[].class), any(String[].class), isNull(), isNull());
         reset(mockEmailSender);
     }
 

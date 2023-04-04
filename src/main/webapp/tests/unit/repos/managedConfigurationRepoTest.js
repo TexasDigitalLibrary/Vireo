@@ -1,10 +1,12 @@
 describe("service: managedConfigurationRepo", function () {
-    var q, repo, rootScope, mockedRepo, scope, WsApi;
+    var q, repo, rootScope, mockedRepo, mockedUser, scope, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, $rootScope, _WsApi_) {
             q = $q;
             rootScope = $rootScope;
+
+            mockedUser = mockParameterModel(q, mockUser);
 
             WsApi = _WsApi_;
         });
@@ -14,7 +16,7 @@ describe("service: managedConfigurationRepo", function () {
         inject(function ($injector, ManagedConfigurationRepo, _ManagedConfiguration_) {
             scope = rootScope.$new();
 
-            repo = ManagedConfigurationRepo;
+            repo = $injector.get('ManagedConfigurationRepo');
 
             // FIXME: find a way to get something like `angular.extend(new mockRepo("ManagedConfigurationRepo", q), $injector.get("ManagedConfigurationRepo")())` or `repo = ManagedConfigurationRepo` to work.
             /*
@@ -33,6 +35,13 @@ describe("service: managedConfigurationRepo", function () {
         module("core");
         module("vireo");
         module("mock.managedConfiguration");
+        module("mock.user", function($provide) {
+            var User = function() {
+                return mockedUser;
+            };
+            $provide.value("User", User);
+        });
+        module("mock.userService");
         module("mock.wsApi");
 
         // TODO: find a way to get this to work with current design.

@@ -1,11 +1,11 @@
 var appConfig = {
 
-    'version': '4.1.1',
+    'version': '4.1.4',
 
     'allowAnonymous': true,
     'anonymousRole': 'ROLE_ANONYMOUS',
 
-    'authService': window.location.protocol + '//' + window.location.host + window.location.base + '/mock/auth',
+    'authService': ${AUTH_SERVICE_URL},
     'webService': window.location.protocol + '//' + window.location.host + window.location.base,
 
     'storageType': 'session',
@@ -18,7 +18,7 @@ var appConfig = {
         'debug': true
     },
 
-    'stompDebug': false,
+    'stompDebug': ${STOMP_DEBUG},
 
     /*
     	Determines the type of connection stomp will attempt to make with the service.

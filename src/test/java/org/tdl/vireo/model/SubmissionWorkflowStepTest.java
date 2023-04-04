@@ -1,9 +1,10 @@
 package org.tdl.vireo.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
 import org.tdl.vireo.model.repo.SubmissionNoteRepo;
@@ -22,7 +23,7 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
     @Autowired
     private SubmissionNoteRepo submissionNoteRepo;
 
-    @Before
+    @BeforeEach
     public void setup() throws Exception {
         // parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
         // organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
@@ -40,24 +41,27 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
     }
 
     @Override
+    @Test
     public void testCreate() {
 
         // SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
         //
-        // assertEquals("The repository didn't save the entity!", 1, submissionWorkflowStepRepo.count());
-        // assertFalse("The submissionWorkflowStep didn't clone it's originating step's field profile!", fieldProfile.equals( sws.getAggregateFieldProfiles().get(0) ) );
-        // assertEquals("The submissionWorkflowStep didn't clone it's originating step's field profile!", fieldProfile.getPredicate(), sws.getAggregateFieldProfiles().get(0).getPredicate());
-        // assertEquals("The submissionWorkflowStep didn't clone it's originating step's field profile!", fieldProfile.getInputType(), sws.getAggregateFieldProfiles().get(0).getInputType());
+        // assertEquals(1, submissionWorkflowStepRepo.count(), "The repository didn't save the entity!");
+        // assertFalse(fieldProfile.equals( sws.getAggregateFieldProfiles().get(0) ) , "The submissionWorkflowStep didn't clone it's originating step's field profile!");
+        // assertEquals(fieldProfile.getPredicate(), sws.getAggregateFieldProfiles().get(0).getPredicate(), "The submissionWorkflowStep didn't clone it's originating step's field profile!");
+        // assertEquals(fieldProfile.getInputType(), sws.getAggregateFieldProfiles().get(0).getInputType(), "The submissionWorkflowStep didn't clone it's originating step's field profile!");
     }
 
     @Override
+    @Test
     public void testDuplication() {
         // SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
         // SubmissionWorkflowStep sws2 = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
-        // assertEquals("The submission workflow step was duplicated!", sws.getId(), sws2.getId());
+        // assertEquals(sws.getId(), sws2.getId(), "The submission workflow step was duplicated!");
     }
 
     @Override
+    @Test
     public void testDelete() {
         // TODO:
         // SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
@@ -68,24 +72,25 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
         // submissionWorkflowStepRepo.delete(sws);
         // count--;
         //
-        // assertNull("The submissionWorkflowStep wasn't deleted!", submissionWorkflowStepRepo.findOne(id));
-        // assertEquals("The submissionWorkflowStep wasn't deleted!", count, submissionWorkflowStepRepo.count());
+        // assertNull(submissionWorkflowStepRepo.findOne(id), "The submissionWorkflowStep wasn't deleted!");
+        // assertEquals(count, submissionWorkflowStepRepo.count(), "The submissionWorkflowStep wasn't deleted!");
 
     }
 
     @Override
+    @Test
     public void testCascade() {
         // TODO Auto-generated method stub
 
     }
 
-    @After
+    @AfterEach
     public void cleanUp() throws Exception {
 
         noteRepo.findAll().forEach(note -> {
             noteRepo.delete(note);
         });
-        assertEquals("Couldn't delete all notes!", 0, noteRepo.count());
+        assertEquals(0, noteRepo.count(), "Couldn't delete all notes!");
 
         submissionNoteRepo.deleteAll();
 
@@ -93,12 +98,12 @@ public class SubmissionWorkflowStepTest extends AbstractEntityTest {
             fieldProfileRepo.delete(fieldProfile);
         });
 
-        assertEquals("Couldn't delete all field profiles!", 0, fieldProfileRepo.count());
+        assertEquals(0, fieldProfileRepo.count(), "Couldn't delete all field profiles!");
 
         submissionListColumnRepo.deleteAll();
 
         inputTypeRepo.deleteAll();
-        assertEquals("Couldn't delete all input types!", 0, inputTypeRepo.count());
+        assertEquals(0, inputTypeRepo.count(), "Couldn't delete all input types!");
 
         submissionFieldProfileRepo.deleteAll();
 

@@ -101,7 +101,7 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
         if (parentOrganization != null) {
             parentOrganization.removeChildOrganization(organization);
             parentOrganization = organizationRepo.save(parentOrganization);
-            organization = organizationRepo.findOne(orgId);
+            organization = organizationRepo.findById(orgId).get();
         }
 
         Set<Organization> childrenToRemove = new HashSet<Organization>();
@@ -161,14 +161,14 @@ public class OrganizationRepoImpl extends AbstractWeaverRepoImpl<Organization, O
             workflowStepRepo.delete(ws);
         }
 
-        organizationRepo.delete(orgId);
+        organizationRepo.deleteById(orgId);
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
     }
 
     @Override
     public Organization restoreDefaults(Organization organization) {
-        Organization persistedOrg = organizationRepo.findOne(organization.getId());
-        Organization parentOrg = organizationRepo.findOne(organization.getParentOrganization().getId());
+        Organization persistedOrg = organizationRepo.findById(organization.getId()).get();
+        Organization parentOrg = organizationRepo.findById(organization.getParentOrganization().getId()).get();
         
         List<WorkflowStep> workflowStepsToDelete = new ArrayList<WorkflowStep>(persistedOrg.getOriginalWorkflowSteps());
 

@@ -14,11 +14,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.VocabularyWordValidator;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
@@ -28,15 +30,19 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "name", "controlled_vocabulary_id" }))
 public class VocabularyWord extends ValidatingBaseEntity {
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private String name;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private String definition;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = true)
     private String identifier;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ElementCollection(fetch = EAGER)
     private List<String> contacts;
 

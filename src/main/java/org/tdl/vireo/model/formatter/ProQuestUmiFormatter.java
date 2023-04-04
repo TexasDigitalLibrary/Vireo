@@ -78,6 +78,15 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
             case DEGREE_LEVEL:
                 context.setVariable(key.name(), submissionHelperUtility.getDegreeLevel());
                 break;
+            case DEGREE_LEVEL_STR:
+                context.setVariable(key.name(), submissionHelperUtility.getDegreeCodeLevelStr());
+                break;
+            case DEGREE_CODE_STR:
+                context.setVariable(key.name(), submissionHelperUtility.getDegreeCodeStr());
+                break;
+            case DEGREE_LEVEL_PQ_PROCCODE:
+                context.setVariable(key.name(), submissionHelperUtility.getDegreeCodeProc());
+                break;
             case DEPARTMENT:
                 context.setVariable(key.name(), submissionHelperUtility.getDepartment());
                 break;

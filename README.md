@@ -1,3 +1,4 @@
+<a name="readme-top"></a>
 [![Build Status](https://github.com/TexasDigitalLibrary/Vireo/workflows/Build/badge.svg)](https://github.com/TexasDigitalLibrary/Vireo/actions?query=workflow%3ABuild)
 [![Coverage Status](https://coveralls.io/repos/github/TexasDigitalLibrary/Vireo/badge.svg)](https://coveralls.io/github/TexasDigitalLibrary/Vireo)
 
@@ -19,9 +20,9 @@ Vireo build is done with [Maven](https://maven.apache.org/). The build is config
 
 **Ending trailing slash is required for spring.config.location**
 
-The external configuration directory is where an application.yaml file can be added to override default properties. When packaging the application define `config.uri`, which will template context.xml file with the `spring.config.location` system variable for container deployment.
+The external configuration directory is where an application.yml file can be added to override default properties. When packaging the application define `config.uri`, which will template context.xml file with the `spring.config.location` system variable for container deployment.
 
-When running for development define `spring.config.location` to externalize the configuration. If running for development and using an external configuration, do not define `assets.uri`. It will have to be configured manually in the external application.yaml.
+When running for development define `spring.config.location` to externalize the configuration. If running for development and using an external configuration, do not define `assets.uri`. It will have to be configured manually in the external application.yml.
 
 **External configuration is recommended for production deployment**
 
@@ -55,6 +56,8 @@ or run as production
 $ mvn clean spring-boot:run -Dproduction
 ```
 
+<div align="right">(<a href="#readme-top">back to top</a>)</div>
+
 **Building or running with -Dproduction will change the index.html template at src/main/resources/templates/index.html**
 
 ### Production
@@ -63,7 +66,7 @@ $ mvn clean spring-boot:run -Dproduction
 $ mvn clean package -DskipTests -Dproduction -Dassets.uri=file:/opt/vireo/ -Dconfig.uri=file:/opt/vireo/config/
 ```
 
-If build succeeds, you should have both a `vireo-4.0.0-SNAPSHOT.war` and a `vireo-4.0.0-SNAPSHOT-install.zip` in the `target/` directory. When building for production required static assets are copied into the packaged war file and the index.html template is optimized for production. For development a symlink is used to allow the application to access required static assets.
+If build succeeds, you should have both a `vireo-4.1.4.war` and a `vireo-4.1.4-install.zip` in the `target/` directory. When building for production required static assets are copied into the packaged war file and the index.html template is optimized for production. For development a symlink is used to allow the application to access required static assets.
 
 #### Apache Reverse Proxy Config
 
@@ -108,20 +111,13 @@ $ npm run test
 $ mvn clean test -Dclient
 ```
 
-### e2e
-
-```bash
-$ mvn clean spring-boot:run
-$ npm run protractor
-```
-
 ## Deploying from Zip Package
 
 Unzip package into preferred directory (or any directory you choose):
 
 ```bash
 $ cd /opt/vireo
-$ unzip vireo-4.0.0-SNAPSHOT-install.zip
+$ unzip vireo-4.1.4-install.zip
 ```
 
 ### Directory Structure of installed package
@@ -135,6 +131,8 @@ drwxrwxrwx  7 root  root  238 Sep  3 11:20 webapp
 * config - where the external config files reside
 * logs - where vireo log files are stored
 * webapp - the extracted WAR file
+
+<div align="right">(<a href="#readme-top">back to top</a>)</div>
 
 ### Recommended Hardware Configuration
 
@@ -154,8 +152,24 @@ Currently, in order to have Tomcat know where the external configuration directo
 </Context>
 ```
 
-2) Update [application.yaml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yaml)
+2) Update [application.yml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yml)
 
+<div align="right">(<a href="#readme-top">back to top</a>)</div>
+
+### Deploy with Docker
+
+A quick and easy deployment method using `docker-compose` is described in the [Deployment Guide][deployment-guide].
+
+For _advanced use cases_, or when `docker-compose` is unavailable, the use of `docker` or `npm`/`mvn` is also described in the [Deployment Guide][deployment-guide].
+
+Deployment, in general, may look something like this:
+
+```shell
+cp example.env .env
+
+# Make any changes to the .env files before here.
+docker-compose up
+```
 
 ### Deploy to Tomcat
 
@@ -176,18 +190,18 @@ ln -s /opt/vireo/webapp /opt/tomcat/webapps/ROOT
 Copy war file into Tomcat webapps directory (your location may vary -- this is an example):
 
 ```bash
-$ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/vireo.war
+$ cp ~/vireo-4.1.4.war /usr/local/tomcat/webapps/vireo.war
 ```
 
 or as root:
 
 ```bash
-$ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
+$ cp ~/vireo-4.1.4.war /usr/local/tomcat/webapps/ROOT.war
 ```
 
 **if not specifying assets.uri during build the assets will be stored under the vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes**
 
-**if not specifying config.uri during build the application.yaml will be under the Vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes/application.yaml**
+**if not specifying config.uri during build the application.yml will be under the Vireo webapp's classpath, /opt/tomcat/webapps/vireo/WEB-INF/classes/application.yml**
 
 **if deployed from default WAR package and would like to externalize the config, you will have to edit /opt/tomcat/webapps/vireo/META-INF/context.xml***
 
@@ -195,12 +209,14 @@ $ cp ~/vireo-4.0.0-SNAPSHOT.war /usr/local/tomcat/webapps/ROOT.war
 ## Running WAR as a stand-alone Spring Boot application
 
 ```bash
-java -jar target/vireo-4.0.0-SNAPSHOT.war
+java -jar target/vireo-4.1.4.war
 ```
+
+<div align="right">(<a href="#readme-top">back to top</a>)</div>
 
 ## Configuring
 
-* [application.yaml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yaml)
+* [application.yml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/application.yml)
   * application configurations
 
 * [theme-defaults.json](https://github.com/TexasDigitalLibrary/Vireo/blob/master/src/main/resources/theme-defaults.json)
@@ -238,3 +254,7 @@ java -jar target/vireo-4.0.0-SNAPSHOT.war
 ### Customization of default values
 
 Information on customizing default values can be found in the [advanced customization](https://github.com/TexasDigitalLibrary/Vireo/blob/master/ADVANCED_CUSTOMIZATION.md) documentation.
+
+<div align="right">(<a href="#readme-top">back to top</a>)</div>
+
+[deployment-guide]: DEPLOYING.md

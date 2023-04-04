@@ -11,25 +11,34 @@ import javax.persistence.ManyToMany;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OrderColumn;
 
+import org.tdl.vireo.model.response.Views;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @MappedSuperclass
 public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, FP, N>, FP extends AbstractFieldProfile<FP>, N extends AbstractNote<N>> extends ValidatingBaseEntity {
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private String name;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(nullable = false)
     private Boolean overrideable;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<FP> aggregateFieldProfiles;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<N> aggregateNotes;
 
+    @JsonView(Views.SubmissionIndividual.class)
     @Column(columnDefinition = "text")
     private String instructions;
 
@@ -41,45 +50,39 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * @param name
-     *            the name to set
+     * @param name the name to set
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
-     * @return
+     * @return the overrideable
      */
     public Boolean getOverrideable() {
         return overrideable;
     }
 
     /**
-     *
-     * @param overrideable
+     * @param overrideable the overrideable to set
      */
     public void setOverrideable(Boolean overrideable) {
         this.overrideable = overrideable;
     }
 
     /**
-     *
-     * @return
+     * @return the aggregateFieldProfiles
      */
     public List<FP> getAggregateFieldProfiles() {
         return aggregateFieldProfiles;
     }
 
     /**
-     *
-     * @param param
+     * @param aggregateFieldProfiles the aggregateFieldProfiles to set
      */
     public void setAggregateFieldProfiles(List<FP> aggregateFieldProfiles) {
         this.aggregateFieldProfiles = aggregateFieldProfiles;
     }
-
     public void addFieldProfile(FP fieldProfile) {
         getAggregateFieldProfiles().add(fieldProfile);
     }
@@ -103,10 +106,11 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
+     * Replace the field profile.
      *
-     * @param fp1
-     * @param fp2
-     * @return
+     * @param fp1 The FieldProfile to replace.
+     * @param fp2 The FieldProfile to replace with.
+     * @return True if replaced and false otherwise.
      */
     public boolean replaceAggregateFieldProfile(FP fp1, FP fp2) {
         boolean res = false;
@@ -124,10 +128,11 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
+     * Swap the field profile.
      *
-     * @param fp1
-     * @param fp2
-     * @return
+     * @param fp1 The FieldProfile to swap.
+     * @param fp2 The FieldProfile to swap with.
+     * @return True if swapped and false otherwise.
      */
     public boolean swapAggregateFieldProfile(FP fp1, FP fp2) {
         boolean res = false;
@@ -143,10 +148,10 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
+     * Re-order field profiles by their index.
      *
-     * @param fp1
-     * @param fp2
-     * @return
+     * @param src The index of the FieldProfile to swap from.
+     * @param dest The index of the FieldProfile to swap to.
      */
     public void reorderAggregateFieldProfile(int src, int dest) {
 
@@ -162,24 +167,23 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
-     * @return
+     * @return the aggregateNotes
      */
     public List<N> getAggregateNotes() {
         return aggregateNotes;
     }
 
     /**
-     * 
-     * @param aggregateNotes
+     * @param aggregateNotes the aggregateNotes to set
      */
     public void setAggregateNotes(List<N> aggregateNotes) {
         this.aggregateNotes = aggregateNotes;
     }
 
-    /**
-     * 
-     * @param aggregateNote
+   /**
+     * Append a note.
+     *
+     * @param aggregateNote the aggregateNote to append.
      */
     public void addAggregateNote(N aggregateNote) {
         if (!getAggregateNotes().contains(aggregateNote)) {
@@ -188,34 +192,20 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
-     * @param aggregateNote
+     * Remove a note.
+     *
+     * @param aggregateNote the aggregateNote to remove.
      */
     public void removeAggregateNote(N aggregateNote) {
         getAggregateNotes().remove(aggregateNote);
     }
 
     /**
-     * 
-     * @return
-     */
-    public String getInstructions() {
-        return instructions;
-    }
-
-    /**
-     * 
-     * @param instructions
-     */
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
-    }
-
-    /**
-     * 
-     * @param n1
-     * @param n2
-     * @return
+     * Replace the note.
+     *
+     * @param n1 The AggregateNote to replace.
+     * @param n2 The AggregateNote to replace with.
+     * @return True if replaced and false otherwise.
      */
     public boolean replaceAggregateNote(N n1, N n2) {
         boolean res = false;
@@ -233,10 +223,11 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
-     * @param n1
-     * @param n2
-     * @return
+     * Swap the note.
+     *
+     * @param n1 The AggregateNote to swap.
+     * @param n2 The AggregateNote to swap with.
+     * @return True if swapped and false otherwise.
      */
     public boolean swapAggregateNote(N n1, N n2) {
         boolean res = false;
@@ -252,9 +243,10 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     }
 
     /**
-     * 
-     * @param src
-     * @param dest
+     * Re-order notes by their index.
+     *
+     * @param src The index of the AggregateNote to swap from.
+     * @param dest The index of the AggregateNote to swap to.
      */
     public void reorderAggregateNote(int src, int dest) {
 
@@ -267,6 +259,20 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
         getAggregateNotes().remove(src);
 
         getAggregateNotes().add(dest, note);
+    }
+
+    /**
+     * @return the instructions
+     */
+    public String getInstructions() {
+        return instructions;
+    }
+
+    /**
+     * @param instructions the instructions to set
+     */
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
 }

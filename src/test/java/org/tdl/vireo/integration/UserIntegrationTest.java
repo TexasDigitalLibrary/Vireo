@@ -1,10 +1,8 @@
 package org.tdl.vireo.integration;
 
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.MediaType;
 //import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -22,6 +20,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Override
+    @BeforeEach
     public void setup() {
 
         systemDataLoader.loadSystemDefaults();
@@ -55,6 +54,7 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Override
+    @AfterEach
     public void cleanup() {
         namedSearchFilterRepo.findAll().forEach(nsf -> {
             namedSearchFilterRepo.delete(nsf);
