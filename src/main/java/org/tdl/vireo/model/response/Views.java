@@ -4,6 +4,10 @@ import edu.tamu.weaver.response.ApiView;
 
 public class Views {
 
+    public static class SubmissionIndividualActionLogs extends SubmissionIndividual {
+
+    }
+
     public static class SubmissionIndividual extends Partial {
 
     }

@@ -24,14 +24,17 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
 
         //populate actionLogs with models for existing values
         var instantiateActionLogs = function () {
-            var actionLogs = angular.copy(submission.actionLogs);
-            if (submission.actionLogs) {
-                submission.actionLogs.length = 0;
+            if (angular.isDefined(submission.actionLogs)) {
+                var actionLogs = angular.copy(submission.actionLogs);
+                if (submission.actionLogs) {
+                    submission.actionLogs.length = 0;
+                }
+
+                angular.forEach(actionLogs, function (actionLog) {
+                    actionLog = new ActionLog(actionLog);
+                    submission.actionLogs.push(actionLog);
+                });
             }
-            angular.forEach(actionLogs, function (actionLog) {
-                actionLog = new ActionLog(actionLog);
-                submission.actionLogs.push(actionLog);
-            });
         };
 
         // additional model methods and variables
@@ -92,6 +95,11 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
 
             submission.actionLogListenPromise.then(null, null, function (response) {
                 var newActionLog = angular.fromJson(response.body).payload.ActionLog;
+
+                if (angular.isUndefined(submission.actionLogs)) {
+                    submission.actionLogs = [];
+                }
+
                 submission.actionLogs.push(new ActionLog(newActionLog));
                 submission.actionLogListenReloadDefer.notify(submission.actionLogs);
             });

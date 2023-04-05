@@ -49,6 +49,12 @@ describe("service: studentSubmissionRepo", function () {
             expect(repo.fetchSubmissionById).toBeDefined();
             expect(typeof repo.fetchSubmissionById).toEqual("function");
         });
+
+        it("findPaginatedActionLogsById should be defined", function () {
+            expect(repo.findPaginatedActionLogsById).toBeDefined();
+            expect(typeof repo.findPaginatedActionLogsById).toEqual("function");
+        });
+
         it("listenForChanges should be defined", function () {
             expect(repo.listenForChanges).toBeDefined();
             expect(typeof repo.listenForChanges).toEqual("function");
@@ -58,6 +64,20 @@ describe("service: studentSubmissionRepo", function () {
     describe("Do the repo methods work as expected", function () {
         it("fetchSubmissionById should return a submission", function () {
             repo.fetchSubmissionById(1);
+            scope.$digest();
+
+            // TODO
+        });
+
+        it("findPaginatedActionLogsById should return action logs", function () {
+            var mockOrderBy = { order: 'id' };
+            var mockPayload = {
+                PageImpl: {}
+            };
+
+            WsApi.mockFetchResponse({ type: "payload", payload: mockPayload });
+
+            repo.findPaginatedActionLogsById(1, mockOrderBy, 0, 10);
             scope.$digest();
 
             // TODO
