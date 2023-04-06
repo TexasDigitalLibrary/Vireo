@@ -29,6 +29,22 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             $scope.dropzoneText = "Choose file here or drag and drop to upload";
 
             var save = function (fieldValue) {
+                if (angular.isDefined(appConfig.datePredicates) && angular.isDefined(fieldValue) && angular.isDefined(fieldValue.fieldPredicate)) {
+                    for (var i = 0; i < appConfig.datePredicates.length; i++) {
+                        if (appConfig.datePredicates[i].how === 'start') {
+                            if (fieldValue.fieldPredicate.value.startsWith(appConfig.datePredicates[i].predicate)) {
+                                fieldValue.value = $filter('date')(fieldValue.value, $scope.datepickerFormat);
+                                break;
+                            }
+                        } else if (appConfig.datePredicates[i].how === 'exact') {
+                            if (fieldValue.fieldPredicate.value === appConfig.datePredicates[i].predicate) {
+                                fieldValue.value = $filter('date')(fieldValue.value, $scope.datepickerFormat);
+                                break;
+                            }
+                        }
+                    }
+                }
+
                 return $q(function (resolve) {
                     $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (res) {
                         delete fieldValue.updating;
@@ -71,8 +87,34 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 }
             };
 
-            $scope.datepickerOptions = {};
-            $scope.datepickerFormat = angular.isDefined($scope.profile.controlledVocabulary) ? "MMMM yyyy" : "MM/dd/yyyy";
+            // Warning: setting ngModelOptions: { timezone: 'utc' } can cause the off by 1 day problem.
+            $scope.datepickerOptions = {
+                datepickerMode: 'day',
+                formatDay: 'dd',
+                formatMonth: 'MMMM',
+                formatYear: 'yyyy',
+                formatDayHeader: 'EEE',
+                formatDayTitle: 'MMMM yyyy',
+                formatMonthTitle: 'yyyy',
+                maxDate: null,
+                maxMode: 'year',
+                minDate: null,
+                minMode: 'day',
+                monthColumns: 3,
+                ngModelOptions: {},
+                shortcutPropagation: false,
+                showWeeks: true,
+                yearColumns: 5,
+                yearRows: 4
+            };
+
+            $scope.datepickerFormat = "MM/dd/yyyy";
+
+            if (angular.isDefined($scope.profile.controlledVocabulary)) {
+                $scope.datepickerOptions.minMode = "month";
+                $scope.datepickerFormat = "MMMM yyyy";
+            }
+
             var checkDisabled = function (dateAndMode) {
                 var disabled = true;
                 if(angular.isDefined($scope.profile.controlledVocabulary)) {
@@ -93,11 +135,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                     if (checkDisabled(dateAndMode)) return "disabled";
                 };
                 $scope.datepickerOptions.dateDisabled = checkDisabled;
-
-                $scope.datepickerOptions.minViewMode = "month";
                 $scope.datepickerOptions.minMode = "month";
-                $scope.datepickerOptions.maxViewMode = "month";
-                $scope.datepickerOptions.maxMode = "month";
             }
 
             $scope.hasFile = function (fieldValue) {

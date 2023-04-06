@@ -50,12 +50,12 @@
   },
   {
     "name": "INPUT_DEGREEDATE",
-    "validationPattern": "(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d)(Z)",
+    "validationPattern": "^\\w+ \\d{4}$",
     "validationMessage": "Dates must be in MMMM YYYY format"
   },
   {
     "name": "INPUT_DATETIME",
-    "validationPattern": "(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d)(Z)",
+    "validationPattern": "^\\d{1,2}/\\d{1,2}/\\d{4}$",
     "validationMessage": "Dates must be in MM/DD/YYYY format"
   },
   {

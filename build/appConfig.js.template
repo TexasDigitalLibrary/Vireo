@@ -31,6 +31,19 @@ var appConfig = {
     // Set this to 'admin' or 'user' if using mock AuthService
     // otherwise set to null or false
 
-    'mockRole': 'admin'
+    'mockRole': 'admin',
 
+    // Designate predicates that require date/times value filtering on save.
+    // Each object has two properties, 1) predicate value, called 'predicate' 2) how to process, called 'how'.
+    // The 'how' must be one of 'start' to designate predicate values that start with match or 'exact' to use an exact match.
+    'datePredicates': [
+        {
+          'how': 'start',
+          'predicate': 'dc.date.'
+        },
+        {
+          'how': 'exact',
+          'predicate': 'defense_date'
+        }
+    ]
 };
