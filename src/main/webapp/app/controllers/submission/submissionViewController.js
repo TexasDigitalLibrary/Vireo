@@ -60,7 +60,11 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
         };
 
         $scope.updateActionLogLimit = function () {
-            $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit ? $scope.submission.actionLogs.length : $scope.actionLogLimit;
+            if (angular.isDefined($scope.submission.actionLogs)) {
+                $scope.actionLogCurrentLimit = $scope.actionLogCurrentLimit === $scope.actionLogLimit ? $scope.submission.actionLogs.length : $scope.actionLogLimit;
+            } else {
+                $scope.actionLogCurrentLimit = 0;
+            }
         };
 
         $scope.queueRemove = function (fieldValue) {
@@ -171,6 +175,10 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
                 });
             }
         });
+
+        $scope.getPaginatedActionLog = function (orderBy, page, count) {
+            return StudentSubmissionRepo.findPaginatedActionLogsById($routeParams.submissionId, orderBy, page, count);
+        }
 
     });
 

@@ -103,4 +103,8 @@ vireo.controller("AdvisorSubmissionReviewController", function ($controller, $sc
         return result;
     };
 
+    $scope.getPaginatedActionLog = function (orderBy, page, count) {
+        return AdvisorSubmissionRepo.findPaginatedActionLogsByHash($routeParams.advisorAccessHash, orderBy, page, count);
+    };
+
 });
