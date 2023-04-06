@@ -990,9 +990,18 @@ public class SubmissionController {
             apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
         } else {
             if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
-                JsonNode fileInfo = assetService.getAssetFileInfo(uri, submission);
+                String fileName = "";
+                String fileSize = "file not found";
+                if (assetService.assetFileExists(uri)) {
+                    JsonNode fileInfo = assetService.getAssetFileInfo(uri, submission);
+                    fileName = fileInfo.get("name").asText();
+                    fileSize = fileInfo.get("readableSize").asText();
+                } else {
+                    fileName = assetService.getAssetFileName(uri);
+                }
+
                 assetService.delete(uri);
-                actionLogRepo.createPublicLog(submission, user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") removed");
+                actionLogRepo.createPublicLog(submission, user, documentType.substring(9).toUpperCase() + " file " + fileName + " (" + fileSize + ") removed");
             } else {
                 apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
             }

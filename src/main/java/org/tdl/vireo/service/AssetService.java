@@ -1,5 +1,7 @@
 package org.tdl.vireo.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -25,11 +27,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import javax.imageio.ImageIO;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -41,11 +43,10 @@ import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.utility.FileHelperUtility;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Service
 public class AssetService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AssetService.class);
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -87,7 +88,12 @@ public class AssetService {
     }
 
     public void delete(String relativePath) throws IOException {
-        Files.delete(getAssetsAbsolutePath(relativePath));
+        Path path = getAssetsAbsolutePath(relativePath);
+        if (Files.exists(path)) {
+            Files.delete(getAssetsAbsolutePath(relativePath));
+        } else {
+            LOG.warn("File not found while trying to delete at path: '" + path.getFileName().toString() + "'");
+        }
     }
 
     public String write(InputStream is, String relativePath) throws IOException {
@@ -108,6 +114,31 @@ public class AssetService {
         BufferedImage image = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder().decode(encodedData[1])));
         Path path = processAssetsRelativePath(relativePath);
         ImageIO.write(image, fileExtension, Files.newOutputStream(path));
+    }
+
+    /**
+     * Check to see if the asset file exists on the filesystem.
+     *
+     * @param relativePath The path to check.
+     *
+     * @return TRUE if file exists and FALSE otherwise.
+     */
+    public boolean assetFileExists(String relativePath) {
+        return Files.exists(getAssetsAbsolutePath(relativePath));
+    }
+
+    /**
+     * Get the file name, without the entire path.
+     *
+     * @param relativePath The path to process.
+     *
+     * @return The file name without the path.
+     */
+    public String getAssetFileName(String relativePath) {
+        Path path = getAssetsAbsolutePath(relativePath);
+        String fileName = path.getFileName().toString();
+
+        return fileName.substring(fileName.indexOf('-') + 1);
     }
 
     public JsonNode getAssetFileInfo(String relativePath, Submission submission) throws IOException {
@@ -166,7 +197,7 @@ public class AssetService {
         URI uri = resource.getURI();
         if (uri.getScheme().equals("jar")) {
             String directory = null;
-        	if (uri.toString().contains(".jar!")) {
+            if (uri.toString().contains(".jar!")) {
                 directory = resourceDirectory.replace("classpath:", "/BOOT-INF/classes").replace("file:", "/");
             }else{ //.war!
                 directory = resourceDirectory.replace("classpath:", "/WEB-INF/classes").replace("file:", "/");
