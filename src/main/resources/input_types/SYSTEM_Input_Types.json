@@ -54,9 +54,14 @@
     "validationMessage": "Dates must be in MMMM YYYY format"
   },
   {
-    "name": "INPUT_DATETIME",
+    "name": "INPUT_DATE",
     "validationPattern": "^\\d{1,2}/\\d{1,2}/\\d{4}$",
     "validationMessage": "Dates must be in MM/DD/YYYY format"
+  },
+  {
+    "name": "INPUT_DATETIME",
+    "validationPattern": "(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d+)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d:[0-5]\\d)(Z)|(\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d)(Z)",
+    "validationMessage": "Dates must be in YYYY-MM-DDTHH:mm:ss.sssZ format"
   },
   {
     "name": "INPUT_FILE",

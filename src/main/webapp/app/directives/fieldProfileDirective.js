@@ -29,19 +29,11 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             $scope.dropzoneText = "Choose file here or drag and drop to upload";
 
             var save = function (fieldValue) {
-                if (angular.isDefined(appConfig.datePredicates) && angular.isDefined(fieldValue) && angular.isDefined(fieldValue.fieldPredicate)) {
-                    for (var i = 0; i < appConfig.datePredicates.length; i++) {
-                        if (appConfig.datePredicates[i].how === 'start') {
-                            if (fieldValue.fieldPredicate.value.startsWith(appConfig.datePredicates[i].predicate)) {
-                                fieldValue.value = $filter('date')(fieldValue.value, $scope.datepickerFormat);
-                                break;
-                            }
-                        } else if (appConfig.datePredicates[i].how === 'exact') {
-                            if (fieldValue.fieldPredicate.value === appConfig.datePredicates[i].predicate) {
-                                fieldValue.value = $filter('date')(fieldValue.value, $scope.datepickerFormat);
-                                break;
-                            }
-                        }
+                if (angular.isDefined(fieldValue) && angular.isDefined(fieldValue.fieldPredicate) && angular.isDefined(fieldValue.fieldPredicate.value)) {
+                    var predicate = $scope.findDatePredicate(fieldValue.fieldPredicate.value);
+
+                    if (predicate !== null) {
+                      fieldValue.value = $filter('date')(fieldValue.value, predicate.format);
                     }
                 }
 
@@ -111,7 +103,6 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             $scope.datepickerFormat = "MM/dd/yyyy";
 
             if (angular.isDefined($scope.profile.controlledVocabulary)) {
-                $scope.datepickerOptions.minMode = "month";
                 $scope.datepickerFormat = "MMMM yyyy";
             }
 
@@ -129,12 +120,31 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 return disabled;
             };
 
+            $scope.findDatePredicate = function (match) {
+                if (angular.isDefined(appConfig.datePredicates) && angular.isDefined(match)) {
+                    for (var i = 0; i < appConfig.datePredicates.length; i++) {
+                        if (appConfig.datePredicates[i].how === 'start') {
+                            if (match.startsWith(appConfig.datePredicates[i].name)) {
+                                return appConfig.datePredicates[i];
+                            }
+                        } else if (appConfig.datePredicates[i].how === 'exact') {
+                            if (match === appConfig.datePredicates[i].name) {
+                                return appConfig.datePredicates[i];
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            };
+
             if (angular.isDefined($scope.profile.controlledVocabulary) && $scope.profile.controlledVocabulary.name === "Graduation Months") {
 
                 $scope.datepickerOptions.customClass = function (dateAndMode) {
                     if (checkDisabled(dateAndMode)) return "disabled";
                 };
                 $scope.datepickerOptions.dateDisabled = checkDisabled;
+                $scope.datepickerOptions.datepickerMode = 'month';
                 $scope.datepickerOptions.minMode = "month";
             }
 

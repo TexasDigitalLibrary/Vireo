@@ -461,9 +461,19 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                         switch (submissionListColumn.getInputType().getName()) {
                         case "INPUT_DEGREEDATE":
-                            // Column's values are of type datetime
-                            filterString.replaceAll("[TZ:.\\-]", " ");
-                            sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
+                            // Column's values are of type 'MMMM yyyy' (in SQL date format would be 'Month YYYY').
+                            sqlWhereBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                            break;
+                        case "INPUT_DATE":
+                            // Column's values are of type 'MM/dd/yyyy' (in SQL date format would be 'MM/DD/YYYY').
+                            if (filterString.contains("|")) {
+                                // Date Range
+                                String[] dates = filterString.split(Pattern.quote("|"));
+                                sqlWhereBuilder.append("to_date(pfv").append(n).append(".value, 'MM/DD/YYYY') BETWEEN to_date('").append(dates[0]).append("', 'MM/DD/YYYY') AND to_date('").append(dates[1]).append("', 'MM/DD/YYYY')");
+                            } else {
+                                // Date Match
+                                sqlWhereBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                            }
                             break;
                         case "INPUT_DATETIME":
                             // Column's values are of type datetime

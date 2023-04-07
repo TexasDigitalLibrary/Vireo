@@ -1,52 +1,49 @@
 <div class="further-filter-by" ng-repeat="column in box.filterColumns.userFilterColumns | filter: {title: '!Search Box'}">
-	<sideboxsub>{{column.title}}</sideboxsub>
+    <sideboxsub>{{column.title}}</sideboxsub>
 
-	<div ng-switch on="column.title">
-		
-		<div ng-switch-when="Assigned To">
-	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByAssignedTo.html'"></div>
-	    </div>
+    <div ng-switch on="column.title">
 
-		<div ng-switch-when="Custom Actions">
-	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByCustomActions.html'"></div>
-	    </div>
+        <div ng-switch-when="Assigned To">
+            <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByAssignedTo.html'"></div>
+        </div>
 
-	    <div ng-switch-when="Embargo Type">
-	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByEmbargoType.html'"></div>
-	    </div>
+        <div ng-switch-when="Custom Actions">
+            <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByCustomActions.html'"></div>
+        </div>
 
-	    <div ng-switch-when="Organization">
-	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByOrganization.html'"></div>
-	    </div>
+        <div ng-switch-when="Embargo Type">
+            <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByEmbargoType.html'"></div>
+        </div>
 
-	    <div ng-switch-when="Organization Category">
-	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByOrganizationCategory.html'"></div>
-	    </div>
+        <div ng-switch-when="Organization">
+            <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByOrganization.html'"></div>
+        </div>
 
-		<div ng-switch-when="Status">
-	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByStatus.html'"></div>
-	    </div>
+        <div ng-switch-when="Organization Category">
+            <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByOrganizationCategory.html'"></div>
+        </div>
 
-		<div ng-switch-when="Submission Type">
-	    	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterBySubmissionType.html'"></div>
-		</div>
+        <div ng-switch-when="Status">
+            <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByStatus.html'"></div>
+        </div>
 
-	  <div ng-switch-when="Proquest Publication">
-	     	<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByUmiPublication.html'"></div>
-	  </div>
+        <div ng-switch-when="Submission Type">
+            <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterBySubmissionType.html'"></div>
+        </div>
 
-		<div ng-switch-when="Graduation Semester">
-			<div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDegreeDate.html'"></div>
-	    </div>
+        <div ng-switch-when="Proquest Publication">
+            <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByUmiPublication.html'"></div>
+        </div>
 
-		<div ng-switch-default>
-	    	
-			<div ng-if="column.inputType.name=='INPUT_DATETIME'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDate.html'"></div>
+        <div ng-switch-when="Graduation Semester">
+            <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDegreeDate.html'"></div>
+        </div>
 
-		    <div ng-if="column.inputType.name!='INPUT_DATETIME'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDefault.html'"></div>
+        <div ng-switch-default>
+            <div ng-if="column.inputType.name=='INPUT_DATETIME' || column.inputType.name=='INPUT_DATE'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDate.html'"></div>
+            <div ng-if="column.inputType.name!='INPUT_DATETIME' && column.inputType.name!='INPUT_DATE'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDefault.html'"></div>
+        </div>
 
-	    </div>
-
-	</div>
+    </div>
 
 </div>

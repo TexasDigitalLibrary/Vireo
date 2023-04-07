@@ -21,10 +21,10 @@ var appConfig = {
     'stompDebug': ${STOMP_DEBUG},
 
     /*
-    	Determines the type of connection stomp will attempt to make with the service.
-    	TYPES:  websocket, xhr-streaming, xdr-streaming, eventsource, iframe-eventsource,
-    			htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
-    			jsonp-polling
+      Determines the type of connection stomp will attempt to make with the service.
+      TYPES:  websocket, xhr-streaming, xdr-streaming, eventsource, iframe-eventsource,
+          htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
+          jsonp-polling
     */
     'sockJsConnectionType': ['websocket', 'xhr-polling'],
 
@@ -34,16 +34,31 @@ var appConfig = {
     'mockRole': 'admin',
 
     // Designate predicates that require date/times value filtering on save.
-    // Each object has two properties, 1) predicate value, called 'predicate' 2) how to process, called 'how'.
+    // Each object has three properties, 1) predicate value, called 'name', 2) how to process, called 'how', and 3) the format string called 'format'.
     // The 'how' must be one of 'start' to designate predicate values that start with match or 'exact' to use an exact match.
+    // The `dateColumns` is identical, except it is matching against column names rather than predicate values.
     'datePredicates': [
         {
+          'name': 'dc.date.',
           'how': 'start',
-          'predicate': 'dc.date.'
+          'format': 'MMMM yyyy'
         },
         {
+          'name': 'defense_date',
           'how': 'exact',
-          'predicate': 'defense_date'
+          'format': 'MM/dd/yyyy'
+        }
+    ],
+    'dateColumns': [
+        {
+          'name': 'INPUT_DEGREEDATE',
+          'how': 'exact',
+          'format': 'MMMM yyyy'
+        },
+        {
+          'name': 'INPUT_DATE',
+          'how': 'exact',
+          'format': 'MM/dd/yyyy'
         }
     ]
 };

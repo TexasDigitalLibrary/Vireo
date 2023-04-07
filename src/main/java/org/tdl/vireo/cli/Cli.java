@@ -87,8 +87,10 @@ public class Cli implements CommandLineRunner {
             Scanner reader = new Scanner(System.in); // Reading from System.in
             boolean expansive = false;
             Random random = new Random();
+            Calendar calendar = null;
 
-            SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat formatDay = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat formatMonth = new SimpleDateFormat("MMMM yyyy");
             SimpleDateFormat emailDate = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss_");
 
             System.out.print(PROMPT);
@@ -265,10 +267,15 @@ public class Cli implements CommandLineRunner {
                                     sub.addFieldValue(val);
                                     break;
                                 case "INPUT_DEGREEDATE":
+                                case "INPUT_DATE":
+                                    val = fieldValueRepo.create(pred);
+                                    calendar = getRandomDate();
+                                    val.setValue(formatMonth.format(calendar.getTime()));
+                                    sub.addFieldValue(val);
                                 case "INPUT_DATETIME":
                                     val = fieldValueRepo.create(pred);
-                                    Calendar calendar = getRandomDate();
-                                    val.setValue(format.format(calendar.getTime()));
+                                    calendar = getRandomDate();
+                                    val.setValue(formatDay.format(calendar.getTime()));
                                     sub.addFieldValue(val);
                                     break;
                                 default:

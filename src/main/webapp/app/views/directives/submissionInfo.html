@@ -23,8 +23,8 @@
         </span>
         <span ng-if="inputDegreeDate() && !field.value" class="info-empty">none</span>
         <span ng-if="inputDegreeDate() && field.value">{{field.value | date:'MMMM yyyy'}}</span>
-        <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
-        <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
+        <span ng-if="(inputDate() || inputDateTime()) && !field.value" class="info-empty">none</span>
+        <span ng-if="(inputDate() || inputDateTime()) && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
         <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
         <span ng-if="inputContactChair() && field.value"><span class="span-block">{{field.value}}</span><span>{{field.contacts[0]}}</span></span>
         <span ng-if="inputFile()" ng-class="{'info-empty': !field.value}">{{field.fileInfo.name || 'none'}}</span>
@@ -59,8 +59,8 @@
         </span>
         <span ng-if="inputDegreeDate() && !field.value" class="info-empty">none</span>
         <span ng-if="inputDegreeDate() && field.value">{{field.value | date:'MMMM yyyy'}}</span>
-        <span ng-if="inputDateTime() && !field.value" class="info-empty">none</span>
-        <span ng-if="inputDateTime() && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
+        <span ng-if="(inputDate() || inputDateTime()) && !field.value" class="info-empty">none</span>
+        <span ng-if="(inputDate() || inputDateTime()) && field.value">{{field.value | date:'MM/dd/yyyy'}}</span>
         <span ng-if="inputContactChair() && !field.value" class="info-empty">none</span>
         <span ng-if="inputContactChair() && field.value"><span class="span-block">{{field.value}}</span><span>{{field.contacts[0]}}</span></span>
         <span ng-if="inputFile()" ng-class="{'info-empty': !field.value}">{{field.fileInfo.name || 'none'}}</span>
