@@ -89,7 +89,7 @@ public class Cli implements CommandLineRunner {
             Random random = new Random();
             Calendar calendar = null;
 
-            SimpleDateFormat formatDay = new SimpleDateFormat("MM/dd/yyyy");
+            SimpleDateFormat formatDay = new SimpleDateFormat("yyyy-MM-dd");
             SimpleDateFormat formatMonth = new SimpleDateFormat("MMMM yyyy");
             SimpleDateFormat emailDate = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss_");
 
@@ -267,20 +267,27 @@ public class Cli implements CommandLineRunner {
                                     sub.addFieldValue(val);
                                     break;
                                 case "INPUT_DEGREEDATE":
-                                case "INPUT_DATE":
                                     val = fieldValueRepo.create(pred);
-                                    calendar = getRandomDate();
+                                    calendar = getRandomDegreeDate();
                                     val.setValue(formatMonth.format(calendar.getTime()));
                                     sub.addFieldValue(val);
-                                case "INPUT_DATETIME":
+                                    break;
+                                case "INPUT_DATE":
                                     val = fieldValueRepo.create(pred);
                                     calendar = getRandomDate();
                                     val.setValue(formatDay.format(calendar.getTime()));
                                     sub.addFieldValue(val);
                                     break;
                                 default:
+                                    // Allow for a small number of unfilled field values.
+                                    if (random.nextInt(10) > 8) break;
+
                                     val = fieldValueRepo.create(pred);
-                                    val.setValue("test " + pred.getValue() + " " + i);
+                                    if (pred.getValue().equalsIgnoreCase("birth_year")) {
+                                        val.setValue(getRandomYearString(80));
+                                    } else {
+                                        val.setValue("test " + pred.getValue() + " " + i);
+                                    }
                                     sub.addFieldValue(val);
                                 }
                             }
@@ -315,13 +322,41 @@ public class Cli implements CommandLineRunner {
         Random random = new Random();
         Calendar date = Calendar.getInstance();
         date.add(Calendar.YEAR, -random.nextInt(10));
+
         int rm = random.nextInt(10);
         if (random.nextInt(2) == 2) {
             rm = -rm;
         }
-        date.add(Calendar.MONTH, rm);
-        date.add(Calendar.DATE, random.nextInt(32 - date.get(Calendar.DAY_OF_MONTH)));
+
+        date.set(Calendar.MONTH, rm);
+        date.set(Calendar.DATE, random.nextInt(32 - date.get(Calendar.DAY_OF_MONTH)));
         return date;
+    }
+
+    private Calendar getRandomDegreeDate() {
+        Random random = new Random();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.YEAR, -random.nextInt(10));
+
+        int rm = random.nextInt(3);
+        if (rm == 0) {
+            rm = Calendar.MAY;
+        } else if (rm == 1) {
+            rm = Calendar.AUGUST;
+        } else {
+            rm = Calendar.DECEMBER;
+        }
+
+        date.set(Calendar.MONTH, rm);
+        date.set(Calendar.DATE, random.nextInt(28) + 1);
+        return date;
+    }
+
+    private String getRandomYearString(int max) {
+        Random random = new Random();
+        Calendar date = Calendar.getInstance();
+
+        return "" + (date.get(Calendar.YEAR) - random.nextInt(max));
     }
 
     private User createHelpfulHarry(int offset, SimpleDateFormat formatter) {

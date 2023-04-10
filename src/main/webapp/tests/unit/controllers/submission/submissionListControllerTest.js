@@ -357,7 +357,7 @@ describe("controller: SubmissionListController", function () {
 
             scope.displaySubmissionProperty(row, column);
 
-            column.inputType.name = "INPUT_DATETIME";
+            column.inputType.name = "INPUT_DATE";
 
             scope.displaySubmissionProperty(row, column);
 

@@ -40,8 +40,8 @@
         </div>
 
         <div ng-switch-default>
-            <div ng-if="column.inputType.name=='INPUT_DATETIME' || column.inputType.name=='INPUT_DATE'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDate.html'"></div>
-            <div ng-if="column.inputType.name!='INPUT_DATETIME' && column.inputType.name!='INPUT_DATE'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDefault.html'"></div>
+            <div ng-if="column.inputType.name=='INPUT_DATE'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDate.html'"></div>
+            <div ng-if="column.inputType.name!='INPUT_DATE'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDefault.html'"></div>
         </div>
 
     </div>

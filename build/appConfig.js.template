@@ -34,31 +34,35 @@ var appConfig = {
     'mockRole': 'admin',
 
     // Designate predicates that require date/times value filtering on save.
-    // Each object has three properties, 1) predicate value, called 'name', 2) how to process, called 'how', and 3) the format string called 'format'.
+    // Each object has four properties, 1) predicate value, called 'name', 2) how to process, called 'how', 3) the format string when printing called 'format', and 4) the format string for saving to the DB called 'database'.
     // The 'how' must be one of 'start' to designate predicate values that start with match or 'exact' to use an exact match.
     // The `dateColumns` is identical, except it is matching against column names rather than predicate values.
     'datePredicates': [
         {
-          'name': 'dc.date.',
-          'how': 'start',
-          'format': 'MMMM yyyy'
+          'name': 'dc.date.issued',
+          'how': 'exact',
+          'format': 'MMMM yyyy',
+          'database': 'MMMM yyyy'
         },
         {
           'name': 'defense_date',
           'how': 'exact',
-          'format': 'MM/dd/yyyy'
+          'format': 'MM/dd/yyyy',
+          'database': 'yyyy-MM-dd'
         }
     ],
     'dateColumns': [
         {
           'name': 'INPUT_DEGREEDATE',
           'how': 'exact',
-          'format': 'MMMM yyyy'
+          'format': 'MMMM yyyy',
+          'database': 'MMMM yyyy'
         },
         {
           'name': 'INPUT_DATE',
           'how': 'exact',
-          'format': 'MM/dd/yyyy'
+          'format': 'MM/dd/yyyy',
+          'database': 'yyyy-MM-dd'
         }
     ]
 };

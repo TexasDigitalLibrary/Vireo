@@ -4,10 +4,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
@@ -16,6 +18,8 @@ import org.tdl.vireo.model.User;
 @Service
 @SuppressWarnings("unused")
 public class TemplateUtility {
+
+    final static Logger LOG = LoggerFactory.getLogger(TemplateUtility.class);
 
     @Value("${app.url}")
     private String url;
@@ -33,7 +37,8 @@ public class TemplateUtility {
     private static final String SUBMISSION_ASSIGNED_TO = "SUBMISSION_ASSIGNED_TO";
     private static final String REGISTRATION_URL = "REGISTRATION_URL";
 
-    private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+    private final static SimpleDateFormat sqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy");
 
     public String templateParameters(String content, Map<String, String> parameters) {
@@ -101,16 +106,18 @@ public class TemplateUtility {
 
             for (SubmissionFieldProfile afp : sws.getAggregateFieldProfiles()) {
 
-                String predicateKey = afp.getFieldPredicate().getValue();
-                String fieldValue = findValue(predicateKey, submission);
+                FieldPredicate fp = afp.getFieldPredicate();
+                String fieldValue = findValue(fp.getValue(), submission);
 
-                try {
-                    fieldValue = monthYearFormat.format(dateTimeFormat.parse(fieldValue));
-                } catch (ParseException e) {
-                    // most fieldValues are likely not dates and will generate parse exceptions.
+                if (afp.getInputType().getName().equalsIgnoreCase("INPUT_DATE") && !fieldValue.isEmpty()) {
+                    try {
+                        fieldValue = monthYearFormat.format(sqlDateFormat.parse(fieldValue));
+                    } catch (ParseException e) {
+                        LOG.warn("Exception while parsing input type " + afp.getInputType().getName() + " with field predicate " + fp.getValue() + ".", e);
+                    }
                 }
 
-                compiled = compiled.replaceAll("\\{" + predicateKey + "\\}", fieldValue);
+                compiled = compiled.replaceAll("\\{" + fp.getValue() + "\\}", fieldValue);
             };
 
         };

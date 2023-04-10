@@ -66,8 +66,12 @@ vireo.directive("submissionInfo", function ($filter) {
                 if (angular.isDefined(fieldValue) && angular.isDefined(fieldValue.fieldPredicate) && angular.isDefined(fieldValue.fieldPredicate.value)) {
                     var predicate = $scope.findDatePredicate(fieldValue.fieldPredicate.value);
 
-                    if (predicate !== null) {
-                        fieldValue.value = $filter('date')(fieldValue.value, predicate.format);
+                    if (predicate !== null && angular.isDefined(fieldValue) && angular.isDefined(fieldValue.value) && fieldValue.value != null) {
+                        // Work-around datepicker messing up the time zone by stripping off the time and setting it to 0 to prevent Javascript date() from altering the day based on time zone.
+                        if (typeof fieldValue.value === 'object') {
+                            var date = new Date(fieldValue.value.getFullYear(), fieldValue.value.getMonth(), fieldValue.value.getDate(), 0, 0, 0);
+                            fieldValue.value = $filter('date')(date, predicate.database);
+                        }
                     }
                 }
 
@@ -134,7 +138,7 @@ vireo.directive("submissionInfo", function ($filter) {
                 formatDayTitle: 'MMMM yyyy',
                 formatMonthTitle: 'yyyy',
                 maxDate: null,
-                maxMode: 'year',
+                maxMode: 'month',
                 minDate: null,
                 minMode: 'day',
                 monthColumns: 3,
@@ -164,12 +168,12 @@ vireo.directive("submissionInfo", function ($filter) {
             $scope.findDatePredicate = function (match) {
                 if (angular.isDefined(appConfig.datePredicates) && angular.isDefined(match)) {
                     for (var i = 0; i < appConfig.datePredicates.length; i++) {
-                        if (appConfig.datePredicates[i].how === 'start') {
-                            if (match.startsWith(appConfig.datePredicates[i].name)) {
+                        if (appConfig.datePredicates[i].how === 'exact') {
+                            if (match === appConfig.datePredicates[i].name) {
                                 return appConfig.datePredicates[i];
                             }
-                        } else if (appConfig.datePredicates[i].how === 'exact') {
-                            if (match === appConfig.datePredicates[i].name) {
+                        } else if (appConfig.datePredicates[i].how === 'start') {
+                            if (match.startsWith(appConfig.datePredicates[i].name)) {
                                 return appConfig.datePredicates[i];
                             }
                         }
@@ -220,10 +224,6 @@ vireo.directive("submissionInfo", function ($filter) {
                 return $scope.fieldProfile.inputType.name == 'INPUT_DATE';
             };
 
-            $scope.inputDateTime = function () {
-                return $scope.fieldProfile.inputType.name == 'INPUT_DATETIME';
-            };
-
             $scope.inputContactChair = function () {
                 return $scope.fieldProfile.fieldPredicate.value == 'dc.contributor.advisor';
             };
@@ -233,7 +233,7 @@ vireo.directive("submissionInfo", function ($filter) {
             };
 
             $scope.standardInput = function () {
-                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDegreeDate() && !$scope.inputDate() && !$scope.inputDateTime() && !$scope.inputContactChair() && !$scope.inputFile();
+                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDegreeDate() && !$scope.inputDate() && !$scope.inputContactChair() && !$scope.inputFile();
             };
 
             $scope.setConditionalTextArea = function (fieldValue, checked) {

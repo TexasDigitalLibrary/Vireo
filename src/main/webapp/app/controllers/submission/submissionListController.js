@@ -226,20 +226,31 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var addDateFilter = function (column) {
-            var date1Value = $scope.furtherFilterBy[column.title.split(" ").join("")].d1.toISOString();
-            var date2Value = $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? $scope.furtherFilterBy[column.title.split(" ").join("")].d2.toISOString() : null;
+            var key = column.title.split(" ").join("");
+            var date1Value = $scope.furtherFilterBy[key].d1
+            var date2Value = $scope.furtherFilterBy[key].d2 ? $scope.furtherFilterBy[key].d2 : null;
             var dateGloss = date1Value;
 
             if (angular.isDefined(column) && angular.isDefined(column.inputType) && angular.isDefined(column.inputType.name)) {
                 var dateColumn = $scope.findDateColumn(column.inputType.name);
 
-                if (dateColumn !== null) {
-                    date1Value = $filter('date')(date1Value, dateColumn.format);
+                if (dateColumn !== null && angular.isDefined(date1Value) && date1Value != null) {
+                    // Work-around datepicker messing up the time zone by stripping off the time and setting it to 0 to prevent Javascript date() from altering the day based on time zone.
+                    var date = new Date(date1Value.getFullYear(), date1Value.getMonth(), date1Value.getDate(), 0, 0, 0);
+                    date1Value = $filter('date')(date, dateColumn.database);
                     dateGloss = date1Value;
 
                     if (date2Value !== null) {
-                        date2Value = $filter('date')(date2Value, dateColumn.format);
+                        // Work-around datepicker messing up the time zone by stripping off the time and setting it to 0 to prevent Javascript date() from altering the day based on time zone.
+                        var date = new Date(date2Value.getFullYear(), date2Value.getMonth(), date2Value.getDate(), 0, 0, 0);
+                        date2Value = $filter('date')(date, dateColumn.database);
                     }
+                }
+            } else {
+                date1Value = date1Value.toISOString();
+
+                if (date2Value !== null) {
+                    date2Value = date2Value.toISOString();
                 }
             }
 
@@ -495,7 +506,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             formatDayTitle: 'MMMM yyyy',
             formatMonthTitle: 'yyyy',
             maxDate: null,
-            maxMode: 'year',
+            maxMode: 'month',
             minDate: null,
             minMode: 'month',
             monthColumns: 3,
@@ -588,7 +599,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.displaySubmissionProperty = function (row, col) {
-            return $scope.getSubmissionProperty(row, col);
+            var value = $scope.getSubmissionProperty(row, col);
+
+            return angular.isDefined(col) ? $filter('displayFieldValue')(value, col.inputType) : value;
         };
 
         $scope.getCustomActionLabelById = function (id) {
@@ -602,12 +615,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         $scope.findDateColumn = function (match) {
             if (angular.isDefined(appConfig.dateColumns) && angular.isDefined(match)) {
                 for (var i = 0; i < appConfig.dateColumns.length; i++) {
-                    if (appConfig.dateColumns[i].how === 'start') {
-                        if (match.startsWith(appConfig.dateColumns[i].name)) {
+                    if (appConfig.dateColumns[i].how === 'exact') {
+                        if (match === appConfig.dateColumns[i].name) {
                             return appConfig.dateColumns[i];
                         }
-                    } else if (appConfig.dateColumns[i].how === 'exact') {
-                        if (match === appConfig.dateColumns[i].name) {
+                    } else if (appConfig.dateColumns[i].how === 'start') {
+                        if (match.startsWith(appConfig.dateColumns[i].name)) {
                             return appConfig.dateColumns[i];
                         }
                     }
