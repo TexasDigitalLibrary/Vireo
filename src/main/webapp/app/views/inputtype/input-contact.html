@@ -9,8 +9,8 @@
     uib-typeahead="word.name as word.name for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
     typeahead-no-results="noResults"
     typeahead-on-select="saveWithCV(fieldValue, $item)"/>
-  <span class="input-group-btn">
-    <button class="btn btn-danger submission-input-contact-remove" ng-if="fieldValue.value">
+  <span class="input-group-btn" ng-show="fieldValue.value">
+    <button class="btn btn-danger submission-input-contact-remove">
       <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)"></span>
     </button>
   </span>
