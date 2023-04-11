@@ -120,10 +120,10 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
             container: '#email-templates'
         });
 
-        EmailTemplateRepo.listen(function (/* data */) {
+        EmailTemplateRepo.listen(function () {
             $timeout(function () {
                 EmailTemplateRepo.reset().then(function () {
-                    $scope.resetEmailTemplates();;				
+                    $scope.resetEmailTemplates();
                 });
             }, 250);
         });
