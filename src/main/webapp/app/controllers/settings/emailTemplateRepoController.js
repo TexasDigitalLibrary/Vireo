@@ -1,4 +1,4 @@
-vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $q, ApiResponseActions, EmailTemplateRepo, DragAndDropListenerFactory, FieldPredicateRepo) {
+vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $timeout, $q, ApiResponseActions, EmailTemplateRepo, DragAndDropListenerFactory, FieldPredicateRepo) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -120,14 +120,13 @@ vireo.controller("EmailTemplateRepoController", function ($controller, $scope, $
             container: '#email-templates'
         });
 
-        EmailTemplateRepo.listen(function (data) {
-            $scope.resetEmailTemplates();
+        EmailTemplateRepo.listen(function (/* data */) {
+            $timeout(function () {
+                EmailTemplateRepo.reset().then(function () {
+                    $scope.resetEmailTemplates();;				
+                });
+            }, 250);
         });
-
-        EmailTemplateRepo.listen(ApiResponseActions.UPDATE, function (data) {
-            EmailTemplateRepo.reset();
-        });
-
     });
 
 });
