@@ -30,12 +30,12 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
 
             var save = function (fieldValue) {
                 if (angular.isDefined(fieldValue) && angular.isDefined(fieldValue.fieldPredicate) && angular.isDefined(fieldValue.fieldPredicate.value)) {
-                    var predicate = $scope.findDatePredicate(fieldValue.fieldPredicate.value);
+                    var predicate = $scope.submission.findDatePredicate(fieldValue.fieldPredicate.value);
 
-                    if (predicate !== null && angular.isDefined(fieldValue) && angular.isDefined(fieldValue.value) && fieldValue.value != null) {
+                    if (predicate !== null && angular.isDefined(fieldValue) && angular.isDefined(fieldValue.valuePopup) && fieldValue.valuePopup != null) {
                         // Work-around datepicker messing up the time zone by stripping off the time and setting it to 0 to prevent Javascript date() from altering the day based on time zone.
-                        if (typeof fieldValue.value === 'object') {
-                            var date = new Date(fieldValue.value.getFullYear(), fieldValue.value.getMonth(), fieldValue.value.getDate(), 0, 0, 0);
+                        if (typeof fieldValue.valuePopup === 'object') {
+                            var date = new Date(fieldValue.valuePopup.getFullYear(), fieldValue.valuePopup.getMonth(), fieldValue.valuePopup.getDate(), 0, 0, 0);
                             fieldValue.value = $filter('date')(date, predicate.database);
                         }
                     }
@@ -122,24 +122,6 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                     }
                 }
                 return disabled;
-            };
-
-            $scope.findDatePredicate = function (match) {
-                if (angular.isDefined(appConfig.datePredicates) && angular.isDefined(match)) {
-                    for (var i = 0; i < appConfig.datePredicates.length; i++) {
-                        if (appConfig.datePredicates[i].how === 'exact') {
-                            if (match === appConfig.datePredicates[i].name) {
-                                return appConfig.datePredicates[i];
-                            }
-                        } else if (appConfig.datePredicates[i].how === 'start') {
-                            if (match.startsWith(appConfig.datePredicates[i].name)) {
-                                return appConfig.datePredicates[i];
-                            }
-                        }
-                    }
-                }
-
-                return null;
             };
 
             if (angular.isDefined($scope.profile.controlledVocabulary) && $scope.profile.controlledVocabulary.name === "Graduation Months") {
