@@ -6,7 +6,6 @@
     ng-model="fieldValue.value"
     ng-disabled="fieldValue.updating"
     ng-blur="saveContacts(fieldValue, noResults)"
-    placeholder="Input Name"
     uib-typeahead="word.name as word.name for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
     typeahead-no-results="noResults"
     typeahead-on-select="saveWithCV(fieldValue, $item)"/>
@@ -29,7 +28,6 @@
     ng-model="fieldValue.contacts"
     ng-disabled="fieldValue.updating"
     ng-blur="saveContacts(fieldValue, noResults)"
-    placeholder="Input Email"
     uib-typeahead="word.contacts[0] as word.contacts[0] for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
     typeahead-no-results="noResults"
     typeahead-on-select="saveWithCV(fieldValue, $item)"/>
