@@ -41,8 +41,8 @@ public class AppWebMvcConfig implements WebMvcConfigurer {
     @Autowired
     private List<HttpMessageConverter<?>> converters;
 
-    @Value("${app.config.path:classpath:/appConfig.js}")
-    private String appConfigPath;
+    @Value("${app.config.uri:classpath:/appConfig.js}")
+    private String appConfigUri;
 
     @Value("${app.public.folder:public}")
     private String publicFolder;
@@ -61,7 +61,7 @@ public class AppWebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/appConfig.js").addResourceLocations(appConfigPath);
+        registry.addResourceHandler("/appConfig.js").addResourceLocations(appConfigUri);
         registry.addResourceHandler("/**").addResourceLocations("classpath:/");
 
         registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.getAssetsPath() + publicFolder + "/");
