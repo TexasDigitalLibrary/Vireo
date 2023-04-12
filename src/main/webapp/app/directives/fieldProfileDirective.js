@@ -29,17 +29,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             $scope.dropzoneText = "Choose file here or drag and drop to upload";
 
             var save = function (fieldValue) {
-                if (angular.isDefined(fieldValue) && angular.isDefined(fieldValue.fieldPredicate) && angular.isDefined(fieldValue.fieldPredicate.value)) {
-                    var predicate = $scope.submission.findDatePredicate(fieldValue.fieldPredicate.value);
-
-                    if (predicate !== null && angular.isDefined(fieldValue) && angular.isDefined(fieldValue.valuePopup) && fieldValue.valuePopup != null) {
-                        // Work-around datepicker messing up the time zone by stripping off the time and setting it to 0 to prevent Javascript date() from altering the day based on time zone.
-                        if (typeof fieldValue.valuePopup === 'object') {
-                            var date = new Date(fieldValue.valuePopup.getFullYear(), fieldValue.valuePopup.getMonth(), fieldValue.valuePopup.getDate(), 0, 0, 0);
-                            fieldValue.value = $filter('date')(date, predicate.database);
-                        }
-                    }
-                }
+                $scope.submission.saveDatePopupFieldValueWorkaround(fieldValue);
 
                 return $q(function (resolve) {
                     $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (res) {

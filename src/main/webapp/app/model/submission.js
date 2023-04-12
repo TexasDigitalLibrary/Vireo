@@ -1,4 +1,4 @@
-var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organization, EmailRecipient, EmailRecipientType, WsApi) {
+var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService, Organization, EmailRecipient, EmailRecipientType, WsApi) {
 
     return function Submission() {
 
@@ -673,11 +673,32 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
                             // Fallback to unchanged value when unable to parse.
                             fieldValue.valuePopup = fieldValue.value;
                         } else {
+
                             // The timezoneoffset is in minutes and must be converted to milliseconds.
                             var offset = new Date().getTimezoneOffset() * 60000;
-                            var date = new Date(stamp + offset);
+                            var offsetDate = new Date(stamp + offset);
 
-                            fieldValue.valuePopup = date.toISOString();
+                            // Must manually set the year month and day because Javascript date() now that the offset is applied.
+                            if (typeof fieldValue.value == 'string') {
+                                var split = fieldValue.value.split('-');
+
+                                if (split.length == 3) {
+                                    offsetDate.setFullYear(Number(split[0]));
+                                    offsetDate.setMonth(Number(split[1]) - 1); // Month representation starts at 0 and not 1.
+                                    offsetDate.setDate(Number(split[2]));
+                                }
+                            } else {
+                                offsetDate.setFullYear(fieldValue.value.getFullYear());
+                                offsetDate.setMonth(fieldValue.value.getMonth());
+                                offsetDate.setDate(fieldValue.value.getDate());
+                            }
+
+                            offsetDate.setHours(0);
+                            offsetDate.setMinutes(0);
+                            offsetDate.setSeconds(0);
+                            offsetDate.setMilliseconds(0);
+
+                            fieldValue.valuePopup = offsetDate.toISOString();
                         }
                     } else {
                         fieldValue.valuePopup = fieldValue.value;
@@ -702,6 +723,21 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
             }
 
             return null;
+        };
+
+        submission.saveDatePopupFieldValueWorkaround = function (fieldValue) {
+            if (angular.isDefined(fieldValue)) {
+                var predicate = submission.findDatePredicate(fieldValue.fieldPredicate.value);
+
+                // Work-around datepicker messing up the time zone by stripping off the time and setting it to 0 to prevent Javascript date() from altering the day based on time zone.
+                if (predicate !== null && angular.isDefined(fieldValue.valuePopup) && fieldValue.valuePopup != null) {
+                    if (typeof fieldValue.valuePopup === 'object') {
+                        var dateValue = new Date(fieldValue.valuePopup.getFullYear(), fieldValue.valuePopup.getMonth(), fieldValue.valuePopup.getDate(), 0, 0, 0);
+                        dateValue.setMilliseconds(0);
+                        fieldValue.value = $filter('date')(dateValue, predicate.database);
+                    }
+                }
+            }
         };
 
         return submission;
