@@ -13,7 +13,7 @@
       <a href="#">{{word.name}}</a>
     </li>
   </ul>
-  <button class="btn btn-danger" ng-if="fieldValue.value">
+  <button class="btn btn-default opaque" ng-show="fieldValue.value">
     <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)"></span>
   </button>
   <button type="button" class="btn dropdown-help" disabled>
