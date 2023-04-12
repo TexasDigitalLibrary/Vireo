@@ -109,9 +109,10 @@ public class TemplateUtility {
                 FieldPredicate fp = afp.getFieldPredicate();
                 String fieldValue = findValue(fp.getValue(), submission);
 
+                // FIXME: The format needs to be customizable and not hardcoded.
                 if (afp.getInputType().getName().equalsIgnoreCase("INPUT_DATE") && !fieldValue.isEmpty()) {
                     try {
-                        fieldValue = monthYearFormat.format(sqlDateFormat.parse(fieldValue));
+                        fieldValue = dateFormat.format(sqlDateFormat.parse(fieldValue));
                     } catch (ParseException e) {
                         LOG.warn("Exception while parsing input type " + afp.getInputType().getName() + " with field predicate " + fp.getValue() + ".", e);
                     }
