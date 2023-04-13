@@ -737,9 +737,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
-
-                        sqlWhereBuilderList.add(new StringBuilder()
-                            .append("CAST(s.submission_date AS TIMESTAMP) = '").append(filterString).append("'"));
+                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("submission_date", filterString));
                     }
 
                     break;
@@ -751,9 +749,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
-
-                        sqlWhereBuilderList.add(new StringBuilder()
-                            .append("CAST(s.approve_application_date AS TIMESTAMP) = '").append(filterString).append("'"));
+                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("approve_application_date", filterString));
                     }
 
                     break;
@@ -765,9 +761,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
-
-                        sqlWhereBuilderList.add(new StringBuilder()
-                            .append("CAST(s.approve_advisor_date AS TIMESTAMP) = '").append(filterString).append("'"));
+                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("approve_advisor_date", filterString));
                     }
 
                     break;
@@ -779,9 +773,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
-
-                        sqlWhereBuilderList.add(new StringBuilder()
-                            .append("CAST(s.approve_embargo_date AS TIMESTAMP) = '").append(filterString).append("'"));
+                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("approve_embargo_date", filterString));
                     }
 
                     break;
@@ -891,6 +883,21 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         default:
             break;
         }
+    }
+
+    /**
+     * Build a submission date field string given some filter.
+     *
+     * This is form submission date fields that are already stored in the SQL date format.
+     *
+     * @param column The column name to filter.
+     * @param filter The filter.
+     * @return A constructed string builder appropriately casting the date.
+     */
+    private StringBuilder buildSubmissionDateFieldString(String column, String filter) {
+        return new StringBuilder()
+            .append("CAST(s.").append(column)
+            .append(" AS TIMESTAMP) = '").append(filter).append("'");
     }
 
     @Override
