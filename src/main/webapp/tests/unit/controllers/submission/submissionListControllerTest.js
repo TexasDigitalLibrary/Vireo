@@ -167,10 +167,6 @@ describe("controller: SubmissionListController", function () {
             expect(scope.getUserById).toBeDefined();
             expect(typeof scope.getUserById).toEqual("function");
         });
-        it("isDateColumn should be defined", function () {
-            expect(scope.isDateColumn).toBeDefined();
-            expect(typeof scope.isDateColumn).toEqual("function");
-        });
         it("removeFilter should be defined", function () {
             expect(scope.removeFilter).toBeDefined();
             expect(typeof scope.removeFilter).toEqual("function");
@@ -361,7 +357,7 @@ describe("controller: SubmissionListController", function () {
 
             scope.displaySubmissionProperty(row, column);
 
-            column.inputType.name = "INPUT_DATETIME";
+            column.inputType.name = "INPUT_DATE";
 
             scope.displaySubmissionProperty(row, column);
 
@@ -425,15 +421,6 @@ describe("controller: SubmissionListController", function () {
 
             response = scope.getUserById(dataUser2.id);
             expect(response.id).toBe(dataUser2.id);
-        });
-        it("isDateColumn should return a boolean", function () {
-            var response;
-
-            response = scope.isDateColumn({ inputType: { name: "test" } });
-            expect(response).toBe(false);
-
-            response = scope.isDateColumn({ inputType: { name: "INPUT_DATETIME" } });
-            expect(response).toBe(true);
         });
         it("removeFilter should remove a filter", function () {
             var filter = {};

@@ -226,11 +226,40 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var addDateFilter = function (column) {
-            var dateValue = $scope.furtherFilterBy[column.title.split(" ").join("")].d1.toISOString();
-            var dateGloss = $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d1, column.title==="Graduation Semester" ? "MMMM yyyy" : "MM/dd/yyyy");
-            dateValue += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? "|" + $scope.furtherFilterBy[column.title.split(" ").join("")].d2.toISOString() : "";
-            dateGloss += $scope.furtherFilterBy[column.title.split(" ").join("")].d2 ? " to " + $filter('date')($scope.furtherFilterBy[column.title.split(" ").join("")].d2, "MM/dd/yyyy") : "";
-            $scope.activeFilters.addFilter(column.title, dateValue, dateGloss, false).then(function () {
+            var key = column.title.split(" ").join("");
+            var date1Value = $scope.furtherFilterBy[key].d1
+            var date2Value = $scope.furtherFilterBy[key].d2 ? $scope.furtherFilterBy[key].d2 : null;
+            var dateGloss = date1Value;
+
+            if (angular.isDefined(column) && angular.isDefined(column.inputType) && angular.isDefined(column.inputType.name)) {
+                var dateColumn = $scope.findDateColumn(column.inputType.name);
+
+                if (dateColumn !== null && angular.isDefined(date1Value) && date1Value != null) {
+                    // Work-around datepicker messing up the time zone by stripping off the time and setting it to 0 to prevent Javascript date() from altering the day based on time zone.
+                    var date = new Date(date1Value.getFullYear(), date1Value.getMonth(), date1Value.getDate(), 0, 0, 0);
+                    date1Value = $filter('date')(date, dateColumn.database);
+                    dateGloss = date1Value;
+
+                    if (date2Value !== null) {
+                        // Work-around datepicker messing up the time zone by stripping off the time and setting it to 0 to prevent Javascript date() from altering the day based on time zone.
+                        var date = new Date(date2Value.getFullYear(), date2Value.getMonth(), date2Value.getDate(), 0, 0, 0);
+                        date2Value = $filter('date')(date, dateColumn.database);
+                    }
+                }
+            } else {
+                date1Value = date1Value.toISOString();
+
+                if (date2Value !== null) {
+                    date2Value = date2Value.toISOString();
+                }
+            }
+
+            if (date2Value !== null) {
+                date1Value += "|" + date2Value;
+                dateGloss += " to " + date2Value;
+            }
+
+            $scope.activeFilters.addFilter(column.title, date1Value, dateGloss, false).then(function () {
                 $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
                 query();
             });
@@ -467,11 +496,25 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             return disabled;
         };
 
+        // Warning: setting ngModelOptions: { timezone: 'utc' } can cause the off by 1 day problem.
         var datepickerOptions = {
-            minMode: "month",
-            minViewMode: "month",
-            maxViewMode: "month",
-            maxMode: "month",
+            datepickerMode: 'day',
+            formatDay: 'dd',
+            formatMonth: 'MMMM',
+            formatYear: 'yyyy',
+            formatDayHeader: 'EEE',
+            formatDayTitle: 'MMMM yyyy',
+            formatMonthTitle: 'yyyy',
+            maxDate: null,
+            maxMode: 'month',
+            minDate: null,
+            minMode: 'month',
+            monthColumns: 3,
+            ngModelOptions: {},
+            shortcutPropagation: false,
+            showWeeks: true,
+            yearColumns: 5,
+            yearRows: 4,
             dateDisabled: checkDisabled,
             customClass: function (dateAndMode) {
                 if (checkDisabled(dateAndMode)) return "disabled";
@@ -557,14 +600,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         $scope.displaySubmissionProperty = function (row, col) {
             var value = $scope.getSubmissionProperty(row, col);
-            if ($scope.isDateColumn(col)) {
-                if(col.predicate === 'dc.date.issued') {
-                    value = $filter('date')(value, 'MMMM yyyy');
-                } else {
-                    value = $filter('date')(value, 'MMM dd, yyyy');
-                }
-            }
-            return value;
+
+            return angular.isDefined(col) ? $filter('displayFieldValue')(value, col.inputType) : value;
         };
 
         $scope.getCustomActionLabelById = function (id) {
@@ -575,8 +612,22 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             }
         };
 
-        $scope.isDateColumn = function (col) {
-            return (col.inputType.name == 'INPUT_DATETIME' || col.inputType.name == 'INPUT_DEGREEDATE');
+        $scope.findDateColumn = function (match) {
+            if (angular.isDefined(appConfig.dateColumns) && angular.isDefined(match)) {
+                for (var i = 0; i < appConfig.dateColumns.length; i++) {
+                    if (appConfig.dateColumns[i].how === 'exact') {
+                        if (match === appConfig.dateColumns[i].name) {
+                            return appConfig.dateColumns[i];
+                        }
+                    } else if (appConfig.dateColumns[i].how === 'start') {
+                        if (match.startsWith(appConfig.dateColumns[i].name)) {
+                            return appConfig.dateColumns[i];
+                        }
+                    }
+                }
+            }
+
+            return null;
         };
 
         $scope.getUserById = function (userId) {

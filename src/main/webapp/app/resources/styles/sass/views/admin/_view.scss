@@ -195,3 +195,20 @@ div .item-view div.row h1 span.spinning {
   right: 10px;
   top: 5px;
 }
+
+.list-view-column-header {
+  display: inline-block;
+  vertical-align: text-bottom;
+  margin-right: 2px;
+}
+
+.list-view-column-header-icon {
+  display: block;
+  font-size: 10px;
+  color: #ccc;
+}
+
+.list-view-column-header-icon.selected {
+  color: #555;
+}
+

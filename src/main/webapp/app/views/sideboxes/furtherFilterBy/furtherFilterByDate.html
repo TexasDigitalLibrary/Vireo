@@ -21,7 +21,7 @@
 		</span>
 	</div>
 
-	<p ng-if="box[column.title.split(' ').join('')].range" class="date-range-divider">&mdash; TO &mdash;</p>
+    <p ng-if="box[column.title.split(' ').join('')].range" class="date-range-divider">&mdash; TO &mdash;</p>
 
 	<div ng-if="box[column.title.split(' ').join('')].range" class="input-group">
 		<span class="input-group-addon" ng-click="date2=true">
@@ -44,6 +44,6 @@
 		</span>
 	</div>
 
-	<input type="submit" value="Add" class="btn btn-default btn-block add-date-filter-btn" ng-disabled="!box[column.title.split(' ').join('')].d1" />
+    <input type="submit" value="Add" class="btn btn-default btn-block add-date-filter-btn" ng-disabled="!box[column.title.split(' ').join('')].d1" />
 
 </form>

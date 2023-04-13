@@ -4,7 +4,7 @@ vireo.directive("actionlog", function($filter, $timeout, NgTableParams) {
         restrict: 'E',
         scope: {
             'submission': '=',
-            'public': '=',
+            'method': '&?',
             'delay': '@'
         },
         link: function($scope) {
@@ -16,20 +16,33 @@ vireo.directive("actionlog", function($filter, $timeout, NgTableParams) {
                     id: "desc"
                 }
             }, {
-                total: $scope.submission.actionLogs.length,
-                dataset: $scope.submission.actionLogs,
+                total: angular.isDefined($scope.submission.actionLogs) ? $scope.submission.actionLogs.length : 0,
+                dataset: angular.isDefined($scope.submission.actionLogs) ? $scope.submission.actionLogs : [],
                 getData: function(params) {
+                    if (angular.isDefined($scope.method) && $scope.method !== null) {
+                        var result = $scope.method()(params.orderBy(), params.page() - 1, params.count()).then(function (page) {
+                            params.total(page.totalElements);
+
+                            return page.content;
+                        });
+
+                        return result;
+                    }
+
                     var data = [];
-                    angular.extend(data, $scope.submission.actionLogs);
+
+                    if (angular.isDefined($scope.submission.actionLogs)) {
+                        angular.extend(data, $scope.submission.actionLogs);
+                    }
 
                     params.total(data.length);
-                    data = $filter('orderBy')(data, params.orderBy());
-                    return data.slice((params.page() - 1) * params.count(), params.page() * params.count());
+                    data = $filter('orderBy')(data, params.orderBy()).slice((params.page() - 1) * params.count(), params.page() * params.count());
+                    return data;
                 }
             });
 
             if (angular.isDefined($scope.submission.actionLogListenReloadDefer)) {
-                $scope.submission.actionLogListenReloadDefer.promise.then(null, null, function(actionLogs) {
+                $scope.submission.actionLogListenReloadDefer.promise.then(null, null, function (actionLogs) {
                     if (debounce === null) {
                         debounce = function() {
                             $scope.tableParams.reload();

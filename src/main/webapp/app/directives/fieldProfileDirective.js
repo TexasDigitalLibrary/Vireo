@@ -29,6 +29,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             $scope.dropzoneText = "Choose file here or drag and drop to upload";
 
             var save = function (fieldValue) {
+                $scope.submission.saveDatePopupFieldValueWorkaround(fieldValue);
+
                 return $q(function (resolve) {
                     $scope.submission.saveFieldValue(fieldValue, $scope.profile).then(function (res) {
                         delete fieldValue.updating;
@@ -71,8 +73,33 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                 }
             };
 
-            $scope.datepickerOptions = {};
-            $scope.datepickerFormat = angular.isDefined($scope.profile.controlledVocabulary) ? "MMMM yyyy" : "MM/dd/yyyy";
+            // Warning: setting ngModelOptions: { timezone: 'utc' } can cause the off by 1 day problem.
+            $scope.datepickerOptions = {
+                datepickerMode: 'day',
+                formatDay: 'dd',
+                formatMonth: 'MMMM',
+                formatYear: 'yyyy',
+                formatDayHeader: 'EEE',
+                formatDayTitle: 'MMMM yyyy',
+                formatMonthTitle: 'yyyy',
+                maxDate: null,
+                maxMode: 'month',
+                minDate: null,
+                minMode: 'day',
+                monthColumns: 3,
+                ngModelOptions: {},
+                shortcutPropagation: false,
+                showWeeks: true,
+                yearColumns: 5,
+                yearRows: 4
+            };
+
+            $scope.datepickerFormat = "MM/dd/yyyy";
+
+            if (angular.isDefined($scope.profile.controlledVocabulary)) {
+                $scope.datepickerFormat = "MMMM yyyy";
+            }
+
             var checkDisabled = function (dateAndMode) {
                 var disabled = true;
                 if(angular.isDefined($scope.profile.controlledVocabulary)) {
@@ -88,16 +115,12 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             };
 
             if (angular.isDefined($scope.profile.controlledVocabulary) && $scope.profile.controlledVocabulary.name === "Graduation Months") {
-
                 $scope.datepickerOptions.customClass = function (dateAndMode) {
                     if (checkDisabled(dateAndMode)) return "disabled";
                 };
                 $scope.datepickerOptions.dateDisabled = checkDisabled;
-
-                $scope.datepickerOptions.minViewMode = "month";
+                $scope.datepickerOptions.datepickerMode = 'month';
                 $scope.datepickerOptions.minMode = "month";
-                $scope.datepickerOptions.maxViewMode = "month";
-                $scope.datepickerOptions.maxMode = "month";
             }
 
             $scope.hasFile = function (fieldValue) {

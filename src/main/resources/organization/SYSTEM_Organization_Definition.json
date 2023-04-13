@@ -591,7 +591,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_DATETIME"
+            "name":"INPUT_DATE"
           },
           "repeatable":false,
           "overrideable":true,
@@ -624,7 +624,7 @@
           "controlledVocabulary":{
             "name":"Submission Types",
             "isEntityProperty":false
-    	  }
+        }
         },
         {
           "fieldPredicate":{
@@ -665,7 +665,7 @@
           "flagged":false,
           "logged":false,
           "usage":"",
-          "help":"Enter keywords for your document. You may enter multiple keywords. You may enter multiple keywords by selecting the + sign.",
+          "help":"Enter keywords for your document. You may enter multiple keywords by selecting the + sign.",
           "gloss": "Keywords"
         },
         {
