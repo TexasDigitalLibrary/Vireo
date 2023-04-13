@@ -738,9 +738,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
 
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(new StringBuilder()
+                            .append("CAST(s.submission_date AS TIMESTAMP) = '").append(filterString).append("'"));
                     }
 
                     break;
@@ -753,9 +752,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
 
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(new StringBuilder()
+                            .append("CAST(s.approve_application_date AS TIMESTAMP) = '").append(filterString).append("'"));
                     }
 
                     break;
@@ -768,9 +766,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
 
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(new StringBuilder()
+                            .append("CAST(s.approve_advisor_date AS TIMESTAMP) = '").append(filterString).append("'"));
                     }
 
                     break;
@@ -783,9 +780,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         filterString.replaceAll("[TZ:.\\-]", " ");
 
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(new StringBuilder()
+                            .append("CAST(s.approve_embargo_date AS TIMESTAMP) = '").append(filterString).append("'"));
                     }
 
                     break;
