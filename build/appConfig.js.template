@@ -21,16 +21,22 @@ var appConfig = {
     'stompDebug': ${STOMP_DEBUG},
 
     /*
-    	Determines the type of connection stomp will attempt to make with the service.
-    	TYPES:  websocket, xhr-streaming, xdr-streaming, eventsource, iframe-eventsource,
-    			htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
-    			jsonp-polling
+      Determines the type of connection stomp will attempt to make with the service.
+      TYPES:  websocket, xhr-streaming, xdr-streaming, eventsource, iframe-eventsource,
+          htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
+          jsonp-polling
     */
     'sockJsConnectionType': ['websocket', 'xhr-polling'],
 
     // Set this to 'admin' or 'user' if using mock AuthService
     // otherwise set to null or false
 
-    'mockRole': 'admin'
+    'mockRole': 'admin',
 
+    /*
+      Designate whether or not to use the login modal.
+      Set this to either true or false booleans.
+      When set to false, a modal is not used and Shibboleth login is automatically attempted.
+     */
+    'useLoginModal': true
 };
