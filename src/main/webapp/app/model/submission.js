@@ -1,4 +1,4 @@
-var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organization, EmailRecipient, EmailRecipientType, WsApi) {
+var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService, Organization, EmailRecipient, EmailRecipientType, WsApi) {
 
     return function Submission() {
 
@@ -18,6 +18,7 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
             }
             angular.forEach(fieldValues, function (fieldValue) {
                 fieldValue = new FieldValue(fieldValue);
+                submission.prepareDatePopupWorkaround(fieldValue);
                 submission.fieldValues.push(fieldValue);
             });
         };
@@ -131,8 +132,12 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
                 var newFieldValue = angular.fromJson(data.body).payload.FieldValue;
                 var emptyFieldValues = [];
                 var fieldValue;
+
+                submission.prepareDatePopupWorkaround(newFieldValue);
+
                 for (var i in submission.fieldValues) {
                     fieldValue = submission.fieldValues[i];
+
                     if (fieldValue.fieldPredicate.id === newFieldValue.fieldPredicate.id) {
                         if (fieldValue.id) {
                             if (fieldValue.id === newFieldValue.id) {
@@ -307,9 +312,9 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
         };
 
         submission.addFieldValue = function (fieldPredicate) {
-
             for (var i = submission.fieldValues.length - 1; i >= 0; i--) {
                 var fv = submission.fieldValues[i];
+
                 if (fv.fieldPredicate.id === fieldPredicate.id && (fv.value === "" || !fv.value)) {
                     submission.fieldValues.splice(i, 1);
                     break;
@@ -654,6 +659,93 @@ var submissionModel = function ($q, ActionLog, FieldValue, FileService, Organiza
 
         submission.getFileType = function (fieldPredicate) {
             return fieldPredicate.value.substring(9).toUpperCase();
+        };
+
+        // This is a work-around of datepicker problems and ideally should be removed when either datepicker is fix or datepicker is replaced.
+        submission.prepareDatePopupWorkaround = function (fieldValue) {
+            if (angular.isDefined(fieldValue)) {
+                var predicate = submission.findDatePredicate(fieldValue.fieldPredicate.value);
+
+                if (predicate !== null) {
+                    if (angular.isDefined(fieldValue.value) && fieldValue.value != null) {
+                        // Work-around datepicker messing up time by applying the timezone to the value so that when datepicker applies the timezone they cancel out and get the correct value.
+                        var stamp = Date.parse(fieldValue.value);
+
+                        // Some browsers, like Firefox, do not support 'MMMM yyyy' formats for Date.parse().
+                        if (isNaN(stamp) && predicate.format == 'MMMM yyyy') {
+                            var split = fieldValue.value.match(/^(\S+) (\d+)$/);
+                            stamp = Date.parse(split[1] + ' 01, ' + split[2]);
+                        }
+
+                        if (isNaN(stamp)) {
+                            // Fallback to unchanged value when unable to parse.
+                            fieldValue.valuePopup = fieldValue.value;
+                        } else {
+
+                            // The timezoneoffset is in minutes and must be converted to milliseconds.
+                            var offset = new Date().getTimezoneOffset() * 60000;
+                            var offsetDate = new Date(stamp + offset);
+
+                            // Must manually set the year month and day because Javascript date() now that the offset is applied.
+                            if (typeof fieldValue.value == 'string') {
+                                var split = fieldValue.value.split('-');
+
+                                if (split.length == 3) {
+                                    offsetDate.setFullYear(Number(split[0]));
+                                    offsetDate.setMonth(Number(split[1]) - 1); // Month representation starts at 0 and not 1.
+                                    offsetDate.setDate(Number(split[2]));
+                                }
+                            } else {
+                                offsetDate.setFullYear(fieldValue.value.getFullYear());
+                                offsetDate.setMonth(fieldValue.value.getMonth());
+                                offsetDate.setDate(fieldValue.value.getDate());
+                            }
+
+                            offsetDate.setHours(0);
+                            offsetDate.setMinutes(0);
+                            offsetDate.setSeconds(0);
+                            offsetDate.setMilliseconds(0);
+
+                            fieldValue.valuePopup = offsetDate.toISOString();
+                        }
+                    } else {
+                        fieldValue.valuePopup = fieldValue.value;
+                    }
+                }
+            }
+        };
+
+        submission.findDatePredicate = function (match) {
+            if (angular.isDefined(appConfig.datePredicates) && angular.isDefined(match)) {
+                for (var i = 0; i < appConfig.datePredicates.length; i++) {
+                    if (appConfig.datePredicates[i].how === 'exact') {
+                        if (match === appConfig.datePredicates[i].name) {
+                            return appConfig.datePredicates[i];
+                        }
+                    } else if (appConfig.datePredicates[i].how === 'start') {
+                        if (match.startsWith(appConfig.datePredicates[i].name)) {
+                            return appConfig.datePredicates[i];
+                        }
+                    }
+                }
+            }
+
+            return null;
+        };
+
+        submission.saveDatePopupFieldValueWorkaround = function (fieldValue) {
+            if (angular.isDefined(fieldValue)) {
+                var predicate = submission.findDatePredicate(fieldValue.fieldPredicate.value);
+
+                // Work-around datepicker messing up the time zone by stripping off the time and setting it to 0 to prevent Javascript date() from altering the day based on time zone.
+                if (predicate !== null && angular.isDefined(fieldValue.valuePopup) && fieldValue.valuePopup != null) {
+                    if (typeof fieldValue.valuePopup === 'object') {
+                        var dateValue = new Date(fieldValue.valuePopup.getFullYear(), fieldValue.valuePopup.getMonth(), fieldValue.valuePopup.getDate(), 0, 0, 0);
+                        dateValue.setMilliseconds(0);
+                        fieldValue.value = $filter('date')(dateValue, predicate.database);
+                    }
+                }
+            }
         };
 
         return submission;
