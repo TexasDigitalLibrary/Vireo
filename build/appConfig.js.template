@@ -33,11 +33,21 @@ var appConfig = {
 
     'mockRole': 'admin',
 
-    // Designate predicates that require date/times value filtering on save.
-    // Each object has four properties, 1) predicate value, called 'name', 2) how to process, called 'how', 3) the format string when printing called 'format', and 4) the format string for saving to the DB called 'database'.
-    // The 'how' must be one of 'start' to designate predicate values that start with match or 'exact' to use an exact match.
-    // The `dateColumns` is identical, except it is matching against column names rather than predicate values.
-    // The `dateColunns` is used on the advisor review page, the submission list, and the confirm and submit page (through the displayFieldValue filter).
+    /*
+      Designate whether or not to use the local authentication.
+      Set this to either true or false booleans.
+      When set to true, the login modal and registrations links are available.
+      When set to false, a modal is not used and Shibboleth login is automatically attempted and no registration link is shown.
+     */
+    'localAuthentication': true,
+
+    /*
+       Designate predicates that require date/times value filtering on save.
+       Each object has four properties, 1) predicate value, called 'name', 2) how to process, called 'how', 3) the format string when printing called 'format', and 4) the format string for saving to the DB called 'database'.
+       The 'how' must be one of 'start' to designate predicate values that start with match or 'exact' to use an exact match.
+       The `dateColumns` is identical, except it is matching against column names rather than predicate values.
+       The `dateColunns` is used on the advisor review page, the submission list, and the confirm and submit page (through the displayFieldValue filter).
+    */
     'datePredicates': [
         {
           'name': 'dc.date.issued',
