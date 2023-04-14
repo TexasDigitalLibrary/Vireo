@@ -121,6 +121,8 @@ app:
   # i.e. `mvn clean package -Dassets.uri=file:/var/vireo/`
   assets.uri: ${assets.uri}
 
+  config.uri: classpath:/appConfig.js
+
   public.folder: public
 
   document.folder: private
@@ -163,10 +165,6 @@ app:
 
   # edu.tamu.weaver.utility.HttpUtility
   http.timeout: 10000
-
-  config:
-    path: classpath:/appConfig.js
-
 
 # edu.tamu.weaver.token.service.TokenService
 auth:
