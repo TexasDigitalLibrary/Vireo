@@ -1,0 +1,15 @@
+<div class="container" ng-controller="UserController">
+
+    <h1>Login</h1>
+
+    <div ng-if="isAnonymous()">
+        <p>You may login to this system.</p>
+
+        <span login-button class="btn btn-primary" always>Login</span>
+    </div>
+
+    <div ng-if="!isAnonymous()">
+        <p>You are already logged in to the system.</p>
+    </div>
+
+</div>

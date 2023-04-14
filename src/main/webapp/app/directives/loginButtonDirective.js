@@ -6,7 +6,13 @@ vireo.directive("loginButton", function ($window, StorageService) {
         restrict: 'A',
         link: function ($scope, elem, attr) {
             $scope.loginButton = function () {
-                if (appConfig.localAuthentication === false) {
+                var simple = appConfig.localAuthentication !== true;
+
+                if (appConfig.localAuthentication === 'alternate') {
+                    simple = angular.isDefined(attr) && !angular.isDefined(attr.always);
+                }
+
+                if (simple) {
                     // This is a simplified version of the login() from the LoginController in weaver-ui-core.
                     StorageService.delete('token');
                     StorageService.delete('role');
