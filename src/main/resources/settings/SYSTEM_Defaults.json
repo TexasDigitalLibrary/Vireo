@@ -86,10 +86,16 @@
       "theme_path":"configuration/theme/"
     },
     {
+      "text_main_color":"#757575"
+    },
+    {
       "background_main_color":"#1b333f"
     },
     {
       "background_highlight_color":"#43606e"
+    },
+    {
+      "background_text_color":"#ffffff"
     },
     {
       "button_main_color_on":"#1b333f"
@@ -98,10 +104,25 @@
       "button_highlight_color_on":"#43606e"
     },
     {
-      "button_main_color_off":"#92aa9c"
+      "button_text_color_on":"#ffffff"
     },
     {
-      "button_highlight_color_off":"#adbdaa"
+      "button_main_color_off":"#424D46"
+    },
+    {
+      "button_highlight_color_off":"#697A70"
+    },
+    {
+      "button_text_color_off":"#ffffff"
+    },
+    {
+      "admin_tab_main_color":"#adbdaa"
+    },
+    {
+      "admin_tab_selected_color":"#ffffff"
+    },
+    {
+      "admin_tab_text_color":"#1D3541"
     },
     {
       "left_logo":"resources/images/default-left-logo.png"

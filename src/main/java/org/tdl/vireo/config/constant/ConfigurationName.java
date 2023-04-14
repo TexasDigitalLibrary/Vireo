@@ -49,6 +49,9 @@ public class ConfigurationName {
     // Theme settings
     /** Background main color */
     public final static String THEME_PATH = "theme_path";
+    
+    /** Text main color */
+    public final static String TEXT_MAIN_COLOR = "text_main_color";
 
     /** Background main color */
     public final static String BACKGROUND_MAIN_COLOR = "background_main_color";
@@ -56,17 +59,35 @@ public class ConfigurationName {
     /** Background highlight color */
     public final static String BACKGROUND_HIGHLIGHT_COLOR = "background_highlight_color";
 
+    /** Background text color */
+    public final static String BACKGROUND_TEXT_COLOR = "background_text_color";
+
     /** Submission Step Button main color when in "on" state */
     public final static String BUTTON_MAIN_COLOR_ON = "button_main_color_on";
 
     /** Submission Step Button highlight color when in "on" state */
     public final static String BUTTON_HIGHLIGHT_COLOR_ON = "button_highlight_color_on";
 
+    /** Submission Step Button text color when in "on" state */
+    public final static String BUTTON_TEXT_COLOR_ON = "button_text_color_on";
+
     /** Submission Step Button main color when in "off" state */
     public final static String BUTTON_MAIN_COLOR_OFF = "button_main_color_off";
 
     /** Submission Step Button highlight color when in "off" state */
     public final static String BUTTON_HIGHLIGHT_COLOR_OFF = "button_highlight_color_off";
+
+    /** Submission Step Button text color when in "off" state */
+    public final static String BUTTON_TEXT_COLOR_OFF = "button_text_color_off";
+    
+    /** Admin main navigation tab background color */
+    public final static String ADMIN_TAB_MAIN_COLOR = "admin_tab_main_color";
+
+    /** Admin selected navigation tab background color */
+    public final static String ADMIN_TAB_SELECTED_COLOR = "admin_tab_selected_color";
+
+    /** Admin navigation tab text color*/
+    public final static String ADMIN_TAB_TEXT_COLOR = "admin_tab_text_color";
 
     /** Custom CSS */
     public final static String LEFT_LOGO = "left_logo";
