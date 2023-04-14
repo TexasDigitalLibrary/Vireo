@@ -9,19 +9,14 @@
 
   <div ng-if="(filter || textFilter) && scopeValue.length > 0" class="filter-div">
     <div ng-if="textFilter">
-      <a href="" ng-click="!expanded?expanded=true:expanded=false" >
-        <span class="glyphicon glyphicon-filter"></span>
-        {{expanded?'close':'open'}}
-        filters
-      </a>
-      <div ng-class="{'input-group': properties.length>1}" ng-if="expanded">
-        <div ng-if="properties.length>1" class="input-group-btn">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> {{selectedFilter}} <span class="caret"></span></button>
-          <ul class="dropdown-menu">
-            <li ng-repeat="property in properties" ng-click="setSelectedFilter(property)"><a href="#">{{property}}</a></li>
-          </ul>
-        </div>
-        <input type="text" class="form-control" placeholder="{{properties.length===1?'Filter by '+selectedFilter:''}}" ng-model="textFilterValue[selectedFilter]" ng-class="{expanded: expanded}" ng-disabled="!selectedFilter">
+      <div>
+          <span>Filter Metadata Keys</span>
+      </div>
+      <div class="input-group">
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-filter"></span>
+        </span>
+        <input type="text" class="form-control" ng-model="textFilterValue[selectedFilter]" />
       </div>
     </div>
   </div>

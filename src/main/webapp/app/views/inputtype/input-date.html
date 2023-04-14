@@ -1,6 +1,6 @@
 <div class="input-group">
-    <span class="input-group-addon" ng-click="date=true">
-        <span class="glyphicon glyphicon-calendar clickable"></span>
+  <span class="input-group-addon" ng-click="date=true">
+      <span class="glyphicon glyphicon-calendar clickable"></span>
     </span>
     <input
       type="text"
@@ -8,7 +8,6 @@
       uib-datepicker-popup="{{datepickerFormat}}"
       datepicker-options="datepickerOptions"
       ng-model="fieldValue.valuePopup"
-      placeholder="Choose Date"
       ng-click="date=true"
       ng-blur="save(fieldValue)"
       is-open="date"
@@ -16,7 +15,7 @@
       ng-required="!profile.optional"
       close-text="Close"
       readonly
-      stringtodate />
+      stringtodate/>
     <span class="input-group-addon">
         <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
         <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>

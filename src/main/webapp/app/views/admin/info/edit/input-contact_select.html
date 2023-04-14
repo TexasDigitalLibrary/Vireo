@@ -21,7 +21,6 @@
   <input type="text"
     class="form-control"
     ng-model="field.contacts"
-    placeholder="Select Email"
     uib-typeahead="word.contacts[0] as word.contacts[0] for word in fieldProfile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
     typeahead-on-select="saveWithCV(field, $item)"
     disabled>

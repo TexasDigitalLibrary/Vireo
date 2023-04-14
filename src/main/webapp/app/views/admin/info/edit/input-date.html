@@ -4,17 +4,16 @@
   </span>
   <input
     type="text"
-    class="form-control"
-    uib-datepicker-popup="{{datepickerFormat}}"
+    class="form-control" 
+    uib-datepicker-popup="{{datepickerFormat}}" 
     datepicker-options="datepickerOptions"
     ng-model="field.valuePopup"
-    placeholder="Choose Date"
     ng-click="date=true"
     is-open="date"
-    ng-required="!fieldProfile.optional"
+    ng-required="!fieldProfile.optional" 
     close-text="Close"
     readonly
-    stringtodate />
+    stringtodate/>
   <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="save(field)"></span>
-  <span class="input-group-addon glyphicon glyphicon-remove clickable" ng-click="cancel(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-remove clickable" ng-click="cancel(field)"></span>		
 </div>
