@@ -30,7 +30,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ${LOCAL_VIREO_ASSETS_PATH}:${APP_ASSETS_PATH}
+      - ${LOCAL_VIREO_PATH}:${APP_PATH}
     depends_on:
       - vireo_db
     networks:

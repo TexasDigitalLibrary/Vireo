@@ -15,8 +15,7 @@
             id="new-template-name"
             model="modalData"
             property="name"
-            label="Name"
-            placeholder="Name of the new email template"
+            label="Email Template Name"
             form="forms.create"
             validations="emailTemplateRepo.getValidations()"
             results="emailTemplateRepo.getValidationResults()">
@@ -26,8 +25,7 @@
             id="new-template-subject"
             model="modalData"
             property="subject"
-            label="Subject"
-            placeholder="Subject of the new email template"
+            label="Email Template Subject"
             form="forms.create"
             validations="emailTemplateRepo.getValidations()"
             results="emailTemplateRepo.getValidationResults()">
@@ -71,11 +69,14 @@
 
                 <div id="new-email-template-fields">
                     <label for="fields" class="email-template-label">Fields:</label>
+                    <div>
+                        <span class="email-template-label">Filter Fields</span>
+                    </div>
                     <div class="input-group">
                       <span class="input-group-addon">
                         <span class="glyphicon glyphicon-filter"></span>
                       </span>
-                      <input class="form-control" placeholder="limit results" ng-model="fpFilter" />
+                      <input class="form-control" ng-model="fpFilter" />
                     </div>
                     <div id="new-email-template-fields-list" class="btn-group-vertical email-template-fields-list">
                         <button type="button" ng-repeat="fp in fieldPredicates | filter:fpFilter " ng-click="insertText(fp.value)" class="list-group-item"><span class="glyphicon glyphicon-plus " aria-hidden="true"></span> {{fp.value}}</button>

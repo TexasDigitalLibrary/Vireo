@@ -591,7 +591,7 @@
             "name":"Document Information"
           },
           "inputType":{
-            "name":"INPUT_DATETIME"
+            "name":"INPUT_DATE"
           },
           "repeatable":false,
           "overrideable":true,
@@ -624,7 +624,7 @@
           "controlledVocabulary":{
             "name":"Submission Types",
             "isEntityProperty":false
-    	  }
+        }
         },
         {
           "fieldPredicate":{

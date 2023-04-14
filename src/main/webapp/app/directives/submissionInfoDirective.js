@@ -63,6 +63,8 @@ vireo.directive("submissionInfo", function () {
             };
 
             var save = function (fieldValue) {
+                $scope.submission.saveDatePopupFieldValueWorkaround(fieldValue);
+
                 $scope.submission.saveFieldValue(fieldValue, $scope.fieldProfile).then(function (response) {
                     delete fieldValue.updating;
                 });
@@ -116,8 +118,29 @@ vireo.directive("submissionInfo", function () {
                 }
             };
 
-            $scope.datepickerOptions = {};
-            $scope.datepickerFormat = angular.isDefined($scope.fieldProfile.controlledVocabulary) ? "MMMM yyyy" : "MM/dd/yyyy";
+            // Warning: setting ngModelOptions: { timezone: 'utc' } can cause the off by 1 day problem.
+            $scope.datepickerOptions = {
+                datepickerMode: 'day',
+                formatDay: 'dd',
+                formatMonth: 'MMMM',
+                formatYear: 'yyyy',
+                formatDayHeader: 'EEE',
+                formatDayTitle: 'MMMM yyyy',
+                formatMonthTitle: 'yyyy',
+                maxDate: null,
+                maxMode: 'month',
+                minDate: null,
+                minMode: 'day',
+                monthColumns: 3,
+                ngModelOptions: {},
+                shortcutPropagation: false,
+                showWeeks: true,
+                yearColumns: 5,
+                yearRows: 4
+            };
+
+            $scope.datepickerFormat = "MM/dd/yyyy";
+
             var checkDisabled = function (dateAndMode) {
                 var disabled = true;
                 if(angular.isDefined($scope.fieldProfile.controlledVocabulary)) {
@@ -136,11 +159,11 @@ vireo.directive("submissionInfo", function () {
                 $scope.datepickerOptions.customClass = function (dateAndMode) {
                     if (checkDisabled(dateAndMode)) return "disabled";
                 };
+
                 $scope.datepickerOptions.dateDisabled = checkDisabled;
-                $scope.datepickerOptions.minViewMode = "month";
+                $scope.datepickerOptions.datepickerMode = 'month';
                 $scope.datepickerOptions.minMode = "month";
-                $scope.datepickerOptions.maxViewMode = "month";
-                $scope.datepickerOptions.maxMode = "month";
+                $scope.datepickerFormat = "MMMM yyyy";
             }
 
             $scope.cancel = function (fieldValue) {
@@ -169,8 +192,8 @@ vireo.directive("submissionInfo", function () {
                 return $scope.fieldProfile.inputType.name == 'INPUT_DEGREEDATE';
             };
 
-            $scope.inputDateTime = function () {
-                return $scope.fieldProfile.inputType.name == 'INPUT_DATETIME';
+            $scope.inputDate = function () {
+                return $scope.fieldProfile.inputType.name == 'INPUT_DATE';
             };
 
             $scope.inputContactChair = function () {
@@ -182,7 +205,7 @@ vireo.directive("submissionInfo", function () {
             };
 
             $scope.standardInput = function () {
-                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDegreeDate() && !$scope.inputDateTime() && !$scope.inputContactChair() && !$scope.inputFile();
+                return !$scope.inputLicense() && !$scope.inputProquest() && !$scope.inputTel() && !$scope.inputUrl() && !$scope.inputDegreeDate() && !$scope.inputDate() && !$scope.inputContactChair() && !$scope.inputFile();
             };
 
             $scope.setConditionalTextArea = function (fieldValue, checked) {

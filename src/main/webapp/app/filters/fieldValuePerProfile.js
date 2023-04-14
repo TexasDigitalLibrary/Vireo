@@ -14,7 +14,7 @@ vireo.filter('fieldValuePerProfile', function(FieldValue) {
           fieldValues.push(fv);
           fieldProfileValues.push(fv);
         }
-        
+
         return fieldProfileValues;
     };
 });

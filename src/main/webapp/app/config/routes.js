@@ -54,6 +54,10 @@ vireo.config(function ($locationProvider, $routeProvider) {
     when('/register', {
         templateUrl: 'views/register.html'
     }).
+    when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LocalLoginController'
+    }).
     when('/admin', {
         redirectTo: '/admin/list',
         access: ["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_REVIEWER"]

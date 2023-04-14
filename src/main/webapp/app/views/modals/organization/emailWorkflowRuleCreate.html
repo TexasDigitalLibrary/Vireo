@@ -34,8 +34,9 @@
 		</div>
 		<div class="row email-workflow-rule-section" ng-class="{'email-workflow-rule-open': newRecipient.type==emailRecipientType.ORGANIZATION, 'email-workflow-rule-closed': newRecipient.type!=emailRecipientType.ORGANIZATION}">
 			<div class="col-xs-12">
-				<input 	class="form-control"
-						placeholder="Select Organization"
+				<label for="organizationName">Organization Name</label>
+				<input 	id="organizationName"
+						class="form-control"
 						ng-model="newRecipient.data"
 						typeahead-append-to="'.addRecipientModal .typeahead-dropdown-container'"
 						uib-typeahead="o as o.name for o in organizations | filter:{name:$viewValue} | limitTo:8"

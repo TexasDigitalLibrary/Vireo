@@ -56,9 +56,9 @@
         <div ng-if="isAnonymous()" class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
-              <a href ng-click="openModal('#loginModal')">Login</a>
+              <span href login-button>Login</span>
             </li>
-            <li class="dropdown">
+            <li ng-if="registerEnabled" class="dropdown">
               <a href ng-click="openModal('#verifyEmailModal')">Register</a>
             </li>
           </ul>
