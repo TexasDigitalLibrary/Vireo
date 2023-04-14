@@ -140,8 +140,14 @@
   min-height: 34px;
 }
 
-.submission-input-contact-remove {
+.submission-input-select .btn-default.opaque {
+  background-color: #eeeeee;
+}
+
+.input-contact-value .btn-default.opaque {
+  background-color: #eeeeee;
   border-radius: 0px;
+  border-left: none;
 }
 
 .submission-input-select .dropdown-text {
