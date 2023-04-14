@@ -34,11 +34,12 @@ var appConfig = {
     'mockRole': 'admin',
 
     /*
-      Designate whether or not to use the login modal.
+      Designate whether or not to use the local authentication.
       Set this to either true or false booleans.
-      When set to false, a modal is not used and Shibboleth login is automatically attempted.
+      When set to true, the login modal and registrations links are available.
+      When set to false, a modal is not used and Shibboleth login is automatically attempted and no registration link is shown.
      */
-    'useLoginModal': true,
+    'localAuthentication': true,
 
     /*
        Designate predicates that require date/times value filtering on save.
