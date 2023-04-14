@@ -338,6 +338,10 @@ var mockSubmission = function($q) {
         return payloadPromise($q.defer());
     };
 
+    model.findDatePredicate = function (fieldValue) {
+        return null;
+    };
+
     model.findFieldValueById = function (id) {
         var fieldValue = {
             value: "",
@@ -418,6 +422,9 @@ var mockSubmission = function($q) {
 
     model.renameFile = function (fieldValue) {
         return payloadPromise($q.defer());
+    };
+
+    model.saveDatePopupFieldValueWorkaround = function (fieldValue) {
     };
 
     model.saveFieldValue = function (fieldValue, fieldProfile) {

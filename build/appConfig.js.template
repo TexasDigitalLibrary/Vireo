@@ -1,6 +1,6 @@
 var appConfig = {
 
-    'version': '4.1.4',
+    'version': '4.1.5',
 
     'allowAnonymous': true,
     'anonymousRole': 'ROLE_ANONYMOUS',
@@ -38,5 +38,41 @@ var appConfig = {
       Set this to either true or false booleans.
       When set to false, a modal is not used and Shibboleth login is automatically attempted.
      */
-    'useLoginModal': true
+    'useLoginModal': true,
+
+    /*
+       Designate predicates that require date/times value filtering on save.
+       Each object has four properties, 1) predicate value, called 'name', 2) how to process, called 'how', 3) the format string when printing called 'format', and 4) the format string for saving to the DB called 'database'.
+       The 'how' must be one of 'start' to designate predicate values that start with match or 'exact' to use an exact match.
+       The `dateColumns` is identical, except it is matching against column names rather than predicate values.
+       The `dateColunns` is used on the advisor review page, the submission list, and the confirm and submit page (through the displayFieldValue filter).
+    */
+    'datePredicates': [
+        {
+          'name': 'dc.date.issued',
+          'how': 'exact',
+          'format': 'MMMM yyyy',
+          'database': 'MMMM yyyy'
+        },
+        {
+          'name': 'defense_date',
+          'how': 'exact',
+          'format': 'MM/dd/yyyy',
+          'database': 'yyyy-MM-dd'
+        }
+    ],
+    'dateColumns': [
+        {
+          'name': 'INPUT_DEGREEDATE',
+          'how': 'exact',
+          'format': 'MMMM yyyy',
+          'database': 'MMMM yyyy'
+        },
+        {
+          'name': 'INPUT_DATE',
+          'how': 'exact',
+          'format': 'MMM dd, yyyy',
+          'database': 'yyyy-MM-dd'
+        }
+    ]
 };

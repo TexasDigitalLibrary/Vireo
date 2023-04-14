@@ -114,7 +114,7 @@
       <div class="container">
         <div class="row">
           <a class="pull-left" th:href="${#strings.isEmpty(base) ? '/' : base}">
-            <img style="max-height: 57px;" ng-src="{{logoImage()}}" />
+            <img style="max-height: 57px;" ng-src="{{logoImage()}}" alt="Thesis Submission Portal Home" />
           </a>
           <ul ng-if="activeAdminSection()" class="tab-nav nav navbar-nav navbar-right hidden-xs">
             <li ng-class="{'active': activeTab('/admin/list')}">
@@ -153,16 +153,16 @@
           <span app-version></span>
         </li>
         <li>
-          <a href="{{webmaster}}">Webmaster</a>
+          <a href="{{webmaster}}" ng-attr-aria-label="{{webmaster_label}}" ng-attr-aria-hidden="{{webmaster_hidden}}">Webmaster</a>
         </li>
         <li>
-          <a href="{{legal}}">Legal</a>
+          <a href="{{legal}}" ng-attr-aria-label="{{legal_label}}" ng-attr-aria-hidden="{{legal_hidden}}">Legal</a>
         </li>
         <li>
-          <a href="{{comments}}">Comments</a>
+          <a href="{{comments}}" ng-attr-aria-label="{{comments_label}}" ng-attr-aria-hidden="{{comments_hidden}}">Comments</a>
         </li>
         <li>
-          <a href="{{accessibility}}">Accessibility</a>
+          <a href="{{accessibility}}" ng-attr-aria-label="{{accessibility_label}}" ng-attr-aria-hidden="{{accessibility_hidden}}">Accessibility</a>
         </li>
       </ul>
     </div>

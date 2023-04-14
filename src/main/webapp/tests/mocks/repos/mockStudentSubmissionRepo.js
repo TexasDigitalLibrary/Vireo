@@ -42,6 +42,16 @@ angular.module("mock.studentSubmissionRepo", []).service("StudentSubmissionRepo"
         return valuePromise($q.defer(), repo.mockModel(payload));
     };
 
+    repo.findPaginatedActionLogsById = function (id, order, page, count) {
+        var payload = {
+            PageImpl: {}
+        };
+
+        // TODO
+
+        return payloadPromise($q.defer(), repo.mockModel(payload));
+    };
+
     repo.listenForChanges = function () {
         return payloadPromise($q.defer());
     };

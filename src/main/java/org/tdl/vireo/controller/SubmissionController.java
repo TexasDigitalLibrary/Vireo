@@ -4,6 +4,16 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.INVALID;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tamu.weaver.auth.annotation.WeaverCredentials;
+import edu.tamu.weaver.auth.annotation.WeaverUser;
+import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.data.model.ApiPage;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.results.ValidationResults;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -23,10 +33,8 @@ import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -38,11 +46,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -88,18 +100,6 @@ import org.tdl.vireo.service.SubmissionEmailService;
 import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
-
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import edu.tamu.weaver.auth.annotation.WeaverCredentials;
-import edu.tamu.weaver.auth.annotation.WeaverUser;
-import edu.tamu.weaver.auth.model.Credentials;
-import edu.tamu.weaver.data.model.ApiPage;
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.validation.results.ValidationResults;
 
 @RestController
 @RequestMapping("/submission")
@@ -188,7 +188,7 @@ public class SubmissionController {
     return new ApiResponse(SUCCESS, submissionRepo.findAllBySubmitterId(user.getId()));
   }
 
-  @JsonView(Views.SubmissionIndividual.class)
+  @JsonView(Views.SubmissionIndividualActionLogs.class)
   @RequestMapping("/get-one/{submissionId}")
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
@@ -204,12 +204,22 @@ public class SubmissionController {
     return new ApiResponse(SUCCESS, submission);
   }
 
-  @JsonView(Views.SubmissionIndividual.class)
-  @RequestMapping("/advisor-review/{submissionHash}")
-  public ApiResponse getOne(@PathVariable String submissionHash) {
-    Submission submission = submissionRepo.findOneByAdvisorAccessHash(submissionHash);
-    return new ApiResponse(SUCCESS, submission);
-  }
+    @GetMapping("/get-one/{submissionId}/action-logs")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse getActionLogs(@WeaverUser User user, @PathVariable Long submissionId, @PageableDefault(direction = Direction.DESC, sort = { "action_date" }) Pageable pageable) {
+        return new ApiResponse(SUCCESS, actionLogRepo.getAllActionLogs(submissionId, false, pageable));
+    }
+
+    @JsonView(Views.SubmissionIndividual.class)
+    @RequestMapping("/advisor-review/{advisorAccessHash}")
+    public ApiResponse getOne(@PathVariable String advisorAccessHash) {
+        return new ApiResponse(SUCCESS, submissionRepo.findOneByAdvisorAccessHash(advisorAccessHash));
+    }
+
+    @GetMapping("/advisor-review/{advisorAccessHash}/action-logs")
+    public ApiResponse getActionLogsForAdvisement(@PathVariable String advisorAccessHash, @PageableDefault(direction = Direction.DESC, sort = { "action_date" }) Pageable pageable) {
+        return new ApiResponse(SUCCESS, actionLogRepo.getAllActionLogs(advisorAccessHash, false, pageable));
+    }
 
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   @PreAuthorize("hasRole('STUDENT')")
@@ -990,9 +1000,18 @@ public class SubmissionController {
             apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
         } else {
             if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
-                JsonNode fileInfo = assetService.getAssetFileInfo(uri, submission);
+                String fileName = "";
+                String fileSize = "file not found";
+                if (assetService.assetFileExists(uri)) {
+                    JsonNode fileInfo = assetService.getAssetFileInfo(uri, submission);
+                    fileName = fileInfo.get("name").asText();
+                    fileSize = fileInfo.get("readableSize").asText();
+                } else {
+                    fileName = assetService.getAssetFileName(uri);
+                }
+
                 assetService.delete(uri);
-                actionLogRepo.createPublicLog(submission, user, documentType.substring(9).toUpperCase() + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") removed");
+                actionLogRepo.createPublicLog(submission, user, documentType.substring(9).toUpperCase() + " file " + fileName + " (" + fileSize + ") removed");
             } else {
                 apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
             }

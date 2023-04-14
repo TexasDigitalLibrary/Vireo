@@ -461,23 +461,22 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                         switch (submissionListColumn.getInputType().getName()) {
                         case "INPUT_DEGREEDATE":
-                            // Column's values are of type datetime
-                            filterString.replaceAll("[TZ:.\\-]", " ");
-                            sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
+                            // Column's values are of type 'MMMM yyyy' (in SQL date format would be 'Month YYYY').
+                            sqlWhereBuilder.append("LOWER(pfv").append(n).append(".value) = LOWER('").append(filterString).append("')");
                             break;
-                        case "INPUT_DATETIME":
-                            // Column's values are of type datetime
+                        case "INPUT_DATE":
+                            // Column's values are of type 'yyyy-mm-dd' as required by the SQL standard to represent a date without time.
                             if (filterString.contains("|")) {
                                 // Date Range
                                 String[] dates = filterString.split(Pattern.quote("|"));
-                                dates[0] = dates[0].replaceAll("[TZ:.\\-]", " ");
-                                dates[1] = dates[1].replaceAll("[TZ:.\\-]", " ");
-
-                                sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) BETWEEN to_timestamp('").append(dates[0]).append("', \'YYYY MM DD HH MI SS MS') AND to_timestamp('").append(dates[1]).append("', \'YYYY MM DD HH MI SS MS')");
+                                sqlWhereBuilder
+                                    .append("CAST(pfv").append(n)
+                                    .append(".value AS DATE) BETWEEN CAST('").append(dates[0])
+                                    .append("' AS DATE) AND CAST('").append(dates[1])
+                                    .append("' AS DATE)");
                             } else {
                                 // Date Match
-                                filterString.replaceAll("[TZ:.\\-]", " ");
-                                sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
+                                sqlWhereBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
                             }
                             break;
                         case "INPUT_CHECKBOX":
@@ -736,11 +735,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        filterString.replaceAll("[TZ:.\\-]", " ");
-
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("submission_date", filterString));
                     }
 
                     break;
@@ -751,11 +746,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        filterString.replaceAll("[TZ:.\\-]", " ");
-
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("approve_application_date", filterString));
                     }
 
                     break;
@@ -766,11 +757,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        filterString.replaceAll("[TZ:.\\-]", " ");
-
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("approve_advisor_date", filterString));
                     }
 
                     break;
@@ -781,11 +768,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        filterString.replaceAll("[TZ:.\\-]", " ");
-
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("CAST(pfv").append(n).append(".value AS TIMESTAMP) = '").append(filterString).append("'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("approve_embargo_date", filterString));
                     }
 
                     break;
@@ -900,6 +883,35 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     @Override
     protected String getChannel() {
         return "/channel/submission";
+    }
+
+    /**
+     * Build a date field string given some filter.
+     *
+     * @param id The ID to append to the field name alias.
+     * @param filter The filter.
+     * @return A constructed string builder appropriately casting the date.
+     */
+    private StringBuilder buildDateFieldString(int id, String filter) {
+        return new StringBuilder()
+            .append("pfv").append(id)
+            .append(".value = CAST('").append(filter)
+            .append("' AS DATE)");
+    }
+
+    /**
+     * Build a submission date field string given some filter.
+     *
+     * This is form submission date fields that are already stored in the SQL date format.
+     *
+     * @param column The column name to filter.
+     * @param filter The filter.
+     * @return A constructed string builder appropriately casting the date.
+     */
+    private StringBuilder buildSubmissionDateFieldString(String column, String filter) {
+        return new StringBuilder()
+            .append("s.").append(column)
+            .append(" = CAST('").append(filter).append("' AS DATE)");
     }
 
     private class QueryStrings {
