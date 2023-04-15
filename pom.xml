@@ -115,7 +115,7 @@
     <dependency>
       <groupId>com.googlecode.libphonenumber</groupId>
       <artifactId>libphonenumber</artifactId>
-      <version>8.13.7</version>
+      <version>8.13.8</version>
     </dependency>
 
     <dependency>
@@ -641,7 +641,7 @@
                     </goals>
                   </pluginExecutionFilter>
                   <action>
-                    <execute />
+                    <execute/>
                   </action>
                 </pluginExecution>
               </pluginExecutions>
@@ -675,7 +675,7 @@
         </os>
       </activation>
       <properties>
-        <npm-extension></npm-extension>
+        <npm-extension/>
       </properties>
     </profile>
 
