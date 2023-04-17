@@ -22,7 +22,7 @@
     "build": "wvr build --clean"
   },
   "dependencies": {
-    "@wvr/core": "2.2.4",
+    "@wvr/core": "https://github.com/TAMULib/Weaver-UI-Core.git#modal-keyboard-escape-fix",
     "angular-ui-tinymce": "0.0.19",
     "file-saver": "2.0.5",
     "ng-csv": "0.3.6",
