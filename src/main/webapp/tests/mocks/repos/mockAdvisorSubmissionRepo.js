@@ -43,5 +43,15 @@ angular.module("mock.advisorSubmissionRepo", []).service("AdvisorSubmissionRepo"
         return valuePromise($q.defer(), repo.mockModel(payload));
     };
 
+    repo.findPaginatedActionLogsByHash = function (hash, order, page, count) {
+        var payload = {
+            PageImpl: {}
+        };
+
+        // TODO
+
+        return payloadPromise($q.defer(), repo.mockModel(payload));
+    };
+
     return repo;
 });

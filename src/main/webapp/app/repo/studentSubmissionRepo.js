@@ -21,6 +21,36 @@ vireo.repo("StudentSubmissionRepo", function StudentSubmissionRepo($q, ApiRespon
         });
     };
 
+    studentSubmissionRepo.findPaginatedActionLogsById = function (id, orderBy, page, count) {
+        return $q(function(resolve, reject) {
+            angular.extend(studentSubmissionRepo.mapping.one, {
+                'method': 'get-one/' + id + '/action-logs',
+                'query': {
+                  'orderBy': orderBy,
+                  'page': page,
+                  'size': count,
+                }
+            });
+
+            var fetchPromise = WsApi.fetch(studentSubmissionRepo.mapping.one);
+
+            fetchPromise.then(function (res) {
+                if (angular.isDefined(res) && angular.isDefined(res.body)) {
+                    var apiRes = angular.fromJson(res.body);
+
+                    if (angular.isDefined(apiRes) && angular.isDefined(apiRes.meta)) {
+                        if (apiRes.meta.status === "SUCCESS" && angular.isDefined(apiRes.payload.PageImpl)) {
+                            resolve(apiRes.payload.PageImpl);
+                            return;
+                        }
+                    }
+                }
+
+                reject();
+            });
+        });
+    };
+
     studentSubmissionRepo.listenForChanges = function() {
         return defer.promise;
     };

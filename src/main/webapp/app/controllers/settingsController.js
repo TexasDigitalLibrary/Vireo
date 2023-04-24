@@ -98,7 +98,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
             },
             "required": {
                 "type": "required",
-                "message": "Display requires a name",
+                "message": "Display name required",
                 "property": "displayName",
                 "value": true
             }
@@ -118,7 +118,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
             },
             "required": {
                 "type": "required",
-                "message": "Preferred email requires a name",
+                "message": "Preferred email address required",
                 "property": "preferedEmail",
                 "value": true
             },

@@ -18,7 +18,6 @@
     ng-model="fieldValue.value"
     ng-blur="saveConditionalTextArea(fieldValue)"
     ng-disabled="fieldValue.updating"
-    placeholder="Input {{profile.gloss}}">
   </textarea>
   <span class="input-group-addon">
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>

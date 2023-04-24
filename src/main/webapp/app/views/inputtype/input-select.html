@@ -3,7 +3,7 @@
     <span class="caret"></span>
   </button>
   <button ng-class="{selected: fieldValue.value}" type="button" class="btn btn-default dropdown-text" disabled>
-    <span class="text-left dropdown-text-label">{{fieldValue.value || 'Choose ' + profile.gloss}}</span>
+    <span class="text-left dropdown-text-label">{{fieldValue.value}}</span>
   </button>
   <ul class="dropdown-menu" uib-dropdown-menu role="menu">
     <li class="select-option"
@@ -13,7 +13,7 @@
       <a href="#">{{word.name}}</a>
     </li>
   </ul>
-  <button class="btn btn-danger" ng-if="fieldValue.value">
+  <button class="btn btn-default opaque" ng-if="fieldValue.value">
     <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)"></span>
   </button>
   <button type="button" class="btn dropdown-help" disabled>

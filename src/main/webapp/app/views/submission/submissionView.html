@@ -112,7 +112,7 @@
         </div>
         <hr/>
         <div class="col-md-10 col-md-offset-1">
-          <actionlog ng-if="submission" submission="submission" public="'true'" delay="{{::actionLogDelay}}"></actionlog>
+          <actionlog ng-if="submission" submission="submission" method="getPaginatedActionLog" delay="{{::actionLogDelay}}"></actionlog>
         </div>
       </div>
 

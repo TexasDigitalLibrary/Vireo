@@ -62,6 +62,10 @@ describe("controller: FooterController", function () {
             expect(scope.buildLink).toBeDefined();
             expect(typeof scope.buildLink).toEqual("function");
         });
+        it("buildLabel should be defined", function () {
+            expect(scope.buildLabel).toBeDefined();
+            expect(typeof scope.buildLabel).toEqual("function");
+        });
     });
 
     describe("Do the scope methods work as expected", function () {
@@ -97,6 +101,35 @@ describe("controller: FooterController", function () {
 
             built = scope.buildLink({ value: "\"user name\"@example.com" });
             expect(built).toBe("mailto:\"user name\"@example.com");
+        });
+        it("buildLabel should fallback to undefined", function () {
+            var built;
+
+            built = scope.buildLabel();
+            expect(built).toBeUndefined();
+
+            built = scope.buildLabel(null);
+            expect(built).toBeUndefined();
+
+            built = scope.buildLabel({});
+            expect(built).toBeUndefined();
+
+            built = scope.buildLabel({ value: null });
+            expect(built).toBeUndefined();
+        });
+        it("buildLabel should provide e-mail related message", function () {
+            var setting = { value: 'a@b.c' };
+            var email = "to somewhere.";
+            var about = "something.";
+            var built = scope.buildLabel(setting, email, about);
+            expect(built).toBe("Send an e-mail " + email);
+        });
+        it("buildLabel should provide URL related message", function () {
+            var setting = { value: 'http://localhost' };
+            var email = "to somewhere.";
+            var about = "something.";
+            var built = scope.buildLabel(setting, email, about);
+            expect(built).toBe("View page with further information about " + about);
         });
     });
 

@@ -47,11 +47,30 @@ describe("service: advisorSubmissionRepo", function () {
             expect(repo.fetchSubmissionByHash).toBeDefined();
             expect(typeof repo.fetchSubmissionByHash).toEqual("function");
         });
+
+        it("findPaginatedActionLogsByHash should be defined", function () {
+            expect(repo.fetchSubmissionByHash).toBeDefined();
+            expect(typeof repo.fetchSubmissionByHash).toEqual("function");
+        });
     });
 
     describe("Do the repo methods work as expected", function () {
         it("fetchSubmissionByHash should return a submission", function () {
             repo.fetchSubmissionByHash("mock hash");
+            scope.$digest();
+
+            // TODO
+        });
+
+        it("findPaginatedActionLogsByHash should return action logs", function () {
+            var mockOrderBy = { order: 'id' };
+            var mockPayload = {
+                PageImpl: {}
+            };
+
+            WsApi.mockFetchResponse({ type: "payload", payload: mockPayload });
+
+            repo.findPaginatedActionLogsByHash("mock hash", mockOrderBy, 0, 10);
             scope.$digest();
 
             // TODO

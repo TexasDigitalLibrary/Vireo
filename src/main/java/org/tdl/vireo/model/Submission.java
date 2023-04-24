@@ -214,7 +214,7 @@ public class Submission extends ValidatingBaseEntity {
     @Fetch(FetchMode.SELECT)
     private Set<CustomActionValue> customActionValues;
 
-    @JsonView(Views.SubmissionIndividual.class)
+    @JsonView(Views.SubmissionIndividualActionLogs.class)
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     @JoinColumn

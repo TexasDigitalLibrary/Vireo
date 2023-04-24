@@ -8,7 +8,6 @@
 			type="text"
 			name="{{column.title.split(' ').join('')+'Value1'}}"
 			class="form-control"
-			placeholder="Choose Date"
 			uib-datepicker-popup="MM/dd/yyyy"
 			ng-model="box[column.title.split(' ').join('')].d1"
 			ng-click="date1=true"
@@ -22,7 +21,7 @@
 		</span>
 	</div>
 
-	<p ng-if="box[column.title.split(' ').join('')].range" class="date-range-divider">&mdash; TO &mdash;</p>
+    <p ng-if="box[column.title.split(' ').join('')].range" class="date-range-divider">&mdash; TO &mdash;</p>
 
 	<div ng-if="box[column.title.split(' ').join('')].range" class="input-group">
 		<span class="input-group-addon" ng-click="date2=true">
@@ -32,7 +31,6 @@
 			type="text"
 			name="{{column.title.split(' ').join('')+'Value2'}}"
 			class="form-control"
-			placeholder="Choose Date"
 			uib-datepicker-popup="MM/dd/yyyy"
 			ng-model="box[column.title.split(' ').join('')].d2"
 			ng-click="date1=true"
@@ -46,6 +44,6 @@
 		</span>
 	</div>
 
-	<input type="submit" value="Add" class="btn btn-default btn-block add-date-filter-btn" ng-disabled="!box[column.title.split(' ').join('')].d1" />
+    <input type="submit" value="Add" class="btn btn-default btn-block add-date-filter-btn" ng-disabled="!box[column.title.split(' ').join('')].d1" />
 
 </form>

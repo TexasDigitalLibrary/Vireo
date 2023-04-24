@@ -1,6 +1,6 @@
 var appConfig = {
 
-    'version': '4.1.4',
+    'version': '4.1.5',
 
     'allowAnonymous': true,
     'anonymousRole': 'ROLE_ANONYMOUS',
@@ -21,16 +21,60 @@ var appConfig = {
     'stompDebug': ${STOMP_DEBUG},
 
     /*
-    	Determines the type of connection stomp will attempt to make with the service.
-    	TYPES:  websocket, xhr-streaming, xdr-streaming, eventsource, iframe-eventsource,
-    			htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
-    			jsonp-polling
+      Determines the type of connection stomp will attempt to make with the service.
+      TYPES:  websocket, xhr-streaming, xdr-streaming, eventsource, iframe-eventsource,
+          htmlfile, iframe-htmlfile, xhr-polling, xdr-polling, iframe-xhr-polling,
+          jsonp-polling
     */
     'sockJsConnectionType': ['websocket', 'xhr-polling'],
 
     // Set this to 'admin' or 'user' if using mock AuthService
     // otherwise set to null or false
 
-    'mockRole': 'admin'
+    'mockRole': 'admin',
 
+    /*
+      Designate whether or not to use the local authentication.
+      Set this to true or false booleans or set it to the the string 'alternate'.
+      When set to the boolean true, the login modal and registrations links are available.
+      When set to the boolean false, a modal is not used and Shibboleth login is automatically attempted and no registration link is shown.
+      When set to the string 'alternate' to hide the local login (and registration) as if localAuthentication is false and provide an alterate (hidden) login page for local authentication.
+     */
+    'localAuthentication': true,
+
+    /*
+       Designate predicates that require date/times value filtering on save.
+       Each object has four properties, 1) predicate value, called 'name', 2) how to process, called 'how', 3) the format string when printing called 'format', and 4) the format string for saving to the DB called 'database'.
+       The 'how' must be one of 'start' to designate predicate values that start with match or 'exact' to use an exact match.
+       The `dateColumns` is identical, except it is matching against column names rather than predicate values.
+       The `dateColunns` is used on the advisor review page, the submission list, and the confirm and submit page (through the displayFieldValue filter).
+    */
+    'datePredicates': [
+        {
+          'name': 'dc.date.issued',
+          'how': 'exact',
+          'format': 'MMMM yyyy',
+          'database': 'MMMM yyyy'
+        },
+        {
+          'name': 'defense_date',
+          'how': 'exact',
+          'format': 'MM/dd/yyyy',
+          'database': 'yyyy-MM-dd'
+        }
+    ],
+    'dateColumns': [
+        {
+          'name': 'INPUT_DEGREEDATE',
+          'how': 'exact',
+          'format': 'MMMM yyyy',
+          'database': 'MMMM yyyy'
+        },
+        {
+          'name': 'INPUT_DATE',
+          'how': 'exact',
+          'format': 'MMM dd, yyyy',
+          'database': 'yyyy-MM-dd'
+        }
+    ]
 };
