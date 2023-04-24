@@ -599,9 +599,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.displaySubmissionProperty = function (row, col) {
-            var value = $scope.getSubmissionProperty(row, col);
+            if (angular.isDefined(col) && col !== null) {
+                return $filter('displayFieldValue')($scope.getSubmissionProperty(row, col), col.inputType);
+            }
 
-            return angular.isDefined(col) ? $filter('displayFieldValue')(value, col.inputType) : value;
+            return value;
         };
 
         $scope.getCustomActionLabelById = function (id) {
