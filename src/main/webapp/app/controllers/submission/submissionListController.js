@@ -92,7 +92,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                         $scope.page.count = sessionStorage.getItem("list-page-size") ? sessionStorage.getItem("list-page-size") : apiRes.payload.Integer;
                     }
 
-                    var managerFilterColumns = ManagerFilterColumnRepo.getAll();
+                    var managerFilterColumns = ManagerFilterColumnRepo.getAll().filter(function excludeSearchBox(slc) {
+                        return slc.title !== 'Search Box';
+                    });
+
                     var submissionListColumns = SubmissionListColumnRepo.getAll();
 
                     $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
