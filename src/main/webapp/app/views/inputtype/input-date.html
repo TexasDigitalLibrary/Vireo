@@ -1,6 +1,6 @@
 <div class="input-group">
-  <span class="input-group-addon" ng-click="date=true">
-      <span class="glyphicon glyphicon-calendar clickable"></span>
+    <span class="input-group-addon" ng-click="date=true">
+        <span class="glyphicon glyphicon-calendar clickable"></span>
     </span>
     <input
       type="text"
@@ -9,6 +9,7 @@
       datepicker-options="datepickerOptions"
       ng-model="fieldValue.valuePopup"
       ng-click="date=true"
+      ng-keypress="$event.which===13?date=true:date=false"
       ng-blur="save(fieldValue)"
       is-open="date"
       ng-disabled="fieldValue.updating"
