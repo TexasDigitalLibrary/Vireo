@@ -76,8 +76,6 @@ vireo.directive("validatedinput", function ($q, $timeout) {
                     if ($scope.model && typeof $scope.model.refresh === 'function') {
                         $scope.model.refresh();
                     }
-                } else {
-
                 }
             };
 
