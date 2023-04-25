@@ -128,6 +128,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var update = function (reloadList) {
             SavedFilterRepo.reset();
+            ManagerFilterColumnRepo.reset();
             SubmissionListColumnRepo.reset();
             ManagerSubmissionListColumnRepo.reset();
 
@@ -153,7 +154,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var processUpdate = function (reloadList) {
-            var managerFilterColumns = ManagerFilterColumnRepo.getAll();
+            var managerFilterColumns = ManagerFilterColumnRepo.getAll().filter(function excludeSearchBox(slc) {
+                return slc.title !== 'Search Box';
+            });
             var submissionListColumns = SubmissionListColumnRepo.getAll();
 
             $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
@@ -668,9 +671,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.displaySubmissionProperty = function (row, col) {
-            var value = $scope.getSubmissionProperty(row, col);
+            if (angular.isDefined(col) && col !== null) {
+                return $filter('displayFieldValue')($scope.getSubmissionProperty(row, col), col.inputType);
+            }
 
-            return angular.isDefined(col) ? $filter('displayFieldValue')(value, col.inputType) : value;
+            return value;
         };
 
         $scope.getCustomActionLabelById = function (id) {
@@ -799,10 +804,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.resetColumns = function () {
-            ManagerSubmissionListColumnRepo.reset();
             update(true);
             $scope.closeModal();
-            updateChange(false);
         };
 
         $scope.resetColumnsToDefault = function () {
@@ -812,20 +815,23 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.saveColumns = function () {
-            ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.userColumns, $scope.page.count).then(function () {
-                $scope.resetPagination();
-                sessionStorage.setItem("list-page-size", $scope.page.count);
-                $scope.resetColumns();
+            ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.userColumns, $scope.page.count).then(function (res) {
+                var results = angular.fromJson(res.body);
+                if (results.meta.status === 'SUCCESS') {
+                    $scope.resetPagination();
+                    sessionStorage.setItem("list-page-size", $scope.page.count);
+                    $scope.resetColumns();
+                }
             });
         };
 
         $scope.saveUserFilters = function () {
-            ManagerFilterColumnRepo.updateFilterColumns(filterColumns.userFilterColumns).then(function () {
-                for (var i in filterColumns.userFilterColumns) {
-                    delete filterColumns.userFilterColumns[i].status;
+            ManagerFilterColumnRepo.updateFilterColumns(filterColumns.userFilterColumns).then(function (res) {
+                var results = angular.fromJson(res.body);
+                if (results.meta.status === 'SUCCESS') {
+                    update(false);
+                    $scope.closeModal();
                 }
-                update(false);
-                $scope.closeModal();
             });
         };
 

@@ -73,9 +73,9 @@ vireo.directive("validatedinput", function ($q, $timeout) {
                 }
                 // escape(27): reset value using shadow
                 else if ($event.which == 27) {
-                    $scope.model.refresh();
-                } else {
-
+                    if ($scope.model && typeof $scope.model.refresh === 'function') {
+                        $scope.model.refresh();
+                    }
                 }
             };
 
