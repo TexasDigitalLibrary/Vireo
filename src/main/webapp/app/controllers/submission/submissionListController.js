@@ -147,7 +147,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                         processUpdate(reloadList);
                     });
                 } else {
-                  processUpdate(reloadList);
+                    processUpdate(reloadList);
                 }
             });
         };
