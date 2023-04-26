@@ -95,7 +95,10 @@
       "background_highlight_color":"#43606e"
     },
     {
-      "background_text_color":"#ffffff"
+      "background_main_text_color":"#ffffff"
+    },
+    {
+      "background_highlight_text_color":"#ffffff"
     },
     {
       "button_main_color_on":"#1b333f"
@@ -122,7 +125,10 @@
       "admin_tab_selected_color":"#ffffff"
     },
     {
-      "admin_tab_text_color":"#1D3541"
+      "admin_tab_main_text_color":"#1D3541"
+    },
+    {
+      "admin_tab_selected_text_color":"#1D3541"
     },
     {
       "left_logo":"resources/images/default-left-logo.png"

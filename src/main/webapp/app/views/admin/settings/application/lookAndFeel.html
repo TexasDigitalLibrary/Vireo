@@ -112,10 +112,10 @@
 	
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
-							<span>Text Color
+							<span>Main Text Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
-									ng-click="resetConfiguration('lookAndFeel','background_text_color')">
+									ng-click="resetConfiguration('lookAndFeel','background_main_text_color')">
 								</span>
 							</span>
 						</div>
@@ -124,17 +124,46 @@
 							<span class="input-group-addon">#</span>
 						  	<input
 						  		class="form-control color-input"
-						  		ng-change="updateHexValue('lookAndFeel','background_text_color')"
-						  		ng-model="settings.configurable.lookAndFeel.background_text_color.value"
+						  		ng-change="updateHexValue('lookAndFeel','background_main_text_color')"
+						  		ng-model="settings.configurable.lookAndFeel.background_main_text_color.value"
 						  		dehashcolor>
 
 							<span class="input-group-addon">
-								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_text_color.value}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_main_text_color.value}">
 									<input
 										type="color"
-										name="background_text_color"
-										ng-model="settings.configurable.lookAndFeel.background_text_color.value"
-										ng-change="updateHexValue('lookAndFeel','background_text_color')"/>
+										name="background_main_text_color"
+										ng-model="settings.configurable.lookAndFeel.background_main_text_color.value"
+										ng-change="updateHexValue('lookAndFeel','background_main_text_color')"/>
+								</label>
+							</span>
+						</div>
+					</div>
+					<div class="col-md-5 col-lg-3">
+						<div class="row">
+							<span>Highlight Text Color
+								<span
+									class="glyphicon glyphicon-refresh color-reset"
+									ng-click="resetConfiguration('lookAndFeel','background_highlight_text_color')">
+								</span>
+							</span>
+						</div>
+
+						<div class="input-group color-selector">
+							<span class="input-group-addon">#</span>
+						  	<input
+						  		class="form-control color-input"
+						  		ng-change="updateHexValue('lookAndFeel','background_highlight_text_color')"
+						  		ng-model="settings.configurable.lookAndFeel.background_highlight_text_color.value"
+						  		dehashcolor>
+
+							<span class="input-group-addon">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_highlight_text_color.value}">
+									<input
+										type="color"
+										name="background_highlight_text_color"
+										ng-model="settings.configurable.lookAndFeel.background_highlight_text_color.value"
+										ng-change="updateHexValue('lookAndFeel','background_highlight_text_color')"/>
 								</label>
 							</span>
 						</div>
@@ -429,10 +458,10 @@
 					</div>
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
-							<span>Text Color
+							<span>Main Text Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
-									ng-click="resetConfiguration('lookAndFeel','admin_tab_text_color')">
+									ng-click="resetConfiguration('lookAndFeel','admin_tab_main_text_color')">
 								</span>
 							</span>
 						</div>
@@ -441,21 +470,50 @@
 							<span class="input-group-addon">#</span>
 						  	<input
 						  		class="form-control color-input"
-						  		ng-change="updateHexValue('lookAndFeel','admin_tab_text_color')"
-						  		ng-model="settings.configurable.lookAndFeel.admin_tab_text_color.value"
+						  		ng-change="updateHexValue('lookAndFeel','admin_tab_main_text_color')"
+						  		ng-model="settings.configurable.lookAndFeel.admin_tab_main_text_color.value"
 						  		dehashcolor>
 
 							<span class="input-group-addon">
-								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.admin_tab_text_color.value}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.admin_tab_main_text_color.value}">
 									<input
 										type="color"
-										name="admin_tab_text_color"
-										ng-model="settings.configurable.lookAndFeel.admin_tab_text_color.value"
-										ng-change="updateHexValue('lookAndFeel','admin_tab_text_color')"/>
+										name="admin_tab_main_text_color"
+										ng-model="settings.configurable.lookAndFeel.admin_tab_main_text_color.value"
+										ng-change="updateHexValue('lookAndFeel','admin_tab_main_text_color')"/>
 								</label>
 							</span>
 						</div>
-					</div>					
+					</div>
+					<div class="col-md-5 col-lg-3">
+						<div class="row">
+							<span>Selected Text Color
+								<span
+									class="glyphicon glyphicon-refresh color-reset"
+									ng-click="resetConfiguration('lookAndFeel','admin_tab_selected_text_color')">
+								</span>
+							</span>
+						</div>
+
+						<div class="input-group color-selector">
+							<span class="input-group-addon">#</span>
+						  	<input
+						  		class="form-control color-input"
+						  		ng-change="updateHexValue('lookAndFeel','admin_tab_selected_text_color')"
+						  		ng-model="settings.configurable.lookAndFeel.admin_tab_selected_text_color.value"
+						  		dehashcolor>
+
+							<span class="input-group-addon">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.admin_tab_selected_text_color.value}">
+									<input
+										type="color"
+										name="admin_tab_selected_text_color"
+										ng-model="settings.configurable.lookAndFeel.admin_tab_selected_text_color.value"
+										ng-change="updateHexValue('lookAndFeel','admin_tab_selected_text_color')"/>
+								</label>
+							</span>
+						</div>
+					</div>
 					<div class="col-md-1 col-lg-5"></div>
 				</div>
 			</div>

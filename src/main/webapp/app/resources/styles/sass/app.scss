@@ -81,7 +81,7 @@ main footer {
   margin-right: 15px;
   min-width: 75px;
   text-align: center;
-  color: $admin_tab_text_color;
+  color: $admin_tab_main_text_color;
   font-size: 1.75em;
   font-weight: bolder;
   display: inline-block;
@@ -100,6 +100,7 @@ main footer {
 .tab-nav li.active,
 .tab-nav li:hover {
   cursor: pointer;
+  color: $admin_tab_selected_text_color;
   background: $admin_tab_selected_color;
   box-shadow: inset 0 0 0 #FFFFFF;
 }
@@ -151,6 +152,7 @@ main footer {
 }
 
 .modal-header-primary {
+  color: $background_highlight_text_color;
   background-color: $background_highlight_color;
 }
 
@@ -390,12 +392,12 @@ tr.submission-list-row:hover td span.glyphicon.glyphicon-remove-circle {
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:focus,
 .navbar-default .navbar-nav > .active > a:hover {
-  color: #fff;
+  color: $background_highlight_text_color;
   background-color: $background_highlight_color;
 }
 
 .navbar-default .navbar-nav > li > a {
-  color: #fff;
+  color: $background_highlight_text_color;
 }
 
 .navbar-default .navbar-brand {
@@ -839,7 +841,7 @@ legend.legendborder {
 footer a,
 footer li,
 footer p {
-  color: #fff;
+  color: $background_main_text_color;
   font-size: 0.9em;
 }
 

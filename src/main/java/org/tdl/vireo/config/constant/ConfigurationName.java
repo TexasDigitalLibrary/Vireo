@@ -60,7 +60,10 @@ public class ConfigurationName {
     public final static String BACKGROUND_HIGHLIGHT_COLOR = "background_highlight_color";
 
     /** Background text color */
-    public final static String BACKGROUND_TEXT_COLOR = "background_text_color";
+    public final static String BACKGROUND_MAIN_TEXT_COLOR = "background_main_text_color";
+    
+    /** Background text color */
+    public final static String BACKGROUND_HIGHLIGHTTEXT_COLOR = "background_highlight_text_color";
 
     /** Submission Step Button main color when in "on" state */
     public final static String BUTTON_MAIN_COLOR_ON = "button_main_color_on";
@@ -87,7 +90,10 @@ public class ConfigurationName {
     public final static String ADMIN_TAB_SELECTED_COLOR = "admin_tab_selected_color";
 
     /** Admin navigation tab text color*/
-    public final static String ADMIN_TAB_TEXT_COLOR = "admin_tab_text_color";
+    public final static String ADMIN_TAB_MAIN_TEXT_COLOR = "admin_tab_main_text_color";
+    
+    /** Admin navigation tab text color*/
+    public final static String ADMIN_TAB_SELECTED_TEXT_COLOR = "admin_tab_selected_text_color";
 
     /** Custom CSS */
     public final static String LEFT_LOGO = "left_logo";
