@@ -152,7 +152,7 @@ main footer {
 }
 
 .modal-header-primary {
-  color: $background_highlight_text_color;
+  color: $background_header_text_color;
   background-color: $background_highlight_color;
 }
 
@@ -392,12 +392,12 @@ tr.submission-list-row:hover td span.glyphicon.glyphicon-remove-circle {
 .navbar-default .navbar-nav > .active > a,
 .navbar-default .navbar-nav > .active > a:focus,
 .navbar-default .navbar-nav > .active > a:hover {
-  color: $background_highlight_text_color;
+  color: $background_header_text_color;
   background-color: $background_highlight_color;
 }
 
 .navbar-default .navbar-nav > li > a {
-  color: $background_highlight_text_color;
+  color: $background_header_text_color;
 }
 
 .navbar-default .navbar-brand {
@@ -841,7 +841,7 @@ legend.legendborder {
 footer a,
 footer li,
 footer p {
-  color: $background_main_text_color;
+  color: $background_footer_text_color;
   font-size: 0.9em;
 }
 

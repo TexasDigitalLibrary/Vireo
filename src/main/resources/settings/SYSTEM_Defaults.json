@@ -95,10 +95,10 @@
       "background_highlight_color":"#43606e"
     },
     {
-      "background_main_text_color":"#ffffff"
+      "background_header_text_color":"#ffffff"
     },
     {
-      "background_highlight_text_color":"#ffffff"
+      "background_footer_text_color":"#ffffff"
     },
     {
       "button_main_color_on":"#1b333f"

@@ -42,7 +42,7 @@
 				</div>
 
 				<div class="row look-and-feel-h1">
-					<div>Header/Footer Background
+					<div>Header/Footer
 						<span class="glyphicon glyphicon-info-sign opaque color-reset" tooltip="Use hex color values to change the background and text colors for the header and footer. The main color (default #1B333F) fades into the highlight color (default #43606E)."></span>
 					</div>
 				</div>
@@ -50,7 +50,7 @@
 				<div class="row look-and-feel-h2">
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
-							<span>Main Color
+							<span>Background Main Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
 									ng-click="resetConfiguration('lookAndFeel','background_main_color')">
@@ -82,7 +82,7 @@
 
 					<div class="col-md-5 col-lg-3 col-md-offset-1 col-lg-offset-0">
 						<div class="row">
-							<span>Highlight Color
+							<span>Background Highlight Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
 									ng-click="resetConfiguration('lookAndFeel','background_highlight_color')">
@@ -109,13 +109,12 @@
 							</span>
 						</div>
 					</div>
-	
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
-							<span>Main Text Color
+							<span>Header Text Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
-									ng-click="resetConfiguration('lookAndFeel','background_main_text_color')">
+									ng-click="resetConfiguration('lookAndFeel','background_header_text_color')">
 								</span>
 							</span>
 						</div>
@@ -124,27 +123,27 @@
 							<span class="input-group-addon">#</span>
 						  	<input
 						  		class="form-control color-input"
-						  		ng-change="updateHexValue('lookAndFeel','background_main_text_color')"
-						  		ng-model="settings.configurable.lookAndFeel.background_main_text_color.value"
+						  		ng-change="updateHexValue('lookAndFeel','background_header_text_color')"
+						  		ng-model="settings.configurable.lookAndFeel.background_header_text_color.value"
 						  		dehashcolor>
 
 							<span class="input-group-addon">
-								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_main_text_color.value}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_header_text_color.value}">
 									<input
 										type="color"
-										name="background_main_text_color"
-										ng-model="settings.configurable.lookAndFeel.background_main_text_color.value"
-										ng-change="updateHexValue('lookAndFeel','background_main_text_color')"/>
+										name="background_header_text_color"
+										ng-model="settings.configurable.lookAndFeel.background_header_text_color.value"
+										ng-change="updateHexValue('lookAndFeel','background_header_text_color')"/>
 								</label>
 							</span>
 						</div>
-					</div>
+					</div>	
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
-							<span>Highlight Text Color
+							<span>Footer Text Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
-									ng-click="resetConfiguration('lookAndFeel','background_highlight_text_color')">
+									ng-click="resetConfiguration('lookAndFeel','background_footer_text_color')">
 								</span>
 							</span>
 						</div>
@@ -153,17 +152,17 @@
 							<span class="input-group-addon">#</span>
 						  	<input
 						  		class="form-control color-input"
-						  		ng-change="updateHexValue('lookAndFeel','background_highlight_text_color')"
-						  		ng-model="settings.configurable.lookAndFeel.background_highlight_text_color.value"
+						  		ng-change="updateHexValue('lookAndFeel','background_footer_text_color')"
+						  		ng-model="settings.configurable.lookAndFeel.background_footer_text_color.value"
 						  		dehashcolor>
 
 							<span class="input-group-addon">
-								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_highlight_text_color.value}">
+								<label class="color-selector-swatch" ng-style="{background: settings.configurable.lookAndFeel.background_footer_text_color.value}">
 									<input
 										type="color"
-										name="background_highlight_text_color"
-										ng-model="settings.configurable.lookAndFeel.background_highlight_text_color.value"
-										ng-change="updateHexValue('lookAndFeel','background_highlight_text_color')"/>
+										name="background_footer_text_color"
+										ng-model="settings.configurable.lookAndFeel.background_footer_text_color.value"
+										ng-change="updateHexValue('lookAndFeel','background_footer_text_color')"/>
 								</label>
 							</span>
 						</div>
@@ -181,7 +180,7 @@
 				<div class="row look-and-feel-h2">
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
-							<span>Main Color
+							<span>Background Main Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
 									ng-click="resetConfiguration('lookAndFeel','button_main_color_on')">
@@ -211,7 +210,7 @@
 
 					<div class="col-md-5 col-lg-3 col-md-offset-1 col-lg-offset-0">
 						<div class="row">
-							<span>Highlight Color
+							<span>Background Highlight Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
 									ng-click="resetConfiguration('lookAndFeel','button_highlight_color_on')">
@@ -285,7 +284,7 @@
 				<div class="row look-and-feel-h2">
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
-							<span>Main Color
+							<span>Background Main Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
 									ng-click="resetConfiguration('lookAndFeel','button_main_color_off')">
@@ -320,7 +319,7 @@
 
 					<div class="col-md-5 col-lg-3 col-md-offset-1 col-lg-offset-0">
 						<div class="row">
-							<span>Highlight Color
+							<span>Background Highlight Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
 									ng-click="resetConfiguration('lookAndFeel','button_highlight_color_off')">
@@ -391,7 +390,7 @@
 				<div class="row look-and-feel-h2">
 					<div class="col-md-5 col-lg-3">
 						<div class="row">
-							<span>Main Color
+							<span>Background Main Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
 									ng-click="resetConfiguration('lookAndFeel','admin_tab_main_color')">
@@ -426,7 +425,7 @@
 
 					<div class="col-md-5 col-lg-3 col-md-offset-1 col-lg-offset-0">
 						<div class="row">
-							<span>Selected Color
+							<span>Background Selected Color
 								<span
 									class="glyphicon glyphicon-refresh color-reset"
 									ng-click="resetConfiguration('lookAndFeel','admin_tab_selected_color')">

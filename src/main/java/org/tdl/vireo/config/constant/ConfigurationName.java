@@ -58,12 +58,12 @@ public class ConfigurationName {
 
     /** Background highlight color */
     public final static String BACKGROUND_HIGHLIGHT_COLOR = "background_highlight_color";
-
-    /** Background text color */
-    public final static String BACKGROUND_MAIN_TEXT_COLOR = "background_main_text_color";
     
     /** Background text color */
-    public final static String BACKGROUND_HIGHLIGHTTEXT_COLOR = "background_highlight_text_color";
+    public final static String BACKGROUND_HEADER_TEXT_COLOR = "background_header_text_color";
+    
+    /** Background text color */
+    public final static String BACKGROUNT_FOOTER_TEXT_COLOR = "background_footer_text_color";
 
     /** Submission Step Button main color when in "on" state */
     public final static String BUTTON_MAIN_COLOR_ON = "button_main_color_on";
