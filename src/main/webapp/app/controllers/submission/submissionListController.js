@@ -53,20 +53,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var start;
 
         var query = function () {
-            var pageNumber = $scope.page.number;
-            var pageCount = $scope.page.count;
-
-            if (angular.isDefined(sessionStorage.getItem("list-page-number")) && sessionStorage.getItem("list-page-number") !== null) {
-                pageNumber = sessionStorage.getItem("list-page-number");
-            }
-
-            if (angular.isDefined(sessionStorage.getItem("list-page-size")) && sessionStorage.getItem("list-page-size") !== null) {
-                pageCount = sessionStorage.getItem("list-page-size");
-            }
+            var sessionPageNumber = sessionStorage.getItem("list-page-number");
+            var sessionPageSize = sessionStorage.getItem("list-page-size");
 
             $scope.tableParams = new NgTableParams({
-                page: pageNumber,
-                count: pageCount
+                page: angular.isDefined(sessionPageNumber) && sessionPageNumber !== null ? sessionPageNumber : $scope.page.number,
+                count: angular.isDefined(sessionPageSize) && sessionPageSize !== null ? sessionPageSize : $scope.page.count,
             }, {
                 counts: $scope.page.options,
                 total: $scope.page.totalElements,
