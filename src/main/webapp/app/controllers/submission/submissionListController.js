@@ -696,7 +696,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             updateChange(false);
         };
 
-        $scope.removeFilter = function (filter) {
+        $scope.removeSaveFilter = function (filter) {
             SavedFilterRepo.delete(filter).then(function () {
                 SavedFilterRepo.reset();
             });
@@ -888,7 +888,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 "resetSaveUserFilters": $scope.resetSaveFilter,
                 "applyFilter": $scope.applyFilter,
                 "resetRemoveFilters": $scope.resetRemoveFilters,
-                "removeFilter": $scope.removeFilter,
+                "removeSaveFilter": $scope.removeSaveFilter,
                 "getUserById": $scope.getUserById
             },
             $scope.furtherFilterBy,
