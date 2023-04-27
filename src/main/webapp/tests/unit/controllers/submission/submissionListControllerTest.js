@@ -167,9 +167,9 @@ describe("controller: SubmissionListController", function () {
             expect(scope.getUserById).toBeDefined();
             expect(typeof scope.getUserById).toEqual("function");
         });
-        it("removeFilter should be defined", function () {
-            expect(scope.removeFilter).toBeDefined();
-            expect(typeof scope.removeFilter).toEqual("function");
+        it("removeSaveFilter should be defined", function () {
+            expect(scope.removeSaveFilter).toBeDefined();
+            expect(typeof scope.removeSaveFilter).toEqual("function");
         });
         it("removeFilterValue should be defined", function () {
             expect(scope.removeFilterValue).toBeDefined();
@@ -427,7 +427,7 @@ describe("controller: SubmissionListController", function () {
 
             spyOn(SavedFilterRepo, "reset");
 
-            scope.removeFilter(filter);
+            scope.removeSaveFilter(filter);
             scope.$digest();
 
             expect(SavedFilterRepo.reset).toHaveBeenCalled();
