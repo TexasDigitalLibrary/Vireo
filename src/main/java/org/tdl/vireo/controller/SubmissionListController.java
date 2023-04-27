@@ -281,7 +281,10 @@ public class SubmissionListController {
     @RequestMapping("/all-saved-filter-criteria")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse getAllSaveFilterCriteria(@WeaverUser User user) {
-        return new ApiResponse(SUCCESS, namedSearchFilterGroupRepo.findByUserOrPublicFlagTrue(user));
+        List<NamedSearchFilterGroup> all = namedSearchFilterGroupRepo.findByUserIsNotAndPublicFlagTrue(user);
+        all.addAll(user.getSavedFilters());
+
+        return new ApiResponse(SUCCESS, all);
     }
 
     @RequestMapping(value = "/save-filter-criteria", method = POST)
