@@ -4,10 +4,12 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import edu.tamu.weaver.auth.annotation.WeaverUser;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +34,6 @@ import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
-
-import edu.tamu.weaver.auth.annotation.WeaverUser;
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 
 @RestController
 @RequestMapping("/submission-list")
@@ -284,7 +282,7 @@ public class SubmissionListController {
         List<NamedSearchFilterGroup> userSavedFilters = user.getSavedFilters();
         List<NamedSearchFilterGroup> publicSavedFilters = namedSearchFilterGroupRepo.findByPublicFlagTrue();
 
-        List<NamedSearchFilterGroup> allSavedFilters = new ArrayList<NamedSearchFilterGroup>();
+        List<NamedSearchFilterGroup> allSavedFilters = new ArrayList<>();
         allSavedFilters.addAll(userSavedFilters);
         allSavedFilters.addAll(publicSavedFilters);
 
