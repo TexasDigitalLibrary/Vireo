@@ -10,7 +10,7 @@ import edu.tamu.weaver.data.model.repo.WeaverRepo;
 
 public interface NamedSearchFilterGroupRepo extends WeaverRepo<NamedSearchFilterGroup>, NamedSearchFilterGroupRepoCustom {
 
-    public List<NamedSearchFilterGroup> findByUserOrPublicFlagTrue(User user);
+    public List<NamedSearchFilterGroup> findByUserIsNotAndPublicFlagTrue(User user);
 
     public NamedSearchFilterGroup findByNameAndPublicFlagTrue(String name);
 
