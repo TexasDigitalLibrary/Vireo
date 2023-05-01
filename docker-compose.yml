@@ -1,37 +1,50 @@
-version: '3.7'
+version: '3.8'
 
 networks:
-  weaver:
+  net:
+
+volumes:
+  pgdata:
+  vireo:
 
 services:
 
-  vireo_db:
-    container_name: vireo_db
-    hostname: vireo_db
+  db:
     image: postgres
     environment:
-      POSTGRES_DB: vireo
-      POSTGRES_USER: vireo
-      POSTGRES_PASSWORD: vireo
+       - POSTGRES_DB=vireo
+       - POSTGRES_USER=vireo
+       - POSTGRES_PASSWORD=vireo
     volumes:
-      - ${LOCAL_VIREO_PGDATA}:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
     networks:
-      weaver:
+      - net
+
+  adminer:
+    image: adminer
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    networks:
+      - net
 
   vireo:
     container_name: vireo
     hostname: vireo
+    image: ${IMAGE_HOST}/${SERVICE_PROJECT}/${SERVICE_PATH}:${IMAGE_VERSION}
     build:
       dockerfile: Dockerfile
       context: './'
-    image: ${IMAGE_HOST}/${SERVICE_PROJECT}${SERVICE_PATH}:${IMAGE_VERSION}
+    env_file:
+       - .env
+    volumes:
+      - vireo:${APP_PATH}
     ports:
       - 9000:9000
-    env_file:
-      - .env
-    volumes:
-      - ${LOCAL_VIREO_PATH}:${APP_PATH}
     depends_on:
-      - vireo_db
+      - db
     networks:
-      weaver:
+      - net
