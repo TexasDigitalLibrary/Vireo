@@ -457,13 +457,16 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
 
                     // @formatter:off
-                    sqlJoinsBuilder.append("\nLEFT JOIN")
-                                  .append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
-                                  .append("\n   FROM submission_field_values sfv").append(n)
-                                  .append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
-                                  .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n)
-                                  .append("\n ON pfv").append(n).append(".submission_id=s.id");
-                    // @formatter:on
+                    if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0) {
+                        sqlJoinsBuilder
+                            .append("\nLEFT JOIN")
+                            .append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
+                            .append("\n   FROM submission_field_values sfv").append(n)
+                            .append("\n   LEFT JOIN field_value fv").append(n)
+                            .append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
+                            .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n)
+                            .append("\n ON pfv").append(n).append(".submission_id=s.id");
+                    }
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
@@ -547,14 +550,16 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         }
                     }
 
-                    // all column search filter
-                    for (String filterString : allColumnSearchFilters) {
-                        sqlBuilder = new StringBuilder();
-                        sqlBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlAllColumnsWhereBuilderList.add(sqlBuilder);
-                    }
+                    if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0) {
+                        // all column search filter
+                        for (String filterString : allColumnSearchFilters) {
+                            sqlBuilder = new StringBuilder();
+                            sqlBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlAllColumnsWhereBuilderList.add(sqlBuilder);
+                        }
 
-                    n++;
+                        n++;
+                    }
 
                     break;
 
