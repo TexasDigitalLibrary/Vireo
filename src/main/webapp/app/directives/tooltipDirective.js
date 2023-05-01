@@ -23,7 +23,7 @@ vireo.directive('tooltip', function ($timeout) {
                 }, 250);
             };
 
-            $scope.mouseEnter = function() {
+            $scope.showTooltip = function() {
                 open();
                 $timeout(function() {
                     angular.element('.popover').hover(function() {
@@ -34,7 +34,7 @@ vireo.directive('tooltip', function ($timeout) {
                 });
             };
 
-            $scope.mouseLeave = function() {
+            $scope.hideTooltip = function() {
                 close();
             };
 

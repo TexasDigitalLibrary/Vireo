@@ -213,7 +213,11 @@ public class SubmissionController {
     @JsonView(Views.SubmissionIndividual.class)
     @RequestMapping("/advisor-review/{advisorAccessHash}")
     public ApiResponse getOne(@PathVariable String advisorAccessHash) {
-        return new ApiResponse(SUCCESS, submissionRepo.findOneByAdvisorAccessHash(advisorAccessHash));
+        Submission submission = submissionRepo.findOneByAdvisorAccessHash(advisorAccessHash);
+
+        return submission.getSubmissionStatus().isEditableByReviewer()
+            ? new ApiResponse(SUCCESS, submission)
+            : new ApiResponse(ERROR, "Submission is not editable by reviewer");
     }
 
     @GetMapping("/advisor-review/{advisorAccessHash}/action-logs")
