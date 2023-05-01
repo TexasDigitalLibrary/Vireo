@@ -3,6 +3,7 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -63,7 +64,7 @@ public class NamedSearchFilterGroup extends ValidatingBaseEntity {
     private Sort sortDirection;
 
     @OrderColumn
-    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
+    @ManyToMany(cascade = { REFRESH, MERGE }, fetch = LAZY)
     private List<SubmissionListColumn> savedColumns;
 
     @Fetch(FetchMode.SELECT)

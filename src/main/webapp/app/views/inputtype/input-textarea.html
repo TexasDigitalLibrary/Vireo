@@ -4,8 +4,7 @@
     ng-required="!profile.optional" 
     ng-model="fieldValue.value"
     ng-blur="save(fieldValue)"
-    ng-disabled="fieldValue.updating" 
-  </textarea>
+    ng-disabled="fieldValue.updating"></textarea>
   <span class="input-group-addon">
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
