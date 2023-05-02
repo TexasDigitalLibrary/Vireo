@@ -5,7 +5,7 @@ networks:
 
 volumes:
   pgdata:
-  vireo:
+  assets:
 
 services:
 
@@ -41,7 +41,7 @@ services:
     env_file:
        - .env
     volumes:
-      - vireo:${APP_PATH}
+      - assets:${APP_PATH}
     ports:
       - 9000:9000
     depends_on:
