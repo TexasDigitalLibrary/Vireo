@@ -50,7 +50,20 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var start;
 
-        var query = function () {
+        var callbackOnSuccess = function (res, cb) {
+            var results = angular.fromJson(res.body);
+            if (results.meta.status === 'SUCCESS') {
+                cb();
+            } else {
+                console.error(res);
+            }
+        };
+
+        var query = function (resetPageNumber) {
+            if (!!resetPageNumber) {
+                $scope.page.number = 1;
+                sessionStorage.setItem("list-page-number", $scope.page.number + 1);
+            }
             $scope.tableParams = new NgTableParams({
                 page: $scope.page.number,
                 count: $scope.page.count
@@ -219,9 +232,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             if (filterValue !== null) {
                 filterValue = filterValue.toString();
             }
-            $scope.activeFilters.addFilter(column.title, filterValue, gloss, column.exactMatch).then(function () {
-                $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
-                query();
+            $scope.activeFilters.addFilter(column.title, filterValue, gloss, column.exactMatch).then(function (res) {
+                callbackOnSuccess(res, function () {
+                    $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
+                    query(true);
+                });
             });
         };
 
@@ -264,9 +279,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 dateGloss += " to " + date2Value;
             }
 
-            $scope.activeFilters.addFilter(column.title, date1Value, dateGloss, false).then(function () {
-                $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
-                query();
+            $scope.activeFilters.addFilter(column.title, date1Value, dateGloss, false).then(function (res) {
+                callbackOnSuccess(res, function () {
+                    $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
+                    query(true);
+                });
             });
         };
 
@@ -275,8 +292,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             var columnTitle = "Exclude";
             var value = row.id.toString();
             var gloss = "Submission #" + row.id;
-            $scope.activeFilters.addFilter(columnTitle, value, gloss, true).then (function () {
-                query();
+            $scope.activeFilters.addFilter(columnTitle, value, gloss, true).then (function (res) {
+                callbackOnSuccess(res, function () {
+                    query(true);
+                });
             });
         };
 
@@ -642,14 +661,18 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.removeFilterValue = function (criterionName, filterValue) {
-            $scope.activeFilters.removeFilter(criterionName, filterValue).then(function () {
-                query();
+            $scope.activeFilters.removeFilter(criterionName, filterValue).then(function (res) {
+                callbackOnSuccess(res, function () {
+                    query(true);
+                });
             });
         };
 
         $scope.clearFilters = function () {
-            $scope.activeFilters.clearFilters().then(function () {
-                query();
+            $scope.activeFilters.clearFilters().then(function (res) {
+                callbackOnSuccess(res, function () {
+                    query(true);
+                });
             });
         };
 
@@ -667,8 +690,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             if (filter.columnsFlag) {
                 $scope.userColumns = filter.savedColumns;
             }
-            $scope.activeFilters.set(filter).then(function () {
-                query();
+            $scope.activeFilters.set(filter).then(function (res) {
+                callbackOnSuccess(res, function () {
+                    query(true);
+                });
             });
         };
 
