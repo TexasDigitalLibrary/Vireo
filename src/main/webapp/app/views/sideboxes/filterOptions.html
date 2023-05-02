@@ -14,7 +14,7 @@
 			<ul class="list">
 				<li class="columns" ng-repeat="filter in columnFilters = (box.savedFilters | filter: {columnsFlag:($index > 0 ? true:false)})" ng-click="box.applyFilter(filter)">
 					<span ng-class="{'glyphicon-globe':filter.publicFlag,'glyphicon-user':!filter.publicFlag}" class="glyphicon"></span>
-					<a href="#" ng-click="activateFilter(filter)">{{filter.name}}</a>
+					<a href="#">{{filter.name}}</a>
 				</li>
 				<li ng-hide="columnFilters.length">None</li>
 			</ul>
