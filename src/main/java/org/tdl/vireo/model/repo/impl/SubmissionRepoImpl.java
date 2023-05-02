@@ -561,7 +561,11 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 case "id":
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, null);
+                        // The s.id is already on the submission, such just add it to the order by rather than call setColumnOrdering().
+                        Sort sort = submissionListColumn.getSort();
+                        if (sort == Sort.ASC || sort == Sort.DESC) {
+                            sqlOrderBysBuilder.append(" s.id ").append(sort.name()).append(",");
+                        }
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -990,13 +994,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     public void setColumnOrdering(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder, String value) {
         if (sort == Sort.ASC || sort == Sort.DESC) {
-            // Allow sqlSelectBuilder to be NULL to easily facilitate not appending "s.id".
-            if (sqlSelectBuilder != null) {
-                sqlSelectBuilder.append(value).append(",");
-            }
-
+            sqlSelectBuilder.append(value).append(",");
             sqlOrderBysBuilder.append(value).append(" ").append(sort.name()).append(",");
-         }
+        }
     }
 
     @Override
