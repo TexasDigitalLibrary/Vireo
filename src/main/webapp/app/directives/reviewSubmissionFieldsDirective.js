@@ -56,12 +56,9 @@ vireo.directive('reviewsubmissionsfields', function ($location, InputTypes, Fiel
             };
 
             $scope.getFile = function (fieldValue) {
-                console.log(fieldValue);
                 $scope.submission.fileInfo(fieldValue).then(function (data) {
-                    console.log(data);
                     fieldValue.fileInfo = angular.fromJson(data.body).payload.ObjectNode;
                     $scope.submission.file(fieldValue.value).then(function (data) {
-                        console.log(data);
                         saveAs(new Blob([data], {
                             type: fieldValue.fileInfo.type
                         }), fieldValue.fileInfo.name);
