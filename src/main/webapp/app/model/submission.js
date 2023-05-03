@@ -514,7 +514,7 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
                     'uri': uri
                 }
             });
-            var promise = FileService.download(this.getMapping().file);
+            var promise = FileService.anonymousDownload(this.getMapping().file);
             return promise;
         };
 
