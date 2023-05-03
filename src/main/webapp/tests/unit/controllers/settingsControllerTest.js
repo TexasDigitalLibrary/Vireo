@@ -259,11 +259,12 @@ describe("controller: SettingsController", function () {
             result = scope.multipleSubmissions();
             expect(result).toBe(false);
         });
-        it("resetConfiguration should reset the configuration", function () {
+        it("resetConfiguration should reset the configuration if not default", function () {
             scope.settings = {
                 configurable: {
                     a: {
                         b: {
+                            id: 1,
                             reset: function() {}
                         }
                     }

@@ -7,7 +7,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -180,9 +179,14 @@ public class SubmissionListController {
     @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping(value = "/remove-saved-filter", method = POST)
     public ApiResponse removeSavedFilter(@WeaverUser User user, @WeaverValidatedModel NamedSearchFilterGroup savedFilter) {
-        user.getSavedFilters().remove(savedFilter);
-        user = userRepo.save(user);
-        return new ApiResponse(SUCCESS, user.getActiveFilter());
+        if (user.getSavedFilters().contains(savedFilter)) {
+            user.getSavedFilters().remove(savedFilter);
+            user = userRepo.save(user);
+
+            return new ApiResponse(SUCCESS, user.getActiveFilter());
+        }
+
+        return new ApiResponse(ERROR, "Cannot not find filter.");
     }
 
     @PreAuthorize("hasRole('REVIEWER')")

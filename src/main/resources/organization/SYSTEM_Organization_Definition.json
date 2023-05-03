@@ -18,7 +18,7 @@
       "originalNotes":[
         {
           "name":"name",
-          "text":"Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them",
+          "text":"Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them.",
           "originatingWorkflowStep":{
             "name":"Verify Personal Information"
           }
