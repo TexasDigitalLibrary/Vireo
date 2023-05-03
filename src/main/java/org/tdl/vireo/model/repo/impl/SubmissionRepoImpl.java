@@ -469,7 +469,11 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
+                        if (submissionListColumn.getInputType().getName().equals("INPUT_DEGREEDATE")) {
+                            setColumnOrderingForMonthYearDateFormat(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n);
+                        } else {
+                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
+                        }
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -1001,6 +1005,35 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         if (sort == Sort.ASC || sort == Sort.DESC) {
             sqlSelectBuilder.append(value).append(",");
             sqlOrderBysBuilder.append(value).append(" ").append(sort.name()).append(",");
+        }
+    }
+
+    /**
+     * Handle case where Postgresql requires help casting the date string to a date type.
+     *
+     * Some SQL engines can directly cast the "Month Year" format to a date but postgresql cannot.
+     * Because of this limitation in Postgresql, all dates cannot be cast.
+     * Instead, the "Month Year" formatted data must be handled as an exception case.
+     *
+     * This converts the "Month Year" format into a "Month Day, Year" format to make Postgresql happy.
+     * Then this converts that date resulting string into a date type for proper SQL sorting.
+     *
+     * This would also be easier to add the cast on the ORDER BY and not need to add a column in the select clause.
+     * However, another Postgresql problem prevents this from working when DISTINCT is in use.
+     * Postgresql will falsely claim that pfv0.value is not in the SELECT clause when it actually is while DISTINCT is present.
+     *
+     * @param sort The sort direction.
+     * @param sqlSelectBuilder The SQL select builder string.
+     * @param sqlOrderBysBuilder The SQL order by builder string.
+     * @param table The table to select from when joining on the assumption that the value is "table".value.
+     */
+    public void setColumnOrderingForMonthYearDateFormat(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder, String table) {
+        if (sort == Sort.ASC || sort == Sort.DESC) {
+            sqlSelectBuilder
+                .append(table).append(".value,")
+                .append(" cast(replace(").append(table).append(".value, ' ', ' 1, ') as date) as").append(table).append("_date,");
+
+            sqlOrderBysBuilder.append(table).append("_date ").append(sort.name()).append(",");
         }
     }
 
