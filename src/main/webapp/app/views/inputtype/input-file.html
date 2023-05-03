@@ -2,7 +2,7 @@
   <div class="col-md-5 col-sm-12">
     <div class="input-group file-input-group">
       <span class="pull-right file-info-tip">
-        <span ng-if="!uploading" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"></span>
+        <span ng-if="!uploading" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"></span>
         <span ng-if="uploading" class="glyphicon glyphicon-refresh spinning"></span>
       </span>
       <dropzone file-model="files" text="dropzoneText" allow-multiple="!profile.repeatable" patterns="getPattern()" drop-method="queueUpload(files)"></dropzone>
@@ -41,7 +41,7 @@
   <div class="col-md-5 col-sm-12">
     <div class="input-group file-input-group">
       <span class="pull-right file-info-tip">
-        <span ng-if="!uploading" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"></span>
+        <span ng-if="!uploading" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"></span>
         <span ng-if="uploading" class="glyphicon glyphicon-refresh spinning"></span>
       </span>
       <dropzone file-model="files" text="dropzoneText" allow-multiple="profile.repeatable" patterns="getPattern()" drop-method="queueUpload(files)"></dropzone>
