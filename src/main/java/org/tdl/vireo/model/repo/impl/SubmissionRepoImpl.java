@@ -947,11 +947,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                         sqlCountSelectBuilder
                             .append("\n(fv.field_predicate_id = ").append(id)
-                            .append(" AND (").append(filter).append("))");
+                            .append(" AND (").append(filter).append(")) AND");
                     }
                 });
-
-                sqlCountSelectBuilder.append(" AND");
             } else {
                 sqlCountSelectBuilder.append("\nWHERE");
             }
