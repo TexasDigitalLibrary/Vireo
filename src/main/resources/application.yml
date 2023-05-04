@@ -114,7 +114,7 @@ info:
 
 
 app:
-  url: http://localhost:9000
+  url: http://localhost:${server.port}
 
   # value generated from property assets.uri
   # either defined in pom.xml or via package argument
@@ -142,7 +142,7 @@ app:
     # edu.tamu.weaver.auth.service.CryptoService
     secret: verysecretsecret
     # edu.tamu.weaver.filter.CorsFilter
-    allow-access: http://localhost:9000
+    allow-access: http://localhost:${server.port}
 
   # edu.tamu.weaver.email.config.WeaverEmailConfig
   email:
