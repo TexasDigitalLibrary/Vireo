@@ -642,7 +642,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         $scope.clearFilters = function () {
             $scope.activeFilters.clearFilters().then(function () {
-                $scope.resetColumnsToDefault();
+                query();
             });
         };
 
