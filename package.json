@@ -22,7 +22,7 @@
     "build": "wvr build --clean"
   },
   "dependencies": {
-    "@wvr/core": "2.2.5-rc.2",
+    "@wvr/core": "2.2.5-rc.3",
     "angular-ui-tinymce": "0.0.19",
     "file-saver": "2.0.5",
     "ng-csv": "0.3.6",

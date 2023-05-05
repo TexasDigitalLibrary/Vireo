@@ -292,12 +292,12 @@ describe('model: Submission', function () {
             scope.$apply();
         });
         it('file should call FileService', function () {
-            spyOn(FileService, "download");
+            spyOn(FileService, "anonymousDownload");
 
             model.file("uri");
             scope.$apply();
 
-            expect(FileService.download).toHaveBeenCalled();
+            expect(FileService.anonymousDownload).toHaveBeenCalled();
         });
         it('fileInfo should call WsApi', function () {
             var fieldValue = new mockFieldValue(q);
