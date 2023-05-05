@@ -5,6 +5,7 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -121,7 +122,7 @@ public class User extends AbstractWeaverUserDetails {
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     private List<SubmissionListColumn> filterColumns;
 
-    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = EAGER, optional = true)
+    @ManyToOne(cascade = { REFRESH, MERGE }, fetch = LAZY, optional = true)
     private NamedSearchFilterGroup activeFilter;
 
     @Fetch(FetchMode.SELECT)
