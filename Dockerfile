@@ -80,6 +80,7 @@ RUN apk -U upgrade && \
 # Copy files from outside docker to inside.
 COPY build/appConfig.js.template /usr/local/app/templates/appConfig.js.template
 COPY build/docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod ugo+x /usr/local/bin/docker-entrypoint.sh
 
 # Login as user.
 USER $USER_NAME
