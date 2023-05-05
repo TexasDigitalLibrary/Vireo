@@ -36,6 +36,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.config.VireoDatabaseConfig;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
@@ -99,6 +100,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Autowired
     private AssetService assetService;
+
+    @Autowired
+    private VireoDatabaseConfig vireoDatabaseConfig;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -1029,9 +1033,15 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
      */
     public void setColumnOrderingForMonthYearDateFormat(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder, String table) {
         if (sort == Sort.ASC || sort == Sort.DESC) {
-            sqlSelectBuilder
-                .append(table).append(".value,")
-                .append(" CAST(REPLACE(").append(table).append(".value, ' ', ' 1, ') AS DATE) AS").append(table).append("_date,");
+            sqlSelectBuilder.append(table).append(".value,");
+
+            if ("h2".equals(vireoDatabaseConfig.getPlatform())) {
+                sqlSelectBuilder.append(" PARSEDATETIME(").append(table).append(".value, 'MMM yyyy') AS");
+            } else {
+                sqlSelectBuilder.append(" CAST(REPLACE(").append(table).append(".value, ' ', ' 1, ') AS DATE) AS");
+            }
+
+            sqlSelectBuilder.append(table).append("_date,");
 
             sqlOrderBysBuilder.append(table).append("_date ").append(sort.name()).append(",");
         }
