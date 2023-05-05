@@ -6,7 +6,15 @@
 
   <h1>List ETDs</h1>
   <hr/>
-  <a href="" ng-click="openModal('#customizeSubmissionList')">Customize view</a>
+
+  <div class="list-view-table-controls">
+    <button class="btn btn-default" ng-click="openModal('#customizeSubmissionList')">
+      Customize columns
+    </button>
+    <button class="btn btn-default" ng-click="resetColumnsToDefault()">
+      Default columns
+    </button>
+  </div>
 
   <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped table-hover" id="etd-table">
     <thead class="header">
