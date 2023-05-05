@@ -251,7 +251,9 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
                 };
 
                 $scope.resetConfiguration = function (type, name) {
-                    return $scope.settings.configurable[type][name].reset();
+                    if ($scope.settings.configurable[type][name].id) {
+                        return $scope.settings.configurable[type][name].reset();
+                    }
                 };
 
                 $scope.saveDegree = function (degree) {

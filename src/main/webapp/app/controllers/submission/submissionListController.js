@@ -81,6 +81,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             SavedFilterRepo.reset();
 
+            ManagerFilterColumnRepo.reset();
+
             SubmissionListColumnRepo.reset();
 
             ManagerSubmissionListColumnRepo.reset();
@@ -92,7 +94,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                         $scope.page.count = sessionStorage.getItem("list-page-size") ? sessionStorage.getItem("list-page-size") : apiRes.payload.Integer;
                     }
 
-                    var managerFilterColumns = ManagerFilterColumnRepo.getAll();
+                    var managerFilterColumns = ManagerFilterColumnRepo.getAll().filter(function excludeSearchBox(slc) {
+                        return slc.title !== 'Search Box';
+                    });
+
                     var submissionListColumns = SubmissionListColumnRepo.getAll();
 
                     $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
@@ -599,9 +604,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.displaySubmissionProperty = function (row, col) {
-            var value = $scope.getSubmissionProperty(row, col);
+            if (angular.isDefined(col) && col !== null) {
+                return $filter('displayFieldValue')($scope.getSubmissionProperty(row, col), col.inputType);
+            }
 
-            return angular.isDefined(col) ? $filter('displayFieldValue')(value, col.inputType) : value;
+            return value;
         };
 
         $scope.getCustomActionLabelById = function (id) {
@@ -696,7 +703,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             updateChange(false);
         };
 
-        $scope.removeFilter = function (filter) {
+        $scope.removeSaveFilter = function (filter) {
             SavedFilterRepo.delete(filter).then(function () {
                 SavedFilterRepo.reset();
             });
@@ -721,10 +728,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.resetColumns = function () {
-            ManagerSubmissionListColumnRepo.reset();
             update();
             $scope.closeModal();
-            updateChange(false);
         };
 
         $scope.resetColumnsToDefault = function () {
@@ -734,20 +739,23 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.saveColumns = function () {
-            ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.userColumns, $scope.page.count).then(function () {
-                $scope.page.number = 1;
-                sessionStorage.setItem("list-page-size", $scope.page.count);
-                $scope.resetColumns();
+            ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.userColumns, $scope.page.count).then(function (res) {
+                var results = angular.fromJson(res.body);
+                if (results.meta.status === 'SUCCESS') {
+                    $scope.page.number = 1;
+                    sessionStorage.setItem("list-page-size", $scope.page.count);
+                    $scope.resetColumns();
+                }
             });
         };
 
         $scope.saveUserFilters = function () {
-            ManagerFilterColumnRepo.updateFilterColumns(filterColumns.userFilterColumns).then(function () {
-                for (var i in filterColumns.userFilterColumns) {
-                    delete filterColumns.userFilterColumns[i].status;
+            ManagerFilterColumnRepo.updateFilterColumns(filterColumns.userFilterColumns).then(function (res) {
+                var results = angular.fromJson(res.body);
+                if (results.meta.status === 'SUCCESS') {
+                    update();
+                    $scope.closeModal();
                 }
-                update();
-                $scope.closeModal();
             });
         };
 
@@ -888,7 +896,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 "resetSaveUserFilters": $scope.resetSaveFilter,
                 "applyFilter": $scope.applyFilter,
                 "resetRemoveFilters": $scope.resetRemoveFilters,
-                "removeFilter": $scope.removeFilter,
+                "removeSaveFilter": $scope.removeSaveFilter,
                 "getUserById": $scope.getUserById
             },
             $scope.furtherFilterBy,

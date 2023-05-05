@@ -14,7 +14,7 @@
 		<span><h5><b>{{word.name}}</b></h5>{{word.definition}}</span>
 	</div>
 	<div class="col-xs-2">
-        <span ng-if="!fieldValue.updating && $index === 0" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+        <span ng-if="!fieldValue.updating && $index === 0" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"> </span>
         <span ng-if="fieldValue.updating && $index === 0" class="glyphicon glyphicon-refresh spinning"> </span>
 	</div>
 

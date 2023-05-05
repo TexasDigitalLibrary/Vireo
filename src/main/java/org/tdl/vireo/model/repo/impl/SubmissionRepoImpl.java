@@ -337,19 +337,29 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Override
     public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) throws ExecutionException {
+        long startTime = System.nanoTime();
+
         QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColums, pageable);
 
         Long total = jdbcTemplate.queryForObject(queryBuilder.getCountQuery(), Long.class);
 
-        List<Long> ids = jdbcTemplate.query(queryBuilder.getQuery(), new RowMapper<Long>() {
+        logger.debug("Count query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        startTime = System.nanoTime();
+
+        List<Long> ids = jdbcTemplate.query(queryBuilder.getQuery(), new RowMapper<>() {
             public Long mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return rs.getLong("ID");
             }
         });
 
-        List<Submission> submissions = new ArrayList<Submission>();
+        logger.debug("ID query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        startTime = System.nanoTime();
+
+        List<Submission> submissions = new ArrayList<>();
 
         List<Submission> unordered = submissionRepo.findAllById(ids);
+
+        logger.debug("Find all query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
 
         // order them
         for (Long id : ids) {
@@ -370,7 +380,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     private QueryStrings craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
 
         // set up storage for user's preferred columns
-        Set<String> allColumnSearchFilters = new HashSet<String>();
+        Set<String> allColumnSearchFilters = new HashSet<>();
 
         // get all the possible columns, some of which we will make visible
         List<SubmissionListColumn> allSubmissionListColumns = submissionListColumnRepo.findAll();
@@ -406,7 +416,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         }
 
         // sort all submission list columns by sort order provided by users submission list columns
-        Collections.sort(allSubmissionListColumns, new Comparator<SubmissionListColumn>() {
+        Collections.sort(allSubmissionListColumns, new Comparator<>() {
             @Override
             public int compare(SubmissionListColumn svc1, SubmissionListColumn svc2) {
                 return svc1.getSortOrder().compareTo(svc2.getSortOrder());
@@ -415,17 +425,20 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         StringBuilder sqlSelectBuilder = new StringBuilder("SELECT DISTINCT s.id,");
 
-        StringBuilder sqlCountSelectBuilder = new StringBuilder("SELECT COUNT(DISTINCT s.id) FROM submission s ");
+        StringBuilder sqlCountSelectBuilder = new StringBuilder();
 
-        Map<Long, ArrayList<StringBuilder>> sqlColumnsBuilders = new HashMap<Long, ArrayList<StringBuilder>>();
+        Map<Long, ArrayList<StringBuilder>> sqlColumnsBuilders = new HashMap<>();
+        Map<String, ArrayList<StringBuilder>> sqlCountWhereFilterBuilders = new HashMap<>();
+        Map<Long, StringBuilder> sqlCountWherePredicate = new HashMap<>();
 
         StringBuilder sqlJoinsBuilder = new StringBuilder();
-        StringBuilder sqlWhereBuilder;
+        StringBuilder sqlBuilder;
+        StringBuilder sqlCountBuilder;
         StringBuilder sqlWheresExcludeBuilder = new StringBuilder();
         StringBuilder sqlOrderBysBuilder = new StringBuilder();
 
         ArrayList<StringBuilder> sqlWhereBuilderList;
-        ArrayList<StringBuilder> sqlAllColumnsWhereBuilderList = new ArrayList<StringBuilder>();
+        ArrayList<StringBuilder> sqlAllColumnsWhereBuilderList = new ArrayList<>();
 
         int n = 0;
 
@@ -444,120 +457,161 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
 
                     // @formatter:off
-                    sqlJoinsBuilder.append("\nLEFT JOIN")
-                                  .append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
-                                  .append("\n   FROM submission_field_values sfv").append(n)
-                                  .append("\n   LEFT JOIN field_value fv").append(n).append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
-                                  .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n)
-                                  .append("\n ON pfv").append(n).append(".submission_id=s.id");
-                    // @formatter:on
+                    if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0) {
+                        sqlJoinsBuilder
+                            .append("\nLEFT JOIN")
+                            .append("\n  (SELECT sfv").append(n).append(".submission_id, fv").append(n).append(".*")
+                            .append("\n   FROM submission_field_values sfv").append(n)
+                            .append("\n   LEFT JOIN field_value fv").append(n)
+                            .append(" ON fv").append(n).append(".id=sfv").append(n).append(".field_values_id ")
+                            .append("\n   WHERE fv").append(n).append(".field_predicate_id=").append(predicateId).append(") pfv").append(n)
+                            .append("\n ON pfv").append(n).append(".submission_id=s.id");
+                    }
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilder = new StringBuilder();
+                        sqlBuilder = new StringBuilder();
+                        sqlCountBuilder = new StringBuilder();
 
                         switch (submissionListColumn.getInputType().getName()) {
                         case "INPUT_DEGREEDATE":
                             // Column's values are of type 'MMMM yyyy' (in SQL date format would be 'Month YYYY').
-                            sqlWhereBuilder.append("LOWER(pfv").append(n).append(".value) = LOWER('").append(filterString).append("')");
+                            sqlBuilder.append("LOWER(pfv").append(n).append(".value) = LOWER('").append(filterString).append("')");
+                            sqlCountBuilder.append("LOWER(fv.value) = LOWER('").append(filterString).append("')");
                             break;
                         case "INPUT_DATE":
                             // Column's values are of type 'yyyy-mm-dd' as required by the SQL standard to represent a date without time.
                             if (filterString.contains("|")) {
                                 // Date Range
                                 String[] dates = filterString.split(Pattern.quote("|"));
-                                sqlWhereBuilder
+                                sqlBuilder
                                     .append("CAST(pfv").append(n)
                                     .append(".value AS DATE) BETWEEN CAST('").append(dates[0])
                                     .append("' AS DATE) AND CAST('").append(dates[1])
                                     .append("' AS DATE)");
+                                sqlCountBuilder
+                                    .append("CAST(fv.value AS DATE) BETWEEN CAST('").append(dates[0])
+                                    .append("' AS DATE) AND CAST('").append(dates[1])
+                                    .append("' AS DATE)");
                             } else {
                                 // Date Match
-                                sqlWhereBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                                sqlBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                                sqlCountBuilder.append("fv.value = '").append(filterString).append("'");
                             }
                             break;
                         case "INPUT_CHECKBOX":
-                            sqlWhereBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                            sqlBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                            sqlCountBuilder.append("fv.value = '").append(filterString).append("'");
 
                             // Column's values are a boolean
                             if (!Boolean.valueOf(filterString)) {
-                                sqlWhereBuilderList.add(sqlWhereBuilder);
-                                sqlWhereBuilder = new StringBuilder();
+                                sqlWhereBuilderList.add(sqlBuilder);
 
-                                sqlWhereBuilder.append(" pfv").append(n).append(".value IS NULL");
+                                if (!sqlCountWherePredicate.containsKey(predicateId)) {
+                                    sqlCountWherePredicate.put(predicateId, new StringBuilder());
+                                }
+
+                                sqlCountWherePredicate.get(predicateId).append(" (").append(sqlCountBuilder).append(") OR");
+
+                                sqlBuilder = new StringBuilder();
+                                sqlBuilder.append(" pfv").append(n).append(".value IS NULL");
+
+                                sqlCountBuilder = new StringBuilder();
+                                sqlCountBuilder.append(" fv.value IS NULL");
                             }
+
                             break;
                         default:
                             // Column's values can be handled by this default
                             if (submissionListColumn.getExactMatch()) {
                                 // perform exact match
-                                sqlWhereBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                                sqlBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                                sqlCountBuilder.append("fv.value = '").append(filterString).append("'");
                             } else {
                                 // perform like when input from text field
-                                sqlWhereBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                                sqlBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                                sqlCountBuilder.append("LOWER(fv.value) LIKE '%").append(filterString.toLowerCase()).append("%'");
                             }
+
                             break;
                         }
 
-                        if (sqlWhereBuilder.length() > 0) {
-                            sqlWhereBuilderList.add(sqlWhereBuilder);
+                        if (sqlBuilder.length() > 0) {
+                            sqlWhereBuilderList.add(sqlBuilder);
+
+                            if (!sqlCountWherePredicate.containsKey(predicateId)) {
+                                sqlCountWherePredicate.put(predicateId, new StringBuilder());
+                            }
+
+                            sqlCountWherePredicate.get(predicateId).append(" (").append(sqlCountBuilder).append(") OR");
                         }
                     }
 
-                    // all column search filter
-                    for (String filterString : allColumnSearchFilters) {
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
-                    }
+                    if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0) {
+                        // all column search filter
+                        for (String filterString : allColumnSearchFilters) {
+                            sqlBuilder = new StringBuilder();
+                            sqlBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlAllColumnsWhereBuilderList.add(sqlBuilder);
+                        }
 
-                    n++;
+                        n++;
+                    }
 
                     break;
 
                 case "id":
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.id");
+                        // The s.id is already on the submission, such just add it to the order by rather than call setColumnOrdering().
+                        Sort sort = submissionListColumn.getSort();
+                        if (sort == Sort.ASC || sort == Sort.DESC) {
+                            sqlOrderBysBuilder.append(" s.id ").append(sort.name()).append(",");
+                        }
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("s").append(".id = ").append(filterString);
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("s").append(".id = ").append(filterString);
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "id").add(sqlBuilder);
                     }
 
                     break;
 
                 case "submissionStatus.name":
+                    sqlBuilder = new StringBuilder()
+                        .append("\nLEFT JOIN submission_status ss ON ss.id=s.submission_status_id");
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN submission_status ss ON ss.id=s.submission_status_id");
+                    sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " ss.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilder = new StringBuilder();
+                        sqlBuilder = new StringBuilder();
 
                         if (submissionListColumn.getExactMatch()) {
-                            sqlWhereBuilder.append("ss").append(".name = '").append(filterString).append("'");
+                            sqlBuilder.append("ss").append(".name = '").append(filterString).append("'");
                         } else {
                             // TODO: determine if status will ever be search using a like
-                            sqlWhereBuilder.append("LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlBuilder.append("LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
                         }
 
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "submissionStatus.name").add(sqlBuilder);
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
                     break;
@@ -565,7 +619,11 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 case "organization.name":
 
                     if (sqlJoinsBuilder.indexOf("LEFT JOIN organization o ON o.id=s.organization_id") == -1) {
-                        sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
+                        sqlBuilder = new StringBuilder()
+                            .append("\nLEFT JOIN organization o ON o.id=s.organization_id");
+
+                        sqlJoinsBuilder.append(sqlBuilder);
+                        sqlCountSelectBuilder.append(sqlBuilder);
                     }
 
                     if (submissionListColumn.getSortOrder() > 0) {
@@ -573,140 +631,154 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilder = new StringBuilder();
+                        sqlBuilder = new StringBuilder();
 
                         if (submissionListColumn.getExactMatch()) {
-                            sqlWhereBuilder.append("o").append(".name = '").append(filterString).append("'");
+                            sqlBuilder.append("o").append(".name = '").append(filterString).append("'");
                         } else {
                             // TODO: determine if organization name will ever be
                             // search using a like
-                            sqlWhereBuilder.append("LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlBuilder.append("LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
                         }
 
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "organization.name").add(sqlBuilder);
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
                     break;
 
                 case "organization.category.name":
+                    sqlBuilder = new StringBuilder();
 
                     if (sqlJoinsBuilder.indexOf("LEFT JOIN organization o ON o.id=s.organization_id") == -1) {
-                        sqlJoinsBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
+                        sqlBuilder.append("\nLEFT JOIN organization o ON o.id=s.organization_id");
                     }
-                    sqlJoinsBuilder.append("\nLEFT JOIN organization_category oc ON oc.id=o.category_id");
+                    sqlBuilder.append("\nLEFT JOIN organization_category oc ON oc.id=o.category_id");
+
+                    sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " oc.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilder = new StringBuilder();
+                        sqlBuilder = new StringBuilder();
                         if (submissionListColumn.getExactMatch()) {
-                            sqlWhereBuilder.append("oc").append(".name = '").append(filterString).append("'");
+                            sqlBuilder.append("oc").append(".name = '").append(filterString).append("'");
                         } else {
                             // TODO: determine if organization category name
                             // will ever be search using a like
-                            sqlWhereBuilder.append("LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlBuilder.append("LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
                         }
 
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "organization.category.name").add(sqlBuilder);
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
                     break;
 
                 case "assignee.email":
+                    sqlBuilder = new StringBuilder()
+                        .append("\nLEFT JOIN weaver_users a ON a.id=s.assignee_id");
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN weaver_users a ON a.id=s.assignee_id");
+                    sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " a.email");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilder = new StringBuilder();
+                        sqlBuilder = new StringBuilder();
 
                         if (filterString == null) {
-                            sqlWhereBuilder.append("a").append(".email IS NULL");
+                            sqlBuilder.append("a").append(".email IS NULL");
                         } else if (submissionListColumn.getExactMatch()) {
-                            sqlWhereBuilder.append("a").append(".email = '").append(filterString).append("'");
+                            sqlBuilder.append("a").append(".email = '").append(filterString).append("'");
                         } else {
-                            sqlWhereBuilder.append("LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlBuilder.append("LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%'");
                         }
 
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "assignee.email").add(sqlBuilder);
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
                     break;
 
                 case "embargoTypes.name":
-                    // @formatter:off
-                    sqlJoinsBuilder.append("\nLEFT JOIN")
-                                   .append("\n   (SELECT e.id, e.name, semt.submission_id")
-                                   .append("\n   FROM embargo e")
-                                   .append("\n   LEFT JOIN submission_embargo_types semt")
-                                   .append("\n   ON semt.embargo_types_id=e.id) embs")
-                                   .append("\n   ON embs.submission_id=s.id");
-                    // @formatter:on
+                    sqlBuilder = new StringBuilder()
+                        .append("\nLEFT JOIN")
+                        .append("\n   (SELECT e.id, e.name, semt.submission_id")
+                        .append("\n   FROM embargo e")
+                        .append("\n   LEFT JOIN submission_embargo_types semt")
+                        .append("\n   ON semt.embargo_types_id=e.id) embs")
+                        .append("\n   ON embs.submission_id=s.id");
+
+                    sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " embs.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilder = new StringBuilder();
+                        sqlBuilder = new StringBuilder();
 
-                        sqlWhereBuilder.append(" embs").append(".name = '").append(filterString).append("'");
+                        sqlBuilder.append(" embs").append(".name = '").append(filterString).append("'");
 
                         if (filterString.equals("None")) {
-                            sqlWhereBuilderList.add(sqlWhereBuilder);
-                            sqlWhereBuilder = new StringBuilder();
-                            sqlWhereBuilder.append("embs.id IS NULL");
+                            sqlWhereBuilderList.add(sqlBuilder);
+                            sqlBuilder = new StringBuilder();
+                            sqlBuilder.append("embs.id IS NULL");
                         }
 
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "embargoTypes.name").add(sqlBuilder);
                     }
 
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                        sqlAllColumnsWhereBuilderList.add(sqlWhereBuilder);
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
                     break;
 
                 case "lastEvent":
-                    // @formatter:off
+                    sqlBuilder = new StringBuilder()
+                        .append("\nLEFT JOIN")
+                        .append("\n   (SELECT al.id, al.action_date, al.entry, al.action_logs_id")
+                        .append("\n   FROM action_log al")
+                        .append("\n   WHERE (al.action_logs_id = id)")
+                        .append("\n   ORDER BY al.action_date DESC")
+                        .append("\n   LIMIT 1) als")
+                        .append("\n   ON action_logs_id = s.submission_status_id");
 
-                    sqlJoinsBuilder.append("\nLEFT JOIN")
-                                   .append("\n   (SELECT al.id, al.action_date, al.entry, al.action_logs_id")
-                                   .append("\n   FROM action_log al")
-                                   .append("\n   WHERE (al.action_logs_id = id)")
-                                   .append("\n   ORDER BY al.action_date DESC")
-                                   .append("\n   LIMIT 1) als")
-                                   .append("\n   ON action_logs_id = s.submission_status_id");
-                    // @formatter:on
+                    sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     // TODO: finish sqlWheresBuilder.
 
@@ -735,7 +807,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("submission_date", filterString));
+                        sqlBuilder = buildSubmissionDateFieldString("submission_date", filterString);
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "submissionDate").add(sqlBuilder);
                     }
 
                     break;
@@ -746,7 +820,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("approve_application_date", filterString));
+                        sqlBuilder = buildSubmissionDateFieldString("approve_application_date", filterString);
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "approveApplicationDate").add(sqlBuilder);
                     }
 
                     break;
@@ -757,7 +833,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("approve_advisor_date", filterString));
+                        sqlBuilder = buildSubmissionDateFieldString("approve_advisor_date", filterString);
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "approveAdvisorDate").add(sqlBuilder);
                     }
 
                     break;
@@ -768,25 +846,29 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilderList.add(buildSubmissionDateFieldString("approve_embargo_date", filterString));
+                        sqlBuilder = buildSubmissionDateFieldString("approve_embargo_date", filterString);
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "approveEmbargoDate").add(sqlBuilder);
                     }
 
                     break;
                 case "customActionValues":
+                    sqlBuilder = new StringBuilder()
+                        .append("\nLEFT JOIN")
+                        .append("\n   (SELECT submission_id, value, label")
+                        .append("\n   FROM submission_custom_action_values scav")
+                        .append("\n   LEFT JOIN custom_action_value cav ON scav.custom_action_values_id = cav .id")
+                        .append("\n   LEFT JOIN custom_action_definition cad ON cav.definition_id = cad.id) scavcavcad")
+                        .append("\n   ON scavcavcad.submission_id = s.id");
 
-                    // @formatter:off
-                    sqlJoinsBuilder.append("\nLEFT JOIN")
-                                   .append("\n   (SELECT submission_id, value, label")
-                                   .append("\n   FROM submission_custom_action_values scav")
-                                   .append("\n   LEFT JOIN custom_action_value cav ON scav.custom_action_values_id = cav .id")
-                                   .append("\n   LEFT JOIN custom_action_definition cad ON cav.definition_id = cad.id) scavcavcad")
-                                   .append("\n   ON scavcavcad.submission_id = s.id");
-                    // @formatter:on
+                    sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     for (String filterString : submissionListColumn.getFilters()) {
-                        sqlWhereBuilder = new StringBuilder();
-                        sqlWhereBuilder.append("scavcavcad.value = true AND scavcavcad.label = '" + filterString + "'");
-                        sqlWhereBuilderList.add(sqlWhereBuilder);
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("scavcavcad.value = true AND scavcavcad.label = '" + filterString + "'");
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "customActionValues").add(sqlBuilder);
                     }
 
                     break;
@@ -800,9 +882,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             }
         }
 
-        // complete select clause
+        // Complete the select clause.
         sqlSelectBuilder.setLength(sqlSelectBuilder.length() - 1);
         sqlSelectBuilder.append(" FROM submission s");
+        sqlCountSelectBuilder.insert(0, "SELECT COUNT(DISTINCT s.id) FROM submission s");
 
         // if ordering, complete order by clause and strip the tailing comma
         if (sqlOrderBysBuilder.length() > 0) {
@@ -811,46 +894,92 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         }
 
         // build WHERE query such that OR is used for conditions inside a column and AND is used across each different column.
-        sqlWhereBuilder = new StringBuilder();
+        sqlBuilder = new StringBuilder();
         if (sqlColumnsBuilders.size() > 0 || sqlAllColumnsWhereBuilderList.size() > 0 || sqlWheresExcludeBuilder.length() > 0) {
-            sqlWhereBuilder.append("\nWHERE ");
+            sqlBuilder.append("\nWHERE ");
 
             for (Entry<Long, ArrayList<StringBuilder>> list : sqlColumnsBuilders.entrySet()) {
-                sqlWhereBuilder.append("(");
+                sqlBuilder.append("(");
 
                 for (StringBuilder builder : list.getValue()) {
-                    sqlWhereBuilder.append("(").append(builder).append(") OR ");
+                    sqlBuilder.append("(").append(builder).append(") OR ");
                 }
 
-                // remove last " OR".
-                sqlWhereBuilder.setLength(sqlWhereBuilder.length() - 4);
+                // remove last " OR ".
+                sqlBuilder.setLength(sqlBuilder.length() - 4);
 
-                sqlWhereBuilder.append(") AND ");
+                sqlBuilder.append(") AND ");
             }
 
             if (sqlAllColumnsWhereBuilderList.size() > 0) {
-                sqlWhereBuilder.append("(");
+                sqlBuilder.append("(");
 
                 for (StringBuilder builder : sqlAllColumnsWhereBuilderList) {
-                    sqlWhereBuilder.append("(").append(builder).append(") OR ");
+                    sqlBuilder.append("(").append(builder).append(") OR ");
                 }
 
-                // remove last " OR".
-                sqlWhereBuilder.setLength(sqlWhereBuilder.length() - 4);
+                // remove last " OR ".
+                sqlBuilder.setLength(sqlBuilder.length() - 4);
 
-                sqlWhereBuilder.append(") AND ");
+                sqlBuilder.append(") AND ");
             }
 
             if (sqlWheresExcludeBuilder.length() > 0) {
-                sqlWhereBuilder.append("(").append(sqlWheresExcludeBuilder).append(")");
+                sqlBuilder.append("(").append(sqlWheresExcludeBuilder).append(")");
             } else {
-                // remove last " AND"
-                sqlWhereBuilder.setLength(sqlWhereBuilder.length() - 5);
+                // remove last " AND "
+                sqlBuilder.setLength(sqlBuilder.length() - 5);
             }
         }
 
-        String sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWhereBuilder.toString();
-        String sqlCountQuery = sqlCountSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlWhereBuilder.toString();
+        if (sqlCountWherePredicate.size() > 0 || sqlCountWhereFilterBuilders.size() > 0 || sqlWheresExcludeBuilder.length() > 0) {
+
+            // Conditions are AND across different predicates but are OR within the same predicate.
+            if (sqlCountWherePredicate.size() > 0) {
+                sqlCountSelectBuilder.append("\nLEFT JOIN submission_field_values sfv ON s.id = sfv.submission_id");
+                sqlCountSelectBuilder.append("\nINNER JOIN field_value fv ON sfv.field_values_id = fv.id");
+                sqlCountSelectBuilder.append("\nWHERE");
+
+                sqlCountWherePredicate.forEach((id, filter) -> {
+                    if (filter.length() > 0) {
+                        // Remove the last " OR".
+                        filter.setLength(filter.length() - 3);
+
+                        sqlCountSelectBuilder
+                            .append("\n(fv.field_predicate_id = ").append(id)
+                            .append(" AND (").append(filter).append(")) AND");
+                    }
+                });
+            } else {
+                sqlCountSelectBuilder.append("\nWHERE");
+            }
+
+            // Conditions are AND across different filters and OR within the same filter.
+            if (sqlCountWhereFilterBuilders.size() > 0) {
+                sqlCountWhereFilterBuilders.forEach((key, list) -> {
+                    sqlCountSelectBuilder.append(" (");
+
+                    list.forEach(filter -> {
+                        sqlCountSelectBuilder.append(" (").append(filter).append(") OR");
+                    });
+
+                    // Remove the last " OR".
+                    sqlCountSelectBuilder.setLength(sqlCountSelectBuilder.length() - 3);
+
+                    sqlCountSelectBuilder.append(")\n AND");
+                });
+            }
+
+            if (sqlWheresExcludeBuilder.length() > 0) {
+                sqlCountSelectBuilder.append("\n(").append(sqlWheresExcludeBuilder).append(")");
+            } else {
+                // remove last " AND"
+                sqlCountSelectBuilder.setLength(sqlCountSelectBuilder.length() - 4);
+            }
+        }
+
+        String sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlBuilder.toString();
+        String sqlCountQuery = sqlCountSelectBuilder.toString();
 
         if (pageable != null) {
             // determine the offset and limit of the query
@@ -867,36 +996,15 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     }
 
     public void setColumnOrdering(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder, String value) {
-        sqlSelectBuilder.append(value).append(",");
-        switch (sort) {
-        case ASC:
-            sqlOrderBysBuilder.append(value).append(" ASC,");
-            break;
-        case DESC:
-            sqlOrderBysBuilder.append(value).append(" DESC,");
-            break;
-        default:
-            break;
+        if (sort == Sort.ASC || sort == Sort.DESC) {
+            sqlSelectBuilder.append(value).append(",");
+            sqlOrderBysBuilder.append(value).append(" ").append(sort.name()).append(",");
         }
     }
 
     @Override
     protected String getChannel() {
         return "/channel/submission";
-    }
-
-    /**
-     * Build a date field string given some filter.
-     *
-     * @param id The ID to append to the field name alias.
-     * @param filter The filter.
-     * @return A constructed string builder appropriately casting the date.
-     */
-    private StringBuilder buildDateFieldString(int id, String filter) {
-        return new StringBuilder()
-            .append("pfv").append(id)
-            .append(".value = CAST('").append(filter)
-            .append("' AS DATE)");
     }
 
     /**
@@ -909,9 +1017,34 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
      * @return A constructed string builder appropriately casting the date.
      */
     private StringBuilder buildSubmissionDateFieldString(String column, String filter) {
+        if (filter.contains("|")) {
+            String[] dates = filter.split(Pattern.quote("|"));
         return new StringBuilder()
             .append("s.").append(column)
-            .append(" = CAST('").append(filter).append("' AS DATE)");
+                .append(" BETWEEN CAST('").append(dates[0])
+                .append("' AS DATE) AND CAST('").append(dates[1])
+                .append("' AS DATE)");
+        }
+        return new StringBuilder()
+            .append("s.").append(column)
+            .append(" = CAST('").append(filter)
+            .append("' AS DATE)");
+    }
+
+    /**
+     * Get the builders list array for some key, initializing that key if not found.
+     *
+     * @param map The map of builders to select from.
+     * @param key The identifier.
+     *
+     * @return An array of the builders for the given key.
+     */
+    private ArrayList<StringBuilder> getFromBuildersMap(Map<String, ArrayList<StringBuilder>> map, String key) {
+        if (!map.containsKey(key)) {
+            map.put(key, new ArrayList<StringBuilder>());
+        }
+
+        return map.get(key);
     }
 
     private class QueryStrings {
