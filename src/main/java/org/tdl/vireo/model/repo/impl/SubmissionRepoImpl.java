@@ -1031,7 +1031,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         if (sort == Sort.ASC || sort == Sort.DESC) {
             sqlSelectBuilder
                 .append(table).append(".value,")
-                .append(" cast(replace(").append(table).append(".value, ' ', ' 1, ') as date) as").append(table).append("_date,");
+                .append(" CAST(REPLACE(").append(table).append(".value, ' ', ' 1, ') AS DATE) AS").append(table).append("_date,");
 
             sqlOrderBysBuilder.append(table).append("_date ").append(sort.name()).append(",");
         }
