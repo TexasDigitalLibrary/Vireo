@@ -5,5 +5,9 @@ angular.module("mock.managerFilterColumnRepo", []).service("ManagerFilterColumnR
         return payloadPromise($q.defer(), angular.copy(repo.mockedList));
     };
 
+    repo.reset = function () {
+        return payloadPromise($q.defer());
+    };
+
     return repo;
 });

@@ -1,7 +1,7 @@
 vireo.filter('displayFieldValue', function($filter, InputTypes) {
     return function(value, inputType) {
         if (angular.isUndefined(inputType)) {
-          return value;
+            return value;
         }
 
         var dateColumn = null;
@@ -15,7 +15,7 @@ vireo.filter('displayFieldValue', function($filter, InputTypes) {
 
         if (type != null) {
             if (inputType.name == InputTypes.INPUT_LICENSE || inputType.name == InputTypes.INPUT_PROQUEST) {
-              return value == 'true' ? 'yes' : 'no';
+                return value == 'true' ? 'yes' : 'no';
             }
 
             if (angular.isDefined(appConfig.dateColumns) && angular.isDefined(inputType.name)) {
@@ -35,17 +35,28 @@ vireo.filter('displayFieldValue', function($filter, InputTypes) {
             }
         }
 
-        if (dateColumn == null || angular.isUndefined(value) || value == null) {
-          return value;
+        if (dateColumn === null || angular.isUndefined(value) || value === null) {
+            return value;
         }
 
         // Some browsers, like Firefox, do not support 'MMMM yyyy' formats for Date.parse().
         var stamp = Date.parse(value);
         if (isNaN(stamp) && dateColumn.format == 'MMMM yyyy') {
             var split = value.match(/^(\S+) (\d+)$/);
+
+            if (split === null || split.length < 3) {
+                return value;
+            }
+
             return $filter('date')(new Date(split[1] + ' 01, ' + split[2]).toISOString(), dateColumn.format, 'utc');
         }
 
-        return $filter('date')(new Date(value).toISOString(), dateColumn.format, 'utc');
+        var date = new Date(value);
+
+        if (isNaN(date)) {
+            return value;
+        }
+
+        return $filter('date')(date.toISOString(), dateColumn.format, 'utc');
     };
 });

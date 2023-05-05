@@ -1,12 +1,20 @@
 <div ng-controller="SubmissionListController">
 
-  <modal modal-id="customizeSubmissionListModal" modal-view="views/modals/submissions/customizeSubmissionListModal.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
+  <modal modal-id="customizeSubmissionList" modal-view="views/modals/submissions/customizeSubmissionList.html" modal-header-class="modal-header-primary" wvr-modal-backdrop="static"></modal>
 
   <alerts seconds="90" channels="submission/select" types="WARNING" view="views/alerts/submissionItemViewAlert.html" exclusive></alerts>
 
   <h1>List ETDs</h1>
   <hr/>
-  <a href="" ng-click="openModal('#customizeSubmissionListModal')">Customize view</a>
+
+  <div class="list-view-table-controls">
+    <button class="btn btn-default" ng-click="openModal('#customizeSubmissionList')">
+      Customize columns
+    </button>
+    <button class="btn btn-default" ng-click="resetColumnsToDefault()">
+      Default columns
+    </button>
+  </div>
 
   <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped table-hover" id="etd-table">
     <thead class="header">

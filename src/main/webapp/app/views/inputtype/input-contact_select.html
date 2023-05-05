@@ -17,7 +17,7 @@
     <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)"></span>
   </button>
   <button type="button" class="btn dropdown-help" disabled>
-    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
   </button>
 </div>
@@ -29,7 +29,7 @@
     placeholder="{{fieldValue.contacts[0]}}"
     disabled>
   <span class="input-group-addon">
-    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" tooltip="{{ profile.help }}"> </span>
+    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
   </span>
 </div>
