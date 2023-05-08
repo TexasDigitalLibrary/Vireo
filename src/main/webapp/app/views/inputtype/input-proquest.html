@@ -1,8 +1,9 @@
 <div>
-  <div class="well" ng-bind-html="configuration.proquest_umi_degree_code.proquest_license.value|trusted"></div>
+  <div class="well" tabindex="0" ng-bind-html="configuration.proquest_umi_degree_code.proquest_license.value|trusted" aria-details="input_proquest-{{fieldValue.fieldPredicate.id}}-{{fieldValue.id}}"></div>
   <div class="checkbox">
     <label>
-      <input type="checkbox"
+      <input id="input_proquest-{{fieldValue.fieldPredicate.id}}-{{fieldValue.id}}"
+        type="checkbox"
         ng-model="fieldValue.value"
         ng-true-value="'true'"
         ng-false-value="'false'"

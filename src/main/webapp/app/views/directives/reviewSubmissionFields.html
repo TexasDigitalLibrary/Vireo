@@ -21,7 +21,7 @@
                   {{fv.contacts[0]}}</span>
               </span>
               <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_FILE">
-                <a href ng-click="getFile(fv)">{{fv.fileInfo.name}}</a>
+                <span class="file-link" ng-click="getFile(fv)">{{fv.fileInfo.name}}</span>
               </span>
             </li>
           </ul>

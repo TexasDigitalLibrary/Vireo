@@ -29,6 +29,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
+    var rowFilterTitle = "Exclude";
+
     var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready()]);
 
     var updateChange = function(change) {
@@ -51,25 +53,19 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var start;
 
         var query = function () {
+            var sessionPageNumber = sessionStorage.getItem("list-page-number");
+            var sessionPageSize = sessionStorage.getItem("list-page-size");
+
             $scope.tableParams = new NgTableParams({
-                page: $scope.page.number,
-                count: $scope.page.count
+                page: angular.isDefined(sessionPageNumber) && sessionPageNumber !== null ? sessionPageNumber : $scope.page.number,
+                count: angular.isDefined(sessionPageSize) && sessionPageSize !== null ? sessionPageSize : $scope.page.count,
             }, {
                 counts: $scope.page.options,
                 total: $scope.page.totalElements,
                 filterDelay: 0,
                 getData: function (params) {
                     start = window.performance.now();
-                    return SubmissionRepo.query($scope.userColumns, params.page() > 0 ? params.page() - 1 : params.page(), params.count()).then(function (response) {
-                        angular.extend($scope.page, angular.fromJson(response.body).payload.ApiPage);
-                        // NOTE: this causes way to many subscriptions!!!
-                        // SubmissionRepo.addAll($scope.page.content);
-                        params.total($scope.page.totalElements);
-                        $scope.page.count = params.count();
-                        sessionStorage.setItem("list-page-size", $scope.page.count);
-                        sessionStorage.setItem("list-page-number", $scope.page.number + 1);
-                        return $scope.page.content;
-                    });
+                    return queryGetData(params);
                 }.bind(start)
             });
             $scope.finished = function() {
@@ -77,54 +73,114 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             }.bind(start);
         }.bind(start);
 
-        var update = function () {
+        var queryGetData = function (params, forcePageNumber) {
+            var requestPage = 0;
 
+            if (forcePageNumber === undefined) {
+                if (params.page() > 0) {
+                    requestPage = params.page() - 1;
+                }
+            } else {
+                requestPage = forcePageNumber;
+            }
+
+            return SubmissionRepo.query($scope.userColumns, requestPage, params.count()).then(function (response) {
+                var page = angular.fromJson(response.body).payload.ApiPage;
+
+                // Forcibly fix invalid page and try again, but only once.
+                if (forcePageNumber === undefined && angular.isDefined(page.number) && angular.isDefined(page.totalPages)) {
+                    var totalPages = parseInt(page.totalPages);
+                    var pageNumber = parseInt(page.number);
+
+                    if (!isNaN(totalPages) && !isNaN(pageNumber) && (pageNumber > totalPages || pageNumber < 0)) {
+                        pageNumber = pageNumber > totalPages && totalPages > 0 ? totalPages - 1 : 0;
+
+                        console.warn("Invalid page number '" + page.number + "' detected, forcibly resetting to page '" + pageNumber + "' and trying again.");
+
+                        return queryGetData(params, pageNumber);
+                    }
+                }
+
+                angular.extend($scope.page, page);
+
+                // The service sets page number starting at 0, which needs to be incremented by 1 when provided.
+                if (angular.isDefined(page.number)) {
+                    $scope.page.number++;
+                }
+
+                params.total($scope.page.totalElements);
+                params.page($scope.page.number);
+                $scope.page.count = params.count();
+                sessionStorage.setItem("list-page-size", $scope.page.count);
+                sessionStorage.setItem("list-page-number", $scope.page.number);
+
+                return $scope.page.content;
+            });
+        }
+
+        var update = function (reloadList) {
             SavedFilterRepo.reset();
-
+            ManagerFilterColumnRepo.reset();
             SubmissionListColumnRepo.reset();
-
             ManagerSubmissionListColumnRepo.reset();
 
             $q.all([SavedFilterRepo.ready(), SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready()]).then(function() {
-                ManagerSubmissionListColumnRepo.submissionListPageSize().then(function(response) {
-                    var apiRes = angular.fromJson(response.body);
-                    if(apiRes.meta.status === 'SUCCESS') {
-                        $scope.page.count = sessionStorage.getItem("list-page-size") ? sessionStorage.getItem("list-page-size") : apiRes.payload.Integer;
-                    }
 
-                    var managerFilterColumns = ManagerFilterColumnRepo.getAll();
-                    var submissionListColumns = SubmissionListColumnRepo.getAll();
+                // Only get the list size if/when there is no page count set.
+                if (angular.isUndefined(sessionStorage.getItem("list-page-size")) || sessionStorage.getItem("list-page-size") === null) {
+                    ManagerSubmissionListColumnRepo.submissionListPageSize().then(function (response) {
+                        var apiRes = angular.fromJson(response.body);
 
-                    $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
-
-                    angular.forEach($scope.userColumns, function (userColumn) {
-                        if ($scope.activeFilters.sortColumnTitle === userColumn.title) {
-                            userColumn.sortOrder = 1;
-                            userColumn.sort = $scope.activeFilters.sortDirection;
+                        if (apiRes.meta.status === 'SUCCESS') {
+                            $scope.page.count = apiRes.payload.Integer;
+                        } else if (sessionStorage.getItem("list-page-size")) {
+                            $scope.page.count = sessionStorage.getItem("list-page-size");
                         }
+
+                        processUpdate(reloadList);
                     });
-
-                    $scope.excludedColumns = [];
-
-                    angular.copy($scope.userColumns, $scope.excludedColumns);
-
-                    $scope.excludedColumns.push(SubmissionListColumnRepo.findByTitle('Search Box'));
-
-                    $scope.columns = angular.fromJson(angular.toJson($filter('orderBy')($filter('exclude')(submissionListColumns, $scope.excludedColumns, 'title'), 'title')));
-
-                    angular.extend(filterColumns, {
-                        userFilterColumns: managerFilterColumns,
-                        inactiveFilterColumns:  $filter('orderBy')($filter('exclude')(submissionListColumns, managerFilterColumns, 'title'), 'title')
-                    });
-
-                    query();
-
-                    updateChange(false);
-                });
+                } else {
+                    processUpdate(reloadList);
+                }
             });
         };
 
-        update();
+        var processUpdate = function (reloadList) {
+            var managerFilterColumns = ManagerFilterColumnRepo.getAll().filter(function excludeSearchBox(slc) {
+                return slc.title !== 'Search Box';
+            });
+            var submissionListColumns = SubmissionListColumnRepo.getAll();
+
+            $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
+
+            angular.forEach($scope.userColumns, function (userColumn) {
+                if ($scope.activeFilters.sortColumnTitle === userColumn.title) {
+                    userColumn.sortOrder = 1;
+                    userColumn.sort = $scope.activeFilters.sortDirection;
+                }
+            });
+
+            $scope.excludedColumns = [];
+
+            angular.copy($scope.userColumns, $scope.excludedColumns);
+
+            $scope.excludedColumns.push(SubmissionListColumnRepo.findByTitle('Search Box'));
+
+            $scope.columns = angular.fromJson(angular.toJson($filter('orderBy')($filter('exclude')(submissionListColumns, $scope.excludedColumns, 'title'), 'title')));
+
+            angular.extend(filterColumns, {
+                userFilterColumns: managerFilterColumns,
+                inactiveFilterColumns:  $filter('orderBy')($filter('exclude')(submissionListColumns, managerFilterColumns, 'title'), 'title')
+            });
+
+            if (reloadList === true) {
+                query();
+            }
+
+            updateChange(false);
+        };
+
+        update(true);
 
         var assignableUsers = UserRepo.getAssignableUsers(0, 0);
         var savedFilters = SavedFilterRepo.getAll();
@@ -210,10 +266,13 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
 
         var addFilter = function (column, gloss) {
+            $scope.resetPagination();
+
             var filterValue = $scope.furtherFilterBy[column.title.split(" ").join("")];
             if (filterValue !== null) {
                 filterValue = filterValue.toString();
             }
+
             $scope.activeFilters.addFilter(column.title, filterValue, gloss, column.exactMatch).then(function () {
                 $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
                 query();
@@ -265,12 +324,17 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             });
         };
 
-         $scope.addRowFilter = function ($index, row) {
+        $scope.addRowFilter = function ($index, row) {
+            // When removing the last row for a page, and the page number is the last
+            if ($scope.page.content.length == 1 && $scope.page.number > 0 && $scope.page.number == $scope.page.totalPages) {
+                sessionStorage.setItem("list-page-number", --$scope.page.number);
+            }
+
             $scope.page.content.splice($index, 1);
-            var columnTitle = "Exclude";
+
             var value = row.id.toString();
             var gloss = "Submission #" + row.id;
-            $scope.activeFilters.addFilter(columnTitle, value, gloss, true).then (function () {
+            $scope.activeFilters.addFilter(rowFilterTitle, value, gloss, true).then(function () {
                 query();
             });
         };
@@ -599,9 +663,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.displaySubmissionProperty = function (row, col) {
-            var value = $scope.getSubmissionProperty(row, col);
+            if (angular.isDefined(col) && col !== null) {
+                return $filter('displayFieldValue')($scope.getSubmissionProperty(row, col), col.inputType);
+            }
 
-            return angular.isDefined(col) ? $filter('displayFieldValue')(value, col.inputType) : value;
+            return value;
         };
 
         $scope.getCustomActionLabelById = function (id) {
@@ -635,12 +701,19 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.removeFilterValue = function (criterionName, filterValue) {
+            // Reset filter except for when row filters are in use.
+            if (criterionName !== rowFilterTitle) {
+                $scope.resetPagination();
+            }
+
             $scope.activeFilters.removeFilter(criterionName, filterValue).then(function () {
                 query();
             });
         };
 
         $scope.clearFilters = function () {
+            $scope.resetPagination();
+
             $scope.activeFilters.clearFilters().then(function () {
                 query();
             });
@@ -696,7 +769,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             updateChange(false);
         };
 
-        $scope.removeFilter = function (filter) {
+        $scope.removeSaveFilter = function (filter) {
+            $scope.resetPagination();
+
             SavedFilterRepo.delete(filter).then(function () {
                 SavedFilterRepo.reset();
             });
@@ -721,10 +796,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.resetColumns = function () {
-            ManagerSubmissionListColumnRepo.reset();
-            update();
+            update(true);
             $scope.closeModal();
-            updateChange(false);
         };
 
         $scope.resetColumnsToDefault = function () {
@@ -734,20 +807,23 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.saveColumns = function () {
-            ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.userColumns, $scope.page.count).then(function () {
-                $scope.page.number = 1;
-                sessionStorage.setItem("list-page-size", $scope.page.count);
-                $scope.resetColumns();
+            ManagerSubmissionListColumnRepo.updateSubmissionListColumns($scope.userColumns, $scope.page.count).then(function (res) {
+                var results = angular.fromJson(res.body);
+                if (results.meta.status === 'SUCCESS') {
+                    $scope.resetPagination();
+                    sessionStorage.setItem("list-page-size", $scope.page.count);
+                    $scope.resetColumns();
+                }
             });
         };
 
         $scope.saveUserFilters = function () {
-            ManagerFilterColumnRepo.updateFilterColumns(filterColumns.userFilterColumns).then(function () {
-                for (var i in filterColumns.userFilterColumns) {
-                    delete filterColumns.userFilterColumns[i].status;
+            ManagerFilterColumnRepo.updateFilterColumns(filterColumns.userFilterColumns).then(function (res) {
+                var results = angular.fromJson(res.body);
+                if (results.meta.status === 'SUCCESS') {
+                    update(false);
+                    $scope.closeModal();
                 }
-                update();
-                $scope.closeModal();
             });
         };
 
@@ -888,12 +964,19 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 "resetSaveUserFilters": $scope.resetSaveFilter,
                 "applyFilter": $scope.applyFilter,
                 "resetRemoveFilters": $scope.resetRemoveFilters,
-                "removeFilter": $scope.removeFilter,
+                "removeSaveFilter": $scope.removeSaveFilter,
                 "getUserById": $scope.getUserById
             },
             $scope.furtherFilterBy,
             $scope.advancedfeaturesBox
         ]);
+
+        $scope.resetPagination = function() {
+            $scope.pageNumber = 0;
+            $scope.page.number = 1;
+
+            sessionStorage.setItem("list-page-number", 1);
+        };
 
     });
 

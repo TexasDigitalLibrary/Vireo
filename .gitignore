@@ -28,6 +28,9 @@
 /.nb-gradle/
 
 
+### VS ###
+.vs
+
 ### VS Code ###
 .vscode/
 
@@ -80,7 +83,7 @@ replay_pid*
 logs/
 target/
 
-.classpth
+.classpath
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 .project
