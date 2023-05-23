@@ -138,24 +138,26 @@
                     
                     <!-- dc.description.provenance = Statement about when this package was generated. -->
                     <dim:field
-                        mdschema="dc"
-                        element="description"
-                        qualifier="provenance"
-                        th:text="${ 'DSpace METS Submission Ingestion Package generated from Vireo submission ' + SUBMISSION_ID + ' on ' + TIME }">
+                      mdschema="dc"
+                      element="description"
+                      qualifier="provenance"
+                      th:text="${ 'DSpace METS Submission Ingestion Package generated from Vireo submission ' + SUBMISSION_ID + ' on ' + TIME }">
                     </dim:field>
 
                     <!-- local.embargo.terms = Embargo Lift Date -->
                     <dim:field
-                        mdschema="local"
-                        element="embargo"
-                        qualifier="terms"
-                        th:text="${ EMBARGO_LIFT_DATE }">                         
+                      th:if="${ EMBARGO_LIFT_DATE != null }"
+                      mdschema="local"
+                      element="embargo"
+                      qualifier="terms"
+                      th:text="${ EMBARGO_LIFT_DATE }">                         
                     </dim:field>
                     <dim:field
-                        mdschema="local"
-                        element="embargo"
-                        qualifier="lift"
-                        th:text="${ EMBARGO_LIFT_DATE }">                         
+                      th:if="${ EMBARGO_LIFT_DATE != null }"
+                      mdschema="local"
+                      element="embargo"
+                      qualifier="lift"
+                      th:text="${ EMBARGO_LIFT_DATE }">                         
                     </dim:field>
 
                     <dim:field
