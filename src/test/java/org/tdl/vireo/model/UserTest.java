@@ -1,20 +1,20 @@
 package org.tdl.vireo.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
-public class UserTest extends AbstractEntityTest {
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-    @BeforeEach
-    public void setUp() {
-        assertEquals(0, userRepo.count(), "The user repository was not empty!");
-    }
+@Transactional(propagation = Propagation.REQUIRES_NEW)
+public class UserTest extends AbstractEntityTest {
 
     @Override
     @Test
+    @Transactional(propagation = Propagation.REQUIRED)
     public void testCreate() {
         User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         assertEquals(1, userRepo.count(), "The user repository did not save the user!");
@@ -26,28 +26,32 @@ public class UserTest extends AbstractEntityTest {
 
     @Override
     @Test
+    @Transactional(propagation = Propagation.NESTED)
     public void testDuplication() {
         userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
-        try {
-            userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */
-        }
 
-        assertEquals(1, userRepo.count(), "The user repository duplicated the user!");
+        Exception exception = assertThrows(DataIntegrityViolationException.class, () -> {
+            userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
+        });
+
+        assertTrue(exception instanceof DataIntegrityViolationException);
     }
 
     @Override
     @Test
+    @Transactional(propagation = Propagation.REQUIRED)
     public void testDelete() {
+        Long originalCount = userRepo.count();
         User testUser = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
         userRepo.delete(testUser);
-        assertEquals(0, userRepo.count(), "User did not delete!");
+        assertEquals(originalCount, userRepo.count(), "User did not delete!");
     }
 
     @Override
     @Test
+    @Transactional(propagation = Propagation.REQUIRED)
     public void testCascade() {
+        Long originalCount = userRepo.count();
         Address currentAddress = addressRepo.create(TEST_CURRENT_ADDRESS1, TEST_CURRENT_ADDRESS2, TEST_CURRENT_CITY, TEST_CURRENT_STATE, TEST_CURRENT_POSTAL_CODE, TEST_CURRENT_COUNTRY);
         assertEquals(1, addressRepo.count(), "The address does not exist!");
         ContactInfo currentContactInfo = contactInfoRepo.create(currentAddress, TEST_CURRENT_PHONE, TEST_CURRENT_EMAIL);
@@ -67,22 +71,6 @@ public class UserTest extends AbstractEntityTest {
 
         // test delete user
         userRepo.delete(testUser);
-        assertEquals(0, userRepo.count(), "The testUser was not deleted!");
-    }
-
-    @AfterEach
-    public void cleanUp() {
-        namedSearchFilterGroupRepo.findAll().forEach(nsf -> {
-            namedSearchFilterGroupRepo.delete(nsf);
-        });
-        namedSearchFilterRepo.findAll().forEach(nsf -> {
-            namedSearchFilterRepo.delete(nsf);
-        });
-        filterCriterionRepo.deleteAll();
-        userRepo.deleteAll();
-        organizationRepo.findAll().forEach(organization -> {
-            organizationRepo.delete(organization);
-        });
-        organizationCategoryRepo.deleteAll();
+        assertEquals(originalCount, userRepo.count(), "The testUser was not deleted!");
     }
 }

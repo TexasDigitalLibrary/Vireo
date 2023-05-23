@@ -1,10 +1,10 @@
 package org.tdl.vireo.model;
 
+import edu.tamu.weaver.auth.model.Credentials;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -49,10 +49,8 @@ import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
-import edu.tamu.weaver.auth.model.Credentials;
-
 @ActiveProfiles("test")
-@SpringBootTest(classes = { Application.class })
+@SpringBootTest(classes = { Application.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractEntityTest {
 
     protected static final boolean TEST_SUBMISSION_STATUS_ARCHIVED = true;

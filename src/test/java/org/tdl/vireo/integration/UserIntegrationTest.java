@@ -1,6 +1,5 @@
 package org.tdl.vireo.integration;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
-    @Override
     @BeforeEach
     public void setup() {
 
@@ -51,15 +49,6 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void testUpdateRole() throws Exception {
         // TODO
-    }
-
-    @Override
-    @AfterEach
-    public void cleanup() {
-        namedSearchFilterRepo.findAll().forEach(nsf -> {
-            namedSearchFilterRepo.delete(nsf);
-        });
-        userRepo.deleteAll();
     }
 
 }

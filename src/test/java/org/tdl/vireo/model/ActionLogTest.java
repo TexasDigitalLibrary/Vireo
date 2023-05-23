@@ -2,15 +2,15 @@ package org.tdl.vireo.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class ActionLogTest extends AbstractEntityTest {
 
     @Autowired
@@ -83,21 +83,6 @@ public class ActionLogTest extends AbstractEntityTest {
         assertEquals(1, submissionRepo.count(), "Submission is not deleted");
         assertEquals(1, submissionStatusRepo.count(), "Submission State is not deleted");
         assertEquals(1, userRepo.count(), "User is not deleted");
-    }
-
-    @AfterEach
-    public void cleanUp() {
-        actionLogRepo.findAll().forEach(actionLog -> {
-            actionLogRepo.delete(actionLog);
-        });
-        submissionRepo.deleteAll();
-        submissionStatusRepo.deleteAll();
-        organizationRepo.deleteAll();
-        organizationCategoryRepo.deleteAll();
-        namedSearchFilterGroupRepo.findAll().forEach(nsf -> {
-            namedSearchFilterGroupRepo.delete(nsf);
-        });
-        userRepo.deleteAll();
     }
 
 }
