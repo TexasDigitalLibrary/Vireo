@@ -188,10 +188,6 @@
           <artifactId>commons-httpclient</artifactId>
         </exclusion>
         <exclusion>
-          <groupId>log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-        <exclusion>
           <groupId>xom</groupId>
           <artifactId>xom</artifactId>
         </exclusion>
