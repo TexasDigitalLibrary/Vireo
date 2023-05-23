@@ -1,9 +1,9 @@
 package org.tdl.vireo.model.repo.impl;
 
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.tdl.vireo.model.FilterCriterion;
 import org.tdl.vireo.model.NamedSearchFilter;
@@ -11,8 +11,6 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.repo.FilterCriterionRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.custom.NamedSearchFilterRepoCustom;
-
-import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 
 public class NamedSearchFilterRepoImpl extends AbstractWeaverRepoImpl<NamedSearchFilter, NamedSearchFilterRepo> implements NamedSearchFilterRepoCustom {
 
@@ -46,18 +44,17 @@ public class NamedSearchFilterRepoImpl extends AbstractWeaverRepoImpl<NamedSearc
 
     @Override
     public void delete(NamedSearchFilter namedSearchFilter) {
-
         List<FilterCriterion> filterCriteria = new ArrayList<FilterCriterion>(namedSearchFilter.getFilters());
 
         namedSearchFilter.setFilters(new HashSet<FilterCriterion>());
-
+        namedSearchFilter.setSubmissionListColumn(null);
         namedSearchFilterRepo.deleteById(namedSearchFilter.getId());
 
-        filterCriteria.forEach(filterCriterion -> {
-            if (namedSearchFilterRepo.findByFilterCriteriaId(filterCriterion.getId()).isEmpty()) {
-                filterCriterionRepo.deleteAllInBatch(filterCriteria);
+        for (FilterCriterion filterCriterion : filterCriteria) {
+            if (namedSearchFilterRepo.countByFilterCriteriaId(filterCriterion.getId()) == 0) {
+                filterCriterionRepo.delete(filterCriterion);
             }
-        });
+        }
     }
 
     @Override

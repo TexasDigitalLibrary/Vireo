@@ -7,12 +7,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,14 +181,19 @@ public class SubmissionListController {
     @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping(value = "/remove-saved-filter", method = POST)
     public ApiResponse removeSavedFilter(@WeaverUser User user, @WeaverValidatedModel NamedSearchFilterGroup savedFilter) {
-        if (user.getSavedFilters().contains(savedFilter)) {
-            user.getSavedFilters().remove(savedFilter);
-            user = userRepo.save(user);
+        Optional<NamedSearchFilterGroup> filterGroup = namedSearchFilterGroupRepo.findById(savedFilter.getId());
 
-            return new ApiResponse(SUCCESS, user.getActiveFilter());
+        if (filterGroup.isEmpty()) {
+            return new ApiResponse(ERROR, "Cannot not find filter with ID " + savedFilter.getId() + ".");
         }
 
-        return new ApiResponse(ERROR, "Cannot not find filter.");
+        if (filterGroup.get().getUser().getId() != user.getId()) {
+            return new ApiResponse(ERROR, "Cannot delete filter, you do not own filter with ID " + filterGroup.get().getId() + ".");
+        }
+
+        namedSearchFilterGroupRepo.delete(filterGroup.get());
+
+        return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
 
     @PreAuthorize("hasRole('REVIEWER')")
@@ -273,50 +275,9 @@ public class SubmissionListController {
     @RequestMapping("/clear-filter-criteria")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse clearFilterCriteria(@WeaverUser User user) {
-        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        user = userRepo.clearActiveFilter(user);
 
-        // Switch to a not "saved" filter (title is NULL) when clearing.
-        List<NamedSearchFilterGroup> filters = namedSearchFilterGroupRepo.findByUserAndNameIsNull(user);
-        if (activeFilter == null || activeFilter.getName() != null) {
-            if (filters.size() == 0) {
-                activeFilter = new NamedSearchFilterGroup();
-                activeFilter.setUser(user);
-            } else {
-                activeFilter = filters.get(0);
-            }
-        }
-
-        // When clearing a not saved filter (title is NULL), then remove the existing filters and columns.
-        List<Long> searchFilterIds = new ArrayList<>();
-        List<Long> savedColumnIds = new ArrayList<>();
-
-        if (activeFilter.getName() == null) {
-            for (NamedSearchFilter searchFilter : activeFilter.getNamedSearchFilters()) {
-                searchFilterIds.add(searchFilter.getId());
-            }
-
-            for (SubmissionListColumn savedColumn : activeFilter.getSavedColumns()) {
-                savedColumnIds.add(savedColumn.getId());
-            }
-        }
-
-        activeFilter.getNamedSearchFilters().clear();
-        activeFilter.getSavedColumns().clear();
-        activeFilter.setColumnsFlag(false);
-
-        activeFilter = namedSearchFilterGroupRepo.save(activeFilter);
-
-        user.setActiveFilter(activeFilter);
-        user = userRepo.save(user);
-
-        searchFilterIds.forEach(id -> {
-            namedSearchFilterRepo.deleteById(id);
-        });
-
-        savedColumnIds.forEach(id -> {
-            submissionListColumnRepo.deleteById(id);
-        });
-
+        simpMessagingTemplate.convertAndSend("/channel/user/update", new ApiResponse(SUCCESS, user));
         simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
