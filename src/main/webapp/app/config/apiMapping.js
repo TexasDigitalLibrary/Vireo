@@ -1067,7 +1067,8 @@ var apiMapping = {
         },
         removeFilter: {
             'endpoint': '/private/queue',
-            'controller': 'submission-list'
+            'controller': 'submission-list',
+            'method': 'remove-filter-criterion'
         },
         clearFilters: {
             'endpoint': '/private/queue',
