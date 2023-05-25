@@ -44,12 +44,19 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     }
 
     private User saveAndAddSettings(User user) {
-        NamedSearchFilterGroup activeFilter = namedSearchFilterGroupRepo.create(user);
+        switch ((Role) user.getRole()) {
+            case ROLE_ADMIN:
+            case ROLE_MANAGER:
+            case ROLE_REVIEWER:
+                user.setActiveFilter(namedSearchFilterGroupRepo.create(user));
+                break;
+            default:
+                break;
+        }
 
         user.putSetting("id", user.getId().toString());
         user.putSetting("displayName", user.getFirstName() + " " + user.getLastName());
         user.putSetting("preferedEmail", user.getEmail());
-        user.setActiveFilter(activeFilter);
         user.setFilterColumns(defaultFiltersService.getDefaultFilter());
         user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
@@ -65,6 +72,18 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
 
     @Override
     public User update(User user) {
+        switch ((Role) user.getRole()) {
+            case ROLE_ADMIN:
+            case ROLE_MANAGER:
+            case ROLE_REVIEWER:
+                if (user.getActiveFilter() == null) {
+                    user.setActiveFilter(namedSearchFilterGroupRepo.create(user));
+                }
+                break;
+            default:
+                break;
+        }
+
         user = userRepo.save(user);
         simpMessagingTemplate.convertAndSend("/channel/user/update", new ApiResponse(SUCCESS, user));
         return user;
