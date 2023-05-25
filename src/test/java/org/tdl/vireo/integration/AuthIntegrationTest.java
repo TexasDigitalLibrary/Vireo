@@ -4,10 +4,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import edu.tamu.weaver.auth.service.CryptoService;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,12 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
-import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
-import edu.tamu.weaver.auth.service.CryptoService;
 
 public class AuthIntegrationTest extends AbstractIntegrationTest {
 
@@ -33,10 +28,6 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private CryptoService cryptoService;
 
-    @Autowired
-    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
-
-    @Override
     @BeforeEach
     public void setup() {
         systemDataLoader.loadSystemDefaults();
@@ -93,16 +84,6 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
             )
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.meta.status").value("SUCCESS"));
-    }
-
-    @Override
-    @AfterEach
-    public void cleanup() {
-        namedSearchFilterRepo.findAll().forEach(nsf -> {
-            namedSearchFilterRepo.delete(nsf);
-        });
-        userRepo.deleteAll();
-        emailTemplateRepo.deleteAll();
     }
 
 }

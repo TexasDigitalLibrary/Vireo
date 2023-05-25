@@ -1,31 +1,19 @@
 package org.tdl.vireo.integration;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import java.io.IOException;
-
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.model.repo.LanguageRepo;
-import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
-import org.tdl.vireo.model.repo.UserRepo;
-
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 public class LanguageIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private LanguageRepo languageRepo;
 
-    @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
-    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
-
-    @Override
     @BeforeEach
     public void setup() {
 
@@ -42,16 +30,6 @@ public class LanguageIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void testGetAllLanguages() throws InterruptedException, JsonParseException, JsonMappingException, IOException {
         // TODO
-    }
-
-    @Override
-    @AfterEach
-    public void cleanup() {
-        languageRepo.deleteAll();
-        namedSearchFilterRepo.findAll().forEach(nsf -> {
-            namedSearchFilterRepo.delete(nsf);
-        });
-        userRepo.deleteAll();
     }
 
 }

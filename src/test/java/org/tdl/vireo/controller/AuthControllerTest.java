@@ -6,14 +6,14 @@ import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.response.ApiStatus;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +26,8 @@ import org.mockito.stubbing.Answer;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.auth.controller.AuthController;
 import org.tdl.vireo.auth.service.VireoUserCredentialsService;
 import org.tdl.vireo.model.EmailTemplate;
@@ -34,9 +36,7 @@ import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.VireoEmailSender;
 
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.response.ApiStatus;
-
+@Transactional(propagation = Propagation.NEVER)
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public class AuthControllerTest extends AbstractControllerTest {
