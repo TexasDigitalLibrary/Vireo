@@ -965,7 +965,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 "applyFilter": $scope.applyFilter,
                 "resetRemoveFilters": $scope.resetRemoveFilters,
                 "removeSaveFilter": $scope.removeSaveFilter,
-                "getUserById": $scope.getUserById
+                "getUserById": $scope.getUserById,
+                "userSettings": userSettings
             },
             $scope.furtherFilterBy,
             $scope.advancedfeaturesBox
