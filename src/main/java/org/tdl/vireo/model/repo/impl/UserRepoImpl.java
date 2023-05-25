@@ -44,15 +44,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     }
 
     private User saveAndAddSettings(User user) {
-        switch ((Role) user.getRole()) {
-            case ROLE_ADMIN:
-            case ROLE_MANAGER:
-            case ROLE_REVIEWER:
-                user.setActiveFilter(namedSearchFilterGroupRepo.create(user));
-                break;
-            default:
-                break;
-        }
+        initializeActiveFilter(user);
 
         user.putSetting("id", user.getId().toString());
         user.putSetting("displayName", user.getFirstName() + " " + user.getLastName());
@@ -72,17 +64,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
 
     @Override
     public User update(User user) {
-        switch ((Role) user.getRole()) {
-            case ROLE_ADMIN:
-            case ROLE_MANAGER:
-            case ROLE_REVIEWER:
-                if (user.getActiveFilter() == null) {
-                    user.setActiveFilter(namedSearchFilterGroupRepo.create(user));
-                }
-                break;
-            default:
-                break;
-        }
+        initializeActiveFilter(user);
 
         user = userRepo.save(user);
         simpMessagingTemplate.convertAndSend("/channel/user/update", new ApiResponse(SUCCESS, user));
@@ -99,6 +81,25 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     @Override
     protected String getChannel() {
         return "/channel/user";
+    }
+
+    /**
+     * Create an active filter if the user has the appropriate roles.
+     *
+     * @param user The user to update.
+     */
+    private void initializeActiveFilter(User user) {
+        switch ((Role) user.getRole()) {
+            case ROLE_ADMIN:
+            case ROLE_MANAGER:
+            case ROLE_REVIEWER:
+                if (user.getActiveFilter() == null) {
+                    user.setActiveFilter(namedSearchFilterGroupRepo.create(user));
+                }
+                break;
+            default:
+                break;
+        }
     }
 
 }
