@@ -299,9 +299,12 @@ public class SubmissionListController {
         NamedSearchFilterGroup existingFilter = namedSearchFilterGroupRepo.findByNameAndPublicFlagTrue(namedSearchFilterGroup.getName());
 
         if (existingFilter != null) {
-            existingFilter = namedSearchFilterGroupRepo.clone(existingFilter, namedSearchFilterGroup);
-        } else {
+            if (existingFilter.getUser() == null || existingFilter.getUser().getId() != user.getId()) {
+                return new ApiResponse(ERROR, "Cannot save filter because a public filter with the name '" + existingFilter.getName() + "' already exists.");
+            }
 
+            namedSearchFilterGroupRepo.clone(existingFilter, namedSearchFilterGroup);
+        } else {
             boolean foundFilter = false;
 
             for (NamedSearchFilterGroup filter : user.getSavedFilters()) {
@@ -317,7 +320,6 @@ public class SubmissionListController {
                 namedSearchFilterGroup.setUser(user);
                 user.getSavedFilters().add(namedSearchFilterGroupRepo.createFromFilter(namedSearchFilterGroup));
             }
-
         }
 
         userRepo.save(user);
