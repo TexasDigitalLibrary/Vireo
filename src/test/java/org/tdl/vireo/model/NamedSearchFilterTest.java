@@ -55,8 +55,7 @@ public class NamedSearchFilterTest extends AbstractEntityTest {
 
         long numberOfNamedSearchFilterGroups = namedSearchFilterGroupRepo.count();
 
-        // user create implicitly creates a filter
-        assertEquals(1, numberOfNamedSearchFilterGroups, "There already exists a named search filter group!");
+        assertEquals(0, numberOfNamedSearchFilterGroups, "There already exists a named search filter group!");
 
         long numberOfNamedSearchFilters = namedSearchFilterRepo.count();
 

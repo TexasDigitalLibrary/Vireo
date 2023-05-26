@@ -95,7 +95,7 @@ public class SubmissionListController {
         clearColumnCreate(user);
         user.setPageSize(pageSize);
         user.setSubmissionViewColumns(submissionViewColumns);
-        user = userRepo.save(user);
+        user = userRepo.update(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
 
@@ -105,7 +105,7 @@ public class SubmissionListController {
         clearColumnCreate(user);
         user.setPageSize(10);
         user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());
-        user = userRepo.save(user);
+        user = userRepo.update(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
 
@@ -125,7 +125,7 @@ public class SubmissionListController {
     @RequestMapping(value = "/update-user-filter-columns", method = POST)
     public ApiResponse updateUserFilterColumns(@WeaverUser User user, @RequestBody List<SubmissionListColumn> filterColumns) {
         user.setFilterColumns(filterColumns);
-        user = userRepo.save(user);
+        user = userRepo.update(user);
         return new ApiResponse(SUCCESS, user.getFilterColumns());
     }
 
@@ -159,7 +159,7 @@ public class SubmissionListController {
 
         user.setActiveFilter(desiredFilter.get());
 
-        user = userRepo.save(user);
+        user = userRepo.update(user);
 
         simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
@@ -228,7 +228,7 @@ public class SubmissionListController {
 
         activeFilter.addFilterCriterion(namedSearchFilter);
 
-        user = userRepo.save(user);
+        user = userRepo.update(user);
 
         simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
@@ -265,7 +265,7 @@ public class SubmissionListController {
             }
         }
 
-        user = userRepo.save(user);
+        user = userRepo.update(user);
 
         simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
@@ -322,7 +322,7 @@ public class SubmissionListController {
             }
         }
 
-        userRepo.save(user);
+        userRepo.update(user);
 
         return new ApiResponse(SUCCESS);
     }

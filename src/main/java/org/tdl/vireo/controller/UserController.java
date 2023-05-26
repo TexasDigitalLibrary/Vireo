@@ -162,7 +162,7 @@ public class UserController {
         copyProperties(updatedUser, persistedUser, "password", "activeFilter", "savedFilters");
 
         LOG.info("Updating user with email " + persistedUser.getEmail());
-        persistedUser = userRepo.save(persistedUser);
+        persistedUser = userRepo.update(persistedUser);
 
         userRepo.broadcast(userRepo.findAll());
 
@@ -179,8 +179,8 @@ public class UserController {
     @RequestMapping(value = "/settings/update", method = POST)
     public ApiResponse updateSetting(@WeaverUser User user, @RequestBody Map<String, String> userSettings) {
         user.setSettings(userSettings);
-        userRepo.update(user);
-        simpMessagingTemplate.convertAndSend("/channel/user/settings/" + user.getId(), new ApiResponse(SUCCESS, userRepo.save(user).getSettings()));
+        user = userRepo.update(user);
+        simpMessagingTemplate.convertAndSend("/channel/user/settings/" + user.getId(), new ApiResponse(SUCCESS, user.getSettings()));
         return new ApiResponse(SUCCESS);
     }
 
