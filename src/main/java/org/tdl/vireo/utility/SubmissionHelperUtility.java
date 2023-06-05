@@ -652,7 +652,7 @@ public class SubmissionHelperUtility {
     }
 
     public String getEmbargoLiftDate() {
-        String defaultEmbargoLiftDateStr = "";
+        String defaultEmbargoLiftDateStr = null;
         Optional<String> dateIssued = getFieldValueByPredicateValue("dc.date.issued");
         if(dateIssued.isPresent()){
             String dateIssuedStr = dateIssued.get();

@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.custom.UserRepoCustom;
 
@@ -25,6 +26,10 @@ public interface UserRepo extends AbstractWeaverUserRepo<User>, UserRepoCustom {
     public List<User> findAllByRoleInAndNameContainsIgnoreCase(List<IRole> role, String name, Pageable pageable);
 
     public Page<User> findAll(Specification<User> specification, Pageable pageable);
+
+    public List<User> findAllByActiveFilter(NamedSearchFilterGroup activeFilter);
+
+    public List<User> findAllBySavedFilters(NamedSearchFilterGroup activeFilter);
 
     public Long countByRoleIn(List<IRole> role);
 

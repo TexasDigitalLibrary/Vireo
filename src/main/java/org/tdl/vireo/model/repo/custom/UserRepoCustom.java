@@ -9,4 +9,6 @@ public interface UserRepoCustom {
 
     public User create(String email, String firstName, String lastName, String password, Role role);
 
+    public User clearActiveFilter(User user);
+
 }

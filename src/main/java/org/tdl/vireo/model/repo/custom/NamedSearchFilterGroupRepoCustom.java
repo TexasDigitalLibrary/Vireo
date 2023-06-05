@@ -13,4 +13,6 @@ public interface NamedSearchFilterGroupRepoCustom {
 
     public NamedSearchFilterGroup createFromFilter(NamedSearchFilterGroup namedSearchFilterGroup);
 
+    public NamedSearchFilterGroup getOrCreatePersistedActiveFilterForUser(User user);
+
 }

@@ -4,17 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.List;
-
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class SubmissionTest extends AbstractEntityTest {
 
     @Autowired
@@ -251,38 +250,6 @@ public class SubmissionTest extends AbstractEntityTest {
         assertEquals(2, found.size(), "Did not retrieve exactly two submissions by submitter and organization!");
         assertEquals(secondSubmission, found.get(1), "The submission was not retrievable by submitter and organization!");
         assertNotEquals(found.get(0).getId(), found.get(1).getId(), "The submissions retrieved by submitter and organization are the same!");
-    }
-
-    @AfterEach
-    public void cleanUp() {
-        submissionRepo.deleteAll();
-        submissionStatusRepo.deleteAll();
-        customActionValueRepo.deleteAll();
-        customActionDefinitionRepo.deleteAll();
-        workflowStepRepo.findAll().forEach(workflowStep -> {
-            workflowStepRepo.delete(workflowStep);
-        });
-        submissionWorkflowStepRepo.deleteAll();
-        actionLogRepo.deleteAll();
-        fieldValueRepo.deleteAll();
-        organizationRepo.findAll().forEach(organization -> {
-            organizationRepo.delete(organization);
-        });
-        organizationCategoryRepo.deleteAll();
-        fieldProfileRepo.findAll().forEach(fieldProfile -> {
-            fieldProfileRepo.delete(fieldProfile);
-        });
-        submissionFieldProfileRepo.findAll().forEach(fieldProfile -> {
-            submissionFieldProfileRepo.delete(fieldProfile);
-        });
-        fieldPredicateRepo.deleteAll();
-        submissionListColumnRepo.deleteAll();
-        inputTypeRepo.deleteAll();
-        embargoRepo.deleteAll();
-        namedSearchFilterGroupRepo.findAll().forEach(nsf -> {
-            namedSearchFilterGroupRepo.delete(nsf);
-        });
-        userRepo.deleteAll();
     }
 
 }

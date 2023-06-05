@@ -6,7 +6,7 @@
 
   <groupId>org.tdl</groupId>
   <artifactId>vireo</artifactId>
-  <version>4.2.0</version>
+  <version>4.2.1</version>
 
   <name>Vireo</name>
   <description>Vireo Thesis and Dissertation Submission System</description>
@@ -115,7 +115,7 @@
     <dependency>
       <groupId>com.googlecode.libphonenumber</groupId>
       <artifactId>libphonenumber</artifactId>
-      <version>8.13.9</version>
+      <version>8.13.10</version>
     </dependency>
 
     <dependency>
@@ -186,14 +186,6 @@
         <exclusion>
           <groupId>commons-httpclient</groupId>
           <artifactId>commons-httpclient</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>log4j</groupId>
-          <artifactId>log4j</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>xom</groupId>
-          <artifactId>xom</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

@@ -2,19 +2,22 @@ package org.tdl.vireo.model.repo.impl;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.UserRepoCustom;
 import org.tdl.vireo.service.DefaultFiltersService;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
-
-import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
-import edu.tamu.weaver.response.ApiResponse;
 
 public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> implements UserRepoCustom {
 
@@ -31,6 +34,9 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
     @Autowired
+    private NamedSearchFilterRepo namedSearchFilterRepo;
+
+    @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
@@ -44,12 +50,11 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     }
 
     private User saveAndAddSettings(User user) {
-        NamedSearchFilterGroup activeFilter = namedSearchFilterGroupRepo.create(user);
+        initializeActiveFilter(user);
 
         user.putSetting("id", user.getId().toString());
         user.putSetting("displayName", user.getFirstName() + " " + user.getLastName());
         user.putSetting("preferedEmail", user.getEmail());
-        user.setActiveFilter(activeFilter);
         user.setFilterColumns(defaultFiltersService.getDefaultFilter());
         user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
@@ -63,8 +68,42 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
         return user;
     }
 
+    /**
+     * Clear the active filter group for the given user, creating a persisted filer group if necessary.
+     *
+     * This removes existing filters and columns on the persisted filter group (aka not-"saved" filter group).
+     *
+     * This does not send a message on channel "/channel/user/update".
+     *
+     * @param user The user to clear the active filter group of.
+     *
+     * @return The updated user model.
+     */
+    public User clearActiveFilter(User user) {
+        NamedSearchFilterGroup persistFilterGroup = namedSearchFilterGroupRepo.getOrCreatePersistedActiveFilterForUser(user);
+        List<NamedSearchFilter> searchFilters = new ArrayList<>(persistFilterGroup.getNamedSearchFilters());
+
+        persistFilterGroup.getNamedSearchFilters().clear();
+        persistFilterGroup.getSavedColumns().clear();
+        persistFilterGroup.setColumnsFlag(false);
+
+        persistFilterGroup = namedSearchFilterGroupRepo.save(persistFilterGroup);
+
+        user.setActiveFilter(persistFilterGroup);
+        user = userRepo.save(user);
+
+        // Do not call deleteAllInBatch() in here because delete() is overridden in namedSearchFilterRepo() and delete() must be called.
+        searchFilters.forEach(filter -> {
+            namedSearchFilterRepo.delete(filter);
+        });
+
+        return user;
+    }
+
     @Override
     public User update(User user) {
+        initializeActiveFilter(user);
+
         user = userRepo.save(user);
         simpMessagingTemplate.convertAndSend("/channel/user/update", new ApiResponse(SUCCESS, user));
         return user;
@@ -72,14 +111,39 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
 
     @Override
     public void delete(User user) {
-        namedSearchFilterGroupRepo.delete(user.getActiveFilter());
-        userRepo.deleteById(user.getId());
+        for (NamedSearchFilterGroup namedSearchFilterGroup : namedSearchFilterGroupRepo.findByUser(user)) {
+            namedSearchFilterGroupRepo.delete(namedSearchFilterGroup);
+        }
+
+        user.setActiveFilter(null);
+        user.setSavedFilters(null);
+        super.delete(user);
+
         simpMessagingTemplate.convertAndSend("/channel/user/delete", new ApiResponse(SUCCESS));
     }
 
     @Override
     protected String getChannel() {
         return "/channel/user";
+    }
+
+    /**
+     * Create an active filter if the user has the appropriate roles.
+     *
+     * @param user The user to update.
+     */
+    private void initializeActiveFilter(User user) {
+        switch ((Role) user.getRole()) {
+            case ROLE_ADMIN:
+            case ROLE_MANAGER:
+            case ROLE_REVIEWER:
+                if (user.getActiveFilter() == null) {
+                    user.setActiveFilter(namedSearchFilterGroupRepo.create(user));
+                }
+                break;
+            default:
+                break;
+        }
     }
 
 }

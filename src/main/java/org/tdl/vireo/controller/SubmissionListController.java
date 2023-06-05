@@ -9,6 +9,7 @@ import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +95,7 @@ public class SubmissionListController {
         clearColumnCreate(user);
         user.setPageSize(pageSize);
         user.setSubmissionViewColumns(submissionViewColumns);
-        user = userRepo.save(user);
+        user = userRepo.update(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
 
@@ -104,7 +105,7 @@ public class SubmissionListController {
         clearColumnCreate(user);
         user.setPageSize(10);
         user.setSubmissionViewColumns(defaultSubmissionListColumnService.getDefaultSubmissionListColumns());
-        user = userRepo.save(user);
+        user = userRepo.update(user);
         return new ApiResponse(SUCCESS, user.getSubmissionViewColumns());
     }
 
@@ -124,7 +125,7 @@ public class SubmissionListController {
     @RequestMapping(value = "/update-user-filter-columns", method = POST)
     public ApiResponse updateUserFilterColumns(@WeaverUser User user, @RequestBody List<SubmissionListColumn> filterColumns) {
         user.setFilterColumns(filterColumns);
-        user = userRepo.save(user);
+        user = userRepo.update(user);
         return new ApiResponse(SUCCESS, user.getFilterColumns());
     }
 
@@ -150,16 +151,17 @@ public class SubmissionListController {
     @RequestMapping(value = "/set-active-filter", method = POST)
     public ApiResponse setActiveFilter(@WeaverUser User user, @RequestBody NamedSearchFilterGroup namedSearchFilterGroup) {
 
-        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
+        Optional<NamedSearchFilterGroup> desiredFilter = namedSearchFilterGroupRepo.findById(namedSearchFilterGroup.getId());
 
-        activeFilter.getNamedSearchFilters().clear();
-        activeFilter.getSavedColumns().clear();
+        if (desiredFilter.isEmpty()) {
+            return new ApiResponse(ERROR, "Failed to find filter with ID " + namedSearchFilterGroup.getId() + ".");
+        }
 
-        activeFilter = namedSearchFilterGroupRepo.clone(activeFilter, namedSearchFilterGroup);
+        user.setActiveFilter(desiredFilter.get());
 
-        user = userRepo.save(user);
+        user = userRepo.update(user);
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + activeFilter.getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -179,14 +181,19 @@ public class SubmissionListController {
     @PreAuthorize("hasRole('REVIEWER')")
     @RequestMapping(value = "/remove-saved-filter", method = POST)
     public ApiResponse removeSavedFilter(@WeaverUser User user, @WeaverValidatedModel NamedSearchFilterGroup savedFilter) {
-        if (user.getSavedFilters().contains(savedFilter)) {
-            user.getSavedFilters().remove(savedFilter);
-            user = userRepo.save(user);
+        Optional<NamedSearchFilterGroup> filterGroup = namedSearchFilterGroupRepo.findById(savedFilter.getId());
 
-            return new ApiResponse(SUCCESS, user.getActiveFilter());
+        if (filterGroup.isEmpty()) {
+            return new ApiResponse(ERROR, "Cannot not find filter with ID " + savedFilter.getId() + ".");
         }
 
-        return new ApiResponse(ERROR, "Cannot not find filter.");
+        if (filterGroup.get().getUser().getId() != user.getId()) {
+            return new ApiResponse(ERROR, "Cannot delete filter, you do not own filter with ID " + filterGroup.get().getId() + ".");
+        }
+
+        namedSearchFilterGroupRepo.delete(filterGroup.get());
+
+        return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
 
     @PreAuthorize("hasRole('REVIEWER')")
@@ -221,7 +228,7 @@ public class SubmissionListController {
 
         activeFilter.addFilterCriterion(namedSearchFilter);
 
-        user = userRepo.save(user);
+        user = userRepo.update(user);
 
         simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
@@ -258,7 +265,7 @@ public class SubmissionListController {
             }
         }
 
-        user = userRepo.save(user);
+        user = userRepo.update(user);
 
         simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
@@ -268,14 +275,10 @@ public class SubmissionListController {
     @RequestMapping("/clear-filter-criteria")
     @PreAuthorize("hasRole('REVIEWER')")
     public ApiResponse clearFilterCriteria(@WeaverUser User user) {
-        NamedSearchFilterGroup activeFilter = user.getActiveFilter();
-        activeFilter.getNamedSearchFilters().clear();
-        activeFilter.getSavedColumns().clear();
-        activeFilter.setColumnsFlag(false);
+        user = userRepo.clearActiveFilter(user);
 
-        user = userRepo.save(user);
-
-        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + activeFilter.getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/user/update", new ApiResponse(SUCCESS, user));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -296,9 +299,12 @@ public class SubmissionListController {
         NamedSearchFilterGroup existingFilter = namedSearchFilterGroupRepo.findByNameAndPublicFlagTrue(namedSearchFilterGroup.getName());
 
         if (existingFilter != null) {
-            existingFilter = namedSearchFilterGroupRepo.clone(existingFilter, namedSearchFilterGroup);
-        } else {
+            if (existingFilter.getUser() == null || existingFilter.getUser().getId() != user.getId()) {
+                return new ApiResponse(ERROR, "Cannot save filter because a public filter with the name '" + existingFilter.getName() + "' already exists.");
+            }
 
+            namedSearchFilterGroupRepo.clone(existingFilter, namedSearchFilterGroup);
+        } else {
             boolean foundFilter = false;
 
             for (NamedSearchFilterGroup filter : user.getSavedFilters()) {
@@ -314,10 +320,9 @@ public class SubmissionListController {
                 namedSearchFilterGroup.setUser(user);
                 user.getSavedFilters().add(namedSearchFilterGroupRepo.createFromFilter(namedSearchFilterGroup));
             }
-
         }
 
-        userRepo.save(user);
+        userRepo.update(user);
 
         return new ApiResponse(SUCCESS);
     }
