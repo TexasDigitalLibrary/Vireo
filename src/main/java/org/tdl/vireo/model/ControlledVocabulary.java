@@ -1,15 +1,18 @@
 package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import edu.tamu.weaver.context.SpringContext;
+import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
-
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
@@ -18,12 +21,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.ControlledVocabularyValidator;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonView;
-
-import edu.tamu.weaver.context.SpringContext;
-import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 
 @Entity
 @Configurable
@@ -37,8 +34,9 @@ public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
     private String name;
 
     @JsonView(Views.SubmissionIndividual.class)
-    @OneToMany(cascade = { ALL }, fetch = EAGER, mappedBy = "controlledVocabulary", orphanRemoval = true)
+    @OneToMany(cascade = { ALL }, fetch = LAZY, mappedBy = "controlledVocabulary", orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
+    @BatchSize(size=1000)
     private List<VocabularyWord> dictionary;
 
     @JsonView(Views.SubmissionIndividual.class)
