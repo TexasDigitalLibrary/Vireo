@@ -9,7 +9,7 @@ public interface SimpleSubmissionView {
 
     public SimpleUserView getSubmitter();
 
-    public SimpleUserView getAssignee();
+    public SettingsUserView getAssignee();
 
     public SubmissionStatus getSubmissionStatus();
 
