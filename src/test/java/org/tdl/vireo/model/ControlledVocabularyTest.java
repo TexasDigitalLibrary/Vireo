@@ -3,15 +3,17 @@ package org.tdl.vireo.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(propagation = Propagation.REQUIRES_NEW)
 public class ControlledVocabularyTest extends AbstractEntityTest {
 
     @Override
     @Test
+    @Transactional(propagation = Propagation.REQUIRED)
     public void testCreate() throws ClassNotFoundException {
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
         assertEquals(1, controlledVocabularyRepo.count(), "The repository did not save the entity!");
@@ -42,6 +44,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
 
     @Override
     @Test
+    @Transactional(propagation = Propagation.REQUIRED)
     public void testDuplication() {
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
         try {
@@ -57,6 +60,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
 
     @Override
     @Test
+    @Transactional(propagation = Propagation.REQUIRED)
     public void testDelete() {
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
         controlledVocabularyRepo.delete(controlledVocabulary);
@@ -65,6 +69,7 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
 
     @Override
     @Test
+    @Transactional(propagation = Propagation.REQUIRED)
     public void testCascade() {
         controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
 
@@ -87,17 +92,6 @@ public class ControlledVocabularyTest extends AbstractEntityTest {
         controlledVocabularyRepo.delete(controlledVocabulary);
         assertEquals(0, vocabularyWordRepo.count(), "Vocabulary word was orphaned!");
         assertEquals(0, controlledVocabularyRepo.count(), "The entity was not deleted!");
-    }
-
-    @AfterEach
-    public void cleanUp() {
-        controlledVocabularyRepo.findAll().forEach(cv -> {
-            controlledVocabularyRepo.delete(cv);
-        });
-        vocabularyWordRepo.findAll().forEach(vw -> {
-            vocabularyWordRepo.delete(vw);
-        });
-        embargoRepo.deleteAll();
     }
 
 }

@@ -2,28 +2,26 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.CascadeType.DETACH;
 import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.FetchType.EAGER;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
-import org.tdl.vireo.model.response.Views;
-import org.tdl.vireo.model.validation.VocabularyWordValidator;
+import static javax.persistence.FetchType.LAZY;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.model.response.Views;
+import org.tdl.vireo.model.validation.VocabularyWordValidator;
 
 @Entity
 @JsonIgnoreProperties(value = { "controlledVocabulary" }, allowGetters = true)
@@ -42,11 +40,11 @@ public class VocabularyWord extends ValidatingBaseEntity {
     @Column(nullable = true)
     private String identifier;
 
-    @JsonView(Views.SubmissionIndividual.class)
-    @ElementCollection(fetch = EAGER)
+    @ElementCollection(fetch = LAZY)
+    @Fetch(FetchMode.SUBSELECT)
     private List<String> contacts;
 
-    @ManyToOne(cascade = { DETACH, REFRESH }, fetch = EAGER, optional = false)
+    @ManyToOne(cascade = { DETACH, REFRESH }, fetch = LAZY, optional = false)
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = ControlledVocabulary.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private ControlledVocabulary controlledVocabulary;
