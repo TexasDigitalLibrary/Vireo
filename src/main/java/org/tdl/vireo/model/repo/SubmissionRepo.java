@@ -1,17 +1,17 @@
 package org.tdl.vireo.model.repo;
 
+import edu.tamu.weaver.data.model.repo.WeaverRepo;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 
-import edu.tamu.weaver.data.model.repo.WeaverRepo;
-
 public interface SubmissionRepo extends WeaverRepo<Submission>, SubmissionRepoCustom {
+
+    public <T> List<T> findAllViewBySubmitterId(Long submitterId, Class<T> type);
 
     public List<Submission> findAllBySubmitterAndOrganization(User submitter, Organization organization);
 
