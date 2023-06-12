@@ -100,7 +100,7 @@ import org.tdl.vireo.service.SubmissionEmailService;
 import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
-import org.tdl.vireo.view.SimpleSubmissionView;
+import org.tdl.vireo.view.FieldValueSubmissionView;
 
 @RestController
 @RequestMapping("/submission")
@@ -186,7 +186,7 @@ public class SubmissionController {
   @RequestMapping("/all-by-user")
   @PreAuthorize("hasRole('STUDENT')")
   public ApiResponse getAllByUser(@WeaverUser User user) {
-    return new ApiResponse(SUCCESS, submissionRepo.findAllViewBySubmitterId(user.getId(), SimpleSubmissionView.class));
+    return new ApiResponse(SUCCESS, submissionRepo.findAllViewBySubmitterId(user.getId(), FieldValueSubmissionView.class));
   }
 
   @JsonView(Views.SubmissionIndividualActionLogs.class)
