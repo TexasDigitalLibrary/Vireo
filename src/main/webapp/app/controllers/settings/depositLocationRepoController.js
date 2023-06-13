@@ -52,15 +52,15 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
                     var testableDepositLocation = new DepositLocation(testData);
                     testableDepositLocation.testConnection().then(function (response) {
                         var apiRes = angular.fromJson(response.body);
-                        if(apiRes.meta.status === 'SUCCESS') {
-                        	var collections = apiRes.payload.HashMap;
+                        if (apiRes.meta.status === 'SUCCESS') {
+                            var collections = apiRes.payload.HashMap;
                             angular.forEach(collections, function (uri, name) {
                                 $scope.collections.push({
                                     "name": name,
                                     "uri": uri
                                 });
                             });
-                        }                        
+                        }
                         isTestDepositing = false;
                     });
                 },
@@ -89,7 +89,9 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
         };
 
         $scope.selectDepositLocation = function (index) {
-            $scope.modalData = $scope.depositLocations[index];
+            $scope.resetDepositLocation();
+
+            angular.extend($scope.modalData, $scope.depositLocations[index]);
         };
 
         $scope.editDepositLocation = function (index) {
