@@ -1045,7 +1045,7 @@ var apiMapping = {
     },
     NamedSearchFilterGroup: {
         validations: true,
-        modelListeners: true,
+        modelListeners: false,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'submission-list',
@@ -1056,9 +1056,13 @@ var apiMapping = {
             'controller': 'submission-list',
             'method': 'set-active-filter'
         },
-        listen: {
+        listenActive: {
             'endpoint': '/channel',
             'controller': 'active-filters'
+        },
+        listenSaved: {
+            'endpoint': '/channel',
+            'controller': 'saved-filters'
         },
         addFilter: {
             'endpoint': '/private/queue',

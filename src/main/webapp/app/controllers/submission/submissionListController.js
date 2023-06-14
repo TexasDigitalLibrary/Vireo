@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilter, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -978,6 +978,44 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             sessionStorage.setItem("list-page-number", 1);
         };
+
+        WsApi.listen(apiMapping.NamedSearchFilterGroup.listenActive).then(null, null, function (res) {
+            if (res !== undefined && res.body) {
+                var apiRes = angular.fromJson(res.body);
+
+                if (apiRes.payload && apiRes.payload) {
+                    var keys = Object.keys(apiRes.payload);
+                    var regex = /^NamedSearchFilterGroup\b/;
+                    for (var i = 0; i < keys.length; i++) {
+                        if (keys[i].match(regex)) {
+                            angular.extend($scope.activeFilters, apiRes.payload[keys[i]]);
+                            query(); // FIXME: this will result in a double-load on event triggering page, but it needed for all other pages.
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+        WsApi.listen(apiMapping.NamedSearchFilterGroup.listenSaved).then(null, null, function (res) {
+            if (res !== undefined && res.body) {
+                var apiRes = angular.fromJson(res.body);
+
+                if (apiRes.payload) {
+                    var keys = Object.keys(apiRes.payload);
+                    var regex = /^PersistentBag\b/;
+                    for (var i = 0; i < keys.length; i++) {
+                        if (keys[i].match(regex)) {
+                            savedFilters.length = 0;
+                            for (var j = 0; j < apiRes.payload[keys[i]].length; j++) {
+                                savedFilters.push(new SavedFilter(apiRes.payload[keys[i]][j]));
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        });
 
     });
 
