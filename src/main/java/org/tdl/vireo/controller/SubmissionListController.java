@@ -145,7 +145,7 @@ public class SubmissionListController {
 
         activeFilter = namedSearchFilterGroupRepo.update(activeFilter);
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters", new ApiResponse(SUCCESS, FilterAction.SORT, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.SORT, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS, activeFilter);
     }
@@ -164,7 +164,7 @@ public class SubmissionListController {
 
         user = userRepo.update(user);
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters", new ApiResponse(SUCCESS, FilterAction.SET, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.SET, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -196,8 +196,8 @@ public class SubmissionListController {
 
         namedSearchFilterGroupRepo.delete(filterGroup.get());
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters", new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
-        simpMessagingTemplate.convertAndSend("/channel/saved-filters", new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getSavedFilters()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/saved-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getSavedFilters()));
 
         return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
@@ -236,7 +236,7 @@ public class SubmissionListController {
 
         user = userRepo.update(user);
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters", new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -273,7 +273,7 @@ public class SubmissionListController {
 
         user = userRepo.update(user);
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters", new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -284,7 +284,7 @@ public class SubmissionListController {
         user = userRepo.clearActiveFilter(user);
 
         simpMessagingTemplate.convertAndSend("/channel/user/update", new ApiResponse(SUCCESS, user));
-        simpMessagingTemplate.convertAndSend("/channel/active-filters", new ApiResponse(SUCCESS, FilterAction.CLEAR, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.CLEAR, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -330,8 +330,8 @@ public class SubmissionListController {
 
         userRepo.update(user);
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters", new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
-        simpMessagingTemplate.convertAndSend("/channel/saved-filters", new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getSavedFilters()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/saved-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getSavedFilters()));
 
         return new ApiResponse(SUCCESS);
     }

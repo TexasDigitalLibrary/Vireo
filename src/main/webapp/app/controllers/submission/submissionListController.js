@@ -29,9 +29,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
+    var userSettings = new UserSettings();
+
     var rowFilterTitle = "Exclude";
 
-    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready()]);
+    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready(), userSettings.ready()]);
 
     var updateChange = function(change) {
         $scope.change = change;
@@ -193,8 +195,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var embargos = EmbargoRepo.getAll();
         var packagers = PackagerRepo.getAll();
         var controlledVocabularies = ControlledVocabularyRepo.getAll();
-
-        var userSettings = new UserSettings();
 
         var addBatchCommentEmail = function (message) {
             batchCommentEmail.adding = true;
@@ -968,7 +968,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             sessionStorage.setItem("list-page-number", 1);
         };
 
-        WsApi.listen(apiMapping.NamedSearchFilterGroup.listenActive).then(null, null, function (res) {
+        var listenActive = apiMapping.NamedSearchFilterGroup.listenActive;
+        var listenSaved = apiMapping.NamedSearchFilterGroup.listenSaved;
+        listenActive.controller = 'active-filters/user/' + userSettings.id;
+        listenSaved.controller = 'saved-filters/user/' + userSettings.id;
+
+        WsApi.listen(listenActive).then(null, null, function (res) {
             if (res !== undefined && res.body) {
                 var apiRes = angular.fromJson(res.body);
 
@@ -990,7 +995,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             }
         });
 
-        WsApi.listen(apiMapping.NamedSearchFilterGroup.listenSaved).then(null, null, function (res) {
+        WsApi.listen(listenSaved).then(null, null, function (res) {
             if (res !== undefined && res.body) {
                 var apiRes = angular.fromJson(res.body);
 
