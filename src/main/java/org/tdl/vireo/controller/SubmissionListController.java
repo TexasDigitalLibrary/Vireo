@@ -194,10 +194,17 @@ public class SubmissionListController {
             return new ApiResponse(ERROR, "Cannot delete filter, you do not own filter with ID " + filterGroup.get().getId() + ".");
         }
 
+        Boolean isPublic = filterGroup.get().getPublicFlag();
+        Long fgId = filterGroup.get().getId();
+
         namedSearchFilterGroupRepo.delete(filterGroup.get());
 
         simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
         simpMessagingTemplate.convertAndSend("/channel/saved-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getSavedFilters()));
+
+        if (isPublic == true) {
+            simpMessagingTemplate.convertAndSend("/channel/saved-filters/public", new ApiResponse(SUCCESS, FilterAction.REMOVE, fgId));
+        }
 
         return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
@@ -303,12 +310,14 @@ public class SubmissionListController {
     public ApiResponse saveFilterCriteria(@WeaverUser User user, @WeaverValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
 
         NamedSearchFilterGroup existingFilter = namedSearchFilterGroupRepo.findByNameAndPublicFlagTrue(namedSearchFilterGroup.getName());
+        boolean wasPublic = false;
 
         if (existingFilter != null) {
             if (existingFilter.getUser() == null || existingFilter.getUser().getId() != user.getId()) {
                 return new ApiResponse(ERROR, "Cannot save filter because a public filter with the name '" + existingFilter.getName() + "' already exists.");
             }
 
+            wasPublic = existingFilter.getPublicFlag();
             namedSearchFilterGroupRepo.clone(existingFilter, namedSearchFilterGroup);
         } else {
             boolean foundFilter = false;
@@ -316,7 +325,7 @@ public class SubmissionListController {
             for (NamedSearchFilterGroup filter : user.getSavedFilters()) {
                 if (filter.getName().equals(namedSearchFilterGroup.getName())) {
                     filter.getNamedSearchFilters().clear();
-                    filter = namedSearchFilterGroupRepo.clone(filter, namedSearchFilterGroup);
+                    existingFilter = namedSearchFilterGroupRepo.clone(filter, namedSearchFilterGroup);
                     foundFilter = true;
                     break;
                 }
@@ -324,7 +333,8 @@ public class SubmissionListController {
 
             if (!foundFilter) {
                 namedSearchFilterGroup.setUser(user);
-                user.getSavedFilters().add(namedSearchFilterGroupRepo.createFromFilter(namedSearchFilterGroup));
+                existingFilter = namedSearchFilterGroupRepo.createFromFilter(namedSearchFilterGroup);
+                user.getSavedFilters().add(existingFilter);
             }
         }
 
@@ -332,6 +342,10 @@ public class SubmissionListController {
 
         simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
         simpMessagingTemplate.convertAndSend("/channel/saved-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getSavedFilters()));
+
+        if (existingFilter.getPublicFlag() == true || wasPublic) {
+            simpMessagingTemplate.convertAndSend("/channel/saved-filters/public", new ApiResponse(SUCCESS, FilterAction.SAVE, existingFilter));
+        }
 
         return new ApiResponse(SUCCESS);
     }

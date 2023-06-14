@@ -968,10 +968,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             sessionStorage.setItem("list-page-number", 1);
         };
 
-        var listenActive = apiMapping.NamedSearchFilterGroup.listenActive;
-        var listenSaved = apiMapping.NamedSearchFilterGroup.listenSaved;
+        var listenActive = angular.copy(apiMapping.NamedSearchFilterGroup.listenActive);
+        var listenSaved = angular.copy(apiMapping.NamedSearchFilterGroup.listenSaved);
+        var listenPublic = angular.copy(apiMapping.NamedSearchFilterGroup.listenSaved);
         listenActive.controller = 'active-filters/user/' + userSettings.id;
         listenSaved.controller = 'saved-filters/user/' + userSettings.id;
+        listenPublic.controller = 'saved-filters/public';
 
         WsApi.listen(listenActive).then(null, null, function (res) {
             if (res !== undefined && res.body) {
@@ -1009,6 +1011,33 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                                 savedFilters.push(new SavedFilter(apiRes.payload[keys[i]][j]));
                             }
                             break;
+                        }
+                    }
+                }
+            }
+        });
+
+        WsApi.listen(listenPublic).then(null, null, function (res) {
+            if (res !== undefined && res.body) {
+                var apiRes = angular.fromJson(res.body);
+
+                if (apiRes.payload && apiRes.payload.FilterAction) {
+                    if (apiRes.payload.FilterAction == 'REMOVE') {
+                        SavedFilterRepo.reset();
+                    } else {
+                        var keys = Object.keys(apiRes.payload);
+                        var regex = /^NamedSearchFilterGroup\b/;
+                        for (var i = 0; i < keys.length; i++) {
+                            if (keys[i].match(regex)) {
+                                if (apiRes.payload.FilterAction == 'SAVE') {
+                                    // If the user is the same, then the filter list should already be up to date.
+                                    if (apiRes.payload[keys[i]].user !== userSettings.id) {
+                                        SavedFilterRepo.reset();
+                                    }
+                                }
+
+                                break;
+                            }
                         }
                     }
                 }
