@@ -92,10 +92,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                     var totalPages = parseInt(page.totalPages);
                     var pageNumber = parseInt(page.number);
 
-                    if (!isNaN(totalPages) && !isNaN(pageNumber) && (pageNumber > totalPages || pageNumber < 0)) {
-                        pageNumber = pageNumber > totalPages && totalPages > 0 ? totalPages - 1 : 0;
-
-                        console.warn("Invalid page number '" + page.number + "' detected, forcibly resetting to page '" + pageNumber + "' and trying again.");
+                    if (!isNaN(totalPages) && !isNaN(pageNumber) && (pageNumber >= totalPages || pageNumber < 0)) {
+                        pageNumber = pageNumber >= totalPages && totalPages > 0 ? totalPages - 1 : 0;
 
                         return queryGetData(params, pageNumber);
                     }
@@ -334,9 +332,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             var value = row.id.toString();
             var gloss = "Submission #" + row.id;
-            $scope.activeFilters.addFilter(rowFilterTitle, value, gloss, true).then(function () {
-                query();
-            });
+            $scope.activeFilters.addFilter(rowFilterTitle, value, gloss, true);
         };
 
         var resetBatchProcess = function () {
@@ -706,17 +702,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 $scope.resetPagination();
             }
 
-            $scope.activeFilters.removeFilter(criterionName, filterValue).then(function () {
-                query();
-            });
+            $scope.activeFilters.removeFilter(criterionName, filterValue);
         };
 
         $scope.clearFilters = function () {
             $scope.resetPagination();
-
-            $scope.activeFilters.clearFilters().then(function () {
-                query();
-            });
+            $scope.activeFilters.clearFilters();
         };
 
         $scope.saveFilter = function () {
@@ -733,9 +724,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             if (filter.columnsFlag) {
                 $scope.userColumns = filter.savedColumns;
             }
-            $scope.activeFilters.set(filter).then(function () {
-                query();
-            });
+            $scope.activeFilters.set(filter);
         };
 
         $scope.resetSaveFilter = function () {
@@ -983,13 +972,17 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             if (res !== undefined && res.body) {
                 var apiRes = angular.fromJson(res.body);
 
-                if (apiRes.payload && apiRes.payload) {
+                if (apiRes.payload && apiRes.payload.FilterAction) {
                     var keys = Object.keys(apiRes.payload);
                     var regex = /^NamedSearchFilterGroup\b/;
                     for (var i = 0; i < keys.length; i++) {
                         if (keys[i].match(regex)) {
+                            if (apiRes.payload.FilterAction == 'CLEAR' || apiRes.payload.FilterAction == 'SET') {
+                                $scope.resetPagination();
+                            }
+
                             angular.extend($scope.activeFilters, apiRes.payload[keys[i]]);
-                            query(); // FIXME: this will result in a double-load on event triggering page, but it needed for all other pages.
+                            query();
                             break;
                         }
                     }
