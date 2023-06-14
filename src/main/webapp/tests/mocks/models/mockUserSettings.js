@@ -25,6 +25,10 @@ var dataUserSettings6 = {
 var mockUserSettings = function($q) {
     var model = mockModel("UserSettings", $q, dataUserSettings1);
 
+    model.ready = function() {
+        return true;
+    };
+
     return model;
 };
 
