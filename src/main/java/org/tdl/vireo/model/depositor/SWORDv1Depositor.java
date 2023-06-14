@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.purl.sword.base.Collection;
 import org.purl.sword.base.DepositResponse;
@@ -20,7 +19,14 @@ import org.purl.sword.client.PostMessage;
 import org.purl.sword.client.SWORDClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tdl.vireo.exception.SwordDepositBadRequestException;
+import org.tdl.vireo.exception.SwordDepositConflictException;
 import org.tdl.vireo.exception.SwordDepositException;
+import org.tdl.vireo.exception.SwordDepositForbiddenException;
+import org.tdl.vireo.exception.SwordDepositInternalServerErrorException;
+import org.tdl.vireo.exception.SwordDepositNotFoundException;
+import org.tdl.vireo.exception.SwordDepositUnauthorizedException;
+import org.tdl.vireo.exception.SwordDepositUnprocessableEntityException;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.export.ExportPackage;
 import org.tdl.vireo.utility.FileHelperUtility;
@@ -40,6 +46,8 @@ public class SWORDv1Depositor implements Depositor {
     }
 
     public Map<String, String> getCollections(DepositLocation depLocation) {
+        ServiceDocument serviceDocument = null;
+
         try {
             Map<String, String> foundCollections = new HashMap<String, String>();
 
@@ -67,16 +75,10 @@ public class SWORDv1Depositor implements Depositor {
             // Obtaining the service document
             // If the credentials contain an onbehalfof user, retrieve the service document on
             // behalf of that user. Otherwise, simply retrieve the service document.
-            ServiceDocument serviceDocument = null;
-            try {
-                if (depLocation.getOnBehalfOf() != null) {
-                    serviceDocument = client.getServiceDocument(depLocation.getRepository(), depLocation.getOnBehalfOf());
-                } else {
-                    serviceDocument = client.getServiceDocument(depLocation.getRepository());
-                }
-            } catch (SWORDClientException e) {
-                logger.debug("Could not get service document!", e);
-                throw new SwordDepositException("Could not get service document!", e);
+            if (depLocation.getOnBehalfOf() != null) {
+                serviceDocument = client.getServiceDocument(depLocation.getRepository(), depLocation.getOnBehalfOf());
+            } else {
+                serviceDocument = client.getServiceDocument(depLocation.getRepository());
             }
 
             // Getting the service from the service document
@@ -93,22 +95,29 @@ public class SWORDv1Depositor implements Depositor {
         } catch (MalformedURLException murle) {
             logger.debug("The repository is an invalid URL", murle);
             throw new SwordDepositException("The repository is an invalid URL", murle);
-        } catch (RuntimeException re) {
-
+        } catch (RuntimeException | SWORDClientException re) {
             String message = re.getMessage();
 
-            if (re.getMessage().contains("Code: 401")) {
-                message = "Unauthorized credentials";
+            if (re.getMessage().contains("Code: 400")) {
+                message = "Bad request to the SWORD server.";
+            } else if (re.getMessage().contains("Code: 401")) {
+                throw new SwordDepositUnauthorizedException("Unauthorized credentials.", re);
             } else if (re.getMessage().contains("Code: 404")) {
-                message = "Repository URL not found";
+                throw new SwordDepositNotFoundException("Repository URL not found.", re);
+            } else if (re.getMessage().contains("Code: 409")) {
+                throw new SwordDepositConflictException(message, re);
             } else if (re.getMessage().contains("Connection refused")) {
-                message = "Connection refused";
+                throw new SwordDepositForbiddenException("Connection refused by the SWORD server.", re);
             } else if (re.getMessage().contains("Unable to parse the XML")) {
-                message = "The repository does not appear to be a valid SWORD server.";
+                throw new SwordDepositUnprocessableEntityException("The repository does not appear to be a valid SWORD server.", re);
+            } else if (re.getMessage().contains("Code: 500")) {
+                throw new SwordDepositInternalServerErrorException("Internal server error returned by the SWORD server.", re);
+            }
+            else if (serviceDocument == null) {
+                message = "Could not get service document!";
             }
 
-            logger.debug(message, re);
-            throw new SwordDepositException(message, re);
+            throw new SwordDepositBadRequestException(message, re);
         }
     }
 
