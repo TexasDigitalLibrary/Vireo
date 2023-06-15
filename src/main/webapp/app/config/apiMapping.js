@@ -492,12 +492,12 @@ var apiMapping = {
         addEmailWorkflowRule: {
             'endpoint': '/private/queue',
             'controller': 'organization',
-            'metod': 'add-email-workflow-rule'
+            'method': 'add-email-workflow-rule'
         },
         editEmailWorkflowRule: {
             'endpoint': '/private/queue',
             'controller': 'organization',
-            'metod': 'edit-email-workflow-rule'
+            'method': 'edit-email-workflow-rule'
         },
         get: {
             'endpoint': '/private/queue',
