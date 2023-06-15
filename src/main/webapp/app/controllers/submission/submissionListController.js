@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilter, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -29,9 +29,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
+    var userSettings = new UserSettings();
+
     var rowFilterTitle = "Exclude";
 
-    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready()]);
+    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready(), userSettings.ready()]);
 
     var updateChange = function(change) {
         $scope.change = change;
@@ -92,10 +94,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                     var totalPages = parseInt(page.totalPages);
                     var pageNumber = parseInt(page.number);
 
-                    if (!isNaN(totalPages) && !isNaN(pageNumber) && (pageNumber > totalPages || pageNumber < 0)) {
-                        pageNumber = pageNumber > totalPages && totalPages > 0 ? totalPages - 1 : 0;
-
-                        console.warn("Invalid page number '" + page.number + "' detected, forcibly resetting to page '" + pageNumber + "' and trying again.");
+                    if (!isNaN(totalPages) && !isNaN(pageNumber) && (pageNumber >= totalPages || pageNumber < 0)) {
+                        pageNumber = pageNumber >= totalPages && totalPages > 0 ? totalPages - 1 : 0;
 
                         return queryGetData(params, pageNumber);
                     }
@@ -195,8 +195,6 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var embargos = EmbargoRepo.getAll();
         var packagers = PackagerRepo.getAll();
         var controlledVocabularies = ControlledVocabularyRepo.getAll();
-
-        var userSettings = new UserSettings();
 
         var addBatchCommentEmail = function (message) {
             batchCommentEmail.adding = true;
@@ -334,9 +332,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             var value = row.id.toString();
             var gloss = "Submission #" + row.id;
-            $scope.activeFilters.addFilter(rowFilterTitle, value, gloss, true).then(function () {
-                query();
-            });
+            $scope.activeFilters.addFilter(rowFilterTitle, value, gloss, true);
         };
 
         var resetBatchProcess = function () {
@@ -706,17 +702,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 $scope.resetPagination();
             }
 
-            $scope.activeFilters.removeFilter(criterionName, filterValue).then(function () {
-                query();
-            });
+            $scope.activeFilters.removeFilter(criterionName, filterValue);
         };
 
         $scope.clearFilters = function () {
             $scope.resetPagination();
-
-            $scope.activeFilters.clearFilters().then(function () {
-                query();
-            });
+            $scope.activeFilters.clearFilters();
         };
 
         $scope.saveFilter = function () {
@@ -733,9 +724,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             if (filter.columnsFlag) {
                 $scope.userColumns = filter.savedColumns;
             }
-            $scope.activeFilters.set(filter).then(function () {
-                query();
-            });
+            $scope.activeFilters.set(filter);
         };
 
         $scope.resetSaveFilter = function () {
@@ -978,6 +967,82 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             sessionStorage.setItem("list-page-number", 1);
         };
+
+        var listenActive = angular.copy(apiMapping.NamedSearchFilterGroup.listenActive);
+        var listenSaved = angular.copy(apiMapping.NamedSearchFilterGroup.listenSaved);
+        var listenPublic = angular.copy(apiMapping.NamedSearchFilterGroup.listenSaved);
+        listenActive.controller = 'active-filters/user/' + userSettings.id;
+        listenSaved.controller = 'saved-filters/user/' + userSettings.id;
+        listenPublic.controller = 'saved-filters/public';
+
+        WsApi.listen(listenActive).then(null, null, function (res) {
+            if (res !== undefined && res.body) {
+                var apiRes = angular.fromJson(res.body);
+
+                if (apiRes.payload && apiRes.payload.FilterAction) {
+                    var keys = Object.keys(apiRes.payload);
+                    var regex = /^NamedSearchFilterGroup\b/;
+                    for (var i = 0; i < keys.length; i++) {
+                        if (keys[i].match(regex)) {
+                            if (apiRes.payload.FilterAction == 'CLEAR' || apiRes.payload.FilterAction == 'SET') {
+                                $scope.resetPagination();
+                            }
+
+                            angular.extend($scope.activeFilters, apiRes.payload[keys[i]]);
+                            query();
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+        WsApi.listen(listenSaved).then(null, null, function (res) {
+            if (res !== undefined && res.body) {
+                var apiRes = angular.fromJson(res.body);
+
+                if (apiRes.payload) {
+                    var keys = Object.keys(apiRes.payload);
+                    var regex = /^PersistentBag\b/;
+                    for (var i = 0; i < keys.length; i++) {
+                        if (keys[i].match(regex)) {
+                            savedFilters.length = 0;
+                            for (var j = 0; j < apiRes.payload[keys[i]].length; j++) {
+                                savedFilters.push(new SavedFilter(apiRes.payload[keys[i]][j]));
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+
+        WsApi.listen(listenPublic).then(null, null, function (res) {
+            if (res !== undefined && res.body) {
+                var apiRes = angular.fromJson(res.body);
+
+                if (apiRes.payload && apiRes.payload.FilterAction) {
+                    if (apiRes.payload.FilterAction == 'REMOVE') {
+                        SavedFilterRepo.reset();
+                    } else {
+                        var keys = Object.keys(apiRes.payload);
+                        var regex = /^NamedSearchFilterGroup\b/;
+                        for (var i = 0; i < keys.length; i++) {
+                            if (keys[i].match(regex)) {
+                                if (apiRes.payload.FilterAction == 'SAVE') {
+                                    // If the user is the same, then the filter list should already be up to date.
+                                    if (apiRes.payload[keys[i]].user !== userSettings.id) {
+                                        SavedFilterRepo.reset();
+                                    }
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
 
     });
 

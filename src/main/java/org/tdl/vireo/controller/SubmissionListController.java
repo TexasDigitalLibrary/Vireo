@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.tdl.vireo.model.FilterAction;
 import org.tdl.vireo.model.FilterCriterion;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
@@ -144,6 +145,8 @@ public class SubmissionListController {
 
         activeFilter = namedSearchFilterGroupRepo.update(activeFilter);
 
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.SORT, user.getActiveFilter()));
+
         return new ApiResponse(SUCCESS, activeFilter);
     }
 
@@ -161,7 +164,7 @@ public class SubmissionListController {
 
         user = userRepo.update(user);
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.SET, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -191,7 +194,17 @@ public class SubmissionListController {
             return new ApiResponse(ERROR, "Cannot delete filter, you do not own filter with ID " + filterGroup.get().getId() + ".");
         }
 
+        Boolean isPublic = filterGroup.get().getPublicFlag();
+        Long fgId = filterGroup.get().getId();
+
         namedSearchFilterGroupRepo.delete(filterGroup.get());
+
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/saved-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getSavedFilters()));
+
+        if (isPublic == true) {
+            simpMessagingTemplate.convertAndSend("/channel/saved-filters/public", new ApiResponse(SUCCESS, FilterAction.REMOVE, fgId));
+        }
 
         return new ApiResponse(SUCCESS, user.getActiveFilter());
     }
@@ -230,7 +243,7 @@ public class SubmissionListController {
 
         user = userRepo.update(user);
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -267,7 +280,7 @@ public class SubmissionListController {
 
         user = userRepo.update(user);
 
-        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -278,7 +291,7 @@ public class SubmissionListController {
         user = userRepo.clearActiveFilter(user);
 
         simpMessagingTemplate.convertAndSend("/channel/user/update", new ApiResponse(SUCCESS, user));
-        simpMessagingTemplate.convertAndSend("/channel/active-filters/" + user.getActiveFilter().getId(), new ApiResponse(SUCCESS, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.CLEAR, user.getActiveFilter()));
 
         return new ApiResponse(SUCCESS);
     }
@@ -297,12 +310,14 @@ public class SubmissionListController {
     public ApiResponse saveFilterCriteria(@WeaverUser User user, @WeaverValidatedModel NamedSearchFilterGroup namedSearchFilterGroup) {
 
         NamedSearchFilterGroup existingFilter = namedSearchFilterGroupRepo.findByNameAndPublicFlagTrue(namedSearchFilterGroup.getName());
+        boolean wasPublic = false;
 
         if (existingFilter != null) {
             if (existingFilter.getUser() == null || existingFilter.getUser().getId() != user.getId()) {
                 return new ApiResponse(ERROR, "Cannot save filter because a public filter with the name '" + existingFilter.getName() + "' already exists.");
             }
 
+            wasPublic = existingFilter.getPublicFlag();
             namedSearchFilterGroupRepo.clone(existingFilter, namedSearchFilterGroup);
         } else {
             boolean foundFilter = false;
@@ -310,7 +325,7 @@ public class SubmissionListController {
             for (NamedSearchFilterGroup filter : user.getSavedFilters()) {
                 if (filter.getName().equals(namedSearchFilterGroup.getName())) {
                     filter.getNamedSearchFilters().clear();
-                    filter = namedSearchFilterGroupRepo.clone(filter, namedSearchFilterGroup);
+                    existingFilter = namedSearchFilterGroupRepo.clone(filter, namedSearchFilterGroup);
                     foundFilter = true;
                     break;
                 }
@@ -318,11 +333,19 @@ public class SubmissionListController {
 
             if (!foundFilter) {
                 namedSearchFilterGroup.setUser(user);
-                user.getSavedFilters().add(namedSearchFilterGroupRepo.createFromFilter(namedSearchFilterGroup));
+                existingFilter = namedSearchFilterGroupRepo.createFromFilter(namedSearchFilterGroup);
+                user.getSavedFilters().add(existingFilter);
             }
         }
 
         userRepo.update(user);
+
+        simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
+        simpMessagingTemplate.convertAndSend("/channel/saved-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getSavedFilters()));
+
+        if (existingFilter.getPublicFlag() == true || wasPublic) {
+            simpMessagingTemplate.convertAndSend("/channel/saved-filters/public", new ApiResponse(SUCCESS, FilterAction.SAVE, existingFilter));
+        }
 
         return new ApiResponse(SUCCESS);
     }
