@@ -160,9 +160,7 @@ public class SubmissionListController {
             return new ApiResponse(ERROR, "Failed to find filter with ID " + namedSearchFilterGroup.getId() + ".");
         }
 
-        user.setActiveFilter(desiredFilter.get());
-
-        user = userRepo.update(user);
+        user = userRepo.setActiveFilter(user, desiredFilter.get());
 
         simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.SET, user.getActiveFilter()));
 
