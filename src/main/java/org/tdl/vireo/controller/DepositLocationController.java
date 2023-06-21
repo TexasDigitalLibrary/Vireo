@@ -63,7 +63,6 @@ public class DepositLocationController {
     // This endpoint is broken. Unable to deserialize Packager interface!!
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/remove", method = POST)
-    @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeDepositLocation(@WeaverValidatedModel DepositLocation depositLocation) {
         logger.info("Removing deposit location with name " + depositLocation.getName());
         depositLocationRepo.remove(depositLocation);
