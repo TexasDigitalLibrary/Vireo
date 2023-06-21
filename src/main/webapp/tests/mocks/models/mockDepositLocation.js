@@ -94,6 +94,17 @@ var mockDepositLocation = function($q) {
         return payloadPromise($q.defer(), testConnectionPayload);
     };
 
+    model.testDepositLocation = function() {
+    };
+
+    model.isTestDepositing = function() {
+        return false;
+    };
+
+    model.isTestable = function() {
+        return false;
+    };
+
     return model;
 };
 
