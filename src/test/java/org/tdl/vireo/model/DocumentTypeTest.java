@@ -62,7 +62,7 @@ public class DocumentTypeTest extends AbstractEntityTest {
     }
 
     @Test
-    @Disabled // FIXME: This function's name suggested testing the delete, but all this does is call create.
+    @Disabled // FIXME: This no longer throws an exception and the previous DataIntegrityViolationException exception may have been a false positive due to a lack of a transaction.
     @Transactional(propagation = Propagation.NESTED)
     public void testFieldPredicateDeleteFailure() {
         DocumentType documentType = documentTypeRepo.create(TEST_DOCUMENT_TYPE_NAME);

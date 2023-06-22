@@ -12,7 +12,7 @@ vireo.controller('NewSubmissionController', function ($controller, $location, $q
 
     $scope.ready = false;
 
-    $q.all([OrganizationRepo.ready(), ManagedConfigurationRepo.getAll(), StudentSubmissionRepo.getAll()]).then(function () {
+    $q.all([OrganizationRepo.ready(), ManagedConfigurationRepo.ready(), StudentSubmissionRepo.ready()]).then(function () {
 
         $scope.ready = true;
 

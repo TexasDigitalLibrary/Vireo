@@ -6,7 +6,7 @@
 
   <groupId>org.tdl</groupId>
   <artifactId>vireo</artifactId>
-  <version>4.2.1</version>
+  <version>4.2.2</version>
 
   <name>Vireo</name>
   <description>Vireo Thesis and Dissertation Submission System</description>
@@ -167,6 +167,18 @@
     </dependency>
 
     <dependency>
+      <groupId>com.io7m.xom</groupId>
+      <artifactId>xom</artifactId>
+      <version>1.2.10</version>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+
+    <dependency>
       <groupId>org.swordapp</groupId>
       <artifactId>sword-common</artifactId>
       <version>1.1</version>
@@ -186,6 +198,10 @@
         <exclusion>
           <groupId>commons-httpclient</groupId>
           <artifactId>commons-httpclient</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xom</groupId>
+          <artifactId>xom</artifactId>
         </exclusion>
       </exclusions>
     </dependency>

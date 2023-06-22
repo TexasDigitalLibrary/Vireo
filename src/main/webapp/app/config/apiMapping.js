@@ -492,12 +492,12 @@ var apiMapping = {
         addEmailWorkflowRule: {
             'endpoint': '/private/queue',
             'controller': 'organization',
-            'metod': 'add-email-workflow-rule'
+            'method': 'add-email-workflow-rule'
         },
         editEmailWorkflowRule: {
             'endpoint': '/private/queue',
             'controller': 'organization',
-            'metod': 'edit-email-workflow-rule'
+            'method': 'edit-email-workflow-rule'
         },
         get: {
             'endpoint': '/private/queue',
@@ -1045,7 +1045,7 @@ var apiMapping = {
     },
     NamedSearchFilterGroup: {
         validations: true,
-        modelListeners: true,
+        modelListeners: false,
         instantiate: {
             'endpoint': '/private/queue',
             'controller': 'submission-list',
@@ -1056,9 +1056,13 @@ var apiMapping = {
             'controller': 'submission-list',
             'method': 'set-active-filter'
         },
-        listen: {
+        listenActive: {
             'endpoint': '/channel',
             'controller': 'active-filters'
+        },
+        listenSaved: {
+            'endpoint': '/channel',
+            'controller': 'saved-filters'
         },
         addFilter: {
             'endpoint': '/private/queue',

@@ -172,7 +172,7 @@ describe("controller: DepositLocationRepoController", function () {
             scope.resetDepositLocation();
         });
         it("selectDepositLocation should select a custom action", function () {
-            scope.modalData = null;
+            scope.modalData = undefined;
             scope.depositLocations = [
                 new mockDepositLocation(q),
                 new mockDepositLocation(q)
@@ -181,7 +181,17 @@ describe("controller: DepositLocationRepoController", function () {
 
             scope.selectDepositLocation(1);
 
-            expect(scope.modalData).toBe(scope.depositLocations[1]);
+            expect(scope.modalData.id).toBe(scope.depositLocations[1].id);
+            expect(scope.modalData.position).toBe(scope.depositLocations[1].position);
+            expect(scope.modalData.name).toBe(scope.depositLocations[1].name);
+            expect(scope.modalData.repository).toBe(scope.depositLocations[1].repository);
+            expect(scope.modalData.collection).toBe(scope.depositLocations[1].collection);
+            expect(scope.modalData.username).toBe(scope.depositLocations[1].username);
+            expect(scope.modalData.password).toBe(scope.depositLocations[1].password);
+            expect(scope.modalData.onBehalfOf).toBe(scope.depositLocations[1].onBehalfOf);
+            expect(scope.modalData.packager).toBe(scope.depositLocations[1].packager);
+            expect(scope.modalData.depositor).toBe(scope.depositLocations[1].depositor);
+            expect(scope.modalData.timeout).toBe(scope.depositLocations[1].timeout);
         });
         it("updateDepositLocation should should save a custom action", function () {
             scope.modalData = new mockDepositLocation(q);
