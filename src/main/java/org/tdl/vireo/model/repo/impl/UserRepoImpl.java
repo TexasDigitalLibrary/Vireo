@@ -11,6 +11,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.tdl.vireo.model.NamedSearchFilter;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Role;
+import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
@@ -98,6 +99,45 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
         });
 
         return user;
+    }
+
+    /**
+     * Set the active filter group.
+     *
+     * This copies the active filter if it is a saved filter to isolate it from the saved filter.
+     *
+     * @param user The user to update the active filter group of.
+     * @param filter The active filter group to set.
+     *
+     * @return The updated user model.
+     */
+    public User setActiveFilter(User user, NamedSearchFilterGroup filter) {
+
+        if (filter.getName() == null) {
+            user.setActiveFilter(filter);
+            return userRepo.update(user);
+        }
+
+        NamedSearchFilterGroup persistedFilterGroup = namedSearchFilterGroupRepo.getOrCreatePersistedActiveFilterForUser(user);
+
+        persistedFilterGroup.getNamedSearchFilters().clear();
+        persistedFilterGroup.getSavedColumns().clear();
+        persistedFilterGroup.setColumnsFlag(persistedFilterGroup.getColumnsFlag());
+
+        for (NamedSearchFilter namedSearchFilter : filter.getNamedSearchFilters()) {
+            persistedFilterGroup.addFilterCriterion(namedSearchFilterRepo.clone(namedSearchFilter));
+        };
+
+        if (filter.getColumnsFlag()) {
+            for (SubmissionListColumn column : filter.getSavedColumns()) {
+                persistedFilterGroup.addSavedColumn(column);
+            }
+        }
+
+        persistedFilterGroup = namedSearchFilterGroupRepo.save(persistedFilterGroup);
+
+        user.setActiveFilter(persistedFilterGroup);
+        return userRepo.update(user);
     }
 
     @Override
