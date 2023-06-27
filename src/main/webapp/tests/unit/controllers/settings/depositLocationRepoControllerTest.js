@@ -14,17 +14,19 @@ describe("controller: DepositLocationRepoController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _PackagerRepo_, _RestApi_, _StorageService_) {
+        inject(function ($controller, $rootScope, _DepositLocation_, _DragAndDropListenerFactory_, _ModalService_, _PackagerRepo_, _RestApi_, _StorageService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
+            DepositLocation = _DepositLocation_;
+
             controller = $controller("DepositLocationRepoController", {
                 $q: q,
                 $scope: scope,
                 $window: mockWindow(),
-                DepositLocation: DepositLocation,
+                DepositLocation: _DepositLocation_,
                 DepositLocationRepo: DepositLocationRepo,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
@@ -44,12 +46,6 @@ describe("controller: DepositLocationRepoController", function () {
     beforeEach(function() {
         module("core");
         module("vireo");
-        module("mock.depositLocation", function($provide) {
-            DepositLocation = function() {
-                return mockedDepositLocation();
-            };
-            $provide.value("DepositLocation", DepositLocation);
-        });
 
         module("mock.depositLocationRepo");
         module("mock.dragAndDropListenerFactory");
@@ -213,9 +209,6 @@ describe("controller: DepositLocationRepoController", function () {
             scope.modalData.testDepositLocation();
             scope.$digest();
 
-            scope.modalData.mockTestConnectionPayload([
-                { uri: "mockUri", name: "mockName" }
-            ]);
             scope.resetDepositLocation();
             scope.modalData.testDepositLocation();
             scope.$digest();
