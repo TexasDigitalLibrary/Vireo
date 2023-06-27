@@ -244,6 +244,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             break;
         case WITHDRAWN:
             break;
+        case ARCHIVED:
+            break;
         case ON_HOLD:
         case CANCELED:
         case CORRECTIONS_RECIEVED:

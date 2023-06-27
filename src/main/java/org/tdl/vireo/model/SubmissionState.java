@@ -13,7 +13,8 @@ public enum SubmissionState {
 	PUBLISHED(9), 
 	ON_HOLD(10),
 	WITHDRAWN(11),
-	CANCELED(12);
+  CANCELED(12),
+  ARCHIVED(13);
 	
 	private int value;
 

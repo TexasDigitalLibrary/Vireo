@@ -142,5 +142,17 @@
     "isActive": false,
     "submissionState": 12,
     "transitionSubmissionStatuses": []
+  },
+  {
+    "id": 13,
+    "name": "Archived",
+    "isArchived": true,
+    "isPublishable": false,
+    "isDeletable": true,
+    "isEditableByReviewer": false,
+    "isEditableByStudent": false,
+    "isActive": false,
+    "submissionState": 13,
+    "transitionSubmissionStatuses": []
   }
 ]
