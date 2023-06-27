@@ -23,7 +23,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
+import org.tdl.vireo.service.DepositorService;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
@@ -32,13 +34,17 @@ public class DepositLocationControllerTest extends AbstractControllerTest {
     @Mock
     private DepositLocationRepo depositLocationRepo;
 
+    @Mock
+    private DepositorService depositorService;
+
+    @Mock
+    private SWORDv1Depositor sWORDv1Depositor;
+
     @InjectMocks
     private DepositLocationController depositLocationController;
 
     private DepositLocation mockDepositLocation1;
     private DepositLocation mockDepositLocation2;
-    private DepositLocation mockDepositLocation3;
-    private DepositLocation mockDepositLocation4;
 
     private static List<DepositLocation> mockDepositLocations;
 
@@ -48,19 +54,11 @@ public class DepositLocationControllerTest extends AbstractControllerTest {
         mockDepositLocation1.setId(1L);
         mockDepositLocation1.setPosition(1L);
 
-        mockDepositLocation2 = new DepositLocation("Location 2", "http://localhost/2", "Collection 2", "User 2", "Password 2", "Behalf Of 2", null, "Depsitor 2", 200);
+        mockDepositLocation2 = new DepositLocation("Location 2", "http://localhost/2", "Collection 2", "User 2", "Password 2", "Behalf Of 2", null, "SWORDv1Depositor", 200);
         mockDepositLocation2.setId(2L);
         mockDepositLocation2.setPosition(2L);
 
-        mockDepositLocation3 = new DepositLocation("Location 3", "http://localhost/3", "Collection 3", "User 3", "Password 3", "Behalf Of 3", null, "Depsitor 3", 300);
-        mockDepositLocation3.setId(3L);
-        mockDepositLocation3.setPosition(3L);
-
-        mockDepositLocation4 = new DepositLocation("Location 4", "http://localhost/4", "Collection 4", "User 4", "Password 4", "Behalf Of 4", null, "Depsitor 4", 400);
-        mockDepositLocation4.setId(4L);
-        mockDepositLocation4.setPosition(4L);
-
-        mockDepositLocations = new ArrayList<DepositLocation>(Arrays.asList(new DepositLocation[] { mockDepositLocation1, mockDepositLocation2, mockDepositLocation3 }));
+        mockDepositLocations = new ArrayList<DepositLocation>(Arrays.asList(new DepositLocation[] { mockDepositLocation1 }));
     }
 
     @Test
@@ -76,7 +74,7 @@ public class DepositLocationControllerTest extends AbstractControllerTest {
 
     @Test
     public void testCreateDepositLocation() {
-        when(depositLocationRepo.create(anyMap())).thenReturn(mockDepositLocation4);
+        when(depositLocationRepo.create(anyMap())).thenReturn(mockDepositLocation2);
 
         Map<String, Object> map = new HashMap<>();
 
@@ -84,18 +82,18 @@ public class DepositLocationControllerTest extends AbstractControllerTest {
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         DepositLocation depositLocation = (DepositLocation) response.getPayload().get("DepositLocation");
-        assertEquals(mockDepositLocation4.getId(), depositLocation.getId());
+        assertEquals(mockDepositLocation2.getId(), depositLocation.getId());
     }
 
     @Test
     public void testUpdateDepositLocation() {
-        when(depositLocationRepo.update(any(DepositLocation.class))).thenReturn(mockDepositLocation4);
+        when(depositLocationRepo.update(any(DepositLocation.class))).thenReturn(mockDepositLocation2);
 
-        ApiResponse response = depositLocationController.updateDepositLocation(mockDepositLocation3);
+        ApiResponse response = depositLocationController.updateDepositLocation(mockDepositLocation1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         DepositLocation depositLocation = (DepositLocation) response.getPayload().get("DepositLocation");
-        assertEquals(mockDepositLocation4.getId(), depositLocation.getId());
+        assertEquals(mockDepositLocation2.getId(), depositLocation.getId());
     }
 
     @Test
@@ -116,6 +114,25 @@ public class DepositLocationControllerTest extends AbstractControllerTest {
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         verify(depositLocationRepo, times(1)).reorder(any(Long.class), any(Long.class));
+    }
+
+    @Test
+    public void testConnectionDepositLocation() {
+        Map<String, Object> mapIn = new HashMap<>();
+        Map<String, String> mapOut = new HashMap<>();
+        mapIn.put("in", "is in");
+        mapOut.put("out", "is out");
+
+        when(depositLocationRepo.createDetached(anyMap())).thenReturn(mockDepositLocation2);
+        when(depositorService.getDepositor(any(String.class))).thenReturn(sWORDv1Depositor);
+        when(sWORDv1Depositor.getCollections(any(DepositLocation.class))).thenReturn(mapOut);
+
+        ApiResponse response = depositLocationController.testConnection(mapIn);
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        @SuppressWarnings("unchecked")
+        Map<String, String> mapReturned = (HashMap<String, String>) response.getPayload().get("HashMap");
+        assertEquals(mapReturned.get("out"), mapOut.get("out"));
     }
 
 }
