@@ -22,9 +22,9 @@
 
     <label for="collection">
       Collection
-      <span ng-if="modalData.isTestDepositing()">
+      <span ng-if="isTestDepositing()">
         (Getting collections)</span>
-      <span ng-if="!modalData.isTestDepositing() && collections.length==0">
+      <span ng-if="!isTestDepositing() && collections.length==0">
         (Please get collections)</span>
 
     </label>
@@ -39,9 +39,9 @@
     <validatedinput id="new-on-behalf-of" model="modalData" property="onBehalfOf" label="On Behalf Of" form="forms.create" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
 
     <div class="form-group">
-      <button ng-disabled="!modalData.isTestable()" ng-click="modalData.testDepositLocation()" id="new-depositLocation-test" type="button" class="btn btn-default">
-        <span ng-show="modalData.isTestDepositing()">Testing...</span>
-        <span ng-show="!modalData.isTestDepositing()">Test connection &amp; find available collections</span>
+      <button ng-disabled="!isTestable()" ng-click="testDepositLocation()" id="new-depositLocation-test" type="button" class="btn btn-default">
+        <span ng-show="isTestDepositing()">Testing...</span>
+        <span ng-show="!isTestDepositing()">Test connection &amp; find available collections</span>
       </button>
     </div>
   </div>
