@@ -102,9 +102,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
             var testData = angular.copy($scope.modalData);
             delete testData.packager;
 
-            var location = new DepositLocation(testData);
-
-            location.testConnection().then(function (response) {
+            $scope.depositLocationRepo.testConnection(testData).then(function (response) {
                 var apiRes = angular.fromJson(response.body);
 
                 if (apiRes.meta.status === 'SUCCESS') {

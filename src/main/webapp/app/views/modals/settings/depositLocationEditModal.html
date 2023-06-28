@@ -39,7 +39,7 @@
     <validatedinput id="edit-on-behalf-of" model="modalData" property="onBehalfOf" label="On Behalf Of" form="forms.update" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
 
     <div class="form-group">
-      <button ng-disabled="!isTestable()" ng-click="testDepositLocation(modalData)" id="depositLocation-test" type="button" class="btn btn-default">
+      <button ng-disabled="!isTestable()" ng-click="testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">
         <span ng-show="isTestDepositing()">Testing...</span>
         <span ng-show="!isTestDepositing()">Test connection &amp; find available collections</span>
       </button>
