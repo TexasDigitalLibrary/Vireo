@@ -1,4 +1,3 @@
-
 vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, DepositLocation, PackagerRepo, DragAndDropListenerFactory) {
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -100,6 +99,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
         };
 
         $scope.updateDepositLocation = function () {
+            $scope.modalData.dirty(true);
             $scope.modalData.save();
         };
 
