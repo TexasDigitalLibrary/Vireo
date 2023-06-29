@@ -20,7 +20,7 @@
 
     <validatedinput id="edit-deposit-location" model="modalData" property="repository" label="Repository Location" form="forms.update" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
 
-    <label for="collection">
+    <label for="edit-collection">
       Collection
       <span ng-if="isTestDepositing()">
         (Getting collections)</span>
@@ -28,7 +28,7 @@
         (Please get collections)</span>
 
     </label>
-    <select class="form-control" id="collection" name="collection" ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections" ng-required="depositLocationRepo.getValidations()['collection'].required.value"></select>
+    <select class="form-control" id="edit-collection" name="collection" ng-model="modalData.collection" ng-options="collection.uri as collection.name for collection in collections" ng-required="depositLocationRepo.getValidations()['collection'].required.value"></select>
 
     <validatedinput id="edit-timeout" model="modalData" property="timeout" label="Repository Timeout (seconds)" form="forms.update" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
 
@@ -36,7 +36,7 @@
 
     <validatedinput id="edit-password" type="password" model="modalData" property="password" label="Password" form="forms.update" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
 
-    <validatedinput id="edit-on-behalf-of" model="modalData" property="onBehalfOf" label="On Behalf Of" form="forms.update" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
+    <validatedinput id="edit-on-behalf-of" model="modalData" property="onBehalfOf" label="On Behalf Of" form="forms.update" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults" hint="The On Behalf Of value must represent a valid user name."></validatedinput>
 
     <div class="form-group">
       <button ng-disabled="!isTestable()" ng-click="testDepositLocation()" id="depositLocation-test" type="button" class="btn btn-default">
