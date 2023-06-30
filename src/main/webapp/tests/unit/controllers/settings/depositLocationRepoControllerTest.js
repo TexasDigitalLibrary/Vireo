@@ -76,6 +76,14 @@ describe("controller: DepositLocationRepoController", function () {
             expect(scope.editDepositLocation).toBeDefined();
             expect(typeof scope.editDepositLocation).toEqual("function");
         });
+        it("isTestable should be defined", function () {
+            expect(scope.isTestable).toBeDefined();
+            expect(typeof scope.isTestable).toEqual("function");
+        });
+        it("isTestDepositing should be defined", function () {
+            expect(scope.isTestDepositing).toBeDefined();
+            expect(typeof scope.isTestDepositing).toEqual("function");
+        });
         it("removeDepositLocation should be defined", function () {
             expect(scope.removeDepositLocation).toBeDefined();
             expect(typeof scope.removeDepositLocation).toEqual("function");
@@ -92,24 +100,13 @@ describe("controller: DepositLocationRepoController", function () {
             expect(scope.selectDepositLocation).toBeDefined();
             expect(typeof scope.selectDepositLocation).toEqual("function");
         });
+        it("testDepositLocation should be defined", function () {
+            expect(scope.testDepositLocation).toBeDefined();
+            expect(typeof scope.testDepositLocation).toEqual("function");
+        });
         it("updateDepositLocation should be defined", function () {
             expect(scope.updateDepositLocation).toBeDefined();
             expect(typeof scope.updateDepositLocation).toEqual("function");
-        });
-    });
-
-    describe("Are the scope.modalData methods defined", function () {
-        it("testDepositLocation should be defined", function () {
-            expect(scope.modalData.testDepositLocation).toBeDefined();
-            expect(typeof scope.modalData.testDepositLocation).toEqual("function");
-        });
-        it("isTestDepositing should be defined", function () {
-            expect(scope.modalData.isTestDepositing).toBeDefined();
-            expect(typeof scope.modalData.isTestDepositing).toEqual("function");
-        });
-        it("isTestable should be defined", function () {
-            expect(scope.modalData.isTestable).toBeDefined();
-            expect(typeof scope.modalData.isTestable).toEqual("function");
         });
     });
 
@@ -206,26 +203,26 @@ describe("controller: DepositLocationRepoController", function () {
     describe("Do the scope.modalData methods work as expected", function () {
         it("testDepositLocation should test the deposit location", function () {
             scope.resetDepositLocation();
-            scope.modalData.testDepositLocation();
+            scope.testDepositLocation();
             scope.$digest();
 
             scope.resetDepositLocation();
-            scope.modalData.testDepositLocation();
+            scope.testDepositLocation();
             scope.$digest();
 
-            scope.modalData.testConnection = function() {
+            scope.testConnection = function() {
                 return payloadPromise(q.defer(), {}, "OTHER");
             };
 
             scope.resetDepositLocation();
-            scope.modalData.testDepositLocation();
+            scope.testDepositLocation();
             scope.$digest();
         });
         it("isTestDepositing should return a boolean", function () {
             var response;
 
             scope.resetDepositLocation();
-            response = scope.modalData.isTestDepositing();
+            response = scope.isTestDepositing();
 
             expect(typeof response).toBe("boolean");
         });
@@ -233,20 +230,20 @@ describe("controller: DepositLocationRepoController", function () {
             var response;
 
             scope.resetDepositLocation();
-            response = scope.modalData.isTestable();
+            response = scope.isTestable();
 
-            // FIXME: should be returning a boolean and not a string (scope.modalData.nam is actually returned).
-            //expect(typeof response).toBe("boolean");
+            expect(typeof response).toBe("boolean");
+            expect(response).toBe(false);
 
             scope.modalData.name = "mock";
             scope.modalData.depositorName = "mock";
             scope.modalData.repository = "mock";
             scope.modalData.username = "mock";
             scope.modalData.password = "mock";
-            response = scope.modalData.isTestable();
+            response = scope.isTestable();
 
-            // FIXME: should be returning a boolean and not a string (scope.modalData.nam is actually returned).
-            //expect(response).toBe(true);
+            expect(typeof response).toBe("boolean");
+            expect(response).toBe(true);
         });
     });
 

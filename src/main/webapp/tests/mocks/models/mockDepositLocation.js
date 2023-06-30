@@ -84,26 +84,6 @@ var dataDepositLocation6 = {
 
 var mockDepositLocation = function($q) {
     var model = mockModel("DepositLocation", $q, dataDepositLocation1);
-    var testConnectionPayload = { HashMap: [ ] };
-
-    model.mockTestConnectionPayload = function(dataArray) {
-        testConnectionPayload = { HashMap: dataArray };
-    };
-
-    model.testConnection = function() {
-        return payloadPromise($q.defer(), testConnectionPayload);
-    };
-
-    model.testDepositLocation = function() {
-    };
-
-    model.isTestDepositing = function() {
-        return false;
-    };
-
-    model.isTestable = function() {
-        return false;
-    };
 
     return model;
 };
