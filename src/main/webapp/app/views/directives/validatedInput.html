@@ -1,9 +1,9 @@
 <div class="form-group" ng-class="{ 'has-error': form[property].$invalid && form[property].$dirty }">
 
    <div ng-if="type === undefined || type == 'text' || type == 'password'">
-    <label ng-if="label" for="{{property}}-input">{{label}}</label>
-    <div ng-class="{ 'input-group': toolTip !== undefined }">
+    <label ng-if="label" for="{{!!id ? id : property + '-input'}}" ng-attr-id="{{!!id ? id + '-label' : undefined}}">{{label}}</label>
 
+    <div ng-class="{ 'input-group': toolTip !== undefined }">
       <input
         ng-if="!repeatable"
         ng-attr-id="{{id}}"
@@ -11,7 +11,8 @@
         type="{{type}}"
         class="form-control"
         placeholder="{{placeholder}}"
-        aria-describedby="{{label}}"
+        ng-attr-aria-labelledby="{{!!id && !!label ? id + '-label' : undefined}}"
+        ng-attr-aria-describedby="{{!!id && !!hint ? id + '-hint' : undefined}}"
         autocomplete="{{autocomplete}}"
         uib-typeahead="data as data[typeaheadproperty] for data in typeahead | filter:$viewValue"
         ng-disabled="isDisabled()"
@@ -32,7 +33,8 @@
             type="{{type}}"
             class="form-control"
             placeholder="{{placeholder}}"
-            aria-describedby="{{label}}"
+            ng-attr-aria-labelledby="{{!!id && !!label ? id + '-label' : undefined}}"
+            ng-attr-aria-describedby="{{!!id && !!hint ? id + '-hint' : undefined}}"
             autocomplete="{{autocomplete}}"
             uib-typeahead="data as data[typeaheadproperty] for data in typeahead | filter:$viewValue"
             ng-disabled="isDisabled()"
@@ -51,7 +53,6 @@
             <button type="button" ng-if="repeatable && $first" ng-click="addMember()" class="btn btn-primary"> + </button>
           </div>
         </div>
-
       </div>
 
       <span ng-if="toolTip" class="input-group-addon">
@@ -59,11 +60,12 @@
         <span ng-if="inProgress" class="glyphicon glyphicon-refresh opaque spinning"></span>
       </span>
     </div>
-    <span ng-if="hint">{{ hint }}</span>
+    <span ng-if="hint" ng-attr-id="{{!!id ? id + '-hint' : undefined}}">{{ hint }}</span>
   </div>
 
   <div ng-if="type === 'checkbox'">
-    <label ng-if="label" for="{{property}}-input">{{label}}</label>
+    <label ng-if="label" for="{{!!id ? id : property + '-input'}}" ng-attr-id="{{!!id ? id + '-label' : undefined}}">{{label}}</label>
+
     <div class="checkbox">
       <label>
         <input
@@ -75,8 +77,11 @@
           ng-model="model[property]"
           ng-false-value="{{falsevalue ? falsevalue : false}}"
           ng-true-value="{{truevalue ? truevalue : true}}"
-          aria-describedby="{{label}}"/>{{placeholder}}</label>
+          ng-attr-aria-labelledby="{{!!id && !!label ? id + '-label' : undefined}}"
+          ng-attr-aria-describedby="{{!!id && !!hint ? id + '-hint' : undefined}}"
+        />{{placeholder}}</label>
     </div>
+    <span ng-if="hint" ng-attr-id="{{!!id ? id + '-hint' : undefined}}">{{ hint }}</span>
   </div>
 
   <validationmessage

@@ -20,7 +20,7 @@
 
     <validatedinput id="new-deposit-location" model="modalData" property="repository" label="Repository Location" form="forms.create" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
 
-    <label for="collection">
+    <label for="new-collection">
       Collection
       <span ng-if="isTestDepositing()">
         (Getting collections)</span>
@@ -36,7 +36,7 @@
 
     <validatedinput id="new-password" type="password" model="modalData" property="password" label="Password" results="modalData.ValidationResults"></validatedinput>
 
-    <validatedinput id="new-on-behalf-of" model="modalData" property="onBehalfOf" label="On Behalf Of" form="forms.create" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults"></validatedinput>
+    <validatedinput id="new-on-behalf-of" model="modalData" property="onBehalfOf" label="On Behalf Of" form="forms.create" validations="depositLocationRepo.getValidations()" results="modalData.ValidationResults" hint="The On Behalf Of value must represent a valid user name."><div>test</div></validatedinput>
 
     <div class="form-group">
       <button ng-disabled="!isTestable()" ng-click="testDepositLocation()" id="new-depositLocation-test" type="button" class="btn btn-default">
