@@ -1,15 +1,12 @@
 describe("controller: DepositLocationRepoController", function () {
 
-    var controller, q, scope, DepositLocation, DepositLocationRepo, MockedDepositLocation, WsApi;
+    var controller, q, scope, mockedDepositLocation, DepositLocation, DepositLocationRepo, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($q, _DepositLocationRepo_, _WsApi_) {
             q = $q;
 
-            MockedDepositLocation = new mockDepositLocation(q);
-            DepositLocation = function() {
-                return MockedDepositLocation;
-            };
+            mockedDepositLocation = mockParameterModel(q, mockDepositLocation);
 
             DepositLocationRepo = _DepositLocationRepo_;
             WsApi = _WsApi_;
@@ -17,17 +14,19 @@ describe("controller: DepositLocationRepoController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _PackagerRepo_, _RestApi_, _StorageService_) {
+        inject(function ($controller, $rootScope, _DepositLocation_, _DragAndDropListenerFactory_, _ModalService_, _PackagerRepo_, _RestApi_, _StorageService_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
+            DepositLocation = _DepositLocation_;
+
             controller = $controller("DepositLocationRepoController", {
                 $q: q,
                 $scope: scope,
                 $window: mockWindow(),
-                DepositLocation: DepositLocation,
+                DepositLocation: _DepositLocation_,
                 DepositLocationRepo: DepositLocationRepo,
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
@@ -47,7 +46,7 @@ describe("controller: DepositLocationRepoController", function () {
     beforeEach(function() {
         module("core");
         module("vireo");
-        module("mock.depositLocation");
+
         module("mock.depositLocationRepo");
         module("mock.dragAndDropListenerFactory");
         module("mock.modalService");
@@ -210,14 +209,11 @@ describe("controller: DepositLocationRepoController", function () {
             scope.modalData.testDepositLocation();
             scope.$digest();
 
-            MockedDepositLocation.mockTestConnectionPayload([
-                { uri: "mockUri", name: "mockName" }
-            ]);
             scope.resetDepositLocation();
             scope.modalData.testDepositLocation();
             scope.$digest();
 
-            MockedDepositLocation.testConnection = function() {
+            scope.modalData.testConnection = function() {
                 return payloadPromise(q.defer(), {}, "OTHER");
             };
 

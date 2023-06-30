@@ -37,7 +37,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
                 $scope.modalData.refresh();
             }
 
-            $scope.modalData = {
+            $scope.modalData = new DepositLocation({
                 name: '',
                 depositorName: 'SWORDv1Depositor',
                 timeout: 240,
@@ -70,7 +70,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
                 isTestable: function () {
                     return (!isTestDepositing && $scope.modalData.name && $scope.modalData.depositorName && $scope.modalData.repository && $scope.modalData.username && $scope.modalData.password);
                 }
-            };
+            });
 
             for (var key in $scope.forms) {
                 if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
