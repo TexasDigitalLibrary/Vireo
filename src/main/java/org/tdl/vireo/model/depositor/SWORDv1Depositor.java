@@ -19,12 +19,17 @@ import org.purl.sword.client.PostMessage;
 import org.purl.sword.client.SWORDClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tdl.vireo.exception.SwordDepositBadGatewayException;
 import org.tdl.vireo.exception.SwordDepositBadRequestException;
 import org.tdl.vireo.exception.SwordDepositConflictException;
 import org.tdl.vireo.exception.SwordDepositException;
 import org.tdl.vireo.exception.SwordDepositForbiddenException;
+import org.tdl.vireo.exception.SwordDepositGatewayTimeoutException;
 import org.tdl.vireo.exception.SwordDepositInternalServerErrorException;
 import org.tdl.vireo.exception.SwordDepositNotFoundException;
+import org.tdl.vireo.exception.SwordDepositNotImplementedException;
+import org.tdl.vireo.exception.SwordDepositRequestTimeoutException;
+import org.tdl.vireo.exception.SwordDepositServiceUnavailableException;
 import org.tdl.vireo.exception.SwordDepositUnauthorizedException;
 import org.tdl.vireo.exception.SwordDepositUnprocessableEntityException;
 import org.tdl.vireo.model.DepositLocation;
@@ -52,7 +57,7 @@ public class SWORDv1Depositor implements Depositor {
             Map<String, String> foundCollections = new HashMap<String, String>();
 
             if (depLocation == null || depLocation.getRepository() == null) {
-                throw new SwordDepositException("Bad deposit location or repository URL when trying to getCollections()");
+                throw new SwordDepositInternalServerErrorException("Bad deposit location or repository URL when trying to getCollections().");
             }
 
             logger.debug("Getting Collections via SWORD from: " + depLocation.getRepository());
@@ -100,18 +105,28 @@ public class SWORDv1Depositor implements Depositor {
 
             if (re.getMessage().contains("Code: 400")) {
                 message = "Bad request to the SWORD server.";
-            } else if (re.getMessage().contains("Code: 401")) {
+            } else if (messageContainsCode(re.getMessage(), "401")) {
                 throw new SwordDepositUnauthorizedException("Unauthorized credentials.", re);
-            } else if (re.getMessage().contains("Code: 404")) {
+            } else if (messageContainsCode(re.getMessage(), "404")) {
                 throw new SwordDepositNotFoundException("Repository URL not found.", re);
-            } else if (re.getMessage().contains("Code: 409")) {
+            } else if (messageContainsCode(re.getMessage(), "408")) {
+                throw new SwordDepositRequestTimeoutException("Request timed out.", re);
+            } else if (messageContainsCode(re.getMessage(), "409")) {
                 throw new SwordDepositConflictException(message, re);
+            } else if (messageContainsCode(re.getMessage(), "500")) {
+                throw new SwordDepositInternalServerErrorException("Internal server error returned by the SWORD server.", re);
+            } else if (messageContainsCode(re.getMessage(), "501")) {
+                throw new SwordDepositNotImplementedException("Deposit Location collection end point is not implemented on the SWORD server.", re);
+            } else if (messageContainsCode(re.getMessage(), "502")) {
+                throw new SwordDepositBadGatewayException("Bad gateway.", re);
+            } else if (messageContainsCode(re.getMessage(), "503")) {
+                throw new SwordDepositServiceUnavailableException("Service unavailable.", re);
+            } else if (messageContainsCode(re.getMessage(), "504")) {
+                throw new SwordDepositGatewayTimeoutException("Gateway Timeout.", re);
             } else if (re.getMessage().contains("Connection refused")) {
                 throw new SwordDepositForbiddenException("Connection refused by the SWORD server.", re);
             } else if (re.getMessage().contains("Unable to parse the XML")) {
                 throw new SwordDepositUnprocessableEntityException("The repository does not appear to be a valid SWORD server.", re);
-            } else if (re.getMessage().contains("Code: 500")) {
-                throw new SwordDepositInternalServerErrorException("Internal server error returned by the SWORD server.", re);
             }
             else if (serviceDocument == null) {
                 message = "Could not get service document!";
@@ -122,6 +137,9 @@ public class SWORDv1Depositor implements Depositor {
     }
 
     public String deposit(DepositLocation depLocation, ExportPackage exportPackage) {
+        if (depLocation == null || depLocation.getRepository() == null) {
+            throw new SwordDepositInternalServerErrorException("Bad deposit location or repository URL when trying to deposit().");
+        }
 
         try {
             URL repositoryURL = new URL(depLocation.getRepository());
@@ -180,11 +198,53 @@ public class SWORDv1Depositor implements Depositor {
             } catch (URISyntaxException e) {
                 throw new SwordDepositException("Unable to publish to " + depLocation.getRepository(), e);
             }
+        } catch (MalformedURLException | SWORDClientException re) {
+            logger.debug(re.getMessage(), re);
+            String message = re.getMessage();
+            String repoMessage = ", unable to publish to " + depLocation.getRepository();
 
-        } catch (MalformedURLException | SWORDClientException e) {
-            logger.debug(e.getMessage(), e);
-            throw new SwordDepositException(e.getMessage(), e);
+            if (re.getMessage().contains("Unable to parse the XML")) {
+                repoMessage += ", SWORD server cannot parse the XML.";
+            }
+            else {
+                repoMessage += ".";
+            }
+
+            if (re.getMessage().contains("Code: 400")) {
+                message = "Bad request" + repoMessage;
+            } else if (messageContainsCode(re.getMessage(), "401")) {
+                throw new SwordDepositUnauthorizedException("Unauthorized credentials" + repoMessage, re);
+            } else if (messageContainsCode(re.getMessage(), "404")) {
+                throw new SwordDepositNotFoundException("Repository URL not found" + repoMessage, re);
+            } else if (messageContainsCode(re.getMessage(), "408")) {
+                throw new SwordDepositRequestTimeoutException("Request timed out" + repoMessage, re);
+            } else if (messageContainsCode(re.getMessage(), "409")) {
+                throw new SwordDepositConflictException("Conflict" + repoMessage, re);
+            } else if (messageContainsCode(re.getMessage(), "500")) {
+                throw new SwordDepositInternalServerErrorException("Internal server error" + repoMessage, re);
+            } else if (messageContainsCode(re.getMessage(), "501")) {
+                throw new SwordDepositNotImplementedException("Publish end point is not implemented" + repoMessage, re);
+            } else if (messageContainsCode(re.getMessage(), "502")) {
+                throw new SwordDepositBadGatewayException("Bad gateway" + repoMessage, re);
+            } else if (messageContainsCode(re.getMessage(), "503")) {
+                throw new SwordDepositServiceUnavailableException("Service unavailable" + repoMessage, re);
+            } else if (messageContainsCode(re.getMessage(), "504")) {
+                throw new SwordDepositGatewayTimeoutException("Gateway Timeout" + repoMessage, re);
+            } else if (re.getMessage().contains("Connection refused")) {
+                throw new SwordDepositForbiddenException("Connection refused" + repoMessage, re);
+            } else if (re.getMessage().contains("Unable to parse the XML")) {
+                throw new SwordDepositUnprocessableEntityException("XML parse failure, unable to publish to " + depLocation.getRepository() + ".", re);
+            }
+            else {
+                message = "Unable to publish to " + depLocation.getRepository() + ".";
+            }
+
+            throw new SwordDepositBadRequestException(message, re);
         }
+    }
+
+    private boolean messageContainsCode(String message, String code) {
+        return message.contains("Code: " + code) || message.contains("HTTP Status [" + code + "]");
     }
 
     private void setAuthentication(Client client, DepositLocation depLocation) {

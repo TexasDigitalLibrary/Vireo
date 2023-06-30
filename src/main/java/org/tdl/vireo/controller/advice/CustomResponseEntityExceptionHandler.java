@@ -13,12 +13,17 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.tdl.vireo.exception.SwordDepositBadGatewayException;
 import org.tdl.vireo.exception.SwordDepositBadRequestException;
 import org.tdl.vireo.exception.SwordDepositConflictException;
 import org.tdl.vireo.exception.SwordDepositException;
 import org.tdl.vireo.exception.SwordDepositForbiddenException;
+import org.tdl.vireo.exception.SwordDepositGatewayTimeoutException;
 import org.tdl.vireo.exception.SwordDepositInternalServerErrorException;
 import org.tdl.vireo.exception.SwordDepositNotFoundException;
+import org.tdl.vireo.exception.SwordDepositNotImplementedException;
+import org.tdl.vireo.exception.SwordDepositRequestTimeoutException;
+import org.tdl.vireo.exception.SwordDepositServiceUnavailableException;
 import org.tdl.vireo.exception.SwordDepositUnauthorizedException;
 import org.tdl.vireo.exception.SwordDepositUnprocessableEntityException;
 
@@ -34,6 +39,14 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     public ApiResponse handleMultipartException(MultipartException exception) {
         logger.debug("File size limit exceeded", exception);
         return new ApiResponse(ERROR, "File size limit exceeded");
+    }
+
+    @ExceptionHandler(SwordDepositBadGatewayException.class)
+    @ResponseStatus(value = HttpStatus.BAD_GATEWAY)
+    @ResponseBody
+    public ApiResponse handleSwordDepositBadGatewayException(SwordDepositException exception) {
+        logger.debug(exception.getMessage(), exception);
+        return new ApiResponse(ERROR, exception.getMessage());
     }
 
     @ExceptionHandler(SwordDepositBadRequestException.class)
@@ -60,6 +73,14 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         return new ApiResponse(ERROR, exception.getMessage());
     }
 
+    @ExceptionHandler(SwordDepositGatewayTimeoutException.class)
+    @ResponseStatus(value = HttpStatus.GATEWAY_TIMEOUT)
+    @ResponseBody
+    public ApiResponse handleSwordDepositGatewayTimeoutException(SwordDepositException exception) {
+        logger.debug(exception.getMessage(), exception);
+        return new ApiResponse(ERROR, exception.getMessage());
+    }
+
     @ExceptionHandler(SwordDepositInternalServerErrorException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
@@ -72,6 +93,30 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
     public ApiResponse handleSwordDepositNotFoundException(SwordDepositException exception) {
+        logger.debug(exception.getMessage(), exception);
+        return new ApiResponse(ERROR, exception.getMessage());
+    }
+
+    @ExceptionHandler(SwordDepositNotImplementedException.class)
+    @ResponseStatus(value = HttpStatus.NOT_IMPLEMENTED)
+    @ResponseBody
+    public ApiResponse handleSwordDepositNotImplementedException(SwordDepositException exception) {
+        logger.debug(exception.getMessage(), exception);
+        return new ApiResponse(ERROR, exception.getMessage());
+    }
+
+    @ExceptionHandler(SwordDepositRequestTimeoutException.class)
+    @ResponseStatus(value = HttpStatus.REQUEST_TIMEOUT)
+    @ResponseBody
+    public ApiResponse handleSwordDepositRequestTimeoutException(SwordDepositException exception) {
+        logger.debug(exception.getMessage(), exception);
+        return new ApiResponse(ERROR, exception.getMessage());
+    }
+
+    @ExceptionHandler(SwordDepositServiceUnavailableException.class)
+    @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
+    @ResponseBody
+    public ApiResponse handleSwordDepositServiceUnavailableException(SwordDepositException exception) {
         logger.debug(exception.getMessage(), exception);
         return new ApiResponse(ERROR, exception.getMessage());
     }
