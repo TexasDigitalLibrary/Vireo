@@ -51,18 +51,19 @@ public class SWORDv1Depositor implements Depositor {
     }
 
     public Map<String, String> getCollections(DepositLocation depLocation) {
+        if (depLocation == null || depLocation.getRepository() == null) {
+            throw new SwordDepositInternalServerErrorException("Bad deposit location or repository URL when trying to getCollections().");
+        }
+
         ServiceDocument serviceDocument = null;
+        String serviceDocumentUrl = depLocation.getRepository() + "/servicedocument";
 
         try {
             Map<String, String> foundCollections = new HashMap<String, String>();
 
-            if (depLocation == null || depLocation.getRepository() == null) {
-                throw new SwordDepositInternalServerErrorException("Bad deposit location or repository URL when trying to getCollections().");
-            }
+            logger.debug("Getting Collections via SWORD from: " + serviceDocumentUrl);
 
-            logger.debug("Getting Collections via SWORD from: " + depLocation.getRepository());
-
-            URL repositoryURL = new URL(depLocation.getRepository());
+            URL repositoryURL = new URL(serviceDocumentUrl);
 
             // Building the client
             Client client = new Client();
@@ -81,9 +82,9 @@ public class SWORDv1Depositor implements Depositor {
             // If the credentials contain an onbehalfof user, retrieve the service document on
             // behalf of that user. Otherwise, simply retrieve the service document.
             if (depLocation.getOnBehalfOf() != null) {
-                serviceDocument = client.getServiceDocument(depLocation.getRepository(), depLocation.getOnBehalfOf());
+                serviceDocument = client.getServiceDocument(serviceDocumentUrl, depLocation.getOnBehalfOf());
             } else {
-                serviceDocument = client.getServiceDocument(depLocation.getRepository());
+                serviceDocument = client.getServiceDocument(serviceDocumentUrl);
             }
 
             // Getting the service from the service document
@@ -141,8 +142,11 @@ public class SWORDv1Depositor implements Depositor {
             throw new SwordDepositInternalServerErrorException("Bad deposit location or repository URL when trying to deposit().");
         }
 
+        String depositUrl = depLocation.getRepository() + "/deposit";
+
         try {
-            URL repositoryURL = new URL(depLocation.getRepository());
+
+            URL repositoryURL = new URL(depositUrl);
 
             FileHelperUtility fileHelperUtility = new FileHelperUtility();
 
@@ -185,7 +189,7 @@ public class SWORDv1Depositor implements Depositor {
             }
 
             try {
-                URI sword = new URI(depLocation.getRepository());
+                URI sword = new URI(depositUrl);
                 URI handle = new URI(response.getEntry().getId());
 
                 String depositURL = sword.getScheme() + "://" + sword.getHost();
@@ -196,12 +200,12 @@ public class SWORDv1Depositor implements Depositor {
 
                 return new URI(depositURL).toString();
             } catch (URISyntaxException e) {
-                throw new SwordDepositException("Unable to publish to " + depLocation.getRepository(), e);
+                throw new SwordDepositException("Unable to publish to " + depositUrl, e);
             }
         } catch (MalformedURLException | SWORDClientException re) {
             logger.debug(re.getMessage(), re);
             String message = re.getMessage();
-            String repoMessage = ", unable to publish to " + depLocation.getRepository();
+            String repoMessage = ", unable to publish to " + depositUrl;
 
             if (re.getMessage().contains("Unable to parse the XML")) {
                 repoMessage += ", SWORD server cannot parse the XML.";
@@ -233,10 +237,10 @@ public class SWORDv1Depositor implements Depositor {
             } else if (re.getMessage().contains("Connection refused")) {
                 throw new SwordDepositForbiddenException("Connection refused" + repoMessage, re);
             } else if (re.getMessage().contains("Unable to parse the XML")) {
-                throw new SwordDepositUnprocessableEntityException("XML parse failure, unable to publish to " + depLocation.getRepository() + ".", re);
+                throw new SwordDepositUnprocessableEntityException("XML parse failure, unable to publish to " + depositUrl + ".", re);
             }
             else {
-                message = "Unable to publish to " + depLocation.getRepository() + ".";
+                message = "Unable to publish to " + depositUrl + ".";
             }
 
             throw new SwordDepositBadRequestException(message, re);
