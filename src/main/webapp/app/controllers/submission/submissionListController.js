@@ -304,10 +304,18 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                     }
                 }
             } else {
-                date1Value = date1Value.toISOString();
+                var date = new Date(date1Value);
 
-                if (date2Value !== null) {
-                    date2Value = date2Value.toISOString();
+                if (!Number.isNaN(date) && !Number.isNaN(date.getTime())) {
+                    date1Value = date.toISOString();
+
+                    if (date2Value !== null) {
+                        date = new Date(date2Value);
+
+                        if (!Number.isNaN(date) && !Number.isNaN(date.getTime())) {
+                            date2Value = date2Value.toISOString();
+                        }
+                    }
                 }
             }
 
