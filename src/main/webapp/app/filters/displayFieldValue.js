@@ -48,12 +48,18 @@ vireo.filter('displayFieldValue', function($filter, InputTypes) {
                 return value;
             }
 
-            return $filter('date')(new Date(split[1] + ' 01, ' + split[2]).toISOString(), dateColumn.format, 'utc');
+            var date = new Date(split[1] + ' 01, ' + split[2]);
+
+            if (Number.isNaN(date) || Number.isNaN(date.getTime())) {
+                return value;
+            }
+
+            return $filter('date')(date.toISOString(), dateColumn.format, 'utc');
         }
 
         var date = new Date(value);
 
-        if (isNaN(date)) {
+        if (isNaN(date) || Number.isNaN(date.getTime())) {
             return value;
         }
 

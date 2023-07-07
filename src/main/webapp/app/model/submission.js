@@ -706,7 +706,11 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
                             offsetDate.setSeconds(0);
                             offsetDate.setMilliseconds(0);
 
-                            fieldValue.valuePopup = offsetDate.toISOString();
+                            if (Number.isNaN(offsetDate.getTime())) {
+                                fieldValue.valuePopup = fieldValue.value;
+                            } else {
+                                fieldValue.valuePopup = offsetDate.toISOString();
+                            }
                         }
                     } else {
                         fieldValue.valuePopup = fieldValue.value;
