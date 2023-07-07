@@ -100,7 +100,7 @@ public class SWORDv1Depositor implements Depositor {
             return foundCollections;
         } catch (MalformedURLException murle) {
             logger.debug("The repository is an invalid URL", murle);
-            throw new SwordDepositException("The repository is an invalid URL", murle);
+            throw new SwordDepositException("The repository URL is invalid.", murle);
         } catch (RuntimeException | SWORDClientException re) {
             String message = re.getMessage();
 
