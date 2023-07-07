@@ -13,15 +13,6 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate.ddl-auto: create-drop
 
-
-vireo:
-  depositor:
-    swordv1:
-
-      # If true, then the "/servicedocument" and "/deposit" URLs are appended to the Repository Location as needed.
-      # If false, then the Repository Location is used as is for both the service document and deposit actions.
-      single-url: false
-
 # logging (is overwritten by logback-test.xml)
 logging:
   level:

@@ -1,12 +1,5 @@
 package org.tdl.vireo.service;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -33,7 +27,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.config.VireoDepositorSwordV1Config;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.DefaultConfiguration;
 import org.tdl.vireo.model.Degree;
@@ -57,6 +50,7 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
+import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
 import org.tdl.vireo.model.formatter.DSpaceSimpleFormatter;
 import org.tdl.vireo.model.formatter.ExcelFormatter;
@@ -85,6 +79,14 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 @Service
 public class SystemDataLoader {
@@ -182,9 +184,6 @@ public class SystemDataLoader {
 
     @Autowired
     private DefaultSettingsService defaultSettingsService;
-
-    @Autowired
-    private VireoDepositorSwordV1Config vireoDepositorSwordV1Config;
 
     @Transactional
     public void loadSystemData() {
@@ -1129,7 +1128,7 @@ public class SystemDataLoader {
     }
 
     private void loadDepositors() {
-        depositorService.addDepositor(vireoDepositorSwordV1Config.sWORDv1Depositor());
+        depositorService.addDepositor(new SWORDv1Depositor());
     }
 
     private static String encodeTemplateName(String name) {

@@ -19,8 +19,6 @@ import org.purl.sword.client.PostMessage;
 import org.purl.sword.client.SWORDClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.config.VireoDepositorSwordV1Config;
 import org.tdl.vireo.exception.SwordDepositBadGatewayException;
 import org.tdl.vireo.exception.SwordDepositBadRequestException;
 import org.tdl.vireo.exception.SwordDepositConflictException;
@@ -40,9 +38,6 @@ import org.tdl.vireo.utility.FileHelperUtility;
 
 public class SWORDv1Depositor implements Depositor {
 
-    @Autowired
-    VireoDepositorSwordV1Config vireoDepositorSwordV1Config;
-
     private String name;
 
     private final String USER_AGENT = "Vireo Sword 1.0 Depositor";
@@ -61,7 +56,7 @@ public class SWORDv1Depositor implements Depositor {
         }
 
         ServiceDocument serviceDocument = null;
-        String serviceDocumentUrl = getServiceDocumentUrl(depLocation);
+        String serviceDocumentUrl = depLocation.getRepository() + "/servicedocument";
 
         try {
             Map<String, String> foundCollections = new HashMap<String, String>();
@@ -147,7 +142,7 @@ public class SWORDv1Depositor implements Depositor {
             throw new SwordDepositInternalServerErrorException("Bad deposit location or repository URL when trying to deposit().");
         }
 
-        String depositUrl = getDepositUrl(depLocation);
+        String depositUrl = depLocation.getRepository() + "/deposit";
 
         try {
 
@@ -275,42 +270,6 @@ public class SWORDv1Depositor implements Depositor {
 
     protected void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Get the Service Document URL.
-     *
-     * @param depLocation
-     *   The deposit location information.
-     *
-     * @return
-     *   The unmodified Repository URL if Single-URL is configured.
-     *   Otherwise, the Repository URL with "/servicedocument" appended.
-     */
-    private String getServiceDocumentUrl(DepositLocation depLocation) {
-        if (vireoDepositorSwordV1Config.getSingleUrl()) {
-            return depLocation.getRepository();
-        }
-
-        return depLocation.getRepository() + "/servicedocument";
-    }
-
-    /**
-     * Get the Deposit URL.
-     *
-     * @param depLocation
-     *   The deposit location information.
-     *
-     * @return
-     *   The unmodified Repository URL if Single-URL is configured.
-     *   Otherwise, the Repository URL with "/deposit" appended.
-     */
-    private String getDepositUrl(DepositLocation depLocation) {
-        if (vireoDepositorSwordV1Config.getSingleUrl()) {
-            return depLocation.getRepository();
-        }
-
-        return depLocation.getRepository() + "/deposit";
     }
 
 }
