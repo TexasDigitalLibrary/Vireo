@@ -40,6 +40,7 @@ public class VocabularyWord extends ValidatingBaseEntity {
     @Column(nullable = true)
     private String identifier;
 
+    @JsonView(Views.Partial.class)
     @ElementCollection(fetch = LAZY)
     @Fetch(FetchMode.SUBSELECT)
     private List<String> contacts;

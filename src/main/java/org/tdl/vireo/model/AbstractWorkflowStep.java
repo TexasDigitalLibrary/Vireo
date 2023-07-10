@@ -28,7 +28,7 @@ public abstract class AbstractWorkflowStep<WS extends AbstractWorkflowStep<WS, F
     @Column(nullable = false)
     private Boolean overrideable;
 
-    @JsonView(Views.SubmissionIndividual.class)
+    @JsonView(Views.Partial.class)
     @ManyToMany(cascade = { REFRESH }, fetch = EAGER)
     @OrderColumn
     private List<FP> aggregateFieldProfiles;
