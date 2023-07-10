@@ -51,18 +51,19 @@ public class SWORDv1Depositor implements Depositor {
     }
 
     public Map<String, String> getCollections(DepositLocation depLocation) {
+        if (depLocation == null || depLocation.getRepository() == null) {
+            throw new SwordDepositInternalServerErrorException("Bad deposit location or repository URL when trying to getCollections().");
+        }
+
         ServiceDocument serviceDocument = null;
+        String serviceDocumentUrl = depLocation.getRepository();
 
         try {
             Map<String, String> foundCollections = new HashMap<String, String>();
 
-            if (depLocation == null || depLocation.getRepository() == null) {
-                throw new SwordDepositInternalServerErrorException("Bad deposit location or repository URL when trying to getCollections().");
-            }
+            logger.debug("Getting Collections via SWORD from: " + serviceDocumentUrl);
 
-            logger.debug("Getting Collections via SWORD from: " + depLocation.getRepository());
-
-            URL repositoryURL = new URL(depLocation.getRepository());
+            URL repositoryURL = new URL(serviceDocumentUrl);
 
             // Building the client
             Client client = new Client();
@@ -81,9 +82,9 @@ public class SWORDv1Depositor implements Depositor {
             // If the credentials contain an onbehalfof user, retrieve the service document on
             // behalf of that user. Otherwise, simply retrieve the service document.
             if (depLocation.getOnBehalfOf() != null) {
-                serviceDocument = client.getServiceDocument(depLocation.getRepository(), depLocation.getOnBehalfOf());
+                serviceDocument = client.getServiceDocument(serviceDocumentUrl, depLocation.getOnBehalfOf());
             } else {
-                serviceDocument = client.getServiceDocument(depLocation.getRepository());
+                serviceDocument = client.getServiceDocument(serviceDocumentUrl);
             }
 
             // Getting the service from the service document
@@ -95,11 +96,11 @@ public class SWORDv1Depositor implements Depositor {
                     foundCollections.put(collection.getTitle(), collection.getLocation());
                 }
             }
-            return foundCollections;
 
+            return foundCollections;
         } catch (MalformedURLException murle) {
             logger.debug("The repository is an invalid URL", murle);
-            throw new SwordDepositException("The repository is an invalid URL", murle);
+            throw new SwordDepositException("The repository URL is invalid.", murle);
         } catch (RuntimeException | SWORDClientException re) {
             String message = re.getMessage();
 
@@ -108,7 +109,7 @@ public class SWORDv1Depositor implements Depositor {
             } else if (messageContainsCode(re.getMessage(), "401")) {
                 throw new SwordDepositUnauthorizedException("Unauthorized credentials.", re);
             } else if (messageContainsCode(re.getMessage(), "404")) {
-                throw new SwordDepositNotFoundException("Repository URL not found.", re);
+                throw new SwordDepositNotFoundException("Repository URL is not found.", re);
             } else if (messageContainsCode(re.getMessage(), "408")) {
                 throw new SwordDepositRequestTimeoutException("Request timed out.", re);
             } else if (messageContainsCode(re.getMessage(), "409")) {
@@ -141,20 +142,29 @@ public class SWORDv1Depositor implements Depositor {
             throw new SwordDepositInternalServerErrorException("Bad deposit location or repository URL when trying to deposit().");
         }
 
+        // Only the host and port are used from the repository URL for sword depositing.
+        URI sword = null;
+        String depositUrl = null;
         try {
-            URL repositoryURL = new URL(depLocation.getRepository());
+            sword = new URI(depLocation.getRepository());
+            depositUrl = sword.getScheme() + "://" + sword.getHost();
+            if (sword.getPort() != -1) {
+                depositUrl += ":" + sword.getPort();
+            }
+        } catch (URISyntaxException e) {
+            throw new SwordDepositBadRequestException("Unable to publish, cannot parse URI from repository URL: " + depLocation.getRepository(), e);
+        }
 
+        try {
             FileHelperUtility fileHelperUtility = new FileHelperUtility();
-
             File exportFile = (File) exportPackage.getPayload();
-
             String exportMimeType = fileHelperUtility.getMimeType(exportFile);
 
             // Building the client
             Client client = new Client();
             // get the timeout from the location, or default it to the default
             client.setSocketTimeout(depLocation.getTimeout() == null ? DepositLocation.DEFAULT_TIMEOUT : (depLocation.getTimeout() * 1000));
-            client.setServer(repositoryURL.getHost(), repositoryURL.getPort());
+            client.setServer(sword.getHost(), sword.getPort());
             client.setUserAgent(USER_AGENT);
 
             // If the credentials include a username and password, set those on the client.
@@ -163,7 +173,6 @@ public class SWORDv1Depositor implements Depositor {
             }
 
             PostMessage message = new PostMessage();
-
             message.setFilepath(exportFile.getAbsolutePath());
             message.setDestination(depLocation.getCollection());
             message.setFiletype(exportMimeType);
@@ -181,32 +190,21 @@ public class SWORDv1Depositor implements Depositor {
             DepositResponse response = client.postFile(message);
 
             if (response.getHttpResponse() < 200 || response.getHttpResponse() > 204) {
-                throw new SwordDepositException("Sword server responed with a non success HTTP status code: " + response.getHttpResponse());
+                throw new SWORDClientException("Sword server responded with a non-success HTTP Status Code: " + response.getHttpResponse());
             }
 
-            try {
-                URI sword = new URI(depLocation.getRepository());
-                URI handle = new URI(response.getEntry().getId());
+            URI handle = new URI(response.getEntry().getId());
+            depositUrl += "/handle" + handle.getPath();
 
-                String depositURL = sword.getScheme() + "://" + sword.getHost();
-                if (sword.getPort() != -1) {
-                    depositURL += ":" + sword.getPort();
-                }
-                depositURL += "/handle" + handle.getPath();
-
-                return new URI(depositURL).toString();
-            } catch (URISyntaxException e) {
-                throw new SwordDepositException("Unable to publish to " + depLocation.getRepository(), e);
-            }
-        } catch (MalformedURLException | SWORDClientException re) {
+            return new URI(depositUrl).toString();
+        } catch (SWORDClientException | URISyntaxException re) {
             logger.debug(re.getMessage(), re);
             String message = re.getMessage();
-            String repoMessage = ", unable to publish to " + depLocation.getRepository();
+            String repoMessage = ", unable to publish using deposit URL " + depositUrl;
 
             if (re.getMessage().contains("Unable to parse the XML")) {
                 repoMessage += ", SWORD server cannot parse the XML.";
-            }
-            else {
+            } else {
                 repoMessage += ".";
             }
 
@@ -215,7 +213,7 @@ public class SWORDv1Depositor implements Depositor {
             } else if (messageContainsCode(re.getMessage(), "401")) {
                 throw new SwordDepositUnauthorizedException("Unauthorized credentials" + repoMessage, re);
             } else if (messageContainsCode(re.getMessage(), "404")) {
-                throw new SwordDepositNotFoundException("Repository URL not found" + repoMessage, re);
+                throw new SwordDepositNotFoundException("Repository URL or Deposit URL is not found" + repoMessage, re);
             } else if (messageContainsCode(re.getMessage(), "408")) {
                 throw new SwordDepositRequestTimeoutException("Request timed out" + repoMessage, re);
             } else if (messageContainsCode(re.getMessage(), "409")) {
@@ -233,10 +231,9 @@ public class SWORDv1Depositor implements Depositor {
             } else if (re.getMessage().contains("Connection refused")) {
                 throw new SwordDepositForbiddenException("Connection refused" + repoMessage, re);
             } else if (re.getMessage().contains("Unable to parse the XML")) {
-                throw new SwordDepositUnprocessableEntityException("XML parse failure, unable to publish to " + depLocation.getRepository() + ".", re);
-            }
-            else {
-                message = "Unable to publish to " + depLocation.getRepository() + ".";
+                throw new SwordDepositUnprocessableEntityException("XML parse failure, unable to publish using URL " + depositUrl + ".", re);
+            } else {
+                message = "Unable to publish using deposit URL " + depositUrl + ".";
             }
 
             throw new SwordDepositBadRequestException(message, re);
