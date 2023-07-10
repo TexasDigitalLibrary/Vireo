@@ -336,6 +336,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         jdbcTemplate.queryForList(queryBuilder.getQuery()).forEach(row -> {
             ids.add((Long) row.get("ID"));
         });
+
         return submissionRepo.findAllById(ids);
     }
 
@@ -427,13 +428,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             }
         });
 
-        StringBuilder sqlSelectBuilder = new StringBuilder("SELECT DISTINCT s.id,");
-
+        StringBuilder sqlSelectBuilder = new StringBuilder("SELECT DISTINCT ");
         StringBuilder sqlCountSelectBuilder = new StringBuilder();
 
         Map<Long, ArrayList<StringBuilder>> sqlColumnsBuilders = new HashMap<>();
         Map<String, ArrayList<StringBuilder>> sqlCountWhereFilterBuilders = new HashMap<>();
         Map<Long, StringBuilder> sqlCountWherePredicate = new HashMap<>();
+        List<String> sqlAliasBuilders = new ArrayList<>();
 
         StringBuilder sqlJoinsBuilder = new StringBuilder();
         StringBuilder sqlBuilder;
@@ -443,6 +444,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         ArrayList<StringBuilder> sqlWhereBuilderList;
         ArrayList<StringBuilder> sqlAllColumnsWhereBuilderList = new ArrayList<>();
+
+        // Always have "s.id" alias.
+        sqlAliasBuilders.add("s.id");
 
         int n = 0;
 
@@ -474,9 +478,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         if (submissionListColumn.getInputType().getName().equals("INPUT_DEGREEDATE")) {
-                            setColumnOrderingForMonthYearDateFormat(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n);
+                            setColumnOrderingForMonthYearDateFormat(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "pfv" + n);
                         } else {
-                            setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " pfv" + n + ".value");
+                            setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "pfv" + n + ".value");
                         }
                     }
 
@@ -540,8 +544,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                                 sqlCountBuilder.append("fv.value = '").append(filterString).append("'");
                             } else {
                                 // perform like when input from text field
-                                sqlBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
-                                sqlCountBuilder.append("LOWER(fv.value) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                                sqlBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(escapeString(filterString)).append("%'");
+                                sqlCountBuilder.append("LOWER(fv.value) LIKE '%").append(escapeString(filterString)).append("%'");
                             }
 
                             break;
@@ -562,7 +566,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         // all column search filter
                         for (String filterString : allColumnSearchFilters) {
                             sqlBuilder = new StringBuilder();
-                            sqlBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(escapeString(filterString)).append("%'");
                             sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                         }
 
@@ -598,7 +602,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " ss.name");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "ss.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -608,7 +612,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                             sqlBuilder.append("ss").append(".name = '").append(filterString).append("'");
                         } else {
                             // TODO: determine if status will ever be search using a like
-                            sqlBuilder.append("LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlBuilder.append("LOWER(ss").append(".name) LIKE '%").append(escapeString(filterString)).append("%'");
                         }
 
                         sqlWhereBuilderList.add(sqlBuilder);
@@ -618,7 +622,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
                         sqlBuilder = new StringBuilder();
-                        sqlBuilder.append("LOWER(ss").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlBuilder.append("LOWER(ss").append(".name) LIKE '%").append(escapeString(filterString)).append("%'");
                         sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
@@ -635,7 +639,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " o.name");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "o.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -646,7 +650,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         } else {
                             // TODO: determine if organization name will ever be
                             // search using a like
-                            sqlBuilder.append("LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlBuilder.append("LOWER(o").append(".name) LIKE '%").append(escapeString(filterString)).append("%'");
                         }
 
                         sqlWhereBuilderList.add(sqlBuilder);
@@ -656,7 +660,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
                         sqlBuilder = new StringBuilder();
-                        sqlBuilder.append("LOWER(o").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlBuilder.append("LOWER(o").append(".name) LIKE '%").append(escapeString(filterString)).append("%'");
                         sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
@@ -674,7 +678,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " oc.name");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "oc.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -684,7 +688,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         } else {
                             // TODO: determine if organization category name
                             // will ever be search using a like
-                            sqlBuilder.append("LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlBuilder.append("LOWER(oc").append(".name) LIKE '%").append(escapeString(filterString)).append("%'");
                         }
 
                         sqlWhereBuilderList.add(sqlBuilder);
@@ -694,7 +698,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
                         sqlBuilder = new StringBuilder();
-                        sqlBuilder.append("LOWER(oc").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlBuilder.append("LOWER(oc").append(".name) LIKE '%").append(escapeString(filterString)).append("%'");
                         sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
@@ -708,7 +712,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " a.email");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "a.email");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -719,7 +723,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         } else if (submissionListColumn.getExactMatch()) {
                             sqlBuilder.append("a").append(".email = '").append(filterString).append("'");
                         } else {
-                            sqlBuilder.append("LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                            sqlBuilder.append("LOWER(a").append(".email) LIKE '%").append(escapeString(filterString)).append("%'");
                         }
 
                         sqlWhereBuilderList.add(sqlBuilder);
@@ -729,7 +733,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
                         sqlBuilder = new StringBuilder();
-                        sqlBuilder.append("LOWER(a").append(".email) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlBuilder.append("LOWER(a").append(".email) LIKE '%").append(escapeString(filterString)).append("%'");
                         sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
@@ -748,7 +752,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " embs.name");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "embs.name");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -769,7 +773,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     // all column search filter
                     for (String filterString : allColumnSearchFilters) {
                         sqlBuilder = new StringBuilder();
-                        sqlBuilder.append("LOWER(embs").append(".name) LIKE '%").append(filterString.toLowerCase()).append("%'");
+                        sqlBuilder.append("LOWER(embs").append(".name) LIKE '%").append(escapeString(filterString)).append("%'");
                         sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
@@ -796,7 +800,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 case "exclude":
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.id");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "s.id");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -811,7 +815,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 case "submissionDate":
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.submission_date");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "s.submission_date");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -824,7 +828,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 case "approveApplicationDate":
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.approve_application_date");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "s.approve_application_date");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -837,7 +841,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 case "approveAdvisorDate":
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.approve_advisor_date");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "s.approve_advisor_date");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -850,7 +854,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 case "approveEmbargoDate":
 
                     if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlSelectBuilder, sqlOrderBysBuilder, " s.approve_embargo_date");
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "s.approve_embargo_date");
                     }
 
                     for (String filterString : submissionListColumn.getFilters()) {
@@ -880,6 +884,48 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     }
 
                     break;
+
+                case "depositURL":
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "s.depositurl");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("LOWER(s").append(".depositurl) LIKE '%").append(escapeString(filterString)).append("%'");
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "depositurl").add(sqlBuilder);
+                    }
+
+                    // all column search filter
+                    for (String filterString : allColumnSearchFilters) {
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("LOWER(s").append(".depositurl) LIKE '%").append(escapeString(filterString)).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlBuilder);
+                    }
+
+                    break;
+
+                case "reviewerNotes":
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "s.reviewer_notes");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("LOWER(s").append(".reviewer_notes) LIKE '%").append(escapeString(filterString)).append("%'");
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "reviewer_notes").add(sqlBuilder);
+                    }
+
+                    // all column search filter
+                    for (String filterString : allColumnSearchFilters) {
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("LOWER(s").append(".reviewer_notes) LIKE '%").append(escapeString(filterString)).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlBuilder);
+                    }
+
+                    break;
                 default:
                     logger.info("No value path given for submission list column " + String.join(".", submissionListColumn.getValuePath()) + ": " + submissionListColumn.getTitle());
                 }
@@ -891,7 +937,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         }
 
         // Complete the select clause.
-        sqlSelectBuilder.setLength(sqlSelectBuilder.length() - 1);
+        sqlAliasBuilders.forEach(string -> {
+            sqlSelectBuilder.append(string).append(", ");
+        });
+        sqlSelectBuilder.setLength(sqlSelectBuilder.length() - 2);
         sqlSelectBuilder.append(" FROM submission s");
         sqlCountSelectBuilder.insert(0, "SELECT COUNT(DISTINCT s.id) FROM submission s");
 
@@ -1003,10 +1052,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         return new QueryStrings(sqlCountQuery, sqlQuery);
     }
 
-    public void setColumnOrdering(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder, String value) {
+    public void setColumnOrdering(Sort sort, List<String> sqlAliasBuilders, StringBuilder sqlOrderBysBuilder, String value) {
         if (sort == Sort.ASC || sort == Sort.DESC) {
-            sqlSelectBuilder.append(value).append(",");
-            sqlOrderBysBuilder.append(value).append(" ").append(sort.name()).append(",");
+            if (!sqlAliasBuilders.contains(value)) {
+                sqlAliasBuilders.add(value);
+            }
+
+            sqlOrderBysBuilder.append(" ").append(value).append(" ").append(sort.name()).append(",");
         }
     }
 
@@ -1025,21 +1077,25 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
      * Postgresql will falsely claim that pfv0.value is not in the SELECT clause when it actually is while DISTINCT is present.
      *
      * @param sort The sort direction.
-     * @param sqlSelectBuilder The SQL select builder string.
+     * @param sqlAliasBuilders The SQL select alias builder string.
      * @param sqlOrderBysBuilder The SQL order by builder string.
      * @param table The table to select from when joining on the assumption that the value is "table".value.
      */
-    public void setColumnOrderingForMonthYearDateFormat(Sort sort, StringBuilder sqlSelectBuilder, StringBuilder sqlOrderBysBuilder, String table) {
+    public void setColumnOrderingForMonthYearDateFormat(Sort sort, List<String> sqlAliasBuilders, StringBuilder sqlOrderBysBuilder, String table) {
         if (sort == Sort.ASC || sort == Sort.DESC) {
-            sqlSelectBuilder.append(table).append(".value,");
+            StringBuilder value = new StringBuilder(table).append(".value, ");
 
             if ("h2".equals(vireoDatabaseConfig.getPlatform())) {
-                sqlSelectBuilder.append(" PARSEDATETIME(").append(table).append(".value, 'MMM yyyy') AS");
+                value.append("PARSEDATETIME(").append(table).append(".value, 'MMM yyyy') AS");
             } else {
-                sqlSelectBuilder.append(" CAST(REPLACE(").append(table).append(".value, ' ', ' 1, ') AS DATE) AS");
+                value.append("CAST(REPLACE(").append(table).append(".value, ' ', ' 1, ') AS DATE) AS");
             }
 
-            sqlSelectBuilder.append(table).append("_date,");
+            value.append(table).append("_date");
+
+            if (!sqlAliasBuilders.contains(value.toString())) {
+                sqlAliasBuilders.add(value.toString());
+            }
 
             sqlOrderBysBuilder.append(table).append("_date ").append(sort.name()).append(",");
         }
@@ -1088,6 +1144,39 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         }
 
         return map.get(key);
+    }
+
+    /**
+     * Add SQL escape protection for string, defaulting to forcing lower case.
+     *
+     * This handles escaping: "\", "_", and "%".
+     * This is expected to be used for LIKE statements.
+     *
+     * @param original
+     * @return
+     *   An escaped string.
+     */
+    private String escapeString(String original) {
+        return escapeString(original, true);
+    }
+
+    /**
+     * Add SQL escape protection for string.
+     *
+     * This handles escaping: "\", "_", and "%".
+     * This is expected to be used for LIKE statements.
+     *
+     * @param original The original string to escape.
+     * @param lower TRUE to make lower case, FALSE to leave case alone.
+     * @return
+     *   An escaped string.
+     */
+    private String escapeString(String original, boolean lower) {
+        String escaped = original.replace("\\", "\\\\");
+        escaped = escaped.replace("_", "\\_");
+        escaped = escaped.replace("%", "\\%");
+
+        return lower == true ? escaped.toLowerCase() : escaped;
     }
 
     private class QueryStrings {
