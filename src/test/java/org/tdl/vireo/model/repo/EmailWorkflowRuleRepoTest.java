@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -6,8 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.tdl.vireo.model.EmailWorkflowRule;
 
-public class EmailWorkflowRuleTest extends AbstractEntityTest {
+public class EmailWorkflowRuleRepoTest extends AbstractRepoTest {
 
     @BeforeEach
     public void setUp() {

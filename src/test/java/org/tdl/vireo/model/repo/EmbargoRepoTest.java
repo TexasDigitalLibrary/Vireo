@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,8 +6,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.model.Embargo;
+import org.tdl.vireo.model.EmbargoGuarantor;
 
-public class EmbargoTest extends AbstractEntityTest {
+public class EmbargoRepoTest extends AbstractRepoTest {
 
     @BeforeEach
     public void setUp() {

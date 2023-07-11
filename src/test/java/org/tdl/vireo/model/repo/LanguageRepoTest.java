@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,9 +6,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.tdl.vireo.model.repo.LanguageRepo;
+import org.tdl.vireo.model.Language;
 
-public class LanguageTest extends AbstractEntityTest {
+public class LanguageRepoTest extends AbstractRepoTest {
 
     @Autowired
     private LanguageRepo languageRepo;

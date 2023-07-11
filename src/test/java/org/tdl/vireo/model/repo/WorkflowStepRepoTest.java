@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -10,8 +10,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
+import org.tdl.vireo.model.FieldPredicate;
+import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.Note;
+import org.tdl.vireo.model.Organization;
+import org.tdl.vireo.model.WorkflowStep;
 
-public class WorkflowStepTest extends AbstractEntityTest {
+public class WorkflowStepRepoTest extends AbstractRepoTest {
 
     @BeforeEach
     public void setup() {

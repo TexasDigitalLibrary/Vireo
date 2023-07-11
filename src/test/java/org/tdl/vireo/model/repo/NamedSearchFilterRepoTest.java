@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -10,9 +10,15 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.FilterCriterion;
+import org.tdl.vireo.model.InputType;
+import org.tdl.vireo.model.NamedSearchFilter;
+import org.tdl.vireo.model.NamedSearchFilterGroup;
+import org.tdl.vireo.model.Sort;
+import org.tdl.vireo.model.SubmissionListColumn;
 
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public class NamedSearchFilterTest extends AbstractEntityTest {
+public class NamedSearchFilterRepoTest extends AbstractRepoTest {
 
     // TODO: write missing tests!!
 

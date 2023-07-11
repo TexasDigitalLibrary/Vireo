@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,8 +6,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.FieldValue;
 
-public class FieldValueTest extends AbstractEntityTest {
+public class FieldValueRepoTest extends AbstractRepoTest {
 
     @BeforeEach
     public void setup() {

@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -10,8 +10,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.Organization;
+import org.tdl.vireo.model.OrganizationCategory;
+import org.tdl.vireo.model.WorkflowStep;
 
-public class OrganizationTest extends AbstractEntityTest {
+public class OrganizationRepoTest extends AbstractRepoTest {
 
     @BeforeEach
     public void setUp() {

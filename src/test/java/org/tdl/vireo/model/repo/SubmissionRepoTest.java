@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -11,10 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
-import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
+import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.CustomActionValue;
+import org.tdl.vireo.model.FieldValue;
+import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionFieldProfile;
+import org.tdl.vireo.model.SubmissionWorkflowStep;
+import org.tdl.vireo.model.WorkflowStep;
 
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public class SubmissionTest extends AbstractEntityTest {
+public class SubmissionRepoTest extends AbstractRepoTest {
 
     @Autowired
     private CustomActionDefinitionRepo customActionDefinitionRepo;

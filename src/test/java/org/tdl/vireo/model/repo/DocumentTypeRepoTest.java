@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -12,10 +12,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
-import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
+import org.tdl.vireo.model.DocumentType;
 
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public class DocumentTypeTest extends AbstractEntityTest {
+public class DocumentTypeRepoTest extends AbstractRepoTest {
 
     @Autowired
     private CustomActionDefinitionRepo customActionDefinitionRepo;

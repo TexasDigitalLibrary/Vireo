@@ -1,12 +1,13 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.tdl.vireo.model.InputType;
 
-public class InputTypeTest extends AbstractEntityTest {
+public class InputTypeRepoTest extends AbstractRepoTest {
 
     @Override
     @Test

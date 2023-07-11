@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -6,8 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.model.SubmissionStatus;
 
-public class SubmissionStatusTest extends AbstractEntityTest {
+public class SubmissionStatusRepoTest extends AbstractRepoTest {
 
     @Override
     @Test

@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,10 +6,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
-import org.tdl.vireo.model.repo.SubmissionNoteRepo;
 
-public class SubmissionWorkflowStepTest extends AbstractEntityTest {
+public class SubmissionWorkflowStepRepoTest extends AbstractRepoTest {
 
     // private User anotherUser;
     // private Credentials credentials;

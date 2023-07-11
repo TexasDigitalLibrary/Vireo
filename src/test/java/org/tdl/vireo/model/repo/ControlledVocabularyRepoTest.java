@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -7,9 +7,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.Embargo;
+import org.tdl.vireo.model.EmbargoGuarantor;
+import org.tdl.vireo.model.VocabularyWord;
 
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public class ControlledVocabularyTest extends AbstractEntityTest {
+public class ControlledVocabularyRepoTest extends AbstractRepoTest {
 
     @Override
     @Test

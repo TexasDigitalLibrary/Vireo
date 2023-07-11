@@ -1,12 +1,14 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.model.Organization;
+import org.tdl.vireo.model.OrganizationCategory;
 
-public class OrganizationCategoryTest extends AbstractEntityTest {
+public class OrganizationCategoryRepoTest extends AbstractRepoTest {
 
     @Override
     @Test

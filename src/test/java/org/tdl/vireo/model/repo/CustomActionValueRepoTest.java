@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -6,12 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
+import org.tdl.vireo.model.CustomActionValue;
+import org.tdl.vireo.model.Organization;
 
-public class CustomActionValueTest extends AbstractEntityTest {
+public class CustomActionValueRepoTest extends AbstractRepoTest {
 
     @Autowired
     private CustomActionDefinitionRepo customActionDefinitionRepo;

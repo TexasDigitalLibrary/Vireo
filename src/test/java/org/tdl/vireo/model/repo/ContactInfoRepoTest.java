@@ -1,12 +1,13 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.tdl.vireo.model.ContactInfo;
 
-public class ContactInfoTest extends AbstractEntityTest {
+public class ContactInfoRepoTest extends AbstractRepoTest {
 
     @BeforeEach
     public void setUp() {

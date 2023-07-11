@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -8,9 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.Address;
+import org.tdl.vireo.model.ContactInfo;
+import org.tdl.vireo.model.User;
 
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public class UserTest extends AbstractEntityTest {
+public class UserRepoTest extends AbstractRepoTest {
 
     @Override
     @Test

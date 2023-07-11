@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,7 +6,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
-public class DegreeTest extends AbstractEntityTest {
+import org.tdl.vireo.model.Degree;
+
+public class DegreeRepoTest extends AbstractRepoTest {
 
     @BeforeEach
     public void setup() {

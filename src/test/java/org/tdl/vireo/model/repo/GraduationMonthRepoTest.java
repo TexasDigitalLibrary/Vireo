@@ -1,12 +1,13 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.tdl.vireo.model.GraduationMonth;
 
-public class GraduationMonthTest extends AbstractEntityTest {
+public class GraduationMonthRepoTest extends AbstractRepoTest {
 
     @Override
     @Test

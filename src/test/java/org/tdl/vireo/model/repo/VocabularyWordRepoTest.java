@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public class VocabularyWordTest extends AbstractEntityTest {
+public class VocabularyWordRepoTest extends AbstractRepoTest {
 
     @BeforeEach
     public void setup() {
