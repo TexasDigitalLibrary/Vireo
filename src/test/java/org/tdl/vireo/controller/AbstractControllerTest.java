@@ -76,11 +76,9 @@ public abstract class AbstractControllerTest extends MockData {
     @InjectMocks
     protected HttpUtility httpUtility;
 
-    @Spy
     @InjectMocks
     protected CryptoService cryptoService;
 
-    @Spy
     @InjectMocks
     protected TemplateUtility templateUtility;
 
