@@ -61,10 +61,10 @@ public abstract class AbstractControllerTest extends MockData {
     protected BCryptPasswordEncoder passwordEncoder;
 
     @Mock
-    private SimpMessagingTemplate simpMessagingTemplate;
+    protected SimpMessagingTemplate simpMessagingTemplate;
 
     @Mock
-    private Environment env;
+    protected Environment env;
 
     @Mock
     protected TokenService tokenService;
@@ -72,14 +72,13 @@ public abstract class AbstractControllerTest extends MockData {
     @Mock
     protected MockEmailService mockEmailService;
 
-    @Spy
     @InjectMocks
     protected HttpUtility httpUtility;
 
-    @InjectMocks
+    @Mock
     protected CryptoService cryptoService;
 
-    @InjectMocks
+    @Mock
     protected TemplateUtility templateUtility;
 
     protected Credentials TEST_CREDENTIALS = new Credentials();
