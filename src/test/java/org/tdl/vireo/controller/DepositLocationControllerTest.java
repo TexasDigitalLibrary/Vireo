@@ -17,10 +17,8 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.depositor.SWORDv1Depositor;
@@ -28,7 +26,6 @@ import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.service.DepositorService;
 
 @ActiveProfiles("test")
-@ExtendWith(MockitoExtension.class)
 public class DepositLocationControllerTest extends AbstractControllerTest {
 
     @Mock

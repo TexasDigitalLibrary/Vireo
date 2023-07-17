@@ -10,16 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.repo.NoteRepo;
 
 @ActiveProfiles("test")
-@ExtendWith(MockitoExtension.class)
 public class NoteControllerTest extends AbstractControllerTest {
 
     @Mock
@@ -28,27 +25,27 @@ public class NoteControllerTest extends AbstractControllerTest {
     @InjectMocks
     private NoteController noteController;
 
-    private Note mockNote1;
+    private Note note1;
 
-    private static List<Note> mockNotes;
+    private static List<Note> notes;
 
     @BeforeEach
     public void setup() {
-        mockNote1 = new Note("Note 1", "text 1");
-        mockNote1.setId(1L);
+        note1 = new Note("Note 1", "text 1");
+        note1.setId(1L);
 
-        mockNotes = new ArrayList<Note>(Arrays.asList(new Note[] { mockNote1 }));
+        notes = new ArrayList<Note>(Arrays.asList(new Note[] { note1 }));
     }
 
     @Test
     public void testAllNotes() {
-        when(noteRepo.findAll()).thenReturn(mockNotes);
+        when(noteRepo.findAll()).thenReturn(notes);
 
         ApiResponse response = noteController.getAllNotes();
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         List<?> list = (ArrayList<?>) response.getPayload().get("ArrayList<Note>");
-        assertEquals(mockNotes.size(), list.size());
+        assertEquals(notes.size(), list.size());
     }
 
 }
