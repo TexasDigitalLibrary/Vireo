@@ -109,7 +109,7 @@
   {
     "title": "Deposit ID",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": ["depositURL"],
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"

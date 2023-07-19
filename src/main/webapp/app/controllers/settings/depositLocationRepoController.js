@@ -1,4 +1,3 @@
-
 vireo.controller("DepositLocationRepoController", function ($controller, $scope, $q, DepositLocationRepo, DepositLocation, PackagerRepo, DragAndDropListenerFactory) {
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -37,7 +36,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
                 $scope.modalData.refresh();
             }
 
-            $scope.modalData = {
+            $scope.modalData = new DepositLocation({
                 name: '',
                 depositorName: 'SWORDv1Depositor',
                 timeout: 240,
@@ -45,32 +44,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
                 repository: '',
                 username: '',
                 password: '',
-                testDepositLocation: function () {
-                    isTestDepositing = true;
-                    var testData = angular.copy($scope.modalData);
-                    delete testData.packager;
-                    var testableDepositLocation = new DepositLocation(testData);
-                    testableDepositLocation.testConnection().then(function (response) {
-                        var apiRes = angular.fromJson(response.body);
-                        if (apiRes.meta.status === 'SUCCESS') {
-                            var collections = apiRes.payload.HashMap;
-                            angular.forEach(collections, function (uri, name) {
-                                $scope.collections.push({
-                                    "name": name,
-                                    "uri": uri
-                                });
-                            });
-                        }
-                        isTestDepositing = false;
-                    });
-                },
-                isTestDepositing: function () {
-                    return isTestDepositing;
-                },
-                isTestable: function () {
-                    return (!isTestDepositing && $scope.modalData.name && $scope.modalData.depositorName && $scope.modalData.repository && $scope.modalData.username && $scope.modalData.password);
-                }
-            };
+            });
 
             for (var key in $scope.forms) {
                 if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
@@ -100,6 +74,7 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
         };
 
         $scope.updateDepositLocation = function () {
+            $scope.modalData.dirty(true);
             $scope.modalData.save();
         };
 
@@ -120,6 +95,36 @@ vireo.controller("DepositLocationRepoController", function ($controller, $scope,
             reorder: $scope.reorderDepositLocation,
             container: '#deposit-locations'
         });
+
+        $scope.testDepositLocation = function () {
+            isTestDepositing = true;
+
+            var testData = angular.copy($scope.modalData);
+            delete testData.packager;
+
+            $scope.depositLocationRepo.testConnection(testData).then(function (response) {
+                var apiRes = angular.fromJson(response.body);
+
+                if (apiRes.meta.status === 'SUCCESS') {
+                    angular.forEach(apiRes.payload.HashMap, function (uri, name) {
+                        $scope.collections.push({
+                            "name": name,
+                            "uri": uri
+                        });
+                    });
+                }
+
+                isTestDepositing = false;
+            });
+        };
+
+        $scope.isTestDepositing = function () {
+            return isTestDepositing;
+        };
+
+        $scope.isTestable = function () {
+            return (!isTestDepositing && !!$scope.modalData.name && !!$scope.modalData.depositorName && !!$scope.modalData.repository && !!$scope.modalData.username && !!$scope.modalData.password);
+        };
 
         DepositLocationRepo.listen(function (data) {
             $scope.resetDepositLocation();

@@ -24,7 +24,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "originating_workflow_step_id", "field_predicate_id", "fp_type", "overrideable" }))
 public abstract class AbstractFieldProfile<FP> extends ValidatingBaseEntity {
 
-    @JsonView(Views.SubmissionIndividual.class)
+    @JsonView(Views.Partial.class)
     @ManyToOne(fetch = EAGER, optional = false)
     private FieldPredicate fieldPredicate;
 

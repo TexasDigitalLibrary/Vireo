@@ -9,6 +9,7 @@ vireo.directive("validatedinput", function ($q, $timeout) {
             "id": "@",
             "property": "@",
             "label": "@",
+            "disabled": "=",
             "placeholder": "@",
             "autocomplete": "@",
             "typeahead": "=",
@@ -21,8 +22,7 @@ vireo.directive("validatedinput", function ($q, $timeout) {
             "confirm": "&",
             "validations": "=",
             "formView": "=",
-            "repeatable": "=?",
-            "disabled": "="
+            "repeatable": "=?"
         },
         link: function ($scope, element, attr) {
 
@@ -41,7 +41,7 @@ vireo.directive("validatedinput", function ($q, $timeout) {
             }
 
             if ($scope.id === undefined && ($scope.noId === 'false' || $scope.noId === undefined)) {
-                $scope.id = $scope.property;
+                $scope.id = $scope.property + '-' + Date.now();
             }
 
             var getForm = function () {

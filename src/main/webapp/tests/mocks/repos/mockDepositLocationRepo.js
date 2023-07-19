@@ -18,6 +18,15 @@ var dataDepositLocationRepo3 = [
 
 angular.module("mock.depositLocationRepo", []).service("DepositLocationRepo", function($q) {
     var repo = mockRepo("DepositLocationRepo", $q, mockDepositLocation, dataDepositLocationRepo1);
+    var testConnectionPayload = { HashMap: [ ] };
+
+    repo.mockTestConnectionPayload = function(dataArray) {
+        testConnectionPayload = { HashMap: dataArray };
+    };
+
+    repo.testConnection = function() {
+        return payloadPromise($q.defer(), testConnectionPayload);
+    };
 
     return repo;
 });

@@ -39,7 +39,7 @@ public class DepositLocation extends ValidatingOrderedBaseEntity {
     @Column(nullable = true)
     private String onBehalfOf;
 
-    @OneToOne(targetEntity = AbstractPackager.class, orphanRemoval = true, optional = true)
+    @OneToOne(targetEntity = AbstractPackager.class, orphanRemoval = false, optional = true)
     private Packager<?> packager;
 
     @Column(nullable = false)

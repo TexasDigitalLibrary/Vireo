@@ -232,7 +232,7 @@ public class Submission extends ValidatingBaseEntity {
     @Column(nullable = true)
     private String advisorReviewURL;
 
-    @JsonView(Views.SubmissionIndividual.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = true)
     private String depositURL;
 
