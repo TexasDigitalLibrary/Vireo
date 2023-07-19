@@ -6,7 +6,7 @@
 
   <groupId>org.tdl</groupId>
   <artifactId>vireo</artifactId>
-  <version>4.2.3</version>
+  <version>4.2.4</version>
 
   <name>Vireo</name>
   <description>Vireo Thesis and Dissertation Submission System</description>
