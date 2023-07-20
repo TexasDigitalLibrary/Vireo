@@ -1,50 +1,31 @@
 package org.tdl.vireo.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.InjectMocks;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.dao.DataIntegrityViolationException;
+public class DegreeLevelTest extends AbstractModelTest<DegreeLevel> {
 
-public class DegreeLevelTest extends AbstractEntityTest {
-
-    @Override
-    @Test
-    public void testCreate() {
-        DegreeLevel degreeLevel = degreeLevelRepo.create(TEST_DEGREE_LEVEL);
-        assertEquals(1, degreeLevelRepo.count(), "The repository did not save the entity!");
-        assertEquals(TEST_DEGREE_LEVEL, degreeLevel.getName(), "Saved entity did not contain the name!");
-    }
+    @InjectMocks
+    private DegreeLevel degreeLevel;
 
     @Override
-    @Test
-    public void testDuplication() {
-        degreeLevelRepo.create(TEST_DEGREE_LEVEL);
-        try {
-            degreeLevelRepo.create(TEST_DEGREE_LEVEL);
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */
-        }
-        assertEquals(1, degreeLevelRepo.count(), "The repository duplicated entity!");
+    protected DegreeLevel getInstance() {
+        return degreeLevel;
     }
 
-    @Override
-    @Test
-    public void testDelete() {
-        DegreeLevel degreeLevel = degreeLevelRepo.create(TEST_DEGREE_LEVEL);
-        degreeLevelRepo.delete(degreeLevel);
-        assertEquals(0, degreeLevelRepo.count(), "The entity was not deleted!");
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testCascade() {
-
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @AfterEach
-    public void cleanUp() {
-        degreeLevelRepo.deleteAll();
+    private static Stream<Arguments> getParameterStream() {
+        return Stream.of(
+            Arguments.of("name", "value")
+        );
     }
 
 }

@@ -2,32 +2,33 @@ package org.tdl.vireo.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
-import java.util.Arrays;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.stubbing.Answer;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.auth.controller.AuthController;
 import org.tdl.vireo.auth.service.VireoUserCredentialsService;
 import org.tdl.vireo.model.EmailTemplate;
@@ -36,17 +37,11 @@ import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.VireoEmailSender;
 
-@Transactional(propagation = Propagation.NEVER)
 @ActiveProfiles("test")
-@ExtendWith(MockitoExtension.class)
 public class AuthControllerTest extends AbstractControllerTest {
 
-    public static final String REGISTRATION_TEMPLATE = "SYSTEM New User Registration";
-
-    public static Long emailTemplatePosition = 0L;
-
-    @MockBean
-    private VireoEmailSender mockEmailSender;
+    @Mock
+    private VireoEmailSender emailSender;
 
     @Mock
     private UserRepo userRepo;
@@ -60,143 +55,264 @@ public class AuthControllerTest extends AbstractControllerTest {
     @InjectMocks
     private AuthController authController;
 
-    private static List<User> mockUsers;
+    private Map<String, String> parameters;
+    private Map<String, String> data;
+    private User user;
+    private EmailTemplate emailTemplate;
 
     @BeforeEach
     public void setup() throws MessagingException {
-        mockUsers = Arrays.asList(new User[] { TEST_USER, TEST_USER2, TEST_USER3, TEST_USER4 });
+        parameters = new HashMap<String, String>();
+        data = new HashMap<String, String>();
 
-        ReflectionTestUtils.setField(httpUtility, HTTP_DEFAULT_TIMEOUT_NAME, HTTP_DEFAULT_TIMEOUT_VALUE);
-        ReflectionTestUtils.setField(cryptoService, SECRET_PROPERTY_NAME, SECRET_VALUE);
+        user = new User();
+        user.setId(1L);
+        user.setEmail(TEST_EMAIL);
+        user.setPassword("password");
 
-        TEST_CREDENTIALS.setFirstName(TEST_USER_FIRST_NAME);
-        TEST_CREDENTIALS.setLastName(TEST_USER_LAST_NAME);
-        TEST_CREDENTIALS.setEmail(TEST_USER_EMAIL);
-        TEST_CREDENTIALS.setRole(TEST_USER_ROLE.toString());
-
-        Mockito.lenient().when(userRepo.findAll()).thenReturn(mockUsers);
-
-        ReflectionTestUtils.setField(authController, "url", "localhost:9000");
-
-        Mockito.lenient().when(vireoUserCredentialsService.createUserFromRegistration(any(String.class), any(String.class), any(String.class), any(String.class))).then(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return userRepo.save(new User((String) invocation.getArguments()[0], (String) invocation.getArguments()[1], (String) invocation.getArguments()[2], (String) invocation.getArguments()[3], TEST_USER_ROLE));
-            }
-        });
-
-        Mockito.lenient().when(userRepo.findByEmail(any(String.class))).then(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return findByEmail((String) invocation.getArguments()[0]);
-            }
-        });
-
-        Mockito.lenient().when(userRepo.save(any(User.class))).then(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return updateUser((User) invocation.getArguments()[0]);
-            }
-        });
-
-        Mockito.lenient().when(emailTemplateRepo.findByNameOverride(REGISTRATION_TEMPLATE)).then(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                EmailTemplate emailTemplate = new EmailTemplate(TEST_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
-                emailTemplate.setPosition(emailTemplatePosition++);
-                return emailTemplate;
-            }
-        });
-
-        doCallRealMethod().when(mockEmailSender).sendEmail(any(String.class), any(String.class), any(String.class));
-        doCallRealMethod().when(mockEmailSender).sendEmail(any(String[].class), any(String.class), any(String.class));
-        doCallRealMethod().when(mockEmailSender).sendEmail(any(String.class), any(String[].class), any(String.class), any(String.class));
-
-        doNothing().when(mockEmailSender).send(any(MimeMessage.class));
-        doNothing().when(mockEmailSender).sendEmail(any(String[].class), any(String[].class), any(String[].class), any(String.class), any(String.class));
+        emailTemplate = new EmailTemplate();
+        emailTemplate.setId(1L);
+        emailTemplate.setSubject("subject");
+        emailTemplate.setMessage("message");
     }
 
     @Test
-    @SuppressWarnings("unchecked")
-    public void testRegisterEmail() {
-        Map<String, String> parameters = new HashMap<String, String>();
+    public void testRegistrationWithoutFirstName() {
+        ApiResponse response = authController.registration(data, parameters);
 
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRegistrationWithoutLastName() {
+        data.put("firstName", "firstName");
+
+        ApiResponse response = authController.registration(data, parameters);
+
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRegistrationWithoutPassword() {
+        data.put("firstName", "firstName");
+        data.put("lastName", "lastName");
+
+        ApiResponse response = authController.registration(data, parameters);
+
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRegistrationWithoutConfirm() {
+        data.put("firstName", "firstName");
+        data.put("lastName", "lastName");
+        data.put("userPassword", "userPassword");
+
+        ApiResponse response = authController.registration(data, parameters);
+
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRegistrationWithShortPassword() {
+        data.put("firstName", "firstName");
+        data.put("lastName", "lastName");
+        data.put("userPassword", "12345");
+        data.put("confirm", data.get("userPassword"));
+
+        ApiResponse response = authController.registration(data, parameters);
+
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValidateGenericTokenExceptions")
+    public void testRegistrationValidateGenericTokenThrowsException(Class<? extends Throwable> exception) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        setupDataMap();
+
+        when(cryptoService.validateGenericToken(anyString(), anyString())).thenThrow(exception);
+
+        ApiResponse response = authController.registration(data, parameters);
+
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRegistrationWhenTokenIsExpired() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        // Warning the tokenDaysOld calculation is unsafe and can fail when the token time is less than the current time due to the subtraction.
+        String[] content = { "" + Instant.now().plusSeconds(86400 * 3).toEpochMilli(), "e@mail.com" };
+
+        setupDataMap();
+
+        when(cryptoService.validateGenericToken(anyString(), anyString())).thenReturn(content);
+
+        ApiResponse response = authController.registration(data, parameters);
+
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRegistration() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        // Warning the tokenDaysOld calculation is unsafe and can fail when the token time is less than the current time due to the subtraction.
+        String[] content = { "" + Instant.now().toEpochMilli(), "e@mail.com" };
+
+        setupDataMap();
+
+        when(cryptoService.validateGenericToken(anyString(), anyString())).thenReturn(content);
+        when(cryptoService.encodePassword(anyString())).thenReturn("encoded");
+        when(vireoUserCredentialsService.createUserFromRegistration(anyString(), anyString(), anyString(), anyString())).thenReturn(user);
+
+        ApiResponse response = authController.registration(data, parameters);
+
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        User got = (User) response.getPayload().get("User");
+
+        assertEquals(got, user, "Did not get the correct user returned.");
+    }
+
+    @Test
+    public void testRegistrationWithEmailAlreadyExists() {
+        setupDataMap();
         parameters.put("email", TEST_EMAIL);
 
-        ApiResponse response = authController.registration(null, parameters);
+        when(userRepo.findByEmail(anyString())).thenReturn(user);
 
-        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+        ApiResponse response = authController.registration(data, parameters);
 
-        assertEquals(TEST_EMAIL, ((String) ((Map<String, String>) response.getPayload().get("HashMap")).get("email")));
+        assertEquals(ApiStatus.INVALID, response.getMeta().getStatus());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValidateGenericTokenExceptions")
+    public void testRegistrationWithEmailGenerateTokenThrowsException(Class<? extends Throwable> exception) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        setupDataMap();
+        parameters.put("email", TEST_EMAIL);
+
+        ReflectionTestUtils.setField(authController, "url", "http://localhost");
+
+        when(userRepo.findByEmail(anyString())).thenReturn(null);
+        when(emailTemplateRepo.findByNameOverride(anyString())).thenReturn(emailTemplate);
+        when(cryptoService.generateGenericToken(anyString(), anyString())).thenThrow(exception);
+
+        ApiResponse response = authController.registration(data, parameters);
+
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
     }
 
     @Test
-    public void testRegister() throws Exception {
-        String token = cryptoService.generateGenericToken(TEST_USER_EMAIL, EMAIL_VERIFICATION_TYPE);
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("token", token);
-        data.put("email", TEST_USER_EMAIL);
-        data.put("firstName", TEST_USER_FIRST_NAME);
-        data.put("lastName", TEST_USER_LAST_NAME);
-        data.put("userPassword", TEST_USER_PASSWORD);
-        data.put("confirm", TEST_USER_CONFIRM);
+    public void testRegistrationWithEmailSendEmailThrowsException() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, MessagingException {
+        setupDataMap();
+        parameters.put("email", TEST_EMAIL);
 
-        ApiResponse response = authController.registration(data, new HashMap<String, String>());
+        ReflectionTestUtils.setField(authController, "url", "http://localhost");
 
-        User user = (User) response.getPayload().get("User");
+        when(userRepo.findByEmail(anyString())).thenReturn(null);
+        when(emailTemplateRepo.findByNameOverride(anyString())).thenReturn(emailTemplate);
+        when(cryptoService.generateGenericToken(anyString(), anyString())).thenReturn("token");
+        when(templateUtility.templateParameters(anyString(), any(String[][].class))).thenReturn("content");
+        doThrow(MessagingException.class).when(emailSender).sendEmail(anyString(), anyString(), anyString());
+
+        ApiResponse response = authController.registration(data, parameters);
+
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    public void testRegistrationWithEmail() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, MessagingException {
+        setupDataMap();
+        parameters.put("email", TEST_EMAIL);
+
+        ReflectionTestUtils.setField(authController, "url", "http://localhost");
+
+        when(userRepo.findByEmail(anyString())).thenReturn(null);
+        when(emailTemplateRepo.findByNameOverride(anyString())).thenReturn(emailTemplate);
+        when(cryptoService.generateGenericToken(anyString(), anyString())).thenReturn("token");
+        when(templateUtility.templateParameters(anyString(), any(String[][].class))).thenReturn("content");
+        doNothing().when(emailSender).sendEmail(anyString(), anyString(), anyString());
+
+        ApiResponse response = authController.registration(data, parameters);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        assertEquals(TEST_USER_FIRST_NAME, user.getFirstName());
-        assertEquals(TEST_USER_LAST_NAME, user.getLastName());
-        assertEquals(TEST_USER_EMAIL, user.getEmail());
-        assertEquals(TEST_USER_ROLE, user.getRole());
+        Map<String, String> got = (HashMap<String, String>) response.getPayload().get("HashMap");
+
+        assertEquals(got, parameters, "Did not get the parameters returned.");
     }
 
     @Test
-    public void testLogin() throws Exception {
+    public void testLoginWhenUserIsNotFound() {
+        setupDataMap();
 
-        testRegister();
+        when(userRepo.findByEmail(anyString())).thenReturn(null);
 
-        Map<String, String> data = new HashMap<>();
-        data.put("email", TEST_USER_EMAIL);
-        data.put("userPassword", TEST_USER_PASSWORD);
+        ApiResponse response = authController.login(data);
 
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("lastName", TEST_USER_LAST_NAME);
-        claims.put("firstName", TEST_USER_FIRST_NAME);
-        claims.put("netid", null);
-        claims.put("uin", TEST_USER_EMAIL);
-        claims.put("email", TEST_USER_EMAIL);
+        assertEquals(ApiStatus.INVALID, response.getMeta().getStatus());
+    }
 
-        when(tokenService.createToken(TEST_USER_EMAIL, claims)).thenReturn("jwt");
+    @Test
+    public void testLoginWhenPasswordIsInvalid() {
+        setupDataMap();
+
+        when(userRepo.findByEmail(anyString())).thenReturn(user);
+        when(cryptoService.validatePassword(anyString(), any())).thenReturn(false);
+
+        ApiResponse response = authController.login(data);
+
+        assertEquals(ApiStatus.INVALID, response.getMeta().getStatus());
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideValidateGenericTokenExceptions")
+    public void testLoginWhenTokenServiceThrowsException(Class<? extends Throwable> exception) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        setupDataMap();
+
+        when(userRepo.findByEmail(anyString())).thenReturn(user);
+        when(cryptoService.validatePassword(anyString(), any())).thenReturn(true);
+        when(tokenService.createToken(anyString(), anyMap())).thenThrow(exception);
+
+        ApiResponse response = authController.login(data);
+
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testLogin() throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
+        String token = "token";
+
+        setupDataMap();
+
+        when(userRepo.findByEmail(anyString())).thenReturn(user);
+        when(cryptoService.validatePassword(anyString(), any())).thenReturn(true);
+        when(tokenService.createToken(anyString(), anyMap())).thenReturn(token);
 
         ApiResponse response = authController.login(data);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        String got = (String) response.getPayload().get("String");
+
+        assertEquals(got, token, "Did not get the token returned.");
     }
 
-    private User findByEmail(String email) {
-        for (User user : mockUsers) {
-            if (user.getEmail().equals(email)) {
-                return user;
-            }
-        }
-        return null;
+    protected static Stream<Arguments> provideValidateGenericTokenExceptions() {
+        return Stream.of(
+            Arguments.of(InvalidKeyException.class),
+            Arguments.of(NoSuchPaddingException.class),
+            Arguments.of(NoSuchAlgorithmException.class),
+            Arguments.of(IllegalBlockSizeException.class),
+            Arguments.of(BadPaddingException.class)
+        );
     }
 
-    private User updateUser(User updatedUser) {
-        for (User user : mockUsers) {
-            if (user.getEmail().equals(updatedUser.getEmail())) {
-                user.setEmail(updatedUser.getEmail());
-                user.setFirstName(updatedUser.getFirstName());
-                user.setLastName(updatedUser.getLastName());
-                user.setPassword(updatedUser.getPassword());
-                user.setRole(updatedUser.getRole());
-                return user;
-            }
-        }
-        return null;
+    private void setupDataMap() {
+        data.put("email", TEST_EMAIL);
+        data.put("token", "token");
+        data.put("firstName", "firstName");
+        data.put("lastName", "lastName");
+        data.put("userPassword", "userPassword");
+        data.put("confirm", data.get("userPassword"));
     }
-
 }

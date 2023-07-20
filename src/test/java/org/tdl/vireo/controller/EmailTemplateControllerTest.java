@@ -6,26 +6,21 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.response.ApiStatus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.response.ApiStatus;
-
 @ActiveProfiles("test")
-@ExtendWith(MockitoExtension.class)
 public class EmailTemplateControllerTest extends AbstractControllerTest {
 
     @Mock

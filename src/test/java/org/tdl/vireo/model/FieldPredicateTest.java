@@ -2,48 +2,100 @@ package org.tdl.vireo.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.dao.DataIntegrityViolationException;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.InjectMocks;
+import org.springframework.test.util.ReflectionTestUtils;
 
-public class FieldPredicateTest extends AbstractEntityTest {
+public class FieldPredicateTest extends AbstractModelCustomMethodTest<FieldPredicate> {
 
-    @Override
-    @Test
-    public void testCreate() {
-        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, Boolean.valueOf(false));
-        assertEquals(1, fieldPredicateRepo.count(), "The repository did not save the entity!");
-        assertEquals(TEST_FIELD_PREDICATE_VALUE, fieldPredicate.getValue(), "Saved entity did not contain the value!");
+    @InjectMocks
+    private FieldPredicate fieldPredicate;
+
+    @ParameterizedTest
+    @MethodSource("provideSchemaTest")
+    public void testGetSchema(String value, String expect) {
+        ReflectionTestUtils.setField(getInstance(), "value", value);
+
+        assertEquals(expect, fieldPredicate.getSchema(), GETTER_MESSAGE);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideElementTest")
+    public void testGetElement(String value, String expect) {
+        ReflectionTestUtils.setField(getInstance(), "value", value);
+
+        assertEquals(expect, fieldPredicate.getElement(), GETTER_MESSAGE);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideQualifierTest")
+    public void testGetQualifier(String value, String expect) {
+        ReflectionTestUtils.setField(getInstance(), "value", value);
+
+        assertEquals(expect, fieldPredicate.getQualifier(), GETTER_MESSAGE);
     }
 
     @Override
-    @Test
-    public void testDuplication() {
-        fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, Boolean.valueOf(false));
-        try {
-            fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, Boolean.valueOf(false));
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */ }
-        assertEquals(1, fieldPredicateRepo.count(), "The repository duplicated entity!");
+    protected FieldPredicate getInstance() {
+        return fieldPredicate;
     }
 
-    @Override
-    @Test
-    public void testDelete() {
-        FieldPredicate fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE, Boolean.valueOf(false));
-        fieldPredicateRepo.delete(fieldPredicate);
-        assertEquals(0, fieldPredicateRepo.count(), "The entity was not deleted!");
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testCascade() {
-
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @AfterEach
-    public void cleanUp() {
-        fieldPredicateRepo.deleteAll();
+    protected static Stream<Arguments> provideGetterMethodParameters() {
+        return Stream.of(
+            Arguments.of("getDocumentTypePredicate", "documentTypePredicate", true),
+            Arguments.of("getDocumentTypePredicate", "documentTypePredicate", false)
+        );
+    }
+
+    protected static Stream<Arguments> provideSetterMethodParameters() {
+        return Stream.of(
+            Arguments.of("setDocumentTypePredicate", "documentTypePredicate", true),
+            Arguments.of("setDocumentTypePredicate", "documentTypePredicate", false)
+        );
+    }
+
+    private static Stream<Arguments> getParameterStream() {
+        return Stream.of(
+            Arguments.of("value", "value")
+        );
+    }
+
+    private static Stream<Arguments> provideSchemaTest() {
+        return Stream.of(
+            Arguments.of("has.all.three", "has"),
+            Arguments.of("has.two", "has"),
+            Arguments.of("one", "one"),
+            Arguments.of("", "")
+        );
+    }
+
+    private static Stream<Arguments> provideElementTest() {
+        return Stream.of(
+            Arguments.of("has.all.three", "all"),
+            Arguments.of("has.two", "two"),
+            Arguments.of("one", null),
+            Arguments.of("", null)
+        );
+    }
+
+    private static Stream<Arguments> provideQualifierTest() {
+        return Stream.of(
+            Arguments.of("has.all.three", "three"),
+            Arguments.of("has.two", null),
+            Arguments.of("one", null),
+            Arguments.of("", null)
+        );
     }
 
 }

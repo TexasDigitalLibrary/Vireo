@@ -1,50 +1,60 @@
 package org.tdl.vireo.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.AfterEach;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.InjectMocks;
+import org.springframework.test.util.ReflectionTestUtils;
 
-public class GraduationMonthTest extends AbstractEntityTest {
+public class GraduationMonthTest extends AbstractModelTest<GraduationMonth> {
 
-    @Override
+    @InjectMocks
+    private GraduationMonth graduationMonth;
+
     @Test
-    public void testCreate() {
-        GraduationMonth graduationMonth = graduationMonthRepo.create(TEST_GRADUATION_MONTH);
-        assertEquals(1, graduationMonthRepo.count(), "The repository did not save the entity!");
-        assertEquals(TEST_GRADUATION_MONTH, graduationMonth.getMonth(), "Saved entity did not contain the value!");
+    public void testGetControlledName() {
+        int month = 123;
+
+        ReflectionTestUtils.setField(getInstance(), "month", month);
+
+        assertEquals(String.valueOf(month), graduationMonth.getControlledName(), "Controlled Name does not match.");
+    }
+
+    @Test
+    public void testGetControlledDefinition() {
+        assertEquals("", graduationMonth.getControlledDefinition(), "Controlled Definition does not match.");
+    }
+
+    @Test
+    public void testGetControlledIdentifier() {
+        assertEquals("", graduationMonth.getControlledIdentifier(), "Controlled Identifier does not match.");
+    }
+
+    @Test
+    public void testGetControlledContacts() {
+        assertNotNull(graduationMonth.getControlledContacts(), "Controlled Contacts is null.");
     }
 
     @Override
-    @Test
-    public void testDuplication() {
-        graduationMonthRepo.create(TEST_GRADUATION_MONTH);
-        try {
-            graduationMonthRepo.create(TEST_GRADUATION_MONTH);
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */
-        }
-        assertEquals(1, graduationMonthRepo.count(), "The repository duplicated entity!");
+    protected GraduationMonth getInstance() {
+        return graduationMonth;
     }
 
-    @Override
-    @Test
-    public void testDelete() {
-        GraduationMonth graduationMonth = graduationMonthRepo.create(TEST_GRADUATION_MONTH);
-        graduationMonthRepo.delete(graduationMonth);
-        assertEquals(0, graduationMonthRepo.count(), "The entity was not deleted!");
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testCascade() {
-
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @AfterEach
-    public void cleanUp() {
-        graduationMonthRepo.deleteAll();
+    private static Stream<Arguments> getParameterStream() {
+        return Stream.of(
+            Arguments.of("month", 123)
+        );
     }
 
 }

@@ -1,124 +1,149 @@
 package org.tdl.vireo.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.InjectMocks;
+import org.springframework.test.util.ReflectionTestUtils;
 
-@Transactional(propagation = Propagation.REQUIRES_NEW)
-public class NamedSearchFilterTest extends AbstractEntityTest {
+public class NamedSearchFilterTest extends AbstractModelCustomMethodTest<NamedSearchFilter> {
 
-    // TODO: write missing tests!!
+    @InjectMocks
+    private NamedSearchFilter namedSearchFilter;
 
-    @BeforeEach
-    public void setUp() {
-        creator = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
+    @Test
+    public void testAddFilterCriterion() {
+        Set<FilterCriterion> filters = new HashSet<>();
+        FilterCriterion filterCriterion1 = new FilterCriterion();
+        FilterCriterion filterCriterion2 = new FilterCriterion();
+
+        filterCriterion1.setId(1L);
+        filterCriterion2.setId(2L);
+        filters.add(filterCriterion1);
+
+        ReflectionTestUtils.setField(namedSearchFilter, "filterCriteria", filters);
+
+        namedSearchFilter.addFilter(filterCriterion2);
+
+        assertTrue(filters.contains(filterCriterion2), "Filter Criterion 2 is not found.");
+    }
+
+    @Test
+    public void testRemoveFilterCriterion() {
+        Set<FilterCriterion> filters = new HashSet<>();
+        FilterCriterion filterCriterion1 = new FilterCriterion();
+        FilterCriterion filterCriterion2 = new FilterCriterion();
+
+        filterCriterion1.setId(1L);
+        filterCriterion2.setId(2L);
+        filters.add(filterCriterion1);
+        filters.add(filterCriterion2);
+
+        ReflectionTestUtils.setField(namedSearchFilter, "filterCriteria", filters);
+
+        namedSearchFilter.removeFilter(filterCriterion2);
+
+        assertFalse(filters.contains(filterCriterion2), "Filter Criterion 2 is found.");
+    }
+
+    @Test
+    public void testGetFilterValues() {
+        Set<FilterCriterion> filters = new HashSet<>();
+        FilterCriterion filterCriterion1 = new FilterCriterion();
+        FilterCriterion filterCriterion2 = new FilterCriterion();
+
+        filterCriterion1.setId(1L);
+        filterCriterion2.setId(2L);
+        filterCriterion1.setValue("value1");
+        filterCriterion2.setValue("value2");
+        filters.add(filterCriterion1);
+        filters.add(filterCriterion2);
+
+        ReflectionTestUtils.setField(namedSearchFilter, "filterCriteria", filters);
+
+        Set<String> filterValues = namedSearchFilter.getFilterValues();
+
+        assertNotNull(filterValues, "Returned Filter Values array is null.");
+        assertEquals(filters.size(), filterValues.size(), "Returned Filter Values array is of the wrong size.");
+        assertTrue(filterValues.contains(filterCriterion1.getValue()), "Filter Criterion 1 value is not found.");
+        assertTrue(filterValues.contains(filterCriterion2.getValue()), "Filter Criterion 2 value is not found.");
+    }
+
+    @Test
+    public void testGetFilterGlosses() {
+        Set<FilterCriterion> filters = new HashSet<>();
+        FilterCriterion filterCriterion1 = new FilterCriterion();
+        FilterCriterion filterCriterion2 = new FilterCriterion();
+
+        filterCriterion1.setId(1L);
+        filterCriterion2.setId(2L);
+        filterCriterion1.setGloss("gloss1");
+        filterCriterion2.setGloss("gloss2");
+        filters.add(filterCriterion1);
+        filters.add(filterCriterion2);
+
+        ReflectionTestUtils.setField(namedSearchFilter, "filterCriteria", filters);
+
+        Set<String> filterGlosses = namedSearchFilter.getFilterGlosses();
+
+        assertNotNull(filterGlosses, "Returned Filter Glosses array is null.");
+        assertEquals(filters.size(), filterGlosses.size(), "Returned Filter Glosses array is of the wrong size.");
+        assertTrue(filterGlosses.contains(filterCriterion1.getGloss()), "Filter Criterion 1 gloss is not found.");
+        assertTrue(filterGlosses.contains(filterCriterion2.getGloss()), "Filter Criterion 2 gloss is not found.");
     }
 
     @Override
-    @Test
-    @Disabled
-    public void testCreate() {
-
+    protected NamedSearchFilter getInstance() {
+        return namedSearchFilter;
     }
 
-    @Override
-    @Test
-    @Disabled
-    public void testDuplication() {
-
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    @Disabled
-    public void testDelete() {
-
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    @Disabled
-    public void testCascade() {
+    protected static Stream<Arguments> provideGetterMethodParameters() {
+        Set<FilterCriterion> filters = new HashSet<>();
 
+        return Stream.of(
+            Arguments.of("getAllColumnSearch", "allColumnSearch", true),
+            Arguments.of("getAllColumnSearch", "allColumnSearch", false),
+            Arguments.of("getExactMatch", "exactMatch", true),
+            Arguments.of("getExactMatch", "exactMatch", false),
+            Arguments.of("getFilters", "filterCriteria", filters) // Warning: This function is identical to getFilterCriteria().
+        );
     }
 
-    @Test
-    @Disabled // FIXME: see problem notes below, createFromFilter() appears to be only used in tests.
-    public void testSetActiveFilter() {
+    protected static Stream<Arguments> provideSetterMethodParameters() {
+        Set<FilterCriterion> filters = new HashSet<>();
 
-        long numberOfNamedSearchFilterGroups = namedSearchFilterGroupRepo.count();
+        return Stream.of(
+            Arguments.of("setAllColumnSearch", "allColumnSearch", true),
+            Arguments.of("setAllColumnSearch", "allColumnSearch", false),
+            Arguments.of("setExactMatch", "exactMatch", true),
+            Arguments.of("setExactMatch", "exactMatch", false),
+            Arguments.of("setFilters", "filterCriteria", filters) // Warning: This function is identical to setFilterCriteria().
+        );
+    }
 
-        assertEquals(0, numberOfNamedSearchFilterGroups, "There already exists a named search filter group!");
+    private static Stream<Arguments> getParameterStream() {
+        Set<FilterCriterion> filterCriteria = new HashSet<>();
 
-        long numberOfNamedSearchFilters = namedSearchFilterRepo.count();
-
-        assertEquals(0, numberOfNamedSearchFilters, "There already exists a named search filter!");
-
-        InputType inputType = inputTypeRepo.create(TEST_FIELD_PROFILE_INPUT_TEXT_NAME);
-
-        SubmissionListColumn submissionListColumn = submissionListColumnRepo.create("TEST_LABEL", Sort.ASC, Arrays.asList(new String[] { "test.path" }), inputType);
-
-        NamedSearchFilter namedSearchFilter = namedSearchFilterRepo.create(submissionListColumn);
-
-        numberOfNamedSearchFilters = namedSearchFilterRepo.count();
-
-        assertEquals(1, numberOfNamedSearchFilters, "There already exists a named search filter!");
-
-        namedSearchFilter.addFilter(filterCriterionRepo.create("FILTER_ONE"));
-        namedSearchFilter.addFilter(filterCriterionRepo.create("FILTER_TWO"));
-
-        assertEquals(2, filterCriterionRepo.count(), "There are more filter criterion than expected!");
-
-        Set<NamedSearchFilter> namedSearchFilters = new HashSet<NamedSearchFilter>();
-        namedSearchFilters.add(namedSearchFilter);
-
-        NamedSearchFilterGroup rawNamedSearchFilterGroup = new NamedSearchFilterGroup();
-
-        rawNamedSearchFilterGroup.setUser(creator);
-
-        rawNamedSearchFilterGroup.setNamedSearchFilters(namedSearchFilters);
-
-        // NOTE: this method call also creates new named search filters
-        // FIXME: namedSearchFilterGroupRepo.createFromFilter() throws UnsupportedOperation when in a transaction when calling namedSearchFilterRepo.save().
-        NamedSearchFilterGroup namedSearchFilterGroup = namedSearchFilterGroupRepo.createFromFilter(rawNamedSearchFilterGroup);
-
-        assertEquals(++numberOfNamedSearchFilterGroups, namedSearchFilterGroupRepo.count(), "There are more named search filter groups than expected!");
-
-        assertEquals(++numberOfNamedSearchFilters, namedSearchFilterRepo.count(), "There are more named search filters than expected!");
-
-        Set<NamedSearchFilter> persistedNamedSearchFilters = namedSearchFilterGroup.getNamedSearchFilters();
-
-        assertEquals(1, persistedNamedSearchFilters.size(), "Named search filter group had more named search filters than expected!");
-
-        NamedSearchFilter persistedNamedSearchFilter = persistedNamedSearchFilters.toArray(new NamedSearchFilter[1])[0];
-
-        Set<FilterCriterion> filterCriterion = persistedNamedSearchFilter.getFilters();
-
-        assertEquals(2, filterCriterion.size(), "Named search filter had more filter criterion than expected!");
-
-        creator.setActiveFilter(namedSearchFilterGroup);
-
-        creator = userRepo.save(creator);
-
-        // Actual test case
-        NamedSearchFilterGroup activeFilter = creator.getActiveFilter();
-        activeFilter = namedSearchFilterGroupRepo.clone(activeFilter, namedSearchFilterGroup);
-
-        if (activeFilter.getColumnsFlag()) {
-            creator.getSubmissionViewColumns().clear();
-            creator.getSubmissionViewColumns().addAll(creator.getActiveFilter().getSavedColumns());
-        }
-
-        creator = userRepo.save(creator);
-
-        assertEquals(2, filterCriterionRepo.count(), "There are more filter criterion than expected!");
+        return Stream.of(
+            Arguments.of("name", "value"),
+            Arguments.of("submissionListColumn", new SubmissionListColumn()),
+            Arguments.of("filterCriteria", filterCriteria)
+        );
     }
 
 }

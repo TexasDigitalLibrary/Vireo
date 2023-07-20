@@ -1,57 +1,70 @@
 package org.tdl.vireo.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.DataIntegrityViolationException;
-public class DegreeTest extends AbstractEntityTest {
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.InjectMocks;
+import org.springframework.test.util.ReflectionTestUtils;
 
-    @BeforeEach
-    public void setup() {
-        degreeLevel = degreeLevelRepo.create(TEST_DEGREE_LEVEL);
+public class DegreeTest extends AbstractModelTest<Degree> {
+
+    @InjectMocks
+    private Degree degree;
+
+    @Test
+    public void testGetControlledName() {
+        String name = "name";
+
+        ReflectionTestUtils.setField(getInstance(), "name", name);
+
+        assertEquals(name, degree.getControlledName(), "Controlled Name does not match.");
+    }
+
+    @Test
+    public void testGetControlledDefinition() {
+        String degreeCode = "degreeCode";
+
+        ReflectionTestUtils.setField(getInstance(), "degreeCode", degreeCode);
+
+        assertEquals(degreeCode, degree.getControlledDefinition(), "Controlled Definition does not match.");
+    }
+
+    @Test
+    public void testGetControlledIdentifier() {
+        DegreeLevel degreeLevel = new DegreeLevel("level");
+
+        ReflectionTestUtils.setField(getInstance(), "level", degreeLevel);
+
+        assertEquals(degreeLevel.getName(), degree.getControlledIdentifier(), "Controlled Identifier does not match.");
+    }
+
+    @Test
+    public void testGetControlledContacts() {
+        assertNotNull(degree.getControlledContacts(), "Controlled Contacts is null.");
     }
 
     @Override
-    @Test
-    public void testCreate() {
-        Degree degree = degreeRepo.create(TEST_DEGREE_NAME, degreeLevel);
-        assertEquals(1, degreeRepo.count(), "The repository did not save the entity!");
-        assertEquals(TEST_DEGREE_NAME, degree.getName(), "Saved entity did not contain the name!");
-        assertEquals(degreeLevel.getName(), degree.getLevel().getName(), "Saved entity did not contain the degree level!");
+    protected Degree getInstance() {
+        return degree;
     }
 
-    @Override
-    @Test
-    public void testDuplication() {
-        degreeRepo.create(TEST_DEGREE_NAME, degreeLevel);
-        try {
-            degreeRepo.create(TEST_DEGREE_NAME, degreeLevel);
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */
-        }
-        assertEquals(1, degreeRepo.count(), "The repository duplicated entity!");
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testDelete() {
-        Degree degree = degreeRepo.create(TEST_DEGREE_NAME, degreeLevel);
-        degreeRepo.delete(degree);
-        assertEquals(0, degreeRepo.count(), "The entity was not deleted!");
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testCascade() {
-
-    }
-
-    @AfterEach
-    public void cleanUp() {
-        degreeRepo.deleteAll();
-        degreeLevelRepo.deleteAll();
+    private static Stream<Arguments> getParameterStream() {
+        return Stream.of(
+            Arguments.of("name", "value"),
+            Arguments.of("degreeCode", "value"),
+            Arguments.of("level", new DegreeLevel())
+        );
     }
 
 }
