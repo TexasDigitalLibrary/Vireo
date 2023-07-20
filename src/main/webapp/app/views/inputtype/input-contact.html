@@ -7,8 +7,10 @@
     ng-disabled="fieldValue.updating"
     ng-blur="saveContacts(fieldValue, noResults)"
     uib-typeahead="word.name as word.name for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
+    typeahead-wait-ms="600"
     typeahead-no-results="noResults"
-    typeahead-on-select="saveWithCV(fieldValue, $item)"/>
+    typeahead-on-select="saveWithCV(fieldValue, $item)"
+  />
   <span class="input-group-btn">
     <button class="btn btn-default opaque" ng-if="fieldValue.value">
       <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)"></span>
@@ -29,8 +31,10 @@
     ng-disabled="fieldValue.updating"
     ng-blur="saveContacts(fieldValue, noResults)"
     uib-typeahead="word.contacts[0] as word.contacts[0] for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
+    typeahead-wait-ms="600"
     typeahead-no-results="noResults"
-    typeahead-on-select="saveWithCV(fieldValue, $item)"/>
+    typeahead-on-select="saveWithCV(fieldValue, $item)"
+  />
   <span class="input-group-addon">
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
