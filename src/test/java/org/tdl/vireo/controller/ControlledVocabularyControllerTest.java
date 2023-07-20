@@ -2,6 +2,7 @@ package org.tdl.vireo.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.only;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ActiveProfiles;
@@ -430,6 +432,19 @@ public class ControlledVocabularyControllerTest extends AbstractControllerTest {
 
         // Warning: These checks are throwing NPE.
         //verify(vocabularyWordRepo, only()).update(any(VocabularyWord.class));
+    }
+
+    @Test
+    public void testTypeaheadVocabularyWord() {
+        when(vocabularyWordRepo.findAllByNameContainsIgnoreCaseAndControlledVocabularyId(anyString(), anyLong(), Mockito.<Class<VocabularyWord>>any())).thenReturn(dictionaries1);
+
+        ApiResponse response = controlledVocabularyController.typeaheadVocabularyWord(vocabularyWord1.getId(), "test");
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        List<?> got = (ArrayList<?>) response.getPayload().get("ArrayList<VocabularyWord>");
+        assertEquals(dictionaries1, got, "Did not get expected Vocabulary Words array in the response.");
+
+        verify(vocabularyWordRepo).findAllByNameContainsIgnoreCaseAndControlledVocabularyId(anyString(), anyLong(), any());
     }
 
 }

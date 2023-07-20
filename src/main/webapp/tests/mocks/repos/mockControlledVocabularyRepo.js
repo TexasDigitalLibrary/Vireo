@@ -16,7 +16,7 @@ var dataControlledVocabularyRepo3 = [
     dataControlledVocabulary6
 ];
 
-angular.module("mock.controlledVocabularyRepo", []).service("ControlledVocabularyRepo", function($q) {
+var mockControlledVocabularyRepo = function($q) {
     var repo = mockRepo("ControlledVocabularyRepo", $q, mockControlledVocabulary, dataControlledVocabularyRepo1);
 
     repo.addVocabularyWord = function (cv, vw) {
@@ -77,5 +77,12 @@ angular.module("mock.controlledVocabularyRepo", []).service("ControlledVocabular
         return payloadPromise($q.defer(), payload);
     };
 
+    repo.typeAhead = function (cvId, typeAhead) {
+        payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
     return repo;
-});
+};
+
+angular.module("mock.controlledVocabularyRepo", []).service("ControlledVocabularyRepo", mockControlledVocabularyRepo);

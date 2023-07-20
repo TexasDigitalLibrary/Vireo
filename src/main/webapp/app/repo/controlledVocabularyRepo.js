@@ -1,4 +1,4 @@
-vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(FileService, RestApi, WsApi) {
+vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo($q, FileService, RestApi, WsApi) {
 
     var controlledVocabularyRepo = this;
 
@@ -114,6 +114,32 @@ vireo.repo("ControlledVocabularyRepo", function ControlledVocabularyRepo(FileSer
             }
         });
         return promise;
+    };
+
+    this.typeAhead = function (cvId, typeAhead) {
+        var endpoint = angular.copy(this.mapping.typeAhead);
+        endpoint.method += '/' + cvId;
+        endpoint.data = '' + typeAhead.search;
+
+        var defer = $q.defer();
+
+        WsApi.fetch(endpoint).then(function (res) {
+            var body = angular.fromJson(res.body);
+            if (body.meta.status === 'SUCCESS') {
+                var keys = Object.keys(body.payload);
+
+                if (!!keys[0]) {
+                    typeAhead.list.length = 0;
+                    angular.extend(typeAhead.list, body.payload[keys[0]]);
+                }
+            }
+
+            typeAhead.loading = false;
+
+            defer.resolve(typeAhead.list);
+        });
+
+        return defer.promise;
     };
 
     return this;

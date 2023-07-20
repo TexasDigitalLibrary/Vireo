@@ -1,4 +1,4 @@
-vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploadService) {
+vireo.directive("field", function ($controller, $filter, $q, $timeout, ControlledVocabularyRepo, FileUploadService) {
     return {
         templateUrl: 'views/directives/fieldProfile.html',
         restrict: 'E',
@@ -27,6 +27,8 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
             $scope.errorMessage = "";
 
             $scope.dropzoneText = "Choose file here or drag and drop to upload";
+
+            $scope.typeAheads = {};
 
             var save = function (fieldValue) {
                 $scope.submission.saveDatePopupFieldValueWorkaround(fieldValue);
@@ -412,6 +414,25 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, FileUploa
                         break;
                     }
                 }
+            };
+
+            $scope.controlledVocabularyTypeAhead = function (field, search) {
+                if (!field.fieldPredicate.id || !$scope.profile.controlledVocabulary.id) {
+                    return [];
+                }
+
+                if (!$scope.typeAheads[field.fieldPredicate.id]) {
+                    $scope.typeAheads[field.fieldPredicate.id] = {
+                        search: search,
+                        loading: false,
+                        list: []
+                    };
+                } else if (!$scope.typeAheads[field.fieldPredicate.id].loading) {
+                    $scope.typeAheads[field.fieldPredicate.id].loading = true;
+                    $scope.typeAheads[field.fieldPredicate.id].search = search;
+                }
+
+                return ControlledVocabularyRepo.typeAhead($scope.profile.controlledVocabulary.id, $scope.typeAheads[field.fieldPredicate.id]);
             };
 
             refreshFieldValues();

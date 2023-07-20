@@ -6,10 +6,11 @@
     ng-model="fieldValue.value"
     ng-disabled="fieldValue.updating"
     ng-blur="saveContacts(fieldValue, noResults)"
-    uib-typeahead="word.name as word.name for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
+    uib-typeahead="word.name as word.name for word in controlledVocabularyTypeAhead(fieldValue, $viewValue)"
     typeahead-wait-ms="600"
     typeahead-no-results="noResults"
     typeahead-on-select="saveWithCV(fieldValue, $item)"
+    typeahead-loading="(!fieldValue.fieldPredicate.id || !typeAheads[fieldValue.fieldPredicate.id]) ? angular.noop : typeAheads[fieldValue.fieldPredicate.id].loading"
   />
   <span class="input-group-btn">
     <button class="btn btn-default opaque" ng-if="fieldValue.value">
@@ -30,10 +31,11 @@
     ng-model="fieldValue.contacts"
     ng-disabled="fieldValue.updating"
     ng-blur="saveContacts(fieldValue, noResults)"
-    uib-typeahead="word.contacts[0] as word.contacts[0] for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
+    uib-typeahead="word.contacts[0] as word.contacts[0] for word in controlledVocabularyTypeAhead(fieldValue, $viewValue)"
     typeahead-wait-ms="600"
     typeahead-no-results="noResults"
     typeahead-on-select="saveWithCV(fieldValue, $item)"
+    typeahead-loading="(!fieldValue.fieldPredicate.id || !typeAheads[fieldValue.fieldPredicate.id]) ? angular.noop : typeAheads[fieldValue.fieldPredicate.id].loading"
   />
   <span class="input-group-addon">
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"> </span>
