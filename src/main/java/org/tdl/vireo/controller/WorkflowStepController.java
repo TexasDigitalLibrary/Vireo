@@ -8,9 +8,16 @@ import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static edu.tamu.weaver.validation.model.MethodValidationType.LIST_REORDER;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,12 +34,6 @@ import org.tdl.vireo.model.repo.FieldProfileRepo;
 import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
-import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @RestController
 @RequestMapping("/workflow-step")
@@ -96,18 +97,38 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile", method = RequestMethod.POST)
+    @PostMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile")
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
-    public ApiResponse removeFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
-        WorkflowStep workflowStep = workflowStepRepo.findById(workflowStepId).get();
-        FieldProfile persistedFieldProfile = fieldProfileRepo.findById(fieldProfile.getId()).get();
-        fieldProfileRepo.removeFromWorkflowStep(organizationRepo.findById(requestingOrgId).get(), workflowStep, persistedFieldProfile);
-        // If the field profile is being removed from its originating workflow step by the organization that originates that step, then it should be deleted.
-        if (persistedFieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId()) && workflowStep.getOriginatingOrganization().getId().equals(requestingOrgId)) {
-            fieldProfileRepo.delete(persistedFieldProfile);
+    public ApiResponse removeFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @RequestBody Long fieldProfileId) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+
+        Optional<Organization> organization = organizationRepo.findById(requestingOrgId);
+
+        if (organization.isEmpty()) {
+            return new ApiResponse(ERROR, "Cannot delete Field Profile, the given Organization is unknown.");
         }
+
+        Optional<WorkflowStep> workflowStep = workflowStepRepo.findById(workflowStepId);
+
+        if (workflowStep.isEmpty()) {
+            return new ApiResponse(ERROR, "Cannot delete Field Profile, the given Workflow Step is unknown.");
+        }
+
+        Optional<FieldProfile> fieldProfile = fieldProfileRepo.findById(fieldProfileId);
+
+        if (fieldProfile.isEmpty()) {
+            return new ApiResponse(ERROR, "Cannot delete unknown Field Profile.");
+        }
+
+        fieldProfileRepo.removeFromWorkflowStep(organization.get(), workflowStep.get(), fieldProfile.get());
+
+        // If the field profile is being removed from its originating workflow step by the organization that originates that step, then it should be deleted.
+        if (fieldProfile.get().getOriginatingWorkflowStep().getId().equals(workflowStepId) && workflowStep.get().getOriginatingOrganization().getId().equals(requestingOrgId)) {
+            fieldProfileRepo.deleteById(fieldProfileId);
+        }
+
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+
         return new ApiResponse(SUCCESS);
     }
 
