@@ -97,11 +97,26 @@ public class WorkflowStepController {
         return new ApiResponse(SUCCESS);
     }
 
-    @PostMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile")
+    @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile", method = RequestMethod.POST)
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
-    public ApiResponse removeFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @RequestBody Long fieldProfileId) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+    public ApiResponse removeFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+        WorkflowStep workflowStep = workflowStepRepo.findById(workflowStepId).get();
+        FieldProfile persistedFieldProfile = fieldProfileRepo.findById(fieldProfile.getId()).get();
+        fieldProfileRepo.removeFromWorkflowStep(organizationRepo.findById(requestingOrgId).get(), workflowStep, persistedFieldProfile);
+        // If the field profile is being removed from its originating workflow step by the organization that originates that step, then it should be deleted.
+        if (persistedFieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId()) && workflowStep.getOriginatingOrganization().getId().equals(requestingOrgId)) {
+            fieldProfileRepo.delete(persistedFieldProfile);
+        }
 
+        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+
+        return new ApiResponse(SUCCESS);
+    }
+
+    @PostMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile/{fieldProfileId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse removeFieldProfileById(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @PathVariable Long fieldProfileId) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
         Optional<Organization> organization = organizationRepo.findById(requestingOrgId);
 
         if (organization.isEmpty()) {

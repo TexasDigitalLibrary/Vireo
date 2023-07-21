@@ -43,8 +43,8 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
         OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
 
         var endpoint = angular.copy(this.mapping.removeFieldProfile);
-        endpoint.method = OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/remove-field-profile';
-        endpoint.data = fieldProfile.id;
+        endpoint.method = OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/remove-field-profile/' + fieldProfile.id;
+        endpoint.data = ''; // Provide empty data to force this to be a POST
 
         return WsApi.fetch(endpoint);
     };
