@@ -1,14 +1,17 @@
 describe('directive: field', function () {
-    var compile, directive, httpBackend, rootScope, scope, templateCache, window, MockedUser;
+    var compile, directive, httpBackend, rootScope, scope, templateCache, window, WsApi, MockedControlledVocabularyRepo, MockedUser;
 
     var initializeVariables = function () {
-        inject(function ($q, $compile, $httpBackend, $rootScope, $templateCache, $window) {
+        inject(function ($q, $compile, $httpBackend, $rootScope, $templateCache, $window, _WsApi_) {
             compile = $compile;
             httpBackend = $httpBackend;
             rootScope = $rootScope;
             templateCache = $templateCache;
             window = $window;
             MockedUser = new mockUser($q);
+            MockedControlledVocabularyRepo = new mockControlledVocabularyRepo($q);
+
+            WsApi = _WsApi_;
         });
     };
 
@@ -41,6 +44,12 @@ describe('directive: field', function () {
     beforeEach(function() {
         module('core');
         module('vireo');
+        module("mock.controlledVocabularyRepo", function ($provide) {
+            var ControlledVocabularyRepo = function () {
+                return MockedControlledVocabularyRepo;
+            };
+            $provide.value("ControlledVocabularyRepo", ControlledVocabularyRepo);
+        });
         module("mock.user", function ($provide) {
             var User = function () {
                 return MockedUser;

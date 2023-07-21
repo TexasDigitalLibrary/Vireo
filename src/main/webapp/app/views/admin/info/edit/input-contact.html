@@ -2,8 +2,11 @@
   <input type="text"
     class="form-control"
     ng-model="field.value"
-    uib-typeahead="word.name as word.name for word in fieldProfile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
-    typeahead-on-select="saveWithCV(field, $item)"/>
+    uib-typeahead="word.name as word.name for word in controlledVocabularyTypeAhead($viewValue)"
+    typeahead-wait-ms="600"
+    typeahead-on-select="saveWithCV(field, $item)"
+    typeahead-loading="typeAheads.loading"
+  />
   <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="saveContacts(field)"></span>
   <span class="input-group-addon glyphicon glyphicon-remove clickable" ng-click="cancel(field)"></span>
 </div>
@@ -11,8 +14,11 @@
   <input type="text"
     class="form-control"
     ng-model="field.contacts"
-    uib-typeahead="word.contacts[0] as word.contacts[0] for word in fieldProfile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
-    typeahead-on-select="saveWithCV(field, $item)">
+    uib-typeahead="word.contacts[0] as word.contacts[0] for word in controlledVocabularyTypeAhead($viewValue)"
+    typeahead-wait-ms="600"
+    typeahead-on-select="saveWithCV(field, $item)"
+    typeahead-loading="typeAheads.loading"
+  />
   <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="saveContacts(field)"></span>
   <span class="input-group-addon glyphicon glyphicon-remove clickable" ng-click="cancel(field)"></span>
 </div>

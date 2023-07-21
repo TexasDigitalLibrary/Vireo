@@ -41,6 +41,7 @@
                         ng-model="emailWorkflowRuleToEdit.emailRecipient.data"
                         typeahead-append-to="'.addRecipientModal .typeahead-dropdown-container'"
                         uib-typeahead="o as o.name for o in organizations | filter:{name:$viewValue} | limitTo:8"
+                        typeahead-wait-ms="400"
                 />
                 <div class="typeahead-dropdown-container"></div>
             </div>

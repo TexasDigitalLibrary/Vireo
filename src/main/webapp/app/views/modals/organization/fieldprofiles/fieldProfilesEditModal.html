@@ -45,7 +45,7 @@
           <div ng-if="!inputFile" class="form-group">
             <div class="col-sm-10 col-sm-offset-1">
               <label for="field-predicates-gloss">Metadata Key</label>
-              <input ng-model="modalData.fieldPredicate" autocomplete="off" uib-typeahead="predicate as predicate.value for predicate in fieldPredicates | filter:$viewValue" type="text" class="form-control" required/>
+              <input ng-model="modalData.fieldPredicate" autocomplete="off" uib-typeahead="predicate as predicate.value for predicate in fieldPredicates | filter:$viewValue" typeahead-wait-ms="400" type="text" class="form-control" required/>
               <small class="text-muted" ng-if="mustCreateFieldPredicate()">Metadata key <strong>{{modalData.fieldPredicate}} will be created</strong></small>
             </div>
           </div>

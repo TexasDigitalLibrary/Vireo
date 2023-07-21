@@ -32,6 +32,11 @@ var apiMapping = {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary'
         },
+        typeAhead: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/controlled-vocabulary',
+            'method': 'typeahead-vocabulary-word'
+        },
         downloadCSV: {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary',
