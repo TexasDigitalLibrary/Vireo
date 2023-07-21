@@ -191,7 +191,7 @@ public class OrganizationControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testDeletOrganizationById() {
+    public void testDeleteOrganizationById() {
         when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
         doNothing().when(organizationRepo).delete(any(Organization.class));
 
@@ -202,7 +202,7 @@ public class OrganizationControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testDeletOrganizationByIdWithUnknownOrganization() {
+    public void testDeleteOrganizationByIdWithUnknownOrganization() {
         when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.empty());
 
         ApiResponse response = organizationController.deleteOrganizationById(organization1.getId());
