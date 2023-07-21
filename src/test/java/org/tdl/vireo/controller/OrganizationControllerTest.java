@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -179,7 +180,7 @@ public class OrganizationControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testRemoveOrganization() {
+    public void testDeleteOrganization() {
         when(organizationRepo.read(any(Long.class))).thenReturn(organization1);
         doNothing().when(organizationRepo).delete(any(Organization.class));
 
@@ -187,6 +188,27 @@ public class OrganizationControllerTest extends AbstractControllerTest {
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         verify(organizationRepo).delete(any(Organization.class));
+    }
+
+    @Test
+    public void testDeletOrganizationById() {
+        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
+        doNothing().when(organizationRepo).delete(any(Organization.class));
+
+        ApiResponse response = organizationController.deleteOrganizationById(organization1.getId());
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        verify(organizationRepo).delete(any(Organization.class));
+    }
+
+    @Test
+    public void testDeletOrganizationByIdWithUnknownOrganization() {
+        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        ApiResponse response = organizationController.deleteOrganizationById(organization1.getId());
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+
+        verify(organizationRepo, never()).delete(any(Organization.class));
     }
 
     @Test

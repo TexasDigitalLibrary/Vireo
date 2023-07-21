@@ -127,6 +127,16 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         return promise;
     };
 
+    this.deleteById = function (organizationId) {
+        organizationRepo.clearValidationResults();
+
+        var endpoint = angular.copy(this.mapping.remove);
+        endpoint.method += '/' + organizationId;
+        endpoint.data = ''; // Provide empty data to force this to be a POST.
+
+        return WsApi.fetch(endpoint);
+    };
+
     this.reorderWorkflowSteps = function (upOrDown, workflowStepID) {
         organizationRepo.clearValidationResults();
         angular.extend(this.mapping.reorderWorkflowStep, {

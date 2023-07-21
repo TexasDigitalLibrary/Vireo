@@ -48,6 +48,12 @@ angular.module("mock.organizationRepo", []).service("OrganizationRepo", function
         return payloadPromise($q.defer(), model);
     };
 
+    repo.deleteById = function (orgId) {
+        var payload = {};
+
+        return payloadPromise($q.defer(), payload);
+    };
+
     repo.deleteWorkflowStep = function (workflowStep) {
         var payload = {};
         repo.clearValidationResults();
