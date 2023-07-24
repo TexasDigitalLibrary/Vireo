@@ -224,12 +224,11 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
 
     @Test
     public void testRemoveFieldProfile() throws JsonProcessingException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
         when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep1));
         when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
-        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
         doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
         when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(fieldProfileRepo).delete(any(FieldProfile.class));
         doNothing().when(organizationRepo).broadcast(anyList());
 
         ApiResponse response = fieldPredicateController.removeFieldProfile(organization1.getId(), workflowStep1.getId(), fieldProfile1);
@@ -238,15 +237,85 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
 
     @Test
     public void testRemoveFieldProfileWithDifferentProfile() throws JsonProcessingException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
         when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep2));
         when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
-        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
         doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
         when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
         doNothing().when(organizationRepo).broadcast(anyList());
 
         ApiResponse response = fieldPredicateController.removeFieldProfile(organization1.getId(), workflowStep1.getId(), fieldProfile1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRemoveFieldProfileById() throws JsonProcessingException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
+        when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep1));
+        when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
+        doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
+        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
+        doNothing().when(organizationRepo).broadcast(anyList());
+
+        ApiResponse response = fieldPredicateController.removeFieldProfileById(organization1.getId(), workflowStep1.getId(), fieldProfile1.getId());
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRemoveFieldProfileWithMatchingOriginatingWorkflowStep() throws JsonProcessingException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+        fieldProfile1.setOriginatingWorkflowStep(workflowStep1);
+        workflowStep1.setOriginatingOrganization(organization1);
+
+        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
+        when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep1));
+        when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
+        doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
+        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
+        doNothing().when(fieldProfileRepo).deleteById(anyLong());
+        doNothing().when(organizationRepo).broadcast(anyList());
+
+        ApiResponse response = fieldPredicateController.removeFieldProfileById(organization1.getId(), workflowStep1.getId(), fieldProfile1.getId());
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRemoveFieldProfileByIdWithDifferentProfile() throws JsonProcessingException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
+        when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep2));
+        when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
+        doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
+        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
+        doNothing().when(organizationRepo).broadcast(anyList());
+
+        ApiResponse response = fieldPredicateController.removeFieldProfileById(organization1.getId(), workflowStep1.getId(), fieldProfile1.getId());
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRemoveFieldProfileByIdWithUnknownOrganization() throws JsonProcessingException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        ApiResponse response = fieldPredicateController.removeFieldProfileById(organization1.getId(), workflowStep1.getId(), fieldProfile1.getId());
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRemoveFieldProfileByIdWithUnknownFieldProfile() throws JsonProcessingException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
+        when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep2));
+        when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        ApiResponse response = fieldPredicateController.removeFieldProfileById(organization1.getId(), workflowStep1.getId(), fieldProfile1.getId());
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
+    }
+
+    @Test
+    public void testRemoveFieldProfileByIdWithUnknownWorkflowStep() throws JsonProcessingException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
+        when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
+        when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.empty());
+
+        ApiResponse response = fieldPredicateController.removeFieldProfileById(organization1.getId(), workflowStep1.getId(), fieldProfile1.getId());
+        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
     }
 
     @Test
