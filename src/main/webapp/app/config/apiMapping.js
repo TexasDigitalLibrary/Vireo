@@ -985,6 +985,7 @@ var apiMapping = {
         }
     },
     WorkflowStep: {
+        lazy: true,
         validations: true,
         channel: '/channel/workflow-step',
         all: {
