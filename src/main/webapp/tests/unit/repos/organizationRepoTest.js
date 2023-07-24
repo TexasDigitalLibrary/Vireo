@@ -59,6 +59,10 @@ describe("service: organizationRepo", function () {
             expect(repo.countSubmissions).toBeDefined();
             expect(typeof repo.countSubmissions).toEqual("function");
         });
+        it("deleteById should be defined", function () {
+            expect(repo.deleteById).toBeDefined();
+            expect(typeof repo.deleteById).toEqual("function");
+        });
         it("deleteWorkflowStep should be defined", function () {
             expect(repo.deleteWorkflowStep).toBeDefined();
             expect(typeof repo.deleteWorkflowStep).toEqual("function");
@@ -142,6 +146,21 @@ describe("service: organizationRepo", function () {
             scope.$digest();
 
             // TODO
+        });
+        it("deleteById should delete an organization", function () {
+            var organization = new mockOrganization(q);
+
+            WsApi.mockFetchResponse({ type: "payload" });
+
+            repo.deleteById(organization.id).then(function (res) {
+                var resObj = angular.fromJson(res.body);
+
+                expect(typeof resObj).toEqual("object");
+                expect(typeof resObj.meta).toEqual("object");
+                expect(resObj.meta.status).toEqual("SUCCESS");
+            });
+
+            scope.$digest();
         });
         it("deleteWorkflowStep should delete a step", function () {
             var workflowStep = new mockWorkflowStep(q);

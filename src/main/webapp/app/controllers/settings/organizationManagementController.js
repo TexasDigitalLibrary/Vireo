@@ -49,7 +49,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
         };
 
         $scope.deleteOrganization = function (organization) {
-            organization.delete().then(function (res) {
+            $scope.organizationRepo.deleteById(organization.id).then(function (res) {
                 var apiRes = angular.fromJson(res.body);
                 if (apiRes.meta.status !== 'INVALID') {
                     $scope.closeModal();
