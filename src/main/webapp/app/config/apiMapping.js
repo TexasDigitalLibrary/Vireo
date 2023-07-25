@@ -2,6 +2,7 @@
 var apiMapping = {
     ActionLog: {},
     ControlledVocabulary: {
+        lazy: true,
         validations: true,
         channel: '/channel/controlled-vocabulary',
         all: {
