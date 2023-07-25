@@ -349,7 +349,7 @@ public class ControlledVocabularyController {
     @PreAuthorize("hasRole('STUDENT')")
     @PostMapping(value = "/typeahead-vocabulary-word/{cvId}")
     public ApiResponse typeaheadVocabularyWord(@PathVariable Long cvId, @RequestBody String search) {
-        return new ApiResponse(SUCCESS, vocabularyWordRepo.findAllByNameContainsIgnoreCaseAndControlledVocabularyId(search, cvId, ContactsVocabularyWordView.class));
+        return new ApiResponse(SUCCESS, vocabularyWordRepo.findAllByNameContainsIgnoreCaseAndControlledVocabularyIdOrderByName(search, cvId, ContactsVocabularyWordView.class));
     }
 
     private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, MultipartFile file) throws IOException {

@@ -436,7 +436,7 @@ public class ControlledVocabularyControllerTest extends AbstractControllerTest {
 
     @Test
     public void testTypeaheadVocabularyWord() {
-        when(vocabularyWordRepo.findAllByNameContainsIgnoreCaseAndControlledVocabularyId(anyString(), anyLong(), Mockito.<Class<VocabularyWord>>any())).thenReturn(dictionaries1);
+        when(vocabularyWordRepo.findAllByNameContainsIgnoreCaseAndControlledVocabularyIdOrderByName(anyString(), anyLong(), Mockito.<Class<VocabularyWord>>any())).thenReturn(dictionaries1);
 
         ApiResponse response = controlledVocabularyController.typeaheadVocabularyWord(vocabularyWord1.getId(), "test");
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -444,7 +444,7 @@ public class ControlledVocabularyControllerTest extends AbstractControllerTest {
         List<?> got = (ArrayList<?>) response.getPayload().get("ArrayList<VocabularyWord>");
         assertEquals(dictionaries1, got, "Did not get expected Vocabulary Words array in the response.");
 
-        verify(vocabularyWordRepo).findAllByNameContainsIgnoreCaseAndControlledVocabularyId(anyString(), anyLong(), any());
+        verify(vocabularyWordRepo).findAllByNameContainsIgnoreCaseAndControlledVocabularyIdOrderByName(anyString(), anyLong(), any());
     }
 
 }
