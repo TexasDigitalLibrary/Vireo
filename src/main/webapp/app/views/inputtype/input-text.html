@@ -6,7 +6,7 @@
     ng-model="fieldValue.value"
     ng-blur="save(fieldValue)"
     ng-disabled="fieldValue.updating"
-    uib-typeahead="word.name as word.name for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue } | orderBy:'name'"
+    uib-typeahead="word.name as word.name for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
     typeahead-wait-ms="400"
     typeahead-on-select="saveWithCV(fieldValue, $item)"
   />

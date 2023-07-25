@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.OrderBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Configurable;
@@ -37,6 +38,7 @@ public class ControlledVocabulary extends ValidatingOrderedBaseEntity {
     @OneToMany(cascade = { ALL }, fetch = LAZY, mappedBy = "controlledVocabulary", orphanRemoval = true)
     @Fetch(FetchMode.SELECT)
     @BatchSize(size=1000)
+    @OrderBy(clause = "name ASC")
     private List<VocabularyWord> dictionary;
 
     @JsonView(Views.SubmissionIndividual.class)

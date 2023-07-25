@@ -10,6 +10,6 @@ public interface VocabularyWordRepo extends WeaverRepo<VocabularyWord>, Vocabula
 
     VocabularyWord findByNameAndControlledVocabulary(String name, ControlledVocabulary controlledVocabulary);
 
-    <T> List<T>findAllByNameContainsIgnoreCaseAndControlledVocabularyId(String name, Long controlledVocabularyId, Class<T> type);
+    <T> List<T>findAllByNameContainsIgnoreCaseAndControlledVocabularyIdOrderByName(String name, Long controlledVocabularyId, Class<T> type);
 
 }
