@@ -674,7 +674,9 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
                         // Some browsers, like Firefox, do not support 'MMMM yyyy' formats for Date.parse().
                         if (isNaN(stamp) && predicate.format == 'MMMM yyyy') {
                             var split = fieldValue.value.match(/^(\S+) (\d+)$/);
-                            stamp = Date.parse(split[1] + ' 01, ' + split[2]);
+                            if (!!split && split.length > 1) {
+                                stamp = Date.parse(split[1] + ' 01, ' + split[2]);
+                            }
                         }
 
                         if (isNaN(stamp)) {

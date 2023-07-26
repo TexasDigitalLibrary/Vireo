@@ -126,6 +126,10 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
+     * Returns TRUE to designate that the entire object is complete.
+     *
+     * This should only be returned with a value of TRUE when the full model is used.
+     *
      * @return True.
      */
     public boolean isComplete() {

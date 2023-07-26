@@ -5,16 +5,37 @@ vireo.directive("triptych", function () {
         replace: true,
         transclude: true,
         scope: true,
-        controller: function ($controller, $q, $scope, $timeout, OrganizationRepo) {
+        controller: function ($controller, $q, $scope, $timeout, Organization, OrganizationRepo) {
+
+            // Lock used to prevent multiple runs (and therefore resulting performance problems) of panel refreshing during timeout.
+            var repoListenLock = false;
 
             angular.extend(this, $controller('AbstractController', {
                 $scope: $scope
             }));
 
             OrganizationRepo.listen(function (response) {
+                if (repoListenLock) {
+                    return;
+                }
+
+                repoListenLock = true;
+
                 $timeout(function () {
-                    $scope.refreshPanels();
-                }, 250);
+                    if (!!$scope.rebuildOrganizationTree) {
+                        $scope.rebuildOrganizationTree().then(function () {
+                            $scope.refreshPanels();
+                            repoListenLock = false;
+                        }).catch(function(reason) {
+                            if (!!reason) console.error(reason);
+
+                            repoListenLock = false;
+                        });
+                    } else {
+                        $scope.refreshPanels();
+                        repoListenLock = false;
+                    }
+                }, 50);
             });
 
             $scope.navigation = {
@@ -39,7 +60,7 @@ vireo.directive("triptych", function () {
                 return panel;
             };
 
-            var setOrganzization = function (panel, organization) {
+            var setOrganization = function (panel, organization) {
                 angular.extend(panel.organization, organization);
                 setCategories(panel);
             };
@@ -117,11 +138,9 @@ vireo.directive("triptych", function () {
             };
 
             $scope.selectOrganization = function (organization) {
-                if ($scope.setDeleteDisabled !== undefined) {
-                    $scope.setDeleteDisabled();
-                }
                 var selectedOrganization = $scope.getSelectedOrganization();
-                if (selectedOrganization !== undefined && (organization.id !== selectedOrganization.id || selectedOrganization.id === $scope.organizations[0].id)) {
+
+                if (!!selectedOrganization && !!selectedOrganization.id && (organization.id !== selectedOrganization.id || !!$scope.organizations && $scope.organizations.length > 0 && selectedOrganization.id === $scope.organizations[0].id)) {
                     var parent;
                     for (var i = $scope.navigation.panels.length - 1; i >= 0; i--) {
                         var panel1 = $scope.navigation.panels[i];
@@ -150,20 +169,62 @@ vireo.directive("triptych", function () {
                     }
                     setVisibility(panel2);
                 }
+
                 $scope.setSelectedOrganization(organization);
             };
 
+            $scope.findOrganizationById = function (organizationId) {
+                var found;
+
+                if (!!$scope.organizations && $scope.organizations.length > 0) {
+                    var searchChildren = function (childrenOrganizations) {
+                        for (var i = 0; i < childrenOrganizations.length; i++) {
+                            if (childrenOrganizations[i].id === organizationId) {
+                                found = new Organization(childrenOrganizations[i]);
+                                return true;
+                            }
+
+                            if (!!childrenOrganizations[i].childrenOrganizations && childrenOrganizations[i].childrenOrganizations.length > 0) {
+                                if (searchChildren(childrenOrganizations[i].childrenOrganizations) === true) {
+                                    return true;
+                                }
+                            }
+                        }
+
+                        return false;
+                    };
+
+                    for (var i = 0; i < $scope.organizations.length; i++) {
+                        if ($scope.organizations[i].id === organizationId) {
+                            found = new Organization($scope.organizations[i]);
+                            break;
+                        }
+
+                        if (!!$scope.organizations[i].childrenOrganizations && $scope.organizations[i].childrenOrganizations.length > 0) {
+                            if (searchChildren($scope.organizations[i].childrenOrganizations) === true) {
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                return found;
+            };
+
             $scope.refreshPanels = function () {
-                var selectedOrganization = $scope.getSelectedOrganization() ? $scope.getSelectedOrganization() : $scope.organizations[0];
+                var selectedOrganization = $scope.getSelectedOrganization();
                 var newVisiblePanel;
+
                 for (var i in $scope.navigation.panels) {
                     var panel = $scope.navigation.panels[i];
-                    var updatedOrganization = OrganizationRepo.findById(panel.organization.id);
+                    var updatedOrganization = $scope.findOrganizationById(panel.organization.id);
+
                     if (updatedOrganization !== undefined) {
-                        setOrganzization(panel, updatedOrganization);
+                        setOrganization(panel, updatedOrganization);
+
                         if (panel.organization.childrenOrganizations.length === 0) {
                             clear(panel);
-                        } else if ($scope.getSelectedOrganization() !== undefined && $scope.getSelectedOrganization().id !== 1) {
+                        } else if (!!selectedOrganization && selectedOrganization.id !== 1) {
                             newVisiblePanel = panel;
                         }
                     } else {
@@ -173,9 +234,11 @@ vireo.directive("triptych", function () {
                         remove(panel);
                     }
                 }
+
                 if (newVisiblePanel !== undefined) {
                     setVisibility(newVisiblePanel);
                 }
+
                 $scope.selectOrganization(selectedOrganization);
             };
 

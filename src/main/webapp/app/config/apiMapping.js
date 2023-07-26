@@ -382,6 +382,7 @@ var apiMapping = {
         }
     },
     FieldProfile: {
+        lazy: true,
         validations: true,
         all: {
             'endpoint': '/private/queue',
@@ -488,6 +489,7 @@ var apiMapping = {
         }
     },
     Organization: {
+        lazy: true,
         validations: true,
         channel: "/channel/organization",
         all: {

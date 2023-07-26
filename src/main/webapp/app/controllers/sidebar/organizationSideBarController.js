@@ -4,14 +4,13 @@ vireo.controller("OrganizationSideBarController", function ($controller, $scope,
         $scope: $scope
     }));
 
-    $scope.organizations = OrganizationRepo.getAll();
+    $scope.organizations = [];
 
     $scope.organizationRepo = OrganizationRepo;
 
     var organizationCategories = OrganizationCategoryRepo.getAll();
 
     $scope.ready = $q.all([
-        OrganizationRepo.ready(),
         OrganizationCategoryRepo.ready()
     ]);
 
@@ -44,8 +43,6 @@ vireo.controller("OrganizationSideBarController", function ($controller, $scope,
             }
         };
 
-        $scope.reset();
-
         $scope.createNewOrganization = function (hierarchical) {
             $scope.creatingNewOrganization = true;
             var parentOrganization = hierarchical === 'true' ? OrganizationRepo.newOrganization.parent : $scope.organizations[0];
@@ -63,6 +60,15 @@ vireo.controller("OrganizationSideBarController", function ($controller, $scope,
             });
         };
 
+        OrganizationRepo.getAllSpecific('tree').then(function (orgs) {
+            $scope.organizations.length = 0;
+
+            if (!!orgs && orgs.length > 0) {
+                angular.extend($scope.organizations, orgs);
+            }
+
+            $scope.reset();
+        });
     });
 
 });

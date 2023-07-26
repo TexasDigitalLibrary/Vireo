@@ -10,7 +10,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
 
     $scope.organizationCategories = OrganizationCategoryRepo.getAll();
 
-    $scope.ready = $q.all([OrganizationRepo.ready(), OrganizationCategoryRepo.ready()]);
+    $scope.ready = $q.all([OrganizationCategoryRepo.ready()]);
 
     $scope.forms = {};
 
@@ -35,8 +35,8 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
         $scope.resetWorkflowSteps();
 
         $scope.showOrganizationManagement = function () {
-            var selectedOrg = $scope.getSelectedOrganization();
-            return selectedOrg !== undefined && selectedOrg.id !== undefined && (selectedOrg.id !== 1 || (selectedOrg.id == 1 && $scope.isAdmin()));
+            var selectedId = $scope.getSelectedOrganizationId();
+            return !!selectedId && (selectedId !== 1 || (selectedId == 1 && $scope.isAdmin()));
         };
 
         $scope.updateOrganization = function (organization) {
@@ -64,7 +64,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
 
         $scope.cancelDeleteOrganization = function () {
             $scope.closeModal();
-            $scope.getSelectedOrganization().clearValidationResults();
+            OrganizationRepo.clearValidationResults();
         };
 
         $scope.restoreOrganizationDefaults = function (organization) {
@@ -80,7 +80,7 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
 
         $scope.cancelRestoreOrganizationDefaults = function () {
             $scope.closeModal();
-            $scope.getSelectedOrganization().clearValidationResults();
+            OrganizationRepo.clearValidationResults();
         };
 
         $scope.addWorkflowStep = function () {
@@ -115,12 +115,14 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
             $scope.openModal('#workflow-step-delete-confirm-' + step.id);
         };
 
-        $scope.resetManageOrganization = function () {
-            if ($scope.getSelectedOrganization() !== undefined && $scope.getSelectedOrganization().id !== undefined) {
-                $scope.getSelectedOrganization().complete = false;
-                $scope.setSelectedOrganization($scope.getSelectedOrganization());
-                $scope.getSelectedOrganization().clearValidationResults();
-                $scope.getSelectedOrganization().refresh();
+        $scope.resetManageOrganization = function (organization) {
+            if (!!organization && !!organization.id) {
+                organization.complete = false;
+                organization.shallow = false;
+                organization.tree = false;
+
+                organization.clearValidationResults();
+                organization.refresh();
             }
         };
 
