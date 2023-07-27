@@ -56,10 +56,8 @@ vireo.controller('NewSubmissionController', function ($controller, $location, $q
             }).then(function (response) {
                 $scope.creatingSubmission = false;
                 var apiRes = angular.fromJson(response.body);
-                if (apiRes.meta.status === 'SUCCESS') {
-                    var submission = apiRes.payload.Submission;
-                    StudentSubmissionRepo.add(submission);
-                    $location.path("/submission/" + submission.id);
+                if (apiRes.meta.status === 'SUCCESS' && !!apiRes.payload.Long) {
+                    $location.path("/submission/" + apiRes.payload.Long);
                 }
             });
         };
