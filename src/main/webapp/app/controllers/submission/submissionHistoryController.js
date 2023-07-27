@@ -25,6 +25,8 @@ vireo.controller('SubmissionHistoryController', function ($controller, $location
         $scope.tableParams.reload();
     };
 
+    var manuscriptFetchLock = {};
+
     StudentSubmissionRepo.ready().then(function () {
         resetTable();
     });
@@ -47,16 +49,35 @@ vireo.controller('SubmissionHistoryController', function ($controller, $location
         return title;
     };
 
-    $scope.getManuscriptFileName = function (row) {
-        var fileName = null;
+    $scope.getManuscriptFileName = function (row, defaultString) {
         for (var i in row.fieldValues) {
             var fv = row.fieldValues[i];
             if (fv.fieldPredicate.value === '_doctype_primary') {
-                fileName = fv.fileInfo ? fv.fileInfo.name : null;
-                break;
+                if (!fv.fileInfo) {
+                    if (!!manuscriptFetchLock[fv.id]) {
+                        return defaultString;
+                    }
+
+                    manuscriptFetchLock[fv.id] = true;
+
+                    row.fileInfo(fv).then(function (response) {
+                        fv.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
+
+                        manuscriptFetchLock[fv.id] = undefined;
+                    }).catch (function (response) {
+                        if (!!response) console.error(response);
+
+                        manuscriptFetchLock[fv.id] = undefined;
+                    });
+
+                    break;
+                }
+
+                return fv.fileInfo.name;
             }
         }
-        return fileName;
+
+        return defaultString;
     };
 
     $scope.startNewSubmission = function (path) {

@@ -47,13 +47,16 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
         };
 
         var enrichDocumentTypeFieldValue = function (fieldValue) {
-            if (fieldValue.fileInfo === undefined && fieldValue.value !== undefined && fieldValue.value.length > 0) {
-                submission.fileInfo(fieldValue).then(function (response) {
-                    fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
-                });
-            }
-            if (fieldValue.value.length > 0 && submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
-                submission.primaryDocumentFieldValue = fieldValue;
+            if (!!fieldValue.value) {
+                if (!fieldValue.fileInfo && fieldValue.value.length > 0) {
+                    submission.fileInfo(fieldValue).then(function (response) {
+                        fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
+                    });
+                }
+
+                if (fieldValue.value.length > 0 && submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
+                    submission.primaryDocumentFieldValue = fieldValue;
+                }
             }
         };
 
