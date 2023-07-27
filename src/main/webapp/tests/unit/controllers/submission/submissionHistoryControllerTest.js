@@ -120,17 +120,24 @@ describe("controller: SubmissionHistoryController", function () {
             expect(result).toBe(row.fieldValues[0].value);
         });
         it("getManuscriptFileName should return a manuscript file name", function () {
+            var defaultMessage = "default message";
+            var expectedMessage = "test";
             var result;
-            var row = { fieldValues: [ new mockFieldValue(q) ] };
+            var row = {
+                fieldValues: [ new mockFieldValue(q) ],
+                fileInfo: function (fieldValue) {
+                    return payloadPromise(q.defer());
+                }
+            };
 
-            result = scope.getManuscriptFileName(row);
-            expect(result).toBe(null);
+            result = scope.getManuscriptFileName(row, defaultMessage);
+            expect(result).toEqual(defaultMessage);
 
             row.fieldValues[0].fieldPredicate.value = "_doctype_primary";
-            row.fieldValues[0].fileInfo = { name: "test" };
+            row.fieldValues[0].fileInfo = { name: expectedMessage };
 
-            result = scope.getManuscriptFileName(row);
-            expect(result).toBe(row.fieldValues[0].fileInfo.name);
+            result = scope.getManuscriptFileName(row, defaultMessage);
+            expect(result).toEqual(expectedMessage);
         });
         it("startNewSubmission should close a modal", function () {
             scope.submissionToDelete = mockSubmission(q);
