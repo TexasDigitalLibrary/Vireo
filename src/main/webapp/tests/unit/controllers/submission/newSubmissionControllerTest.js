@@ -1,6 +1,6 @@
 describe("controller: NewSubmissionController", function () {
 
-    var controller, location, q, scope, OrganizationRepo, WsApi;
+    var controller, location, q, scope, Organization, OrganizationRepo, Submission, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($location, $q, _OrganizationRepo_, _WsApi_) {
@@ -13,7 +13,7 @@ describe("controller: NewSubmissionController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _StorageService_, _StudentSubmissionRepo_) {
+        inject(function ($controller, $rootScope, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _Organization_, _RestApi_, _StorageService_, _StudentSubmissionRepo_, _Submission_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -27,9 +27,11 @@ describe("controller: NewSubmissionController", function () {
                 SubmissionStates: SubmissionStates,
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
+                Organization: _Organization_,
                 OrganizationRepo: OrganizationRepo,
                 StorageService: _StorageService_,
                 StudentSubmissionRepo: _StudentSubmissionRepo_,
+                Submission: _Submission_,
                 RestApi: _RestApi_,
                 WsApi: WsApi
             });
@@ -47,10 +49,15 @@ describe("controller: NewSubmissionController", function () {
         module("mock.managedConfiguration");
         module("mock.managedConfigurationRepo");
         module("mock.modalService");
-        module("mock.organization");
+        module("mock.organization", function($provide) {
+            $provide.value("Organization", mockParameterModel(q, mockOrganization));
+        });
         module("mock.organizationRepo");
         module("mock.restApi");
         module("mock.storageService");
+        module("mock.submission", function($provide) {
+            $provide.value("Submission", mockParameterModel(q, mockSubmission));
+        });
         module("mock.studentSubmission");
         module("mock.studentSubmissionRepo");
         module("mock.wsApi");
@@ -101,11 +108,16 @@ describe("controller: NewSubmissionController", function () {
         });
         it("getSelectedOrganization should return an organization", function () {
             var response;
-            OrganizationRepo.selectedId = 1;
+            var organization = new mockOrganization(q);
+            organization.mock(dataOrganization1);
+
+            OrganizationRepo.selectedId = organization.id;
+            OrganizationRepo.selectedOrganization = organization;
+            scope.selectedOrganization = organization;
 
             response = scope.getSelectedOrganization();
 
-            expect(response.id).toBe(OrganizationRepo.selectedId);
+            expect(response.id).toBe(organization.id);
         });
         it("gotoSubmission should change the URL path", function () {
             var organization = new mockOrganization(q);

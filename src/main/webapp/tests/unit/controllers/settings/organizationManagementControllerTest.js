@@ -15,14 +15,25 @@ describe("controller: OrganizationManagementController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $location, $rootScope, $route, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _WorkflowStepRepo_) {
+        inject(function ($controller, $injector, $location, $rootScope, $route, $timeout, SubmissionStates, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _StudentSubmissionRepo_, _UserService_, _UserSettings_, _WorkflowStepRepo_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            // OrganizationManagementController is included inside of a OrganizationSettingsController scope.
-            // This results in having additional methods on the scope that OrganizationManagementController requires.
+            // The controller being tested is included inside of a OrganizationSettingsController scope.
+            // This results in having additional methods on the scope that the controller being tested requires.
+            $controller("AbstractController", {
+                $injector: $injector,
+                $scope: scope,
+                $timeout: $timeout,
+                UserService: _UserService_,
+                UserSettings: _UserSettings_,
+                ManagedConfigurationRepo: _ManagedConfigurationRepo_,
+                StudentSubmissionRepo: _StudentSubmissionRepo_,
+                SubmissionStates: SubmissionStates
+            });
+
             $controller("OrganizationSettingsController", {
                 $scope: scope,
                 $window: mockWindow(),
@@ -249,15 +260,11 @@ describe("controller: OrganizationManagementController", function () {
         });
         it("resetManageOrganization should reset the selected organization", function () {
             var organization;
-            OrganizationRepo.selectedId = 1;
-            OrganizationRepo.mockSpyAssist = true;
+            scope.selectedOrganization = mockOrganization(q);
+
             organization = scope.getSelectedOrganization();
 
-            spyOn(organization, "refresh");
-
-            scope.resetManageOrganization();
-
-            expect(organization.refresh).toHaveBeenCalled();
+            expect(organization.id).toEqual(scope.selectedOrganization.id);
         });
         it("resetWorkflowSteps should reset the workflow steps", function () {
             var organization = new mockOrganization(q);
@@ -313,13 +320,26 @@ describe("controller: OrganizationManagementController", function () {
         it("showOrganizationManagement should return a boolean", function () {
             var response;
 
+            OrganizationRepo.selectedId = undefined;
+            sessionStorage.role = "ROLE_ADMIN";
+
+            response = scope.showOrganizationManagement();
+            expect(response).toBe(false);
+
             OrganizationRepo.selectedId = 1;
             sessionStorage.role = "ROLE_MANAGER";
 
             response = scope.showOrganizationManagement();
             expect(response).toBe(false);
 
+            scope.selectedOrganization = mockOrganization(q);
             sessionStorage.role = "ROLE_ADMIN";
+
+            response = scope.showOrganizationManagement();
+            expect(response).toBe(true);
+
+            scope.selectedOrganization.mock(dataOrganization2);
+            sessionStorage.role = "ROLE_USER";
 
             response = scope.showOrganizationManagement();
             expect(response).toBe(true);

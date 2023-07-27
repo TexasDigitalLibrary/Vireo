@@ -3,18 +3,19 @@ describe("controller: OrganizationSettingsController", function () {
     var controller, q, scope, AccordionService, OrganizationRepo, WsApi;
 
     var initializeVariables = function(settings) {
-        inject(function ($q, _WsApi_) {
+        inject(function ($q, _AccordionService_, _WsApi_) {
             q = $q;
+
+            AccordionService = _AccordionService_;
 
             WsApi = _WsApi_;
         });
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, _AccordionService_, _ModalService_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_) {
+        inject(function ($controller, $rootScope, _ModalService_, _Organization_, _OrganizationRepo_, _RestApi_, _SidebarService_, _StorageService_) {
             scope = $rootScope.$new();
 
-            AccordionService = _AccordionService_;
             OrganizationRepo = _OrganizationRepo_;
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -23,8 +24,9 @@ describe("controller: OrganizationSettingsController", function () {
             controller = $controller("OrganizationSettingsController", {
                 $scope: scope,
                 $window: mockWindow(),
-                AccordionService: _AccordionService_,
+                AccordionService: AccordionService,
                 ModalService: _ModalService_,
+                Organization: _Organization_,
                 OrganizationRepo: _OrganizationRepo_,
                 RestApi: _RestApi_,
                 SidebarService: _SidebarService_,
@@ -44,7 +46,9 @@ describe("controller: OrganizationSettingsController", function () {
         module("vireo");
         module("mock.accordionService");
         module("mock.modalService");
-        module("mock.organization");
+        module("mock.organization", function($provide) {
+            $provide.value("Organization", mockParameterModel(q, mockOrganization));
+        });
         module("mock.organizationRepo");
         module("mock.restApi");
         module("mock.sidebarService");
@@ -93,14 +97,26 @@ describe("controller: OrganizationSettingsController", function () {
             expect(scope.activeManagementPane).toBe(true);
         });
         it("getSelectedOrganization should get the selected organization", function () {
-            var response = scope.getSelectedOrganization();
+            var response;
+            var organization = new mockOrganization(q);
+            organization.mock(dataOrganization2);
+
+            response = scope.getSelectedOrganization();
 
             expect(response).not.toBeDefined();
 
-            OrganizationRepo.setSelectedOrganization(dataOrganization2);
+            scope.selectedOrganization = {};
 
             response = scope.getSelectedOrganization();
-            expect(response.id).toBe(dataOrganization2.id);
+
+            expect(response).toBeDefined();
+            expect(response.id).not.toBeDefined();
+
+            scope.selectedOrganization = organization;
+
+            response = scope.getSelectedOrganization();
+
+            expect(response.id).toEqual(organization.id);
         });
         it("managementPaneIsActive should return a boolean", function () {
             var response = scope.managementPaneIsActive("test");
@@ -114,14 +130,21 @@ describe("controller: OrganizationSettingsController", function () {
         });
         it("setDeleteDisabled should assign delete disabled", function () {
             var organization = new mockOrganization(q);
-            scope.deleteDisabled  = null;
+            scope.deleteDisabled = null;
 
-            OrganizationRepo.setSelectedOrganization(organization);
+            scope.setDeleteDisabled();
+            scope.$digest();
+            expect(scope.deleteDisabled).toBe(null);
 
-            scope.setDeleteDisabled(organization.id);
+            scope.deleteDisabled = null;
+            scope.selectedOrganization = organization;
+            OrganizationRepo.submissionsCount[organization.id] = 0;
+
+            scope.setDeleteDisabled();
             scope.$digest();
             expect(scope.deleteDisabled).toBe(false);
 
+            scope.deleteDisabled = null;
             OrganizationRepo.submissionsCount[organization.id] = 2;
 
             scope.setDeleteDisabled(organization.id);
@@ -129,17 +152,46 @@ describe("controller: OrganizationSettingsController", function () {
             expect(scope.deleteDisabled).toBe(true);
         });
         it("setSelectedOrganization should assign selected organization", function () {
-            var organization = new mockOrganization(q);
+            var organization1 = new mockOrganization(q);
+            var organization2 = new mockOrganization(q);
+            organization2.mock(dataOrganization2);
 
-            scope.setSelectedOrganization(organization);
+            scope.selectedOrganization = organization2;
 
-            expect(OrganizationRepo.getSelectedOrganization().id).toBe(organization.id);
+            scope.setSelectedOrganization();
+
+            expect(scope.selectedOrganization).not.toBeDefined();
+            expect(scope.newOrganization).toBeDefined();
+            expect(scope.newOrganization.parent).not.toBeDefined();
+            expect(scope.deleteDisabled).toEqual(true);
+
+            scope.selectedOrganization = organization2;
+
+            scope.setSelectedOrganization({});
+
+            expect(scope.selectedOrganization).not.toBeDefined();
+            expect(scope.newOrganization).toBeDefined();
+            expect(scope.newOrganization.parent).not.toBeDefined();
+            expect(scope.deleteDisabled).toEqual(true);
+
+            scope.selectedOrganization = organization2;
+            OrganizationRepo.selectedOrganization = organization2;
+            OrganizationRepo.selectedId = organization2.id;
+
+            var defer = q.defer();
+
+            OrganizationRepo.getById = function (id, specific) {
+                return defer.promise;
+            };
 
             spyOn(AccordionService, "closeAll");
 
-            organization.mock(dataOrganization2);
-            scope.setSelectedOrganization(organization);
+            scope.setSelectedOrganization(organization1);
 
+            defer.resolve(organization1);
+            scope.$digest();
+
+            expect(scope.selectedOrganization.id).toEqual(organization1.id);
             expect(AccordionService.closeAll).toHaveBeenCalled();
         });
     });
