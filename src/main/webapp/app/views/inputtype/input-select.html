@@ -9,7 +9,7 @@
     <li class="select-option"
       role="menuitem"
       ng-click="fieldValue.value = word.name; fieldProfileForm.$dirty = true; saveWithCV(fieldValue, word);"
-      ng-repeat="word in profile.controlledVocabulary.dictionary | filter:displayVocabularyWord">
+      ng-repeat="word in profile.controlledVocabulary.dictionary | filter:displayVocabularyWord | orderBy:'name'">
       <a href="#">{{word.name}}</a>
     </li>
   </ul>
