@@ -124,6 +124,10 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
                         }
 
                         OrganizationRepo.setSelectedOrganization(org);
+
+                        if (!existingSelected || existingSelected.id !== organization.id) {
+                            AccordionService.closeAll();
+                        }
                     }
 
                     $scope.setDeleteDisabled();
@@ -138,10 +142,10 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
                 $scope.selectedOrganization = organization;
                 $scope.setDeleteDisabled();
                 $scope.loadingOrganization = false;
-            }
 
-            if (!!$scope.existingSelected && existingSelected.id !== organization.id) {
-                AccordionService.closeAll();
+                if (!existingSelected || existingSelected.id !== organization.id) {
+                    AccordionService.closeAll();
+                }
             }
         } else {
             $scope.selectedOrganization = undefined;
