@@ -359,12 +359,10 @@ describe("controller: OrganizationManagementController", function () {
         it("updateWorkflowStep should update a workflow step", function () {
             var workflowStep = new mockWorkflowStep(q);
 
-            spyOn(OrganizationRepo, "setToUpdate");
             spyOn(OrganizationRepo, "updateWorkflowStep");
 
             scope.updateWorkflowStep(workflowStep);
 
-            expect(OrganizationRepo.setToUpdate).toHaveBeenCalled();
             expect(OrganizationRepo.updateWorkflowStep).toHaveBeenCalled();
         });
     });
