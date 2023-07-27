@@ -662,8 +662,8 @@ public class SubmissionHelperUtility {
                 if ((defaultEmbargoDuration != null)&&(defaultEmbargoDuration.length() > 0)) {
                     int duration = Integer.valueOf(defaultEmbargoDuration);
                     try {
-                        java.util.Date defaultEmbargoLiftDate = DateUtils.addMonths(dateTimeFormat.parse(dateIssuedStr),duration);
-                        defaultEmbargoLiftDateStr = dateTimeFormat.format(defaultEmbargoLiftDate);
+                        java.util.Date defaultEmbargoLiftDate = DateUtils.addMonths(monthYearFormat.parse(dateIssuedStr),duration);
+                        defaultEmbargoLiftDateStr = dateFormat.format(defaultEmbargoLiftDate);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -681,10 +681,10 @@ public class SubmissionHelperUtility {
           Optional<FieldValue> proquestEmbargo = getFirstFieldValueByPredicateValue("proquest_embargos");
           if (proquestEmbargo.isPresent()) {
             String proquestDuration = proquestEmbargo.get().getIdentifier();
-            if (proquestDuration != null) {
+            if ((proquestDuration != null)&&(proquestDuration.length() > 0)) {
                 int d = Integer.valueOf(proquestDuration);
                 try {
-                  java.util.Date proquestLiftDate = DateUtils.addMonths(dateTimeFormat.parse(dateIssuedStr),d);
+                  java.util.Date proquestLiftDate = DateUtils.addMonths(monthYearFormat.parse(dateIssuedStr),d);
                   proquestLiftDateStr = dateFormat.format(proquestLiftDate);
                 } catch (ParseException e) {
                     e.printStackTrace();
