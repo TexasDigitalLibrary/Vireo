@@ -10,6 +10,12 @@ import edu.tamu.weaver.data.model.repo.WeaverRepo;
 
 public interface OrganizationRepo extends WeaverRepo<Organization>, OrganizationRepoCustom {
 
+    public long countById(Long id);
+
+    public <T> T findViewById(Long id, Class<T> type);
+
+    public <T> List<T> findViewAllByOrderByIdAsc(Class<T> type);
+
     public List<Organization> findAllByOrderByIdAsc();
 
     public List<Organization> findByAggregateWorkflowStepsId(Long workflowStepId);

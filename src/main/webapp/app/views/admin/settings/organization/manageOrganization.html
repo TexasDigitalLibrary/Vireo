@@ -1,95 +1,87 @@
 <div class="panel panel-default">
   <div class="panel-heading">
-    <h3 class="panel-title">Manage {{getSelectedOrganization().name}}</h3>
+    <h3 class="panel-title">Manage {{getSelectedOrganizationName()}}</h3>
   </div>
 
   <div class="panel-body">
-
     <alerts seconds="45" channels="organization/update, organization/delete" types="SUCCESS, INVALID"></alerts>
 
     <form ng-submit="updateOrganization(getSelectedOrganization())" name="forms.update" novalidate>
+        <validationmessage results="getSelectedOrganizationValidationResults()"></validationmessage>
 
-      <validationmessage results="getSelectedOrganization().getValidationResults()"></validationmessage>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-xs-6">
+                    <validatedinput
+                      no-id="true"
+                      label="Organization Name"
+                      model="getSelectedOrganization()"
+                      property="name"
+                      form="forms.update"
+                      validations="getSelectedOrganizationValidations()"
+                      results="getSelectedOrganizationValidationResults()">
+                    </validatedinput>
 
-      <div class="col-md-12">
-        <div class="row">
-          <div class="col-xs-6">
+                    <validatedselect
+                      no-id="true"
+                      label="Category"
+                      options="organizationCategories"
+                      optionproperty="name"
+                      model="getSelectedOrganization()"
+                      property="category"
+                      form="forms.update"
+                      validations="getSelectedOrganizationValidations()"
+                      results="getSelectedOrganizationValidationResults()">
+                    </validatedselect>
 
-            <validatedinput
-              no-id="true"
-              label="Organization Name"
-              model="getSelectedOrganization()"
-              property="name"
-              form="forms.update"
-              validations="getSelectedOrganization().getValidations()"
-              results="getSelectedOrganization().getValidationResults()">
-            </validatedinput>
+                    <toggleButton
+                      label="Organization accepts Submissions?"
+                      scope-value="getSelectedOrganization().acceptsSubmissions"
+                      toggle-options="{{acceptsSubmissions}}">
+                    </toggleButton>
+                </div>
 
-            <validatedselect
-              no-id="true"
-              label="Category"
-              options="organizationCategories"
-              optionproperty="name"
-              model="getSelectedOrganization()"
-              property="category"
-              form="forms.update"
-              validations="getSelectedOrganization().getValidations()"
-              results="getSelectedOrganization().getValidationResults()">
-            </validatedselect>
+                <div class="col-xs-6">
+                    <validatedinput
+                      no-id="true"
+                      label="Email Contact"
+                      model="getSelectedOrganization()"
+                      property="emails"
+                      form="forms.update"
+                      validations="getSelectedOrganizationValidations()"
+                      results="getSelectedOrganizationValidationResults()"
+                      repeatable="true">
+                    </validatedinput>
+                </div>
+            </div>
 
-            <toggleButton
-              label="Organization accepts Submissions?"
-              scope-value="organizationRepo.getSelectedOrganization().acceptsSubmissions"
-              toggle-options="{{acceptsSubmissions}}">
-            </toggleButton>
+            <hr />
 
-          </div>
-
-          <div class="col-xs-6">
-
-            <validatedinput
-              no-id="true"
-              label="Email Contact"
-              model="getSelectedOrganization()"
-              property="emails"
-              form="forms.update"
-              validations="getSelectedOrganization().getValidations()"
-              results="getSelectedOrganization().getValidationResults()"
-              repeatable="true">
-            </validatedinput>
-
-          </div>
+            <div class="row">
+                <div class="pull-right">
+                  <span uib-popover="This organization contains submissions and cannot be deleted." popover-trigger="'mouseenter'" popover-enable="deleteDisabled">
+                    <button
+                      ng-if="getSelectedOrganizationId() !== 1"
+                      type="button"
+                      class="btn btn-danger"
+                      ng-style="{'pointer-events':deleteDisabled ? 'none' : ''}"
+                      ng-disabled="deleteDisabled || loadingOrganization"
+                      ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
+                  </span>
+                  <button
+                    type="button"
+                    class="btn btn-default"
+                    ng-click="resetManageOrganization(getSelectedOrganization())"
+                    ng-disabled="updatingOrganization || loadingOrganization">Cancel</button>
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    ng-disabled="forms.update.$invalid || updatingOrganization">Save
+                    <span ng-if="updatingOrganization" class="glyphicon glyphicon-refresh spinning"></span>
+                  </button>
+                </div>
+            </div>
         </div>
-
-        <hr />
-
-        <div class="row">
-          <div class="pull-right">
-            <span uib-popover="This organization contains submissions and cannot be deleted." popover-trigger="'mouseenter'" popover-enable="deleteDisabled">
-              <button
-                ng-if="getSelectedOrganization().id !== 1"
-                type="button"
-                class="btn btn-danger"
-                ng-style="{'pointer-events':deleteDisabled ? 'none' : ''}"
-                ng-disabled="deleteDisabled"
-                ng-click="openModal('#organizationConfirmDeleteModal')">Delete Organization</button>
-            </span>
-            <button
-              type="button"
-              class="btn btn-default"
-              ng-click="resetManageOrganization()"
-              ng-disabled="updatingOrganization">Cancel</button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              ng-disabled="forms.update.$invalid || updatingOrganization">Save
-              <span ng-if="updatingOrganization" class="glyphicon glyphicon-refresh spinning"></span>
-            </button>
-          </div>
-        </div>
-
-      </div>
-
     </form>
 
     <modal modal-id="organizationConfirmDeleteModal"

@@ -30,8 +30,8 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
     $scope.resetNotes = function() {
         $scope.workflowStepRepo.clearValidationResults();
         $scope.noteRepo.clearValidationResults();
-        for(var key in $scope.forms) {
-            if($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
+        for (var key in $scope.forms) {
+            if ($scope.forms[key] !== undefined && !$scope.forms[key].$pristine) {
                 $scope.forms[key].$setPristine();
                 $scope.forms[key].$setUntouched();
             }
@@ -46,9 +46,9 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
             });
         }
 
-        if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
-			$scope.modalData.refresh();
-		}
+        if ($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+            $scope.modalData.refresh();
+        }
         $scope.modalData = new Note({
             overrideable: true,
             name: '',
@@ -61,6 +61,10 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
     $scope.resetNotes();
 
     $scope.createNote = function() {
+        if (!!$scope.getSelectedOrganizationId()) {
+            $scope.getSelectedOrganization().$dirty = true;
+        }
+
         WorkflowStepRepo.addNote($scope.step, $scope.modalData);
     };
 
@@ -74,22 +78,34 @@ vireo.controller("NoteManagementController", function ($controller, $scope, Drag
     };
 
     $scope.updateNote = function() {
+        if (!!$scope.getSelectedOrganizationId()) {
+            $scope.getSelectedOrganization().$dirty = true;
+        }
+
         WorkflowStepRepo.updateNote($scope.step, $scope.modalData);
     };
 
     $scope.removeNote = function() {
+        if (!!$scope.getSelectedOrganizationId()) {
+            $scope.getSelectedOrganization().$dirty = true;
+        }
+
         WorkflowStepRepo.removeNote($scope.step, $scope.modalData);
     };
 
     $scope.reorderNotes = function(src, dest) {
+        if (!!$scope.getSelectedOrganizationId()) {
+            $scope.getSelectedOrganization().$dirty = true;
+        }
+
         return WorkflowStepRepo.reorderNotes($scope.step, src, dest);
     };
 
     $scope.isEditable = function(note) {
         var editable = note.overrideable;
-        if(!editable) {
+        if (!editable) {
             editable = note.originatingWorkflowStep == $scope.step.id &&
-                       $scope.selectedOrganization.originalWorkflowSteps.indexOf(note.originatingWorkflowStep) > -1;
+                       !!$scope.selectedOrganization && $scope.selectedOrganization.originalWorkflowSteps.indexOf(note.originatingWorkflowStep) > -1;
         }
         return editable;
     };

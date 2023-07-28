@@ -47,9 +47,17 @@ describe("service: organizationRepo", function () {
     });
 
     describe("Are the repo methods defined", function () {
+        it('addEmailWorkflowRule should be defined', function () {
+            expect(repo.addEmailWorkflowRule).toBeDefined();
+            expect(typeof repo.addEmailWorkflowRule).toEqual("function");
+        });
         it("addWorkflowStep should be defined", function () {
             expect(repo.addWorkflowStep).toBeDefined();
             expect(typeof repo.addWorkflowStep).toEqual("function");
+        });
+        it('changeEmailWorkflowRuleActivation should be defined', function () {
+            expect(repo.changeEmailWorkflowRuleActivation).toBeDefined();
+            expect(typeof repo.changeEmailWorkflowRuleActivation).toEqual("function");
         });
         it("create should be defined", function () {
             expect(repo.create).toBeDefined();
@@ -67,6 +75,10 @@ describe("service: organizationRepo", function () {
             expect(repo.deleteWorkflowStep).toBeDefined();
             expect(typeof repo.deleteWorkflowStep).toEqual("function");
         });
+        it('editEmailWorkflowRule should be defined', function () {
+            expect(repo.editEmailWorkflowRule).toBeDefined();
+            expect(typeof repo.editEmailWorkflowRule).toEqual("function");
+        });
         it("getNewOrganization should be defined", function () {
             expect(repo.getNewOrganization).toBeDefined();
             expect(typeof repo.getNewOrganization).toEqual("function");
@@ -78,6 +90,10 @@ describe("service: organizationRepo", function () {
         it("ready should be defined", function () {
             expect(repo.ready).toBeDefined();
             expect(typeof repo.ready).toEqual("function");
+        });
+        it('removeEmailWorkflowRule should be defined', function () {
+            expect(repo.removeEmailWorkflowRule).toBeDefined();
+            expect(typeof repo.removeEmailWorkflowRule).toEqual("function");
         });
         it("reorderWorkflowSteps should be defined", function () {
             expect(repo.reorderWorkflowSteps).toBeDefined();
@@ -102,6 +118,14 @@ describe("service: organizationRepo", function () {
     });
 
     describe("Do the repo methods work as expected", function () {
+        it('addEmailWorkflowRule should call WsApi', function () {
+            spyOn(WsApi, 'fetch');
+
+            repo.addEmailWorkflowRule({id: 1}, 1, "test", 1);
+            scope.$digest();
+
+            expect(WsApi.fetch).toHaveBeenCalled();
+        });
         it("addWorkflowStep should add a step", function () {
             var workflowStep = new mockWorkflowStep(q);
 
@@ -117,6 +141,14 @@ describe("service: organizationRepo", function () {
             scope.$digest();
 
             // TODO
+        });
+        it('changeEmailWorkflowRuleActivation should call WsApi', function () {
+            spyOn(WsApi, 'fetch');
+
+            repo.changeEmailWorkflowRuleActivation({id: 1}, {id: 1});
+            scope.$digest();
+
+            expect(WsApi.fetch).toHaveBeenCalled();
         });
         it("create should create an organization", function () {
             var organization1 = new mockOrganization(q);
@@ -190,6 +222,20 @@ describe("service: organizationRepo", function () {
 
             // TODO
         });
+        it('editEmailWorkflowRule should call WsApi', function () {
+            var rule = {
+                id: 1,
+                emailTemplate: new mockEmailTemplate(q),
+                recipient: "test"
+            };
+
+            spyOn(WsApi, 'fetch');
+
+            repo.editEmailWorkflowRule({id: 1}, rule);
+            scope.$digest();
+
+            expect(WsApi.fetch).toHaveBeenCalled();
+        });
         it("getNewOrganization should return an organization", function () {
             WsApi.fetch = function() {
                 return payloadPromise(q.defer());
@@ -220,6 +266,14 @@ describe("service: organizationRepo", function () {
             scope.$digest();
 
             // TODO
+        });
+        it('removeEmailWorkflowRule should call WsApi', function () {
+            spyOn(WsApi, 'fetch');
+
+            repo.removeEmailWorkflowRule({id: 1}, {id: 1});
+            scope.$digest();
+
+            expect(WsApi.fetch).toHaveBeenCalled();
         });
         it("reorderWorkflowSteps should reorder the steps", function () {
             WsApi.fetch = function() {

@@ -1,35 +1,60 @@
 describe("controller: NoteManagementController", function () {
 
-    var controller, q, scope, NoteRepo, WorkflowStepRepo, WsApi;
+    var controller, q, scope, selectedOrg, selectedOrgId, OrganizationRepo, WorkflowStepRepo, WsApi;
 
     var initializeVariables = function(settings) {
-        inject(function ($q, _NoteRepo_, _WorkflowStepRepo_, _WsApi_) {
+        inject(function ($q, _NoteRepo_, _OrganizationRepo_, _WorkflowStepRepo_, _WsApi_) {
             q = $q;
 
-            NoteRepo = _NoteRepo_;
+            OrganizationRepo = _OrganizationRepo_;
             WorkflowStepRepo = _WorkflowStepRepo_;
             WsApi = _WsApi_;
         });
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, _DragAndDropListenerFactory_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_) {
+        inject(function ($controller, $injector, $rootScope, $timeout, SubmissionStates, _AccordionService_, _DragAndDropListenerFactory_, _ManagedConfigurationRepo_, _ModalService_, _Note_, _NoteRepo_, _RestApi_, _SidebarService_, _StorageService_, _StudentSubmissionRepo_, _UserService_, _UserSettings_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            // step is not defined/initialized in the controller.
-            scope.step = {aggregateNotes: {}};
+            // The scope.step must be assigned based on the current noteManagementController design.
+            scope.step = mockWorkflowStep(q);
+
+            // The controller being tested is included inside of a OrganizationSettingsController scope.
+            // This results in having additional methods on the scope that the controller being tested requires.
+            $controller("AbstractController", {
+                $injector: $injector,
+                $scope: scope,
+                $timeout: $timeout,
+                UserService: _UserService_,
+                UserSettings: _UserSettings_,
+                ManagedConfigurationRepo: _ManagedConfigurationRepo_,
+                StudentSubmissionRepo: _StudentSubmissionRepo_,
+                SubmissionStates: SubmissionStates
+            });
+
+            $controller("OrganizationSettingsController", {
+                $scope: scope,
+                $window: mockWindow(),
+                AccordionService: _AccordionService_,
+                ModalService: _ModalService_,
+                OrganizationRepo: OrganizationRepo,
+                RestApi: _RestApi_,
+                SidebarService: _SidebarService_,
+                StorageService: _StorageService_,
+                WsApi: WsApi
+            });
 
             controller = $controller("NoteManagementController", {
                 $scope: scope,
                 $window: mockWindow(),
                 DragAndDropListenerFactory: _DragAndDropListenerFactory_,
                 ModalService: _ModalService_,
-                Note: mockParameterModel(q, mockNote),
-                NoteRepo: NoteRepo,
-                OrganizationRepo: _OrganizationRepo_,
+                Note: _Note_,
+                NoteRepo: _NoteRepo_,
+                OrganizationRepo: OrganizationRepo,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 WorkflowStepRepo: WorkflowStepRepo,
@@ -48,7 +73,9 @@ describe("controller: NoteManagementController", function () {
         module("vireo");
         module("mock.dragAndDropListenerFactory");
         module("mock.modalService");
-        module("mock.note");
+        module("mock.note", function($provide) {
+            $provide.value("Note", mockParameterModel(q, mockNote));
+        });
         module("mock.noteRepo");
         module("mock.organization");
         module("mock.organizationRepo");
@@ -209,7 +236,7 @@ describe("controller: NoteManagementController", function () {
             scope.step.aggregateNotes[1].mock(dataNote2);
 
             scope.selectNote(1);
-            expect(scope.modalData.id).toBe(scope.step.aggregateNotes[1].id);
+            expect(scope.modalData.id).toBe(dataNote2.id);
         });
         it("updateNote should should save a note", function () {
             spyOn(WorkflowStepRepo, "updateNote");

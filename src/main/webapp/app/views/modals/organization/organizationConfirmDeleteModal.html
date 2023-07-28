@@ -6,9 +6,9 @@
 </div>
 
 <form novalidate>
-  <validationmessage results="getSelectedOrganization().getValidationResults()"></validationmessage>
+  <validationmessage results="getSelectedOrganizationValidationResults()"></validationmessage>
   <div class="modal-body">
-    <h4>Really delete organization "{{ getSelectedOrganization().name }}"?</h4>
+    <h4>Really delete organization "{{ getSelectedOrganizationName() }}"?</h4>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="cancelDeleteOrganization()">Cancel</button>

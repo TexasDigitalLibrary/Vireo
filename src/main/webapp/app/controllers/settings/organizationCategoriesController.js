@@ -24,9 +24,9 @@ vireo.controller("OrganizationCategoriesController", function ($controller, $sco
                     $scope.forms[key].$setUntouched();
                 }
             }
-        	if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
-    			$scope.modalData.refresh();
-    		}
+            if($scope.modalData !== undefined && $scope.modalData.refresh !== undefined) {
+                $scope.modalData.refresh();
+            }
             $scope.modalData = {};
             $scope.closeModal();
         };

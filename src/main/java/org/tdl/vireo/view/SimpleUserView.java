@@ -2,9 +2,7 @@ package org.tdl.vireo.view;
 
 import edu.tamu.weaver.user.model.IRole;
 
-public interface SimpleUserView {
-
-    public Long getId();
+public interface SimpleUserView extends SimpleNamedModelView {
 
     public String getNetid();
 
@@ -15,8 +13,6 @@ public interface SimpleUserView {
     public String getLastName();
 
     public String getMiddleName();
-
-    public String getName();
 
     public IRole getRole();
 

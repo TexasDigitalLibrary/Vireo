@@ -127,11 +127,11 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
                 delete $scope.modalData.fieldPredicate;
             }
         };
-        
+
         $scope.mustCreateFieldPredicate = function () {
             return typeof $scope.modalData.fieldPredicate === 'string';
         };
-        
+
         $scope.canCreateFieldPredicate = function () {
             return $scope.mustCreateFieldPredicate() && $scope.modalData.fieldPredicate.length > 0;
         };
@@ -156,6 +156,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         };
 
         $scope.createFieldProfile = function () {
+            if (!!$scope.getSelectedOrganizationId()) {
+                $scope.getSelectedOrganization().$dirty = true;
+            }
+
             $scope.createFieldPredicate().then(function() {
                 WorkflowStepRepo.addFieldProfile($scope.step, $scope.modalData).then(function() {
                     resetModalData();
@@ -182,6 +186,10 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         };
 
         $scope.updateFieldProfile = function () {
+            if (!!$scope.getSelectedOrganizationId()) {
+                $scope.getSelectedOrganization().$dirty = true;
+            }
+
             $scope.createFieldPredicate().then(function() {
                 WorkflowStepRepo.updateFieldProfile($scope.step, $scope.modalData).then(function() {
                     resetModalData();
@@ -190,17 +198,25 @@ vireo.controller("FieldProfileManagementController", function ($q, $controller, 
         };
 
         $scope.removeFieldProfile = function () {
+            if (!!$scope.getSelectedOrganizationId()) {
+                $scope.getSelectedOrganization().$dirty = true;
+            }
+
             WorkflowStepRepo.removeFieldProfile($scope.step, $scope.modalData);
         };
 
         $scope.reorderFieldProfiles = function (src, dest) {
+            if (!!$scope.getSelectedOrganizationId()) {
+                $scope.getSelectedOrganization().$dirty = true;
+            }
+
             return WorkflowStepRepo.reorderFieldProfiles($scope.step, src, dest);
         };
 
         $scope.isEditable = function (fieldProfile) {
             var editable = fieldProfile.overrideable;
             if (!editable) {
-                editable = fieldProfile.originatingWorkflowStep == $scope.step.id && $scope.organizationRepo.getSelectedOrganization().originalWorkflowSteps.indexOf(fieldProfile.originatingWorkflowStep) > -1;
+                editable = fieldProfile.originatingWorkflowStep == $scope.step.id && !!$scope.getSelectedOrganizationOriginalWorkflowSteps() && $scope.getSelectedOrganizationOriginalWorkflowSteps().indexOf(fieldProfile.originatingWorkflowStep) > -1;
             }
             return editable;
         };

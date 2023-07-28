@@ -26,6 +26,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
 import org.tdl.vireo.exception.SystemEmailRuleNotDeleteableException;
@@ -142,6 +143,34 @@ public class OrganizationControllerTest extends AbstractControllerTest {
 
         List<?> got = (ArrayList<?>) response.getPayload().get("ArrayList<Organization>");
         assertEquals(organizations.size(), got.size());
+    }
+
+    @Test
+    public void testAllSpecificOrganizationsSpecificTree() {
+        when(organizationRepo.findViewAllByOrderByIdAsc(Mockito.<Class<Organization>>any())).thenReturn(organizations);
+
+        ApiResponse response = organizationController.getSpecificAllOrganizations("tree");
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        List<?> got = (ArrayList<?>) response.getPayload().get("ArrayList<Organization>");
+        assertEquals(organizations.size(), got.size());
+    }
+
+    @Test
+    public void testAllSpecificOrganizationsSpecificShallow() {
+        when(organizationRepo.findViewAllByOrderByIdAsc(Mockito.<Class<Organization>>any())).thenReturn(organizations);
+
+        ApiResponse response = organizationController.getSpecificAllOrganizations("shallow");
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        List<?> got = (ArrayList<?>) response.getPayload().get("ArrayList<Organization>");
+        assertEquals(organizations.size(), got.size());
+    }
+
+    @Test
+    public void testAllSpecificOrganizationsInvalidSpecific() {
+        ApiResponse response = organizationController.getSpecificAllOrganizations("unknown and not valid");
+        assertEquals(ApiStatus.INVALID, response.getMeta().getStatus());
     }
 
     @Test

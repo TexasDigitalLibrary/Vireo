@@ -49,14 +49,14 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
         var enrichDocumentTypeFieldValue = function (fieldValue) {
             if (!!fieldValue.value) {
                 if (!fieldValue.fileInfo && fieldValue.value.length > 0) {
-                    submission.fileInfo(fieldValue).then(function (response) {
-                        fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
-                    });
-                }
+                submission.fileInfo(fieldValue).then(function (response) {
+                    fieldValue.fileInfo = angular.fromJson(response.body).payload.ObjectNode;
+                });
+            }
 
-                if (fieldValue.value.length > 0 && submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
-                    submission.primaryDocumentFieldValue = fieldValue;
-                }
+            if (fieldValue.value.length > 0 && submission.getFileType(fieldValue.fieldPredicate) === 'PRIMARY') {
+                submission.primaryDocumentFieldValue = fieldValue;
+            }
             }
         };
 
@@ -677,7 +677,9 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
                         // Some browsers, like Firefox, do not support 'MMMM yyyy' formats for Date.parse().
                         if (isNaN(stamp) && predicate.format == 'MMMM yyyy') {
                             var split = fieldValue.value.match(/^(\S+) (\d+)$/);
-                            stamp = Date.parse(split[1] + ' 01, ' + split[2]);
+                            if (!!split && split.length > 1) {
+                                stamp = Date.parse(split[1] + ' 01, ' + split[2]);
+                            }
                         }
 
                         if (isNaN(stamp)) {

@@ -3,9 +3,7 @@ package org.tdl.vireo.view;
 import java.util.Calendar;
 import org.tdl.vireo.model.SubmissionStatus;
 
-public interface SimpleSubmissionView {
-
-    public Long getId();
+public interface SimpleSubmissionView extends SimpleModelView {
 
     public SimpleUserView getSubmitter();
 
@@ -13,7 +11,7 @@ public interface SimpleSubmissionView {
 
     public SubmissionStatus getSubmissionStatus();
 
-    public SimpleOrganizationView getOrganization();
+    public SimpleNamedModelView getOrganization();
 
     public Calendar getSubmissionDate();
 }

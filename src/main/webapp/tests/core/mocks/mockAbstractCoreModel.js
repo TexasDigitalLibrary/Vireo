@@ -2,8 +2,8 @@ var mockModel = function (modelName, $q, mockDataObj) {
     var model = {};
     var combinationOperation = "";
 
-    model.isDirty = false;
     model.isValid = false;
+    model.$dirty = false;
 
     model.mock = function(toMock) {
         if (typeof toMock === "object") {
@@ -41,10 +41,10 @@ var mockModel = function (modelName, $q, mockDataObj) {
 
     model.dirty = function(boolean) {
         if (boolean !== undefined) {
-            model.isDirty = boolean;
+            model.$dirty = boolean;
         }
 
-        return model.isDirty;
+        return model.$dirty;
     };
 
     model.enableMergeCombinationOperation = function () {

@@ -1,4 +1,4 @@
-<div class="row clearfix" ng-if="step.overrideable || step.originatingOrganization === getSelectedOrganization().id">
+<div class="row clearfix" ng-if="step.overrideable || step.originatingOrganization === getSelectedOrganizationId()">
 
     <div class="col-md-4">
         <validatedinput
@@ -25,7 +25,7 @@
 
     <div class="col-md-2">
         <div class="form-group">
-            <button class="btn btn-danger" ng-click="openConfirmDeleteModal(step)">Delete Workflow Step</button>
+            <button class="btn btn-danger" ng-click="openConfirmDeleteModal(step)" ng-disabled="loadingOrganization">Delete Workflow Step</button>
             <modal modal-id="workflow-step-delete-confirm-{{step.id}}" modal-view="views/modals/organization/workflowStepDeleteModal.html" modal-header-class="modal-header-danger"></modal>
         </div>
     </div>
@@ -34,19 +34,19 @@
 
 <hr>
 
-    <lockingtextarea
-        label="Workflow Step Instructions"
-        hint="These instructions are shown at the begining of this workflow step during the student submission process."
-        scope-value="step.instructions"
-        on-blur="updateWorkflowStep(step)"
-        key-down="confirmEdit(event, prop)">
-    </lockingtextarea>
+<lockingtextarea
+    label="Workflow Step Instructions"
+    hint="These instructions are shown at the begining of this workflow step during the student submission process."
+    scope-value="step.instructions"
+    on-blur="updateWorkflowStep(step)"
+    key-down="confirmEdit(event, prop)">
+</lockingtextarea>
 
 <hr>
 
 <div ng-controller="FieldProfileManagementController">
 
-  <div ng-if="step.overrideable || step.originatingOrganization === getSelectedOrganization().id">
+  <div ng-if="step.overrideable || step.originatingOrganization === getSelectedOrganizationId()">
 
         <div id="field-profiles" class="row">
 
@@ -111,7 +111,7 @@
         </div>
     </div>
 
-    <div ng-if="!step.overrideable && step.originatingOrganization !== getSelectedOrganization().id">
+    <div ng-if="!step.overrideable && step.originatingOrganization !== getSelectedOrganizationId()">
         <h3>Read only. Workflow step is non overrideable.</h3>
         <ul class="list-unstyled">
            <li ng-repeat="fieldProfile in step.aggregateFieldProfiles">
@@ -125,13 +125,9 @@
 <hr>
 
 <div ng-controller="NoteManagementController">
-
-    <div ng-if="step.overrideable || step.originatingOrganization === getSelectedOrganization().id">
-
+    <div ng-if="step.overrideable || step.originatingOrganization === getSelectedOrganizationId()">
         <div id="notes" class="row">
-
             <div class="col-md-12">
-
                 <alerts channels="/organization/workflowStep/notes" types="ERROR, WARNING" exclusive></alerts>
 
                 <div class="col-md-6">
@@ -152,9 +148,7 @@
                                      edit='editNote(index)'
                                      is-editable='isEditable(note)'>
                     </draganddroplist>
-
                 </div>
-
 
 
                 <div class="col-md-6">
@@ -190,11 +184,11 @@
         </div>
     </div>
 
-    <div ng-if="!step.overrideable && step.originatingOrganization !== getSelectedOrganization().id">
+    <div ng-if="!step.overrideable && step.originatingOrganization !== getSelectedOrganizationId()">
         <h3>Read only. Workflow step is non overrideable.</h3>
         <ul class="list-unstyled">
             <li ng-repeat="note in step.aggregateNotes">
-                     {{note.position}}. {{note.name}}
+                {{note.position}}. {{note.name}}
             </li>
         </ul>
     </div>
