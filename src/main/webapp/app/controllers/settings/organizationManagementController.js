@@ -125,8 +125,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
     $scope.ready.then(function () {
         $scope.resetWorkflowSteps();
 
-        $scope.testBoolean = true;
-
         OrganizationRepo.listen(function () {
             $scope.resetWorkflowSteps();
         });
