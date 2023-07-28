@@ -114,8 +114,6 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
     $scope.resetManageOrganization = function (organization) {
         if (!!organization && !!organization.id) {
             organization.complete = false;
-            organization.shallow = false;
-            organization.tree = false;
 
             organization.clearValidationResults();
             organization.refresh();
