@@ -2,23 +2,19 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.FetchType.LAZY;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
+import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.tdl.vireo.model.response.Views;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonView;
-
-import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
@@ -36,6 +32,7 @@ public class FieldValue extends ValidatingBaseEntity {
     @Column(nullable = true)
     private String definition;
 
+    @JsonView(Views.SubmissionList.class)
     @ElementCollection(fetch = LAZY)
     @Fetch(FetchMode.SELECT)
     private List<String> contacts;
