@@ -31,6 +31,10 @@ const config = {
       to: './node_modules/@wvr/core/app/views'
     },
     {
+      from: './node_modules/tinymce/skins',
+      to: './skins'
+    },
+    {
       from: './build/appConfig.js.template',
       to: './appConfig.js',
       transform(content) {
@@ -58,6 +62,9 @@ const config = {
       './node_modules/ng-file-upload/dist/ng-file-upload-shim.js',
       './node_modules/ng-file-upload/dist/ng-file-upload.js',
       './node_modules/tinymce/tinymce.js',
+      './node_modules/tinymce/themes/**/theme.js',
+      './node_modules/tinymce/plugins/**/plugin.js',
+      './node_modules/tinymce/icons/**/icons.js',
       './node_modules/angular-ui-tinymce/src/tinymce.js',
       './node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js',
       './node_modules/file-saver/src/FileSaver.js',
