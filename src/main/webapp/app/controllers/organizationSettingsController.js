@@ -52,7 +52,7 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 
     $scope.getSelectedOrganizationValidationResults = function () {
         if ($scope.getSelectedOrganizationId()) {
-            return $scope.selectedOrganization.getValidationResuls;
+            return $scope.selectedOrganization.getValidationResults;
         }
     };
 
