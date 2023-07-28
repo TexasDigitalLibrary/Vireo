@@ -81,15 +81,16 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
             return;
         }
 
+        $scope.loadingOrganization = true;
+
         var existingSelected = $scope.selectedOrganization;
 
         if (!!organization && !!organization.id) {
-            $scope.loadingOrganization = true;
-
             if (!organization.complete && !organization.shallow || organization.$dirty) {
-                OrganizationRepo.getById(organization.id, 'shallow').then(function (org) {
-                    if (!!org && !!org.id) {
-                        org = new Organization(org);
+                OrganizationRepo.getById(organization.id, 'shallow').then(function (response) {
+                    if (!!response && !!response.id) {
+                        var org = response;
+                        var i;
                         org.complete = false;
                         org.shallow = true;
                         org.tree = false;
@@ -97,16 +98,20 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
                         $scope.newOrganization.parent = org;
                         $scope.selectedOrganization = org;
 
-                        for (var i = 0; i < $scope.organizations.length; i++) {
+                        for (i = 0; i < $scope.organizations.length; i++) {
                             if ($scope.organizations[i].id === org.id) {
-                                angular.extend($scope.organizations[i], org);
+                                $scope.organizations[i] = org;
 
                                 break;
                             }
                         }
 
+                        if (i == $scope.organizations.length) {
+                            $scope.organizations.push(org);
+                        }
+
                         if (!!org.parentOrganization) {
-                            for (var i = 0; i < $scope.organizations.length; i++) {
+                            for (i = 0; i < $scope.organizations.length; i++) {
                                 if ($scope.organizations[i].id === org.parentOrganization) {
                                     if (!!$scope.organizations[i].childrenOrganizations) {
                                         for (var j = 0; j < $scope.organizations[i].childrenOrganizations.length; j++) {
@@ -153,6 +158,7 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
             $scope.deleteDisabled = true;
 
             AccordionService.closeAll();
+            $scope.loadingOrganization = false;
         }
     };
 
