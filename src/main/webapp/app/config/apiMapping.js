@@ -2,6 +2,7 @@
 var apiMapping = {
     ActionLog: {},
     ControlledVocabulary: {
+        lazy: true,
         validations: true,
         channel: '/channel/controlled-vocabulary',
         all: {
@@ -31,6 +32,11 @@ var apiMapping = {
         sort: {
             'endpoint': '/private/queue',
             'controller': 'settings/controlled-vocabulary'
+        },
+        typeAhead: {
+            'endpoint': '/private/queue',
+            'controller': 'settings/controlled-vocabulary',
+            'method': 'typeahead-vocabulary-word'
         },
         downloadCSV: {
             'endpoint': '/private/queue',
@@ -376,6 +382,7 @@ var apiMapping = {
         }
     },
     FieldProfile: {
+        lazy: true,
         validations: true,
         all: {
             'endpoint': '/private/queue',
@@ -482,6 +489,7 @@ var apiMapping = {
         }
     },
     Organization: {
+        lazy: true,
         validations: true,
         channel: "/channel/organization",
         all: {
@@ -980,6 +988,7 @@ var apiMapping = {
         }
     },
     WorkflowStep: {
+        lazy: true,
         validations: true,
         channel: '/channel/workflow-step',
         all: {

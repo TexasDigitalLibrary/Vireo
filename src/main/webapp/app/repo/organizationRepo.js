@@ -5,17 +5,54 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
     var selectiveListenCallbacks = [];
 
     var selectedId;
+    var selectedOrganization;
 
     // additional repo methods and variables
 
     this.newOrganization = {};
 
-    this.ready().then(function () {
-        var organizations = organizationRepo.getAll();
-        if (selectedId === undefined && organizations.length > 0) {
-            organizationRepo.setSelectedOrganization(organizations[0]);
+    /**
+     * Get the organization using a specific method, such as "tree" or "shallow".
+     *
+     * This does not create a new Organization() model for each organization.
+     *
+     * This returns a promise.
+     */
+    this.getAllSpecific = function (specific) {
+        var endpoint = angular.copy(this.mapping.all);
+
+        if (specific == 'tree') {
+            endpoint.method = 'all/tree';
+        } else if (specific == 'shallow') {
+            endpoint.method = 'all/shallow';
         }
-    });
+
+        return $q(function (resolve, reject) {
+            WsApi.fetch(endpoint).then(function (res) {
+                var apiRes = angular.fromJson(res.body);
+
+                if (apiRes.meta.status === 'SUCCESS') {
+                    var keys = Object.keys(apiRes.payload);
+
+                    if (specific == 'tree') {
+                        apiRes.payload[keys[0]].shallow = false;
+                        apiRes.payload[keys[0]].tree = true;
+                    } else if (specific == 'shallow') {
+                        apiRes.payload[keys[0]].shallow = true;
+                        apiRes.payload[keys[0]].tree = false;
+                    }
+
+                    if (keys.length) {
+                        resolve(apiRes.payload[keys[0]]);
+                    } else {
+                        reject(apiRes.meta);
+                    }
+                } else {
+                    reject(apiRes.meta);
+                }
+            });
+        }.bind(this));
+    };
 
     this.create = function (organization, parentOrganization) {
         organizationRepo.clearValidationResults();
@@ -47,31 +84,81 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
     };
 
     this.getSelectedOrganization = function () {
-        return organizationRepo.findById(selectedId);
+        var organization = organizationRepo.findById(selectedId);
+
+        if (!!organization) {
+            selectedOrganization = selectedOrganization;
+        }
+
+        return organization;
+    };
+
+    this.getSelectedOrganizationId = function () {
+        return selectedId;
+    };
+
+    /**
+     * Perform the actual request to the back-end to get the organization by the given ID.
+     *
+     * If specific is passed, then use the given specific variation when querying the back-end.
+     *
+     * This returns a promise.
+     */
+    this.getById = function (id, specific) {
+        var extra = '';
+        var endpoint = angular.copy(this.mapping.get);
+
+        if (specific === 'shallow') {
+            extra = '/shallow';
+        } else if (specific === 'tree') {
+            extra = '/tree';
+        }
+
+        endpoint.method = 'get/' + id + extra;
+
+        return $q(function (resolve, reject) {
+            WsApi.fetch(endpoint).then(function (res) {
+                var apiRes = angular.fromJson(res.body);
+
+                if (apiRes.meta.status === 'SUCCESS') {
+                    var keys = Object.keys(apiRes.payload);
+
+                    if (keys.length) {
+                        var organization = new Organization(apiRes.payload[keys[0]]);
+                        organization.shallow = false;
+                        organization.tree = false;
+
+                        if (specific === 'shallow') {
+                            organization.shallow = true;
+                        } else if (specific === 'tree') {
+                            organization.tree = true;
+                        }
+
+                        resolve(organization, specific);
+                    } else {
+                        reject(apiRes.meta);
+                    }
+                } else {
+                    reject(apiRes.meta);
+                }
+            });
+        }.bind(this));
     };
 
     this.setSelectedOrganization = function (organization) {
-        selectedId = organization.id;
-        organization = organizationRepo.getSelectedOrganization();
-        if(!organization.complete) {
-            organization.updateRequested = true;
-            angular.extend(this.mapping.get, {
-                'method': 'get/' + organization.id
-            });
-            WsApi.fetch(this.mapping.get).then(function (res) {
-                var apiRes = angular.fromJson(res.body);
-                if (apiRes.meta.status === "SUCCESS") {
-                    angular.extend(organization, apiRes.payload.Organization);
-                }
-            });
+        if (!!organization && !!organization.id) {
+            selectedOrganization = organization;
+            selectedId = organization.id;
+        } else {
+            selectedOrganization = undefined;
+            selectedId = undefined;
         }
-        return organization;
     };
 
     this.addWorkflowStep = function (workflowStep) {
         organizationRepo.clearValidationResults();
         angular.extend(this.mapping.addWorkflowStep, {
-            'method': this.getSelectedOrganization().id + '/create-workflow-step',
+            'method': selectedId + '/create-workflow-step',
             'data': workflowStep
         });
         var promise = WsApi.fetch(this.mapping.addWorkflowStep);
@@ -100,7 +187,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
     this.updateWorkflowStep = function (workflowStep) {
         organizationRepo.clearValidationResults();
         angular.extend(this.mapping.updateWorkflowStep, {
-            'method': this.getSelectedOrganization().id + '/update-workflow-step',
+            'method': selectedId + '/update-workflow-step',
             'data': workflowStep
         });
         var promise = RestApi.post(this.mapping.updateWorkflowStep);
@@ -115,7 +202,7 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
     this.deleteWorkflowStep = function (workflowStep) {
         organizationRepo.clearValidationResults();
         angular.extend(this.mapping.deleteWorkflowStep, {
-            'method': this.getSelectedOrganization().id + '/delete-workflow-step',
+            'method': selectedId + '/delete-workflow-step',
             'data': workflowStep
         });
         var promise = RestApi.post(this.mapping.deleteWorkflowStep);
@@ -127,10 +214,20 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         return promise;
     };
 
+    this.deleteById = function (organizationId) {
+        organizationRepo.clearValidationResults();
+
+        var endpoint = angular.copy(this.mapping.remove);
+        endpoint.method += '/' + organizationId;
+        endpoint.data = ''; // Provide empty data to force this to be a POST.
+
+        return WsApi.fetch(endpoint);
+    };
+
     this.reorderWorkflowSteps = function (upOrDown, workflowStepID) {
         organizationRepo.clearValidationResults();
         angular.extend(this.mapping.reorderWorkflowStep, {
-            'method': this.getSelectedOrganization().id + '/shift-workflow-step-' + upOrDown + '/' + workflowStepID
+            'method': selectedId + '/shift-workflow-step-' + upOrDown + '/' + workflowStepID
         });
         var promise = WsApi.fetch(this.mapping.reorderWorkflowStep);
         promise.then(function (res) {
@@ -157,6 +254,47 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
             });
         }.bind(this));
         return defer;
+    };
+
+    this.addEmailWorkflowRule = function (organization, templateId, recipient, submissionStatusId) {
+        angular.extend(apiMapping.Organization.addEmailWorkflowRule, {
+            'method': organization.id + "/add-email-workflow-rule",
+            'data': {
+                templateId: templateId,
+                recipient: recipient,
+                submissionStatusId: submissionStatusId
+            }
+        });
+
+        return WsApi.fetch(apiMapping.Organization.addEmailWorkflowRule);
+    };
+
+    this.removeEmailWorkflowRule = function (organization, rule) {
+        angular.extend(apiMapping.Organization.removeEmailWorkflowRule, {
+            'method': organization.id + "/remove-email-workflow-rule/" + rule.id,
+        });
+
+        return WsApi.fetch(apiMapping.Organization.removeEmailWorkflowRule);
+    };
+
+    this.editEmailWorkflowRule = function (organization, rule) {
+        angular.extend(apiMapping.Organization.editEmailWorkflowRule, {
+            'method': organization.id + "/edit-email-workflow-rule/" + rule.id,
+            'data': {
+                templateId: rule.emailTemplate.id,
+                recipient: rule.emailRecipient
+            }
+        });
+
+        return WsApi.fetch(apiMapping.Organization.editEmailWorkflowRule);
+    };
+
+    this.changeEmailWorkflowRuleActivation = function (organization, rule) {
+        angular.extend(apiMapping.Organization.changeEmailWorkflowRuleActivation, {
+            'method': organization.id + "/change-email-workflow-rule-activation/" + rule.id,
+        });
+
+        return WsApi.fetch(apiMapping.Organization.changeEmailWorkflowRuleActivation);
     };
 
     return this;

@@ -81,6 +81,10 @@ describe("service: controlledVocabularyRepo", function () {
             expect(repo.uploadCSV).toBeDefined();
             expect(typeof repo.uploadCSV).toEqual("function");
         });
+        it("typeAhead should be defined", function () {
+            expect(repo.typeAhead).toBeDefined();
+            expect(typeof repo.typeAhead).toEqual("function");
+        });
     });
 
     describe("Do the repo methods work as expected", function () {
@@ -155,6 +159,28 @@ describe("service: controlledVocabularyRepo", function () {
             scope.$digest();
 
             // TODO
+        });
+        it("typeAhead should return a Vocabulary Word list", function () {
+            var typeAheadData = {
+                search: "find",
+                loading: false,
+                list: []
+            };
+
+            var controlledVocabulary = new mockControlledVocabulary(q);
+            var vocabularyWord = new mockVocabularyWord(q);
+            var responseData = {
+                ArrayList: [ dataVocabularyWord1 ]
+            };
+
+            WsApi.mockFetchResponse({ type: "payload", payload: responseData });
+
+            repo.typeAhead(controlledVocabulary.id, typeAheadData).then(function(response) {
+                expect(response[0]).toEqual(dataVocabularyWord1);
+                expect(typeAheadData.list[0]).toEqual(dataVocabularyWord1);
+            });
+
+            scope.$digest();
         });
     });
 });

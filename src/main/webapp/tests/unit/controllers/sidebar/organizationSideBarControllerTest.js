@@ -3,21 +3,46 @@ describe("controller: OrganizationSideBarController", function () {
     var controller, q, scope, OrganizationRepo, WsApi;
 
     var initializeVariables = function(settings) {
-        inject(function ($q, _OrganizationRepo_, _WsApi_) {
+        inject(function ($q, _AccordionService_, _OrganizationRepo_, _WsApi_) {
             q = $q;
 
-            WsApi = _WsApi_;
             OrganizationRepo = _OrganizationRepo_;
+            WsApi = _WsApi_;
         });
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $q, $rootScope, _ModalService_, _OrganizationCategoryRepo_, _RestApi_, _StorageService_) {
+        inject(function ($controller, $injector, $q, $rootScope, $timeout, SubmissionStates, _AccordionService_, _ManagedConfigurationRepo_, _ModalService_, _OrganizationCategoryRepo_, _RestApi_, _SidebarService_, _StorageService_, _StudentSubmissionRepo_, _UserService_, _UserSettings_) {
             q = $q;
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
+
+            // The controller being tested is included inside of a OrganizationSettingsController scope.
+            // This results in having additional methods on the scope that the controller being tested requires.
+            $controller("AbstractController", {
+                $injector: $injector,
+                $scope: scope,
+                $timeout: $timeout,
+                UserService: _UserService_,
+                UserSettings: _UserSettings_,
+                ManagedConfigurationRepo: _ManagedConfigurationRepo_,
+                StudentSubmissionRepo: _StudentSubmissionRepo_,
+                SubmissionStates: SubmissionStates
+            });
+
+            $controller("OrganizationSettingsController", {
+                $scope: scope,
+                $window: mockWindow(),
+                AccordionService: _AccordionService_,
+                ModalService: _ModalService_,
+                OrganizationRepo: OrganizationRepo,
+                RestApi: _RestApi_,
+                SidebarService: _SidebarService_,
+                StorageService: _StorageService_,
+                WsApi: WsApi
+            });
 
             controller = $controller("OrganizationSideBarController", {
                 $q: q,
@@ -73,7 +98,7 @@ describe("controller: OrganizationSideBarController", function () {
     });
 
     describe("Do the scope methods work as expected", function () {
-        it("createNewOrganization should create a new custom action", function () {
+        it("createNewOrganization should create a new custom action when hierarchal", function () {
             scope.organizations = [ mockOrganization(q) ];
             scope.creatingNewOrganization = null;
 
@@ -86,14 +111,33 @@ describe("controller: OrganizationSideBarController", function () {
             expect(scope.reset).toHaveBeenCalled();
             expect(OrganizationRepo.create).toHaveBeenCalled();
             expect(scope.creatingNewOrganization).toBe(false);
+        });
+        it("createNewOrganization should create a new custom action when not hierarchal", function () {
+            var parentOrganization = mockOrganization(q);
+
+            OrganizationRepo.newOrganization = {
+                parent: parentOrganization,
+                category: ""
+            };
+
+            scope.organizations = [ parentOrganization ];
+            scope.creatingNewOrganization = null;
+
+            spyOn(scope, "reset");
+            spyOn(OrganizationRepo, "create").and.callThrough();
 
             scope.createNewOrganization("true");
             scope.$digest();
+
+            expect(scope.reset).toHaveBeenCalled();
+            expect(OrganizationRepo.create).toHaveBeenCalled();
+            expect(scope.creatingNewOrganization).toBe(false);
         });
         it("reset should reset the custom action", function () {
             var organization = new mockOrganization(q);
             scope.forms = [];
             scope.modalData = organization;
+            scope.organizations = [ organization ];
 
             spyOn(scope.organizationRepo, "clearValidationResults");
             spyOn(organization, "refresh");

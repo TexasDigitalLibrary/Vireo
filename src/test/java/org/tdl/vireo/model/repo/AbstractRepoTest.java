@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import edu.tamu.weaver.auth.model.Credentials;
 import java.util.Calendar;
@@ -10,48 +10,37 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.config.constant.ConfigurationName;
+import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.Address;
+import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.CustomActionValue;
+import org.tdl.vireo.model.DegreeLevel;
+import org.tdl.vireo.model.EmailRecipient;
+import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.Embargo;
+import org.tdl.vireo.model.EmbargoGuarantor;
+import org.tdl.vireo.model.FieldPredicate;
+import org.tdl.vireo.model.FieldProfile;
+import org.tdl.vireo.model.FieldValue;
+import org.tdl.vireo.model.InputType;
+import org.tdl.vireo.model.Language;
+import org.tdl.vireo.model.Organization;
+import org.tdl.vireo.model.OrganizationCategory;
+import org.tdl.vireo.model.Role;
+import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.SubmissionStatus;
+import org.tdl.vireo.model.SubmissionWorkflowStep;
+import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.VocabularyWord;
+import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.packager.Packager;
-import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
-import org.tdl.vireo.model.repo.AbstractPackagerRepo;
-import org.tdl.vireo.model.repo.ActionLogRepo;
-import org.tdl.vireo.model.repo.AddressRepo;
-import org.tdl.vireo.model.repo.ConfigurationRepo;
-import org.tdl.vireo.model.repo.ContactInfoRepo;
-import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
-import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
-import org.tdl.vireo.model.repo.CustomActionValueRepo;
-import org.tdl.vireo.model.repo.DegreeLevelRepo;
-import org.tdl.vireo.model.repo.DegreeRepo;
-import org.tdl.vireo.model.repo.DepositLocationRepo;
-import org.tdl.vireo.model.repo.DocumentTypeRepo;
-import org.tdl.vireo.model.repo.EmailTemplateRepo;
-import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
-import org.tdl.vireo.model.repo.EmbargoRepo;
-import org.tdl.vireo.model.repo.FieldPredicateRepo;
-import org.tdl.vireo.model.repo.FieldProfileRepo;
-import org.tdl.vireo.model.repo.FieldValueRepo;
-import org.tdl.vireo.model.repo.FilterCriterionRepo;
-import org.tdl.vireo.model.repo.GraduationMonthRepo;
-import org.tdl.vireo.model.repo.InputTypeRepo;
-import org.tdl.vireo.model.repo.LanguageRepo;
-import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
-import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
-import org.tdl.vireo.model.repo.NoteRepo;
-import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
-import org.tdl.vireo.model.repo.OrganizationRepo;
-import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
-import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
-import org.tdl.vireo.model.repo.SubmissionRepo;
-import org.tdl.vireo.model.repo.SubmissionStatusRepo;
-import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
-import org.tdl.vireo.model.repo.UserRepo;
-import org.tdl.vireo.model.repo.VocabularyWordRepo;
-import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = { Application.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public abstract class AbstractEntityTest {
+public abstract class AbstractRepoTest {
 
     protected static final boolean TEST_SUBMISSION_STATUS_ARCHIVED = true;
     protected static final boolean TEST_SUBMISSION_STATUS_PUBLISHABLE = true;

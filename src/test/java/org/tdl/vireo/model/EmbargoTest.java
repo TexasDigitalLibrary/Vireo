@@ -1,79 +1,115 @@
 package org.tdl.vireo.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.InjectMocks;
+import org.springframework.test.util.ReflectionTestUtils;
 
-public class EmbargoTest extends AbstractEntityTest {
+public class EmbargoTest extends AbstractModelCustomMethodTest<Embargo> {
 
-    @BeforeEach
-    public void setUp() {
-        assertEquals(0, embargoRepo.count(), "Embargo repo was not empty!");
+    @InjectMocks
+    private Embargo embargo;
+
+    @Test
+    public void testGetControlledName() {
+        String name = "name";
+
+        ReflectionTestUtils.setField(getInstance(), "name", name);
+
+        assertEquals(name, embargo.getControlledName(), "Controlled Name does not match.");
+    }
+
+    @Test
+    public void testGetControlledDefinition() {
+        String description = "description";
+
+        ReflectionTestUtils.setField(getInstance(), "description", description);
+
+        assertEquals(description, embargo.getControlledDefinition(), "Controlled Definition does not match.");
+    }
+
+    @Test
+    public void testGetControlledIdentifier() {
+        Long id = 1L;
+
+        ReflectionTestUtils.setField(getInstance(), "id", id);
+
+        assertEquals(String.valueOf(id), embargo.getControlledIdentifier(), "Controlled Identifier does not match.");
+    }
+
+    @Test
+    public void testGetControlledContacts() {
+        assertNotNull(embargo.getControlledContacts(), "Controlled Contacts is null.");
+    }
+
+    @Test
+    public void testInstanceDoesNotEqual() {
+        Embargo embargo1 = new Embargo();
+        embargo.setId(1L);
+
+        Embargo embargo2 = new Embargo();
+        embargo2.setId(2L);
+
+        assertFalse(embargo1.equals(embargo2), "Embargos must not match.");
+    }
+
+    @Test
+    public void testInstanceEquals() {
+        Embargo embargo1 = new Embargo();
+        embargo1.setId(1L);
+        embargo1.setName("name");
+        embargo1.setDescription("description");
+        embargo1.setGuarantor(EmbargoGuarantor.DEFAULT);
+        embargo1.setDuration(1);
+
+        assertTrue(embargo1.equals((Embargo) embargo1), "Embargos must match.");
     }
 
     @Override
-    @Test
-    public void testCreate() {
-        Embargo testEmbargo = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
-        assertEquals(1, embargoRepo.count(), "Embargo Repo did not save the embargo!");
-        assertEquals(TEST_EMBARGO_NAME, testEmbargo.getName(), "Embargo Repo did not save the correct embargo name!");
-        assertEquals(TEST_EMBARGO_DESCRIPTION, testEmbargo.getDescription(), "Embargo Repo did not save the correct embargo description!");
-        assertEquals(TEST_EMBARGO_DURATION, testEmbargo.getDuration(), "Embargo Repo did not save the correct embargo duration!");
+    protected Embargo getInstance() {
+        return embargo;
     }
 
-    @Test
-    public void testUpdate() {
-        Embargo testEmbargo = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
-        assertEquals(1, embargoRepo.count(), "Embargo Repo did not save the embargo!");
-
-        testEmbargo.setSystemRequired(!testEmbargo.getSystemRequired());
-        testEmbargo.setName("Updated Name");
-        testEmbargo.setDescription("Updated Description");
-        testEmbargo.setDuration(99);
-        testEmbargo.setGuarantor(TEST_EMBARGO_TYPE_GUARANTOR == EmbargoGuarantor.DEFAULT? EmbargoGuarantor.PROQUEST : EmbargoGuarantor.PROQUEST);
-        testEmbargo.setPosition(9000L);
-
-        Embargo updatedEmbargo = embargoRepo.update(testEmbargo);
-        assertEquals(testEmbargo.getSystemRequired(), updatedEmbargo.getSystemRequired(), "Embargo Repo did not update the embargo SystemRequired property!");
-        assertEquals(testEmbargo.getName(), updatedEmbargo.getName(), "Embargo Repo did not update the embargo Name property!");
-        assertEquals(testEmbargo.getDescription(), updatedEmbargo.getDescription(), "Embargo Repo did not update the embargo Description property!");
-        assertEquals(testEmbargo.getDuration(), updatedEmbargo.getDuration(), "Embargo Repo did not update the embargo Duration property!");
-        assertEquals(testEmbargo.getGuarantor(), updatedEmbargo.getGuarantor(), "Embargo Repo did not update the embargo Guarantor property!");
-        assertEquals(testEmbargo.getPosition(), updatedEmbargo.getPosition(), "Embargo Repo did not update the embargo Position property!");
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testDuplication() {
-        embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
-        assertEquals(1, embargoRepo.count(), "The repository didn't persist embargo!");
-        try {
-            embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */ }
-        assertEquals(1, embargoRepo.count(), "The repository didn't persist embargo!");
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testDelete() {
-        Embargo testEmbargo = embargoRepo.create(TEST_EMBARGO_NAME, TEST_EMBARGO_DESCRIPTION, TEST_EMBARGO_DURATION, TEST_EMBARGO_TYPE_GUARANTOR, TEST_EMBARGO_IS_ACTIVE);
-        embargoRepo.delete(testEmbargo);
-        assertEquals(0, embargoRepo.count(), "Embargo did not delete!");
+    protected static Stream<Arguments> provideGetterMethodParameters() {
+        return Stream.of(
+            Arguments.of("isActive", "isActive", true),
+            Arguments.of("isActive", "isActive", false),
+            Arguments.of("getSystemRequired", "systemRequired", true),
+            Arguments.of("getSystemRequired", "systemRequired", false)
+        );
     }
 
-    @Override
-    @Test
-    public void testCascade() {
-        // nothing to cascade
+    protected static Stream<Arguments> provideSetterMethodParameters() {
+        return Stream.of(
+            Arguments.of("isActive", "isActive", true),
+            Arguments.of("isActive", "isActive", false),
+            Arguments.of("setSystemRequired", "systemRequired", true),
+            Arguments.of("setSystemRequired", "systemRequired", false)
+        );
     }
 
-    @AfterEach
-    public void cleanUp() {
-        embargoRepo.deleteAll();
+    private static Stream<Arguments> getParameterStream() {
+        return Stream.of(
+            Arguments.of("name", "value"),
+            Arguments.of("description", "value"),
+            Arguments.of("duration", 123),
+            Arguments.of("guarantor", EmbargoGuarantor.DEFAULT),
+            Arguments.of("guarantor", EmbargoGuarantor.PROQUEST)
+        );
     }
 
 }

@@ -2,8 +2,8 @@ package org.tdl.vireo.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -16,10 +16,8 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
@@ -27,7 +25,6 @@ import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.service.ProquestCodesService;
 
 @ActiveProfiles("test")
-@ExtendWith(MockitoExtension.class)
 public class DegreeControllerTest extends AbstractControllerTest {
 
     @Mock
@@ -39,74 +36,85 @@ public class DegreeControllerTest extends AbstractControllerTest {
     @InjectMocks
     private DegreeController degreeController;
 
-    private Degree mockDegree1;
-    private Degree mockDegree2;
+    private Degree degree1;
+    private Degree degree2;
 
-    private DegreeLevel mockDegreeLevel1;
-    private DegreeLevel mockDegreeLevel2;
+    private DegreeLevel degreeLevel1;
+    private DegreeLevel degreeLevel2;
 
-    private static List<Degree> mockDegrees;
+    private static List<Degree> degrees;
 
     @BeforeEach
     public void setup() {
-        mockDegreeLevel1 = new DegreeLevel("1");
-        mockDegreeLevel1.setId(1L);
+        degreeLevel1 = new DegreeLevel("1");
+        degreeLevel2 = new DegreeLevel("2");
+        degree1 = new Degree("Degree 1", degreeLevel1, "Proquest 1");
+        degree2 = new Degree("Degree 2", degreeLevel2, "Proquest 2");
 
-        mockDegreeLevel2 = new DegreeLevel("2");
-        mockDegreeLevel2.setId(2L);
+        degreeLevel1.setId(1L);
+        degreeLevel2.setId(2L);
+        degree1.setId(1L);
+        degree2.setId(2L);
 
-        mockDegree1 = new Degree("Degree 1", mockDegreeLevel1, "Proquest 1");
-        mockDegree1.setId(1L);
-        mockDegree1.setPosition(1L);
+        degree1.setPosition(1L);
+        degree2.setPosition(2L);
 
-        mockDegree2 = new Degree("Degree 2", mockDegreeLevel2, "Proquest 2");
-        mockDegree2.setId(2L);
-        mockDegree2.setPosition(2L);
-
-        mockDegrees = new ArrayList<Degree>(Arrays.asList(new Degree[] { mockDegree1 }));
+        degrees = new ArrayList<Degree>(Arrays.asList(new Degree[] { degree1 }));
     }
 
     @Test
     public void testAllDegrees() {
-        when(degreeRepo.findAllByOrderByPositionAsc()).thenReturn(mockDegrees);
+        when(degreeRepo.findAllByOrderByPositionAsc()).thenReturn(degrees);
 
         ApiResponse response = degreeController.allDegrees();
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         List<?> list = (ArrayList<?>) response.getPayload().get("ArrayList<Degree>");
-        assertEquals(mockDegrees.size(), list.size());
+        assertEquals(degrees.size(), list.size());
     }
 
     @Test
     public void testCreateDegree() {
-        when(degreeRepo.create(any(String.class), any(DegreeLevel.class))).thenReturn(mockDegree2);
+        when(degreeRepo.create(any(String.class), any(DegreeLevel.class))).thenReturn(degree2);
 
-        ApiResponse response = degreeController.createDegree(mockDegree1);
+        ApiResponse response = degreeController.createDegree(degree1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         Degree degree = (Degree) response.getPayload().get("Degree");
-        assertEquals(mockDegree2.getId(), degree.getId());
+        assertEquals(degree2.getId(), degree.getId());
     }
 
     @Test
     public void testUpdateDegree() {
-        when(degreeRepo.update(any(Degree.class))).thenReturn(mockDegree2);
+        when(degreeRepo.update(any(Degree.class))).thenReturn(degree2);
 
-        ApiResponse response = degreeController.updateDegree(mockDegree1);
+        ApiResponse response = degreeController.updateDegree(degree1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         Degree degree = (Degree) response.getPayload().get("Degree");
-        assertEquals(mockDegree2.getId(), degree.getId());
+        assertEquals(degree2.getId(), degree.getId());
     }
 
     @Test
     public void testRemoveDegree() {
         doNothing().when(degreeRepo).remove(any(Degree.class));
 
-        ApiResponse response = degreeController.removeDegree(mockDegree1);
+        ApiResponse response = degreeController.removeDegree(degree1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        verify(degreeRepo, times(1)).remove(any(Degree.class));
+        verify(degreeRepo).remove(any(Degree.class));
+    }
+
+    @Test
+    public void testRemoveAllDegrees() {
+        doNothing().when(degreeRepo).deleteAll();
+        doNothing().when(degreeRepo).broadcast(anyList());
+
+        ApiResponse response = degreeController.removeAllDegrees();
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        verify(degreeRepo).deleteAll();
+        verify(degreeRepo).broadcast(anyList());
     }
 
     @Test
@@ -116,7 +124,7 @@ public class DegreeControllerTest extends AbstractControllerTest {
         ApiResponse response = degreeController.reorderDegrees(1L, 2L);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        verify(degreeRepo, times(1)).reorder(any(Long.class), any(Long.class));
+        verify(degreeRepo).reorder(any(Long.class), any(Long.class));
     }
 
     @Test
@@ -126,7 +134,7 @@ public class DegreeControllerTest extends AbstractControllerTest {
         ApiResponse response = degreeController.sortDegrees("column");
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        verify(degreeRepo, times(1)).sort(any(String.class));
+        verify(degreeRepo).sort(any(String.class));
     }
 
     @Test

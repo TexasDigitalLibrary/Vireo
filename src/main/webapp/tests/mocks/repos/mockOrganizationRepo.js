@@ -23,7 +23,17 @@ angular.module("mock.organizationRepo", []).service("OrganizationRepo", function
     repo.selectedId = null;
     repo.submissionsCount = {};
 
+    repo.addEmailWorkflowRule = function (organization, template, recipient, submissionStatus) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
     repo.addWorkflowStep = function (workflowStep) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
+    repo.changeEmailWorkflowRuleActivation = function (organization, emailWorkflowRule) {
         var payload = {};
         return payloadPromise($q.defer(), payload);
     };
@@ -48,6 +58,12 @@ angular.module("mock.organizationRepo", []).service("OrganizationRepo", function
         return payloadPromise($q.defer(), model);
     };
 
+    repo.deleteById = function (orgId) {
+        var payload = {};
+
+        return payloadPromise($q.defer(), payload);
+    };
+
     repo.deleteWorkflowStep = function (workflowStep) {
         var payload = {};
         repo.clearValidationResults();
@@ -64,6 +80,21 @@ angular.module("mock.organizationRepo", []).service("OrganizationRepo", function
         return valuePromise($q.defer(), response);
     };
 
+    repo.editEmailWorkflowRule = function (organization, emailWorkflowRule) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
+    repo.getAllSpecific = function (specific) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
+    repo.getById = function (id, specific) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
     repo.getNewOrganization = function () {
         return repo.newOrganization;
     };
@@ -76,6 +107,15 @@ angular.module("mock.organizationRepo", []).service("OrganizationRepo", function
             }
         }
         return found;
+    };
+
+    repo.getSelectedOrganizationId = function () {
+        return repo.selectedId;
+    };
+
+    repo.removeEmailWorkflowRule = function (organization, emailWorkflowRule) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
     };
 
     repo.reorderWorkflowSteps = function (upOrDown, workflowStepID) {

@@ -1,13 +1,19 @@
 package org.tdl.vireo.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.auth.service.CryptoService;
+import edu.tamu.weaver.email.service.MockEmailService;
+import edu.tamu.weaver.token.service.TokenService;
+import edu.tamu.weaver.utility.HttpUtility;
 import java.security.Key;
-
 import javax.crypto.spec.SecretKeySpec;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,15 +22,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.tdl.vireo.mock.MockData;
 import org.tdl.vireo.utility.TemplateUtility;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import edu.tamu.weaver.auth.model.Credentials;
-import edu.tamu.weaver.auth.service.CryptoService;
-import edu.tamu.weaver.email.service.MockEmailService;
-import edu.tamu.weaver.token.service.TokenService;
-import edu.tamu.weaver.utility.HttpUtility;
-
 @ActiveProfiles("test")
+@ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
 public abstract class AbstractControllerTest extends MockData {
 
@@ -60,11 +59,12 @@ public abstract class AbstractControllerTest extends MockData {
     @Spy
     protected BCryptPasswordEncoder passwordEncoder;
 
-    @Mock
-    private SimpMessagingTemplate simpMessagingTemplate;
+    // Must use MockBean rather than Mock here because LookAndFeelController.executeLogoReset() calls simpMessagingTemplate.
+    @MockBean
+    protected SimpMessagingTemplate simpMessagingTemplate;
 
     @Mock
-    private Environment env;
+    protected Environment env;
 
     @Mock
     protected TokenService tokenService;
@@ -72,16 +72,13 @@ public abstract class AbstractControllerTest extends MockData {
     @Mock
     protected MockEmailService mockEmailService;
 
-    @Spy
     @InjectMocks
     protected HttpUtility httpUtility;
 
-    @Spy
-    @InjectMocks
+    @Mock
     protected CryptoService cryptoService;
 
-    @Spy
-    @InjectMocks
+    @Mock
     protected TemplateUtility templateUtility;
 
     protected Credentials TEST_CREDENTIALS = new Credentials();

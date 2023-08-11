@@ -1,58 +1,42 @@
 package org.tdl.vireo.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.InjectMocks;
+import org.tdl.vireo.model.packager.DSpaceMetsPackager;
+import org.tdl.vireo.model.packager.DSpaceSimplePackager;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
+public class DepositLocationTest extends AbstractModelTest<DepositLocation> {
 
-public class DepositLocationTest extends AbstractEntityTest {
-
-    @BeforeEach
-    public void setup() {
-        packager = abstractPackagerRepo.createDSpaceMetsPackager("DSpaceMETS", new DSpaceMetsFormatter());
-    }
+    @InjectMocks
+    private DepositLocation depositLocation;
 
     @Override
-    @Test
-    public void testCreate() {
-        DepositLocation depositLocation = depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, packager, TEST_DEPOSIT_DEPOSITOR, DepositLocation.DEFAULT_TIMEOUT);
-        assertEquals(depositLocation.getName(), TEST_DEPOSIT_LOCATION_NAME, "The deposit location name was wrong!");
-        assertEquals(depositLocation.getTimeout(), DepositLocation.DEFAULT_TIMEOUT, "The default deposit location timeout was wrong!");
-        assertEquals(1, depositLocationRepo.count(), "The desposit location was not saved!");
+    protected DepositLocation getInstance() {
+        return depositLocation;
     }
 
-    @Override
-    @Test
-    public void testDuplication() {
-        depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, packager, TEST_DEPOSIT_DEPOSITOR, DepositLocation.DEFAULT_TIMEOUT);
-        try {
-            depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, packager, TEST_DEPOSIT_DEPOSITOR, DepositLocation.DEFAULT_TIMEOUT);
-        } catch (DataIntegrityViolationException e) {
-        }
-        assertEquals(1, depositLocationRepo.count(), "The desposit location was duplicated!");
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testDelete() {
-        DepositLocation depositLocation = depositLocationRepo.create(TEST_DEPOSIT_LOCATION_NAME, TEST_DEPOSIT_REPOSITORY, TEST_DEPOSIT_COLLECTION, TEST_DEPOSIT_USERNAME, TEST_DEPOSIT_PASSWORD, TEST_DEPOSIT_ONBEHALFOF, packager, TEST_DEPOSIT_DEPOSITOR, DepositLocation.DEFAULT_TIMEOUT);
-        depositLocationRepo.delete(depositLocation);
-        assertEquals(0, depositLocationRepo.count(), "The desposit location was not deleted!");
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testCascade() {
-
-    }
-
-    @AfterEach
-    public void cleanUp() {
-        depositLocationRepo.deleteAll();
-        abstractPackagerRepo.deleteAll();
+    private static Stream<Arguments> getParameterStream() {
+        return Stream.of(
+            Arguments.of("name", "value"),
+            Arguments.of("repository", "value"),
+            Arguments.of("collection", "value"),
+            Arguments.of("username", "value"),
+            Arguments.of("password", "value"),
+            Arguments.of("onBehalfOf", "value"),
+            Arguments.of("packager", new DSpaceMetsPackager()),
+            Arguments.of("packager", new DSpaceSimplePackager()),
+            Arguments.of("depositorName", "value"),
+            Arguments.of("timeout", 123)
+        );
     }
 
 }

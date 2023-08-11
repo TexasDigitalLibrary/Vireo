@@ -2,59 +2,96 @@ package org.tdl.vireo.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.InjectMocks;
+import org.mockito.Mockito;
+import org.springframework.test.util.ReflectionTestUtils;
 
-@Transactional(propagation = Propagation.REQUIRES_NEW)
-public class VocabularyWordTest extends AbstractEntityTest {
+public class VocabularyWordTest extends AbstractModelTest<VocabularyWord> {
 
-    @BeforeEach
-    public void setup() {
-        controlledVocabulary = controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME);
+    @InjectMocks
+    private VocabularyWord vocabularyWord;
+
+    @Test
+    public void testVocabularyWordInstantiation1() {
+        List<String> contacts = new ArrayList<>();
+        contacts.add("contact");
+
+        vocabularyWord.setName("name");
+        vocabularyWord.setDefinition("definition");
+        vocabularyWord.setIdentifier("identifier");
+        vocabularyWord.setContacts(contacts);
+
+        VocabularyWord newVocabularyWord = new VocabularyWord(vocabularyWord.getName(), vocabularyWord.getDefinition(), vocabularyWord.getIdentifier(), vocabularyWord.getContacts());
+
+        assertEquals(newVocabularyWord.getName(), vocabularyWord.getName(), "Name does not match.");
+        assertEquals(newVocabularyWord.getDefinition(), vocabularyWord.getDefinition(), "Definition does not match.");
+        assertEquals(newVocabularyWord.getIdentifier(), vocabularyWord.getIdentifier(), "Identifier does not match.");
+        assertEquals(newVocabularyWord.getContacts(), vocabularyWord.getContacts(), "Contacts does not match.");
+    }
+
+    @Test
+    public void testVocabularyWordInstantiation2() {
+        ControlledVocabulary controlledVocabulary = new ControlledVocabulary();
+        List<String> contacts = new ArrayList<>();
+
+        controlledVocabulary.setId(1L);
+        contacts.add("contact");
+
+        vocabularyWord.setControlledVocabulary(controlledVocabulary);
+        vocabularyWord.setName("name");
+        vocabularyWord.setDefinition("definition");
+        vocabularyWord.setIdentifier("identifier");
+        vocabularyWord.setContacts(contacts);
+
+        VocabularyWord newVocabularyWord = new VocabularyWord(controlledVocabulary, vocabularyWord.getName(), vocabularyWord.getDefinition(), vocabularyWord.getIdentifier(), vocabularyWord.getContacts());
+
+        assertEquals(newVocabularyWord.getControlledVocabulary(), vocabularyWord.getControlledVocabulary(), "Controlled Vocabulary does not match.");
+        assertEquals(newVocabularyWord.getName(), vocabularyWord.getName(), "Name does not match.");
+        assertEquals(newVocabularyWord.getDefinition(), vocabularyWord.getDefinition(), "Definition does not match.");
+        assertEquals(newVocabularyWord.getIdentifier(), vocabularyWord.getIdentifier(), "Identifier does not match.");
+        assertEquals(newVocabularyWord.getContacts(), vocabularyWord.getContacts(), "Contacts does not match.");
+    }
+
+    @Test
+    public void testSetContactsPassingNull() {
+        List<String> contacts = Mockito.spy(new ArrayList<>());
+
+        ReflectionTestUtils.setField(vocabularyWord, "contacts", contacts);
+
+        vocabularyWord.setContacts(null);
+
+        Mockito.verifyNoInteractions(contacts);
     }
 
     @Override
-    @Test
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void testCreate() {
-        vocabularyWord = vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
-        assertEquals(1, vocabularyWordRepo.count(), "VocabularyWord Repo did not save the vocab word!");
-        assertEquals(TEST_CONTROLLED_VOCABULARY_WORD, vocabularyWord.getName(), "VocabularyWord Repo did not save the correct vocab word!");
-        assertEquals(TEST_CONTROLLED_VOCABULARY_DEFINITION, vocabularyWord.getDefinition(), "VocabularyWord Repo did not save the correct vocab definition!");
-        assertEquals(TEST_CONTROLLED_VOCABULARY_IDENTIFIER, vocabularyWord.getIdentifier(), "VocabularyWord Repo did not save the correct vocab identifier!");
+    protected VocabularyWord getInstance() {
+        return vocabularyWord;
     }
 
-    @Override
-    @Test
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void testDuplication() {
-        vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
-        Assertions.assertThrows(DataIntegrityViolationException.class, () -> {
-            vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
-        });
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void testDelete() {
-        vocabularyWord = vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
-        vocabularyWordRepo.delete(vocabularyWord);
-        assertEquals(0, vocabularyWordRepo.count(), "Vocabulary word did not delete!");
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    @Transactional(propagation = Propagation.REQUIRED)
-    public void testCascade() {
-        vocabularyWord = vocabularyWordRepo.create(controlledVocabulary, TEST_CONTROLLED_VOCABULARY_WORD, TEST_CONTROLLED_VOCABULARY_DEFINITION, TEST_CONTROLLED_VOCABULARY_IDENTIFIER);
-        vocabularyWordRepo.delete(vocabularyWord);
-        assertEquals(0, vocabularyWordRepo.count(), "Vocabulary word did not delete!");
-        assertEquals(1, controlledVocabularyRepo.count(), "The controlled vocabulary was deleted!");
+    private static Stream<Arguments> getParameterStream() {
+        List<String> contacts = new ArrayList<>();
+        contacts.add("contact");
+
+        return Stream.of(
+            Arguments.of("name", "value"),
+            Arguments.of("definition", "value"),
+            Arguments.of("identifier", "value"),
+            Arguments.of("contacts", contacts),
+            Arguments.of("controlledVocabulary", new ControlledVocabulary())
+        );
     }
 
 }

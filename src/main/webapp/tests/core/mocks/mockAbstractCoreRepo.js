@@ -246,9 +246,6 @@ var mockRepo = function (repoName, $q, mockModelCtor, mockDataArray) {
     repo.setToDelete = function (id) {
     };
 
-    repo.setToUpdate = function (id) {
-    };
-
     repo.sort = function (guarantor, facet) {
         var payload = {};
         return payloadPromise($q.defer(), payload);

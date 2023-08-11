@@ -46,7 +46,7 @@
                 <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0" class="text-danger">No Emails added. Click the Add Email button to add an email recipient.</span>
                 <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.recipientEmails)" ng-repeat="email in addFileData.recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
                 <div class="input-group">
-                  <input id="primaryDocumentRecipientEmail" class="form-control" type="email" ng-model="addFileData.recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" ng-blur="validateEmailAddressee(addFileDataForm.recipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+                  <input id="primaryDocumentRecipientEmail" class="form-control" type="email" ng-model="addFileData.recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" typeahead-wait-ms="400" ng-blur="validateEmailAddressee(addFileDataForm.recipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
                   <span title="Add Email" ng-class="{disabled: !addFileData.recipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addFileData.recipientEmails, addFileDataForm.recipientEmail)"></span>
                 </div>
                 <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0">Enter a valid email address or an email recipient type (e.g. Submitter).</span>
@@ -60,7 +60,7 @@
                 <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0" class="text-danger">No Emails added. Click the Add Email button to add an email recipient.</span>
                 <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.ccRecipientEmails)" ng-repeat="email in addFileData.ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
                 <div class="input-group">
-                  <input id="primaryDocumentCcRecipientEmail" class="form-control" type="email" ng-model="addFileData.ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" ng-blur="validateEmailAddressee(addFileDataForm.ccRecipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+                  <input id="primaryDocumentCcRecipientEmail" class="form-control" type="email" ng-model="addFileData.ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" typeahead-wait-ms="400" ng-blur="validateEmailAddressee(addFileDataForm.ccRecipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
                   <span title="Add Email" ng-class="{disabled: !addFileData.ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addFileData.ccRecipientEmails, addFileDataForm.ccRecipientEmail)"></span>
                 </div>
                 <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0">Enter a valid email address or an email recipient type (e.g. Submitter).</span>
@@ -132,7 +132,7 @@
             <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0" class="text-danger">No Emails added.</span>
             <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.recipientEmails)" ng-repeat="email in addFileData.recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
             <div class="input-group">
-              <input id="additionalDocumentRecipientEmail" class="form-control" type="email" ng-model="addFileData.recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" ng-blur="validateEmailAddressee(addFileDataForm.recipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+              <input id="additionalDocumentRecipientEmail" class="form-control" type="email" ng-model="addFileData.recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" typeahead-wait-ms="400" ng-blur="validateEmailAddressee(addFileDataForm.recipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
               <span title="Add Email" ng-class="{disabled: !addFileData.recipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addFileData.recipientEmails, addFileDataForm.recipientEmail)"></span>
             </div>
             <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0">An Email is not added until you click the Add Email button.</span>
@@ -146,7 +146,7 @@
             <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0" class="text-danger">No Emails added.</span>
             <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addFileData.ccRecipientEmails)" ng-repeat="email in addFileData.ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
             <div class="input-group">
-              <input id="additionalDocumentCcRecipientEmail" class="form-control" type="email" ng-model="addFileData.ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" ng-blur="validateEmailAddressee(addFileDataForm.ccRecipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+              <input id="additionalDocumentCcRecipientEmail" class="form-control" type="email" ng-model="addFileData.ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" typeahead-wait-ms="400" ng-blur="validateEmailAddressee(addFileDataForm.ccRecipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
               <span title="Add Email" ng-class="{disabled: !addFileData.ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addFileData.ccRecipientEmails, addFileDataForm.ccRecipientEmail)"></span>
             </div>
             <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0">An Email is not added until you click the Add Email button.</span>

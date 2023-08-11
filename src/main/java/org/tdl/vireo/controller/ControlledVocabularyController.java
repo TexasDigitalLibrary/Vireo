@@ -8,6 +8,9 @@ import static edu.tamu.weaver.validation.model.MethodValidationType.REORDER;
 import static edu.tamu.weaver.validation.model.MethodValidationType.SORT;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -16,7 +19,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
@@ -24,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,10 +40,7 @@ import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.service.ControlledVocabularyCachingService;
-
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
-import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
+import org.tdl.vireo.view.ContactsVocabularyWordView;
 
 /**
  * Controller in which to manage controlled vocabulary.
@@ -331,6 +331,25 @@ public class ControlledVocabularyController {
         vw = vocabularyWordRepo.update(vw);
         controlledVocabularyRepo.broadcast(cv.getId());
         return new ApiResponse(SUCCESS, vw);
+    }
+
+    /**
+     * Search the given Controlled Vocabulary for a dictionary name (vocabulary word name).
+     *
+     * This is intended to be used for type aheads.
+     *
+     * @param cvId The path parameter representing the ControlledVocabulary ID.
+     * @param search The search string to use in the type ahead.
+     *
+     * @return ApiReponse
+     *   SUCCESS is always returned.
+     *   An array of Vocabulary Words representing the matches is returned.
+     *   If the ControlledVocabulary is not found, then an empty array is returned.
+     */
+    @PreAuthorize("hasRole('STUDENT')")
+    @PostMapping(value = "/typeahead-vocabulary-word/{cvId}")
+    public ApiResponse typeaheadVocabularyWord(@PathVariable Long cvId, @RequestBody String search) {
+        return new ApiResponse(SUCCESS, vocabularyWordRepo.findAllByNameContainsIgnoreCaseAndControlledVocabularyIdOrderByName(search, cvId, ContactsVocabularyWordView.class));
     }
 
     private Map<String, Object> cacheImport(ControlledVocabulary controlledVocabulary, MultipartFile file) throws IOException {

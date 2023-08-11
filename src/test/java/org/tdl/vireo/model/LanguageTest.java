@@ -1,55 +1,60 @@
 package org.tdl.vireo.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import org.junit.jupiter.api.AfterEach;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.tdl.vireo.model.repo.LanguageRepo;
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.InjectMocks;
+import org.springframework.test.util.ReflectionTestUtils;
 
-public class LanguageTest extends AbstractEntityTest {
+public class LanguageTest extends AbstractModelTest<Language> {
 
-    @Autowired
-    private LanguageRepo languageRepo;
+    @InjectMocks
+    private Language language;
 
-    @Override
     @Test
-    public void testCreate() {
-        Language language = languageRepo.create(TEST_LANGUAGE_NAME);
-        assertEquals(1, languageRepo.count(), "The entity was not created!");
-        assertEquals(TEST_LANGUAGE_NAME, language.getName(), "The entity did not have the correct name!");
+    public void testGetControlledName() {
+        String name = "name";
+
+        ReflectionTestUtils.setField(getInstance(), "name", name);
+
+        assertEquals(name, language.getControlledName(), "Controlled Name does not match.");
+    }
+
+    @Test
+    public void testGetControlledDefinition() {
+        assertEquals("", language.getControlledDefinition(), "Controlled Definition does not match.");
+    }
+
+    @Test
+    public void testGetControlledIdentifier() {
+        assertEquals("", language.getControlledIdentifier(), "Controlled Identifier does not match.");
+    }
+
+    @Test
+    public void testGetControlledContacts() {
+        assertNotNull(language.getControlledContacts(), "Controlled Contacts is null.");
     }
 
     @Override
-    @Test
-    public void testDuplication() {
-        languageRepo.create(TEST_LANGUAGE_NAME);
-        try {
-            languageRepo.create(TEST_LANGUAGE_NAME);
-        } catch (DataIntegrityViolationException e) {
-            /* SUCCESS */
-        }
-        assertEquals(1, languageRepo.count(), "The repository duplicated entity!");
+    protected Language getInstance() {
+        return language;
     }
 
-    @Override
-    @Test
-    public void testDelete() {
-        Language language = languageRepo.create(TEST_LANGUAGE_NAME);
-        languageRepo.delete(language);
-        assertEquals(0, languageRepo.count(), "The entity was not deleted!");
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testCascade() {
-
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @AfterEach
-    public void cleanUp() {
-        languageRepo.deleteAll();
+    private static Stream<Arguments> getParameterStream() {
+        return Stream.of(
+            Arguments.of("name", "value")
+        );
     }
 
 }

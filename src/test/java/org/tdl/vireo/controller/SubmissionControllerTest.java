@@ -13,16 +13,13 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.SubmissionState;
@@ -31,9 +28,7 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 
 @ActiveProfiles("test")
-@ExtendWith(SpringExtension.class)
-@ExtendWith(MockitoExtension.class)
-public class SubmissionControllerTest {
+public class SubmissionControllerTest extends AbstractControllerTest {
 
     private static final String TEST_USER_1_EMAIL = "User 1 email";
     private static final String TEST_USER_1_FIRST_NAME = "User 1 first name";

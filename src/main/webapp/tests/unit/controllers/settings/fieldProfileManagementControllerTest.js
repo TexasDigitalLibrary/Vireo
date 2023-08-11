@@ -1,29 +1,53 @@
 describe("controller: FieldProfileManagementController", function () {
 
-    var controller, q, scope, FieldPredicateRepo, FieldProfileRepo, WorkflowStepRepo, WsApi;
+    var controller, q, scope, selectedOrg, selectedOrgId, FieldPredicateRepo, FieldProfileRepo, OrganizationRepo, WorkflowStepRepo, WsApi;
 
     var initializeVariables = function(settings) {
-        inject(function ($q, _FieldPredicateRepo_, _FieldProfileRepo_, _WorkflowStepRepo_, _WsApi_) {
+        inject(function ($q, _FieldPredicateRepo_, _FieldProfileRepo_, _OrganizationRepo_, _WorkflowStepRepo_, _WsApi_) {
             q = $q;
 
             FieldPredicateRepo = _FieldPredicateRepo_;
             FieldProfileRepo = _FieldProfileRepo_;
+            OrganizationRepo = _OrganizationRepo_;
             WorkflowStepRepo = _WorkflowStepRepo_;
             WsApi = _WsApi_;
         });
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $filter, $rootScope, _ControlledVocabularyRepo_, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _InputTypeRepo_, _ManagedConfigurationRepo_, _ModalService_, _OrganizationRepo_, _RestApi_, _StorageService_) {
+        inject(function ($controller, $filter, $injector, $rootScope, $timeout, SubmissionStates, _AccordionService_, _ControlledVocabularyRepo_, _DocumentTypeRepo_, _DragAndDropListenerFactory_, _InputTypeRepo_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _StudentSubmissionRepo_, _UserService_, _UserSettings_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
 
-            // ensure scope.step is defined.
-            if (!scope.step) {
-                scope.step = {aggregateFieldProfiles: {}};
-            }
+            // The scope.step must be assigned based on the current fieldProfileManagementController design.
+            scope.step = mockWorkflowStep(q);
+
+            // The controller being tested is included inside of a OrganizationSettingsController scope.
+            // This results in having additional methods on the scope that the controller being tested requires.
+            $controller("AbstractController", {
+                $injector: $injector,
+                $scope: scope,
+                $timeout: $timeout,
+                UserService: _UserService_,
+                UserSettings: _UserSettings_,
+                ManagedConfigurationRepo: _ManagedConfigurationRepo_,
+                StudentSubmissionRepo: _StudentSubmissionRepo_,
+                SubmissionStates: SubmissionStates
+            });
+
+            $controller("OrganizationSettingsController", {
+                $scope: scope,
+                $window: mockWindow(),
+                AccordionService: _AccordionService_,
+                ModalService: _ModalService_,
+                OrganizationRepo: OrganizationRepo,
+                RestApi: _RestApi_,
+                SidebarService: _SidebarService_,
+                StorageService: _StorageService_,
+                WsApi: WsApi
+            });
 
             controller = $controller("FieldProfileManagementController", {
                 $filter: $filter,
@@ -38,7 +62,7 @@ describe("controller: FieldProfileManagementController", function () {
                 InputTypeRepo: _InputTypeRepo_,
                 ManagedConfigurationRepo: _ManagedConfigurationRepo_,
                 ModalService: _ModalService_,
-                OrganizationRepo: _OrganizationRepo_,
+                OrganizationRepo: OrganizationRepo,
                 RestApi: _RestApi_,
                 StorageService: _StorageService_,
                 WorkflowStepRepo: WorkflowStepRepo,
@@ -290,6 +314,8 @@ describe("controller: FieldProfileManagementController", function () {
             var fieldProfile = new mockFieldProfile(q);
             fieldProfile.overrideable = true;
 
+            scope.selectedOrganization = mockOrganization(q);
+
             response = scope.isEditable(fieldProfile);
             expect(response).toBe(true);
 
@@ -302,11 +328,7 @@ describe("controller: FieldProfileManagementController", function () {
             response = scope.isEditable(fieldProfile);
             expect(response).toBe(false);
 
-            fieldProfile.originatingWorkflowStep = 0;
-            spyOn(scope.organizationRepo, "getSelectedOrganization").and.returnValue({
-                originalWorkflowSteps: [0]
-            });
-
+            scope.selectedOrganization.originalWorkflowSteps = [ scope.step.id ];
             fieldProfile.originatingWorkflowStep = scope.step.id;
 
             response = scope.isEditable(fieldProfile);

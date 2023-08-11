@@ -1,4 +1,4 @@
-vireo.directive("submissionInfo", function () {
+vireo.directive("submissionInfo", function (ControlledVocabularyRepo) {
     return {
         templateUrl: 'views/directives/submissionInfo.html',
         restrict: 'E',
@@ -19,6 +19,12 @@ vireo.directive("submissionInfo", function () {
             }
         },
         controller: function ($scope, $element, $timeout) {
+
+            $scope.typeAhead = {
+                search: null,
+                loading: false,
+                list: []
+            };
 
             $scope.refreshFieldValue = function (fieldValue) {
                 fieldValue.refresh();
@@ -218,6 +224,19 @@ vireo.directive("submissionInfo", function () {
                 }
 
                 return true;
+            };
+
+            $scope.controlledVocabularyTypeAhead = function (search) {
+                if (!$scope.fieldProfile.controlledVocabulary.id) {
+                    return [];
+                }
+
+                if (!$scope.typeAhead.loading) {
+                    $scope.typeAhead.loading = true;
+                    $scope.typeAhead.search = search;
+                }
+
+                return ControlledVocabularyRepo.typeAhead($scope.fieldProfile.controlledVocabulary.id, $scope.typeAhead);
             };
         }
     };

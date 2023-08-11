@@ -1,5 +1,10 @@
 <div class="input-group">
-  <input class="form-control" type="text" uib-typeahead="word.name as word.name for word in fieldProfile.controlledVocabulary.dictionary | filter: { name: $viewValue } | orderBy:'name'" ng-model="field.value" typeahead-on-select="saveWithCV(field, $item)">
+  <input class="form-control" type="text"
+    uib-typeahead="word.name as word.name for word in fieldProfile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
+    typeahead-wait-ms="400"
+    typeahead-on-select="saveWithCV(field, $item)"
+    ng-model="field.value"
+  />
   <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="save(field)"></span>
   <span class="input-group-addon glyphicon glyphicon-remove clickable" ng-click="cancel(field)"></span>
 </div>

@@ -1,4 +1,4 @@
-vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestApi, WsApi) {
+vireo.repo("WorkflowStepRepo", function WorkflowStepRepo(OrganizationRepo, RestApi, WsApi) {
 
     var workflowStepRepo = this;
 
@@ -6,10 +6,10 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
 
     this.addFieldProfile = function (workflowStep, fieldProfile) {
         workflowStepRepo.clearValidationResults();
-        OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
+
         fieldProfile.originatingWorkflowStep = workflowStep.id;
         angular.extend(this.mapping.addFieldProfile, {
-            'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/add-field-profile',
+            'method': OrganizationRepo.getSelectedOrganizationId() + '/' + workflowStep.id + '/add-field-profile',
             'data': fieldProfile
         });
         var promise = RestApi.post(this.mapping.addFieldProfile);
@@ -23,10 +23,10 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
 
     this.updateFieldProfile = function (workflowStep, fieldProfile) {
         workflowStepRepo.clearValidationResults();
-        OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
+
         fieldProfile.originatingWorkflowStep = workflowStep.id;
         angular.extend(this.mapping.updateFieldProfile, {
-            'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/update-field-profile',
+            'method': OrganizationRepo.getSelectedOrganizationId() + '/' + workflowStep.id + '/update-field-profile',
             'data': fieldProfile
         });
         var promise = RestApi.post(this.mapping.updateFieldProfile);
@@ -40,25 +40,19 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
 
     this.removeFieldProfile = function (workflowStep, fieldProfile) {
         workflowStepRepo.clearValidationResults();
-        OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
-        angular.extend(this.mapping.removeFieldProfile, {
-            'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/remove-field-profile',
-            'data': fieldProfile
-        });
-        var promise = WsApi.fetch(this.mapping.removeFieldProfile);
-        promise.then(function (res) {
-            if (angular.fromJson(res.body).meta.status === "INVALID") {
-                angular.extend(workflowStepRepo, angular.fromJson(res.body).payload);
-            }
-        });
-        return promise;
+
+        var endpoint = angular.copy(this.mapping.removeFieldProfile);
+        endpoint.method = OrganizationRepo.getSelectedOrganizationId() + '/' + workflowStep.id + '/remove-field-profile/' + fieldProfile.id;
+        endpoint.data = ''; // Provide empty data to force this to be a POST
+
+        return WsApi.fetch(endpoint);
     };
 
     this.reorderFieldProfiles = function (workflowStep, src, dest) {
         workflowStepRepo.clearValidationResults();
-        OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
+
         angular.extend(this.mapping.reorderFieldProfile, {
-            'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/reorder-field-profiles/' + src + '/' + dest
+            'method': OrganizationRepo.getSelectedOrganizationId() + '/' + workflowStep.id + '/reorder-field-profiles/' + src + '/' + dest
         });
         var promise = WsApi.fetch(this.mapping.reorderFieldProfile);
         promise.then(function (res) {
@@ -72,9 +66,9 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
 
     this.addNote = function (workflowStep, note) {
         workflowStepRepo.clearValidationResults();
-        OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
+
         angular.extend(this.mapping.addNote, {
-            'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/add-note',
+            'method': OrganizationRepo.getSelectedOrganizationId() + '/' + workflowStep.id + '/add-note',
             'data': note
         });
         var promise = WsApi.fetch(this.mapping.addNote);
@@ -88,9 +82,9 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
 
     this.updateNote = function (workflowStep, note) {
         workflowStepRepo.clearValidationResults();
-        OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
+
         angular.extend(this.mapping.updateNote, {
-            'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/update-note',
+            'method': OrganizationRepo.getSelectedOrganizationId() + '/' + workflowStep.id + '/update-note',
             'data': note
         });
         var promise = WsApi.fetch(this.mapping.updateNote);
@@ -104,8 +98,9 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
 
     this.removeNote = function (workflowStep, note) {
         workflowStepRepo.clearValidationResults();
+
         angular.extend(this.mapping.removeNote, {
-            'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/remove-note',
+            'method': OrganizationRepo.getSelectedOrganizationId() + '/' + workflowStep.id + '/remove-note',
             'data': note
         });
         var promise = WsApi.fetch(this.mapping.removeNote);
@@ -119,9 +114,9 @@ vireo.repo("WorkflowStepRepo", function WorkfloStepRepo(OrganizationRepo, RestAp
 
     this.reorderNotes = function (workflowStep, src, dest) {
         workflowStepRepo.clearValidationResults();
-        OrganizationRepo.setToUpdate(workflowStep.originatingOrganization);
+
         angular.extend(this.mapping.reorderNote, {
-            'method': OrganizationRepo.getSelectedOrganization().id + '/' + workflowStep.id + '/reorder-notes/' + src + '/' + dest
+            'method': OrganizationRepo.getSelectedOrganizationId() + '/' + workflowStep.id + '/reorder-notes/' + src + '/' + dest
         });
         var promise = WsApi.fetch(this.mapping.reorderNote);
         promise.then(function (res) {

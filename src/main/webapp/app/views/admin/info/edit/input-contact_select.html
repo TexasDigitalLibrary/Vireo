@@ -1,28 +1,31 @@
 <div class="btn-group btn-group-justified submission-input-select" uib-dropdown keyboard-nav role="group">
-    <button type="button" class="btn dropdown-toggle dropdown-toggle-button" uib-dropdown-toggle>
-      <span class="caret"></span>
-    </button>
-    <button ng-class="{selected: fieldValue.value}" type="button" class="btn btn-default dropdown-text" disabled>
-      <span class="text-left dropdown-text-label">{{field.value || 'Choose ' + fieldProfile.gloss}}</span>
-    </button>
-    <ul class="dropdown-menu" uib-dropdown-menu role="menu">
-      <li class="select-option"
-        role="menuitem"
-        ng-click="field.value = word.name; fieldProfileForm.$dirty = true; saveWithCV(field, word);"
-        ng-repeat="word in fieldProfile.controlledVocabulary.dictionary | filter:displayVocabularyWord">
-        <a href="#">{{word.name}}</a>
-      </li>
-    </ul>
-    <button type="button" class="btn dropdown-help" ng-click="saveContacts(field)">
-      <span class="glyphicon glyphicon-ok clickable"></span>
-    </button>
+  <button type="button" class="btn dropdown-toggle dropdown-toggle-button" uib-dropdown-toggle>
+     <span class="caret"></span>
+   </button>
+   <button ng-class="{selected: fieldValue.value}" type="button" class="btn btn-default dropdown-text" disabled>
+     <span class="text-left dropdown-text-label">{{field.value || 'Choose ' + fieldProfile.gloss}}</span>
+   </button>
+   <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+     <li class="select-option"
+       role="menuitem"
+       ng-click="field.value = word.name; fieldProfileForm.$dirty = true; saveWithCV(field, word);"
+       ng-repeat="word in fieldProfile.controlledVocabulary.dictionary | filter:displayVocabularyWord">
+       <a href="#">{{word.name}}</a>
+     </li>
+   </ul>
+   <button type="button" class="btn dropdown-help" ng-click="saveContacts(field)">
+     <span class="glyphicon glyphicon-ok clickable"></span>
+   </button>
 </div>
 <div class="input-group input-contact-contacts">
   <input type="text"
     class="form-control"
     ng-model="field.contacts"
-    uib-typeahead="word.contacts[0] as word.contacts[0] for word in fieldProfile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
+    uib-typeahead="word.contacts[0] as word.contacts[0] for word in controlledVocabularyTypeAhead($viewValue)"
+    typeahead-wait-ms="600"
     typeahead-on-select="saveWithCV(field, $item)"
-    disabled>
+    typeahead-loading="typeAheads.loading"
+    disabled
+  />
   <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="saveContacts(field)"></span>
 </div>

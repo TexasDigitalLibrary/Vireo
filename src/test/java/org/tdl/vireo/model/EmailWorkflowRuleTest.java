@@ -1,64 +1,51 @@
 package org.tdl.vireo.model;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.stream.Stream;
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.InjectMocks;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+public class EmailWorkflowRuleTest extends AbstractModelCustomMethodTest<EmailWorkflowRule> {
 
-public class EmailWorkflowRuleTest extends AbstractEntityTest {
-
-    @BeforeEach
-    public void setUp() {
-        assertTrue(emailWorkflowRuleRepo.count() == 0, "The repository was not empty!");
-        submissionStatus = submissionStatusRepo.create(TEST_SUBMISSION_STATUS_NAME, TEST_SUBMISSION_STATUS_ARCHIVED, TEST_SUBMISSION_STATUS_PUBLISHABLE, TEST_SUBMISSION_STATUS_DELETABLE, TEST_SUBMISSION_STATUS_EDITABLE_BY_REVIEWER, TEST_SUBMISSION_STATUS_EDITABLE_BY_STUDENT, TEST_SUBMISSION_STATUS_ACTIVE, null);
-        emailTemplate = emailTemplateRepo.create("Important Notification", "A Marvelous Submission", "Be it known to ye that this submission is marvelous.");
-        emailRecipient = emailRecipientRepo.createSubmitterRecipient();
-    }
+    @InjectMocks
+    private EmailWorkflowRule emailWorkflowRule;
 
     @Override
-    @Test
-    public void testCreate() {
-        EmailWorkflowRule notifyEverybodyOfImportantDoings = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
-        assertTrue(emailWorkflowRuleRepo.count() == 1, "We didn't have enough email workflow rules in the repo!");
-        assertTrue(notifyEverybodyOfImportantDoings.getSubmissionStatus().equals(submissionStatus), "We didn't have the right submissionStatus on our rule!");
-        assertTrue(notifyEverybodyOfImportantDoings.getEmailRecipient().equals(emailRecipient), "We didn't have the right recipient type on our rule!");
-        assertTrue(notifyEverybodyOfImportantDoings.getEmailTemplate().equals(emailTemplate), "We didn't have the right template on our rule!");
+    protected EmailWorkflowRule getInstance() {
+        return emailWorkflowRule;
     }
 
-    @Override
-    @Test
-    public void testDuplication() {
-        emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
-        emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
-
-        assertTrue(emailWorkflowRuleRepo.count() == 2, "Duplicated!");
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testDelete() {
-        EmailWorkflowRule ruleToDelete = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
-        assertEquals(1, emailWorkflowRuleRepo.count(), "Didn't create the rule!");
-        emailWorkflowRuleRepo.delete(ruleToDelete);
-        assertEquals(0, emailWorkflowRuleRepo.count(), "Didn't delete the rule!");
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testCascade() {
-        EmailWorkflowRule ruleToCascade = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
-        emailWorkflowRuleRepo.delete(ruleToCascade);
-        assertEquals(1, submissionStatusRepo.count(), "Submission State is deleted");
-        assertEquals(1, emailTemplateRepo.count(), "Email Template is deleted");
+    protected static Stream<Arguments> provideGetterMethodParameters() {
+        return Stream.of(
+            Arguments.of("isSystem", "isSystem", true),
+            Arguments.of("isSystem", "isSystem", false),
+            Arguments.of("isDisabled", "isDisabled", true),
+            Arguments.of("isDisabled", "isDisabled", false)
+        );
     }
 
-    @AfterEach
-    public void cleanup() {
-        emailWorkflowRuleRepo.deleteAll();
-        submissionStatusRepo.deleteAll();
-        emailTemplateRepo.deleteAll();
+    protected static Stream<Arguments> provideSetterMethodParameters() {
+        return Stream.of(
+            Arguments.of("isSystem", "isSystem", true),
+            Arguments.of("isSystem", "isSystem", false),
+            Arguments.of("isDisabled", "isDisabled", true),
+            Arguments.of("isDisabled", "isDisabled", false)
+        );
+    }
+
+    private static Stream<Arguments> getParameterStream() {
+        return Stream.of(
+            Arguments.of("emailRecipient", new EmailRecipientOrganization()),
+            Arguments.of("emailRecipient", new EmailRecipientPlainAddress()),
+            Arguments.of("emailTemplate", new EmailTemplate())
+        );
     }
 
 }

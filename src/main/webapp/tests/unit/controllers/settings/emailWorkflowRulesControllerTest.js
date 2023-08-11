@@ -12,11 +12,36 @@ describe("controller: EmailWorkflowRulesController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $rootScope, _EmailTemplateRepo_, _ModalService_, _RestApi_, _StorageService_, _SubmissionStatusRepo_) {
+        inject(function ($controller, $injector, $rootScope, $timeout, SubmissionStates, _AccordionService_, _EmailTemplateRepo_, _ManagedConfigurationRepo_, _ModalService_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionStatusRepo_, _StudentSubmissionRepo_, _UserService_, _UserSettings_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
             sessionStorage.token = settings && settings.token ? settings.token : "faketoken";
+
+            // The controller being tested is included inside of a OrganizationSettingsController scope.
+            // This results in having additional methods on the scope that the controller being tested requires.
+            $controller("AbstractController", {
+                $injector: $injector,
+                $scope: scope,
+                $timeout: $timeout,
+                UserService: _UserService_,
+                UserSettings: _UserSettings_,
+                ManagedConfigurationRepo: _ManagedConfigurationRepo_,
+                StudentSubmissionRepo: _StudentSubmissionRepo_,
+                SubmissionStates: SubmissionStates
+            });
+
+            $controller("OrganizationSettingsController", {
+                $scope: scope,
+                $window: mockWindow(),
+                AccordionService: _AccordionService_,
+                ModalService: _ModalService_,
+                OrganizationRepo: OrganizationRepo,
+                RestApi: _RestApi_,
+                SidebarService: _SidebarService_,
+                StorageService: _StorageService_,
+                WsApi: WsApi
+            });
 
             controller = $controller("EmailWorkflowRulesController", {
                 $q: q,
@@ -115,7 +140,9 @@ describe("controller: EmailWorkflowRulesController", function () {
             var template = {id: 1};
             var emailRecipient = mockEmailRecipient(q);
             var submissionStatus = mockSubmissionStatus(q);
-            OrganizationRepo.selectedId = dataOrganization1.id;
+            var organization = mockOrganization(q);
+
+            scope.selectedOrganization = organization;
 
             spyOn(scope, "resetEmailWorkflowRule");
 
@@ -130,7 +157,10 @@ describe("controller: EmailWorkflowRulesController", function () {
             scope.$digest();
         });
         it("buildRecipients should build the recipients", function () {
-            OrganizationRepo.selectedId = dataOrganization1.id;
+            var organization = mockOrganization(q);
+
+            scope.selectedOrganization = organization;
+
             scope.recipients = null;
             scope.$digest();
 
@@ -150,7 +180,9 @@ describe("controller: EmailWorkflowRulesController", function () {
         });
         it("changeEmailWorkflowRuleActivation should change the email", function () {
             var working = null;
-            OrganizationRepo.selectedId = dataOrganization1.id;
+            var organization = mockOrganization(q);
+
+            scope.selectedOrganization = organization;
 
             scope.changeEmailWorkflowRuleActivation("rule", working);
             scope.$digest();
@@ -169,8 +201,11 @@ describe("controller: EmailWorkflowRulesController", function () {
             expect(scope.openModal).toHaveBeenCalled();
         });
         it("deleteEmailWorkflowRule should delete the rule", function () {
+            var organization = mockOrganization(q);
+
+            scope.selectedOrganization = organization;
+
             scope.emailWorkflowRuleDeleteWorking = null;
-            OrganizationRepo.selectedId = dataOrganization1.id;
 
             scope.deleteEmailWorkflowRule("rule");
             scope.$digest();
@@ -179,11 +214,13 @@ describe("controller: EmailWorkflowRulesController", function () {
         });
         it("editEmailWorkflowRule should reset the rule", function () {
             var emailRecipient = new mockEmailRecipient(q);
+            var organization = mockOrganization(q);
+
+            scope.selectedOrganization = organization;
 
             emailRecipient.mock(dataEmailRecipient3);
             emailRecipient.data.id = 7;
 
-            OrganizationRepo.selectedId = dataOrganization1.id;
             scope.emailWorkflowRuleToEdit = {
                 emailRecipient: emailRecipient
             };
@@ -202,6 +239,9 @@ describe("controller: EmailWorkflowRulesController", function () {
         });
         it("openAddEmailWorkflowRuleModal should open a modal", function () {
             var emailRecipient = mockEmailRecipient(q);
+            var organization = mockOrganization(q);
+
+            scope.selectedOrganization = organization;
 
             emailRecipient.mock(dataEmailRecipient3);
 
@@ -224,6 +264,9 @@ describe("controller: EmailWorkflowRulesController", function () {
             var emailRecipient2 = new mockEmailRecipient(q);
             var emailTemplate = new mockEmailTemplate(q);
             var emailTemplate2 = new mockEmailTemplate(q);
+            var organization = mockOrganization(q);
+
+            scope.selectedOrganization = organization;
 
             emailRecipient.mock(dataEmailRecipient3);
             emailRecipient2.mock(dataEmailRecipient2);

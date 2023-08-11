@@ -1,4 +1,4 @@
-package org.tdl.vireo.model;
+package org.tdl.vireo.model.repo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -6,8 +6,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.tdl.vireo.config.constant.ConfigurationName;
+import org.tdl.vireo.model.ManagedConfiguration;
 
-public class ConfigurationTest extends AbstractEntityTest {
+public class ConfigurationRepoTest extends AbstractRepoTest {
 
     @Override
     @Test

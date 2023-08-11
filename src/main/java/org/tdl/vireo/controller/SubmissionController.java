@@ -240,7 +240,7 @@ public class SubmissionController {
     );
     actionLogRepo.createPublicLog(submission, user, "Submission created.");
 
-    return new ApiResponse(SUCCESS, submission);
+    return new ApiResponse(SUCCESS, submission.getId());
   }
 
   @Transactional

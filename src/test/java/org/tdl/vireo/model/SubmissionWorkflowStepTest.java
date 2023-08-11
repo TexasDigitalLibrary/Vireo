@@ -2,128 +2,160 @@ package org.tdl.vireo.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import edu.tamu.weaver.data.model.WeaverEntity;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.model.repo.SubmissionFieldProfileRepo;
-import org.tdl.vireo.model.repo.SubmissionNoteRepo;
+import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.InjectMocks;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.tdl.vireo.model.inheritance.HeritableComponent;
 
-public class SubmissionWorkflowStepTest extends AbstractEntityTest {
+public class SubmissionWorkflowStepTest extends AbstractModelCustomMethodTest<SubmissionWorkflowStep> {
 
-    // private User anotherUser;
-    // private Credentials credentials;
-    // private Credentials anotherCredentials;
-    // private Submission submission;
-    // private FieldProfile fieldProfile;
+    @InjectMocks
+    private SubmissionWorkflowStep submissionWorkflowStep;
 
-    @Autowired
-    private SubmissionFieldProfileRepo submissionFieldProfileRepo;
+    @Test
+    public void testReorderAggregateFieldProfile() {
+        List<FieldProfile> fieldProfiles = new ArrayList<>();
+        FieldProfile fieldProfile1 = new FieldProfile();
+        FieldProfile fieldProfile2 = new FieldProfile();
+        FieldPredicate fieldPredicate1 = new FieldPredicate();
+        FieldPredicate fieldPredicate2 = new FieldPredicate();
 
-    @Autowired
-    private SubmissionNoteRepo submissionNoteRepo;
+        fieldProfile1.setId(1L);
+        fieldProfile2.setId(2L);
 
-    @BeforeEach
-    public void setup() throws Exception {
-        // parentCategory = organizationCategoryRepo.create(TEST_CATEGORY_NAME);
-        // organization = organizationRepo.create(TEST_ORGANIZATION_NAME, parentCategory);
-        // parentCategory = organizationCategoryRepo.findOne(parentCategory.getId());
-        // submitter = userRepo.create(TEST_USER_EMAIL, TEST_USER_FIRSTNAME, TEST_USER_LASTNAME, TEST_USER_ROLE);
-        // anotherUser = userRepo.create("another@tdl.org", "Other", "An", TEST_USER_ROLE);
-        // credentials = new Credentials();
-        // anotherCredentials = new Credentials();
-        //
-        // credentials.setEmail(submitter.getEmail());
-        // submission = submissionRepo.create(credentials, organization.getId());
-        // workflowStep = workflowStepRepo.create(TEST_WORKFLOW_STEP_NAME, organization);
-        // fieldPredicate = fieldPredicateRepo.create(TEST_FIELD_PREDICATE_VALUE);
-        // fieldProfile = fieldProfileRepo.create(workflowStep, fieldPredicate, TEST_FIELD_PROFILE_INPUT_TYPE, TEST_FIELD_PROFILE_USAGE, TEST_FIELD_PROFILE_REPEATABLE, TEST_FIELD_PROFILE_OVERRIDEABLE, TEST_FIELD_PROFILE_ENABLED, TEST_FIELD_PROFILE_OPTIONAL);
+        fieldPredicate1.setId(1L);
+        fieldPredicate2.setId(2L);
+
+        fieldPredicate1.setValue("value1");
+        fieldPredicate2.setValue("value2");
+
+        fieldProfile1.setFieldPredicate(fieldPredicate1);
+        fieldProfile2.setFieldPredicate(fieldPredicate2);
+
+        fieldProfiles.add(fieldProfile1);
+        fieldProfiles.add(fieldProfile2);
+
+        ReflectionTestUtils.setField(getInstance(), "aggregateFieldProfiles", fieldProfiles);
+
+        // Warning: The re-order parameters use index + 1 location logic such that 1 represents index 0 and 2 represents index 1.
+        submissionWorkflowStep.reorderAggregateFieldProfile(1, 2);
+
+        assertEquals(fieldProfiles.get(0), fieldProfile2, "Did not correctly re-order Aggregate Field Profile.");
+        assertEquals(fieldProfiles.get(1), fieldProfile1, "Did not correctly re-order Aggregate Field Profile.");
+    }
+
+    @Test
+    public void testReorderAggregateNote() {
+        List<Note> notes = new ArrayList<>();
+        Note note1 = new Note();
+        Note note2 = new Note();
+
+        note1.setId(1L);
+        note2.setId(2L);
+
+        notes.add(note1);
+        notes.add(note2);
+
+        ReflectionTestUtils.setField(getInstance(), "aggregateNotes", notes);
+
+        // Warning: The re-order parameters use index + 1 location logic such that 1 represents index 0 and 2 represents index 1.
+        submissionWorkflowStep.reorderAggregateNote(1, 2);
+
+        assertEquals(notes.get(0), note2, "Did not correctly re-order Aggregate Note.");
+        assertEquals(notes.get(1), note1, "Did not correctly re-order Aggregate Note.");
     }
 
     @Override
-    @Test
-    public void testCreate() {
-
-        // SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
-        //
-        // assertEquals(1, submissionWorkflowStepRepo.count(), "The repository didn't save the entity!");
-        // assertFalse(fieldProfile.equals( sws.getAggregateFieldProfiles().get(0) ) , "The submissionWorkflowStep didn't clone it's originating step's field profile!");
-        // assertEquals(fieldProfile.getPredicate(), sws.getAggregateFieldProfiles().get(0).getPredicate(), "The submissionWorkflowStep didn't clone it's originating step's field profile!");
-        // assertEquals(fieldProfile.getInputType(), sws.getAggregateFieldProfiles().get(0).getInputType(), "The submissionWorkflowStep didn't clone it's originating step's field profile!");
+    protected SubmissionWorkflowStep getInstance() {
+        return submissionWorkflowStep;
     }
 
-    @Override
-    @Test
-    public void testDuplication() {
-        // SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
-        // SubmissionWorkflowStep sws2 = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
-        // assertEquals(sws.getId(), sws2.getId(), "The submission workflow step was duplicated!");
+    protected static Stream<Arguments> provideGetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testDelete() {
-        // TODO:
-        // SubmissionWorkflowStep sws = submissionWorkflowStepRepo.findOrCreate(organization, workflowStep);
-        //
-        // long id = sws.getId();
-        // long count = submissionWorkflowStepRepo.count();
-        //
-        // submissionWorkflowStepRepo.delete(sws);
-        // count--;
-        //
-        // assertNull(submissionWorkflowStepRepo.findOne(id), "The submissionWorkflowStep wasn't deleted!");
-        // assertEquals(count, submissionWorkflowStepRepo.count(), "The submissionWorkflowStep wasn't deleted!");
-
+    protected static Stream<Arguments> provideSetterParameters() {
+        return getParameterStream();
     }
 
-    @Override
-    @Test
-    public void testCascade() {
-        // TODO Auto-generated method stub
-
+    protected static Stream<Arguments> provideGetterMethodParameters() {
+        return Stream.of(
+            Arguments.of("getOverrideable", "overrideable", true),
+            Arguments.of("getOverrideable", "overrideable", false)
+        );
     }
 
-    @AfterEach
-    public void cleanUp() throws Exception {
-
-        noteRepo.findAll().forEach(note -> {
-            noteRepo.delete(note);
-        });
-        assertEquals(0, noteRepo.count(), "Couldn't delete all notes!");
-
-        submissionNoteRepo.deleteAll();
-
-        fieldProfileRepo.findAll().forEach(fieldProfile -> {
-            fieldProfileRepo.delete(fieldProfile);
-        });
-
-        assertEquals(0, fieldProfileRepo.count(), "Couldn't delete all field profiles!");
-
-        submissionListColumnRepo.deleteAll();
-
-        inputTypeRepo.deleteAll();
-        assertEquals(0, inputTypeRepo.count(), "Couldn't delete all input types!");
-
-        submissionFieldProfileRepo.deleteAll();
-
-        workflowStepRepo.findAll().forEach(workflowStep -> {
-            workflowStepRepo.delete(workflowStep);
-        });
-
-        submissionWorkflowStepRepo.deleteAll();
-
-        submissionRepo.deleteAll();
-
-        organizationRepo.findAll().forEach(organization -> {
-            organizationRepo.delete(organization);
-        });
-
-        organizationCategoryRepo.deleteAll();
-
-        fieldPredicateRepo.deleteAll();
-
-        userRepo.deleteAll();
+    protected static Stream<Arguments> provideSetterMethodParameters() {
+        return Stream.of(
+            Arguments.of("setOverrideable", "overrideable", true),
+            Arguments.of("setOverrideable", "overrideable", false)
+        );
     }
 
+    private static Stream<Arguments> getParameterStream() {
+        List<FieldProfile> fieldProfiles = new ArrayList<>();
+        fieldProfiles.add(new FieldProfile());
+
+        List<Note> notes = new ArrayList<>();
+        notes.add(new Note());
+
+        return Stream.of(
+            Arguments.of("name", "value"),
+            Arguments.of("aggregateFieldProfiles", fieldProfiles),
+            Arguments.of("aggregateNotes", notes),
+            Arguments.of("instructions", "instruction")
+        );
+    }
+
+    protected class OtherComponent implements HeritableComponent<Object> {
+        private Long id = 0L;
+
+        @Override
+        public int compareTo(WeaverEntity arg0) {
+            return 0;
+        }
+
+        @Override
+        public Long getId() {
+            return id;
+        }
+
+        @Override
+        public void setId(Long arg0) {
+            this.id = arg0;
+        }
+
+        @Override
+        public void setOriginating(Object originatingHeritableModel) {
+        }
+
+        @Override
+        public Object getOriginating() {
+            return null;
+        }
+
+        @Override
+        public void setOriginatingWorkflowStep(WorkflowStep originatingWorkflowStep) {
+        }
+
+        @Override
+        public WorkflowStep getOriginatingWorkflowStep() {
+            return null;
+        }
+
+        @Override
+        public Boolean getOverrideable() {
+            return null;
+        }
+
+        @Override
+        public Object clone() {
+            return new Object();
+        }
+    }
 }
