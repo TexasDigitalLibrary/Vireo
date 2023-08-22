@@ -10,7 +10,7 @@ If you would like to help with testing or development, GitHub issues and pull re
 
 ## Building
 
-Vireo build is done with [Maven](https://maven.apache.org/). The build is configured with [pom.xml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/pom.xml) and [package.json](https://github.com/TexasDigitalLibrary/Vireo/blob/master/package.json). There are several command line arguments that can be used when packaging Vireo 4.
+Vireo build is done with [Maven](https://maven.apache.org/).  The most current maven compatible with vireo4 is 3.9.2.  Maven 3.9.3 is not compatible with the AngularJS used by vireo4. The build is configured with [pom.xml](https://github.com/TexasDigitalLibrary/Vireo/blob/master/pom.xml) and [package.json](https://github.com/TexasDigitalLibrary/Vireo/blob/master/package.json). There are several command line arguments that can be used when packaging Vireo 4.
 
 * ```-Dproduction``` will package production ready. **Required for Tomcat deployment or running as a jar**
 * ```-DskipTests``` will skip tests.

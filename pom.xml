@@ -104,12 +104,6 @@
       <groupId>com.github.steveash.hnp</groupId>
       <artifactId>human-name-parser</artifactId>
       <version>0.1</version>
-      <exclusions>
-        <exclusion>
-          <groupId>commons-lang</groupId>
-          <artifactId>commons-lang</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
