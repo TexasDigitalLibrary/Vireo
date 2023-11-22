@@ -1091,13 +1091,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 value.append("CAST(REPLACE(").append(table).append(".value, ' ', ' 1, ') AS DATE) AS");
             }
 
-            value.append(table).append("_date");
+            value.append(" " + table).append("_date");
 
             if (!sqlAliasBuilders.contains(value.toString())) {
                 sqlAliasBuilders.add(value.toString());
             }
 
-            sqlOrderBysBuilder.append(table).append("_date ").append(sort.name()).append(",");
+            sqlOrderBysBuilder.append(" " + table).append("_date ").append(sort.name()).append(",");
         }
     }
 
