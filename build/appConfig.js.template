@@ -1,6 +1,6 @@
 var appConfig = {
 
-    'version': '4.2.5',
+    'version': '4.2.6',
 
     'allowAnonymous': true,
     'anonymousRole': 'ROLE_ANONYMOUS',
