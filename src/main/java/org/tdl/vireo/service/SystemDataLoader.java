@@ -168,12 +168,6 @@ public class SystemDataLoader {
     private SubmissionListColumnRepo submissionListColumnRepo;
 
     @Autowired
-    private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
-
-    @Autowired
-    private DefaultFiltersService defaultFiltersService;
-
-    @Autowired
     private AbstractPackagerRepo abstractPackagerRepo;
 
     @Autowired
@@ -184,6 +178,12 @@ public class SystemDataLoader {
 
     @Autowired
     private DefaultSettingsService defaultSettingsService;
+
+    @Autowired
+    private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
+
+    @Autowired
+    private DefaultFiltersService defaultFiltersService;
 
     @Transactional
     public void loadSystemData() {
@@ -411,18 +411,12 @@ public class SystemDataLoader {
                 organization = organizationRepo.create(systemOrganization.getName(), category);
                 organization.setAcceptsSubmissions(systemOrganization.getAcceptsSubmissions());
             }
-            // else set systemOrganization to existing organization
-            else {
-                systemOrganization = organization;
-            }
 
-            List<WorkflowStep> systemOrganizationWorkflowSteps = new ArrayList<>(systemOrganization.getOriginalWorkflowSteps());
+            processWorkflowSteps(organization, systemOrganization);
 
-            organization.setAggregateWorkflowSteps(processWorkflowSteps(organization, systemOrganizationWorkflowSteps));
+            processEmailWorflowRules(organization, systemOrganization);
 
             organization = organizationRepo.save(organization);
-
-            processEmailWorflowRules();
 
         } catch (IOException e) {
             throw new IllegalStateException("Unable to generate system organization", e);
@@ -430,11 +424,9 @@ public class SystemDataLoader {
 
     }
 
-    private List<WorkflowStep> processWorkflowSteps(Organization organization, List<WorkflowStep> systemOrganizationWorkflowSteps) {
+    private void processWorkflowSteps(Organization organization, Organization systemOrganization) {
 
-        List<WorkflowStep> workflowSteps = new ArrayList<WorkflowStep>();
-
-        for (WorkflowStep workflowStep : systemOrganizationWorkflowSteps) {
+        for (WorkflowStep workflowStep : systemOrganization.getOriginalWorkflowSteps()) {
 
             // check to see if the WorkflowStep exists
             WorkflowStep newWorkflowStep = workflowStepRepo.findByNameAndOriginatingOrganization(workflowStep.getName(), organization);
@@ -524,82 +516,63 @@ public class SystemDataLoader {
             newWorkflowStep.setInstructions(workflowStep.getInstructions());
 
             newWorkflowStep = workflowStepRepo.save(newWorkflowStep);
-
-            workflowSteps.add(newWorkflowStep);
         }
-        return workflowSteps;
     }
 
-    private void processEmailWorflowRules() {
+    private void processEmailWorflowRules(Organization organization, Organization systemOrganization) {
+        List<EmailWorkflowRule> emailWorkflowRules = organization.getEmailWorkflowRules();
 
-        Organization organization = organizationRepo.findById(1L).get();
+        for (EmailWorkflowRule emailWorkflowRule : systemOrganization.getEmailWorkflowRules()) {
 
-        try {
-            Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
+            // check to see if the SubmissionStatus exists
+            SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(emailWorkflowRule.getSubmissionStatus().getName());
 
-            // temporary set of EmailWorkflowRule
-            List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<EmailWorkflowRule>();
+            // create new SubmissionStatus if not already exists
+            if (newSubmissionStatus == null) {
+                newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(), emailWorkflowRule.getSubmissionStatus().isArchived(), emailWorkflowRule.getSubmissionStatus().isPublishable(), emailWorkflowRule.getSubmissionStatus().isDeletable(), emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(), emailWorkflowRule.getSubmissionStatus().isEditableByStudent(), emailWorkflowRule.getSubmissionStatus().isActive(),
+                        emailWorkflowRule.getSubmissionStatus().getSubmissionState());
+                newSubmissionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(emailWorkflowRule.getSubmissionStatus()));
+            }
 
-            systemOrganization.getEmailWorkflowRules().forEach(emailWorkflowRule -> {
+            // check to see if the EmailTemplate exists
+            EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndSystemRequired(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSystemRequired());
 
-                // check to see if the SubmissionStatus exists
-                SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(emailWorkflowRule.getSubmissionStatus().getName());
+            // create new EmailTemplate if not already exists
+            if (newEmailTemplate == null) {
+                newEmailTemplate = emailTemplateRepo.create(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSubject(), emailWorkflowRule.getEmailTemplate().getMessage());
+            }
 
-                // create new SubmissionStatus if not already exists
-                if (newSubmissionStatus == null) {
-                    newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(), emailWorkflowRule.getSubmissionStatus().isArchived(), emailWorkflowRule.getSubmissionStatus().isPublishable(), emailWorkflowRule.getSubmissionStatus().isDeletable(), emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(), emailWorkflowRule.getSubmissionStatus().isEditableByStudent(), emailWorkflowRule.getSubmissionStatus().isActive(),
-                            emailWorkflowRule.getSubmissionStatus().getSubmissionState());
-                    newSubmissionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(emailWorkflowRule.getSubmissionStatus()));
-                }
+            if (emailWorkflowRule.getEmailRecipient() == null) {
 
-                // check to see if the EmailTemplate exists
-                EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndSystemRequired(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSystemRequired());
-
-                // create new EmailTemplate if not already exists
-                if (newEmailTemplate == null) {
-                    newEmailTemplate = emailTemplateRepo.create(emailWorkflowRule.getEmailTemplate().getName(), emailWorkflowRule.getEmailTemplate().getSubject(), emailWorkflowRule.getEmailTemplate().getMessage());
-                }
-
-                if (emailWorkflowRule.getEmailRecipient() == null) {
-
-                    if (newEmailTemplate.getName().equals("SYSTEM Advisor Review Request")) {
-                        organization.getAggregateWorkflowSteps().forEach(awfs -> {
-                            awfs.getAggregateFieldProfiles().forEach(afp -> {
-                                if (afp.getFieldPredicate().getValue().equals("dc.contributor.advisor")) {
-                                    EmailRecipient recipient = abstractEmailRecipientRepo.createContactRecipient(afp.getGloss(), afp.getFieldPredicate());
-                                    emailWorkflowRule.setEmailRecipient(recipient);
-                                }
-                            });
+                if (newEmailTemplate.getName().equals("SYSTEM Advisor Review Request")) {
+                    organization.getAggregateWorkflowSteps().forEach(awfs -> {
+                        awfs.getAggregateFieldProfiles().forEach(afp -> {
+                            if (afp.getFieldPredicate().getValue().equals("dc.contributor.advisor")) {
+                                EmailRecipient recipient = abstractEmailRecipientRepo.createContactRecipient(afp.getGloss(), afp.getFieldPredicate());
+                                emailWorkflowRule.setEmailRecipient(recipient);
+                            }
                         });
-
-                    }
-
-                    if (newEmailTemplate.getName().equals("SYSTEM Initial Submission")) {
-                        EmailRecipient recipient = abstractEmailRecipientRepo.createOrganizationRecipient(organization);
-                        emailWorkflowRule.setEmailRecipient(recipient);
-                    }
+                    });
 
                 }
 
-                // check to see if the EmailWorkflowRule exists
-                EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStatusAndEmailRecipientAndEmailTemplate(newSubmissionStatus, emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
-
-                if (newEmailWorkflowRule == null) {
-                    newEmailWorkflowRule = emailWorkflowRuleRepo.create(newSubmissionStatus, emailWorkflowRule.getEmailRecipient(), newEmailTemplate, emailWorkflowRule.isSystem());
+                if (newEmailTemplate.getName().equals("SYSTEM Initial Submission")) {
+                    EmailRecipient recipient = abstractEmailRecipientRepo.createOrganizationRecipient(organization);
+                    emailWorkflowRule.setEmailRecipient(recipient);
                 }
 
-                emailWorkflowRules.add(newEmailWorkflowRule);
+            }
 
-            });
+            // check to see if the EmailWorkflowRule exists
+            EmailWorkflowRule existingEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStatusAndEmailRecipientAndEmailTemplate(newSubmissionStatus, emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
 
-            organization.setEmailWorkflowRules(emailWorkflowRules);
+            if (existingEmailWorkflowRule == null) {
+                emailWorkflowRules.add(emailWorkflowRuleRepo.create(newSubmissionStatus, emailWorkflowRule.getEmailRecipient(), newEmailTemplate, emailWorkflowRule.isSystem()));
+            }
 
-            organizationRepo.save(organization);
-
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to generate system organization", e);
         }
 
+        organization.setEmailWorkflowRules(emailWorkflowRules);
     }
 
     private void loadSubmissionStatuses() {

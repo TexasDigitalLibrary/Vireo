@@ -1,6 +1,5 @@
 package org.tdl.vireo.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -10,7 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.mock.MockData;
+import org.tdl.vireo.service.DefaultFiltersService;
+import org.tdl.vireo.service.DefaultSubmissionListColumnService;
+import org.tdl.vireo.service.EntityControlledVocabularyService;
 import org.tdl.vireo.service.SystemDataLoader;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 @ActiveProfiles("test")
@@ -27,6 +31,15 @@ public abstract class AbstractIntegrationTest extends MockData {
 
     @Autowired
     protected SystemDataLoader systemDataLoader;
+
+    @Autowired
+    protected EntityControlledVocabularyService entityControlledVocabularyService;
+
+    @Autowired
+    protected DefaultSubmissionListColumnService defaultSubmissionListColumnService;
+
+    @Autowired
+    protected DefaultFiltersService defaultFiltersService;
 
     protected MockMvc mockMvc;
 

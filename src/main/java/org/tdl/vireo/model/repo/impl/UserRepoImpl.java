@@ -70,7 +70,7 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
     }
 
     /**
-     * Clear the active filter group for the given user, creating a persisted filer group if necessary.
+     * Clear the active filter group for the given user, creating a persisted filter group if necessary.
      *
      * This removes existing filters and columns on the persisted filter group (aka not-"saved" filter group).
      *
