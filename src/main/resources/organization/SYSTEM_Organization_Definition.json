@@ -143,7 +143,7 @@
           "enabled":true,
           "optional":true,
           "usage":"",
-          "help":"Enter your ORCID author identifier (ID). If you do not have an ORCID ID, you may register here <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
+          "help":"Enter your ORCID author identifier (ID) associated with email. If you do not have an ORCID ID, you may register here <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
           "htmlTooltip":true,
           "gloss": "ORCID"
         },
