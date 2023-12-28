@@ -2,11 +2,9 @@ package org.tdl.vireo.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -14,11 +12,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -216,14 +209,8 @@ public class SystemDataLoader {
         logger.info("Loading system controlled vocabularies");
         loadControlledVocabularies();
 
-        logger.info("Loading system Proquest language codes");
-        loadProquestLanguageCodes();
-
-        logger.info("Loading system Proquest degree codes");
-        loadProquestDegreeCodes();
-
-        logger.info("Loading system Proquest subject codes");
-        loadProquestSubjectCodes();
+        logger.info("Loading system Proquest subjects codes controlled vocabulary");
+        loadProquestSubjectCodesControlledVocabulary();
 
         logger.info("Loading system Submission List Columns");
         loadSubmissionListColumns();
@@ -237,51 +224,7 @@ public class SystemDataLoader {
         logger.info("Finished loading system data");
     }
 
-    private void loadControlledVocabularies() {
-
-        List<File> controlledVocabularyFiles = new ArrayList<File>();
-        try {
-            controlledVocabularyFiles = fileIOUtility.getResourceDirectoryListing("classpath:/controlled_vocabularies/");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        for (File vocabularyJson : controlledVocabularyFiles) {
-            try {
-                ControlledVocabulary cv = objectMapper.readValue(vocabularyJson, ControlledVocabulary.class);
-
-                // check to see if Controlled Vocabulary exists, and if so, merge up with it
-                ControlledVocabulary persistedCV = controlledVocabularyRepo.findByName(cv.getName());
-
-                if (persistedCV == null) {
-                    persistedCV = controlledVocabularyRepo.create(cv.getName());
-                }
-
-                for (VocabularyWord vw : cv.getDictionary()) {
-
-                    VocabularyWord persistedVW = vocabularyRepo.findByNameAndControlledVocabulary(vw.getName(), persistedCV);
-
-                    if (persistedVW == null) {
-                        persistedVW = vocabularyRepo.create(persistedCV, vw.getName(), vw.getDefinition(), vw.getIdentifier(), vw.getContacts());
-                        persistedCV = controlledVocabularyRepo.findByName(cv.getName());
-                    } else {
-                        persistedVW.setDefinition(vw.getDefinition());
-                        persistedVW.setIdentifier(vw.getIdentifier());
-                        persistedVW.setContacts(vw.getContacts());
-                        persistedVW = vocabularyRepo.save(persistedVW);
-                    }
-                }
-
-            } catch (JsonParseException e) {
-                e.printStackTrace();
-            } catch (JsonMappingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
+    
 
     private void loadOrganizationCategories() {
         try {
@@ -917,23 +860,54 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadProquestLanguageCodes() {
-        proquesteCodesService.setCodes("languages", getProquestCodes("language_codes.xls"));
+    private void loadControlledVocabularies() {
+
+        List<File> controlledVocabularyFiles = new ArrayList<File>();
+        try {
+            controlledVocabularyFiles = fileIOUtility.getResourceDirectoryListing("classpath:/controlled_vocabularies/");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (File vocabularyJson : controlledVocabularyFiles) {
+            try {
+                ControlledVocabulary cv = objectMapper.readValue(vocabularyJson, ControlledVocabulary.class);
+
+                // check to see if Controlled Vocabulary exists, and if so, merge up with it
+                ControlledVocabulary persistedCV = controlledVocabularyRepo.findByName(cv.getName());
+
+                if (persistedCV == null) {
+                    persistedCV = controlledVocabularyRepo.create(cv.getName());
+                }
+
+                for (VocabularyWord vw : cv.getDictionary()) {
+
+                    VocabularyWord persistedVW = vocabularyRepo.findByNameAndControlledVocabulary(vw.getName(), persistedCV);
+
+                    if (persistedVW == null) {
+                        persistedVW = vocabularyRepo.create(persistedCV, vw.getName(), vw.getDefinition(), vw.getIdentifier(), vw.getContacts());
+                        persistedCV = controlledVocabularyRepo.findByName(cv.getName());
+                    } else {
+                        persistedVW.setDefinition(vw.getDefinition());
+                        persistedVW.setIdentifier(vw.getIdentifier());
+                        persistedVW.setContacts(vw.getContacts());
+                        persistedVW = vocabularyRepo.save(persistedVW);
+                    }
+                }
+
+            } catch (JsonParseException e) {
+                e.printStackTrace();
+            } catch (JsonMappingException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
-    private void loadProquestDegreeCodes() {
-        proquesteCodesService.setCodes("degrees", getProquestCodes("degree_codes.xls"));
-    }
-
-    private void loadProquestSubjectCodes() {
-        Map<String, String> subjectCodes = getProquestCodes("umi_subjects.xls");
-
-        proquesteCodesService.setCodes("subjects", subjectCodes);
-
-        createSubjectControlledVocabulary(subjectCodes);
-    }
-
-    private void createSubjectControlledVocabulary(Map<String, String> subjectCodes) {
+    private void loadProquestSubjectCodesControlledVocabulary() {
+        Map<String, String> subjectCodes = proquesteCodesService.getCodes("subjects");
 
         // check to see if Controlled Vocabulary exists, and if so, merge up with it
         ControlledVocabulary persistedCV = controlledVocabularyRepo.findByName("Subjects");
@@ -957,64 +931,6 @@ public class SystemDataLoader {
                 persistedVW = vocabularyRepo.save(persistedVW);
             }
         }
-
-    }
-
-    private Map<String, String> getProquestCodes(String xslFileName) {
-        Map<String, String> proquestCodes = new HashMap<String, String>();
-        Resource resource = resourcePatternResolver.getResource("classpath:/proquest/" + xslFileName);
-
-        InputStream file = null;
-        try {
-            file = resource.getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (file != null) {
-
-            HSSFWorkbook workbook = null;
-            try {
-                workbook = new HSSFWorkbook(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (workbook != null) {
-
-                HSSFSheet sheet = workbook.getSheetAt(0);
-
-                Iterator<Row> rowIterator = sheet.iterator();
-                while (rowIterator.hasNext()) {
-                    Row row = rowIterator.next();
-
-                    String code = null, description = "";
-
-                    Iterator<Cell> cellIterator = row.cellIterator();
-                    while (cellIterator.hasNext()) {
-
-                        Cell cell = cellIterator.next();
-                        if (cell.getCellType() == CellType.STRING) {
-                            String cellValue = cell.getStringCellValue();
-                            if (code == null) {
-                                code = cellValue;
-                            } else {
-                                description = cellValue;
-                            }
-                        }
-                    }
-
-                    proquestCodes.put(code, description);
-                }
-            }
-
-            try {
-                file.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        return proquestCodes;
     }
 
     private void loadPackagers() {

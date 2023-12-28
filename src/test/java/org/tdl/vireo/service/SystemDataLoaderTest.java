@@ -1,6 +1,10 @@
 package org.tdl.vireo.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +49,6 @@ public class SystemDataLoaderTest {
     }
 
     private void assertPersistedSystemData(boolean isReload) {
-
         assertEquals(8, this.defaultSettingsService.getTypes().size(),
             isReload
                 ? "Incorrect number of default setting types after reload"
@@ -69,6 +72,10 @@ public class SystemDataLoaderTest {
             isReload
                 ? "Incorrect number of default filters after reload"
                 : "Incorrect number of default filters");
+
+        assertProquestCodes(82, "languages", isReload);
+        assertProquestCodes(1219, "degrees", isReload);
+        assertProquestCodes(288, "subjects", isReload);
     }
 
     private void assertSettingsType(int expected, String type, boolean isReload) {
@@ -76,6 +83,18 @@ public class SystemDataLoaderTest {
             isReload
                 ? String.format("Incorrect number of default %s settings after reload", type)
                 : String.format("Incorrect number of default %s settings", type));
+    }
+
+    private void assertProquestCodes(int expected, String key, boolean isReload) {
+        Map<String, String> codes = this.proquesteCodesService.getCodes(key);
+        assertNotNull(codes,
+            isReload
+                ? String.format("Missing proquest %s codes after reload", key)
+                : String.format("Missing proquest %s codes", key));
+        assertEquals(expected, codes.size(),
+            isReload
+                ? String.format("Incorrect number of proquest %s codes after reload", key)
+                : String.format("Incorrect number of proquest %s codes", key));
     }
 
 }
