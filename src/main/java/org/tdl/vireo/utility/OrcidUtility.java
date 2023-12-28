@@ -17,6 +17,11 @@ import org.xml.sax.SAXException;
 public class OrcidUtility {
 
     private static final String ORCID_API = "https://pub.orcid.org/v2.0/#/";
+
+    private OrcidUtility() {
+
+    }
+
     public static Map<String, String> verifyOrcid(User user, FieldValue fieldValue) {
         Map<String, String> errors = new HashMap<String, String>();
         if (fieldValue.getValue() == "") {
@@ -78,4 +83,5 @@ public class OrcidUtility {
         }
         return builder;
     }
+
 }
