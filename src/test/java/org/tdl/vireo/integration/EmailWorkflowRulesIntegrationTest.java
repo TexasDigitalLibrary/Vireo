@@ -3,7 +3,6 @@ package org.tdl.vireo.integration;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -86,8 +85,8 @@ public class EmailWorkflowRulesIntegrationTest extends AbstractIntegrationTest {
 
     @AfterEach
     public void cleanup() {
-        defaultFiltersService.setDefaultFilter(new ArrayList<>());
-        defaultSubmissionListColumnService.setDefaultSubmissionListColumns(new ArrayList<>());
+        defaultFiltersService.getDefaultFilter().clear();
+        defaultSubmissionListColumnService.getDefaultSubmissionListColumns().clear();
     }
 
 }

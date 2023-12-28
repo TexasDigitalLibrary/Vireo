@@ -1,10 +1,10 @@
 package org.tdl.vireo.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.MediaType;
-//import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
@@ -20,18 +20,17 @@ public class UserIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach
     public void setup() {
+        assertEquals(0, userRepo.count());
 
-        systemDataLoader.loadSystemDefaults();
-
-        namedSearchFilterRepo.findAll().forEach(nsf -> {
-            namedSearchFilterRepo.delete(nsf);
-        });
-
-        userRepo.deleteAll();
+        assertEquals(0, namedSearchFilterRepo.count());
 
         userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), Role.ROLE_ADMIN);
         userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), Role.ROLE_MANAGER);
         userRepo.create(TEST_USER4_EMAIL, TEST_USER4.getFirstName(), TEST_USER4.getLastName(), Role.ROLE_STUDENT);
+
+        assertEquals(3, userRepo.count());
+
+        assertEquals(2, namedSearchFilterRepo.count());
 
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }

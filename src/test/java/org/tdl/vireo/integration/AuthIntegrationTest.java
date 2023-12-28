@@ -1,26 +1,37 @@
 package org.tdl.vireo.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import edu.tamu.weaver.auth.service.CryptoService;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
+import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import edu.tamu.weaver.auth.service.CryptoService;
 
 public class AuthIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private NamedSearchFilterGroupRepo namedSearchFilterRepo;
 
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
@@ -30,15 +41,21 @@ public class AuthIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach
     public void setup() {
-        systemDataLoader.loadSystemDefaults();
 
-        userRepo.deleteAll();
+        assertEquals(0, userRepo.count());
+        assertEquals(0, namedSearchFilterRepo.count());
+        assertEquals(0, emailTemplateRepo.count());
 
         userRepo.create(TEST_USER2_EMAIL, TEST_USER2.getFirstName(), TEST_USER2.getLastName(), Role.ROLE_ADMIN);
         userRepo.create(TEST_USER3_EMAIL, TEST_USER3.getFirstName(), TEST_USER3.getLastName(), Role.ROLE_MANAGER);
         userRepo.create(TEST_USER4_EMAIL, TEST_USER4.getFirstName(), TEST_USER4.getLastName(), Role.ROLE_STUDENT);
 
+        assertEquals(3, userRepo.count());
+        assertEquals(2, namedSearchFilterRepo.count());
+
         emailTemplateRepo.create(TEST_REGISTRATION_EMAIL_TEMPLATE_NAME, TEST_EMAIL_TEMPLATE_SUBJECT, TEST_EMAIL_TEMPLATE_MESSAGE);
+
+        assertEquals(1, emailTemplateRepo.count());
 
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }

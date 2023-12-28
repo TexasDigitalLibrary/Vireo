@@ -88,6 +88,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
+/**
+ * This class is to load and persist system data from resources.
+ */
 @Service
 public class SystemDataLoader {
 
@@ -916,7 +919,7 @@ public class SystemDataLoader {
         }
     }
 
-    public void loadSystemDefaults() {
+    private void loadSystemDefaults() {
         try {
             JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/settings/SYSTEM_Defaults.json"));
             Iterator<Entry<String, JsonNode>> it = systemDefaults.fields();
