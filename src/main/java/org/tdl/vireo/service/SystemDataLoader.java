@@ -41,7 +41,6 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
-import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.formatter.DSpaceMetsFormatter;
 import org.tdl.vireo.model.formatter.DSpaceSimpleFormatter;
 import org.tdl.vireo.model.formatter.ExcelFormatter;
@@ -167,9 +166,6 @@ public class SystemDataLoader {
     @Autowired
     private ProquestCodesService proquesteCodesService;
 
-    @Autowired
-    private DepositorService depositorService;
-
     @Transactional
     public void loadSystemData() {
 
@@ -209,7 +205,7 @@ public class SystemDataLoader {
         logger.info("Loading system controlled vocabularies");
         loadControlledVocabularies();
 
-        logger.info("Loading system Proquest subjects codes controlled vocabulary");
+        logger.info("Loading system Proquest subject codes controlled vocabulary");
         loadProquestSubjectCodesControlledVocabulary();
 
         logger.info("Loading system Submission List Columns");
@@ -218,13 +214,8 @@ public class SystemDataLoader {
         logger.info("Loading system Packagers");
         loadPackagers();
 
-        logger.info("Loading system Depositors");
-        loadDepositors();
-
         logger.info("Finished loading system data");
     }
-
-    
 
     private void loadOrganizationCategories() {
         try {
@@ -952,10 +943,6 @@ public class SystemDataLoader {
         if (abstractPackagerRepo.findByName("Marc21") == null) {
             abstractPackagerRepo.createMARC21Packager("Marc21", new Marc21Formatter());
         }
-    }
-
-    private void loadDepositors() {
-        depositorService.addDepositor(new SWORDv1Depositor());
     }
 
     private static String encodeTemplateName(String name) {

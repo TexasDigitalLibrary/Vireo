@@ -2,7 +2,6 @@ package org.tdl.vireo.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
@@ -42,8 +41,6 @@ public class SystemDataLoaderTest {
         assertPersistedSystemData(false);
 
         // reload to ensure nothing changes
-        // technically the cache clears after restart
-        // however, this is still an undesired side effect of load system data
         systemDataLoader.loadSystemData();
         assertPersistedSystemData(true);
     }
@@ -72,6 +69,11 @@ public class SystemDataLoaderTest {
             isReload
                 ? "Incorrect number of default filters after reload"
                 : "Incorrect number of default filters");
+
+        assertNotNull(this.depositorService.getDepositor("SWORDv1Depositor"),
+            isReload
+                ? "SWORDv1 depositor not found after reload"
+                : "SWORDv1 depositor not found");
 
         assertProquestCodes(82, "languages", isReload);
         assertProquestCodes(1219, "degrees", isReload);
