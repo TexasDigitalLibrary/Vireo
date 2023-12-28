@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +27,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.model.ControlledVocabulary;
-import org.tdl.vireo.model.DefaultConfiguration;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
@@ -83,7 +81,6 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -180,70 +177,64 @@ public class SystemDataLoader {
     @Autowired
     private DepositorService depositorService;
 
-    @Autowired
-    private DefaultSettingsService defaultSettingsService;
-
     @Transactional
     public void loadSystemData() {
 
-        logger.info("Loading default languages");
+        logger.info("Loading system languages");
         loadLanguages();
 
-        logger.info("Loading default input types");
+        logger.info("Loading system input types");
         loadInputTypes();
 
-        logger.info("Loading default email templates");
+        logger.info("Loading system email templates");
         loadEmailTemplates();
 
-        logger.info("Loading default degree levels");
+        logger.info("Loading system degree levels");
         loadDegreeLevels();
 
-        logger.info("Loading default degrees");
+        logger.info("Loading system degrees");
         loadDegrees();
 
-        logger.info("Loading default graduation months");
+        logger.info("Loading system graduation months");
         loadGraduationMonths();
 
-        logger.info("Loading default embargos");
+        logger.info("Loading system embargos");
         loadEmbargos();
 
-        logger.info("Loading default submission statuses");
+        logger.info("Loading system submission statuses");
         loadSubmissionStatuses();
 
-        logger.info("Loading default organization catagories");
+        logger.info("Loading system organization catagories");
         loadOrganizationCategories();
 
-        logger.info("Loading default document types");
+        logger.info("Loading system document types");
         loadDocumentTypes();
 
-        logger.info("Loading default organization");
+        logger.info("Loading system organization");
         loadOrganization();
 
-        logger.info("Loading default controlled vocabularies");
+        logger.info("Loading system controlled vocabularies");
         loadControlledVocabularies();
 
-        logger.info("Loading default settings");
-        loadSystemDefaults();
-
-        logger.info("Loading default Proquest language codes");
+        logger.info("Loading system Proquest language codes");
         loadProquestLanguageCodes();
 
-        logger.info("Loading default Proquest degree codes");
+        logger.info("Loading system Proquest degree codes");
         loadProquestDegreeCodes();
 
-        logger.info("Loading default Proquest subject codes");
+        logger.info("Loading system Proquest subject codes");
         loadProquestSubjectCodes();
 
-        logger.info("Loading default Submission List Columns");
+        logger.info("Loading system Submission List Columns");
         loadSubmissionListColumns();
 
-        logger.info("Loading default Packagers");
+        logger.info("Loading system Packagers");
         loadPackagers();
 
-        logger.info("Loading default Depositors");
+        logger.info("Loading system Depositors");
         loadDepositors();
 
-        logger.info("Finished loading system defaults");
+        logger.info("Finished loading system data");
     }
 
     private void loadControlledVocabularies() {
@@ -888,34 +879,6 @@ public class SystemDataLoader {
         } catch (RuntimeException | IOException e) {
             e.printStackTrace();
             logger.debug("Unable to initialize default embargos. ", e);
-        }
-    }
-
-    private void loadSystemDefaults() {
-        try {
-            JsonNode systemDefaults = objectMapper.readTree(getFileFromResource("classpath:/settings/SYSTEM_Defaults.json"));
-            Iterator<Entry<String, JsonNode>> it = systemDefaults.fields();
-
-            while (it.hasNext()) {
-                Map.Entry<String, JsonNode> entry = (Map.Entry<String, JsonNode>) it.next();
-                List<DefaultConfiguration> defaultConfigurations = new ArrayList<DefaultConfiguration>();
-                if (entry.getValue().isArray()) {
-                    for (JsonNode objNode : entry.getValue()) {
-                        objNode.fieldNames().forEachRemaining(n -> {
-                            defaultConfigurations.add(new DefaultConfiguration(n, objNode.get(n).asText(), entry.getKey()));
-                        });
-                    }
-                }
-                defaultSettingsService.addSettings(entry.getKey(), defaultConfigurations);
-            }
-            defaultSettingsService.getTypes().forEach(t -> {
-                logger.debug("Stored preferences for type: " + t);
-                defaultSettingsService.getSettingsByType(t).forEach(c -> {
-                    logger.debug(c.getName() + ": " + c.getValue());
-                });
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

@@ -39,12 +39,12 @@ public class DefaultFiltersService {
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
 
-    public DefaultFiltersService() {
+    DefaultFiltersService() {
         this.defaultFilters = new ArrayList<SubmissionListColumn>();
     }
 
     @PostConstruct
-    public void init() throws StreamReadException, DatabindException, IOException {
+    void init() throws StreamReadException, DatabindException, IOException {
         logger.info("Loading default filter columns");
 
         Resource resource = resourcePatternResolver.getResource("classpath:/filter_columns/default_filter_columns.json");

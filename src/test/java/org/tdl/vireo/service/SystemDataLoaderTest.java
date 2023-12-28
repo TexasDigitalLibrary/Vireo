@@ -19,12 +19,6 @@ public class SystemDataLoaderTest {
     private SystemDataLoader systemDataLoader;
 
     @Autowired
-    private ProquestCodesService proquesteCodesService;
-
-    @Autowired
-    private DepositorService depositorService;
-
-    @Autowired
     private DefaultSettingsService defaultSettingsService;
 
     @Autowired
@@ -33,18 +27,39 @@ public class SystemDataLoaderTest {
     @Autowired
     private DefaultFiltersService defaultFiltersService;
 
+    @Autowired
+    private DepositorService depositorService;
+
+    @Autowired
+    private ProquestCodesService proquesteCodesService;
+
     @Test
     public void testLoadSystemData() throws Exception {
-        this.assertPersistedSystemData(false);
+        assertPersistedSystemData(false);
 
         // reload to ensure nothing changes
         // technically the cache clears after restart
         // however, this is still an undesired side effect of load system data
         systemDataLoader.loadSystemData();
-        this.assertPersistedSystemData(true);
+        assertPersistedSystemData(true);
     }
 
     private void assertPersistedSystemData(boolean isReload) {
+
+        assertEquals(8, this.defaultSettingsService.getTypes().size(),
+            isReload
+                ? "Incorrect number of default setting types after reload"
+                : "Incorrect number of default setting types");
+
+        assertSettingsType(8, "application", isReload);
+        assertSettingsType(4, "footer", isReload);
+        assertSettingsType(2, "orcid", isReload);
+        assertSettingsType(9, "proquest_umi_degree_code", isReload);
+        assertSettingsType(1, "export", isReload);
+        assertSettingsType(23, "lookAndFeel", isReload);
+        assertSettingsType(1, "submission", isReload);
+        assertSettingsType(22, "shibboleth", isReload);
+
         assertEquals(10, this.defaultSubmissionListColumnService.getDefaultSubmissionListColumns().size(),
             isReload
                 ? "Incorrect number of default submission list columns after reload"
@@ -54,6 +69,13 @@ public class SystemDataLoaderTest {
             isReload
                 ? "Incorrect number of default filters after reload"
                 : "Incorrect number of default filters");
+    }
+
+    private void assertSettingsType(int expected, String type, boolean isReload) {
+        assertEquals(expected, this.defaultSettingsService.getSettingsByType(type).size(),
+            isReload
+                ? String.format("Incorrect number of default %s settings after reload", type)
+                : String.format("Incorrect number of default %s settings", type));
     }
 
 }

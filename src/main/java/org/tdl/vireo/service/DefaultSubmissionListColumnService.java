@@ -39,12 +39,12 @@ public class DefaultSubmissionListColumnService {
     @Autowired
     private SubmissionListColumnRepo submissionListColumnRepo;
 
-    public DefaultSubmissionListColumnService() {
+    DefaultSubmissionListColumnService() {
         this.defaultSubmissionListColumns = new ArrayList<SubmissionListColumn>();
     }
 
     @PostConstruct
-    public void init() throws StreamReadException, DatabindException, IOException {
+    void init() throws StreamReadException, DatabindException, IOException {
         logger.info("Loading default Submission List Columns");
 
         Resource resource = resourcePatternResolver.getResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json");
