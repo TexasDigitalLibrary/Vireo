@@ -5,10 +5,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.Application;
 
+@ActiveProfiles(value = { "test" })
 @SpringBootTest(classes = { Application.class })
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public class SystemDataLoaderTest {
@@ -33,11 +35,9 @@ public class SystemDataLoaderTest {
 
     @Test
     public void testLoadSystemData() throws Exception {
-        systemDataLoader.loadSystemData();
         this.assertPersistedSystemData(false);
 
         // reload to ensure nothing changes
-        // this breaks the in memory defaults
         // technically the cache clears after restart
         // however, this is still an undesired side effect of load system data
         systemDataLoader.loadSystemData();
@@ -45,8 +45,8 @@ public class SystemDataLoaderTest {
     }
 
     private void assertPersistedSystemData(boolean isReload) {
-        assertEquals(10, this.defaultSubmissionListColumnService.getDefaultSubmissionListColumns().size(), isReload ? "Incorrect number of default submission list columns" : "Incorrect number of default submission list columns after reload");
-        assertEquals(5, this.defaultFiltersService.getDefaultFilter().size(), isReload ? "Incorrect number of default filters" : "Incorrect number of default filters after reload");
+        assertEquals(10, this.defaultSubmissionListColumnService.getDefaultSubmissionListColumns().size(), isReload ? "Incorrect number of default submission list columns after reload" : "Incorrect number of default submission list columns");
+        assertEquals(5, this.defaultFiltersService.getDefaultFilter().size(), isReload ? "Incorrect number of default filters after reload" : "Incorrect number of default filters");
     }
 
 }

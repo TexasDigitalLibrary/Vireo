@@ -9,6 +9,7 @@ import org.tdl.vireo.model.depositor.Depositor;
 @Service
 public class DepositorService {
 
+    // TODO: make map immutable after setting values
     private final Map<String, Depositor> depositors;
 
     public DepositorService() {

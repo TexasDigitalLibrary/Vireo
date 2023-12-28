@@ -2,10 +2,9 @@ package org.tdl.vireo.model.repo.impl;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
-import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
-import edu.tamu.weaver.response.ApiResponse;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.tdl.vireo.model.NamedSearchFilter;
@@ -17,8 +16,9 @@ import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.repo.custom.UserRepoCustom;
-import org.tdl.vireo.service.DefaultFiltersService;
-import org.tdl.vireo.service.DefaultSubmissionListColumnService;
+
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
 
 public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> implements UserRepoCustom {
 
@@ -27,12 +27,6 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
 
     @Autowired
     private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
-
-    @Autowired
-    private DefaultFiltersService defaultFiltersService;
-
-    @Autowired
-    private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
     @Autowired
     private NamedSearchFilterRepo namedSearchFilterRepo;
@@ -56,8 +50,6 @@ public class UserRepoImpl extends AbstractWeaverRepoImpl<User, UserRepo> impleme
         user.putSetting("id", user.getId().toString());
         user.putSetting("displayName", user.getFirstName() + " " + user.getLastName());
         user.putSetting("preferedEmail", user.getEmail());
-        user.setFilterColumns(defaultFiltersService.getDefaultFilter());
-        user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
 
         return userRepo.update(user);
     }

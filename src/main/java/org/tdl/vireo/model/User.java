@@ -19,6 +19,7 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.ManyToMany;
@@ -33,6 +34,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Formula;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.tdl.vireo.model.listener.UserListener;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.UserValidator;
 
@@ -46,6 +48,7 @@ import edu.tamu.weaver.auth.model.AbstractWeaverUserDetails;
 import edu.tamu.weaver.user.model.IRole;
 
 @Entity
+@EntityListeners(UserListener.class)
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class User extends AbstractWeaverUserDetails {
 

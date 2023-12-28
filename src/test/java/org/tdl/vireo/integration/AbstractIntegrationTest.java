@@ -16,7 +16,7 @@ import org.tdl.vireo.service.SystemDataLoader;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 @SpringBootTest(classes = { Application.class })
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public abstract class AbstractIntegrationTest extends MockData {

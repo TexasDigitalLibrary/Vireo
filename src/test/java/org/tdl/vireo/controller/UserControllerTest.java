@@ -34,7 +34,7 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.request.FilteredPageRequest;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class UserControllerTest extends AbstractControllerTest {
 
     @Mock

@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.repo.InputTypeRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class InputTypeControllerTest extends AbstractControllerTest {
 
     @Mock

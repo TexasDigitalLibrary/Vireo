@@ -104,6 +104,7 @@ public class SystemDataLoader {
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
 
+    // TODO: replace use with the ResourcePatternResolver for loading system data
     @Autowired
     private AssetService fileIOUtility;
 
@@ -182,12 +183,6 @@ public class SystemDataLoader {
     @Autowired
     private DefaultSettingsService defaultSettingsService;
 
-    @Autowired
-    private DefaultSubmissionListColumnService defaultSubmissionListColumnService;
-
-    @Autowired
-    private DefaultFiltersService defaultFiltersService;
-
     @Transactional
     public void loadSystemData() {
 
@@ -241,9 +236,6 @@ public class SystemDataLoader {
 
         logger.info("Loading default Submission List Columns");
         loadSubmissionListColumns();
-
-        logger.info("Loading default Submission List Columns Filters");
-        loadSubmissionListColumnsFilters();
 
         logger.info("Loading default Packagers");
         loadPackagers();
@@ -832,18 +824,15 @@ public class SystemDataLoader {
         }
 
         try {
-
-            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() {
-            });
+            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() { });
             int count = 0;
             for (String defaultTitle : defaultSubmissionListColumnTitles) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
                 if (dbSubmissionListColumn != null) {
                     if (dbSubmissionListColumn.getSort() != Sort.NONE) {
+                        logger.warn("Updating sort order for default submission list column with title " + defaultTitle);
                         dbSubmissionListColumn.setSortOrder(++count);
-                        defaultSubmissionListColumnService.addDefaultSubmissionListColumn(submissionListColumnRepo.save(dbSubmissionListColumn));
-                    } else {
-                        defaultSubmissionListColumnService.addDefaultSubmissionListColumn(dbSubmissionListColumn);
+                        submissionListColumnRepo.update(dbSubmissionListColumn);
                     }
                 } else {
                     logger.warn("Unable to find submission list column with title " + defaultTitle);
@@ -855,23 +844,6 @@ public class SystemDataLoader {
             logger.debug("Unable to initialize default submission list column titles. ", e);
         }
 
-    }
-
-    private void loadSubmissionListColumnsFilters() {
-        try {
-            List<SubmissionListColumn> defaultFilterColumns = objectMapper.readValue(getFileFromResource("classpath:/filter_columns/default_filter_columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
-
-            for (SubmissionListColumn defaultFilterColumn : defaultFilterColumns) {
-                SubmissionListColumn dbDefaultFilterColumn = submissionListColumnRepo.findByTitle(defaultFilterColumn.getTitle());
-                if (dbDefaultFilterColumn != null) {
-                    defaultFiltersService.addDefaultFilter(dbDefaultFilterColumn);
-                } else {
-                    logger.warn("Unable to find default filter for column " + defaultFilterColumn.getTitle() + "!");
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private List<String> getAllSystemEmailTemplateNames() {

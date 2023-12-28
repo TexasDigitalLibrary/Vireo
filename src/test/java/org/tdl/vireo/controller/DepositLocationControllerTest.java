@@ -25,7 +25,7 @@ import org.tdl.vireo.model.depositor.SWORDv1Depositor;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
 import org.tdl.vireo.service.DepositorService;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class DepositLocationControllerTest extends AbstractControllerTest {
 
     @Mock

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProquestCodesService {
 
+    // TODO: make map immutable after setting values
     private final Map<String, Map<String, String>> codes;
 
     public ProquestCodesService() {

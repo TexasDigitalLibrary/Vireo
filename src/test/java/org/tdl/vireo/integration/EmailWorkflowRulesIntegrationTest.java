@@ -45,7 +45,7 @@ public class EmailWorkflowRulesIntegrationTest extends AbstractIntegrationTest {
 
     @BeforeEach
     public void setup() throws Exception {
-        // takes a long time, try not to add more tests in this class
+        // takes a long time, try not to add more tests in this class or switch to static @BeforeAll
         systemDataLoader.loadSystemData();
         entityControlledVocabularyService.scanForEntityControlledVocabularies();
 

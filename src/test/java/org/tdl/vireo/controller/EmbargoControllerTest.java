@@ -22,7 +22,7 @@ import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.repo.EmbargoRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class EmbargoControllerTest extends AbstractControllerTest {
 
     protected static final String EMBARGO_NAME = "Embargo Name";

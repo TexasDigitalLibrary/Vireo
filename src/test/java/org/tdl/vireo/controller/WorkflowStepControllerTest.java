@@ -36,7 +36,7 @@ import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class WorkflowStepControllerTest extends AbstractControllerTest {
 
     @Mock

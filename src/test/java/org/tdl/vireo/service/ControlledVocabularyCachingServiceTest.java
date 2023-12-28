@@ -16,7 +16,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.model.ControlledVocabularyCache;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 @SpringBootTest(classes = { Application.class })
 @ContextConfiguration
 public class ControlledVocabularyCachingServiceTest {

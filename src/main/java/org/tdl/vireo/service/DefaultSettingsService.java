@@ -11,6 +11,7 @@ import org.tdl.vireo.model.DefaultPreferences;
 @Service
 public class DefaultSettingsService {
 
+    // TODO: make list immutable after setting default values
     private final List<DefaultPreferences> defaultSettings;
 
     public DefaultSettingsService() {

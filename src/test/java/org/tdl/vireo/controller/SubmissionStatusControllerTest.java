@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class SubmissionStatusControllerTest extends AbstractControllerTest {
 
     @Mock
