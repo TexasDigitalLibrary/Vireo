@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,12 +103,6 @@ public class EmailWorkflowRulesIntegrationTest extends AbstractIntegrationTest {
         EmailWorkflowRule newEmailWorkflowRuleRef = emailWorkflowRulesForOrg.get(emailWorkflowRulesForOrg.size() - 1);
 
         assertEquals(newlyCreatedEmailWorkflowRuleId, newEmailWorkflowRuleRef.getId());
-    }
-
-    @AfterEach
-    public void cleanup() {
-        defaultFiltersService.getDefaultFilter().clear();
-        defaultSubmissionListColumnService.getDefaultSubmissionListColumns().clear();
     }
 
 }
