@@ -1,7 +1,8 @@
 package org.tdl.vireo.model.listener;
 
+import java.util.ArrayList;
+
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -27,11 +28,10 @@ public class UserListener {
     private DefaultSubmissionListColumnService defaultSubmissionViewColumnService;
 
     @PrePersist
-    @PreUpdate
-    private void beforeAnyUpdate(User user) {
+    private void beforeCreate(User user) {
         if (env.acceptsProfiles(Profiles.of("!isolated-test"))) {
-            user.setFilterColumns(defaultFiltersService.getDefaultFilter());
-            user.setSubmissionViewColumns(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns());
+            user.setFilterColumns(new ArrayList<>(defaultFiltersService.getDefaultFilter()));
+            user.setSubmissionViewColumns(new ArrayList<>(defaultSubmissionViewColumnService.getDefaultSubmissionListColumns()));
         }
     }
 
