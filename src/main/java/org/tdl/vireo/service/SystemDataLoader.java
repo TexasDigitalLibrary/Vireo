@@ -217,23 +217,169 @@ public class SystemDataLoader {
         logger.info("Finished loading system data");
     }
 
-    private void loadOrganizationCategories() {
+    private void loadLanguages() {
         try {
+            List<Language> languages = objectMapper.readValue(getFileFromResource("classpath:/languages/SYSTEM_Languages.json"), new TypeReference<List<Language>>() {});
 
-            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {});
+            for (Language language : languages) {
+                Language persistedLanguage = languageRepo.findByName(language.getName());
 
-            for (OrganizationCategory organizationCategory : organizationCategories) {
-                OrganizationCategory dbOrganizationCategory = organizationCategoryRepo.findByName(organizationCategory.getName());
-
-                if (dbOrganizationCategory == null) {
-                    dbOrganizationCategory = organizationCategoryRepo.create(organizationCategory.getName());
+                if (persistedLanguage == null) {
+                    persistedLanguage = languageRepo.create(language.getName());
+                } else {
+                    persistedLanguage.setName(language.getName());
+                    persistedLanguage = languageRepo.save(persistedLanguage);
                 }
-
             }
         } catch (RuntimeException | IOException e) {
             e.printStackTrace();
-            logger.debug("Unable to initialize default embargos. ", e);
+            logger.debug("Unable to initialize default languages. ", e);
         }
+    }
+
+    private void loadInputTypes() {
+        try {
+            List<InputType> inputTypes = objectMapper.readValue(getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {});
+
+            for (InputType inputType : inputTypes) {
+                InputType persistedInputType = inputTypeRepo.findByName(inputType.getName());
+
+                if (persistedInputType == null) {
+                    persistedInputType = inputTypeRepo.create(inputType);
+                } else {
+                    persistedInputType.setName(inputType.getName());
+                    persistedInputType = inputTypeRepo.save(persistedInputType);
+                }
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default input types. ", e);
+        }
+    }
+
+    private void loadEmailTemplates() {
+        for (String name : getAllSystemEmailTemplateNames()) {
+
+            // try to see if it already exists in the DB
+            EmailTemplate dbTemplate = emailTemplateRepo.findByNameAndSystemRequired(name, true);
+
+            // create template or upgrade the old one
+            if (dbTemplate == null) {
+                dbTemplate = loadSystemEmailTemplate(name);
+                logger.info("New System Email template being installed [" + dbTemplate.getName() + "]");
+            } else {
+                EmailTemplate loadedTemplate = loadSystemEmailTemplate(name);
+
+                // if the template in the DB doesn't match in content with the
+                // one loaded from .email file
+                if (!(dbTemplate.getMessage().equals(loadedTemplate.getMessage())) || !(dbTemplate.getSubject().equals(loadedTemplate.getSubject()))) {
+
+                    EmailTemplate possibleCustomTemplate = emailTemplateRepo.findByNameAndSystemRequired(name, false);
+
+                    // if this System template already has a custom template
+                    // (meaning one named the same but that is
+                    // !systemRequired)
+                    if (possibleCustomTemplate != null) {
+
+                        // a custom version of this System email template
+                        // already exists, it's safe to override dbTemplate's
+                        // data and save
+                        dbTemplate.setMessage(loadedTemplate.getMessage());
+                        dbTemplate.setSubject(loadedTemplate.getSubject());
+                        dbTemplate.setSystemRequired(true);
+
+                        logger.info("Upgrading Old System Email Template for [" + dbTemplate.getName() + "]");
+
+                        emailTemplateRepo.save(dbTemplate);
+                    }
+                    // there is no custom one yet, we need to make the
+                    // dbTemplate !systemRequired and the save loadedTemplate
+                    else {
+                        logger.info("Upgrading Old System Email Template and creating custom version for [" + dbTemplate.getName() + "]");
+                        dbTemplate.setSystemRequired(false);
+                        emailTemplateRepo.save(dbTemplate);
+                        emailTemplateRepo.save(loadedTemplate);
+                    }
+                }
+            }
+        }
+    }
+
+    private List<String> getAllSystemEmailTemplateNames() {
+        try {
+
+            List<String> names = new ArrayList<String>();
+            for (Resource resource : resourcePatternResolver.getResources("classpath:/emails/*.email")) {
+                String fileName = resource.getFilename();
+                String templateName = decodeTemplateName(fileName);
+                names.add(templateName);
+            }
+
+            return names;
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to get emails directory from classpath.");
+        }
+    }
+
+    private String decodeTemplateName(String path) {
+        if (path.endsWith(".email")) {
+            path = path.substring(0, path.length() - ".email".length());
+        }
+        return path.replaceAll("_", " ");
+    }
+
+    private EmailTemplate loadSystemEmailTemplate(String name) {
+
+        try {
+            Resource resource = resourcePatternResolver.getResource("classpath:/emails/" + encodeTemplateName(name));
+            String data = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
+
+            // Remove any comment lines
+            data = data.replaceAll("\\s*#.*[\\n\\r]{1}", "");
+
+            // Extract the subject
+            Matcher subjectMatcher = SUBJECT_PATTERN.matcher(data);
+            if (!subjectMatcher.find()) {
+                throw new IllegalStateException("Unable to identify the template's subject.");
+            }
+            String subject = subjectMatcher.group(1).trim();
+
+            // Trim the subject leaving just the body.
+            int index = data.indexOf("\n");
+            if (index < 0) {
+                index = data.indexOf("\r");
+            }
+
+            String message = data.substring(index);
+
+            if (subject == null || subject.length() == 0) {
+                throw new IllegalStateException("Unable to identify the template's subject.");
+            }
+
+            if (message == null || message.length() == 0) {
+                throw new IllegalStateException("Unable to identify the template's message.");
+            }
+
+            EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired(name, true);
+
+            if (template == null) {
+                template = emailTemplateRepo.create(name, subject, message);
+                template.setSystemRequired(true);
+            } else {
+                template.setSubject(subject);
+                template.setMessage(message);
+            }
+
+            return emailTemplateRepo.save(template);
+
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to generate system email template: " + name, e);
+        }
+    }
+
+    private static String encodeTemplateName(String name) {
+        return name.replaceAll(" ", "_") + ".email";
     }
 
     private void loadDegreeLevels() {
@@ -304,6 +450,161 @@ public class SystemDataLoader {
         } catch (RuntimeException | IOException e) {
             e.printStackTrace();
             logger.debug("Unable to initialize default graduation months.", e);
+        }
+    }
+
+    private void loadEmbargos() {
+        try {
+
+            List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
+
+            for (Embargo embargoDefinition : embargoDefinitions) {
+                Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
+
+                if (dbEmbargo == null) {
+                    dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
+                    dbEmbargo.setSystemRequired(true);
+                    embargoRepo.save(dbEmbargo);
+                } else {
+                    dbEmbargo.setDescription(embargoDefinition.getDescription());
+                    dbEmbargo.setDuration(embargoDefinition.getDuration());
+                    dbEmbargo.setGuarantor(embargoDefinition.getGuarantor());
+                    dbEmbargo.isActive(embargoDefinition.isActive());
+                    dbEmbargo.setSystemRequired(embargoDefinition.getSystemRequired());
+                    embargoRepo.save(dbEmbargo);
+                }
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default embargos. ", e);
+        }
+    }
+
+    private void loadSubmissionStatuses() {
+        try {
+            File statusesFile = getFileFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses.json");
+            File transitionsFile = getFileFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses_Transitions.json");
+
+            // read and map json to SubmissionStatus
+            TypeFactory tf = TypeFactory.defaultInstance();
+            CollectionType type = tf.constructCollectionType(ArrayList.class, SubmissionStatus.class);
+            List<SubmissionStatus> systemSubmissionStatuses = objectMapper.readValue(statusesFile, type);
+
+            systemSubmissionStatuses.forEach(ss -> {
+                SubmissionStatus found = submissionStatusRepo.findByName(ss.getName());
+
+                if (found == null) {
+                    ss.setTransitionSubmissionStatuses(new ArrayList<>());
+                    found = submissionStatusRepo.create(ss.getName(), ss.isArchived(), ss.isPublishable(), ss.isDeletable(), ss.isEditableByReviewer(), ss.isEditableByStudent(), ss.isActive(), ss.getSubmissionState());
+                }
+            });
+
+            type = tf.constructCollectionType(ArrayList.class, HashMap.class);
+            List<HashMap<?, ?>> transitions = objectMapper.readValue(transitionsFile, type);
+
+            for (Map<?, ?> transition : transitions) {
+                List<SubmissionStatus> list = new ArrayList<>();
+                Long transitionId = ((Integer) transition.get("id")).longValue();
+                SubmissionStatus ss = submissionStatusRepo.findById(transitionId).get();
+
+                for (Object idObject : (ArrayList<?>) transition.get("transitionSubmissionStatuses")) {
+                    Long id = ((Integer) idObject).longValue();
+                    Optional<SubmissionStatus> submissionStatus = submissionStatusRepo.findById(id);
+                    if (submissionStatus.isPresent()) {
+                        list.add(submissionStatus.get());
+                    }
+                }
+
+                ss.setTransitionSubmissionStatuses(list);
+                submissionStatusRepo.save(ss);
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to generate system organization", e);
+        }
+    }
+
+    private SubmissionStatus recursivelyFindOrCreateSubmissionStatus(SubmissionStatus submissionStatus) {
+        // check to see if the SubmissionStatus exists
+        SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(submissionStatus.getName());
+
+        // create new SubmissionStatus if not already exists
+        if (newSubmissionStatus == null) {
+            newSubmissionStatus = submissionStatusRepo.create(submissionStatus.getName(), submissionStatus.isArchived(), submissionStatus.isPublishable(), submissionStatus.isDeletable(), submissionStatus.isEditableByReviewer(), submissionStatus.isEditableByStudent(), submissionStatus.isActive(), submissionStatus.getSubmissionState());
+        }
+
+        // temporary list of SubmissionState
+        List<SubmissionStatus> transitionStatuses = new ArrayList<SubmissionStatus>();
+
+        submissionStatus.getTransitionSubmissionStatuses().forEach(transitionStatus -> {
+
+            // check to see if the Transistion SubmissionStatus exists
+            SubmissionStatus newTransitionStatus = submissionStatusRepo.findByName(transitionStatus.getName());
+
+            // create new Transistion SubmissionStatus if not already exists
+            if (newTransitionStatus == null) {
+                newTransitionStatus = submissionStatusRepo.create(transitionStatus.getName(), transitionStatus.isArchived(), transitionStatus.isPublishable(), transitionStatus.isDeletable(), transitionStatus.isEditableByReviewer(), transitionStatus.isEditableByStudent(), transitionStatus.isActive(), transitionStatus.getSubmissionState());
+                newTransitionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(transitionStatus));
+            }
+
+            transitionStatuses.add(newTransitionStatus);
+
+        });
+
+        newSubmissionStatus.setTransitionSubmissionStatuses(transitionStatuses);
+
+        return submissionStatusRepo.save(newSubmissionStatus);
+    }
+
+    private void loadOrganizationCategories() {
+        try {
+
+            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {});
+
+            for (OrganizationCategory organizationCategory : organizationCategories) {
+                OrganizationCategory dbOrganizationCategory = organizationCategoryRepo.findByName(organizationCategory.getName());
+
+                if (dbOrganizationCategory == null) {
+                    dbOrganizationCategory = organizationCategoryRepo.create(organizationCategory.getName());
+                }
+
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default embargos. ", e);
+        }
+    }
+
+     private void loadDocumentTypes() {
+        try {
+
+            List<DocumentType> documentTypes = objectMapper.readValue(getFileFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {});
+
+            for (DocumentType documentType : documentTypes) {
+
+                FieldPredicate fieldPredicate = documentType.getFieldPredicate();
+
+                FieldPredicate dbFieldPredicate = fieldPredicateRepo.findByValue(fieldPredicate.getValue());
+                if (dbFieldPredicate == null) {
+                    dbFieldPredicate = fieldPredicateRepo.create(fieldPredicate.getValue(), Boolean.valueOf(true));
+                } else {
+                    dbFieldPredicate.setValue(fieldPredicate.getValue());
+                    dbFieldPredicate.setDocumentTypePredicate(fieldPredicate.getDocumentTypePredicate());
+                    dbFieldPredicate = fieldPredicateRepo.save(dbFieldPredicate);
+                }
+
+                DocumentType dbDocumentType = documentTypeRepo.findByNameAndFieldPredicate(documentType.getName(), dbFieldPredicate);
+
+                if (dbDocumentType == null) {
+                    dbDocumentType = documentTypeRepo.create(documentType.getName(), dbFieldPredicate);
+                } else {
+                    dbDocumentType.setName(documentType.getName());
+                    dbDocumentType.setFieldPredicate(dbFieldPredicate);
+                    documentTypeRepo.save(dbDocumentType);
+                }
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default document types. ", e);
         }
     }
 
@@ -495,362 +796,6 @@ public class SystemDataLoader {
         organization.setEmailWorkflowRules(emailWorkflowRules);
     }
 
-    private void loadSubmissionStatuses() {
-        try {
-            File statusesFile = getFileFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses.json");
-            File transitionsFile = getFileFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses_Transitions.json");
-
-            // read and map json to SubmissionStatus
-            TypeFactory tf = TypeFactory.defaultInstance();
-            CollectionType type = tf.constructCollectionType(ArrayList.class, SubmissionStatus.class);
-            List<SubmissionStatus> systemSubmissionStatuses = objectMapper.readValue(statusesFile, type);
-
-            systemSubmissionStatuses.forEach(ss -> {
-                SubmissionStatus found = submissionStatusRepo.findByName(ss.getName());
-
-                if (found == null) {
-                    ss.setTransitionSubmissionStatuses(new ArrayList<>());
-                    found = submissionStatusRepo.create(ss.getName(), ss.isArchived(), ss.isPublishable(), ss.isDeletable(), ss.isEditableByReviewer(), ss.isEditableByStudent(), ss.isActive(), ss.getSubmissionState());
-                }
-            });
-
-            type = tf.constructCollectionType(ArrayList.class, HashMap.class);
-            List<HashMap<?, ?>> transitions = objectMapper.readValue(transitionsFile, type);
-
-            for (Map<?, ?> transition : transitions) {
-                List<SubmissionStatus> list = new ArrayList<>();
-                Long transitionId = ((Integer) transition.get("id")).longValue();
-                SubmissionStatus ss = submissionStatusRepo.findById(transitionId).get();
-
-                for (Object idObject : (ArrayList<?>) transition.get("transitionSubmissionStatuses")) {
-                    Long id = ((Integer) idObject).longValue();
-                    Optional<SubmissionStatus> submissionStatus = submissionStatusRepo.findById(id);
-                    if (submissionStatus.isPresent()) {
-                        list.add(submissionStatus.get());
-                    }
-                }
-
-                ss.setTransitionSubmissionStatuses(list);
-                submissionStatusRepo.save(ss);
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to generate system organization", e);
-        }
-    }
-
-    private SubmissionStatus recursivelyFindOrCreateSubmissionStatus(SubmissionStatus submissionStatus) {
-
-        // check to see if the SubmissionStatus exists
-        SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(submissionStatus.getName());
-
-        // create new SubmissionStatus if not already exists
-        if (newSubmissionStatus == null) {
-            newSubmissionStatus = submissionStatusRepo.create(submissionStatus.getName(), submissionStatus.isArchived(), submissionStatus.isPublishable(), submissionStatus.isDeletable(), submissionStatus.isEditableByReviewer(), submissionStatus.isEditableByStudent(), submissionStatus.isActive(), submissionStatus.getSubmissionState());
-        }
-
-        // temporary list of SubmissionState
-        List<SubmissionStatus> transitionStatuses = new ArrayList<SubmissionStatus>();
-
-        submissionStatus.getTransitionSubmissionStatuses().forEach(transitionStatus -> {
-
-            // check to see if the Transistion SubmissionStatus exists
-            SubmissionStatus newTransitionStatus = submissionStatusRepo.findByName(transitionStatus.getName());
-
-            // create new Transistion SubmissionStatus if not already exists
-            if (newTransitionStatus == null) {
-                newTransitionStatus = submissionStatusRepo.create(transitionStatus.getName(), transitionStatus.isArchived(), transitionStatus.isPublishable(), transitionStatus.isDeletable(), transitionStatus.isEditableByReviewer(), transitionStatus.isEditableByStudent(), transitionStatus.isActive(), transitionStatus.getSubmissionState());
-                newTransitionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(transitionStatus));
-            }
-
-            transitionStatuses.add(newTransitionStatus);
-
-        });
-
-        newSubmissionStatus.setTransitionSubmissionStatuses(transitionStatuses);
-
-        return submissionStatusRepo.save(newSubmissionStatus);
-    }
-
-    private EmailTemplate loadSystemEmailTemplate(String name) {
-
-        try {
-            Resource resource = resourcePatternResolver.getResource("classpath:/emails/" + encodeTemplateName(name));
-            String data = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
-
-            // Remove any comment lines
-            data = data.replaceAll("\\s*#.*[\\n\\r]{1}", "");
-
-            // Extract the subject
-            Matcher subjectMatcher = SUBJECT_PATTERN.matcher(data);
-            if (!subjectMatcher.find()) {
-                throw new IllegalStateException("Unable to identify the template's subject.");
-            }
-            String subject = subjectMatcher.group(1).trim();
-
-            // Trim the subject leaving just the body.
-            int index = data.indexOf("\n");
-            if (index < 0) {
-                index = data.indexOf("\r");
-            }
-
-            String message = data.substring(index);
-
-            if (subject == null || subject.length() == 0) {
-                throw new IllegalStateException("Unable to identify the template's subject.");
-            }
-
-            if (message == null || message.length() == 0) {
-                throw new IllegalStateException("Unable to identify the template's message.");
-            }
-
-            EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired(name, true);
-
-            if (template == null) {
-                template = emailTemplateRepo.create(name, subject, message);
-                template.setSystemRequired(true);
-            } else {
-                template.setSubject(subject);
-                template.setMessage(message);
-            }
-
-            return emailTemplateRepo.save(template);
-
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to generate system email template: " + name, e);
-        }
-    }
-
-    private void loadLanguages() {
-        try {
-            List<Language> languages = objectMapper.readValue(getFileFromResource("classpath:/languages/SYSTEM_Languages.json"), new TypeReference<List<Language>>() {});
-
-            for (Language language : languages) {
-                Language persistedLanguage = languageRepo.findByName(language.getName());
-
-                if (persistedLanguage == null) {
-                    persistedLanguage = languageRepo.create(language.getName());
-                } else {
-                    persistedLanguage.setName(language.getName());
-                    persistedLanguage = languageRepo.save(persistedLanguage);
-                }
-            }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default languages. ", e);
-        }
-    }
-
-    private void loadInputTypes() {
-        try {
-            List<InputType> inputTypes = objectMapper.readValue(getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {});
-
-            for (InputType inputType : inputTypes) {
-                InputType persistedInputType = inputTypeRepo.findByName(inputType.getName());
-
-                if (persistedInputType == null) {
-                    persistedInputType = inputTypeRepo.create(inputType);
-                } else {
-                    persistedInputType.setName(inputType.getName());
-                    persistedInputType = inputTypeRepo.save(persistedInputType);
-                }
-            }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default input types. ", e);
-        }
-    }
-
-    private void loadEmailTemplates() {
-
-        for (String name : getAllSystemEmailTemplateNames()) {
-
-            // try to see if it already exists in the DB
-            EmailTemplate dbTemplate = emailTemplateRepo.findByNameAndSystemRequired(name, true);
-
-            // create template or upgrade the old one
-            if (dbTemplate == null) {
-                dbTemplate = loadSystemEmailTemplate(name);
-                logger.info("New System Email template being installed [" + dbTemplate.getName() + "]");
-            } else {
-                EmailTemplate loadedTemplate = loadSystemEmailTemplate(name);
-
-                // if the template in the DB doesn't match in content with the
-                // one loaded from .email file
-                if (!(dbTemplate.getMessage().equals(loadedTemplate.getMessage())) || !(dbTemplate.getSubject().equals(loadedTemplate.getSubject()))) {
-
-                    EmailTemplate possibleCustomTemplate = emailTemplateRepo.findByNameAndSystemRequired(name, false);
-
-                    // if this System template already has a custom template
-                    // (meaning one named the same but that is
-                    // !systemRequired)
-                    if (possibleCustomTemplate != null) {
-
-                        // a custom version of this System email template
-                        // already exists, it's safe to override dbTemplate's
-                        // data and save
-                        dbTemplate.setMessage(loadedTemplate.getMessage());
-                        dbTemplate.setSubject(loadedTemplate.getSubject());
-                        dbTemplate.setSystemRequired(true);
-
-                        logger.info("Upgrading Old System Email Template for [" + dbTemplate.getName() + "]");
-
-                        emailTemplateRepo.save(dbTemplate);
-                    }
-                    // there is no custom one yet, we need to make the
-                    // dbTemplate !systemRequired and the save loadedTemplate
-                    else {
-                        logger.info("Upgrading Old System Email Template and creating custom version for [" + dbTemplate.getName() + "]");
-                        dbTemplate.setSystemRequired(false);
-                        emailTemplateRepo.save(dbTemplate);
-                        emailTemplateRepo.save(loadedTemplate);
-                    }
-                }
-            }
-        }
-    }
-
-    private void loadSubmissionListColumns() {
-
-        try {
-
-            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
-
-            for (SubmissionListColumn submissionListColumn : submissionListColumns) {
-                SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
-
-                // check to see if the InputType exists
-                InputType inputType = inputTypeRepo.findByName(submissionListColumn.getInputType().getName());
-
-                if (inputType == null) {
-                    inputType = inputTypeRepo.create(submissionListColumn.getInputType().getName());
-                } else {
-                    inputType.setName(submissionListColumn.getInputType().getName());
-                    inputType = inputTypeRepo.save(inputType);
-                }
-
-                if (dbSubmissionListColumn == null) {
-                    if (submissionListColumn.getPredicate() != null) {
-                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), inputType);
-                    } else {
-                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath(), inputType);
-                    }
-                } else {
-                    dbSubmissionListColumn.setSort(submissionListColumn.getSort());
-                    if (submissionListColumn.getPredicate() != null) {
-                        dbSubmissionListColumn.setPredicate(submissionListColumn.getPredicate());
-                    }
-                    dbSubmissionListColumn.setValuePath(submissionListColumn.getValuePath());
-                    submissionListColumnRepo.save(dbSubmissionListColumn);
-                }
-            }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize submission list columns. ", e);
-        }
-
-        try {
-            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() { });
-            int count = 0;
-            for (String defaultTitle : defaultSubmissionListColumnTitles) {
-                SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
-                if (dbSubmissionListColumn != null) {
-                    if (dbSubmissionListColumn.getSort() != Sort.NONE) {
-                        logger.warn("Updating sort order for default submission list column with title " + defaultTitle);
-                        dbSubmissionListColumn.setSortOrder(++count);
-                        submissionListColumnRepo.update(dbSubmissionListColumn);
-                    }
-                } else {
-                    logger.warn("Unable to find submission list column with title " + defaultTitle);
-                }
-            }
-
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default submission list column titles. ", e);
-        }
-
-    }
-
-    private List<String> getAllSystemEmailTemplateNames() {
-        try {
-
-            List<String> names = new ArrayList<String>();
-            for (Resource resource : resourcePatternResolver.getResources("classpath:/emails/*.email")) {
-                String fileName = resource.getFilename();
-                String templateName = decodeTemplateName(fileName);
-                names.add(templateName);
-            }
-
-            return names;
-
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to get emails directory from classpath.");
-        }
-    }
-
-    private void loadEmbargos() {
-
-        try {
-
-            List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
-
-            for (Embargo embargoDefinition : embargoDefinitions) {
-                Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
-
-                if (dbEmbargo == null) {
-                    dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
-                    dbEmbargo.setSystemRequired(true);
-                    embargoRepo.save(dbEmbargo);
-                } else {
-                    dbEmbargo.setDescription(embargoDefinition.getDescription());
-                    dbEmbargo.setDuration(embargoDefinition.getDuration());
-                    dbEmbargo.setGuarantor(embargoDefinition.getGuarantor());
-                    dbEmbargo.isActive(embargoDefinition.isActive());
-                    dbEmbargo.setSystemRequired(embargoDefinition.getSystemRequired());
-                    embargoRepo.save(dbEmbargo);
-                }
-            }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default embargos. ", e);
-        }
-    }
-
-    private void loadDocumentTypes() {
-
-        try {
-
-            List<DocumentType> documentTypes = objectMapper.readValue(getFileFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {});
-
-            for (DocumentType documentType : documentTypes) {
-
-                FieldPredicate fieldPredicate = documentType.getFieldPredicate();
-
-                FieldPredicate dbFieldPredicate = fieldPredicateRepo.findByValue(fieldPredicate.getValue());
-                if (dbFieldPredicate == null) {
-                    dbFieldPredicate = fieldPredicateRepo.create(fieldPredicate.getValue(), Boolean.valueOf(true));
-                } else {
-                    dbFieldPredicate.setValue(fieldPredicate.getValue());
-                    dbFieldPredicate.setDocumentTypePredicate(fieldPredicate.getDocumentTypePredicate());
-                    dbFieldPredicate = fieldPredicateRepo.save(dbFieldPredicate);
-                }
-
-                DocumentType dbDocumentType = documentTypeRepo.findByNameAndFieldPredicate(documentType.getName(), dbFieldPredicate);
-
-                if (dbDocumentType == null) {
-                    dbDocumentType = documentTypeRepo.create(documentType.getName(), dbFieldPredicate);
-                } else {
-                    dbDocumentType.setName(documentType.getName());
-                    dbDocumentType.setFieldPredicate(dbFieldPredicate);
-                    documentTypeRepo.save(dbDocumentType);
-                }
-            }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default document types. ", e);
-        }
-    }
-
     private void loadControlledVocabularies() {
 
         List<File> controlledVocabularyFiles = new ArrayList<File>();
@@ -924,6 +869,66 @@ public class SystemDataLoader {
         }
     }
 
+    private void loadSubmissionListColumns() {
+        try {
+
+            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
+
+            for (SubmissionListColumn submissionListColumn : submissionListColumns) {
+                SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
+
+                // check to see if the InputType exists
+                InputType inputType = inputTypeRepo.findByName(submissionListColumn.getInputType().getName());
+
+                if (inputType == null) {
+                    inputType = inputTypeRepo.create(submissionListColumn.getInputType().getName());
+                } else {
+                    inputType.setName(submissionListColumn.getInputType().getName());
+                    inputType = inputTypeRepo.save(inputType);
+                }
+
+                if (dbSubmissionListColumn == null) {
+                    if (submissionListColumn.getPredicate() != null) {
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), inputType);
+                    } else {
+                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath(), inputType);
+                    }
+                } else {
+                    dbSubmissionListColumn.setSort(submissionListColumn.getSort());
+                    if (submissionListColumn.getPredicate() != null) {
+                        dbSubmissionListColumn.setPredicate(submissionListColumn.getPredicate());
+                    }
+                    dbSubmissionListColumn.setValuePath(submissionListColumn.getValuePath());
+                    submissionListColumnRepo.save(dbSubmissionListColumn);
+                }
+            }
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize submission list columns. ", e);
+        }
+
+        try {
+            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() { });
+            int count = 0;
+            for (String defaultTitle : defaultSubmissionListColumnTitles) {
+                SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
+                if (dbSubmissionListColumn != null) {
+                    if (dbSubmissionListColumn.getSort() != Sort.NONE) {
+                        logger.warn("Updating sort order for default submission list column with title " + defaultTitle);
+                        dbSubmissionListColumn.setSortOrder(++count);
+                        submissionListColumnRepo.update(dbSubmissionListColumn);
+                    }
+                } else {
+                    logger.warn("Unable to find submission list column with title " + defaultTitle);
+                }
+            }
+
+        } catch (RuntimeException | IOException e) {
+            e.printStackTrace();
+            logger.debug("Unable to initialize default submission list column titles. ", e);
+        }
+    }
+
     private void loadPackagers() {
         if (abstractPackagerRepo.findByName("DSpaceMETS") == null) {
             abstractPackagerRepo.createDSpaceMetsPackager("DSpaceMETS", new DSpaceMetsFormatter());
@@ -943,17 +948,6 @@ public class SystemDataLoader {
         if (abstractPackagerRepo.findByName("Marc21") == null) {
             abstractPackagerRepo.createMARC21Packager("Marc21", new Marc21Formatter());
         }
-    }
-
-    private static String encodeTemplateName(String name) {
-        return name.replaceAll(" ", "_") + ".email";
-    }
-
-    private String decodeTemplateName(String path) {
-        if (path.endsWith(".email")) {
-            path = path.substring(0, path.length() - ".email".length());
-        }
-        return path.replaceAll("_", " ");
     }
 
     private File getFileFromResource(String resourcePath) throws IOException {
