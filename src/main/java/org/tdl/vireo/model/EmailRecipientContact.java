@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Entity
-public class EmailRecipientContact extends AbstractEmailRecipient implements EmailRecipient {
+public class EmailRecipientContact extends AbstractEmailRecipient {
 
     @Transient
     private Logger LOG = LoggerFactory.getLogger(this.getClass());
