@@ -2,23 +2,32 @@ package org.tdl.vireo.integration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tdl.vireo.model.EmailRecipient;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.SubmissionStatus;
-import org.tdl.vireo.model.repo.AbstractEmailRecipientRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class EmailWorkflowRulesIntegrationTest extends AbstractIntegrationTest {
 
@@ -27,9 +36,6 @@ public class EmailWorkflowRulesIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
     private EmailTemplateRepo emailTemplateRepo;
-
-    @Autowired
-    private AbstractEmailRecipientRepo abstractEmailRecipientRepo;
 
     @Autowired
     private OrganizationRepo organizationRepo;
@@ -42,9 +48,12 @@ public class EmailWorkflowRulesIntegrationTest extends AbstractIntegrationTest {
         // takes a long time, try not to add more tests in this class
         systemDataLoader.loadSystemData();
         entityControlledVocabularyService.scanForEntityControlledVocabularies();
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
     @Test
+    @WithMockUser(roles = { "MANAGER" })
     public void testEmailWorkflowRulePersistenceUponReload() throws Exception {
         Organization org = organizationRepo.findAll().get(0);
 
@@ -54,18 +63,32 @@ public class EmailWorkflowRulesIntegrationTest extends AbstractIntegrationTest {
 
         EmailTemplate emailTemplate = emailTemplateRepo.findAll().get(0);
 
-        EmailRecipient emailRecipient = abstractEmailRecipientRepo.findAll().get(0);
-
-        EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
-        org.addEmailWorkflowRule(newEmailWorkflowRule);
-        organizationRepo.update(org);
-
         Long existingOrgWithNewWorkflowRuleId = org.getId();
-        Long newlyCreatedEmailWorkflowRuleId = newEmailWorkflowRule.getId();
+        Long submissionStatusId = submissionStatus.getId();
+        Long emailTemplateId = emailTemplate.getId();
 
-        int numberOfWorkflowRulesForOrg = org.getEmailWorkflowRules().size();
+        JsonNode recipientNode = objectMapper.createObjectNode()
+            .put("type", "SUBMITTER");
 
-        assertEquals(3, numberOfWorkflowRulesForOrg);
+        Map<String, Object> data = new HashMap<>();
+        data.put("recipient", recipientNode);
+        data.put("submissionStatusId", submissionStatusId);
+        data.put("templateId", emailTemplateId);
+
+        MvcResult results = mockMvc.perform(post("/organization/{requestingOrgId}/add-email-workflow-rule", org.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.convertValue(data, JsonNode.class).toString().getBytes("utf-8"))
+            )
+            .andExpect(status().isOk()).andExpect(jsonPath("$.meta.status").value("SUCCESS"))
+            .andExpect(jsonPath("$.payload.id").isNumber())
+            .andReturn();
+
+        Long newlyCreatedEmailWorkflowRuleId = objectMapper.readTree(results.getResponse().getContentAsString())
+            .get("payload")
+            .get("id")
+            .asLong();
+
+        assertEquals(3, org.getEmailWorkflowRules().size());
 
         this.setup();
 
@@ -76,7 +99,7 @@ public class EmailWorkflowRulesIntegrationTest extends AbstractIntegrationTest {
 
         List<EmailWorkflowRule> emailWorkflowRulesForOrg = newOrgRef.getEmailWorkflowRules();
 
-        assertEquals(numberOfWorkflowRulesForOrg, emailWorkflowRulesForOrg.size());
+        assertEquals(3, emailWorkflowRulesForOrg.size());
 
         EmailWorkflowRule newEmailWorkflowRuleRef = emailWorkflowRulesForOrg.get(emailWorkflowRulesForOrg.size() - 1);
 
