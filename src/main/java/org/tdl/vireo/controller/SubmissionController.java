@@ -106,104 +106,106 @@ import org.tdl.vireo.view.FieldValueSubmissionView;
 @RequestMapping("/submission")
 public class SubmissionController {
 
-  private static final Logger LOG = LoggerFactory.getLogger(SubmissionController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SubmissionController.class);
 
-  private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
+    private static final String STARTING_SUBMISSION_STATUS_NAME = "In Progress";
 
-  private static final String NEEDS_CORRECTION_SUBMISSION_STATUS_NAME = "Needs Correction";
+    private static final String NEEDS_CORRECTION_SUBMISSION_STATUS_NAME = "Needs Correction";
 
-  private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME = "Corrections Received";
+    private static final String CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME = "Corrections Received";
 
-  @Autowired
-  private UserRepo userRepo;
+    @Autowired
+    private UserRepo userRepo;
 
-  @Autowired
-  private SubmissionRepo submissionRepo;
+    @Autowired
+    private SubmissionRepo submissionRepo;
 
-  @Autowired
-  private FieldValueRepo fieldValueRepo;
+    @Autowired
+    private FieldValueRepo fieldValueRepo;
 
-  @Autowired
-  private SubmissionFieldProfileRepo submissionFieldProfileRepo;
+    @Autowired
+    private SubmissionFieldProfileRepo submissionFieldProfileRepo;
 
-  @Autowired
-  private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
+    @Autowired
+    private NamedSearchFilterGroupRepo namedSearchFilterGroupRepo;
 
-  @Autowired
-  private OrganizationRepo organizationRepo;
+    @Autowired
+    private OrganizationRepo organizationRepo;
 
-  @Autowired
-  private SubmissionStatusRepo submissionStatusRepo;
+    @Autowired
+    private SubmissionStatusRepo submissionStatusRepo;
 
-  @Autowired
-  private CustomActionDefinitionRepo customActionDefinitionRepo;
+    @Autowired
+    private CustomActionDefinitionRepo customActionDefinitionRepo;
 
-  @Autowired
-  private SubmissionEmailService submissionEmailService;
+    @Autowired
+    private SubmissionEmailService submissionEmailService;
 
-  @Autowired
-  private TemplateUtility templateUtility;
+    @Autowired
+    private TemplateUtility templateUtility;
 
-  @Autowired
-  private AssetService assetService;
+    @Autowired
+    private AssetService assetService;
 
-  @Autowired
-  private ConfigurationRepo configurationRepo;
+    @Autowired
+    private ConfigurationRepo configurationRepo;
 
-  @Autowired
-  private ActionLogRepo actionLogRepo;
+    @Autowired
+    private ActionLogRepo actionLogRepo;
 
-  @Autowired
-  private DepositLocationRepo depositLocationRepo;
+    @Autowired
+    private DepositLocationRepo depositLocationRepo;
 
-  @Autowired
-  private DepositorService depositorService;
+    @Autowired
+    private DepositorService depositorService;
 
-  @Autowired
-  private PackagerUtility packagerUtility;
+    @Autowired
+    private PackagerUtility packagerUtility;
 
-  @Autowired
-  private SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
-  @Autowired
-  private ObjectMapper objectMapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-  @Autowired
-  private CustomActionValueRepo customActionValueRepo;
+    @Autowired
+    private CustomActionValueRepo customActionValueRepo;
 
-  @Value("${app.document.folder:private}")
-  private String documentFolder;
+    @Value("${app.document.folder:private}")
+    private String documentFolder;
 
-  @Value("${app.documentType.rename:}")
-  private String documentTypesToRename;
+    @Value("${app.documentType.rename:}")
+    private String documentTypesToRename;
 
-  @RequestMapping("/all")
-  @PreAuthorize("hasRole('ADMIN')")
-  public ApiResponse getAll() {
-    return new ApiResponse(SUCCESS, submissionRepo.findAll());
-  }
-
-  @RequestMapping("/all-by-user")
-  @PreAuthorize("hasRole('STUDENT')")
-  public ApiResponse getAllByUser(@WeaverUser User user) {
-    return new ApiResponse(SUCCESS, submissionRepo.findAllViewBySubmitterId(user.getId(), FieldValueSubmissionView.class));
-  }
-
-  @JsonView(Views.SubmissionIndividualActionLogs.class)
-  @RequestMapping("/get-one/{submissionId}")
-  @PreAuthorize("hasRole('STUDENT')")
-  public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
-    Submission submission = null;
-    if (user.getRole().ordinal() <= Role.ROLE_REVIEWER.ordinal()) {
-      submission = submissionRepo.read(submissionId);
-    } else {
-      submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
+    @RequestMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse getAll() {
+        return new ApiResponse(SUCCESS, submissionRepo.findAll());
     }
-    if (submission == null) {
-      return new ApiResponse(ERROR, "Submission not found");
+
+    @RequestMapping("/all-by-user")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse getAllByUser(@WeaverUser User user) {
+        return new ApiResponse(SUCCESS, submissionRepo.findAllViewBySubmitterId(user.getId(), FieldValueSubmissionView.class));
     }
-    return new ApiResponse(SUCCESS, submission);
-  }
+
+    @JsonView(Views.SubmissionIndividualActionLogs.class)
+    @RequestMapping("/get-one/{submissionId}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse getOne(@WeaverUser User user, @PathVariable Long submissionId) {
+        Submission submission = null;
+        if (user.getRole().ordinal() <= Role.ROLE_REVIEWER.ordinal()) {
+            submission = submissionRepo.read(submissionId);
+        } else {
+            submission = submissionRepo.findOneBySubmitterAndId(user, submissionId);
+        }
+
+        if (submission == null) {
+            return new ApiResponse(ERROR, "Submission not found");
+        }
+
+        return new ApiResponse(SUCCESS, submission);
+    }
 
     @GetMapping("/get-one/{submissionId}/action-logs")
     @PreAuthorize("hasRole('STUDENT')")
@@ -226,68 +228,67 @@ public class SubmissionController {
         return new ApiResponse(SUCCESS, actionLogRepo.getAllActionLogs(advisorAccessHash, false, pageable));
     }
 
-  @RequestMapping(value = "/create", method = RequestMethod.POST)
-  @PreAuthorize("hasRole('STUDENT')")
-  public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials,
-      @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsException {
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse createSubmission(@WeaverUser User user, @WeaverCredentials Credentials credentials,
+        @RequestBody Map<String, String> data) throws OrganizationDoesNotAcceptSubmissionsException {
 
-    Submission submission = submissionRepo.create(
-      user,
-      organizationRepo.read(Long.valueOf(data.get("organizationId"))),
-      submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME),
-      credentials,
-      customActionDefinitionRepo.findAll()
-    );
-    actionLogRepo.createPublicLog(submission, user, "Submission created.");
+        Submission submission = submissionRepo.create(
+            user,
+            organizationRepo.read(Long.valueOf(data.get("organizationId"))),
+            submissionStatusRepo.findByName(STARTING_SUBMISSION_STATUS_NAME),
+            credentials,
+            customActionDefinitionRepo.findAll()
+        );
+        actionLogRepo.createPublicLog(submission, user, "Submission created.");
 
-    return new ApiResponse(SUCCESS, submission.getId());
-  }
-
-  @Transactional
-  @RequestMapping("/delete/{submissionId}")
-  @PreAuthorize("hasRole('STUDENT')")
-  public ApiResponse deleteSubmission(@WeaverUser User user, @PathVariable Long submissionId) {
-    Submission submissionToDelete = submissionRepo.read(submissionId);
-
-    ApiResponse response = new ApiResponse(SUCCESS);
-    if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail())
-        || user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
-      submissionRepo.delete(submissionToDelete);
-    } else {
-      response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
+        return new ApiResponse(SUCCESS, submission.getId());
     }
 
-    return response;
-  }
+    @Transactional
+    @RequestMapping("/delete/{submissionId}")
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse deleteSubmission(@WeaverUser User user, @PathVariable Long submissionId) {
+        Submission submissionToDelete = submissionRepo.read(submissionId);
 
-  @RequestMapping(value = "/{submissionId}/add-comment", method = RequestMethod.POST)
-  @PreAuthorize("hasRole('STUDENT')")
-  public ApiResponse addComment(@WeaverUser User user, @PathVariable Long submissionId,
-      @RequestBody Map<String, Object> data) throws JsonProcessingException, IOException {
+        ApiResponse response = new ApiResponse(SUCCESS);
+        if (submissionToDelete.getSubmitter().getEmail().equals(user.getEmail()) || user.getRole().ordinal() <= Role.ROLE_MANAGER.ordinal()) {
+            submissionRepo.delete(submissionToDelete);
+        } else {
+            response = new ApiResponse(ERROR, "Insufficient permisions to delete this submission.");
+        }
 
-    Submission submission = submissionRepo.read(submissionId);
+        return response;
+    }
 
-    String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
-    Boolean sendEmailToRecipient = data.get("sendEmailToRecipient") != null ? (Boolean) data.get("sendEmailToRecipient") : true;
+    @RequestMapping(value = "/{submissionId}/add-comment", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('STUDENT')")
+    public ApiResponse addComment(@WeaverUser User user, @PathVariable Long submissionId,
+        @RequestBody Map<String, Object> data) throws JsonProcessingException, IOException {
 
-    data.forEach((key, value) -> System.out.println(key + ":" + value));
+        Submission submission = submissionRepo.read(submissionId);
 
-    if (commentVisibility.equals("public")) {
-        if (sendEmailToRecipient.equals(true)) {
-            submissionEmailService.sendAutomatedEmails(user, submission.getId(), data);
-        } else{
+        String commentVisibility = data.get("commentVisibility") != null ? (String) data.get("commentVisibility") : "public";
+        Boolean sendEmailToRecipient = data.get("sendEmailToRecipient") != null ? (Boolean) data.get("sendEmailToRecipient") : true;
+
+        data.forEach((key, value) -> System.out.println(key + ":" + value));
+
+        if (commentVisibility.equals("public")) {
+            if (sendEmailToRecipient.equals(true)) {
+                submissionEmailService.sendAutomatedEmails(user, submission.getId(), data);
+            } else{
+                String subject = (String) data.get("subject");
+                String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
+                actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
+            }   
+        } else {
             String subject = (String) data.get("subject");
             String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-            actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
-        }   
-    } else {
-      String subject = (String) data.get("subject");
-      String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-      actionLogRepo.createPrivateLog(submission, user, subject + ": " + templatedMessage);
-    }
+            actionLogRepo.createPrivateLog(submission, user, subject + ": " + templatedMessage);
+        }
 
-    return new ApiResponse(SUCCESS);
-  }
+        return new ApiResponse(SUCCESS);
+    }
 
     @RequestMapping(value = "/{submissionId}/send-email", method = RequestMethod.POST)
     @PreAuthorize("hasRole('REVIEWER')")
@@ -321,9 +322,9 @@ public class SubmissionController {
                     actionLogRepo.createPublicLog(sub, user, subject + ": " + templatedMessage);
                 }
             } else {
-              String subject = (String) data.get("subject");
-              String templatedMessage = templateUtility.compileString((String) data.get("message"), sub);
-              actionLogRepo.createPrivateLog(sub, user, subject + ": " + templatedMessage);
+                String subject = (String) data.get("subject");
+                String templatedMessage = templateUtility.compileString((String) data.get("message"), sub);
+                actionLogRepo.createPrivateLog(sub, user, subject + ": " + templatedMessage);
             }
         });
 
@@ -618,16 +619,16 @@ public class SubmissionController {
                             }
                         }
                         // LICENSES
-                    	for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
-                        	Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
-                        	byte[] fileBytes = Files.readAllBytes(path);
+                        for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
+                            Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+                            byte[] fileBytes = Files.readAllBytes(path);
                             int sfxIndx;
                             String licFileName = ldfv.getFileName();
                             if((sfxIndx = licFileName.indexOf("."))>0){
                                 licFileName = licFileName.substring(0,sfxIndx).toUpperCase()+licFileName.substring(sfxIndx);
                             }
-                        	b.putNextEntry(new ZipEntry(personName+"_permission/"+licFileName));
-                        	b.write(fileBytes);
+                            b.putNextEntry(new ZipEntry(personName+"_permission/"+licFileName));
+                            b.write(fileBytes);
                             b.closeEntry();
                         }
                         // PRIMARY_DOC
@@ -702,7 +703,7 @@ public class SubmissionController {
 
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
 
-					//METADATA
+                    //METADATA
                     if (exportPackage.isMap()) {
                         for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
                             zos.putNextEntry(new ZipEntry(submissionName + fileEntry.getKey()));
