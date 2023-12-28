@@ -9,10 +9,10 @@ import org.tdl.vireo.model.SubmissionListColumn;
 @Service
 public class DefaultSubmissionListColumnService {
 
-    private List<SubmissionListColumn> defaultSubmissionListColumns = new ArrayList<SubmissionListColumn>();
+    private final List<SubmissionListColumn> defaultSubmissionListColumns;
 
-    public void setDefaultSubmissionListColumns(List<SubmissionListColumn> defaultSubmissionListColumns) {
-        this.defaultSubmissionListColumns = defaultSubmissionListColumns;
+    public DefaultSubmissionListColumnService() {
+        this.defaultSubmissionListColumns = new ArrayList<SubmissionListColumn>();
     }
 
     public List<SubmissionListColumn> getDefaultSubmissionListColumns() {
@@ -21,10 +21,6 @@ public class DefaultSubmissionListColumnService {
 
     public void addDefaultSubmissionListColumn(SubmissionListColumn defaultSubmissionListColumn) {
         this.defaultSubmissionListColumns.add(defaultSubmissionListColumn);
-    }
-
-    public void removeDefaultSubmissionListColumn(SubmissionListColumn defaultSubmissionListColumn) {
-        this.defaultSubmissionListColumns.remove(defaultSubmissionListColumn);
     }
 
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class ProquestCodesService {
 
-    private Map<String, Map<String, String>> codes;
+    private final Map<String, Map<String, String>> codes;
 
     public ProquestCodesService() {
         codes = new HashMap<String, Map<String, String>>();

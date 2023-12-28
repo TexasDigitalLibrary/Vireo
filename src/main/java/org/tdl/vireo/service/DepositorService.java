@@ -9,7 +9,11 @@ import org.tdl.vireo.model.depositor.Depositor;
 @Service
 public class DepositorService {
 
-    private Map<String, Depositor> depositors = new HashMap<String, Depositor>();
+    private final Map<String, Depositor> depositors;
+
+    public DepositorService() {
+        this.depositors = new HashMap<String, Depositor>();
+    }
 
     public Depositor getDepositor(String depositorName) {
         return depositors.get(depositorName);

@@ -11,7 +11,7 @@ import org.tdl.vireo.model.DefaultPreferences;
 @Service
 public class DefaultSettingsService {
 
-    private static List<DefaultPreferences> defaultSettings;
+    private final List<DefaultPreferences> defaultSettings;
 
     public DefaultSettingsService() {
         defaultSettings = new ArrayList<DefaultPreferences>();

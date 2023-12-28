@@ -9,14 +9,10 @@ import org.tdl.vireo.model.SubmissionListColumn;
 @Service
 public class DefaultFiltersService {
 
-    private List<SubmissionListColumn> defaultFilters = new ArrayList<SubmissionListColumn>();
+    private final List<SubmissionListColumn> defaultFilters;
 
     public DefaultFiltersService() {
-
-    }
-
-    public void setDefaultFilter(List<SubmissionListColumn> defaultFilter) {
-        this.defaultFilters = defaultFilter;
+        this.defaultFilters = new ArrayList<SubmissionListColumn>();
     }
 
     public List<SubmissionListColumn> getDefaultFilter() {
@@ -25,10 +21,6 @@ public class DefaultFiltersService {
 
     public void addDefaultFilter(SubmissionListColumn defaultFilter) {
         this.defaultFilters.add(defaultFilter);
-    }
-
-    public void removeDefaultFilter(SubmissionListColumn defaultFilter) {
-        this.defaultFilters.remove(defaultFilter);
     }
 
 }
