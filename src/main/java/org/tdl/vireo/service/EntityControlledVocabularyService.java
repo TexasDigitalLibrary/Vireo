@@ -35,7 +35,7 @@ public class EntityControlledVocabularyService {
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
 
-    private Map<String, EntityControlledVocabularyRepo<EntityControlledVocabulary>> entityControlledVocabularyRepos;
+    private final Map<String, EntityControlledVocabularyRepo<EntityControlledVocabulary>> entityControlledVocabularyRepos;
 
     public EntityControlledVocabularyService() {
         entityControlledVocabularyRepos = new HashMap<String, EntityControlledVocabularyRepo<EntityControlledVocabulary>>();
