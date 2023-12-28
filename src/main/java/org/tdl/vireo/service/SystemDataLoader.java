@@ -1,7 +1,7 @@
 package org.tdl.vireo.service;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,10 +92,6 @@ public class SystemDataLoader {
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
-
-    // TODO: replace use with the ResourcePatternResolver for loading system data
-    @Autowired
-    private AssetService fileIOUtility;
 
     @Autowired
     private InputTypeRepo inputTypeRepo;
@@ -219,7 +215,7 @@ public class SystemDataLoader {
 
     private void loadLanguages() {
         try {
-            List<Language> languages = objectMapper.readValue(getFileFromResource("classpath:/languages/SYSTEM_Languages.json"), new TypeReference<List<Language>>() {});
+            List<Language> languages = objectMapper.readValue(getInputStreamFromResource("classpath:/languages/SYSTEM_Languages.json"), new TypeReference<List<Language>>() {});
 
             for (Language language : languages) {
                 Language persistedLanguage = languageRepo.findByName(language.getName());
@@ -239,7 +235,7 @@ public class SystemDataLoader {
 
     private void loadInputTypes() {
         try {
-            List<InputType> inputTypes = objectMapper.readValue(getFileFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {});
+            List<InputType> inputTypes = objectMapper.readValue(getInputStreamFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {});
 
             for (InputType inputType : inputTypes) {
                 InputType persistedInputType = inputTypeRepo.findByName(inputType.getName());
@@ -330,8 +326,8 @@ public class SystemDataLoader {
     }
 
     private EmailTemplate loadSystemEmailTemplate(String name) {
-
         try {
+
             Resource resource = resourcePatternResolver.getResource("classpath:/emails/" + encodeTemplateName(name));
             String data = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
 
@@ -385,7 +381,7 @@ public class SystemDataLoader {
     private void loadDegreeLevels() {
         try {
 
-            List<DegreeLevel> degreeLevels = objectMapper.readValue(getFileFromResource("classpath:/degree_levels/SYSTEM_Degree_Levels.json"), new TypeReference<List<DegreeLevel>>() {});
+            List<DegreeLevel> degreeLevels = objectMapper.readValue(getInputStreamFromResource("classpath:/degree_levels/SYSTEM_Degree_Levels.json"), new TypeReference<List<DegreeLevel>>() {});
 
             for (DegreeLevel degreeLevel : degreeLevels) {
                 DegreeLevel dbDegreeLevel = degreeLevelRepo.findByName(degreeLevel.getName());
@@ -404,7 +400,7 @@ public class SystemDataLoader {
     private void loadDegrees() {
         try {
 
-            List<Degree> degrees = objectMapper.readValue(getFileFromResource("classpath:/degrees/SYSTEM_Degrees.json"), new TypeReference<List<Degree>>() {});
+            List<Degree> degrees = objectMapper.readValue(getInputStreamFromResource("classpath:/degrees/SYSTEM_Degrees.json"), new TypeReference<List<Degree>>() {});
 
             for (Degree degree : degrees) {
 
@@ -437,7 +433,7 @@ public class SystemDataLoader {
     private void loadGraduationMonths() {
         try {
 
-            List<GraduationMonth> graduationMonths = objectMapper.readValue(getFileFromResource("classpath:/graduation_months/SYSTEM_Graduation_Months.json"), new TypeReference<List<GraduationMonth>>() {});
+            List<GraduationMonth> graduationMonths = objectMapper.readValue(getInputStreamFromResource("classpath:/graduation_months/SYSTEM_Graduation_Months.json"), new TypeReference<List<GraduationMonth>>() {});
 
             for (GraduationMonth graduationMonth : graduationMonths) {
                 GraduationMonth persistedGraduationMonth = graduationMonthRepo.findByMonth(graduationMonth.getMonth());
@@ -456,7 +452,7 @@ public class SystemDataLoader {
     private void loadEmbargos() {
         try {
 
-            List<Embargo> embargoDefinitions = objectMapper.readValue(getFileFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
+            List<Embargo> embargoDefinitions = objectMapper.readValue(getInputStreamFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
 
             for (Embargo embargoDefinition : embargoDefinitions) {
                 Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
@@ -482,13 +478,13 @@ public class SystemDataLoader {
 
     private void loadSubmissionStatuses() {
         try {
-            File statusesFile = getFileFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses.json");
-            File transitionsFile = getFileFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses_Transitions.json");
+            InputStream statusesInputStream = getInputStreamFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses.json");
+            InputStream transitionsInputStream = getInputStreamFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses_Transitions.json");
 
             // read and map json to SubmissionStatus
             TypeFactory tf = TypeFactory.defaultInstance();
             CollectionType type = tf.constructCollectionType(ArrayList.class, SubmissionStatus.class);
-            List<SubmissionStatus> systemSubmissionStatuses = objectMapper.readValue(statusesFile, type);
+            List<SubmissionStatus> systemSubmissionStatuses = objectMapper.readValue(statusesInputStream, type);
 
             systemSubmissionStatuses.forEach(ss -> {
                 SubmissionStatus found = submissionStatusRepo.findByName(ss.getName());
@@ -500,7 +496,7 @@ public class SystemDataLoader {
             });
 
             type = tf.constructCollectionType(ArrayList.class, HashMap.class);
-            List<HashMap<?, ?>> transitions = objectMapper.readValue(transitionsFile, type);
+            List<HashMap<?, ?>> transitions = objectMapper.readValue(transitionsInputStream, type);
 
             for (Map<?, ?> transition : transitions) {
                 List<SubmissionStatus> list = new ArrayList<>();
@@ -558,7 +554,7 @@ public class SystemDataLoader {
     private void loadOrganizationCategories() {
         try {
 
-            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getFileFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {});
+            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getInputStreamFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {});
 
             for (OrganizationCategory organizationCategory : organizationCategories) {
                 OrganizationCategory dbOrganizationCategory = organizationCategoryRepo.findByName(organizationCategory.getName());
@@ -577,7 +573,7 @@ public class SystemDataLoader {
      private void loadDocumentTypes() {
         try {
 
-            List<DocumentType> documentTypes = objectMapper.readValue(getFileFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {});
+            List<DocumentType> documentTypes = objectMapper.readValue(getInputStreamFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {});
 
             for (DocumentType documentType : documentTypes) {
 
@@ -614,7 +610,7 @@ public class SystemDataLoader {
 
         try {
             // read and map json to Organization
-            Organization systemOrganization = objectMapper.readValue(getFileFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
+            Organization systemOrganization = objectMapper.readValue(getInputStreamFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
 
             // check to see if organization category exists
             OrganizationCategory category = organizationCategoryRepo.findByName(systemOrganization.getCategory().getName());
@@ -797,48 +793,44 @@ public class SystemDataLoader {
     }
 
     private void loadControlledVocabularies() {
-
-        List<File> controlledVocabularyFiles = new ArrayList<File>();
         try {
-            controlledVocabularyFiles = fileIOUtility.getResourceDirectoryListing("classpath:/controlled_vocabularies/");
+            for (Resource vocabularyResourceJson : resourcePatternResolver.getResources("classpath:/controlled_vocabularies/*.json")) {
+                try {
+                    ControlledVocabulary cv = objectMapper.readValue(vocabularyResourceJson.getInputStream(), ControlledVocabulary.class);
+
+                    // check to see if Controlled Vocabulary exists, and if so, merge up with it
+                    ControlledVocabulary persistedCV = controlledVocabularyRepo.findByName(cv.getName());
+
+                    if (persistedCV == null) {
+                        persistedCV = controlledVocabularyRepo.create(cv.getName());
+                    }
+
+                    for (VocabularyWord vw : cv.getDictionary()) {
+
+                        VocabularyWord persistedVW = vocabularyRepo.findByNameAndControlledVocabulary(vw.getName(), persistedCV);
+
+                        if (persistedVW == null) {
+                            persistedVW = vocabularyRepo.create(persistedCV, vw.getName(), vw.getDefinition(), vw.getIdentifier(), vw.getContacts());
+                            persistedCV = controlledVocabularyRepo.findByName(cv.getName());
+                        } else {
+                            persistedVW.setDefinition(vw.getDefinition());
+                            persistedVW.setIdentifier(vw.getIdentifier());
+                            persistedVW.setContacts(vw.getContacts());
+                            persistedVW = vocabularyRepo.save(persistedVW);
+                        }
+                    }
+
+                } catch (JsonParseException e) {
+                    e.printStackTrace();
+                } catch (JsonMappingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        for (File vocabularyJson : controlledVocabularyFiles) {
-            try {
-                ControlledVocabulary cv = objectMapper.readValue(vocabularyJson, ControlledVocabulary.class);
-
-                // check to see if Controlled Vocabulary exists, and if so, merge up with it
-                ControlledVocabulary persistedCV = controlledVocabularyRepo.findByName(cv.getName());
-
-                if (persistedCV == null) {
-                    persistedCV = controlledVocabularyRepo.create(cv.getName());
-                }
-
-                for (VocabularyWord vw : cv.getDictionary()) {
-
-                    VocabularyWord persistedVW = vocabularyRepo.findByNameAndControlledVocabulary(vw.getName(), persistedCV);
-
-                    if (persistedVW == null) {
-                        persistedVW = vocabularyRepo.create(persistedCV, vw.getName(), vw.getDefinition(), vw.getIdentifier(), vw.getContacts());
-                        persistedCV = controlledVocabularyRepo.findByName(cv.getName());
-                    } else {
-                        persistedVW.setDefinition(vw.getDefinition());
-                        persistedVW.setIdentifier(vw.getIdentifier());
-                        persistedVW.setContacts(vw.getContacts());
-                        persistedVW = vocabularyRepo.save(persistedVW);
-                    }
-                }
-
-            } catch (JsonParseException e) {
-                e.printStackTrace();
-            } catch (JsonMappingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
         }
     }
 
@@ -872,7 +864,7 @@ public class SystemDataLoader {
     private void loadSubmissionListColumns() {
         try {
 
-            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
+            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getInputStreamFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
 
             for (SubmissionListColumn submissionListColumn : submissionListColumns) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
@@ -908,7 +900,7 @@ public class SystemDataLoader {
         }
 
         try {
-            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getFileFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() { });
+            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getInputStreamFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() { });
             int count = 0;
             for (String defaultTitle : defaultSubmissionListColumnTitles) {
                 SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
@@ -950,8 +942,8 @@ public class SystemDataLoader {
         }
     }
 
-    private File getFileFromResource(String resourcePath) throws IOException {
-        return fileIOUtility.getFileFromResource(resourcePath);
+    private InputStream getInputStreamFromResource(String resourcePath) throws IOException {
+        return resourcePatternResolver.getResource(resourcePath).getInputStream();
     }
 
 }
