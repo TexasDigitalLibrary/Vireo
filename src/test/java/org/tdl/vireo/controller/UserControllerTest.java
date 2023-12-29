@@ -9,15 +9,13 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import edu.tamu.weaver.auth.model.Credentials;
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.response.ApiStatus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -33,6 +31,10 @@ import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.request.FilteredPageRequest;
+
+import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.response.ApiStatus;
 
 @ActiveProfiles(value = { "test", "isolated-test" })
 public class UserControllerTest extends AbstractControllerTest {
@@ -313,16 +315,6 @@ public class UserControllerTest extends AbstractControllerTest {
         ApiResponse response = userController.updateSetting(user1, settings2);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
-    }
-
-    @Test
-    public void testHandleExceptions() {
-        String message = "example exception";
-
-        ApiResponse response = userController.handleExceptions(new RuntimeException(message));
-
-        assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
-        assertEquals(message, response.getMeta().getMessage());
     }
 
 }
