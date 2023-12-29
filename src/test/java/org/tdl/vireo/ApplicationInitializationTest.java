@@ -1,8 +1,10 @@
-package org.tdl.vireo.service;
+package org.tdl.vireo;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -11,15 +13,27 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdl.vireo.Application;
+import org.tdl.vireo.model.ControlledVocabulary;
+import org.tdl.vireo.model.VocabularyWord;
+import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
+import org.tdl.vireo.service.DefaultFiltersService;
+import org.tdl.vireo.service.DefaultSettingsService;
+import org.tdl.vireo.service.DefaultSubmissionListColumnService;
+import org.tdl.vireo.service.DepositorService;
+import org.tdl.vireo.service.EntityControlledVocabularyService;
+import org.tdl.vireo.service.ProquestCodesService;
+import org.tdl.vireo.service.SystemDataLoader;
 
 @ActiveProfiles(value = { "test" })
 @SpringBootTest(classes = { Application.class })
 @Transactional(propagation = Propagation.REQUIRES_NEW)
-public class SystemDataLoaderTest {
+public class ApplicationInitializationTest {
 
     @Autowired
     private SystemDataLoader systemDataLoader;
+
+    @Autowired
+    private EntityControlledVocabularyService entityControlledVocabularyService;
 
     @Autowired
     private DefaultSettingsService defaultSettingsService;
@@ -36,16 +50,26 @@ public class SystemDataLoaderTest {
     @Autowired
     private ProquestCodesService proquesteCodesService;
 
+    @Autowired
+    private ControlledVocabularyRepo controlledVocabularyRepo;
+
     @Test
     public void testLoadSystemData() throws Exception {
-        assertPersistedSystemData(false);
+        assertInMemorySystemData(false);
 
         // reload to ensure nothing changes
         systemDataLoader.loadSystemData();
-        assertPersistedSystemData(true);
+        entityControlledVocabularyService.scanForEntityControlledVocabularies();
+        assertInMemorySystemData(true);
     }
 
-    private void assertPersistedSystemData(boolean isReload) {
+    private void assertInMemorySystemData(boolean isReload) throws ClassNotFoundException {
+        assertEntityControlledVocabulary(48, "Degrees");
+        assertEntityControlledVocabulary(3, "Graduation Months");
+        assertEntityControlledVocabulary(5, "Proquest Embargos");
+        assertEntityControlledVocabulary(1, "Languages");
+        assertEntityControlledVocabulary(4, "Default Embargos");
+
         assertEquals(8, this.defaultSettingsService.getTypes().size(),
             isReload
                 ? "Incorrect number of default setting types after reload"
@@ -78,6 +102,15 @@ public class SystemDataLoaderTest {
         assertProquestCodes(82, "languages", isReload);
         assertProquestCodes(1219, "degrees", isReload);
         assertProquestCodes(288, "subjects", isReload);
+    }
+
+    private void assertEntityControlledVocabulary(int expected, String name) throws ClassNotFoundException {
+        List<VocabularyWord> dictionary = entityControlledVocabularyService.getControlledVocabularyWords(name);
+        assertEquals(expected, dictionary.size());
+        ControlledVocabulary cv = controlledVocabularyRepo.findByName(name);
+        assertNotNull(cv);
+        assertTrue(cv.getIsEntityProperty());
+        assertEquals(expected, cv.getDictionary().size());
     }
 
     private void assertSettingsType(int expected, String type, boolean isReload) {
