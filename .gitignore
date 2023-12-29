@@ -108,3 +108,7 @@ dist/
 !**/src/test/**
 
 *.mv.db
+
+### Environment Specific ###
+application-*.yml
+logback-*.yml

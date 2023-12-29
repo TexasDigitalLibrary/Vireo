@@ -1,6 +1,4 @@
 spring:
-  config:
-    import: file:src/main/resources/application.yml
   sql:
     init:
       platform: h2
@@ -13,7 +11,7 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate.ddl-auto: create-drop
 
-# logging (is overwritten by logback-test.xml)
+# logging (is overwritten by src/test/resources/logback.xml)
 logging:
   level:
     com.zaxxer: ERROR
