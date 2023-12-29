@@ -4,10 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,6 +36,7 @@ import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.Sort;
 import org.tdl.vireo.model.SubmissionListColumn;
+import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.WorkflowStep;
@@ -73,9 +72,9 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.CollectionType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 
 /**
  * This class is to load and persist system data from resources.
@@ -477,69 +476,44 @@ public class SystemDataLoader {
     }
 
     private void loadSubmissionStatuses() {
+
         try {
-            InputStream statusesInputStream = getInputStreamFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses.json");
-            InputStream transitionsInputStream = getInputStreamFromResource("classpath:/submission_statuses/SYSTEM_Submission_Statuses_Transitions.json");
+            // read System Submission Status as JsonNode
+            JsonNode systemSubmissionStatus = objectMapper.readTree(getInputStreamFromResource("classpath:/submission_statuses/SYSTEM_Submission_Status.json"));
 
-            // read and map json to SubmissionStatus
-            TypeFactory tf = TypeFactory.defaultInstance();
-            CollectionType type = tf.constructCollectionType(ArrayList.class, SubmissionStatus.class);
-            List<SubmissionStatus> systemSubmissionStatuses = objectMapper.readValue(statusesInputStream, type);
+            // check to see if the SubmissionStatus exists
+            SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(systemSubmissionStatus.get("name").asText());
 
-            systemSubmissionStatuses.forEach(ss -> {
-                SubmissionStatus found = submissionStatusRepo.findByName(ss.getName());
-
-                if (found == null) {
-                    ss.setTransitionSubmissionStatuses(new ArrayList<>());
-                    found = submissionStatusRepo.create(ss.getName(), ss.isArchived(), ss.isPublishable(), ss.isDeletable(), ss.isEditableByReviewer(), ss.isEditableByStudent(), ss.isActive(), ss.getSubmissionState());
-                }
-            });
-
-            type = tf.constructCollectionType(ArrayList.class, HashMap.class);
-            List<HashMap<?, ?>> transitions = objectMapper.readValue(transitionsInputStream, type);
-
-            for (Map<?, ?> transition : transitions) {
-                List<SubmissionStatus> list = new ArrayList<>();
-                Long transitionId = ((Integer) transition.get("id")).longValue();
-                SubmissionStatus ss = submissionStatusRepo.findById(transitionId).get();
-
-                for (Object idObject : (ArrayList<?>) transition.get("transitionSubmissionStatuses")) {
-                    Long id = ((Integer) idObject).longValue();
-                    Optional<SubmissionStatus> submissionStatus = submissionStatusRepo.findById(id);
-                    if (submissionStatus.isPresent()) {
-                        list.add(submissionStatus.get());
-                    }
-                }
-
-                ss.setTransitionSubmissionStatuses(list);
-                submissionStatusRepo.save(ss);
+            // recursively find or create new SubmissionStatus if not already exists
+            if (newSubmissionStatus == null) {
+                recursivelyFindOrCreateSubmissionStatus(systemSubmissionStatus);
             }
+
         } catch (IOException e) {
-            throw new IllegalStateException("Unable to generate system organization", e);
+            throw new IllegalStateException("Unable to generate system submission status", e);
         }
     }
 
-    private SubmissionStatus recursivelyFindOrCreateSubmissionStatus(SubmissionStatus submissionStatus) {
+    private SubmissionStatus recursivelyFindOrCreateSubmissionStatus(JsonNode submissionStatus) {
         // check to see if the SubmissionStatus exists
-        SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(submissionStatus.getName());
+        SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(submissionStatus.get("name").asText());
 
         // create new SubmissionStatus if not already exists
         if (newSubmissionStatus == null) {
-            newSubmissionStatus = submissionStatusRepo.create(submissionStatus.getName(), submissionStatus.isArchived(), submissionStatus.isPublishable(), submissionStatus.isDeletable(), submissionStatus.isEditableByReviewer(), submissionStatus.isEditableByStudent(), submissionStatus.isActive(), submissionStatus.getSubmissionState());
+            newSubmissionStatus = createSubmissionStatus(submissionStatus);
         }
 
-        // temporary list of SubmissionState
+        // temporary list of transition SubmissionState
         List<SubmissionStatus> transitionStatuses = new ArrayList<SubmissionStatus>();
 
-        submissionStatus.getTransitionSubmissionStatuses().forEach(transitionStatus -> {
+        ((ArrayNode) submissionStatus.get("transitionSubmissionStatuses")).forEach(transitionStatus -> {
 
             // check to see if the Transistion SubmissionStatus exists
-            SubmissionStatus newTransitionStatus = submissionStatusRepo.findByName(transitionStatus.getName());
+            SubmissionStatus newTransitionStatus = submissionStatusRepo.findByName(transitionStatus.get("name").asText());
 
             // create new Transistion SubmissionStatus if not already exists
             if (newTransitionStatus == null) {
-                newTransitionStatus = submissionStatusRepo.create(transitionStatus.getName(), transitionStatus.isArchived(), transitionStatus.isPublishable(), transitionStatus.isDeletable(), transitionStatus.isEditableByReviewer(), transitionStatus.isEditableByStudent(), transitionStatus.isActive(), transitionStatus.getSubmissionState());
-                newTransitionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(transitionStatus));
+                newTransitionStatus = recursivelyFindOrCreateSubmissionStatus(transitionStatus);
             }
 
             transitionStatuses.add(newTransitionStatus);
@@ -549,6 +523,19 @@ public class SystemDataLoader {
         newSubmissionStatus.setTransitionSubmissionStatuses(transitionStatuses);
 
         return submissionStatusRepo.save(newSubmissionStatus);
+    }
+
+    private SubmissionStatus createSubmissionStatus(JsonNode submissionStatus) {
+        return submissionStatusRepo.create(
+            submissionStatus.get("name").asText(),
+            submissionStatus.get("isArchived").asBoolean(),
+            submissionStatus.get("isPublishable").asBoolean(),
+            submissionStatus.get("isDeletable").asBoolean(),
+            submissionStatus.get("isEditableByReviewer").asBoolean(),
+            submissionStatus.get("isEditableByStudent").asBoolean(),
+            submissionStatus.get("isActive").asBoolean(),
+            SubmissionState.from(submissionStatus.get("submissionState").asInt())
+        );
     }
 
     private void loadOrganizationCategories() {
@@ -746,9 +733,7 @@ public class SystemDataLoader {
 
             // create new SubmissionStatus if not already exists
             if (newSubmissionStatus == null) {
-                newSubmissionStatus = submissionStatusRepo.create(emailWorkflowRule.getSubmissionStatus().getName(), emailWorkflowRule.getSubmissionStatus().isArchived(), emailWorkflowRule.getSubmissionStatus().isPublishable(), emailWorkflowRule.getSubmissionStatus().isDeletable(), emailWorkflowRule.getSubmissionStatus().isEditableByReviewer(), emailWorkflowRule.getSubmissionStatus().isEditableByStudent(), emailWorkflowRule.getSubmissionStatus().isActive(),
-                        emailWorkflowRule.getSubmissionStatus().getSubmissionState());
-                newSubmissionStatus = submissionStatusRepo.save(recursivelyFindOrCreateSubmissionStatus(emailWorkflowRule.getSubmissionStatus()));
+                throw new RuntimeException("No submission status found with name " + emailWorkflowRule.getSubmissionStatus().getName());
             }
 
             // check to see if the EmailTemplate exists
