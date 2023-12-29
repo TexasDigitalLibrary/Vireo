@@ -30,16 +30,21 @@ vireo.service("ModalService", function ($timeout) {
     };
 
     ModalService.closeModal = function () {
-        if (modalElement) {
+        if (!!modalElement) {
             modalElement.modal('hide');
             modalElement.off('shown.bs.modal');
             modalElement = undefined;
         }
 
         // forcefully restore the body element
-        var body = angular.element('body');
-        body.removeClass('modal-open');
-        body.css('padding-right', '');
+        bodyElement.removeClass('modal-open');
+        bodyElement.css('padding-right', '');
+
+        // forcefully remove modal-backdrop div with
+        var backdropElement = angular.element('div.modal-backdrop');
+        if (!!backdropElement) {
+            backdropElement.remove();
+        }
     };
 
     return ModalService;
