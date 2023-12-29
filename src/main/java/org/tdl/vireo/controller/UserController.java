@@ -188,7 +188,8 @@ public class UserController {
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ResponseBody
     public ApiResponse handleExceptions(Exception exception) {
-        LOG.error(exception.getMessage(), exception);
+        LOG.error(exception.getMessage());
+        LOG.debug(exception.getMessage(), exception);
         return new ApiResponse(ERROR, exception.getMessage());
     }
 
