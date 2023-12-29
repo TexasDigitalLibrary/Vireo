@@ -1,11 +1,13 @@
 package org.tdl.vireo.controller.advice;
 
 import static edu.tamu.weaver.response.ApiStatus.ERROR;
+import static java.lang.String.format;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +38,11 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     private static final Logger logger = LoggerFactory.getLogger(CustomResponseEntityExceptionHandler.class);
 
+    private static final String PAYLOAD_TOO_LARGE_TEMPLATE = "File exceeds max size %s";
+
+    @Value("${spring.servlet.multipart.max-file-size:20MB}")
+    private String maxFileSize;
+
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
@@ -49,9 +56,10 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE)
     @ResponseBody
     public ApiResponse handleMultipartException(MultipartException exception) {
+        String message = format(PAYLOAD_TOO_LARGE_TEMPLATE, maxFileSize);
         logger.error(exception.getMessage());
-        logger.debug("File size limit exceeded", exception);
-        return new ApiResponse(ERROR, "File size limit exceeded");
+        logger.debug(message, exception);
+        return new ApiResponse(ERROR, message);
     }
 
     @ExceptionHandler(SwordDepositBadGatewayException.class)
