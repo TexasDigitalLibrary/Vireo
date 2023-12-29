@@ -69,9 +69,7 @@ import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -161,8 +159,8 @@ public class SystemDataLoader {
     @Autowired
     private ProquestCodesService proquesteCodesService;
 
-    @Transactional
-    public void loadSystemData() {
+    @Transactional(rollbackFor = IOException.class)
+    public void loadSystemData() throws IOException {
 
         logger.info("Loading system languages");
         loadLanguages();
@@ -203,56 +201,46 @@ public class SystemDataLoader {
         logger.info("Loading system Proquest subject codes controlled vocabulary");
         loadProquestSubjectCodesControlledVocabulary();
 
-        logger.info("Loading system Submission List Columns");
+        logger.info("Loading system submission list columns");
         loadSubmissionListColumns();
 
-        logger.info("Loading system Packagers");
+        logger.info("Loading system packagers");
         loadPackagers();
 
         logger.info("Finished loading system data");
     }
 
-    private void loadLanguages() {
-        try {
-            List<Language> languages = objectMapper.readValue(getInputStreamFromResource("classpath:/languages/SYSTEM_Languages.json"), new TypeReference<List<Language>>() {});
+    private void loadLanguages() throws IOException {
+        List<Language> languages = objectMapper.readValue(getInputStreamFromResource("classpath:/languages/SYSTEM_Languages.json"), new TypeReference<List<Language>>() {});
 
-            for (Language language : languages) {
-                Language persistedLanguage = languageRepo.findByName(language.getName());
+        for (Language language : languages) {
+            Language persistedLanguage = languageRepo.findByName(language.getName());
 
-                if (persistedLanguage == null) {
-                    persistedLanguage = languageRepo.create(language.getName());
-                } else {
-                    persistedLanguage.setName(language.getName());
-                    persistedLanguage = languageRepo.save(persistedLanguage);
-                }
+            if (persistedLanguage == null) {
+                persistedLanguage = languageRepo.create(language.getName());
+            } else {
+                persistedLanguage.setName(language.getName());
+                persistedLanguage = languageRepo.save(persistedLanguage);
             }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default languages. ", e);
         }
     }
 
-    private void loadInputTypes() {
-        try {
-            List<InputType> inputTypes = objectMapper.readValue(getInputStreamFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {});
+    private void loadInputTypes() throws IOException {
+        List<InputType> inputTypes = objectMapper.readValue(getInputStreamFromResource("classpath:/input_types/SYSTEM_Input_Types.json"), new TypeReference<List<InputType>>() {});
 
-            for (InputType inputType : inputTypes) {
-                InputType persistedInputType = inputTypeRepo.findByName(inputType.getName());
+        for (InputType inputType : inputTypes) {
+            InputType persistedInputType = inputTypeRepo.findByName(inputType.getName());
 
-                if (persistedInputType == null) {
-                    persistedInputType = inputTypeRepo.create(inputType);
-                } else {
-                    persistedInputType.setName(inputType.getName());
-                    persistedInputType = inputTypeRepo.save(persistedInputType);
-                }
+            if (persistedInputType == null) {
+                persistedInputType = inputTypeRepo.create(inputType);
+            } else {
+                persistedInputType.setName(inputType.getName());
+                persistedInputType = inputTypeRepo.save(persistedInputType);
             }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default input types. ", e);
         }
     }
 
-    private void loadEmailTemplates() {
+    private void loadEmailTemplates() throws IOException {
         for (String name : getAllSystemEmailTemplateNames()) {
 
             // try to see if it already exists in the DB
@@ -300,21 +288,15 @@ public class SystemDataLoader {
         }
     }
 
-    private List<String> getAllSystemEmailTemplateNames() {
-        try {
-
-            List<String> names = new ArrayList<String>();
-            for (Resource resource : resourcePatternResolver.getResources("classpath:/emails/*.email")) {
-                String fileName = resource.getFilename();
-                String templateName = decodeTemplateName(fileName);
-                names.add(templateName);
-            }
-
-            return names;
-
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to get emails directory from classpath.");
+    private List<String> getAllSystemEmailTemplateNames() throws IOException {
+        List<String> names = new ArrayList<String>();
+        for (Resource resource : resourcePatternResolver.getResources("classpath:/emails/*.email")) {
+            String fileName = resource.getFilename();
+            String templateName = decodeTemplateName(fileName);
+            names.add(templateName);
         }
+
+        return names;
     }
 
     private String decodeTemplateName(String path) {
@@ -324,173 +306,137 @@ public class SystemDataLoader {
         return path.replaceAll("_", " ");
     }
 
-    private EmailTemplate loadSystemEmailTemplate(String name) {
-        try {
+    private EmailTemplate loadSystemEmailTemplate(String name) throws IOException {
+        Resource resource = resourcePatternResolver.getResource("classpath:/emails/" + encodeTemplateName(name));
+        String data = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
 
-            Resource resource = resourcePatternResolver.getResource("classpath:/emails/" + encodeTemplateName(name));
-            String data = IOUtils.toString(resource.getInputStream(), StandardCharsets.UTF_8);
+        // Remove any comment lines
+        data = data.replaceAll("\\s*#.*[\\n\\r]{1}", "");
 
-            // Remove any comment lines
-            data = data.replaceAll("\\s*#.*[\\n\\r]{1}", "");
-
-            // Extract the subject
-            Matcher subjectMatcher = SUBJECT_PATTERN.matcher(data);
-            if (!subjectMatcher.find()) {
-                throw new IllegalStateException("Unable to identify the template's subject.");
-            }
-            String subject = subjectMatcher.group(1).trim();
-
-            // Trim the subject leaving just the body.
-            int index = data.indexOf("\n");
-            if (index < 0) {
-                index = data.indexOf("\r");
-            }
-
-            String message = data.substring(index);
-
-            if (subject == null || subject.length() == 0) {
-                throw new IllegalStateException("Unable to identify the template's subject.");
-            }
-
-            if (message == null || message.length() == 0) {
-                throw new IllegalStateException("Unable to identify the template's message.");
-            }
-
-            EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired(name, true);
-
-            if (template == null) {
-                template = emailTemplateRepo.create(name, subject, message);
-                template.setSystemRequired(true);
-            } else {
-                template.setSubject(subject);
-                template.setMessage(message);
-            }
-
-            return emailTemplateRepo.save(template);
-
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to generate system email template: " + name, e);
+        // Extract the subject
+        Matcher subjectMatcher = SUBJECT_PATTERN.matcher(data);
+        if (!subjectMatcher.find()) {
+            throw new IllegalStateException("Unable to identify the template's subject.");
         }
+        String subject = subjectMatcher.group(1).trim();
+
+        // Trim the subject leaving just the body.
+        int index = data.indexOf("\n");
+        if (index < 0) {
+            index = data.indexOf("\r");
+        }
+
+        String message = data.substring(index);
+
+        if (subject == null || subject.length() == 0) {
+            throw new IllegalStateException("Unable to identify the template's subject.");
+        }
+
+        if (message == null || message.length() == 0) {
+            throw new IllegalStateException("Unable to identify the template's message.");
+        }
+
+        EmailTemplate template = emailTemplateRepo.findByNameAndSystemRequired(name, true);
+
+        if (template == null) {
+            template = emailTemplateRepo.create(name, subject, message);
+            template.setSystemRequired(true);
+        } else {
+            template.setSubject(subject);
+            template.setMessage(message);
+        }
+
+        return emailTemplateRepo.save(template);
     }
 
     private static String encodeTemplateName(String name) {
         return name.replaceAll(" ", "_") + ".email";
     }
 
-    private void loadDegreeLevels() {
-        try {
+    private void loadDegreeLevels() throws IOException {
+        List<DegreeLevel> degreeLevels = objectMapper.readValue(getInputStreamFromResource("classpath:/degree_levels/SYSTEM_Degree_Levels.json"), new TypeReference<List<DegreeLevel>>() {});
 
-            List<DegreeLevel> degreeLevels = objectMapper.readValue(getInputStreamFromResource("classpath:/degree_levels/SYSTEM_Degree_Levels.json"), new TypeReference<List<DegreeLevel>>() {});
+        for (DegreeLevel degreeLevel : degreeLevels) {
+            DegreeLevel dbDegreeLevel = degreeLevelRepo.findByName(degreeLevel.getName());
 
-            for (DegreeLevel degreeLevel : degreeLevels) {
-                DegreeLevel dbDegreeLevel = degreeLevelRepo.findByName(degreeLevel.getName());
-
-                if (dbDegreeLevel == null) {
-                    dbDegreeLevel = degreeLevelRepo.create(degreeLevel.getName());
-                }
-
+            if (dbDegreeLevel == null) {
+                dbDegreeLevel = degreeLevelRepo.create(degreeLevel.getName());
             }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default degree levels.", e);
+
         }
     }
 
-    private void loadDegrees() {
-        try {
+    private void loadDegrees() throws IOException {
+        List<Degree> degrees = objectMapper.readValue(getInputStreamFromResource("classpath:/degrees/SYSTEM_Degrees.json"), new TypeReference<List<Degree>>() {});
 
-            List<Degree> degrees = objectMapper.readValue(getInputStreamFromResource("classpath:/degrees/SYSTEM_Degrees.json"), new TypeReference<List<Degree>>() {});
+        for (Degree degree : degrees) {
 
-            for (Degree degree : degrees) {
+            DegreeLevel degreeLevel = degreeLevelRepo.findByName(degree.getLevel().getName());
 
-                DegreeLevel degreeLevel = degreeLevelRepo.findByName(degree.getLevel().getName());
-
-                if (degreeLevel == null) {
-                    degreeLevel = degreeLevelRepo.create(degree.getLevel().getName());
-                } else {
-                    degreeLevel.setName(degree.getLevel().getName());
-                    degreeLevel = degreeLevelRepo.save(degreeLevel);
-                }
-
-                Degree dbDegree = degreeRepo.findByNameAndLevel(degree.getName(), degreeLevel);
-
-                if (dbDegree == null) {
-                    dbDegree = degreeRepo.create(degree.getName(), degreeLevel);
-                } else {
-                    dbDegree.setName(degree.getName());
-                    dbDegree.setLevel(degreeLevel);
-                    dbDegree = degreeRepo.save(dbDegree);
-                }
-
+            if (degreeLevel == null) {
+                degreeLevel = degreeLevelRepo.create(degree.getLevel().getName());
+            } else {
+                degreeLevel.setName(degree.getLevel().getName());
+                degreeLevel = degreeLevelRepo.save(degreeLevel);
             }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default degrees.", e);
+
+            Degree dbDegree = degreeRepo.findByNameAndLevel(degree.getName(), degreeLevel);
+
+            if (dbDegree == null) {
+                dbDegree = degreeRepo.create(degree.getName(), degreeLevel);
+            } else {
+                dbDegree.setName(degree.getName());
+                dbDegree.setLevel(degreeLevel);
+                dbDegree = degreeRepo.save(dbDegree);
+            }
+
         }
     }
 
-    private void loadGraduationMonths() {
-        try {
+    private void loadGraduationMonths() throws IOException {
+        List<GraduationMonth> graduationMonths = objectMapper.readValue(getInputStreamFromResource("classpath:/graduation_months/SYSTEM_Graduation_Months.json"), new TypeReference<List<GraduationMonth>>() {});
 
-            List<GraduationMonth> graduationMonths = objectMapper.readValue(getInputStreamFromResource("classpath:/graduation_months/SYSTEM_Graduation_Months.json"), new TypeReference<List<GraduationMonth>>() {});
+        for (GraduationMonth graduationMonth : graduationMonths) {
+            GraduationMonth persistedGraduationMonth = graduationMonthRepo.findByMonth(graduationMonth.getMonth());
 
-            for (GraduationMonth graduationMonth : graduationMonths) {
-                GraduationMonth persistedGraduationMonth = graduationMonthRepo.findByMonth(graduationMonth.getMonth());
-
-                if (persistedGraduationMonth == null) {
-                    persistedGraduationMonth = graduationMonthRepo.create(graduationMonth.getMonth());
-                }
-
+            if (persistedGraduationMonth == null) {
+                persistedGraduationMonth = graduationMonthRepo.create(graduationMonth.getMonth());
             }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default graduation months.", e);
+
         }
     }
 
-    private void loadEmbargos() {
-        try {
+    private void loadEmbargos() throws IOException {
+        List<Embargo> embargoDefinitions = objectMapper.readValue(getInputStreamFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
 
-            List<Embargo> embargoDefinitions = objectMapper.readValue(getInputStreamFromResource("classpath:/embargos/SYSTEM_Embargo_Definitions.json"), new TypeReference<List<Embargo>>() {});
+        for (Embargo embargoDefinition : embargoDefinitions) {
+            Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
 
-            for (Embargo embargoDefinition : embargoDefinitions) {
-                Embargo dbEmbargo = embargoRepo.findByNameAndGuarantorAndSystemRequired(embargoDefinition.getName(), embargoDefinition.getGuarantor(), true);
-
-                if (dbEmbargo == null) {
-                    dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
-                    dbEmbargo.setSystemRequired(true);
-                    embargoRepo.save(dbEmbargo);
-                } else {
-                    dbEmbargo.setDescription(embargoDefinition.getDescription());
-                    dbEmbargo.setDuration(embargoDefinition.getDuration());
-                    dbEmbargo.setGuarantor(embargoDefinition.getGuarantor());
-                    dbEmbargo.isActive(embargoDefinition.isActive());
-                    dbEmbargo.setSystemRequired(embargoDefinition.getSystemRequired());
-                    embargoRepo.save(dbEmbargo);
-                }
+            if (dbEmbargo == null) {
+                dbEmbargo = embargoRepo.create(embargoDefinition.getName(), embargoDefinition.getDescription(), embargoDefinition.getDuration(), embargoDefinition.getGuarantor(), embargoDefinition.isActive());
+                dbEmbargo.setSystemRequired(true);
+                embargoRepo.save(dbEmbargo);
+            } else {
+                dbEmbargo.setDescription(embargoDefinition.getDescription());
+                dbEmbargo.setDuration(embargoDefinition.getDuration());
+                dbEmbargo.setGuarantor(embargoDefinition.getGuarantor());
+                dbEmbargo.isActive(embargoDefinition.isActive());
+                dbEmbargo.setSystemRequired(embargoDefinition.getSystemRequired());
+                embargoRepo.save(dbEmbargo);
             }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default embargos. ", e);
         }
     }
 
-    private void loadSubmissionStatuses() {
+    private void loadSubmissionStatuses() throws IOException {
+        // read System Submission Status as JsonNode
+        JsonNode systemSubmissionStatus = objectMapper.readTree(getInputStreamFromResource("classpath:/submission_statuses/SYSTEM_Submission_Status.json"));
 
-        try {
-            // read System Submission Status as JsonNode
-            JsonNode systemSubmissionStatus = objectMapper.readTree(getInputStreamFromResource("classpath:/submission_statuses/SYSTEM_Submission_Status.json"));
+        // check to see if the SubmissionStatus exists
+        SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(systemSubmissionStatus.get("name").asText());
 
-            // check to see if the SubmissionStatus exists
-            SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(systemSubmissionStatus.get("name").asText());
-
-            // recursively find or create new SubmissionStatus if not already exists
-            if (newSubmissionStatus == null) {
-                recursivelyFindOrCreateSubmissionStatus(systemSubmissionStatus);
-            }
-
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to generate system submission status", e);
+        // recursively find or create new SubmissionStatus if not already exists
+        if (newSubmissionStatus == null) {
+            recursivelyFindOrCreateSubmissionStatus(systemSubmissionStatus);
         }
     }
 
@@ -526,6 +472,7 @@ public class SystemDataLoader {
     }
 
     private SubmissionStatus createSubmissionStatus(JsonNode submissionStatus) {
+        JsonNode isActive = submissionStatus.get("isActive");
         return submissionStatusRepo.create(
             submissionStatus.get("name").asText(),
             submissionStatus.get("isArchived").asBoolean(),
@@ -533,99 +480,77 @@ public class SystemDataLoader {
             submissionStatus.get("isDeletable").asBoolean(),
             submissionStatus.get("isEditableByReviewer").asBoolean(),
             submissionStatus.get("isEditableByStudent").asBoolean(),
-            submissionStatus.get("isActive").asBoolean(),
+            isActive.isNull() ? null : isActive.asBoolean(),
             SubmissionState.from(submissionStatus.get("submissionState").asInt())
         );
     }
 
-    private void loadOrganizationCategories() {
-        try {
+    private void loadOrganizationCategories() throws IOException {
+        List<OrganizationCategory> organizationCategories = objectMapper.readValue(getInputStreamFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {});
 
-            List<OrganizationCategory> organizationCategories = objectMapper.readValue(getInputStreamFromResource("classpath:/organization_categories/SYSTEM_Organizaiton_Categories.json"), new TypeReference<List<OrganizationCategory>>() {});
+        for (OrganizationCategory organizationCategory : organizationCategories) {
+            OrganizationCategory dbOrganizationCategory = organizationCategoryRepo.findByName(organizationCategory.getName());
 
-            for (OrganizationCategory organizationCategory : organizationCategories) {
-                OrganizationCategory dbOrganizationCategory = organizationCategoryRepo.findByName(organizationCategory.getName());
-
-                if (dbOrganizationCategory == null) {
-                    dbOrganizationCategory = organizationCategoryRepo.create(organizationCategory.getName());
-                }
-
+            if (dbOrganizationCategory == null) {
+                dbOrganizationCategory = organizationCategoryRepo.create(organizationCategory.getName());
             }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default embargos. ", e);
         }
     }
 
-     private void loadDocumentTypes() {
-        try {
+     private void loadDocumentTypes() throws IOException {
+        List<DocumentType> documentTypes = objectMapper.readValue(getInputStreamFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {});
 
-            List<DocumentType> documentTypes = objectMapper.readValue(getInputStreamFromResource("classpath:/document_types/SYSTEM_Document_Types.json"), new TypeReference<List<DocumentType>>() {});
+        for (DocumentType documentType : documentTypes) {
 
-            for (DocumentType documentType : documentTypes) {
+            FieldPredicate fieldPredicate = documentType.getFieldPredicate();
 
-                FieldPredicate fieldPredicate = documentType.getFieldPredicate();
-
-                FieldPredicate dbFieldPredicate = fieldPredicateRepo.findByValue(fieldPredicate.getValue());
-                if (dbFieldPredicate == null) {
-                    dbFieldPredicate = fieldPredicateRepo.create(fieldPredicate.getValue(), Boolean.valueOf(true));
-                } else {
-                    dbFieldPredicate.setValue(fieldPredicate.getValue());
-                    dbFieldPredicate.setDocumentTypePredicate(fieldPredicate.getDocumentTypePredicate());
-                    dbFieldPredicate = fieldPredicateRepo.save(dbFieldPredicate);
-                }
-
-                DocumentType dbDocumentType = documentTypeRepo.findByNameAndFieldPredicate(documentType.getName(), dbFieldPredicate);
-
-                if (dbDocumentType == null) {
-                    dbDocumentType = documentTypeRepo.create(documentType.getName(), dbFieldPredicate);
-                } else {
-                    dbDocumentType.setName(documentType.getName());
-                    dbDocumentType.setFieldPredicate(dbFieldPredicate);
-                    documentTypeRepo.save(dbDocumentType);
-                }
+            FieldPredicate dbFieldPredicate = fieldPredicateRepo.findByValue(fieldPredicate.getValue());
+            if (dbFieldPredicate == null) {
+                dbFieldPredicate = fieldPredicateRepo.create(fieldPredicate.getValue(), Boolean.valueOf(true));
+            } else {
+                dbFieldPredicate.setValue(fieldPredicate.getValue());
+                dbFieldPredicate.setDocumentTypePredicate(fieldPredicate.getDocumentTypePredicate());
+                dbFieldPredicate = fieldPredicateRepo.save(dbFieldPredicate);
             }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default document types. ", e);
+
+            DocumentType dbDocumentType = documentTypeRepo.findByNameAndFieldPredicate(documentType.getName(), dbFieldPredicate);
+
+            if (dbDocumentType == null) {
+                dbDocumentType = documentTypeRepo.create(documentType.getName(), dbFieldPredicate);
+            } else {
+                dbDocumentType.setName(documentType.getName());
+                dbDocumentType.setFieldPredicate(dbFieldPredicate);
+                documentTypeRepo.save(dbDocumentType);
+            }
         }
     }
 
-    private void loadOrganization() {
+    private void loadOrganization() throws IOException {
+        // read and map json to Organization
+        Organization systemOrganization = objectMapper.readValue(getInputStreamFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
 
-        Organization organization = null;
+        // check to see if organization category exists
+        OrganizationCategory category = organizationCategoryRepo.findByName(systemOrganization.getCategory().getName());
 
-        try {
-            // read and map json to Organization
-            Organization systemOrganization = objectMapper.readValue(getInputStreamFromResource("classpath:/organization/SYSTEM_Organization_Definition.json"), Organization.class);
-
-            // check to see if organization category exists
-            OrganizationCategory category = organizationCategoryRepo.findByName(systemOrganization.getCategory().getName());
-
-            // create organization category if does not already exists
-            if (category == null) {
-                category = organizationCategoryRepo.create(systemOrganization.getCategory().getName());
-            }
-
-            // check to see if organization with organization category exists
-            organization = organizationRepo.findByNameAndCategory(systemOrganization.getName(), category);
-
-            // create new organization if not already exists
-            if (organization == null) {
-                organization = organizationRepo.create(systemOrganization.getName(), category);
-                organization.setAcceptsSubmissions(systemOrganization.getAcceptsSubmissions());
-            }
-
-            processWorkflowSteps(organization, systemOrganization);
-
-            processEmailWorflowRules(organization, systemOrganization);
-
-            organization = organizationRepo.save(organization);
-
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to generate system organization", e);
+        // create organization category if does not already exists
+        if (category == null) {
+            category = organizationCategoryRepo.create(systemOrganization.getCategory().getName());
         }
 
+        // check to see if organization with organization category exists
+        Organization organization = organizationRepo.findByNameAndCategory(systemOrganization.getName(), category);
+
+        // create new organization if not already exists
+        if (organization == null) {
+            organization = organizationRepo.create(systemOrganization.getName(), category);
+            organization.setAcceptsSubmissions(systemOrganization.getAcceptsSubmissions());
+        }
+
+        processWorkflowSteps(organization, systemOrganization);
+
+        processEmailWorflowRules(organization, systemOrganization);
+
+        organizationRepo.save(organization);
     }
 
     private void processWorkflowSteps(Organization organization, Organization systemOrganization) {
@@ -777,45 +702,31 @@ public class SystemDataLoader {
         organization.setEmailWorkflowRules(emailWorkflowRules);
     }
 
-    private void loadControlledVocabularies() {
-        try {
-            for (Resource vocabularyResourceJson : resourcePatternResolver.getResources("classpath:/controlled_vocabularies/*.json")) {
-                try {
-                    ControlledVocabulary cv = objectMapper.readValue(vocabularyResourceJson.getInputStream(), ControlledVocabulary.class);
+    private void loadControlledVocabularies() throws IOException {
+        for (Resource vocabularyResourceJson : resourcePatternResolver.getResources("classpath:/controlled_vocabularies/*.json")) {
+            ControlledVocabulary cv = objectMapper.readValue(vocabularyResourceJson.getInputStream(), ControlledVocabulary.class);
 
-                    // check to see if Controlled Vocabulary exists, and if so, merge up with it
-                    ControlledVocabulary persistedCV = controlledVocabularyRepo.findByName(cv.getName());
+            // check to see if Controlled Vocabulary exists, and if so, merge up with it
+            ControlledVocabulary persistedCV = controlledVocabularyRepo.findByName(cv.getName());
 
-                    if (persistedCV == null) {
-                        persistedCV = controlledVocabularyRepo.create(cv.getName());
-                    }
-
-                    for (VocabularyWord vw : cv.getDictionary()) {
-
-                        VocabularyWord persistedVW = vocabularyRepo.findByNameAndControlledVocabulary(vw.getName(), persistedCV);
-
-                        if (persistedVW == null) {
-                            persistedVW = vocabularyRepo.create(persistedCV, vw.getName(), vw.getDefinition(), vw.getIdentifier(), vw.getContacts());
-                            persistedCV = controlledVocabularyRepo.findByName(cv.getName());
-                        } else {
-                            persistedVW.setDefinition(vw.getDefinition());
-                            persistedVW.setIdentifier(vw.getIdentifier());
-                            persistedVW.setContacts(vw.getContacts());
-                            persistedVW = vocabularyRepo.save(persistedVW);
-                        }
-                    }
-
-                } catch (JsonParseException e) {
-                    e.printStackTrace();
-                } catch (JsonMappingException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
+            if (persistedCV == null) {
+                persistedCV = controlledVocabularyRepo.create(cv.getName());
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            for (VocabularyWord vw : cv.getDictionary()) {
+
+                VocabularyWord persistedVW = vocabularyRepo.findByNameAndControlledVocabulary(vw.getName(), persistedCV);
+
+                if (persistedVW == null) {
+                    persistedVW = vocabularyRepo.create(persistedCV, vw.getName(), vw.getDefinition(), vw.getIdentifier(), vw.getContacts());
+                    persistedCV = controlledVocabularyRepo.findByName(cv.getName());
+                } else {
+                    persistedVW.setDefinition(vw.getDefinition());
+                    persistedVW.setIdentifier(vw.getIdentifier());
+                    persistedVW.setContacts(vw.getContacts());
+                    persistedVW = vocabularyRepo.save(persistedVW);
+                }
+            }
         }
     }
 
@@ -846,63 +757,51 @@ public class SystemDataLoader {
         }
     }
 
-    private void loadSubmissionListColumns() {
-        try {
+    private void loadSubmissionListColumns() throws IOException {
+        List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getInputStreamFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
 
-            List<SubmissionListColumn> submissionListColumns = objectMapper.readValue(getInputStreamFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Columns.json"), new TypeReference<List<SubmissionListColumn>>() {});
+        for (SubmissionListColumn submissionListColumn : submissionListColumns) {
+            SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
 
-            for (SubmissionListColumn submissionListColumn : submissionListColumns) {
-                SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(submissionListColumn.getTitle());
+            // check to see if the InputType exists
+            InputType inputType = inputTypeRepo.findByName(submissionListColumn.getInputType().getName());
 
-                // check to see if the InputType exists
-                InputType inputType = inputTypeRepo.findByName(submissionListColumn.getInputType().getName());
-
-                if (inputType == null) {
-                    inputType = inputTypeRepo.create(submissionListColumn.getInputType().getName());
-                } else {
-                    inputType.setName(submissionListColumn.getInputType().getName());
-                    inputType = inputTypeRepo.save(inputType);
-                }
-
-                if (dbSubmissionListColumn == null) {
-                    if (submissionListColumn.getPredicate() != null) {
-                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), inputType);
-                    } else {
-                        submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath(), inputType);
-                    }
-                } else {
-                    dbSubmissionListColumn.setSort(submissionListColumn.getSort());
-                    if (submissionListColumn.getPredicate() != null) {
-                        dbSubmissionListColumn.setPredicate(submissionListColumn.getPredicate());
-                    }
-                    dbSubmissionListColumn.setValuePath(submissionListColumn.getValuePath());
-                    submissionListColumnRepo.save(dbSubmissionListColumn);
-                }
+            if (inputType == null) {
+                inputType = inputTypeRepo.create(submissionListColumn.getInputType().getName());
+            } else {
+                inputType.setName(submissionListColumn.getInputType().getName());
+                inputType = inputTypeRepo.save(inputType);
             }
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize submission list columns. ", e);
+
+            if (dbSubmissionListColumn == null) {
+                if (submissionListColumn.getPredicate() != null) {
+                    submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getPredicate(), inputType);
+                } else {
+                    submissionListColumnRepo.create(submissionListColumn.getTitle(), submissionListColumn.getSort(), submissionListColumn.getValuePath(), inputType);
+                }
+            } else {
+                dbSubmissionListColumn.setSort(submissionListColumn.getSort());
+                if (submissionListColumn.getPredicate() != null) {
+                    dbSubmissionListColumn.setPredicate(submissionListColumn.getPredicate());
+                }
+                dbSubmissionListColumn.setValuePath(submissionListColumn.getValuePath());
+                submissionListColumnRepo.save(dbSubmissionListColumn);
+            }
         }
 
-        try {
-            String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getInputStreamFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() { });
-            int count = 0;
-            for (String defaultTitle : defaultSubmissionListColumnTitles) {
-                SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
-                if (dbSubmissionListColumn != null) {
-                    if (dbSubmissionListColumn.getSort() != Sort.NONE) {
-                        logger.warn("Updating sort order for default submission list column with title " + defaultTitle);
-                        dbSubmissionListColumn.setSortOrder(++count);
-                        submissionListColumnRepo.update(dbSubmissionListColumn);
-                    }
-                } else {
-                    logger.warn("Unable to find submission list column with title " + defaultTitle);
+        String[] defaultSubmissionListColumnTitles = objectMapper.readValue(getInputStreamFromResource("classpath:/submission_list_columns/SYSTEM_Default_Submission_List_Column_Titles.json"), new TypeReference<String[]>() { });
+        int count = 0;
+        for (String defaultTitle : defaultSubmissionListColumnTitles) {
+            SubmissionListColumn dbSubmissionListColumn = submissionListColumnRepo.findByTitle(defaultTitle);
+            if (dbSubmissionListColumn != null) {
+                if (dbSubmissionListColumn.getSort() != Sort.NONE) {
+                    logger.warn("Updating sort order for default submission list column with title " + defaultTitle);
+                    dbSubmissionListColumn.setSortOrder(++count);
+                    submissionListColumnRepo.update(dbSubmissionListColumn);
                 }
+            } else {
+                logger.warn("Unable to find submission list column with title " + defaultTitle);
             }
-
-        } catch (RuntimeException | IOException e) {
-            e.printStackTrace();
-            logger.debug("Unable to initialize default submission list column titles. ", e);
         }
     }
 
