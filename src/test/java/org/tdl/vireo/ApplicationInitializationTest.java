@@ -64,11 +64,11 @@ public class ApplicationInitializationTest {
     }
 
     private void assertInMemorySystemData(boolean isReload) throws ClassNotFoundException {
-        assertEntityControlledVocabulary(48, "Degrees");
-        assertEntityControlledVocabulary(3, "Graduation Months");
-        assertEntityControlledVocabulary(5, "Proquest Embargos");
-        assertEntityControlledVocabulary(1, "Languages");
-        assertEntityControlledVocabulary(4, "Default Embargos");
+        assertEntityControlledVocabulary(48, "Degrees", isReload);
+        assertEntityControlledVocabulary(3, "Graduation Months", isReload);
+        assertEntityControlledVocabulary(5, "Proquest Embargos", isReload);
+        assertEntityControlledVocabulary(1, "Languages", isReload);
+        assertEntityControlledVocabulary(4, "Default Embargos", isReload);
 
         assertEquals(8, this.defaultSettingsService.getTypes().size(),
             isReload
@@ -104,13 +104,25 @@ public class ApplicationInitializationTest {
         assertProquestCodes(288, "subjects", isReload);
     }
 
-    private void assertEntityControlledVocabulary(int expected, String name) throws ClassNotFoundException {
+    private void assertEntityControlledVocabulary(int expected, String name, boolean isReload) throws ClassNotFoundException {
         List<VocabularyWord> dictionary = entityControlledVocabularyService.getControlledVocabularyWords(name);
-        assertEquals(expected, dictionary.size());
+        assertEquals(expected, dictionary.size(),
+            isReload
+                ? String.format("Incorrect number of words in %s dictionary after reload", name)
+                : String.format("Incorrect number of words in %s dictionary", name));
         ControlledVocabulary cv = controlledVocabularyRepo.findByName(name);
-        assertNotNull(cv);
-        assertTrue(cv.getIsEntityProperty());
-        assertEquals(expected, cv.getDictionary().size());
+        assertNotNull(cv,
+            isReload
+                ? String.format("%s dictionary not found after reload", name)
+                : String.format("%s dictionary not found", name));
+        assertTrue(cv.getIsEntityProperty(),
+            isReload
+                ? String.format("%s dictionary is not entity property after reload", name)
+                : String.format("%s dictionary is not entity property", name));
+        assertEquals(expected, cv.getDictionary().size(),
+            isReload
+                ? String.format("Controlled vocabulary %s dictionary has incorrect number of words after reload", name)
+                : String.format("Controlled vocabulary %s dictionary has incorrect number of words", name));
     }
 
     private void assertSettingsType(int expected, String type, boolean isReload) {
