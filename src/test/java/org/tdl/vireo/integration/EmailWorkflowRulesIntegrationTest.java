@@ -89,7 +89,8 @@ public class EmailWorkflowRulesIntegrationTest extends AbstractIntegrationTest {
 
         assertEquals(3, org.getEmailWorkflowRules().size());
 
-        this.setup();
+        // reload system data
+        systemDataLoader.loadSystemData();
 
         EmailWorkflowRule newWorkflowRule = emailWorkflowRuleRepo.getById(newlyCreatedEmailWorkflowRuleId);
         assertNotNull(newWorkflowRule);

@@ -228,8 +228,6 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep1));
         when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
         doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(organizationRepo).broadcast(anyList());
 
         ApiResponse response = fieldPredicateController.removeFieldProfile(organization1.getId(), workflowStep1.getId(), fieldProfile1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -254,8 +252,6 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep1));
         when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
         doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(organizationRepo).broadcast(anyList());
 
         ApiResponse response = fieldPredicateController.removeFieldProfileById(organization1.getId(), workflowStep1.getId(), fieldProfile1.getId());
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -270,9 +266,7 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep1));
         when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
         doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(fieldProfileRepo).deleteById(anyLong());
-        doNothing().when(organizationRepo).broadcast(anyList());
+        doNothing().when(fieldProfileRepo).delete(any(FieldProfile.class));
 
         ApiResponse response = fieldPredicateController.removeFieldProfileById(organization1.getId(), workflowStep1.getId(), fieldProfile1.getId());
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());

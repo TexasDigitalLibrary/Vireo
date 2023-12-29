@@ -69,6 +69,16 @@ public class FieldProfileRepoImpl extends HeritableRepoImpl<FieldProfile, FieldP
         return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, hidden, flagged, logged, controlledVocabulary, mappedShibAttribute, defaultValue);
     }
 
+    @Override
+    @Transactional
+    public void delete(FieldProfile fieldProfile) {
+        super.delete(fieldProfile);
+        Optional<SubmissionListColumn> slc = submissionListColumnRepo.findByTitleAndPredicateAndInputType(fieldProfile.getGloss(), fieldProfile.getFieldPredicate().getValue(), fieldProfile.getInputType());
+        if (slc.isPresent()) {
+            submissionListColumnRepo.delete(slc.get());
+        }
+    }
+
     private synchronized FieldProfile newFieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, ControlledVocabulary controlledVocabulary, ManagedConfiguration mappedShibAttribute, String defaultValue) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, hidden, flagged, logged, controlledVocabulary, mappedShibAttribute, defaultValue));
         originatingWorkflowStep.addOriginalFieldProfile(fieldProfile);
