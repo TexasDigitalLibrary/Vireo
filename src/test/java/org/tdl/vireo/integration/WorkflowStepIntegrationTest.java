@@ -103,6 +103,7 @@ public class WorkflowStepIntegrationTest extends AbstractIntegrationTest {
         assertEquals(initialFieldPredicateCount + 1, fieldPredicateRepo.count());
         assertTrue(fieldPredicateRepo.existsById(fieldPredicateId));
 
+
         // add field profile to workflow step
 
         FieldProfile fieldProfile = new FieldProfile(workflowStep, fieldPredicate, inputType, "Test", false, true, true, false, false, false, null);
@@ -128,6 +129,39 @@ public class WorkflowStepIntegrationTest extends AbstractIntegrationTest {
         assertEquals(initialSubmissionListColumnCount + 1, submissionListColumnRepo.count());
         assertNotNull(submissionListColumnRepo.findByTitle("Test"));
 
+
+        // rename field profile and assert submission list column updated accordingly
+
+        fieldProfile.setId(fpId);
+        fieldProfile.setGloss("Tested");
+
+        try {
+            results = mockMvc.perform(post("/workflow-step/{requestingOrgId}/{workflowStepId}/update-field-profile", orgId, wsId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.convertValue(fieldProfile, JsonNode.class).toString().getBytes("utf-8")))
+                .andExpect(status().isOk()).andExpect(jsonPath("$.meta.status").value("SUCCESS"))
+                .andExpect(jsonPath("$.payload.FieldProfile").exists())
+                .andExpect(jsonPath("$.payload.FieldProfile.id").isNumber())
+                .andExpect(jsonPath("$.payload.FieldProfile.gloss").value("Tested"))
+                .andReturn();
+
+        fpId = objectMapper.readTree(results.getResponse().getContentAsString())
+            .get("payload")
+            .get("FieldProfile")
+            .get("id")
+            .asLong();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(initialFieldProfileCount + 1, fieldProfileRepo.count());
+        assertTrue(fieldProfileRepo.existsById(fpId));
+
+        assertEquals(initialSubmissionListColumnCount + 1, submissionListColumnRepo.count());
+        assertNull(submissionListColumnRepo.findByTitle("Test"));
+        assertNotNull(submissionListColumnRepo.findByTitle("Tested"));
+
+
         // remove field profile and assert submission list column not orphaned
 
         mockMvc.perform(post("/workflow-step/{requestingOrgId}/{workflowStepId}/remove-field-profile/{fieldProfileId}", orgId, wsId, fpId)
@@ -140,6 +174,7 @@ public class WorkflowStepIntegrationTest extends AbstractIntegrationTest {
 
         assertEquals(initialSubmissionListColumnCount, submissionListColumnRepo.count());
         assertNull(submissionListColumnRepo.findByTitle("Test"));
+        assertNull(submissionListColumnRepo.findByTitle("Tested"));
     }
 
 }

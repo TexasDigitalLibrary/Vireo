@@ -75,7 +75,7 @@ public class WorkflowStepController {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
         FieldProfile fp = fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), fieldProfile.getControlledVocabulary(), fieldProfile.getDefaultValue());
-        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+
         return new ApiResponse(SUCCESS, fp);
     }
 
@@ -91,9 +91,9 @@ public class WorkflowStepController {
             }
             fieldProfile.setMappedShibAttribute(persistedMappedShibAttribute);
         }
-        fieldProfileRepo.update(fieldProfile, organizationRepo.findById(requestingOrgId).get());
-        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
-        return new ApiResponse(SUCCESS);
+        FieldProfile fp = fieldProfileRepo.update(fieldProfile, organizationRepo.findById(requestingOrgId).get());
+
+        return new ApiResponse(SUCCESS, fp);
     }
 
     @Deprecated
