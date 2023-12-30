@@ -8,6 +8,7 @@ import javax.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -42,6 +43,15 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @Value("${spring.servlet.multipart.max-file-size:20MB}")
     private String maxFileSize;
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ApiResponse handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
+        logger.error(exception.getMessage());
+        logger.debug(exception.getMessage(), exception);
+        return new ApiResponse(ERROR, exception.getMessage());
+    }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
