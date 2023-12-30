@@ -45,7 +45,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     private String maxFileSize;
 
     @ExceptionHandler(DataIntegrityViolationException.class)
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
     @ResponseBody
     public ApiResponse handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
         logger.error(exception.getMessage());
