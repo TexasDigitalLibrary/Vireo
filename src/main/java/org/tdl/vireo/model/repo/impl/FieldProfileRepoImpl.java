@@ -4,11 +4,15 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.exception.ComponentNotPresentOnOrgException;
+import org.tdl.vireo.exception.HeritableModelNonOverrideableException;
+import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.InputType;
 import org.tdl.vireo.model.ManagedConfiguration;
+import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Sort;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.WorkflowStep;
@@ -69,15 +73,47 @@ public class FieldProfileRepoImpl extends HeritableRepoImpl<FieldProfile, FieldP
         return newFieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, hidden, flagged, logged, controlledVocabulary, mappedShibAttribute, defaultValue);
     }
 
+    @Override
+    @Transactional
+    public FieldProfile update(FieldProfile fieldProfile, Organization requestingOrganization) throws ComponentNotPresentOnOrgException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException {
+        String originalGloss = fieldProfileRepo.findGlossById(fieldProfile.getId());
+
+        FieldProfile updatedFieldProfile = super.update(fieldProfile, requestingOrganization);
+
+        Optional<SubmissionListColumn> slc = submissionListColumnRepo.findByTitleAndPredicateAndInputType(originalGloss, fieldProfile.getFieldPredicate().getValue(), fieldProfile.getInputType());
+        if (slc.isPresent()) {
+            slc.get().setTitle(updatedFieldProfile.getGloss());
+            submissionListColumnRepo.update(slc.get());
+        }
+
+        return updatedFieldProfile;
+    }
+
+    @Override
+    @Transactional
+    public void delete(FieldProfile fieldProfile) {
+        super.delete(fieldProfile);
+
+        Optional<SubmissionListColumn> slc = submissionListColumnRepo.findByTitleAndPredicateAndInputType(fieldProfile.getGloss(), fieldProfile.getFieldPredicate().getValue(), fieldProfile.getInputType());
+        if (slc.isPresent()) {
+            submissionListColumnRepo.delete(slc.get());
+        }
+    }
+
     private synchronized FieldProfile newFieldProfile(WorkflowStep originatingWorkflowStep, FieldPredicate fieldPredicate, InputType inputType, String usage, String help, String gloss, Boolean repeatable, Boolean overrideable, Boolean enabled, Boolean optional, Boolean hidden, Boolean flagged, Boolean logged, ControlledVocabulary controlledVocabulary, ManagedConfiguration mappedShibAttribute, String defaultValue) {
         FieldProfile fieldProfile = fieldProfileRepo.save(new FieldProfile(originatingWorkflowStep, fieldPredicate, inputType, usage, help, gloss, repeatable, overrideable, enabled, optional, hidden, flagged, logged, controlledVocabulary, mappedShibAttribute, defaultValue));
+
         originatingWorkflowStep.addOriginalFieldProfile(fieldProfile);
+
         workflowStepRepo.save(originatingWorkflowStep);
+
         Optional<SubmissionListColumn> slc = submissionListColumnRepo.findByTitleAndPredicateAndInputType(gloss, fieldPredicate.getValue(), inputType);
         if (!slc.isPresent()) {
             submissionListColumnRepo.create(gloss, Sort.NONE, fieldPredicate.getValue(), inputType);
         }
+
         organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+
         return fieldProfileRepo.findById(fieldProfile.getId()).get();
     }
 

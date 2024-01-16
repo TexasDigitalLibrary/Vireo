@@ -21,7 +21,7 @@ import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.service.AssetService;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class LookAndFeelControllerTest extends AbstractControllerTest {
 
     @Mock

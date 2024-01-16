@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
-public class EmailRecipientOrganization extends AbstractEmailRecipient implements EmailRecipient {
+public class EmailRecipientOrganization extends AbstractEmailRecipient {
 
     @ManyToOne
     @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = Organization.class, property = "id")

@@ -74,9 +74,9 @@ public class WorkflowStepController {
         if (!requestingOrganization.getId().equals(workflowStep.getOriginatingOrganization().getId())) {
             workflowStep = workflowStepRepo.update(workflowStep, requestingOrganization);
         }
-        fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), fieldProfile.getControlledVocabulary(), fieldProfile.getDefaultValue());
-        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
-        return new ApiResponse(SUCCESS);
+        FieldProfile fp = fieldProfileRepo.create(workflowStep, fieldProfile.getFieldPredicate(), fieldProfile.getInputType(), fieldProfile.getUsage(), fieldProfile.getHelp(), fieldProfile.getGloss(), fieldProfile.getRepeatable(), fieldProfile.getOverrideable(), fieldProfile.getEnabled(), fieldProfile.getOptional(), fieldProfile.getFlagged(), fieldProfile.getLogged(), fieldProfile.getControlledVocabulary(), fieldProfile.getDefaultValue());
+
+        return new ApiResponse(SUCCESS, fp);
     }
 
     @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/update-field-profile", method = RequestMethod.POST)
@@ -91,24 +91,39 @@ public class WorkflowStepController {
             }
             fieldProfile.setMappedShibAttribute(persistedMappedShibAttribute);
         }
-        fieldProfileRepo.update(fieldProfile, organizationRepo.findById(requestingOrgId).get());
-        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
-        return new ApiResponse(SUCCESS);
+        FieldProfile fp = fieldProfileRepo.update(fieldProfile, organizationRepo.findById(requestingOrgId).get());
+
+        return new ApiResponse(SUCCESS, fp);
     }
 
+    @Deprecated
     @RequestMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile", method = RequestMethod.POST)
     @PreAuthorize("hasRole('MANAGER')")
     @WeaverValidation(business = { @WeaverValidation.Business(value = DELETE) })
     public ApiResponse removeFieldProfile(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @WeaverValidatedModel FieldProfile fieldProfile) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
-        WorkflowStep workflowStep = workflowStepRepo.findById(workflowStepId).get();
-        FieldProfile persistedFieldProfile = fieldProfileRepo.findById(fieldProfile.getId()).get();
-        fieldProfileRepo.removeFromWorkflowStep(organizationRepo.findById(requestingOrgId).get(), workflowStep, persistedFieldProfile);
-        // If the field profile is being removed from its originating workflow step by the organization that originates that step, then it should be deleted.
-        if (persistedFieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.getId()) && workflowStep.getOriginatingOrganization().getId().equals(requestingOrgId)) {
-            fieldProfileRepo.delete(persistedFieldProfile);
+        Optional<Organization> organization = organizationRepo.findById(requestingOrgId);
+
+        if (organization.isEmpty()) {
+            return new ApiResponse(ERROR, "Cannot delete Field Profile, the given Organization is unknown.");
         }
 
-        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+        Optional<WorkflowStep> workflowStep = workflowStepRepo.findById(workflowStepId);
+
+        if (workflowStep.isEmpty()) {
+            return new ApiResponse(ERROR, "Cannot delete Field Profile, the given Workflow Step is unknown.");
+        }
+
+        FieldProfile persistedFieldProfile = fieldProfileRepo.findById(fieldProfile.getId()).get();
+
+        fieldProfileRepo.removeFromWorkflowStep(organization.get(), workflowStep.get(), persistedFieldProfile);
+
+        // If the field profile is being removed from its originating workflow step by the organization that originates that step, then it should be deleted.
+        if (persistedFieldProfile.getOriginatingWorkflowStep().getId().equals(workflowStep.get().getId()) && workflowStep.get().getOriginatingOrganization().getId().equals(requestingOrgId)) {
+            fieldProfileRepo.delete(persistedFieldProfile);
+        } else {
+            // only broadcast when not deleting field profile as it broadcasts ordered organizations
+            organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
+        }
 
         return new ApiResponse(SUCCESS);
     }
@@ -138,10 +153,11 @@ public class WorkflowStepController {
 
         // If the field profile is being removed from its originating workflow step by the organization that originates that step, then it should be deleted.
         if (fieldProfile.get().getOriginatingWorkflowStep().getId().equals(workflowStepId) && workflowStep.get().getOriginatingOrganization().getId().equals(requestingOrgId)) {
-            fieldProfileRepo.deleteById(fieldProfileId);
+            fieldProfileRepo.delete(fieldProfile.get());
+        } else {
+            // only broadcast when not deleting field profile as it broadcasts ordered organizations
+            organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
         }
-
-        organizationRepo.broadcast(organizationRepo.findAllByOrderByIdAsc());
 
         return new ApiResponse(SUCCESS);
     }

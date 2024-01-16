@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.Note;
 import org.tdl.vireo.model.repo.NoteRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class NoteControllerTest extends AbstractControllerTest {
 
     @Mock

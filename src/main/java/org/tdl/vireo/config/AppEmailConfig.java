@@ -9,7 +9,7 @@ import edu.tamu.weaver.email.config.WeaverEmailConfig;
 import edu.tamu.weaver.email.service.EmailSender;
 
 @Configuration
-@Profile(value = { "!test" })
+@Profile(value = { "!test", "!isolated-test" })
 public class AppEmailConfig extends WeaverEmailConfig {
 
     @Bean

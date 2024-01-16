@@ -25,7 +25,7 @@ import org.tdl.vireo.model.ManagedConfiguration;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.service.VireoThemeManagerService;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class ConfigurableSettingsControllerTest extends AbstractControllerTest {
 
     @Mock

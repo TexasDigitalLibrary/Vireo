@@ -1,1058 +1,1056 @@
 {
-  "name":"Institution",
+  "name": "Institution",
   "acceptsSubmissions": false,
-  "category":{
-    "name":"System"
+  "category": {
+    "name": "System"
   },
-  "originalWorkflowSteps":[
+  "originalWorkflowSteps": [
     {
-      "name":"Personal Information",
+      "name": "Personal Information",
       "instructions": "<h4>Instructions:</h4><p>Please verify all of your personal information. Some of the information has been provided by your school; if this information is in error, you will need to correct it through the appropriate office at your school.</p><p>Required fields are indicated with an asterisk.</p>",
-      "overrideable":true,
-      "originatingOrganization":{
-        "name":"Institution",
-        "category":{
-          "name":"System"
+      "overrideable": true,
+      "originatingOrganization": {
+        "name": "Institution",
+        "category": {
+          "name": "System"
         }
       },
-      "originalNotes":[
+      "originalNotes": [
         {
-          "name":"name",
-          "text":"Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them.",
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "name": "name",
+          "text": "Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           }
         },
         {
-          "name":"degreeAndMajor",
-          "text":"Select the degree and major that are listed on your title page.",
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "name": "degreeAndMajor",
+          "text": "Select the degree and major that are listed on your title page.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           }
         },
         {
-          "name":"permanentAddress",
-          "text":"You must enter a permanent, long-term address. If your present address is different, use the Current Address field.",
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "name": "permanentAddress",
+          "text": "You must enter a permanent, long-term address. If your present address is different, use the Current Address field.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           }
         }
       ],
-      "originalFieldProfiles":[
+      "originalFieldProfiles": [
         {
-          "fieldPredicate":{
-            "value":"first_name",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "first_name",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter your first name.",
-          "gloss":"First Name"
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter your first name.",
+          "gloss": "First Name"
         },
         {
-          "fieldPredicate":{
-            "value":"middle_name",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "middle_name",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Enter your middle name or initial.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Enter your middle name or initial.",
           "gloss": "Middle Name"
         },
         {
-          "fieldPredicate":{
-            "value":"last_name",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "last_name",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter your last name.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter your last name.",
           "gloss": "Last Name"
         },
         {
-          "fieldPredicate":{
-            "value":"email",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "email",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_EMAIL"
+          "inputType": {
+            "name": "INPUT_EMAIL"
           },
-          "mappedShibAttribute":{
-            "isSystemRequired":true,
-            "name":"APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL",
-            "type":"shibboleth",
-            "value":"email"
+          "mappedShibAttribute": {
+            "isSystemRequired": true,
+            "name": "APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL",
+            "type": "shibboleth",
+            "value": "email"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter your email.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter your email.",
           "gloss": "Email"
         },
         {
-          "fieldPredicate":{
-            "value":"local.etdauthor.orcid",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "local.etdauthor.orcid",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_ORCID"
+          "inputType": {
+            "name": "INPUT_ORCID"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Enter your ORCID author identifier (ID). If you do not have an ORCID ID, you may register here <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
-          "htmlTooltip":true,
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Enter your ORCID author identifier (ID) associated with email. If you do not have an ORCID ID, you may register here <a href='https://orcid.org/register' target='_blank'>orcid.org</a>.",
+          "htmlTooltip": true,
           "gloss": "ORCID"
         },
         {
-          "fieldPredicate":{
-            "value":"institutional_id",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "institutional_id",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "mappedShibAttribute":{
-            "isSystemRequired":true,
-            "name":"APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER",
-            "type":"shibboleth",
-            "value":"uin"
+          "mappedShibAttribute": {
+            "isSystemRequired": true,
+            "name": "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER",
+            "type": "shibboleth",
+            "value": "uin"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "hidden":true,
-          "usage":"",
-          "help":"",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "hidden": true,
+          "usage": "",
+          "help": "",
           "gloss": "Institutional ID"
         },
         {
-          "fieldPredicate":{
-            "value":"birth_year",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "birth_year",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Enter the year in which you were born. (e.g. 2000)",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Enter the year in which you were born. (e.g. 2000)",
           "gloss": "Year of Birth"
         },
         {
-          "fieldPredicate":{
-            "value":"thesis.degree.school",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "thesis.degree.school",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Enter the name of your degree granting institution.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Enter the name of your degree granting institution.",
           "gloss": "School"
         },
         {
-          "fieldPredicate":{
-            "value":"thesis.degree.college",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "thesis.degree.college",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter the name of your college.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter the name of your college.",
           "gloss": "College",
           "controlledVocabulary": {
-            "name":"Colleges",
-            "isEntityProperty":false
+            "name": "Colleges",
+            "isEntityProperty": false
           }
         },
         {
-          "fieldPredicate":{
-            "value":"thesis.degree.program",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "thesis.degree.program",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Enter the name of your program.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Enter the name of your program.",
           "gloss": "Program",
-          "controlledVocabulary":{
-            "name":"Programs",
-            "isEntityProperty":false
+          "controlledVocabulary": {
+            "name": "Programs",
+            "isEntityProperty": false
           }
         },
         {
-          "fieldPredicate":{
-            "value":"thesis.degree.department",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "thesis.degree.department",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter the name of your department.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter the name of your department.",
           "gloss": "Department",
-          "controlledVocabulary":{
-            "name":"Departments",
-            "isEntityProperty":false
+          "controlledVocabulary": {
+            "name": "Departments",
+            "isEntityProperty": false
           }
         },
         {
-          "fieldPredicate":{
-            "value":"thesis.degree.name",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "thesis.degree.name",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_SELECT"
+          "inputType": {
+            "name": "INPUT_SELECT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Select your degree type.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Select your degree type.",
           "gloss": "Degree",
-          "controlledVocabulary":{
-            "name":"Degrees",
-            "entityName":"Degree",
-            "isEntityProperty":true
+          "controlledVocabulary": {
+            "name": "Degrees",
+            "entityName": "Degree",
+            "isEntityProperty": true
           }
         },
         {
-          "fieldPredicate":{
-            "value":"thesis.degree.major",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "thesis.degree.major",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter the name of your major discipline.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter the name of your major discipline.",
           "gloss": "Major",
-          "controlledVocabulary":{
-            "name":"Majors",
-            "isEntityProperty":false
+          "controlledVocabulary": {
+            "name": "Majors",
+            "isEntityProperty": false
           }
         },
         {
-          "fieldPredicate":{
-            "value":"permanent_phone",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "permanent_phone",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEL"
+          "inputType": {
+            "name": "INPUT_TEL"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter a phone number where you can be reached after graduating.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter a phone number where you can be reached after graduating.",
           "gloss": "Permanent Phone"
         },
         {
-          "fieldPredicate":{
-            "value":"permanent_address",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "permanent_address",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXTAREA"
+          "inputType": {
+            "name": "INPUT_TEXTAREA"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter an address where you can be reached after graduating.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter an address where you can be reached after graduating.",
           "gloss": "Permanent Address"
         },
         {
-          "fieldPredicate":{
-            "value":"permanent_email",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "permanent_email",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_EMAIL"
+          "inputType": {
+            "name": "INPUT_EMAIL"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter an email address where you can be reached after graduating.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter an email address where you can be reached after graduating.",
           "gloss": "Permanent Email"
         },
         {
-          "fieldPredicate":{
-            "value":"current_phone",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "current_phone",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEL"
+          "inputType": {
+            "name": "INPUT_TEL"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Enter your current phone number if different from your permanent phone number.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Enter your current phone number if different from your permanent phone number.",
           "gloss": "Current Phone"
         },
         {
-          "fieldPredicate":{
-            "value":"current_address",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "current_address",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXTAREA"
+          "inputType": {
+            "name": "INPUT_TEXTAREA"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Enter your current address if different from your permanent address.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Enter your current address if different from your permanent address.",
           "gloss": "Current Address"
         }
       ]
     },
     {
-      "name":"License Agreement",
+      "name": "License Agreement",
       "instructions": "",
-      "overrideable":true,
-      "originatingOrganization":{
-        "name":"Institution",
-        "category":{
-          "name":"System"
+      "overrideable": true,
+      "originatingOrganization": {
+        "name": "Institution",
+        "category": {
+          "name": "System"
         }
       },
-      "originalNotes":[
-
-      ],
-      "originalFieldProfiles":[
+      "originalNotes": [],
+      "originalFieldProfiles": [
         {
-          "fieldPredicate":{
-            "value":"license_agreement",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "license_agreement",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"License Agreement"
+          "originatingWorkflowStep": {
+            "name": "License Agreement"
           },
-          "inputType":{
-            "name":"INPUT_LICENSE"
+          "inputType": {
+            "name": "INPUT_LICENSE"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":true,
-          "usage":"",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": true,
+          "usage": "",
           "gloss": "License Agreement"
         },
         {
-          "fieldPredicate":{
-            "value":"umi_publication",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "umi_publication",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"License Agreement"
+          "originatingWorkflowStep": {
+            "name": "License Agreement"
           },
-          "inputType":{
-            "name":"INPUT_PROQUEST"
+          "inputType": {
+            "name": "INPUT_PROQUEST"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":true,
-          "usage":"",
-          "help":"I am requesting that ProQuest provide additional free non-exclusive distribution via the ProQuest Dissertation & Theses Database (PQDT), which reaches 3,000 universities with over 200 million searches annually, and supports discovery through major subject and discipline indexes (SciFinder, MLA, MathSciNet, PsycINFO, etc).  I also will be eligible for a royalty based upon sales of my full-text work. More information is available <a target='_blank' href='http://www.proquest.com/en-US/products/dissertations/authors.shtml'>here</a>.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": true,
+          "usage": "",
+          "help": "I am requesting that ProQuest provide additional free non-exclusive distribution via the ProQuest Dissertation & Theses Database (PQDT), which reaches 3,000 universities with over 200 million searches annually, and supports discovery through major subject and discipline indexes (SciFinder, MLA, MathSciNet, PsycINFO, etc).  I also will be eligible for a royalty based upon sales of my full-text work. More information is available <a target='_blank' href='http://www.proquest.com/en-US/products/dissertations/authors.shtml'>here</a>.",
           "gloss": "Proquest Publication"
         }
       ]
     },
     {
-      "name":"Document Information",
+      "name": "Document Information",
       "instructions": "<h4>Instructions:</h4><p>Describe your thesis or dissertation. Please make sure that the information entered below matches the information contained in your document.</p>",
-      "overrideable":true,
-      "originatingOrganization":{
-        "name":"Institution",
-        "category":{
-          "name":"System"
+      "overrideable": true,
+      "originatingOrganization": {
+        "name": "Institution",
+        "category": {
+          "name": "System"
         }
       },
-      "originalNotes":[
+      "originalNotes": [
         {
-          "name":"degreeDate",
-          "text":"For the graduation semester, enter the semester in which your degree will be conferred.",
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "name": "degreeDate",
+          "text": "For the graduation semester, enter the semester in which your degree will be conferred.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           }
         },
         {
-          "name":"multipleKeywords",
-          "text":"Enter one keyword or key phrase per entry field.",
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "name": "multipleKeywords",
+          "text": "Enter one keyword or key phrase per entry field.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           }
         },
         {
-          "name":"committeeMembers",
-          "text":"Please supply the names of your committee members, and a single email address to reach the chair or either co-chair.",
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "name": "committeeMembers",
+          "text": "Please supply the names of your committee members, and a single email address to reach the chair or either co-chair.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           }
         },
         {
-          "name":"embargoCheckAdvisor",
-          "text":"If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication.",
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "name": "embargoCheckAdvisor",
+          "text": "If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           }
         }
       ],
-      "originalFieldProfiles":[
+      "originalFieldProfiles": [
         {
-          "fieldPredicate":{
-            "value":"dc.title",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "dc.title",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter the title of your document.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter the title of your document.",
           "gloss": "Title"
         },
         {
-          "fieldPredicate":{
-            "value":"dc.date.issued",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "dc.date.issued",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_DEGREEDATE"
+          "inputType": {
+            "name": "INPUT_DEGREEDATE"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Select your graduation month. Format: May 2022",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Select your graduation month. Format: May 2022",
           "gloss": "Graduation Semester",
-          "controlledVocabulary":{
-            "name":"Graduation Months",
-            "isEntityProperty":true
+          "controlledVocabulary": {
+            "name": "Graduation Months",
+            "isEntityProperty": true
           }
         },
         {
-          "fieldPredicate":{
-            "value":"defense_date",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "defense_date",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_DATE"
+          "inputType": {
+            "name": "INPUT_DATE"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Select your defense date. Format: mm/dd/yyyy",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Select your defense date. Format: mm/dd/yyyy",
           "gloss": "Defense Date"
         },
         {
-          "fieldPredicate":{
-            "value":"submission_type",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "submission_type",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_SELECT"
+          "inputType": {
+            "name": "INPUT_SELECT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Select your submission type.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Select your submission type.",
           "gloss": "Submission Type",
-          "controlledVocabulary":{
-            "name":"Submission Types",
-            "isEntityProperty":false
-        }
+          "controlledVocabulary": {
+            "name": "Submission Types",
+            "isEntityProperty": false
+          }
         },
         {
-          "fieldPredicate":{
-            "value":"dc.description.abstract",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "dc.description.abstract",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXTAREA"
+          "inputType": {
+            "name": "INPUT_TEXTAREA"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter the abstract for your document.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter the abstract for your document.",
           "gloss": "Abstract"
         },
         {
-          "fieldPredicate":{
-            "value":"keywords",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "keywords",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":true,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter keywords for your document. You may enter multiple keywords by selecting the + sign.",
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter keywords for your document. You may enter multiple keywords by selecting the + sign.",
           "gloss": "Keywords"
         },
         {
-          "fieldPredicate":{
-            "value":"dc.subject",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "dc.subject",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_TEXT"
+          "inputType": {
+            "name": "INPUT_TEXT"
           },
-          "repeatable":true,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter subjects for your document. You may enter multiple subjects by selecting the + sign.",
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter subjects for your document. You may enter multiple subjects by selecting the + sign.",
           "gloss": "Subjects",
-          "controlledVocabulary":{
-            "name":"Subjects",
-            "isEntityProperty":false
+          "controlledVocabulary": {
+            "name": "Subjects",
+            "isEntityProperty": false
           }
         },
         {
-          "fieldPredicate":{
-            "value":"dc.language.iso",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "dc.language.iso",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_SELECT"
+          "inputType": {
+            "name": "INPUT_SELECT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Select the primary language of your document.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Select the primary language of your document.",
           "gloss": "Language",
-          "controlledVocabulary":{
-            "name":"Languages",
-            "isEntityProperty":true
+          "controlledVocabulary": {
+            "name": "Languages",
+            "isEntityProperty": true
           }
         },
         {
-          "fieldPredicate":{
-            "value":"dc.contributor.advisor",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "dc.contributor.advisor",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_CONTACT_SELECT"
+          "inputType": {
+            "name": "INPUT_CONTACT_SELECT"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Select the name and email address for your committee chair.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Select the name and email address for your committee chair.",
           "gloss": "Committee Chair",
-          "controlledVocabulary":{
-            "name":"Committee Members",
-            "isEntityProperty":false
+          "controlledVocabulary": {
+            "name": "Committee Members",
+            "isEntityProperty": false
           }
         },
         {
-          "fieldPredicate":{
-            "value":"dc.contributor.committeeMember",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "dc.contributor.committeeMember",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_CONTACT"
+          "inputType": {
+            "name": "INPUT_CONTACT"
           },
-          "repeatable":true,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Enter the names and email addresses of your non-chairing committee members. You may enter multiple committee members by selecting the + sign.",
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Enter the names and email addresses of your non-chairing committee members. You may enter multiple committee members by selecting the + sign.",
           "gloss": "Non-Chairing Committee Members",
-          "controlledVocabulary":{
-            "name":"Committee Members",
-            "isEntityProperty":false
+          "controlledVocabulary": {
+            "name": "Committee Members",
+            "isEntityProperty": false
           }
         },
         {
-          "fieldPredicate":{
-            "value":"previously_published_material",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "previously_published_material",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_CONDITIONAL_TEXTAREA"
+          "inputType": {
+            "name": "INPUT_CONDITIONAL_TEXTAREA"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Has any part of the material being submitted been previously published (i.e. book chapters or journal articles)? If so you will be asked identify the section where these materials are used in whole or in part.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Has any part of the material being submitted been previously published (i.e. book chapters or journal articles)? If so you will be asked identify the section where these materials are used in whole or in part.",
           "gloss": "Previously Published Material"
         },
         {
-          "fieldPredicate":{
-            "value":"default_embargos",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "default_embargos",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_RADIO"
+          "inputType": {
+            "name": "INPUT_RADIO"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Select the default emborgo for the publication of your work. If you are unsure, you should discuss the options with your advisor.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Select the default emborgo for the publication of your work. If you are unsure, you should discuss the options with your advisor.",
           "gloss": "Default Embargos",
-          "controlledVocabulary":{
-            "name":"Default Embargos",
-            "isEntityProperty":true
+          "controlledVocabulary": {
+            "name": "Default Embargos",
+            "isEntityProperty": true
           }
         },
         {
-          "fieldPredicate":{
-            "value":"proquest_embargos",
-            "documentTypePredicate":false
+          "fieldPredicate": {
+            "value": "proquest_embargos",
+            "documentTypePredicate": false
           },
-          "originatingWorkflowStep":{
-            "name":"Document Information"
+          "originatingWorkflowStep": {
+            "name": "Document Information"
           },
-          "inputType":{
-            "name":"INPUT_RADIO"
+          "inputType": {
+            "name": "INPUT_RADIO"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Select the ProQuest emborgo for the publication of your work. If you are unsure, you should discuss the options with your advisor.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Select the ProQuest emborgo for the publication of your work. If you are unsure, you should discuss the options with your advisor.",
           "gloss": "ProQuest Embargos",
-          "controlledVocabulary":{
-            "name":"Proquest Embargos",
-            "isEntityProperty":true
+          "controlledVocabulary": {
+            "name": "Proquest Embargos",
+            "isEntityProperty": true
           }
         }
       ]
     },
     {
-      "name":"File Upload",
+      "name": "File Upload",
       "instructions": "<h4>Instructions:</h4><p>In this step you will upload your thesis or dissertation to the server. Optionally, you may upload additional supplementary files that will be available along with your document after publication.</p>",
-      "overrideable":true,
-      "originatingOrganization":{
-        "name":"Institution",
-        "category":{
-          "name":"System"
+      "overrideable": true,
+      "originatingOrganization": {
+        "name": "Institution",
+        "category": {
+          "name": "System"
         }
       },
-      "originalNotes":[
+      "originalNotes": [
         {
-          "name":"onePdfFile",
-          "text":"Your thesis or dissertation can only be one file, and the only allowable file format is PDF. Please contact your school for help or information related to creating a PDF file.",
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "name": "onePdfFile",
+          "text": "Your thesis or dissertation can only be one file, and the only allowable file format is PDF. Please contact your school for help or information related to creating a PDF file.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           }
         },
         {
-          "name":"noLimit",
-          "text":"There is no limit on the number or formats of supplementary files you may upload.",
-          "originatingWorkflowStep":{
-            "name":"Verify Personal Information"
+          "name": "noLimit",
+          "text": "There is no limit on the number or formats of supplementary files you may upload.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
           }
         }
       ],
-      "originalFieldProfiles":[
+      "originalFieldProfiles": [
         {
-          "fieldPredicate":{
-            "value":"_doctype_primary",
-            "documentTypePredicate":true
+          "fieldPredicate": {
+            "value": "_doctype_primary",
+            "documentTypePredicate": true
           },
-          "originatingWorkflowStep":{
-            "name":"File Upload"
+          "originatingWorkflowStep": {
+            "name": "File Upload"
           },
-          "inputType":{
-            "name":"INPUT_FILE"
+          "inputType": {
+            "name": "INPUT_FILE"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":false,
-          "flagged":false,
-          "logged":false,
-          "usage":"",
-          "help":"Upload the primary manuscript. You may only upload one file. Additional files may be uploaded below.",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": false,
+          "flagged": false,
+          "logged": false,
+          "usage": "",
+          "help": "Upload the primary manuscript. You may only upload one file. Additional files may be uploaded below.",
           "gloss": "Manuscript in PDF",
-          "controlledVocabulary":{
-            "name":"Manuscript Allowed File Extensions",
-            "isEntityProperty":false
+          "controlledVocabulary": {
+            "name": "Manuscript Allowed File Extensions",
+            "isEntityProperty": false
           }
         },
         {
-          "fieldPredicate":{
-            "value":"_doctype_supplemental",
-            "documentTypePredicate":true
+          "fieldPredicate": {
+            "value": "_doctype_supplemental",
+            "documentTypePredicate": true
           },
-          "originatingWorkflowStep":{
-            "name":"File Upload"
+          "originatingWorkflowStep": {
+            "name": "File Upload"
           },
-          "inputType":{
-            "name":"INPUT_FILE"
+          "inputType": {
+            "name": "INPUT_FILE"
           },
-          "repeatable":true,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Upload only supplemental files such as audio, video or data sets. These files must be listed in the appendix of your thesis or dissertation.",
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Upload only supplemental files such as audio, video or data sets. These files must be listed in the appendix of your thesis or dissertation.",
           "gloss": "Supplemental Files"
         },
         {
-          "fieldPredicate":{
-            "value":"_doctype_source",
-            "documentTypePredicate":true
+          "fieldPredicate": {
+            "value": "_doctype_source",
+            "documentTypePredicate": true
           },
-          "originatingWorkflowStep":{
-            "name":"File Upload"
+          "originatingWorkflowStep": {
+            "name": "File Upload"
           },
-          "inputType":{
-            "name":"INPUT_FILE"
+          "inputType": {
+            "name": "INPUT_FILE"
           },
-          "repeatable":true,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Upload the source files used to create your manuscript such as a Word Document, LaTeX Source file, etc. These files will be used to improve the digital preservation potential of your document.",
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Upload the source files used to create your manuscript such as a Word Document, LaTeX Source file, etc. These files will be used to improve the digital preservation potential of your document.",
           "gloss": "Source Files"
         },
         {
-          "fieldPredicate":{
-            "value":"_doctype_administrative",
-            "documentTypePredicate":true
+          "fieldPredicate": {
+            "value": "_doctype_administrative",
+            "documentTypePredicate": true
           },
-          "originatingWorkflowStep":{
-            "name":"File Upload"
+          "originatingWorkflowStep": {
+            "name": "File Upload"
           },
-          "inputType":{
-            "name":"INPUT_FILE"
+          "inputType": {
+            "name": "INPUT_FILE"
           },
-          "repeatable":true,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "usage":"",
-          "help":"Upload additional administrative files such as a signed graduation release form or other local administrative files.",
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "usage": "",
+          "help": "Upload additional administrative files such as a signed graduation release form or other local administrative files.",
           "gloss": "Administrative Files"
         },
         {
-          "fieldPredicate":{
-            "value":"_doctype_license",
-            "documentTypePredicate":true
+          "fieldPredicate": {
+            "value": "_doctype_license",
+            "documentTypePredicate": true
           },
-          "originatingWorkflowStep":{
-            "name":"File Upload"
+          "originatingWorkflowStep": {
+            "name": "File Upload"
           },
-          "inputType":{
-            "name":"INPUT_FILE"
+          "inputType": {
+            "name": "INPUT_FILE"
           },
-          "repeatable":false,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "hidden":true,
-          "usage":"",
-          "help":"",
+          "repeatable": false,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "hidden": true,
+          "usage": "",
+          "help": "",
           "gloss": "License Files"
         },
         {
-          "fieldPredicate":{
-            "value":"_doctype_archived",
-            "documentTypePredicate":true
+          "fieldPredicate": {
+            "value": "_doctype_archived",
+            "documentTypePredicate": true
           },
-          "originatingWorkflowStep":{
-            "name":"File Upload"
+          "originatingWorkflowStep": {
+            "name": "File Upload"
           },
-          "inputType":{
-            "name":"INPUT_FILE"
+          "inputType": {
+            "name": "INPUT_FILE"
           },
-          "repeatable":true,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "hidden":true,
-          "usage":"",
-          "help":"",
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "hidden": true,
+          "usage": "",
+          "help": "",
           "gloss": "Archived Files"
         },
         {
-          "fieldPredicate":{
-            "value":"_doctype_feedback",
-            "documentTypePredicate":true
+          "fieldPredicate": {
+            "value": "_doctype_feedback",
+            "documentTypePredicate": true
           },
-          "originatingWorkflowStep":{
-            "name":"File Upload"
+          "originatingWorkflowStep": {
+            "name": "File Upload"
           },
-          "inputType":{
-            "name":"INPUT_FILE"
+          "inputType": {
+            "name": "INPUT_FILE"
           },
-          "repeatable":true,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "hidden":true,
-          "usage":"",
-          "help":"",
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "hidden": true,
+          "usage": "",
+          "help": "",
           "gloss": "Feedback Files"
         },
         {
-          "fieldPredicate":{
-            "value":"_doctype_unknown",
-            "documentTypePredicate":true
+          "fieldPredicate": {
+            "value": "_doctype_unknown",
+            "documentTypePredicate": true
           },
-          "originatingWorkflowStep":{
-            "name":"File Upload"
+          "originatingWorkflowStep": {
+            "name": "File Upload"
           },
-          "inputType":{
-            "name":"INPUT_FILE"
+          "inputType": {
+            "name": "INPUT_FILE"
           },
-          "repeatable":true,
-          "overrideable":true,
-          "enabled":true,
-          "optional":true,
-          "hidden":true,
-          "usage":"",
-          "help":"",
+          "repeatable": true,
+          "overrideable": true,
+          "enabled": true,
+          "optional": true,
+          "hidden": true,
+          "usage": "",
+          "help": "",
           "gloss": "Unknown Files"
         }
       ]
     }
   ],
-  "parentOrganization":null,
-  "childrenOrganizations":null,
-  "emails":null,
-  "emailWorkflowRules":[
+  "parentOrganization": null,
+  "childrenOrganizations": null,
+  "emails": null,
+  "emailWorkflowRules": [
     {
-      "isSystem":true,
-      "isDisabled":false,
+      "isSystem": true,
+      "isDisabled": false,
       "submissionStatus": {
         "name": "Submitted"
       },
-      "recipientType":2,
-      "emailTemplate":{
-        "name":"SYSTEM Advisor Review Request",
-        "systemRequired":true
+      "recipientType": 2,
+      "emailTemplate": {
+        "name": "SYSTEM Advisor Review Request",
+        "systemRequired": true
       }
     },
     {
-      "isSystem":true,
-      "isDisabled":false,
+      "isSystem": true,
+      "isDisabled": false,
       "submissionStatus": {
         "name": "Submitted"
       },
-      "recipientType":1,
-      "emailTemplate":{
-        "name":"SYSTEM Initial Submission",
-        "systemRequired":true
+      "recipientType": 1,
+      "emailTemplate": {
+        "name": "SYSTEM Initial Submission",
+        "systemRequired": true
       }
     }
   ]

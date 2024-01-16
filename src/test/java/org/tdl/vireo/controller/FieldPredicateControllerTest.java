@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class FieldPredicateControllerTest extends AbstractControllerTest {
 
     @Mock

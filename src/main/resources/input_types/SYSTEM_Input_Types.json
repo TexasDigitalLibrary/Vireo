@@ -1,4 +1,5 @@
-[{
+[
+  {
     "name": "INPUT_TEXT",
     "validationPattern": null,
     "validationMessage": null
@@ -13,14 +14,14 @@
     "validationPattern": null,
     "validationMessage": null,
     "validation": {
-        "name": {
-            "pattern": null,
-            "message": null
-        },
-        "email": {
-            "pattern": "^([_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})|)$",
-            "message": "Field must be a valid email address"
-        }
+      "name": {
+        "pattern": null,
+        "message": null
+      },
+      "email": {
+        "pattern": "^([_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})|)$",
+        "message": "Field must be a valid email address"
+      }
     }
   },
   {
@@ -28,14 +29,14 @@
     "validationPattern": null,
     "validationMessage": null,
     "validation": {
-        "name": {
-            "pattern": null,
-            "message": null
-        },
-        "email": {
-            "pattern": null,
-            "message": null
-        }
+      "name": {
+        "pattern": null,
+        "message": null
+      },
+      "email": {
+        "pattern": null,
+        "message": null
+      }
     }
   },
   {

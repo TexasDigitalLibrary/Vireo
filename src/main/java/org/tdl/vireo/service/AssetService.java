@@ -48,6 +48,8 @@ public class AssetService {
 
     private static final Logger LOG = LoggerFactory.getLogger(AssetService.class);
 
+    private final FileHelperUtility fileHelperUtility = new FileHelperUtility();
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -56,8 +58,6 @@ public class AssetService {
 
     @Autowired
     private ResourcePatternResolver resourcePatternResolver;
-
-    private final FileHelperUtility fileHelperUtility = new FileHelperUtility();
 
     public void write(byte[] data, String relativePath) throws IOException {
         Files.write(processAssetsRelativePath(relativePath), data);
@@ -214,7 +214,7 @@ public class AssetService {
         return Arrays.asList(resource.getFile().listFiles());
     }
 
-    public Resource getResource(String resourcePath) {
+    private Resource getResource(String resourcePath) {
         return resourcePatternResolver.getResource(resourcePath);
     }
 

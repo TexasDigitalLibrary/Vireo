@@ -63,7 +63,7 @@ public class AbstractEmailRecipientRepoImpl extends AbstractWeaverRepoImpl<Abstr
         // query using jpql
 
         // TODO: this should not be needed, named queries should work
-        return (EmailRecipient) abstractEmailRecipientRepo.findAll().stream().filter(r -> r.getName().equals(name)).findFirst().orElse(null);
+        return abstractEmailRecipientRepo.findAll().stream().filter(r -> r.getName().equals(name)).findFirst().orElse(null);
     }
 
     @Override

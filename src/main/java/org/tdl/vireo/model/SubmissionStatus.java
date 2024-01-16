@@ -22,10 +22,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import edu.tamu.weaver.data.resolver.BaseEntityIdResolver;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
 public class SubmissionStatus extends ValidatingBaseEntity {
 
     @JsonView(Views.SubmissionList.class)
@@ -67,7 +68,7 @@ public class SubmissionStatus extends ValidatingBaseEntity {
     private SubmissionState submissionState;
 
     @ManyToMany(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionStatus.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionStatus.class, resolver = BaseEntityIdResolver.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
     private List<SubmissionStatus> transitionSubmissionStatuses;
 

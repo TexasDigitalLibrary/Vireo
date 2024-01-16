@@ -1,46 +1,46 @@
 {
-  "name":"Submission Types",
-  "isEntityProperty":false,
-  "dictionary":[
+  "name": "Submission Types",
+  "isEntityProperty": false,
+  "dictionary": [
     {
-      "name":"Performance Piece",
-      "definition":"a live artistic performance",
-      "identifier":""
+      "name": "Performance Piece",
+      "definition": "a live artistic performance",
+      "identifier": ""
     },
     {
-      "name":"Thesis",
-      "definition":"",
-      "identifier":""
+      "name": "Thesis",
+      "definition": "",
+      "identifier": ""
     },
     {
-      "name":"Dissertation",
-      "definition":"",
-      "identifier":""
+      "name": "Dissertation",
+      "definition": "",
+      "identifier": ""
     },
     {
-      "name":"Honors Thesis",
-      "definition":"",
-      "identifier":""
+      "name": "Honors Thesis",
+      "definition": "",
+      "identifier": ""
     },
     {
-      "name":"Project Report",
-      "definition":"",
-      "identifier":""
+      "name": "Project Report",
+      "definition": "",
+      "identifier": ""
     },
     {
-      "name":"Capstone Project",
-      "definition":"",
-      "identifier":""
+      "name": "Capstone Project",
+      "definition": "",
+      "identifier": ""
     },
     {
-      "name":"Project Capstone",
-      "definition":"",
-      "identifier":""
+      "name": "Project Capstone",
+      "definition": "",
+      "identifier": ""
     },
     {
-      "name":"Treatise",
-      "definition":"",
-      "identifier":""
+      "name": "Treatise",
+      "definition": "",
+      "identifier": ""
     }
   ]
 }

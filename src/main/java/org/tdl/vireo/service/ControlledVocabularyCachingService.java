@@ -21,7 +21,11 @@ public class ControlledVocabularyCachingService {
     @Value("${app.cvcache.duration}")
     private Long duration;
 
-    private Map<String, ControlledVocabularyCache> cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
+    private final Map<String, ControlledVocabularyCache> cvCacheMap;
+
+    public ControlledVocabularyCachingService() {
+        cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
+    }
 
     /**
      *
@@ -63,7 +67,7 @@ public class ControlledVocabularyCachingService {
      * Clear the cache.
      */
     public void clearCache() {
-        cvCacheMap = new HashMap<String, ControlledVocabularyCache>();
+        cvCacheMap.clear();
     }
 
     /**

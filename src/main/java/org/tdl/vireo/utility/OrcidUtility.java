@@ -8,6 +8,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.User;
 import org.w3c.dom.Document;
@@ -16,7 +18,14 @@ import org.xml.sax.SAXException;
 
 public class OrcidUtility {
 
-    private static final String ORCID_API = "https://pub.orcid.org/v2.0/#/";
+    private static final Logger logger = LoggerFactory.getLogger(OrcidUtility.class);
+
+    private static final String ORCID_API = "https://pub.orcid.org/v3.0/#/";
+
+    private OrcidUtility() {
+
+    }
+
     public static Map<String, String> verifyOrcid(User user, FieldValue fieldValue) {
         Map<String, String> errors = new HashMap<String, String>();
         if (fieldValue.getValue() == "") {
@@ -29,13 +38,13 @@ public class OrcidUtility {
                 if (doc.getElementsByTagName("record") == null) {
                     errors.put("orcid-no-document", "No public profile was found for this ORCID");
                 }
-                if (!tagMatchesCredentials(user.getFirstName(), doc.getElementsByTagName("given-names"))) {
+                if (!tagMatchesCredentials(user.getFirstName(), doc.getElementsByTagName("personal-details:given-names"))) {
                     errors.put("orcid-invalid-first-name", "The first name you registered with does not match this ORCID profile");
                 }
-                if (!tagMatchesCredentials(user.getLastName(), doc.getElementsByTagName("family-name"))) {
+                if (!tagMatchesCredentials(user.getLastName(), doc.getElementsByTagName("personal-details:family-name"))) {
                     errors.put("orcid-invalid-last-name", "The last name you registered with does not match this ORCID profile");
                 }
-                if (!tagMatchesCredentials(user.getEmail(), doc.getElementsByTagName("email"))) {
+                if (!tagMatchesCredentials(user.getEmail(), doc.getElementsByTagName("email:email"))) {
                     errors.put("orcid-no-invalid-email", "The email you registered with does not match this ORCID profile");
                 }
             }
@@ -58,12 +67,10 @@ public class OrcidUtility {
         Document doc = null;
         try {
             doc = builder.parse(ORCID_API.replace("#", orcid));
-        } catch (IOException ioex) {
-            System.out.println("IO error occurred while verifying ORCID: " + ioex.getMessage());
-        } catch (SAXException saxex) {
-            System.out.println("IO error occurred while verifying ORCID: " + saxex.getMessage());
-        } catch (IllegalArgumentException argex) {
-            System.out.println("IO error occurred while verifying ORCID: " + argex.getMessage());
+        } catch (IOException | SAXException | IllegalArgumentException e) {
+            String message = "IO error occurred while verifying ORCID";
+            logger.error(message + ": " + e.getMessage());
+            logger.debug(message, e);
         }
         return doc;
     }
@@ -73,9 +80,12 @@ public class OrcidUtility {
         DocumentBuilder builder = null;
         try {
             builder = dbf.newDocumentBuilder();
-        } catch (ParserConfigurationException pcex) {
-            System.out.println("IO error occurred while verifying ORCID: " + pcex.getMessage());
+        } catch (ParserConfigurationException e) {
+            String message = "IO error occurred while verifying ORCID";
+            logger.error(message + ": " + e.getMessage());
+            logger.debug(message, e);
         }
         return builder;
     }
+
 }

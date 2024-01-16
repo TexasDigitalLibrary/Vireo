@@ -6,7 +6,7 @@ import java.util.List;
 import javax.persistence.Entity;
 
 @Entity
-public class EmailRecipientAssignee extends AbstractEmailRecipient implements EmailRecipient {
+public class EmailRecipientAssignee extends AbstractEmailRecipient {
 
     public EmailRecipientAssignee() {
         setName("Assignee");
