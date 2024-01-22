@@ -2,7 +2,6 @@ package org.tdl.vireo.service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -61,7 +60,7 @@ public class DefaultSubmissionListColumnService {
     }
 
     public List<SubmissionListColumn> getDefaultSubmissionListColumns() {
-        return Collections.unmodifiableList(defaultSubmissionListColumns);
+        return new ArrayList<>(defaultSubmissionListColumns);
     }
 
 }
