@@ -99,7 +99,7 @@ const config = {
       './node_modules/@wvr/core/app/services/alertService.js',
       './node_modules/@wvr/core/app/services/validationStore.js',
       './node_modules/@wvr/core/app/services/userService.js',
-      // './node_modules/@wvr/core/app/services/modalService.js',
+      './node_modules/@wvr/core/app/services/modalService.js',
       './node_modules/@wvr/core/app/services/modelCache.js',
       './node_modules/@wvr/core/app/services/modelUpdateService.js',
       './node_modules/@wvr/core/app/repo/abstractRepo.js',
