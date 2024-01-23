@@ -13,6 +13,10 @@ import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 import java.util.Optional;
+
+import javax.transaction.Transactional;
+
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -130,6 +134,7 @@ public class WorkflowStepController {
 
     @PostMapping(value = "/{requestingOrgId}/{workflowStepId}/remove-field-profile/{fieldProfileId}")
     @PreAuthorize("hasRole('MANAGER')")
+    @Transactional(rollbackOn = ConstraintViolationException.class)
     public ApiResponse removeFieldProfileById(@PathVariable Long requestingOrgId, @PathVariable Long workflowStepId, @PathVariable Long fieldProfileId) throws WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
         Optional<Organization> organization = organizationRepo.findById(requestingOrgId);
 

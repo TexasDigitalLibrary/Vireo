@@ -5,6 +5,7 @@ import static java.lang.String.format;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +44,15 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @Value("${spring.servlet.multipart.max-file-size:20MB}")
     private String maxFileSize;
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(value = HttpStatus.CONFLICT)
+    @ResponseBody
+    public ApiResponse handleConstraintViolationException(ConstraintViolationException exception) {
+        logger.error(exception.getMessage());
+        logger.debug(exception.getMessage(), exception);
+        return new ApiResponse(ERROR, exception.getMessage());
+    }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
