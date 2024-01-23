@@ -577,7 +577,7 @@ public class SubmissionHelperUtility {
     }
 
     public List<FieldValue> getKeywordFieldValues() {
-        return submission.getFieldValuesByPredicateValue("dc.subject.other");
+        return submission.getFieldValuesByPredicateValue("keywords");
     }
 
     public List<FieldValue> getCommitteeMemberFieldValues() {
