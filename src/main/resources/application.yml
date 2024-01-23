@@ -203,6 +203,7 @@ theme:
   managerService: org.tdl.vireo.service.VireoThemeManagerService
   # define the location of sass/css files
   default.css: sass/app.scss
+  cssUrl: ${app.url}/wro/app.css
   cacheReloadUrl: ${app.url}/wro/wroAPI/reloadCache
 
 
