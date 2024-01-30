@@ -36,7 +36,7 @@ public class SubmissionHelperUtility {
     private final static SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy-MM");
     private final static SimpleDateFormat monthYearFormat = new SimpleDateFormat("MMMM yyyy");
 
-    private final static SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    private final static SimpleDateFormat iso8601Format = new SimpleDateFormat("yyyy-MM-dd");
 
     private final static PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
 
@@ -652,25 +652,41 @@ public class SubmissionHelperUtility {
     }
 
     public String getEmbargoLiftDate() {
-        String defaultEmbargoLiftDateStr = null;
+        String embargoLiftDateStr = null;
         Optional<String> dateIssued = getFieldValueByPredicateValue("dc.date.issued");
         if(dateIssued.isPresent()){
             String dateIssuedStr = dateIssued.get();
+
+            Optional<FieldValue> proquestEmbargo = getFirstFieldValueByPredicateValue("proquest_embargos");
             Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
-            if (defaultEmbargo.isPresent()) {
-                String defaultEmbargoDuration = defaultEmbargo.get().getIdentifier();
-                if ((defaultEmbargoDuration != null)&&(defaultEmbargoDuration.length() > 0)) {
-                    int duration = Integer.valueOf(defaultEmbargoDuration);
+
+            Optional<FieldValue> embargo = Optional.empty();
+            
+            if (proquestEmbargo.isPresent() && Integer.valueOf(proquestEmbargo.get().getIdentifier()) > 0 &&
+                defaultEmbargo.isPresent() && Integer.valueOf(defaultEmbargo.get().getIdentifier()) > 0) {
+                embargo = Integer.valueOf(proquestEmbargo.get().getIdentifier()) >= Integer.valueOf(defaultEmbargo.get().getIdentifier())
+                    ? proquestEmbargo
+                    : defaultEmbargo;
+            } else if (proquestEmbargo.isPresent() && Integer.valueOf(proquestEmbargo.get().getIdentifier()) > 0) {
+                embargo = proquestEmbargo;
+            } else if (defaultEmbargo.isPresent() && Integer.valueOf(defaultEmbargo.get().getIdentifier()) > 0) {
+                embargo = defaultEmbargo;
+            }
+
+            if (embargo.isPresent()) {
+                String embargoDuration = embargo.get().getIdentifier();
+                if (embargoDuration != null && embargoDuration.length() > 0) {
+                    int duration = Integer.valueOf(embargoDuration);
                     try {
-                        java.util.Date defaultEmbargoLiftDate = DateUtils.addMonths(monthYearFormat.parse(dateIssuedStr),duration);
-                        defaultEmbargoLiftDateStr = dateFormat.format(defaultEmbargoLiftDate);
+                        java.util.Date embargoLiftDate = DateUtils.addMonths(monthYearFormat.parse(dateIssuedStr), duration);
+                        embargoLiftDateStr = iso8601Format.format(embargoLiftDate);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
-        return defaultEmbargoLiftDateStr;
+        return embargoLiftDateStr;
     }  
 
     public String getProQuestFormatRestrictionRemove() {
