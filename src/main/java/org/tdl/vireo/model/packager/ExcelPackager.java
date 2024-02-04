@@ -2,6 +2,7 @@ package org.tdl.vireo.model.packager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -67,11 +68,13 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
         columns.forEach(column -> {
             Optional<String> predicate = Optional.ofNullable(column.getPredicate());
             if (predicate.isPresent()) {
+                List<String> fieldValues = new ArrayList<String>();
                 for (FieldValue fieldValue : submission.getFieldValues()) {
                     if (fieldValue.getFieldPredicate().getValue().equals(predicate.get().trim())) {
-                        row.put(column.getTitle(), fieldValue.getValue());
-                        break;
-                    }
+                        fieldValues.add(fieldValue.getValue());
+                        row.put(column.getTitle(), String.join(", ", fieldValues));
+                    } else {
+                        row.put(column.getTitle(), String.join(", ", fieldValues));                    }
                 }
             } else {
                 if (column.getValuePath().size() > 0) {
@@ -110,6 +113,7 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                             value = user.getName().toString();
                         } else {
                             value = valueAsObject.toString();
+                            System.out.println("value: " + value.toString());
                         }
                         row.put(column.getTitle(), value.toString());
                     } catch (Exception exception) {
