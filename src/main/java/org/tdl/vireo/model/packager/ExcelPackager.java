@@ -113,7 +113,6 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                             value = user.getName().toString();
                         } else {
                             value = valueAsObject.toString();
-                            System.out.println("value: " + value.toString());
                         }
                         row.put(column.getTitle(), value.toString());
                     } catch (Exception exception) {
