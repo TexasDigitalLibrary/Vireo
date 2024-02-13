@@ -57,6 +57,8 @@ import org.tdl.vireo.exception.DepositException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
+import org.tdl.vireo.model.Embargo;
+import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Role;
@@ -65,6 +67,7 @@ import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.depositor.Depositor;
 import org.tdl.vireo.model.export.ExportPackage;
 import org.tdl.vireo.model.packager.AbstractPackager;
@@ -73,6 +76,7 @@ import org.tdl.vireo.model.repo.ConfigurationRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.CustomActionValueRepo;
 import org.tdl.vireo.model.repo.DepositLocationRepo;
+import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.NamedSearchFilterGroupRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -170,6 +174,9 @@ public class SubmissionController {
 
     @Autowired
     private CustomActionValueRepo customActionValueRepo;
+
+    @Autowired
+    private EmbargoRepo embargoRepo;
 
     @Value("${app.document.folder:private}")
     private String documentFolder;
@@ -337,7 +344,20 @@ public class SubmissionController {
         ApiResponse apiResponse = null;
         SubmissionFieldProfile submissionFieldProfile = submissionFieldProfileRepo.findById(Long.parseLong(fieldProfileId)).get();
         ValidationResults validationResults = getValidationResults(submissionFieldProfile.getId().toString(), fieldValue);
+
         if (validationResults.isValid()) {
+            FieldPredicate fieldPredicate = fieldValue.getFieldPredicate();
+            if (fieldPredicate.getValue().equalsIgnoreCase("default_embargos") ||
+                fieldPredicate.getValue().equalsIgnoreCase("proquest_embargos")) {
+                for (VocabularyWord vocabularyWord : submissionFieldProfile.getControlledVocabulary().getDictionary()) {
+                    if (fieldValue.getValue().equals(vocabularyWord.getName())) {
+                        Embargo embargo = embargoRepo.getById(Long.parseLong(vocabularyWord.getIdentifier()));
+                        fieldValue.setIdentifier(String.valueOf(embargo.getDuration()));
+                        break;
+                    }
+                }
+            }
+
             Map<String, String> orcidErrors = new HashMap<String, String>();
             if (isOrcidVerificationActive(submissionFieldProfile, fieldValue)) {
                 orcidErrors = OrcidUtility.verifyOrcid(user, fieldValue);
