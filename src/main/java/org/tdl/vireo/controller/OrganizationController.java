@@ -9,15 +9,10 @@ import static edu.tamu.weaver.validation.model.BusinessValidationType.UPDATE;
 import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.response.ApiView;
-import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
-import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,6 +41,15 @@ import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 import org.tdl.vireo.view.ShallowOrganizationView;
 import org.tdl.vireo.view.TreeOrganizationView;
+
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.response.ApiView;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidation;
 
 @RestController
 @RequestMapping("/organization")
@@ -253,6 +257,10 @@ public class OrganizationController {
             EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
             org.addEmailWorkflowRule(newEmailWorkflowRule);
             organizationRepo.update(org);
+
+            HashMap<String, Object> payload = new HashMap<String, Object>();
+            payload.put("id", newEmailWorkflowRule.getId());
+            response.setPayload(payload);
         }
 
         return response;

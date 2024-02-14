@@ -36,7 +36,7 @@ import org.tdl.vireo.model.repo.NoteRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class WorkflowStepControllerTest extends AbstractControllerTest {
 
     @Mock
@@ -150,8 +150,6 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep1));
         when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
         when(fieldProfileRepo.create(any(WorkflowStep.class), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(fieldProfile1);
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(organizationRepo).broadcast(anyList());
 
         ApiResponse response = fieldPredicateController.createFieldProfile(organization1.getId(), workflowStep1.getId(), fieldProfile1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -163,8 +161,6 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
         when(workflowStepRepo.update(any(WorkflowStep.class), any(Organization.class))).thenReturn(workflowStep2);
         when(fieldProfileRepo.create(any(WorkflowStep.class), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any(), any())).thenReturn(fieldProfile1);
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(organizationRepo).broadcast(anyList());
 
         ApiResponse response = fieldPredicateController.createFieldProfile(organization1.getId(), workflowStep1.getId(), fieldProfile1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -173,8 +169,7 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
     @Test
     public void testUpdateFieldProfile() throws JsonProcessingException, WorkflowStepNonOverrideableException, HeritableModelNonOverrideableException, ComponentNotPresentOnOrgException {
         when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(organizationRepo).broadcast(anyList());
+        when(fieldProfileRepo.update(any(FieldProfile.class), any(Organization.class))).thenReturn(fieldProfile1);
 
         ApiResponse response = fieldPredicateController.updateFieldProfile(organization1.getId(), workflowStep1.getId(), fieldProfile1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -185,8 +180,7 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         managedConfiguration1 = null;
 
         when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(organizationRepo).broadcast(anyList());
+        when(fieldProfileRepo.update(any(FieldProfile.class), any(Organization.class))).thenReturn(fieldProfile1);
 
         ApiResponse response = fieldPredicateController.updateFieldProfile(organization1.getId(), workflowStep1.getId(), fieldProfile1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -199,8 +193,6 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         when(configurationRepo.findByNameAndType(anyString(), anyString())).thenReturn(managedConfiguration1);
         when(fieldProfileRepo.update(any(FieldProfile.class), any(Organization.class))).thenReturn(fieldProfile1);
         when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(organizationRepo).broadcast(anyList());
 
         ApiResponse response = fieldPredicateController.updateFieldProfile(organization1.getId(), workflowStep1.getId(), fieldProfile1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -215,8 +207,6 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         when(fieldProfileRepo.update(any(FieldProfile.class), any(Organization.class))).thenReturn(fieldProfile1);
         when(configurationRepo.create(any(ManagedConfiguration.class))).thenReturn(managedConfiguration1);
         when(organizationRepo.findById(any(Long.class))).thenReturn(Optional.of(organization1));
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(organizationRepo).broadcast(anyList());
 
         ApiResponse response = fieldPredicateController.updateFieldProfile(organization1.getId(), workflowStep1.getId(), fieldProfile1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -228,8 +218,6 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep1));
         when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
         doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(organizationRepo).broadcast(anyList());
 
         ApiResponse response = fieldPredicateController.removeFieldProfile(organization1.getId(), workflowStep1.getId(), fieldProfile1);
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -254,8 +242,6 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep1));
         when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
         doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(organizationRepo).broadcast(anyList());
 
         ApiResponse response = fieldPredicateController.removeFieldProfileById(organization1.getId(), workflowStep1.getId(), fieldProfile1.getId());
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
@@ -270,9 +256,7 @@ public class WorkflowStepControllerTest extends AbstractControllerTest {
         when(workflowStepRepo.findById(any(Long.class))).thenReturn(Optional.of(workflowStep1));
         when(fieldProfileRepo.findById(any(Long.class))).thenReturn(Optional.of(fieldProfile1));
         doNothing().when(fieldProfileRepo).removeFromWorkflowStep(any(Organization.class), any(WorkflowStep.class), any(FieldProfile.class));
-        when(organizationRepo.findAllByOrderByIdAsc()).thenReturn(organizations);
-        doNothing().when(fieldProfileRepo).deleteById(anyLong());
-        doNothing().when(organizationRepo).broadcast(anyList());
+        doNothing().when(fieldProfileRepo).delete(any(FieldProfile.class));
 
         ApiResponse response = fieldPredicateController.removeFieldProfileById(organization1.getId(), workflowStep1.getId(), fieldProfile1.getId());
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());

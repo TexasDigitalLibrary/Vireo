@@ -22,7 +22,7 @@ import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.repo.DocumentTypeRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class DocumentTypeControllerTest extends AbstractControllerTest {
 
     @Mock

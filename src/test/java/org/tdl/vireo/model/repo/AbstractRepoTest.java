@@ -38,7 +38,7 @@ import org.tdl.vireo.model.WorkflowStep;
 import org.tdl.vireo.model.packager.Packager;
 import org.tdl.vireo.service.EntityControlledVocabularyService;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 @SpringBootTest(classes = { Application.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public abstract class AbstractRepoTest {
 

@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class CustomActionControllerTest extends AbstractControllerTest {
 
     @Mock

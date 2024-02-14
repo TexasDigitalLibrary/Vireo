@@ -36,7 +36,7 @@ import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.service.ControlledVocabularyCachingService;
 
 @SpringBootTest(classes = { Application.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class ControlledVocabularyControllerTest extends AbstractControllerTest {
 
     @Mock

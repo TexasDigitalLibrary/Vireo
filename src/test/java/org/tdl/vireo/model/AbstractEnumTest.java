@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractEnumTest<E extends Enum<?>> {
 

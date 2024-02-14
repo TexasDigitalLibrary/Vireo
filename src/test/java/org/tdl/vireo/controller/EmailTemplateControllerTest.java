@@ -20,7 +20,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.tdl.vireo.model.EmailTemplate;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class EmailTemplateControllerTest extends AbstractControllerTest {
 
     @Mock

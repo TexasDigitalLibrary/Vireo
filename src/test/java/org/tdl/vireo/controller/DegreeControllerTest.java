@@ -24,7 +24,7 @@ import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.service.ProquestCodesService;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class DegreeControllerTest extends AbstractControllerTest {
 
     @Mock

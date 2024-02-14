@@ -1086,9 +1086,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             StringBuilder value = new StringBuilder(table).append(".value, ");
 
             if ("h2".equals(vireoDatabaseConfig.getPlatform())) {
-                value.append("PARSEDATETIME(").append(table).append(".value, 'MMM yyyy') AS");
+                value.append("PARSEDATETIME(").append(table).append(".value, 'MMM yyyy') AS ");
             } else {
-                value.append("CAST(REPLACE(").append(table).append(".value, ' ', ' 1, ') AS DATE) AS");
+                value.append("CAST(REPLACE(").append(table).append(".value, ' ', ' 1, ') AS DATE) AS ");
             }
 
             value.append(table).append("_date");
@@ -1097,7 +1097,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 sqlAliasBuilders.add(value.toString());
             }
 
-            sqlOrderBysBuilder.append(table).append("_date ").append(sort.name()).append(",");
+            sqlOrderBysBuilder.append(" ").append(table).append("_date ").append(sort.name()).append(",");
         }
     }
 

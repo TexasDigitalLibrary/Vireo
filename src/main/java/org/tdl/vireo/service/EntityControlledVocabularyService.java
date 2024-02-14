@@ -35,16 +35,16 @@ public class EntityControlledVocabularyService {
     @Autowired
     private ControlledVocabularyRepo controlledVocabularyRepo;
 
-    private Map<String, EntityControlledVocabularyRepo<EntityControlledVocabulary>> entityControlledVocabularyRepos;
+    private final Map<String, EntityControlledVocabularyRepo<EntityControlledVocabulary>> entityControlledVocabularyRepos;
 
     public EntityControlledVocabularyService() {
         entityControlledVocabularyRepos = new HashMap<String, EntityControlledVocabularyRepo<EntityControlledVocabulary>>();
     }
 
-    @SuppressWarnings("unchecked")
     public void scanForEntityControlledVocabularies() throws ClassNotFoundException {
         for (String name : applicationContext.getBeanNamesForType(EntityControlledVocabularyRepo.class)) {
             Object bean = applicationContext.getBean(name);
+            @SuppressWarnings("unchecked")
             EntityControlledVocabularyRepo<EntityControlledVocabulary> entityControlledVoabularyRepo = (EntityControlledVocabularyRepo<EntityControlledVocabulary>) bean;
             String entityName = getEntity(entityControlledVoabularyRepo).getSimpleName();
             List<EntityCV.Subset> subsetAnnotations = getEntityControlledVocabularySubsets(entityControlledVoabularyRepo);
@@ -96,7 +96,7 @@ public class EntityControlledVocabularyService {
         return dictionary;
     }
 
-    public List<EntityCV.Subset> getEntityControlledVocabularySubsets(EntityControlledVocabularyRepo<EntityControlledVocabulary> repo) throws ClassNotFoundException {
+    private List<EntityCV.Subset> getEntityControlledVocabularySubsets(EntityControlledVocabularyRepo<EntityControlledVocabulary> repo) throws ClassNotFoundException {
         List<EntityCV.Subset> subsets = new ArrayList<EntityCV.Subset>();
         EntityCV annotation = Class.forName(getGenericType(repo.getClass())[0].getTypeName()).getDeclaredAnnotation(EntityCV.class);
         if (annotation != null) {
@@ -105,7 +105,7 @@ public class EntityControlledVocabularyService {
         return subsets;
     }
 
-    public Optional<String> getEntityControlledVocabularyName(EntityControlledVocabularyRepo<EntityControlledVocabulary> repo) throws ClassNotFoundException {
+    private Optional<String> getEntityControlledVocabularyName(EntityControlledVocabularyRepo<EntityControlledVocabulary> repo) throws ClassNotFoundException {
         Optional<String> name = Optional.empty();
         EntityCV annotation = Class.forName(getGenericType(repo.getClass())[0].getTypeName()).getDeclaredAnnotation(EntityCV.class);
         if (annotation != null) {
@@ -116,13 +116,13 @@ public class EntityControlledVocabularyService {
         return name;
     }
 
-    public Class<?> getEntity(EntityControlledVocabularyRepo<EntityControlledVocabulary> repo) {
+    private Class<?> getEntity(EntityControlledVocabularyRepo<EntityControlledVocabulary> repo) {
         Type type = getGenericType(repo.getClass())[0];
         Type[] types = getGenericType(getClass(type));
         return getClass(((ParameterizedType) types[0]).getActualTypeArguments()[0]);
     }
 
-    public Type[] getGenericType(Class<?> target) {
+    private Type[] getGenericType(Class<?> target) {
         Type[] types = new Type[0];
         if (target != null) {
             types = target.getGenericInterfaces();

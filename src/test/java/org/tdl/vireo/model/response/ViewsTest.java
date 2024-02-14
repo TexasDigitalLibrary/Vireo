@@ -11,7 +11,7 @@ import org.tdl.vireo.model.response.Views.SubmissionIndividual;
 import org.tdl.vireo.model.response.Views.SubmissionIndividualActionLogs;
 import org.tdl.vireo.model.response.Views.SubmissionList;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class ViewsTest {
 
     @Test

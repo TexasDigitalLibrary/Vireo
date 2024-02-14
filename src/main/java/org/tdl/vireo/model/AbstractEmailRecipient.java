@@ -8,7 +8,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
 @Inheritance
-public abstract class AbstractEmailRecipient extends ValidatingBaseEntity {
+public abstract class AbstractEmailRecipient extends ValidatingBaseEntity implements EmailRecipient {
 
     @Column(nullable = false)
     private String name;

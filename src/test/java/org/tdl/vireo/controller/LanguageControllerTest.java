@@ -23,7 +23,7 @@ import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.service.ProquestCodesService;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class LanguageControllerTest extends AbstractControllerTest {
 
     @Mock

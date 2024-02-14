@@ -22,7 +22,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.tdl.vireo.mock.MockData;
 import org.tdl.vireo.utility.TemplateUtility;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 @ExtendWith(MockitoExtension.class)
 @ExtendWith(SpringExtension.class)
 public abstract class AbstractControllerTest extends MockData {

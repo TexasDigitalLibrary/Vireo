@@ -1,8 +1,6 @@
-vireo.controller('AbstractController', function ($scope, $window, ModalService, StorageService, RestApi) {
+vireo.controller('AbstractController', function ($scope, $window, ModalService, RestApi) {
 
     angular.extend($scope, ModalService);
-
-    $scope.modals = ModalService;
 
     $scope.isAnonymous = function () {
         return sessionStorage.token === undefined || sessionStorage.role === appConfig.anonymousRole;
