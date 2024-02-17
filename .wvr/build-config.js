@@ -40,7 +40,7 @@ const config = {
       transform(content) {
         return content
           .toString()
-          .replace('${AUTH_SERVICE_URL}', 'window.location.protocol + \'//\' + window.location.host + window.location.base + \'/mock/auth\'')
+          .replace('${AUTH_SERVICE_URL}', 'window.location.protocol + \'//\' + window.location.host + window.location.base + \'/auth\'')
           .replace('${STOMP_DEBUG}', 'false');
       },
     },

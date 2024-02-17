@@ -1,8 +1,8 @@
 # config valid for current version and patch releases of Capistrano
-lock "~> 3.17.3"
+lock "~> 3.18.0"
 
 set :application, "Vireo4"
-set :repo_url, "https://github.com/medusa-project/uiuc-local-vireo4.git"
+set :repo_url, "https://github.com/medusa-project/Vireo.git"
 set :branch, "main"
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -47,7 +47,8 @@ namespace :deploy do
       # puts "the server is #{server}, the user is #{user}"
       on roles(:app) do
         execute "mkdir -p #{deploy_to}/shared/"
-        execute "ln -s #{deploy_to}/shared/application.yml #{deploy_to}/current/src/main/resources/application.yml"
+        execute "ln -sf #{deploy_to}/shared/application.yml #{deploy_to}/current/src/main/resources/application.yml"
+        execute "ln -sf #{deploy_to}/shared/build-config.js #{deploy_to}/current/.wvr/build-config.js"
         # the cd to current and the sh need to happen in the same execute command.
         # execute "cd #{deploy_to}/current/ && sh create_vireo_war_file.sh"
       end
