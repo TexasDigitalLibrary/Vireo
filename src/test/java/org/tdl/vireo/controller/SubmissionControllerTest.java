@@ -27,7 +27,7 @@ import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class SubmissionControllerTest extends AbstractControllerTest {
 
     private static final String TEST_USER_1_EMAIL = "User 1 email";

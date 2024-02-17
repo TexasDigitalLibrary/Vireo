@@ -1,9 +1,11 @@
 {
   "name": "Manuscript Allowed File Extensions",
   "isEntityProperty": false,
-  "dictionary": [{
-    "name": "pdf",
-    "definition": "PDF file",
-    "identifier": ""
-  }]
+  "dictionary": [
+    {
+      "name": "pdf",
+      "definition": "PDF file",
+      "identifier": ""
+    }
+  ]
 }

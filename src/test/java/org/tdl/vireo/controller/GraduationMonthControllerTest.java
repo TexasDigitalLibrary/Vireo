@@ -21,7 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.GraduationMonth;
 import org.tdl.vireo.model.repo.GraduationMonthRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class GraduationMonthControllerTest extends AbstractControllerTest {
 
     @Mock

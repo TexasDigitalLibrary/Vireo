@@ -20,7 +20,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.OrganizationCategory;
 import org.tdl.vireo.model.repo.OrganizationCategoryRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class OrganizationCategoryControllerTest extends AbstractControllerTest {
 
     @Mock

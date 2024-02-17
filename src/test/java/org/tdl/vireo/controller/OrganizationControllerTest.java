@@ -53,7 +53,7 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class OrganizationControllerTest extends AbstractControllerTest {
 
     @Mock

@@ -133,7 +133,7 @@ public class AuthController extends WeaverAuthController {
             content = cryptoService.validateGenericToken(token, EMAIL_VERIFICATION_TYPE);
         } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
             logger.debug("Unable to validate token!");
-            return new ApiResponse(ERROR, "Unable to generate token!");
+            return new ApiResponse(ERROR, "Unable to validate token!");
         }
 
         String tokenCreateTime = content[0];

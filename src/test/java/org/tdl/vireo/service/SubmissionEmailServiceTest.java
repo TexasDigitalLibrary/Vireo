@@ -60,7 +60,7 @@ import org.tdl.vireo.utility.TemplateUtility;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 @ExtendWith(MockitoExtension.class)
 @SpringBootTest(classes = { Application.class })
 public class SubmissionEmailServiceTest extends MockData {

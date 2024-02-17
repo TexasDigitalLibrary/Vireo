@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.packager.AbstractPackager;
 import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class PackagerControllerTest extends AbstractControllerTest {
 
     @Mock

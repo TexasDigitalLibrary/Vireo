@@ -1,19 +1,17 @@
 spring:
-  config:
-    import: file:src/main/resources/application.yml
   sql:
     init:
       platform: h2
 
   datasource:
     url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driverClassName: org.h2.Driver
+    driver-class-name: org.h2.Driver
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate.ddl-auto: create-drop
 
-# logging (is overwritten by logback-test.xml)
+# logging (is overwritten by src/test/resources/logback.xml)
 logging:
   level:
     com.zaxxer: ERROR

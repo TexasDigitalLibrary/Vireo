@@ -1,8 +1,11 @@
 package org.tdl.vireo.integration;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.model.repo.ControlledVocabularyRepo;
 
 public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest {
@@ -12,13 +15,15 @@ public class ControlledVocabularyIntegrationTest extends AbstractIntegrationTest
 
     @BeforeEach
     public void setup() {
-
-        systemDataLoader.loadSystemDefaults();
+        assertEquals(0, controlledVocabularyRepo.count());
 
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME1);
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME2);
         controlledVocabularyRepo.create(TEST_CONTROLLED_VOCABULARY_NAME3);
 
+        assertEquals(3, controlledVocabularyRepo.count());
+
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
     @Test

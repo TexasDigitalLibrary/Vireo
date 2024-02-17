@@ -37,7 +37,7 @@ import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.VireoEmailSender;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class AuthControllerTest extends AbstractControllerTest {
 
     @Mock

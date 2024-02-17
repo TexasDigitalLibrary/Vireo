@@ -654,7 +654,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "deleteSubmission": function () {
                 $scope.submission.delete().then(function () {
                     $scope.submissionStatusBox.deleteWorking = false;
-                    $location.path("/admin/list");
+                    $scope.closeModal();
+                    $timeout(function () {
+                        $location.path("/admin/list");
+                    }, 250);
                 });
             },
             "changeAssignee": function (assignee) {

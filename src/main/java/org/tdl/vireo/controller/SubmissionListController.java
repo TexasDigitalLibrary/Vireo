@@ -341,7 +341,7 @@ public class SubmissionListController {
         simpMessagingTemplate.convertAndSend("/channel/active-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getActiveFilter()));
         simpMessagingTemplate.convertAndSend("/channel/saved-filters/user/" + user.getId(), new ApiResponse(SUCCESS, FilterAction.REFRESH, user.getSavedFilters()));
 
-        if (existingFilter.getPublicFlag() == true || wasPublic) {
+        if (existingFilter != null && existingFilter.getPublicFlag() == true || wasPublic) {
             simpMessagingTemplate.convertAndSend("/channel/saved-filters/public", new ApiResponse(SUCCESS, FilterAction.SAVE, existingFilter));
         }
 

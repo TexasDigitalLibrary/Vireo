@@ -16,7 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.repo.DegreeLevelRepo;
 
-@ActiveProfiles("test")
+@ActiveProfiles(value = { "test", "isolated-test" })
 public class DegreeLevelControllerTest extends AbstractControllerTest {
 
     @Mock
