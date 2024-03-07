@@ -301,13 +301,12 @@ public class SubmissionHelperUtility {
         return year;
     }
 
-    // NOTE: uses hard coded predicate values
     public String getGraduationYearMonthString() {
         Optional<String> graduationYearMonth = getFieldValueByPredicateValue("dc.date.issued");
         String yearMonth = "";
         if (graduationYearMonth.isPresent()) {
             try {
-                yearMonth = yearMonthFormat.format(monthYearFormat.parse(graduationYearMonth.get()));
+                yearMonth = iso8601Format.format(monthYearFormat.parse(graduationYearMonth.get()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -315,10 +314,17 @@ public class SubmissionHelperUtility {
         return yearMonth;
     }
 
-    // NOTE: uses hard coded predicate values
     public String getGraduationMonthYearString() {
         Optional<String> graduationMonthYear = getFieldValueByPredicateValue("dc.date.issued");
-        return graduationMonthYear.isPresent() ? graduationMonthYear.get() : "";
+        String monthYear = "";
+        if (graduationMonthYear.isPresent()) {
+            try {
+                monthYear = iso8601Format.format(monthYearFormat.parse(graduationMonthYear.get()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        return monthYear;
     }
 
     public String getSubmitterEmail() {
