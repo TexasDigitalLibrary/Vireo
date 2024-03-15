@@ -149,7 +149,9 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             var managerFilterColumns = ManagerFilterColumnRepo.getAll().filter(function excludeSearchBox(slc) {
                 return slc.title !== 'Search Box';
             });
-            var submissionListColumns = SubmissionListColumnRepo.getAll();
+            var submissionListColumns = SubmissionListColumnRepo.getAll().filter(function excludeSearchBox(slc) {
+                return slc.title !== 'Search Box';
+            });
 
             $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
 
