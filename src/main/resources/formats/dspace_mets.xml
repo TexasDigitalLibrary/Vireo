@@ -48,10 +48,18 @@
                     <!-- dc, thesis, and local schema -->
                     <dim:field
                       th:each="fv : ${ METS_FIELD_VALUES }"
+                      th:if = "${ fv.getFieldPredicate().getQualifier()!='issued'}"
                       th:attr="mdschema=${ fv.getFieldPredicate().getSchema() },
                                element=${ fv.getFieldPredicate().getElement() },
                                qualifier=${ fv.getFieldPredicate().getQualifier() }"
                       th:text="${ fv.value }">
+                    </dim:field>
+
+                    <!-- dc.date.issued in proper format -->
+                    <dim:field
+                      th:if="${ GRADUATION_YEAR_MONTH != null }"
+                        mdschema="dc" element="date" qualifier="issued"
+                        th:text="${GRADUATION_YEAR_MONTH}">
                     </dim:field>
 
                     <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
