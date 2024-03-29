@@ -3,6 +3,8 @@ package org.tdl.vireo.auth.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.config.constant.ConfigurationName;
@@ -22,6 +24,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
 
     @Override
     public synchronized User updateUserByCredentials(Credentials credentials) {
+        Logger logger = LoggerFactory.getLogger(this.getClass());
         User user = userRepo.findByEmail(credentials.getEmail());
 
         Map<String, String> shibSettings = new HashMap<String, String>();
@@ -41,7 +44,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
         if (uin == null) {
             uin = credentials.getEmail();
         }
-
+        logger.info("UIN is "+uin);
         // TODO: check to see if credentials is from basic login or shibboleth
         // do not create new user from basic login credentials that have no user!
         if (user == null) {
