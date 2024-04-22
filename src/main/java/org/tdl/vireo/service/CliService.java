@@ -33,6 +33,12 @@ import org.tdl.vireo.model.repo.UserRepo;
 @Service
 public class CliService {
 
+    public static final SimpleDateFormat FORMAT_DAY = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static final SimpleDateFormat FORMAT_MONTH = new SimpleDateFormat("MMMM yyyy");
+
+    public static final SimpleDateFormat EMAIL_DATE = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss_");
+
     @Autowired
     private UserRepo userRepo;
 
@@ -81,139 +87,132 @@ public class CliService {
         }
     }
 
-    public void operateGenerate(boolean expansive, int generateTotal, int maxActionLogs, int itemsGenerated) throws OrganizationDoesNotAcceptSubmissionsException {
-        Random random = new Random();
-        Calendar calendar = null;
+    public void operateGenerate(boolean expansive, int maxActionLogs, Random random, int idOffset, User helpfulHarry, int i) throws OrganizationDoesNotAcceptSubmissionsException {
+        Calendar now = Calendar.getInstance();
+        User submitter = userRepo.create("bob" + EMAIL_DATE.format(now.getTime()) + (idOffset + i + 1) + "@boring.bob", "bob", "boring " + (idOffset + i + 1), Role.ROLE_STUDENT);
+        Credentials credentials = new Credentials();
+        credentials.setFirstName("Bob");
+        credentials.setLastName("Boring " + (idOffset + i + 1));
+        credentials.setEmail("bob@boring.bob");
+        credentials.setRole(Role.ROLE_STUDENT.name());
 
-        SimpleDateFormat formatDay = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat formatMonth = new SimpleDateFormat("MMMM yyyy");
-        SimpleDateFormat emailDate = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss_");
+        Organization org = getOrganization(0);
+        setAcceptSubmissions(org);
 
-        Organization org = organizationRepo.findAll().get(0);
+        List<SubmissionStatus> statuses = getAllSubmissionStatuses();
+        SubmissionStatus state = statuses.get(0);
 
-        int idOffset = userRepo.findAll().toArray().length;
-        User helpfulHarry = null;
-
+        // Status is chosen completely randomly for every option available when expansive is enabled.
         if (expansive) {
-            helpfulHarry = createHelpfulHarry(idOffset++, emailDate);
+            state = statuses.get(random.nextInt(statuses.size()));
         }
 
-        if (!org.getAcceptsSubmissions()) {
-            org.setAcceptsSubmissions(true);
-            org = organizationRepo.save(org);
+        List<CustomActionDefinition> customActions = customActionDefinitionRepo.findAll();
+
+        Submission sub = submissionRepo.create(submitter, org, state, credentials, customActions);
+
+        sub.setSubmissionDate(getRandomDate());
+
+        if (random.nextInt(10) < 3) {
+            sub.setApproveAdvisorDate(getRandomDate());
+            sub.setApproveAdvisor(random.nextInt(10) < 5);
+        } else {
+            sub.setApproveAdvisorDate(null);
+            sub.setApproveAdvisor(false);
         }
 
-        List<SubmissionStatus> statuses = submissionStatusRepo.findAll();
+        if (random.nextInt(10) < 3) {
+            sub.setApproveApplicationDate(getRandomDate());
+            sub.setApproveApplication(random.nextInt(10) < 5);
+        } else {
+            sub.setApproveApplicationDate(null);
+            sub.setApproveApplication(false);
+        }
 
-        for (int i = itemsGenerated; i < generateTotal + itemsGenerated; i++) {
-            Calendar now = Calendar.getInstance();
-            User submitter = userRepo.create("bob" + emailDate.format(now.getTime()) + (idOffset + i + 1) + "@boring.bob", "bob", "boring " + (idOffset + i + 1), Role.ROLE_STUDENT);
-            Credentials credentials = new Credentials();
-            credentials.setFirstName("Bob");
-            credentials.setLastName("Boring " + (idOffset + i + 1));
-            credentials.setEmail("bob@boring.bob");
-            credentials.setRole(Role.ROLE_STUDENT.name());
+        if (random.nextInt(10) < 3) {
+            sub.setApproveEmbargoDate(getRandomDate());
+            sub.setApproveEmbargo(random.nextInt(10) < 5);
+        } else {
+            sub.setApproveEmbargoDate(null);
+            sub.setApproveEmbargo(false);
+        }
 
-            SubmissionStatus state = statuses.get(0);
+        // 30% chance to be assigned to helpful harry.
+        if (expansive && random.nextInt(10) < 3) {
+            sub.setAssignee(helpfulHarry);
+        }
 
-            // Status is chosen completely randomly for every option available when expansive is enabled.
-            if (expansive) {
-                state = statuses.get(random.nextInt(statuses.size()));
-            }
+        generateActionLogs(sub, submitter, expansive, maxActionLogs);
 
-            List<CustomActionDefinition> customActions = customActionDefinitionRepo.findAll();
+        for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
+            for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
+                FieldPredicate pred = fp.getFieldPredicate();
+                FieldValue val;
 
-            Submission sub = submissionRepo.create(submitter, org, state, credentials, customActions);
+                switch (fp.getInputType().getName()) {
+                case "INPUT_FILE":
+                    break;
+                case "INPUT_CONTACT":
+                    val = fieldValueRepo.create(pred);
+                    val.setValue("test " + pred.getValue() + " " + i);
+                    val.setContacts(Arrays.asList(new String[] { "test" + pred.getValue() + i + "@mailinator.com" }));
+                    sub.addFieldValue(val);
+                    break;
+                case "INPUT_EMAIL":
+                    val = fieldValueRepo.create(pred);
+                    val.setValue("test" + pred.getValue() + i + "@mailinator.com");
+                    sub.addFieldValue(val);
+                    break;
+                case "INPUT_DEGREEDATE":
+                    val = fieldValueRepo.create(pred);
+                    val.setValue(FORMAT_MONTH.format(getRandomDegreeDate().getTime()));
+                    sub.addFieldValue(val);
+                    break;
+                case "INPUT_DATE":
+                    val = fieldValueRepo.create(pred);
+                    val.setValue(FORMAT_DAY.format(getRandomDate().getTime()));
+                    sub.addFieldValue(val);
+                    break;
+                default:
+                    // Allow for a small number of unfilled field values.
+                    if (random.nextInt(10) > 8) break;
 
-            sub.setSubmissionDate(getRandomDate());
-
-            if (random.nextInt(10) < 3) {
-                sub.setApproveAdvisorDate(getRandomDate());
-                sub.setApproveAdvisor(random.nextInt(10) < 5);
-            } else {
-                sub.setApproveAdvisorDate(null);
-                sub.setApproveAdvisor(false);
-            }
-
-            if (random.nextInt(10) < 3) {
-                sub.setApproveApplicationDate(getRandomDate());
-                sub.setApproveApplication(random.nextInt(10) < 5);
-            } else {
-                sub.setApproveApplicationDate(null);
-                sub.setApproveApplication(false);
-            }
-
-            if (random.nextInt(10) < 3) {
-                sub.setApproveEmbargoDate(getRandomDate());
-                sub.setApproveEmbargo(random.nextInt(10) < 5);
-            } else {
-                sub.setApproveEmbargoDate(null);
-                sub.setApproveEmbargo(false);
-            }
-
-            // %30 chance to be assigned to helpful harry.
-            if (expansive && random.nextInt(10) < 3) {
-                sub.setAssignee(helpfulHarry);
-            }
-
-            generateActionLogs(sub, submitter, expansive, maxActionLogs);
-
-            for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
-                for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
-                    FieldPredicate pred = fp.getFieldPredicate();
-                    FieldValue val;
-                    switch (fp.getInputType().getName()) {
-                    case "INPUT_FILE":
-                        break;
-                    case "INPUT_CONTACT":
-                        val = fieldValueRepo.create(pred);
+                    val = fieldValueRepo.create(pred);
+                    if (pred.getValue().equalsIgnoreCase("birth_year")) {
+                        val.setValue(getRandomYearString(80));
+                    } else {
                         val.setValue("test " + pred.getValue() + " " + i);
-                        val.setContacts(Arrays.asList(new String[] { "test" + pred.getValue() + i + "@mailinator.com" }));
-                        sub.addFieldValue(val);
-                        break;
-                    case "INPUT_EMAIL":
-                        val = fieldValueRepo.create(pred);
-                        val.setValue("test" + pred.getValue() + i + "@mailinator.com");
-                        sub.addFieldValue(val);
-                        break;
-                    case "INPUT_DEGREEDATE":
-                        val = fieldValueRepo.create(pred);
-                        calendar = getRandomDegreeDate();
-                        val.setValue(formatMonth.format(calendar.getTime()));
-                        sub.addFieldValue(val);
-                        break;
-                    case "INPUT_DATE":
-                        val = fieldValueRepo.create(pred);
-                        calendar = getRandomDate();
-                        val.setValue(formatDay.format(calendar.getTime()));
-                        sub.addFieldValue(val);
-                        break;
-                    default:
-                        // Allow for a small number of unfilled field values.
-                        if (random.nextInt(10) > 8) break;
-
-                        val = fieldValueRepo.create(pred);
-                        if (pred.getValue().equalsIgnoreCase("birth_year")) {
-                            val.setValue(getRandomYearString(80));
-                        } else {
-                            val.setValue("test " + pred.getValue() + " " + i);
-                        }
-                        sub.addFieldValue(val);
                     }
+                    sub.addFieldValue(val);
                 }
             }
-            submissionRepo.saveAndFlush(sub);
-
-            System.out.print("\r" + (i - itemsGenerated) + " of " + generateTotal + " generated...");
         }
 
-        if (expansive) {
-            System.out.println("\rGenerated " + generateTotal + " submissions expansively with max action logs of " + maxActionLogs + ".");
-        } else {
-            System.out.println("\rGenerated " + generateTotal + " submissions.");
-        }
+        submissionRepo.saveAndFlush(sub);
+    }
 
-        itemsGenerated += generateTotal;
+    public Organization getOrganization(int index) {
+        return organizationRepo.findAll().get(index);
+    }
+
+    public int countUsers() {
+        return userRepo.findAll().toArray().length;
+    }
+
+    public void setAcceptSubmissions(Organization organization) {
+        if (!organization.getAcceptsSubmissions()) {
+            organization.setAcceptsSubmissions(true);
+            organization = organizationRepo.save(organization);
+        }
+    }
+
+    public List<SubmissionStatus> getAllSubmissionStatuses() {
+        return submissionStatusRepo.findAll();
+    }
+
+    public User createHelpfulHarry(int offset, SimpleDateFormat formatter) {
+        String dateString = formatter.format(Calendar.getInstance().getTime());
+        return userRepo.create("harry" + dateString + offset + "@help.ful", "Harry", "Helpful " + offset, Role.ROLE_REVIEWER);
     }
 
     private Calendar getRandomDate() {
@@ -255,11 +254,6 @@ public class CliService {
         Calendar date = Calendar.getInstance();
 
         return "" + (date.get(Calendar.YEAR) - random.nextInt(max));
-    }
-
-    private User createHelpfulHarry(int offset, SimpleDateFormat formatter) {
-        String dateString = formatter.format(Calendar.getInstance().getTime());
-        return userRepo.create("harry" + dateString + offset + "@help.ful", "Harry", "Helpful " + offset, Role.ROLE_REVIEWER);
     }
 
     private void generateActionLogs(Submission sub, User submitter, boolean expansive, int maxActionLogs) {
