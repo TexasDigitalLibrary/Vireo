@@ -131,6 +131,13 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
                 $scope.resetWorkflowSteps();
             }
         });
+
+        OrganizationRepo.listen(ApiResponseActions.READ, function (res) {
+            var resObj = !!res && !!res.body ? angular.fromJson(res.body) : {};
+            if (!!resObj && !!resObj.meta && !!resObj.meta.status && resObj.meta.status === 'SUCCESS') {
+              $scope.resetManageOrganization($scope.getSelectedOrganization());
+            }
+        });
     });
 
     $scope.acceptsSubmissions = [{
