@@ -144,8 +144,6 @@ public class CliService {
                 programsVW.add(vw);
             } else if (vw.getControlledVocabulary().getName().equalsIgnoreCase("schools")) {
                 schoolsVW.add(vw);
-            } else if (vw.getControlledVocabulary().getName().equalsIgnoreCase("schools")) {
-                schoolsVW.add(vw);
             }
         });
 
