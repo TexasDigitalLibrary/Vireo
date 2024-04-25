@@ -740,41 +740,29 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     break;
 
                 case "embargoTypes.name":
-                    sqlBuilder = new StringBuilder()
-                        .append("\nLEFT JOIN")
-                        .append("\n   (SELECT e.id, e.name, semt.submission_id")
-                        .append("\n   FROM embargo e")
-                        .append("\n   LEFT JOIN submission_embargo_types semt")
-                        .append("\n   ON semt.embargo_types_id=e.id) embs")
-                        .append("\n   ON embs.submission_id=s.id");
-
-                    sqlJoinsBuilder.append(sqlBuilder);
-                    sqlCountSelectBuilder.append(sqlBuilder);
-
-                    if (submissionListColumn.getSortOrder() > 0) {
-                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "embs.name");
-                    }
-
-                    for (String filterString : submissionListColumn.getFilters()) {
+                    // This is not a select column but is instead only a custom filter.
+                    if (submissionListColumn.getFilters().size() > 0) {
                         sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("s.id IN (SELECT submission_id FROM submission_field_values WHERE field_values_id IN (select id FROM field_value WHERE field_predicate_id IN (SELECT id FROM field_predicate WHERE value IN ('default_embargos', 'proquest_embargos')) and (");
 
-                        sqlBuilder.append(" embs").append(".name = '").append(filterString).append("'");
+                        // Note that the OR query is used inside the column, represented by both default_embargos and proquest_embargos.
+                        boolean hasNone = false;
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            sqlBuilder.append(" value = '").append(escapeString(filterString, false)).append("' OR");
 
-                        if (filterString.equals("None")) {
-                            sqlWhereBuilderList.add(sqlBuilder);
-                            sqlBuilder = new StringBuilder();
-                            sqlBuilder.append("embs.id IS NULL");
+                            if ("None".equals(filterString)) {
+                                hasNone = true;
+                            }
+                        }
+                        sqlBuilder.setLength(sqlBuilder.length() - 3);
+                        sqlBuilder.append(")))");
+
+                        if (hasNone) {
+                            sqlBuilder.append(" OR s.id NOT IN (SELECT submission_id FROM submission_field_values WHERE field_values_id IN (SELECT id FROM field_value WHERE field_predicate_id IN (SELECT id FROM field_predicate WHERE value IN ('default_embargos', 'proquest_embargos'))))");
                         }
 
                         sqlWhereBuilderList.add(sqlBuilder);
                         getFromBuildersMap(sqlCountWhereFilterBuilders, "embargoTypes.name").add(sqlBuilder);
-                    }
-
-                    // all column search filter
-                    for (String filterString : allColumnSearchFilters) {
-                        sqlBuilder = new StringBuilder();
-                        sqlBuilder.append("LOWER(embs").append(".name) LIKE '%").append(escapeString(filterString)).append("%'");
-                        sqlAllColumnsWhereBuilderList.add(sqlBuilder);
                     }
 
                     break;

@@ -492,7 +492,7 @@ public class SystemDataLoaderTest {
     }
 
     private void assertSubmissionListColumn(boolean isReload) {
-        assertEquals(59, submissionListColumnRepo.count(),
+        assertEquals(60, submissionListColumnRepo.count(),
             isReload
                 ? "Incorrect number of submissionListColumn found after reload"
                 : "Incorrect number of submissionListColumn found");
