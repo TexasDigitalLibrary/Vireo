@@ -340,6 +340,7 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
                     resolve();
                 });
             }
+
             angular.extend(this.getMapping().validateFieldValue, {
                 method: submission.id + "/validate-field-value/" + fieldProfile.id,
                 data: fieldValue

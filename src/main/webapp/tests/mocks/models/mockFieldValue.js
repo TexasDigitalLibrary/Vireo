@@ -8,7 +8,7 @@ var dataFieldValue1 = {
         value: "_doctype_primary"
     },
     identifier: "",
-    value: ""
+    value: "dataFieldValue1"
 };
 
 var dataFieldValue2 = {
@@ -24,7 +24,7 @@ var dataFieldValue2 = {
         name: "test"
     },
     identifier: "",
-    value: ""
+    value: "dataFieldValue2"
 };
 
 var dataFieldValue3 = {
@@ -33,7 +33,7 @@ var dataFieldValue3 = {
     definition: "",
     fieldPredicate: null,
     identifier: "",
-    value: ""
+    value: "dataFieldValue3"
 };
 
 var dataFieldValue4 = {
@@ -46,7 +46,7 @@ var dataFieldValue4 = {
         value: "text/plain"
     },
     identifier: "",
-    value: ""
+    value: "dataFieldValue4"
 };
 
 var dataFieldValue5 = {
@@ -59,7 +59,7 @@ var dataFieldValue5 = {
         value: "application/pdf"
     },
     identifier: "",
-    value: ""
+    value: "dataFieldValue5"
 };
 
 var dataFieldValue6 = {
@@ -75,7 +75,7 @@ var dataFieldValue6 = {
         name: "test.csv"
     },
     identifier: "",
-    value: ""
+    value: "dataFieldValue6"
 };
 
 

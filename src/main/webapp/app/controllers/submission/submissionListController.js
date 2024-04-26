@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilter, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValueRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilter, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -28,6 +28,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
     $scope.activeFilters = new NamedSearchFilterGroup();
 
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
+
+    $scope.simplifyTitle = function (str) {
+      return str.replaceAll(/[()\s]/gi, '');
+    };
 
     var userSettings = new UserSettings();
 
@@ -146,12 +150,27 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var processUpdate = function (reloadList) {
-            var managerFilterColumns = ManagerFilterColumnRepo.getAll().filter(function excludeSearchBox(slc) {
-                return slc.title !== 'Search Box';
-            });
-            var submissionListColumns = SubmissionListColumnRepo.getAll().filter(function excludeSearchBox(slc) {
-                return slc.title !== 'Search Box';
-            });
+            var allManagerFilters = ManagerFilterColumnRepo.getAll();
+            var allSubmissionListFilters = SubmissionListColumnRepo.getAll();
+            var managerFilterColumns = [];
+            var submissionListColumns = [];
+            var submissionListColumnsForManage = [];
+
+            if (!!allManagerFilters) {
+                managerFilterColumns = allManagerFilters.filter(function excludeSearchBox(slc) {
+                    return slc.title !== 'Search Box';
+                });
+            }
+
+            if (!!allSubmissionListFilters) {
+                submissionListColumns = allSubmissionListFilters.filter(function excludeCustomFilters(slc) {
+                    return slc.title !== 'Search Box' && slc.title !== "Submission Type (List)";
+                });
+
+                submissionListColumnsForManage = allSubmissionListFilters.filter(function excludeSearchBox(slc) {
+                    return slc.title !== 'Search Box';
+                });
+            }
 
             $scope.userColumns = angular.fromJson(angular.toJson(ManagerSubmissionListColumnRepo.getAll()));
 
@@ -172,7 +191,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             angular.extend(filterColumns, {
                 userFilterColumns: managerFilterColumns,
-                inactiveFilterColumns:  $filter('orderBy')($filter('exclude')(submissionListColumns, managerFilterColumns, 'title'), 'title')
+                inactiveFilterColumns:  $filter('orderBy')($filter('exclude')(submissionListColumnsForManage, managerFilterColumns, 'title'), 'title')
             });
 
             if (reloadList === true) {
@@ -197,6 +216,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var embargos = EmbargoRepo.getAll();
         var packagers = PackagerRepo.getAll();
         var controlledVocabularies = ControlledVocabularyRepo.getAll();
+        var submissionTypeList = FieldValueRepo.findByPredicateValue('submission_type');
 
         var addBatchCommentEmail = function (message) {
             batchCommentEmail.adding = true;
@@ -264,17 +284,16 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             return words;
         };
 
-
         var addFilter = function (column, gloss) {
             $scope.resetPagination();
 
-            var filterValue = $scope.furtherFilterBy[column.title.split(" ").join("")];
-            if (filterValue !== null) {
+            var filterValue = $scope.furtherFilterBy[$scope.simplifyTitle(column.title)];
+            if (!!filterValue && typeof filterValue !== 'string') {
                 filterValue = filterValue.toString();
             }
 
             $scope.activeFilters.addFilter(column.title, filterValue, gloss, column.exactMatch).then(function () {
-                $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
+                $scope.furtherFilterBy[$scope.simplifyTitle(column.title)] = "";
                 query();
             });
         };
@@ -285,7 +304,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         var addDateFilter = function (column) {
-            var key = column.title.split(" ").join("");
+            var key = $scope.simplifyTitle(column.title);
             var date1Value = $scope.furtherFilterBy[key].d1
             var date2Value = $scope.furtherFilterBy[key].d2 ? $scope.furtherFilterBy[key].d2 : null;
             var dateGloss = date1Value;
@@ -327,7 +346,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             }
 
             $scope.activeFilters.addFilter(column.title, date1Value, dateGloss, false).then(function () {
-                $scope.furtherFilterBy[column.title.split(" ").join("")] = "";
+                $scope.furtherFilterBy[$scope.simplifyTitle(column.title)] = "";
                 query();
             });
         };
@@ -604,6 +623,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "organizationCategories": organizationCategories,
             "documentTypes": documentTypes,
             "embargos": embargos,
+            "submissionTypeList": submissionTypeList,
             "assignableUsers": assignableUsers,
             "defaultLimit": 3,
             "getTypeAheadByPredicateName": getTypeAheadByPredicateName,
@@ -1068,10 +1088,12 @@ vireo.filter('exclude', function () {
         }
         if (prop) {
             exclude = exclude.map(function byProp(item) {
+                if (item === undefined || item == null) return undefined;
                 return item[prop];
             });
         }
         return input.filter(function byExclude(item) {
+            if (item === undefined || item == null) return undefined;
             return exclude.indexOf(prop ? item[prop] : item) === -1;
         });
     };

@@ -748,7 +748,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         // Note that the OR query is used inside the column, represented by both default_embargos and proquest_embargos.
                         boolean hasNone = false;
                         for (String filterString : submissionListColumn.getFilters()) {
-                            sqlBuilder.append(" value = '").append(escapeString(filterString, false)).append("' OR");
+                            if (filterString != null) {
+                                sqlBuilder.append(" value = '").append(escapeString(filterString, false, true)).append("' OR");
+                            }
 
                             if ("None".equals(filterString)) {
                                 hasNone = true;
@@ -763,6 +765,36 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                         sqlWhereBuilderList.add(sqlBuilder);
                         getFromBuildersMap(sqlCountWhereFilterBuilders, "embargoTypes.name").add(sqlBuilder);
+                    }
+
+                    break;
+
+                case "submissionTypes.name":
+                    // This is not a select column but is instead only a custom filter.
+                    if (submissionListColumn.getFilters().size() > 0) {
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("s.id IN (SELECT submission_id FROM submission_field_values WHERE field_values_id IN (select id FROM field_value WHERE field_predicate_id IN (SELECT id FROM field_predicate WHERE value = 'submission_type') and (");
+
+                        // Note that the OR query is used inside the column, represented by both default_embargos and proquest_embargos.
+                        boolean hasNone = false;
+                        for (String filterString : submissionListColumn.getFilters()) {
+                            if (filterString != null) {
+                                sqlBuilder.append(" value = '").append(escapeString(filterString, false, true)).append("' OR");
+                            }
+
+                            if ("None".equals(filterString)) {
+                                hasNone = true;
+                            }
+                        }
+                        sqlBuilder.setLength(sqlBuilder.length() - 3);
+                        sqlBuilder.append(")))");
+
+                        if (hasNone) {
+                            sqlBuilder.append(" OR s.id NOT IN (SELECT submission_id FROM submission_field_values WHERE field_values_id IN (SELECT id FROM field_value WHERE field_predicate_id IN (SELECT id FROM field_predicate WHERE value = 'submission_type')))");
+                        }
+
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "submissionTypes.name").add(sqlBuilder);
                     }
 
                     break;
@@ -1145,7 +1177,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
      *   An escaped string.
      */
     private String escapeString(String original) {
-        return escapeString(original, true);
+        return escapeString(original, true, false);
     }
 
     /**
@@ -1156,15 +1188,19 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
      *
      * @param original The original string to escape.
      * @param lower TRUE to make lower case, FALSE to leave case alone.
+     * @param quoted If TRUE, then only perform escaping on "\" for strings inside of a quote.
      * @return
      *   An escaped string.
      */
-    private String escapeString(String original, boolean lower) {
+    private String escapeString(String original, boolean lower, boolean quoted) {
         String escaped = original.replace("\\", "\\\\");
-        escaped = escaped.replace("_", "\\_");
-        escaped = escaped.replace("%", "\\%");
 
-        return lower == true ? escaped.toLowerCase() : escaped;
+        if (!quoted) {
+            escaped = escaped.replace("_", "\\_");
+            escaped = escaped.replace("%", "\\%");
+        }
+
+        return lower ? escaped.toLowerCase() : escaped;
     }
 
     private class QueryStrings {

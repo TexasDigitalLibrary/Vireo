@@ -1,0 +1,5 @@
+<form name="{{'box.SubmissionTypeListForm'}}">
+  <ul class="sidebox-list">
+    <li class="filter" ng-click="box.SubmissionTypeList=st.value;box.addExactMatchFilter(column);" ng-repeat="st in box.submissionTypeList | uniqueSubmissionTypeList">{{st.value}}</li>
+  </ul>
+</form>
