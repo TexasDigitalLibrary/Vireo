@@ -775,7 +775,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         sqlBuilder = new StringBuilder();
                         sqlBuilder.append("s.id IN (SELECT submission_id FROM submission_field_values WHERE field_values_id IN (select id FROM field_value WHERE field_predicate_id IN (SELECT id FROM field_predicate WHERE value = 'submission_type') and (");
 
-                        // Note that the OR query is used inside the column, represented by both default_embargos and proquest_embargos.
+                        // Note that the OR query is used inside the column, represented by submission_type.
                         boolean hasNone = false;
                         for (String filterString : submissionListColumn.getFilters()) {
                             if (filterString != null) {
