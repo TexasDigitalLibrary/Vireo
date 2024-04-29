@@ -216,7 +216,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var embargos = EmbargoRepo.getAll();
         var packagers = PackagerRepo.getAll();
         var controlledVocabularies = ControlledVocabularyRepo.getAll();
-        var submissionTypeList = FieldValueRepo.findByPredicateValue('submission_type');
+        var submissionTypeList = FieldValueRepo.findValuesByPredicateValue('submission_type');
 
         var addBatchCommentEmail = function (message) {
             batchCommentEmail.adding = true;

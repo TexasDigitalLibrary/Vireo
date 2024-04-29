@@ -1,7 +1,6 @@
 package org.tdl.vireo.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -37,7 +36,7 @@ public class FieldValueControllerTest extends AbstractControllerTest {
     private FieldValue mockFieldValue1;
     private FieldValue mockFieldValue2;
 
-    private static List<FieldValue> mockFieldValues;
+    private static List<String> mockValues;
 
     @BeforeEach
     public void setup() {
@@ -52,20 +51,19 @@ public class FieldValueControllerTest extends AbstractControllerTest {
         mockFieldPredicate1 = new FieldPredicate("FieldPredicate 1", true);
         mockFieldPredicate1.setId(1L);
 
-        mockFieldValues = new ArrayList<FieldValue>(Arrays.asList(new FieldValue[] { mockFieldValue1 }));
+        mockValues = new ArrayList<String>(Arrays.asList(new String[] { mockFieldValue1.getValue() }));
     }
 
     @Test
     public void testGetFieldValuesByPredicateValue() {
-        when(fieldPredicateRepo.findByValue(anyString())).thenReturn(mockFieldPredicate1);
-        when(fieldValueRepo.findAllByFieldPredicate(any(FieldPredicate.class))).thenReturn(mockFieldValues);
+        when(fieldValueRepo.getAllValuesByFieldPredicateValue(anyString())).thenReturn(mockValues);
 
         ApiResponse response = fieldValueController.getFieldValuesByPredicateValue("value");
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        ArrayList<FieldValue> fieldValues = (ArrayList<FieldValue>) response.getPayload().get("ArrayList<FieldValue>");
-        assertEquals(mockFieldValues.size(), fieldValues.size());
-        assertEquals(mockFieldValues.get(0).getId(), fieldValues.get(0).getId());
+        ArrayList<String> fieldValues = (ArrayList<String>) response.getPayload().get("ArrayList<String>");
+        assertEquals(mockValues.size(), fieldValues.size());
+        assertEquals(mockValues.get(0), fieldValues.get(0));
     }
 
 }

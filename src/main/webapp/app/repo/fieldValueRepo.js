@@ -2,7 +2,7 @@ vireo.repo("FieldValueRepo", function FieldValueRepo(FieldValue, WsApi) {
 
   var fieldValueRepo = this;
 
-  fieldValueRepo.findByPredicateValue = function(value) {
+  fieldValueRepo.findValuesByPredicateValue = function(value) {
       var fieldValues = [];
 
       // FieldValue exists on the API Mapping but is under the Submission controller, which is not correct and so manually define the entire mapping inline here.
@@ -16,9 +16,9 @@ vireo.repo("FieldValueRepo", function FieldValueRepo(FieldValue, WsApi) {
           if (!!res && !!res.body) {
             var resObj = angular.fromJson(res.body);
             if (resObj.meta.status === 'SUCCESS') {
-                var values = resObj.payload['ArrayList<FieldValue>'];
+                var values = resObj.payload['ArrayList<String>'];
                 for (var i in values) {
-                    fieldValues.push(new FieldValue(values[i]));
+                    fieldValues.push(values[i]);
                 }
             }
           }

@@ -22,9 +22,6 @@ import org.tdl.vireo.model.repo.FieldValueRepo;
 public class FieldValueController {
 
     @Autowired
-    private FieldPredicateRepo fieldPredicateRepo;
-
-    @Autowired
     private FieldValueRepo fieldValueRepo;
 
     /**
@@ -37,8 +34,7 @@ public class FieldValueController {
     @GetMapping("/predicate/{value}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getFieldValuesByPredicateValue(@PathVariable String value) {
-        final FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(value);
-        return new ApiResponse(SUCCESS, fieldValueRepo.findAllByFieldPredicate(fieldPredicate));
+        return new ApiResponse(SUCCESS, fieldValueRepo.getAllValuesByFieldPredicateValue("submission_type"));
     }
 
 }

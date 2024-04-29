@@ -3,13 +3,14 @@ vireo.filter('uniqueSubmissionTypeList', function() {
     var matched = [];
     var newValues = [];
     if (typeof initialValues === 'object') {
-      angular.forEach(initialValues, function(fv) {
-        if (matched.includes(fv.value)) return;
+      angular.forEach(initialValues, function(value) {
+        if (matched.includes(value)) return;
 
-        matched.push(fv.value);
-        newValues.push(fv);
+        matched.push(value);
+        newValues.push(value);
       });
     }
+
     return newValues;
   };
 });
