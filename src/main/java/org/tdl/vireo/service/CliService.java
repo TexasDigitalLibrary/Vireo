@@ -115,8 +115,7 @@ public class CliService {
     }
 
     public boolean hasSubmissionTypes() {
-        FieldPredicate submissionTypeFP = fieldPredicateRepo.findByValue("submission_type");
-        return fieldValueRepo.findAllByFieldPredicate(submissionTypeFP).size() > 0;
+        return fieldValueRepo.getAllValuesByFieldPredicateValue("submission_type").size() > 0;
     }
 
     public void operateGenerate(boolean expansive, int maxActionLogs, Random random, long idOffset, User helpfulHarry, boolean hasSubmissionTypes, long i) throws OrganizationDoesNotAcceptSubmissionsException {
@@ -138,7 +137,7 @@ public class CliService {
         final List<VocabularyWord> departmentsVW = new ArrayList<>();
         final List<VocabularyWord> schoolsVW = new ArrayList<>();
         final List<VocabularyWord> majorsVW = new ArrayList<>();
-        final List<FieldValue> submissionTypesVW = new ArrayList<>();
+        final List<String> submissionTypeValues = new ArrayList<>();
         Organization org = orgs.get(getRandomNumber(organizationRepo.findAll().size()));
         SubmissionStatus state = statuses.get(0);
         setAcceptSubmissions(org);
@@ -158,9 +157,8 @@ public class CliService {
         });
 
         if (hasSubmissionTypes) {
-            FieldPredicate submissionTypeFP = fieldPredicateRepo.findByValue("submission_type");
-            fieldValueRepo.findAllByFieldPredicate(submissionTypeFP).forEach((FieldValue fv) -> {
-                submissionTypesVW.add(fv);
+            fieldValueRepo.getAllValuesByFieldPredicateValue("submission_type").forEach((String value) -> {
+                submissionTypeValues.add(value);
             });
         }
 
@@ -310,15 +308,15 @@ public class CliService {
                         val.setContacts(Arrays.asList(new String[] { "test" + pred.getValue() + i + AT_ADDRESS }));
                         sub.addFieldValue(val);
                     } else if (pred.getValue().equalsIgnoreCase("submission_type")) {
-                        FieldValue fv = null;
-                        if (submissionTypesVW.size() > 0) {
-                            fv = submissionTypesVW.get(getRandomNumber(submissionTypesVW.size()));
+                        String value = null;
+                        if (submissionTypeValues.size() > 0) {
+                            value = submissionTypeValues.get(getRandomNumber(submissionTypeValues.size()));
                         }
 
-                        if (fv == null) {
+                        if (value == null) {
                             val.setValue("test " + pred.getValue() + " " + getRandomNumber(10));
                         } else {
-                            val.setValue(fv.getValue());
+                            val.setValue(value);
                         }
                     } else {
                         val.setValue("test " + pred.getValue() + " " + i);
