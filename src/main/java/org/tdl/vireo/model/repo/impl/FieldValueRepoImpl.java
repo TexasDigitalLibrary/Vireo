@@ -37,8 +37,6 @@ public class FieldValueRepoImpl extends AbstractWeaverRepoImpl<FieldValue, Field
 
     @Override
     public List<String> getAllValuesByFieldPredicateValue(String fieldPredicateValue) {
-        String query = "SELECT DISTINCT fv.value AS value FROM field_value fv WHERE fv.field_predicate_id IN (select fp.id FROM field_predicate fp WHERE fp.value = ?) ORDER BY fv.value ASC";
-
         List<String> list = new ArrayList<>();
         jdbcTemplate.queryForList(VALUES_BY_PREDICATE, fieldPredicateValue).forEach(row -> {
             list.add((String) row.get("value"));
