@@ -166,6 +166,13 @@ app:
   # edu.tamu.weaver.utility.HttpUtility
   http.timeout: 10000
 
+  # org.tdl.vireo.config.AppFilterConfig
+  filter:
+    # The "*TypeNone" represent this value and having a NULL value being treated as the same.
+    # These are often something like "None", "Unassigned", or "Unknown".
+    embargoTypeNone: None
+    submissionTypeNone: None
+
 # edu.tamu.weaver.token.service.TokenService
 auth:
   security.jwt:
