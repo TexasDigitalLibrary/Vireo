@@ -85,7 +85,7 @@ public class SystemDataLoader {
 
     private final Pattern SUBJECT_PATTERN = Pattern.compile("\\s*Subject:(.*)[\\n\\r]{1}");
 
-    @Value("${app.dataLoader.initialize}")
+    @Value("${app.dataLoader.initialize:true}")
     private Boolean doInitialize;
 
     @Autowired
