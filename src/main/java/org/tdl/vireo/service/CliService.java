@@ -110,7 +110,7 @@ public class CliService {
         }
     }
 
-    public void operateGenerate(boolean expansive, int maxActionLogs, Random random, int idOffset, User helpfulHarry, int i) throws OrganizationDoesNotAcceptSubmissionsException {
+    public void operateGenerate(boolean expansive, int maxActionLogs, Random random, long idOffset, User helpfulHarry, long i) throws OrganizationDoesNotAcceptSubmissionsException {
         Calendar now = Calendar.getInstance();
         User submitter = userRepo.create("bob" + EMAIL_DATE.format(now.getTime()) + (idOffset + i + 1) + "@boring.bob", "bob", "boring " + (idOffset + i + 1), Role.ROLE_STUDENT);
         Credentials credentials = new Credentials();
@@ -303,8 +303,8 @@ public class CliService {
         submissionRepo.saveAndFlush(sub);
     }
 
-    public int countUsers() {
-        return userRepo.findAll().toArray().length;
+    public long countUsers() {
+        return userRepo.count();
     }
 
     public void setAcceptSubmissions(Organization organization) {
@@ -314,7 +314,7 @@ public class CliService {
         }
     }
 
-    public User createHelpfulHarry(int offset, SimpleDateFormat formatter) {
+    public User createHelpfulHarry(long offset, SimpleDateFormat formatter) {
         String dateString = formatter.format(Calendar.getInstance().getTime());
         return userRepo.create("harry" + dateString + offset + "@help.ful", "Harry", "Helpful " + offset, Role.ROLE_REVIEWER);
     }
