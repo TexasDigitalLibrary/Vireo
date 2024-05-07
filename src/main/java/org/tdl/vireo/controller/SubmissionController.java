@@ -929,21 +929,17 @@ public class SubmissionController {
     @RequestMapping("/{submissionId}/submit-corrections")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse setSubmissionCorrectionsReceived(@WeaverUser User user, @PathVariable Long submissionId) {
-        ApiResponse response;
-        LOG.info("FSS submit-corrections");
         Submission submission = submissionRepo.read(submissionId);
-        if (submission != null) {
-          String oldSubmissionStatusName = submission.getSubmissionStatus().getName();
-          SubmissionStatus correctionsReceivedStatus = submissionStatusRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
-          submission.setSubmissionStatus(correctionsReceivedStatus);
-          submission = submissionRepo.update(submission);
-          actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
-          submissionEmailService.sendWorkflowEmails(user, submission.getId());
-          response = new ApiResponse(SUCCESS, submission);
-        } else {
-            response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+        if (submission == null) {
+          return new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
-        return response;
+        String oldSubmissionStatusName = submission.getSubmissionStatus().getName();
+        SubmissionStatus correctionsReceivedStatus = submissionStatusRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
+        submission.setSubmissionStatus(correctionsReceivedStatus);
+        submission = submissionRepo.update(submission);
+        actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
+        submissionEmailService.sendWorkflowEmails(user, submission.getId());
+        return new ApiResponse(SUCCESS, submission);
     }
 
     @RequestMapping(value = "/{submissionId}/add-message", method = RequestMethod.POST)
