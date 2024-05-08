@@ -429,12 +429,16 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         });
 
         StringBuilder sqlSelectBuilder = new StringBuilder("SELECT DISTINCT ");
+        StringBuilder sqlCountSelectBuilder = new StringBuilder();
 
         Map<Long, ArrayList<StringBuilder>> sqlColumnsBuilders = new HashMap<>();
+        Map<String, ArrayList<StringBuilder>> sqlCountWhereFilterBuilders = new HashMap<>();
+        Map<Long, StringBuilder> sqlCountWherePredicate = new HashMap<>();
         List<String> sqlAliasBuilders = new ArrayList<>();
 
         StringBuilder sqlJoinsBuilder = new StringBuilder();
         StringBuilder sqlBuilder;
+        StringBuilder sqlCountBuilder;
         StringBuilder sqlWheresExcludeBuilder = new StringBuilder();
         StringBuilder sqlOrderBysBuilder = new StringBuilder();
 
@@ -482,11 +486,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         sqlBuilder = new StringBuilder();
+                        sqlCountBuilder = new StringBuilder();
 
                         switch (submissionListColumn.getInputType().getName()) {
                         case "INPUT_DEGREEDATE":
                             // Column's values are of type 'MMMM yyyy' (in SQL date format would be 'Month YYYY').
                             sqlBuilder.append("LOWER(pfv").append(n).append(".value) = LOWER('").append(filterString).append("')");
+                            sqlCountBuilder.append("LOWER(fv.value) = LOWER('").append(filterString).append("')");
                             break;
                         case "INPUT_DATE":
                             // Column's values are of type 'yyyy-mm-dd' as required by the SQL standard to represent a date without time.
@@ -498,20 +504,35 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                                     .append(".value AS DATE) BETWEEN CAST('").append(dates[0])
                                     .append("' AS DATE) AND CAST('").append(dates[1])
                                     .append("' AS DATE)");
+                                sqlCountBuilder
+                                    .append("CAST(fv.value AS DATE) BETWEEN CAST('").append(dates[0])
+                                    .append("' AS DATE) AND CAST('").append(dates[1])
+                                    .append("' AS DATE)");
                             } else {
                                 // Date Match
                                 sqlBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                                sqlCountBuilder.append("fv.value = '").append(filterString).append("'");
                             }
                             break;
                         case "INPUT_CHECKBOX":
                             sqlBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                            sqlCountBuilder.append("fv.value = '").append(filterString).append("'");
 
                             // Column's values are a boolean
                             if (!Boolean.valueOf(filterString)) {
                                 sqlWhereBuilderList.add(sqlBuilder);
 
+                                if (!sqlCountWherePredicate.containsKey(predicateId)) {
+                                    sqlCountWherePredicate.put(predicateId, new StringBuilder());
+                                }
+
+                                sqlCountWherePredicate.get(predicateId).append(" (").append(sqlCountBuilder).append(") OR");
+
                                 sqlBuilder = new StringBuilder();
                                 sqlBuilder.append(" pfv").append(n).append(".value IS NULL");
+
+                                sqlCountBuilder = new StringBuilder();
+                                sqlCountBuilder.append(" fv.value IS NULL");
                             }
 
                             break;
@@ -520,9 +541,11 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                             if (submissionListColumn.getExactMatch()) {
                                 // perform exact match
                                 sqlBuilder.append("pfv").append(n).append(".value = '").append(filterString).append("'");
+                                sqlCountBuilder.append("fv.value = '").append(filterString).append("'");
                             } else {
                                 // perform like when input from text field
                                 sqlBuilder.append("LOWER(pfv").append(n).append(".value) LIKE '%").append(escapeString(filterString)).append("%'");
+                                sqlCountBuilder.append("LOWER(fv.value) LIKE '%").append(escapeString(filterString)).append("%'");
                             }
 
                             break;
@@ -530,6 +553,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                         if (sqlBuilder.length() > 0) {
                             sqlWhereBuilderList.add(sqlBuilder);
+
+                            if (!sqlCountWherePredicate.containsKey(predicateId)) {
+                                sqlCountWherePredicate.put(predicateId, new StringBuilder());
+                            }
+
+                            sqlCountWherePredicate.get(predicateId).append(" (").append(sqlCountBuilder).append(") OR");
                         }
                     }
 
@@ -560,6 +589,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         sqlBuilder = new StringBuilder();
                         sqlBuilder.append("s").append(".id = ").append(filterString);
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "id").add(sqlBuilder);
                     }
 
                     break;
@@ -569,6 +599,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         .append("\nLEFT JOIN submission_status ss ON ss.id=s.submission_status_id");
 
                     sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "ss.name");
@@ -585,6 +616,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         }
 
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "submissionStatus.name").add(sqlBuilder);
                     }
 
                     // all column search filter
@@ -603,6 +635,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                             .append("\nLEFT JOIN organization o ON o.id=s.organization_id");
 
                         sqlJoinsBuilder.append(sqlBuilder);
+                        sqlCountSelectBuilder.append(sqlBuilder);
                     }
 
                     if (submissionListColumn.getSortOrder() > 0) {
@@ -621,6 +654,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         }
 
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "organization.name").add(sqlBuilder);
                     }
 
                     // all column search filter
@@ -641,6 +675,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     sqlBuilder.append("\nLEFT JOIN organization_category oc ON oc.id=o.category_id");
 
                     sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "oc.name");
@@ -657,6 +692,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         }
 
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "organization.category.name").add(sqlBuilder);
                     }
 
                     // all column search filter
@@ -673,6 +709,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         .append("\nLEFT JOIN weaver_users a ON a.id=s.assignee_id");
 
                     sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "a.email");
@@ -690,6 +727,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         }
 
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "assignee.email").add(sqlBuilder);
                     }
 
                     // all column search filter
@@ -711,6 +749,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         .append("\n   ON embs.submission_id=s.id");
 
                     sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     if (submissionListColumn.getSortOrder() > 0) {
                         setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "embs.name");
@@ -728,6 +767,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         }
 
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "embargoTypes.name").add(sqlBuilder);
                     }
 
                     // all column search filter
@@ -750,6 +790,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         .append("\n   ON action_logs_id = s.submission_status_id");
 
                     sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     // TODO: finish sqlWheresBuilder.
 
@@ -780,6 +821,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         sqlBuilder = buildSubmissionDateFieldString("submission_date", filterString);
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "submissionDate").add(sqlBuilder);
                     }
 
                     break;
@@ -792,6 +834,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         sqlBuilder = buildSubmissionDateFieldString("approve_application_date", filterString);
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "approveApplicationDate").add(sqlBuilder);
                     }
 
                     break;
@@ -804,6 +847,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         sqlBuilder = buildSubmissionDateFieldString("approve_advisor_date", filterString);
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "approveAdvisorDate").add(sqlBuilder);
                     }
 
                     break;
@@ -816,6 +860,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         sqlBuilder = buildSubmissionDateFieldString("approve_embargo_date", filterString);
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "approveEmbargoDate").add(sqlBuilder);
                     }
 
                     break;
@@ -829,11 +874,13 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         .append("\n   ON scavcavcad.submission_id = s.id");
 
                     sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
 
                     for (String filterString : submissionListColumn.getFilters()) {
                         sqlBuilder = new StringBuilder();
                         sqlBuilder.append("scavcavcad.value = true AND scavcavcad.label = '" + filterString + "'");
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "customActionValues").add(sqlBuilder);
                     }
 
                     break;
@@ -847,6 +894,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         sqlBuilder = new StringBuilder();
                         sqlBuilder.append("LOWER(s").append(".depositurl) LIKE '%").append(escapeString(filterString)).append("%'");
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "depositurl").add(sqlBuilder);
                     }
 
                     // all column search filter
@@ -867,6 +915,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         sqlBuilder = new StringBuilder();
                         sqlBuilder.append("LOWER(s").append(".reviewer_notes) LIKE '%").append(escapeString(filterString)).append("%'");
                         sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "reviewer_notes").add(sqlBuilder);
                     }
 
                     // all column search filter
@@ -893,6 +942,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         });
         sqlSelectBuilder.setLength(sqlSelectBuilder.length() - 2);
         sqlSelectBuilder.append(" FROM submission s");
+        sqlCountSelectBuilder.insert(0, "SELECT COUNT(DISTINCT s.id) FROM submission s");
 
         // if ordering, complete order by clause and strip the tailing comma
         if (sqlOrderBysBuilder.length() > 0) {
@@ -939,8 +989,54 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             }
         }
 
+        if (sqlCountWherePredicate.size() > 0 || sqlCountWhereFilterBuilders.size() > 0 || sqlWheresExcludeBuilder.length() > 0) {
+
+            // Conditions are AND across different predicates but are OR within the same predicate.
+            if (sqlCountWherePredicate.size() > 0) {
+                sqlCountSelectBuilder.append("\nLEFT JOIN submission_field_values sfv ON s.id = sfv.submission_id");
+                sqlCountSelectBuilder.append("\nINNER JOIN field_value fv ON sfv.field_values_id = fv.id");
+                sqlCountSelectBuilder.append("\nWHERE");
+
+                sqlCountWherePredicate.forEach((id, filter) -> {
+                    if (filter.length() > 0) {
+                        // Remove the last " OR".
+                        filter.setLength(filter.length() - 3);
+
+                        sqlCountSelectBuilder
+                            .append("\n(fv.field_predicate_id = ").append(id)
+                            .append(" AND (").append(filter).append(")) AND");
+                    }
+                });
+            } else {
+                sqlCountSelectBuilder.append("\nWHERE");
+            }
+
+            // Conditions are AND across different filters and OR within the same filter.
+            if (sqlCountWhereFilterBuilders.size() > 0) {
+                sqlCountWhereFilterBuilders.forEach((key, list) -> {
+                    sqlCountSelectBuilder.append(" (");
+
+                    list.forEach(filter -> {
+                        sqlCountSelectBuilder.append(" (").append(filter).append(") OR");
+                    });
+
+                    // Remove the last " OR".
+                    sqlCountSelectBuilder.setLength(sqlCountSelectBuilder.length() - 3);
+
+                    sqlCountSelectBuilder.append(")\n AND");
+                });
+            }
+
+            if (sqlWheresExcludeBuilder.length() > 0) {
+                sqlCountSelectBuilder.append("\n(").append(sqlWheresExcludeBuilder).append(")");
+            } else {
+                // remove last " AND"
+                sqlCountSelectBuilder.setLength(sqlCountSelectBuilder.length() - 4);
+            }
+        }
+
         String sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlBuilder.toString();
-        String sqlCountQuery = "SELECT COUNT(DISTINCT s.id) FROM submission s" + sqlJoinsBuilder.toString() + sqlBuilder.toString();
+        String sqlCountQuery = sqlCountSelectBuilder.toString();
 
         if (pageable != null) {
             // determine the offset and limit of the query
@@ -1032,6 +1128,22 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             .append("s.").append(column)
             .append(" = CAST('").append(filter)
             .append("' AS DATE)");
+    }
+
+    /**
+     * Get the builders list array for some key, initializing that key if not found.
+     *
+     * @param map The map of builders to select from.
+     * @param key The identifier.
+     *
+     * @return An array of the builders for the given key.
+     */
+    private ArrayList<StringBuilder> getFromBuildersMap(Map<String, ArrayList<StringBuilder>> map, String key) {
+        if (!map.containsKey(key)) {
+            map.put(key, new ArrayList<StringBuilder>());
+        }
+
+        return map.get(key);
     }
 
     /**
