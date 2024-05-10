@@ -449,6 +449,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         sqlAliasBuilders.add("s.id");
 
         int n = 0;
+        int totalFieldValueConditions = 0;
 
         for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
 
@@ -552,6 +553,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         }
 
                         if (sqlBuilder.length() > 0) {
+                            totalFieldValueConditions++;
                             sqlWhereBuilderList.add(sqlBuilder);
 
                             if (!sqlCountWherePredicate.containsKey(predicateId)) {
@@ -942,7 +944,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         });
         sqlSelectBuilder.setLength(sqlSelectBuilder.length() - 2);
         sqlSelectBuilder.append(" FROM submission s");
-        sqlCountSelectBuilder.insert(0, "SELECT COUNT(DISTINCT s.id) FROM submission s");
 
         // if ordering, complete order by clause and strip the tailing comma
         if (sqlOrderBysBuilder.length() > 0) {
@@ -1036,7 +1037,14 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         }
 
         String sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlBuilder.toString();
-        String sqlCountQuery = sqlCountSelectBuilder.toString();
+        String sqlCountQuery = "SELECT COUNT(DISTINCT s.id) FROM submission s";
+
+        // Use count query optimization only when there are fewer than 2 field values in the where clause.
+        if (totalFieldValueConditions > 1) {
+            sqlCountQuery += sqlJoinsBuilder.toString() + sqlBuilder.toString();
+        } else {
+            sqlCountQuery += sqlCountSelectBuilder.toString();
+        }
 
         if (pageable != null) {
             // determine the offset and limit of the query
