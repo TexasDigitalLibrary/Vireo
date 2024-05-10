@@ -98,11 +98,13 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
     };
 
     $scope.reorderWorkflowStepUp = function (workflowStepID) {
+        $scope.getSelectedOrganization().$dirty = true;
         AccordionService.closeAll();
         return OrganizationRepo.reorderWorkflowSteps("up", workflowStepID);
     };
 
     $scope.reorderWorkflowStepDown = function (workflowStepID) {
+        $scope.getSelectedOrganization().$dirty = true;
         AccordionService.closeAll();
         return OrganizationRepo.reorderWorkflowSteps("down", workflowStepID);
     };
@@ -123,18 +125,19 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
     $scope.ready.then(function () {
         $scope.resetWorkflowSteps();
 
-        OrganizationRepo.listen(function () {
-            $scope.resetWorkflowSteps();
+        OrganizationRepo.listen(function (res) {
+            var resObj = !!res && !!res.body ? angular.fromJson(res.body) : {};
+            if (!!resObj && !!resObj.meta && !!resObj.meta.status && resObj.meta.status === 'SUCCESS') {
+                $scope.resetWorkflowSteps();
+            }
         });
 
-        OrganizationRepo.listen(ApiResponseActions.READ, function () {
-            $scope.resetManageOrganization();
+        OrganizationRepo.listen(ApiResponseActions.READ, function (res) {
+            var resObj = !!res && !!res.body ? angular.fromJson(res.body) : {};
+            if (!!resObj && !!resObj.meta && !!resObj.meta.status && resObj.meta.status === 'SUCCESS') {
+              $scope.resetManageOrganization($scope.getSelectedOrganization());
+            }
         });
-
-        OrganizationRepo.listen(ApiResponseActions.BROADCAST, function () {
-            $scope.resetManageOrganization();
-        });
-
     });
 
     $scope.acceptsSubmissions = [{
