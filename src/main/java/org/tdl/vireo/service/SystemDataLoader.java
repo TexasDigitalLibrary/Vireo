@@ -13,6 +13,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
@@ -83,6 +84,9 @@ public class SystemDataLoader {
     private final Logger logger = LoggerFactory.getLogger(SystemDataLoader.class);
 
     private final Pattern SUBJECT_PATTERN = Pattern.compile("\\s*Subject:(.*)[\\n\\r]{1}");
+
+    @Value("${app.dataLoader.initialize:true}")
+    private Boolean doInitialize;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -161,53 +165,56 @@ public class SystemDataLoader {
 
     @Transactional(rollbackFor = IOException.class)
     public void loadSystemData() throws IOException {
+        if (!doInitialize) {
+            logger.info("Bypassing data load based on app configuration");
+        } else {
+            logger.info("Loading system languages");
+            loadLanguages();
 
-        logger.info("Loading system languages");
-        loadLanguages();
+            logger.info("Loading system input types");
+            loadInputTypes();
 
-        logger.info("Loading system input types");
-        loadInputTypes();
+            logger.info("Loading system email templates");
+            loadEmailTemplates();
 
-        logger.info("Loading system email templates");
-        loadEmailTemplates();
+            logger.info("Loading system degree levels");
+            loadDegreeLevels();
 
-        logger.info("Loading system degree levels");
-        loadDegreeLevels();
+            logger.info("Loading system degrees");
+            loadDegrees();
 
-        logger.info("Loading system degrees");
-        loadDegrees();
+            logger.info("Loading system graduation months");
+            loadGraduationMonths();
 
-        logger.info("Loading system graduation months");
-        loadGraduationMonths();
+            logger.info("Loading system embargos");
+            loadEmbargos();
 
-        logger.info("Loading system embargos");
-        loadEmbargos();
+            logger.info("Loading system submission statuses");
+            loadSubmissionStatuses();
 
-        logger.info("Loading system submission statuses");
-        loadSubmissionStatuses();
+            logger.info("Loading system organization catagories");
+            loadOrganizationCategories();
 
-        logger.info("Loading system organization catagories");
-        loadOrganizationCategories();
+            logger.info("Loading system document types");
+            loadDocumentTypes();
 
-        logger.info("Loading system document types");
-        loadDocumentTypes();
+            logger.info("Loading system organization");
+            loadOrganization();
 
-        logger.info("Loading system organization");
-        loadOrganization();
+            logger.info("Loading system controlled vocabularies");
+            loadControlledVocabularies();
 
-        logger.info("Loading system controlled vocabularies");
-        loadControlledVocabularies();
+            logger.info("Loading system Proquest subject codes controlled vocabulary");
+            loadProquestSubjectCodesControlledVocabulary();
 
-        logger.info("Loading system Proquest subject codes controlled vocabulary");
-        loadProquestSubjectCodesControlledVocabulary();
+            logger.info("Loading system submission list columns");
+            loadSubmissionListColumns();
 
-        logger.info("Loading system submission list columns");
-        loadSubmissionListColumns();
+            logger.info("Loading system packagers");
+            loadPackagers();
 
-        logger.info("Loading system packagers");
-        loadPackagers();
-
-        logger.info("Finished loading system data");
+            logger.info("Finished loading system data");
+        }
     }
 
     private void loadLanguages() throws IOException {
