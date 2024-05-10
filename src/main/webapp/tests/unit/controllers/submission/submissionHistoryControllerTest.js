@@ -1,12 +1,15 @@
 describe("controller: SubmissionHistoryController", function () {
 
-    var controller, location, q, scope, timeout, NgTableParams, WsApi;
+    var controller, location, q, scope, timeout, MockedSubmission, MockedStudentSubmission, NgTableParams, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($location, $q, $timeout, _WsApi_) {
             location = $location;
             q = $q;
             timeout = $timeout;
+
+            MockedStudentSubmission = new mockStudentSubmission($q);
+            MockedSubmission = new mockSubmission($q);
 
             NgTableParams = mockNgTableParams;
             WsApi = _WsApi_;
@@ -49,6 +52,18 @@ describe("controller: SubmissionHistoryController", function () {
         module("mock.restApi");
         module("mock.storageService");
         module("mock.studentSubmission");
+        module("mock.submission", function ($provide) {
+          var Submission = function () {
+            return MockedSubmission;
+          };
+          $provide.value("Submission", Submission);
+        });
+        module("mock.studentSubmission", function ($provide) {
+          var StudentSubmission = function () {
+            return MockedStudentSubmission;
+          };
+          $provide.value("StudentSubmission", StudentSubmission);
+        });
         module("mock.studentSubmissionRepo");
         module("mock.wsApi");
 

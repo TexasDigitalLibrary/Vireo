@@ -15,6 +15,7 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
         $scope.studentSubmissionRepoReady = true;
 
         $scope.submission = submission;
+        $scope.submission.enableListeners();
 
         $scope.submission.fetchDocumentTypeFileInfo();
 
