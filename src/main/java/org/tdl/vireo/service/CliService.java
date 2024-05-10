@@ -2,6 +2,7 @@ package org.tdl.vireo.service;
 
 import edu.tamu.weaver.auth.model.Credentials;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
@@ -12,8 +13,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.model.CustomActionDefinition;
+import org.tdl.vireo.model.Degree;
+import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
+import org.tdl.vireo.model.Language;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.Submission;
@@ -21,17 +25,30 @@ import org.tdl.vireo.model.SubmissionFieldProfile;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.SubmissionWorkflowStep;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.VocabularyWord;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
+import org.tdl.vireo.model.repo.DegreeRepo;
+import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
+import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.UserRepo;
+import org.tdl.vireo.model.repo.VocabularyWordRepo;
 
 @Transactional
 @Service
 public class CliService {
+
+    public static final SimpleDateFormat FORMAT_DAY = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static final SimpleDateFormat FORMAT_MONTH = new SimpleDateFormat("MMMM yyyy");
+
+    public static final SimpleDateFormat EMAIL_DATE = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss_");
+
+    public static final String AT_ADDRESS = "@localhost.localdomain";
 
     @Autowired
     private UserRepo userRepo;
@@ -41,6 +58,12 @@ public class CliService {
 
     @Autowired
     private SubmissionRepo submissionRepo;
+
+    @Autowired
+    private LanguageRepo languageRepo;
+
+    @Autowired
+    private EmbargoRepo embargoRepo;
 
     @Autowired
     private OrganizationRepo organizationRepo;
@@ -55,18 +78,24 @@ public class CliService {
     private CustomActionDefinitionRepo customActionDefinitionRepo;
 
     @Autowired
+    private VocabularyWordRepo vocabularyWordRepo;
+
+    @Autowired
+    private DegreeRepo degreeRepo;
+
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     public void operateAccounts(boolean expansive, int generateTotal) {
         for (int i = 0; i < generateTotal; i++) {
             String enc_pwd = passwordEncoder.encode("password");
-            User testacct = userRepo.create("student" + (i + 1) + "@example.com", "student" + (i + 1), "example", enc_pwd, Role.ROLE_STUDENT);
+            User testacct = userRepo.create("student" + (i + 1) + AT_ADDRESS, "student" + (i + 1), "example", enc_pwd, Role.ROLE_STUDENT);
             System.out.println("Creating account with email " + testacct.getEmail() + " with role ROLE_STUDENT");
             userRepo.saveAndFlush(testacct);
-            testacct = userRepo.create("reviewer" + (i + 1) + "@example.com", "reviewer" + (i + 1), "example", enc_pwd, Role.ROLE_REVIEWER);
+            testacct = userRepo.create("reviewer" + (i + 1) + AT_ADDRESS, "reviewer" + (i + 1), "example", enc_pwd, Role.ROLE_REVIEWER);
             System.out.println("Creating account with email " + testacct.getEmail() + " with role ROLE_REVIEWER");
             userRepo.saveAndFlush(testacct);
-            testacct = userRepo.create("manager" + (i + 1) + "@example.com", "", "manager" + (i + 1), enc_pwd, Role.ROLE_MANAGER);
+            testacct = userRepo.create("manager" + (i + 1) + AT_ADDRESS, "", "manager" + (i + 1), enc_pwd, Role.ROLE_MANAGER);
             System.out.println("Creating account with email " + testacct.getEmail() + " with role ROLE_MANAGER");
             userRepo.saveAndFlush(testacct);
         }
@@ -75,145 +104,219 @@ public class CliService {
     public void operateAdminAccounts(boolean expansive, int generateTotal) {
         for (int i = 0; i < generateTotal; i++) {
             String enc_pwd = passwordEncoder.encode("password");
-            User testacct = userRepo.create("admin" + (i + 1) + "@example.com", "", "admin" + (i + 1), enc_pwd, Role.ROLE_ADMIN);
+            User testacct = userRepo.create("admin" + (i + 1) + AT_ADDRESS, "", "admin" + (i + 1), enc_pwd, Role.ROLE_ADMIN);
             System.out.println("Creating account with email " + testacct.getEmail() + " with role ROLE_ADMIN");
             userRepo.saveAndFlush(testacct);
         }
     }
 
-    public void operateGenerate(boolean expansive, int generateTotal, int maxActionLogs, int itemsGenerated) throws OrganizationDoesNotAcceptSubmissionsException {
-        Random random = new Random();
-        Calendar calendar = null;
+    public void operateGenerate(boolean expansive, int maxActionLogs, Random random, long idOffset, User helpfulHarry, long i) throws OrganizationDoesNotAcceptSubmissionsException {
+        Calendar now = Calendar.getInstance();
+        User submitter = userRepo.create("bob" + EMAIL_DATE.format(now.getTime()) + (idOffset + i + 1) + "@boring.bob", "bob", "boring " + (idOffset + i + 1), Role.ROLE_STUDENT);
+        Credentials credentials = new Credentials();
+        credentials.setFirstName("Bob");
+        credentials.setLastName("Boring " + (idOffset + i + 1));
+        credentials.setEmail("bob@boring.bob");
+        credentials.setRole(Role.ROLE_STUDENT.name());
 
-        SimpleDateFormat formatDay = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat formatMonth = new SimpleDateFormat("MMMM yyyy");
-        SimpleDateFormat emailDate = new SimpleDateFormat("_yyyy_MM_dd_HH_mm_ss_");
-
-        Organization org = organizationRepo.findAll().get(0);
-
-        int idOffset = userRepo.findAll().toArray().length;
-        User helpfulHarry = null;
-
-        if (expansive) {
-            helpfulHarry = createHelpfulHarry(idOffset++, emailDate);
-        }
-
-        if (!org.getAcceptsSubmissions()) {
-            org.setAcceptsSubmissions(true);
-            org = organizationRepo.save(org);
-        }
-
+        List<Organization> orgs = organizationRepo.findAll();
         List<SubmissionStatus> statuses = submissionStatusRepo.findAll();
+        List<Embargo> embargoes = embargoRepo.findAll();
+        List<Language> languages = languageRepo.findAll();
+        List<Degree> degrees = degreeRepo.findAll();
+        final List<VocabularyWord> collegesVW = new ArrayList<>();
+        final List<VocabularyWord> programsVW = new ArrayList<>();
+        final List<VocabularyWord> departmentsVW = new ArrayList<>();
+        final List<VocabularyWord> schoolsVW = new ArrayList<>();
+        final List<VocabularyWord> majorsVW = new ArrayList<>();
+        Organization org = orgs.get(getRandomNumber(organizationRepo.findAll().size()));
+        SubmissionStatus state = statuses.get(0);
+        setAcceptSubmissions(org);
 
-        for (int i = itemsGenerated; i < generateTotal + itemsGenerated; i++) {
-            Calendar now = Calendar.getInstance();
-            User submitter = userRepo.create("bob" + emailDate.format(now.getTime()) + (idOffset + i + 1) + "@boring.bob", "bob", "boring " + (idOffset + i + 1), Role.ROLE_STUDENT);
-            Credentials credentials = new Credentials();
-            credentials.setFirstName("Bob");
-            credentials.setLastName("Boring " + (idOffset + i + 1));
-            credentials.setEmail("bob@boring.bob");
-            credentials.setRole(Role.ROLE_STUDENT.name());
-
-            SubmissionStatus state = statuses.get(0);
-
-            // Status is chosen completely randomly for every option available when expansive is enabled.
-            if (expansive) {
-                state = statuses.get(random.nextInt(statuses.size()));
+        vocabularyWordRepo.findAll().forEach(vw -> {
+            if (vw.getControlledVocabulary().getName().equalsIgnoreCase("colleges")) {
+                collegesVW.add(vw);
+            } else if (vw.getControlledVocabulary().getName().equalsIgnoreCase("departments")) {
+                departmentsVW.add(vw);
+            } else if (vw.getControlledVocabulary().getName().equalsIgnoreCase("majors")) {
+                majorsVW.add(vw);
+            } else if (vw.getControlledVocabulary().getName().equalsIgnoreCase("programs")) {
+                programsVW.add(vw);
+            } else if (vw.getControlledVocabulary().getName().equalsIgnoreCase("schools")) {
+                schoolsVW.add(vw);
             }
+        });
 
-            List<CustomActionDefinition> customActions = customActionDefinitionRepo.findAll();
+        // Status is chosen completely randomly for every option available when expansive is enabled.
+        if (expansive) {
+            state = statuses.get(random.nextInt(statuses.size()));
+        }
 
-            Submission sub = submissionRepo.create(submitter, org, state, credentials, customActions);
+        List<CustomActionDefinition> customActions = customActionDefinitionRepo.findAll();
 
-            sub.setSubmissionDate(getRandomDate());
+        Submission sub = submissionRepo.create(submitter, org, state, credentials, customActions);
 
-            if (random.nextInt(10) < 3) {
-                sub.setApproveAdvisorDate(getRandomDate());
-                sub.setApproveAdvisor(random.nextInt(10) < 5);
-            } else {
-                sub.setApproveAdvisorDate(null);
-                sub.setApproveAdvisor(false);
-            }
+        sub.setSubmissionDate(getRandomDate());
 
-            if (random.nextInt(10) < 3) {
-                sub.setApproveApplicationDate(getRandomDate());
-                sub.setApproveApplication(random.nextInt(10) < 5);
-            } else {
-                sub.setApproveApplicationDate(null);
-                sub.setApproveApplication(false);
-            }
+        if (random.nextInt(10) < 3) {
+            sub.setApproveAdvisorDate(getRandomDate());
+            sub.setApproveAdvisor(random.nextInt(10) < 5);
+        } else {
+            sub.setApproveAdvisorDate(null);
+            sub.setApproveAdvisor(false);
+        }
 
-            if (random.nextInt(10) < 3) {
-                sub.setApproveEmbargoDate(getRandomDate());
-                sub.setApproveEmbargo(random.nextInt(10) < 5);
-            } else {
-                sub.setApproveEmbargoDate(null);
-                sub.setApproveEmbargo(false);
-            }
+        if (random.nextInt(10) < 3) {
+            sub.setApproveApplicationDate(getRandomDate());
+            sub.setApproveApplication(random.nextInt(10) < 5);
+        } else {
+            sub.setApproveApplicationDate(null);
+            sub.setApproveApplication(false);
+        }
 
-            // %30 chance to be assigned to helpful harry.
-            if (expansive && random.nextInt(10) < 3) {
-                sub.setAssignee(helpfulHarry);
-            }
+        if (random.nextInt(10) < 3) {
+            sub.setApproveEmbargoDate(getRandomDate());
+            sub.setApproveEmbargo(random.nextInt(10) < 5);
+        } else {
+            sub.setApproveEmbargoDate(null);
+            sub.setApproveEmbargo(false);
+        }
 
-            generateActionLogs(sub, submitter, expansive, maxActionLogs);
+        // 30% chance to be assigned to helpful harry.
+        if (expansive && random.nextInt(10) < 3) {
+            sub.setAssignee(helpfulHarry);
+        }
 
-            for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
-                for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
-                    FieldPredicate pred = fp.getFieldPredicate();
-                    FieldValue val;
-                    switch (fp.getInputType().getName()) {
-                    case "INPUT_FILE":
-                        break;
-                    case "INPUT_CONTACT":
+        generateActionLogs(sub, submitter, expansive, maxActionLogs);
+
+        for (SubmissionWorkflowStep step : sub.getSubmissionWorkflowSteps()) {
+            for (SubmissionFieldProfile fp : step.getAggregateFieldProfiles()) {
+                FieldPredicate pred = fp.getFieldPredicate();
+                FieldValue val;
+
+                switch (fp.getInputType().getName()) {
+                case "INPUT_FILE":
+                    break;
+                case "INPUT_CONTACT":
+                    val = fieldValueRepo.create(pred);
+                    val.setValue("test " + pred.getValue() + " " + i);
+                    val.setContacts(Arrays.asList(new String[] { "test" + pred.getValue() + i + AT_ADDRESS }));
+                    sub.addFieldValue(val);
+                    break;
+                case "INPUT_EMAIL":
+                    val = fieldValueRepo.create(pred);
+                    val.setValue("test" + pred.getValue() + i + AT_ADDRESS);
+                    sub.addFieldValue(val);
+                    break;
+                case "INPUT_DEGREEDATE":
+                    val = fieldValueRepo.create(pred);
+                    val.setValue(FORMAT_MONTH.format(getRandomDegreeDate().getTime()));
+                    sub.addFieldValue(val);
+                    break;
+                case "INPUT_DATE":
+                    val = fieldValueRepo.create(pred);
+                    val.setValue(FORMAT_DAY.format(getRandomDate().getTime()));
+                    sub.addFieldValue(val);
+                    break;
+                default:
+                    // Allow for a small number of unfilled field values.
+                    if (random.nextInt(10) > 8) break;
+
+                    val = fieldValueRepo.create(pred);
+                    if (pred.getValue().equalsIgnoreCase("birth_year")) {
+                        val.setValue(getRandomYearString(80));
+                    } else if (pred.getValue().equalsIgnoreCase("default_embargos") || pred.getValue().equalsIgnoreCase("proquest_embargos")) {
+                        Embargo embargo = null;
+                        if (embargoes.size() > 0) {
+                            embargo = embargoes.get(getRandomNumber(embargoes.size()));
+                        }
+
+                        if (embargo == null) {
+                            val.setValue("test " + pred.getValue() + " " + i);
+                        } else {
+                            val.setValue(embargo.getName());
+                        }
+                    } else if (pred.getValue().equalsIgnoreCase("dc.language.iso")) {
+                        Language language = null;
+                        if (languages.size() > 0) {
+                            language = languages.get(getRandomNumber(languages.size()));
+                        }
+
+                        if (language == null) {
+                            val.setValue("test " + pred.getValue() + " " + i);
+                        } else {
+                            val.setValue(language.getName());
+                        }
+                    } else if (pred.getValue().equalsIgnoreCase("thesis.degree.name")) {
+                        Degree degree = null;
+                        if (degrees.size() > 0) {
+                            degree = degrees.get(getRandomNumber(degrees.size()));
+                        }
+
+                        if (degree == null) {
+                            val.setValue("test " + pred.getValue() + " " + i);
+                        } else {
+                            val.setValue(degree.getName());
+                        }
+                    } else if (pred.getValue().equalsIgnoreCase("dc.subject") || pred.getValue().toLowerCase().startsWith("thesis.degree.")) {
+                        VocabularyWord vw = null;
+                        if (pred.getValue().equalsIgnoreCase("dc.subject") || pred.getValue().equalsIgnoreCase("thesis.degree.college")) {
+                            if (collegesVW.size() > 0) {
+                                vw = collegesVW.get(getRandomNumber(collegesVW.size()));
+                            }
+                        } else if (pred.getValue().equalsIgnoreCase("thesis.degree.school")) {
+                            if (schoolsVW.size() > 0) {
+                                vw = schoolsVW.get(getRandomNumber(schoolsVW.size()));
+                            }
+                        } else if (pred.getValue().equalsIgnoreCase("thesis.degree.program")) {
+                            if (programsVW.size() > 0) {
+                                vw = programsVW.get(getRandomNumber(programsVW.size()));
+                            }
+                        } else if (pred.getValue().equalsIgnoreCase("thesis.degree.department")) {
+                            if (departmentsVW.size() > 0) {
+                                vw = departmentsVW.get(getRandomNumber(departmentsVW.size()));
+                            }
+                        } else if (pred.getValue().equalsIgnoreCase("thesis.degree.major")) {
+                            if (majorsVW.size() > 0) {
+                                vw = majorsVW.get(getRandomNumber(majorsVW.size()));
+                            }
+                        }
+
+                        if (vw == null) {
+                            val.setValue("test " + pred.getValue() + " " + i);
+                        } else {
+                            val.setValue(vw.getName());
+                        }
+                    } else if (pred.getValue().equalsIgnoreCase("dc.contributor.advisor") || pred.getValue().equalsIgnoreCase("dc.contributor.committeeMember")) {
                         val = fieldValueRepo.create(pred);
                         val.setValue("test " + pred.getValue() + " " + i);
-                        val.setContacts(Arrays.asList(new String[] { "test" + pred.getValue() + i + "@mailinator.com" }));
+                        val.setContacts(Arrays.asList(new String[] { "test" + pred.getValue() + i + AT_ADDRESS }));
                         sub.addFieldValue(val);
-                        break;
-                    case "INPUT_EMAIL":
-                        val = fieldValueRepo.create(pred);
-                        val.setValue("test" + pred.getValue() + i + "@mailinator.com");
-                        sub.addFieldValue(val);
-                        break;
-                    case "INPUT_DEGREEDATE":
-                        val = fieldValueRepo.create(pred);
-                        calendar = getRandomDegreeDate();
-                        val.setValue(formatMonth.format(calendar.getTime()));
-                        sub.addFieldValue(val);
-                        break;
-                    case "INPUT_DATE":
-                        val = fieldValueRepo.create(pred);
-                        calendar = getRandomDate();
-                        val.setValue(formatDay.format(calendar.getTime()));
-                        sub.addFieldValue(val);
-                        break;
-                    default:
-                        // Allow for a small number of unfilled field values.
-                        if (random.nextInt(10) > 8) break;
-
-                        val = fieldValueRepo.create(pred);
-                        if (pred.getValue().equalsIgnoreCase("birth_year")) {
-                            val.setValue(getRandomYearString(80));
-                        } else {
-                            val.setValue("test " + pred.getValue() + " " + i);
-                        }
-                        sub.addFieldValue(val);
+                    } else {
+                        val.setValue("test " + pred.getValue() + " " + i);
                     }
+                    sub.addFieldValue(val);
                 }
             }
-            submissionRepo.saveAndFlush(sub);
-
-            System.out.print("\r" + (i - itemsGenerated) + " of " + generateTotal + " generated...");
         }
 
-        if (expansive) {
-            System.out.println("\rGenerated " + generateTotal + " submissions expansively with max action logs of " + maxActionLogs + ".");
-        } else {
-            System.out.println("\rGenerated " + generateTotal + " submissions.");
-        }
+        submissionRepo.saveAndFlush(sub);
+    }
 
-        itemsGenerated += generateTotal;
+    public long countUsers() {
+        return userRepo.count();
+    }
+
+    public void setAcceptSubmissions(Organization organization) {
+        if (!organization.getAcceptsSubmissions()) {
+            organization.setAcceptsSubmissions(true);
+            organization = organizationRepo.save(organization);
+        }
+    }
+
+    public User createHelpfulHarry(long offset, SimpleDateFormat formatter) {
+        String dateString = formatter.format(Calendar.getInstance().getTime());
+        return userRepo.create("harry" + dateString + offset + "@help.ful", "Harry", "Helpful " + offset, Role.ROLE_REVIEWER);
     }
 
     private Calendar getRandomDate() {
@@ -257,9 +360,10 @@ public class CliService {
         return "" + (date.get(Calendar.YEAR) - random.nextInt(max));
     }
 
-    private User createHelpfulHarry(int offset, SimpleDateFormat formatter) {
-        String dateString = formatter.format(Calendar.getInstance().getTime());
-        return userRepo.create("harry" + dateString + offset + "@help.ful", "Harry", "Helpful " + offset, Role.ROLE_REVIEWER);
+    private int getRandomNumber(int max) {
+        Random random = new Random();
+
+        return random.nextInt(max);
     }
 
     private void generateActionLogs(Submission sub, User submitter, boolean expansive, int maxActionLogs) {

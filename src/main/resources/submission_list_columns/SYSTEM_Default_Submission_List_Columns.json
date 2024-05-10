@@ -197,5 +197,17 @@
     "inputType": {
       "name": "INPUT_TEXT"
     }
+  },
+  {
+    "title": "Embargo Type",
+    "sort": "NONE",
+    "valuePath": [
+      "embargoTypes",
+      "name"
+    ],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
   }
 ]
