@@ -32,7 +32,7 @@ public class EmailRecipientContact extends AbstractEmailRecipient {
     @Override
     public List<String> getEmails(Submission submission) {
         List<String> emails = new ArrayList<String>();
-        for (FieldValue fv : submission.getFieldValuesByPredicate(getFieldPredicate())) {
+        for (FieldValue fv : submission.getFieldValuesByPredicateValue(getFieldPredicate().getValue())) {
             LOG.debug("Looking at field value " + fv.getValue() + "(" + fv.getId() + ") gotten from submission " + submission.getId() + "'s predicates matching " + getFieldPredicate().getValue() + "(" + getFieldPredicate().getId());
             for (String contact : fv.getContacts()) {
                 LOG.debug("That field value has a contact value of " + contact);

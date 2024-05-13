@@ -27,14 +27,35 @@ vireo.controller('SubmissionHistoryController', function ($controller, $location
 
     var manuscriptFetchLock = {};
 
+    var handleResponse = function (res) {
+        if (!!res && !!res.body) {
+            var apiRes = angular.fromJson(res.body);
+            if (apiRes.meta.status === "SUCCESS") {
+                resetTable();
+            }
+        }
+    };
+
     StudentSubmissionRepo.ready().then(function () {
+        angular.forEach($scope.studentsSubmissions, function (submission) {
+            if (!!submission) {
+                submission.enableListeners(true);
+
+                if (!!submission.fieldValuesListenPromise) {
+                    submission.fieldValuesListenPromise.then(null, null, handleResponse);
+                }
+
+                if (!!submission.fieldValuesRemovedListenPromise) {
+                    submission.fieldValuesRemovedListenPromise.then(null, null, handleResponse);
+                }
+            }
+        });
+
         resetTable();
     });
 
-    StudentSubmissionRepo.listenForChanges().then(null, null, function() {
-        StudentSubmissionRepo.reset().then(function() {
-            resetTable();
-        });
+    StudentSubmissionRepo.listenForChanges().then(null, null, function(res) {
+        StudentSubmissionRepo.reset().then(handleResponse);
     });
 
     $scope.getDocumentTitle = function (row) {

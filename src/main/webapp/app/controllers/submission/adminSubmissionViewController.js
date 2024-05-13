@@ -78,6 +78,7 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
     SubmissionRepo.fetchSubmissionById($routeParams.id).then(function(submission) {
 
         $scope.submission = submission;
+        $scope.submission.enableListeners();
 
         $scope.loaded = true;
 
