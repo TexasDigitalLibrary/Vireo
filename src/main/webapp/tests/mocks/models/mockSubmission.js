@@ -327,6 +327,18 @@ var mockSubmission = function($q) {
         return payloadPromise($q.defer());
     };
 
+    model.enableListeners = function (simple) {
+        model.fieldValuesListenPromise = $q.defer().promise;
+        model.fieldValuesRemovedListenPromise = $q.defer().promise;
+
+        if (simple !== true) {
+            model.actionLogListenPromise = $q.defer().promise;
+            model.customActionValuesListenPromise = $q.defer().promise;
+
+            model.actionLogListenReloadDefer = $q.defer();
+        }
+    };
+
     model.fetchDocumentTypeFileInfo = function () {
     };
 

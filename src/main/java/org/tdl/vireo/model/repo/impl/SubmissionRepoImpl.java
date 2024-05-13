@@ -453,6 +453,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         sqlAliasBuilders.add("s.id");
 
         int n = 0;
+        int totalFieldValueConditions = 0;
 
         for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
 
@@ -556,6 +557,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         }
 
                         if (sqlBuilder.length() > 0) {
+                            totalFieldValueConditions++;
                             sqlWhereBuilderList.add(sqlBuilder);
 
                             if (!sqlCountWherePredicate.containsKey(predicateId)) {
@@ -747,16 +749,16 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     // This is not a select column but is instead only a custom filter.
                     if (submissionListColumn.getFilters().size() > 0) {
                         sqlBuilder = new StringBuilder();
-                        sqlBuilder.append("s.id IN (SELECT submission_id FROM submission_field_values WHERE field_values_id IN (select id FROM field_value WHERE field_predicate_id IN (SELECT id FROM field_predicate WHERE value IN ('default_embargos', 'proquest_embargos')) and (");
+                        sqlBuilder.append("s.id IN (SELECT submission_id FROM submission_field_values WHERE field_values_id IN (select id FROM field_value WHERE field_predicate_id IN (SELECT id FROM field_predicate WHERE value = 'submission_type') and (");
 
-                        // Note that the OR query is used inside the column, represented by both default_embargos and proquest_embargos.
+                        // Note that the OR query is used inside the column, represented by submission_type.
                         boolean hasNone = false;
                         for (String filterString : submissionListColumn.getFilters()) {
                             if (filterString != null) {
                                 sqlBuilder.append(" value = '").append(escapeString(filterString, false, true)).append("' OR");
                             }
 
-                            if (appFilterConfig.getEmbargoTypeNone().equalsIgnoreCase(filterString)) {
+                            if (appFilterConfig.getSubmissionTypeNone().equalsIgnoreCase(filterString)) {
                                 hasNone = true;
                             }
                         }
@@ -966,7 +968,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         });
         sqlSelectBuilder.setLength(sqlSelectBuilder.length() - 2);
         sqlSelectBuilder.append(" FROM submission s");
-        sqlCountSelectBuilder.insert(0, "SELECT COUNT(DISTINCT s.id) FROM submission s");
 
         // if ordering, complete order by clause and strip the tailing comma
         if (sqlOrderBysBuilder.length() > 0) {
@@ -1060,7 +1061,14 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         }
 
         String sqlQuery = sqlSelectBuilder.toString() + sqlJoinsBuilder.toString() + sqlBuilder.toString();
-        String sqlCountQuery = sqlCountSelectBuilder.toString();
+        String sqlCountQuery = "SELECT COUNT(DISTINCT s.id) FROM submission s";
+
+        // Use count query optimization only when there are fewer than 2 field values in the where clause.
+        if (totalFieldValueConditions > 1) {
+            sqlCountQuery += sqlJoinsBuilder.toString() + sqlBuilder.toString();
+        } else {
+            sqlCountQuery += sqlCountSelectBuilder.toString();
+        }
 
         if (pageable != null) {
             // determine the offset and limit of the query

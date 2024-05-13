@@ -173,6 +173,10 @@ app:
     embargoTypeNone: None
     submissionTypeNone: None
 
+  # org.tdl.vireo.service.SystemDataLoader
+  dataLoader:
+    initialize: true
+
 # edu.tamu.weaver.token.service.TokenService
 auth:
   security.jwt:

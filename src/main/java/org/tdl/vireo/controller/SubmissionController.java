@@ -930,11 +930,15 @@ public class SubmissionController {
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse setSubmissionCorrectionsReceived(@WeaverUser User user, @PathVariable Long submissionId) {
         Submission submission = submissionRepo.read(submissionId);
+        if (submission == null) {
+          return new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
+        }
         String oldSubmissionStatusName = submission.getSubmissionStatus().getName();
-        SubmissionStatus needsCorrectionStatus = submissionStatusRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
-        submission.setSubmissionStatus(needsCorrectionStatus);
+        SubmissionStatus correctionsReceivedStatus = submissionStatusRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
+        submission.setSubmissionStatus(correctionsReceivedStatus);
         submission = submissionRepo.update(submission);
         actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
+        submissionEmailService.sendWorkflowEmails(user, submission.getId());
         return new ApiResponse(SUCCESS, submission);
     }
 
