@@ -749,16 +749,16 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     // This is not a select column but is instead only a custom filter.
                     if (submissionListColumn.getFilters().size() > 0) {
                         sqlBuilder = new StringBuilder();
-                        sqlBuilder.append("s.id IN (SELECT submission_id FROM submission_field_values WHERE field_values_id IN (select id FROM field_value WHERE field_predicate_id IN (SELECT id FROM field_predicate WHERE value = 'submission_type') and (");
+                        sqlBuilder.append("s.id IN (SELECT submission_id FROM submission_field_values WHERE field_values_id IN (select id FROM field_value WHERE field_predicate_id IN (SELECT id FROM field_predicate WHERE value IN ('default_embargos', 'proquest_embargos')) and (");
 
-                        // Note that the OR query is used inside the column, represented by submission_type.
+                        // Note that the OR query is used inside the column, represented by both default_embargos and proquest_embargos.
                         boolean hasNone = false;
                         for (String filterString : submissionListColumn.getFilters()) {
                             if (filterString != null) {
                                 sqlBuilder.append(" value = '").append(escapeString(filterString, false, true)).append("' OR");
                             }
 
-                            if (appFilterConfig.getSubmissionTypeNone().equalsIgnoreCase(filterString)) {
+                            if (appFilterConfig.getEmbargoTypeNone().equalsIgnoreCase(filterString)) {
                                 hasNone = true;
                             }
                         }
