@@ -758,8 +758,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                                 sqlBuilder.append(" value = '").append(escapeString(filterString, false, true)).append("' OR");
                             }
 
-                            if (appFilterConfig.getEmbargoTypeNone().equalsIgnoreCase(filterString)) {
-                                hasNone = true;
+                            if (appFilterConfig.getEmbargoTypeNone() != null) {
+                              if (appFilterConfig.getEmbargoTypeNone().equalsIgnoreCase(filterString)) {
+                                  hasNone = true;
+                              }
                             }
                         }
                         sqlBuilder.setLength(sqlBuilder.length() - 3);
@@ -788,8 +790,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                                 sqlBuilder.append(" value = '").append(escapeString(filterString, false, true)).append("' OR");
                             }
 
-                            if (appFilterConfig.getSubmissionTypeNone().equalsIgnoreCase(filterString)) {
-                                hasNone = true;
+                            if (appFilterConfig.getSubmissionTypeNone() != null) {
+                              if (appFilterConfig.getSubmissionTypeNone().equalsIgnoreCase(filterString)) {
+                                  hasNone = true;
+                              }
                             }
                         }
                         sqlBuilder.setLength(sqlBuilder.length() - 3);
