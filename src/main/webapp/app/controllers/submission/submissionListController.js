@@ -164,7 +164,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             if (!!allSubmissionListFilters) {
                 submissionListColumns = allSubmissionListFilters.filter(function excludeCustomFilters(slc) {
-                    return slc.title !== 'Search Box' && slc.title !== "Submission Type (List)";
+                    return slc.title !== 'Search Box' && slc.title !== "Submission Type (List)" && slc.title != "Embargo Type";
                 });
 
                 submissionListColumnsForManage = allSubmissionListFilters.filter(function excludeSearchBox(slc) {
