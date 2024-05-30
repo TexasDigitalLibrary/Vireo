@@ -36,6 +36,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.config.AppFilterConfig;
 import org.tdl.vireo.config.VireoDatabaseConfig;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.model.Configuration;
@@ -100,6 +101,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
     @Autowired
     private AssetService assetService;
+
+    @Autowired
+    private AppFilterConfig appFilterConfig;
 
     @Autowired
     private VireoDatabaseConfig vireoDatabaseConfig;
@@ -754,8 +758,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                                 sqlBuilder.append(" value = '").append(escapeString(filterString, false, true)).append("' OR");
                             }
 
-                            if ("None".equals(filterString)) {
-                                hasNone = true;
+                            if (appFilterConfig.getEmbargoTypeNone() != null) {
+                              if (appFilterConfig.getEmbargoTypeNone().equalsIgnoreCase(filterString)) {
+                                  hasNone = true;
+                              }
                             }
                         }
                         sqlBuilder.setLength(sqlBuilder.length() - 3);
@@ -784,8 +790,10 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                                 sqlBuilder.append(" value = '").append(escapeString(filterString, false, true)).append("' OR");
                             }
 
-                            if ("None".equals(filterString)) {
-                                hasNone = true;
+                            if (appFilterConfig.getSubmissionTypeNone() != null) {
+                              if (appFilterConfig.getSubmissionTypeNone().equalsIgnoreCase(filterString)) {
+                                  hasNone = true;
+                              }
                             }
                         }
                         sqlBuilder.setLength(sqlBuilder.length() - 3);
