@@ -525,6 +525,7 @@ sidebox ul.sidebox-list input {
 }
 
 .sidebox-body ul.sidebox-list.embargotype-list,
+.sidebox-body ul.sidebox-list.submissiontype-list,
 .sidebox-body ul.sidebox-list.status-list {
   padding: 0px;
 }
@@ -1562,6 +1563,7 @@ input[type=color]:focus {
 }
 
 .further-filter-by .embargotype-category,
+.further-filter-by .submissiontype-category,
 .further-filter-by .status-category {
   background: #CCCCCC;
   display: inline-block;
@@ -1575,6 +1577,7 @@ input[type=color]:focus {
 .further-filter-by .inactive-filters-sub-list,
 .further-filter-by .organization-by-category-sub-list,
 .further-filter-by .embargotype-list,
+.further-filter-by .submissiontype-list,
 .further-filter-by .status-list {
   max-height: 0;
   overflow: hidden;
@@ -1591,6 +1594,7 @@ input[type=color]:focus {
 .further-filter-by .inactive-filters-sub-list.expanded,
 .further-filter-by .organization-by-category-sub-list.expanded,
 .further-filter-by .embargotype-list.expanded,
+.further-filter-by .submissiontype-list.expanded,
 .further-filter-by .status-list.expanded {
   max-height: 1000px;
   -webkit-transition: max-height 0.5s ease-in;

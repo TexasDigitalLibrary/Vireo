@@ -568,6 +568,12 @@ describe("controller: SubmissionListController", function () {
 
             expect(location.path).toHaveBeenCalled();
         });
+        it(" should simplifyTitle fix the string", function () {
+            var result = scope.simplifyTitle("a(b)c d");
+            scope.$digest();
+
+            expect(result).toEqual("abcd");
+        });
     });
 
     describe("Do the scope.furtherFilterBy methods work as expected", function () {

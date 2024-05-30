@@ -209,5 +209,17 @@
     "inputType": {
       "name": "INPUT_TEXT"
     }
+  },
+  {
+    "title": "Submission Type (List)",
+    "sort": "NONE",
+    "valuePath": [
+      "submissionTypes",
+      "name"
+    ],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
   }
 ]

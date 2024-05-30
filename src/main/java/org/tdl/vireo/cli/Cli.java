@@ -129,13 +129,15 @@ public class Cli implements CommandLineRunner {
                             Random random = new Random();
                             long idOffset = cliService.countUsers();
                             User helpfulHarry = null;
+                            boolean hasSubmissionTypes = false;
 
                             if (expansive) {
                                 helpfulHarry = cliService.createHelpfulHarry(idOffset++, CliService.EMAIL_DATE);
+                                hasSubmissionTypes = cliService.hasSubmissionTypes();
                             }
 
                             for (long i = itemsGenerated; i < num1 + itemsGenerated; i++) {
-                                cliService.operateGenerate(expansive, num2, random, idOffset, helpfulHarry, i);
+                                cliService.operateGenerate(expansive, num2, random, idOffset, helpfulHarry, hasSubmissionTypes, i);
                                 System.out.print("\r" + (i - itemsGenerated) + " of " + num1 + " generated...");
                             }
 

@@ -30,6 +30,7 @@ import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.CustomActionDefinitionRepo;
 import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
+import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.FieldValueRepo;
 import org.tdl.vireo.model.repo.LanguageRepo;
 import org.tdl.vireo.model.repo.OrganizationRepo;
@@ -84,6 +85,9 @@ public class CliService {
     private DegreeRepo degreeRepo;
 
     @Autowired
+    private FieldPredicateRepo fieldPredicateRepo;
+
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     public void operateAccounts(boolean expansive, int generateTotal) {
@@ -110,7 +114,11 @@ public class CliService {
         }
     }
 
-    public void operateGenerate(boolean expansive, int maxActionLogs, Random random, long idOffset, User helpfulHarry, long i) throws OrganizationDoesNotAcceptSubmissionsException {
+    public boolean hasSubmissionTypes() {
+        return fieldValueRepo.getAllValuesByFieldPredicateValue("submission_type").size() > 0;
+    }
+
+    public void operateGenerate(boolean expansive, int maxActionLogs, Random random, long idOffset, User helpfulHarry, boolean hasSubmissionTypes, long i) throws OrganizationDoesNotAcceptSubmissionsException {
         Calendar now = Calendar.getInstance();
         User submitter = userRepo.create("bob" + EMAIL_DATE.format(now.getTime()) + (idOffset + i + 1) + "@boring.bob", "bob", "boring " + (idOffset + i + 1), Role.ROLE_STUDENT);
         Credentials credentials = new Credentials();
@@ -129,6 +137,7 @@ public class CliService {
         final List<VocabularyWord> departmentsVW = new ArrayList<>();
         final List<VocabularyWord> schoolsVW = new ArrayList<>();
         final List<VocabularyWord> majorsVW = new ArrayList<>();
+        final List<String> submissionTypeValues = new ArrayList<>();
         Organization org = orgs.get(getRandomNumber(organizationRepo.findAll().size()));
         SubmissionStatus state = statuses.get(0);
         setAcceptSubmissions(org);
@@ -146,6 +155,12 @@ public class CliService {
                 schoolsVW.add(vw);
             }
         });
+
+        if (hasSubmissionTypes) {
+            fieldValueRepo.getAllValuesByFieldPredicateValue("submission_type").forEach((String value) -> {
+                submissionTypeValues.add(value);
+            });
+        }
 
         // Status is chosen completely randomly for every option available when expansive is enabled.
         if (expansive) {
@@ -292,6 +307,17 @@ public class CliService {
                         val.setValue("test " + pred.getValue() + " " + i);
                         val.setContacts(Arrays.asList(new String[] { "test" + pred.getValue() + i + AT_ADDRESS }));
                         sub.addFieldValue(val);
+                    } else if (pred.getValue().equalsIgnoreCase("submission_type")) {
+                        String value = null;
+                        if (submissionTypeValues.size() > 0) {
+                            value = submissionTypeValues.get(getRandomNumber(submissionTypeValues.size()));
+                        }
+
+                        if (value == null) {
+                            val.setValue("test " + pred.getValue() + " " + getRandomNumber(10));
+                        } else {
+                            val.setValue(value);
+                        }
                     } else {
                         val.setValue("test " + pred.getValue() + " " + i);
                     }
