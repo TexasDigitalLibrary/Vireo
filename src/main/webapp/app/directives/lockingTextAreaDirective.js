@@ -56,9 +56,9 @@ vireo.directive("lockingtextarea", function ($timeout) {
                         save();
                     });
                 },
-                toolbar1: "formatselect bold italic underline | bullist numlist undo redo | link unlink",
+                toolbar1: "formatselect bold italic underline | bullist numlist undo redo | link unlink | code",
                 theme: "silver",
-                plugins: "autoresize link autolink",
+                plugins: "autoresize lists advlist link autolink code",
                 menubar: false,
                 statusbar: false,
                 image_advtab: true,
