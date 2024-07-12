@@ -1,4 +1,4 @@
-vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $location, $routeParams, $scope, $timeout, DepositLocationRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatuses, SubmissionStatusRepo, UserRepo, UserService, UserSettings, WsApi) {
+vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $controller, $filter, $location, $routeParams, $scope, $timeout, DepositLocationRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValue, FileUploadService, SidebarService, SubmissionRepo, SubmissionStatuses, SubmissionStatusRepo, UserRepo, UserService, UserSettings, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -590,14 +590,16 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             "hasPrimaryDocument": $scope.hasPrimaryDocument
         };
 
+        var getLastActionLog = function() {
+            return $filter('orderBy')($scope.submission.actionLogs, 'actionDate', true)[0];
+        }
+
         var getLastActionDate = function() {
-            var index = $scope.submission.actionLogs.length - 1;
-            return $scope.submission.actionLogs[index].actionDate;
+            return getLastActionLog().actionDate;
         };
 
         var getLastActionEntry = function() {
-            var index = $scope.submission.actionLogs.length - 1;
-            return $scope.submission.actionLogs[index].entry;
+            return getLastActionLog().entry;
         };
 
         var isUmiRelease = function() {
