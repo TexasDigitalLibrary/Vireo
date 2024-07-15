@@ -189,10 +189,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             $scope.columns = angular.fromJson(angular.toJson($filter('orderBy')($filter('exclude')(submissionListColumns, $scope.excludedColumns, 'title'), 'title')));
 
-            angular.extend(filterColumns, {
-                userFilterColumns: managerFilterColumns,
-                inactiveFilterColumns:  $filter('orderBy')($filter('exclude')(submissionListColumnsForManage, managerFilterColumns, 'title'), 'title')
-            });
+            setFilterColumns(managerFilterColumns, $filter('orderBy')($filter('exclude')(submissionListColumnsForManage, managerFilterColumns, 'title'), 'title'));
 
             if (reloadList === true) {
                 query();
@@ -350,6 +347,14 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 query();
             });
         };
+
+        var setFilterColumns = function(userFilterColumns, inactiveFilterColumns) {
+            // exclude columns which have multiple predicates
+            angular.extend(filterColumns, {
+                userFilterColumns: userFilterColumns.filter(c => (c.predicate === undefined || c.predicate == null) || c.predicate.trim().indexOf(' ') === -1),
+                inactiveFilterColumns: inactiveFilterColumns.filter(c => (c.predicate === undefined || c.predicate == null) || c.predicate.trim().indexOf(' ') === -1)
+            });
+        }
 
         $scope.addRowFilter = function ($index, row) {
             // When removing the last row for a page, and the page number is the last
@@ -539,21 +544,36 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var getValueFromArray = function (array, col) {
             var value = "";
-            for (var j in array) {
-                var member = array[j];
-                if (member.fieldPredicate !== undefined) {
-                    if (member.fieldPredicate.value === col.predicate) {
-                        value += value.length > 0 ? ", " + member.value : member.value;
+            var predicates = col.predicate.split(' ');
+            var pv;
+            for (var v of predicates) {
+                var predicate = v.replace(',', '').trim();
+
+                var delimeter = ', ';
+                for (var j in array) {
+                    var member = array[j];
+                    if (member.fieldPredicate !== undefined) {
+                        if (member.fieldPredicate.value === predicate) {
+
+                            // if set of predicates, determine delimeter by precense of trailing comma
+                            if (predicates.length > 1) {
+                                delimeter = (!!pv && pv.endsWith(',')) ? ', ' : ' ';
+                            }
+
+                            value += value.length > 0 ? delimeter + member.value : member.value;
+                        }
+                    } else {
+                        var path = col.valuePath;
+                        var curr = member;
+                        for (var p = 1; p < path.length; p++) {
+                            curr = curr[path[p]];
+                        }
+                        value += value.length > 0 ? ', ' + curr : curr;
                     }
-                } else {
-                    var path = col.valuePath;
-                    var curr = member;
-                    for (var p = 1; p < path.length; p++) {
-                        curr = curr[path[p]];
-                    }
-                    value += value.length > 0 ? ", " + curr : curr;
                 }
+                pv = v;
             }
+
             return value;
         };
 
@@ -780,10 +800,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             var userFilterColumns = filtersPreviouslyDisplayed.concat(filterColumns.userFilterColumns);
             var inactiveFilterColumns = filtersPreviouslyDisabled.concat(filterColumns.inactiveFilterColumns);
 
-            angular.extend(filterColumns, {
-                userFilterColumns: userFilterColumns,
-                inactiveFilterColumns: inactiveFilterColumns
-            });
+            setFilterColumns(userFilterColumns, inactiveFilterColumns);
 
             updateChange(false);
         };
