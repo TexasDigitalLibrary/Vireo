@@ -5,9 +5,8 @@ import static edu.tamu.weaver.response.ApiAction.DELETE;
 import static edu.tamu.weaver.response.ApiAction.UPDATE;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
-import edu.tamu.weaver.auth.model.Credentials;
-import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
-import edu.tamu.weaver.response.ApiResponse;
+import javax.sql.DataSource;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,7 +23,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
-import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +63,10 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 import org.tdl.vireo.service.AssetService;
+
+import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
 
 public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, SubmissionRepo> implements SubmissionRepoCustom {
 
@@ -455,7 +458,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         int n = 0;
         int totalFieldValueConditions = 0;
 
-        for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
+        for (int i = 0; i < allSubmissionListColumns.size(); i++) {
+            SubmissionListColumn submissionListColumn = allSubmissionListColumns.get(i);
 
             if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0 || submissionListColumn.getVisible()) {
                 if (sqlColumnsBuilders.containsKey(submissionListColumn.getId())) {
@@ -467,7 +471,31 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 switch (String.join(".", submissionListColumn.getValuePath())) {
                 case "fieldValues.value":
 
-                    Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
+                    FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate());
+
+                    // if the predicate is not found, see if it is space delimited set of predicates
+                    // for each predicate, add a submission list column clone with predicate and sort order updated
+                    if (fieldPredicate == null) {
+                        String[] predicates = submissionListColumn.getPredicate().split(" ");
+                        int sortOrder = submissionListColumn.getSortOrder();
+                        for(int j = 0; j < predicates.length; ++j) {
+
+                            SubmissionListColumn column = new SubmissionListColumn(
+                                submissionListColumn.getTitle(),
+                                submissionListColumn.getSort(),
+                                predicates[j].replace(",", "").trim(),
+                                submissionListColumn.getInputType()
+                            );
+
+                            column.setSortOrder(sortOrder++);
+
+                            allSubmissionListColumns.add(i + j + 1, column);
+                        }
+
+                        continue;
+                    }
+
+                    Long predicateId = fieldPredicate.getId();
 
                     // @formatter:off
                     if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0) {
@@ -1093,8 +1121,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             if (!sqlAliasBuilders.contains(value)) {
                 sqlAliasBuilders.add(value);
             }
-
-            sqlOrderBysBuilder.append(" ").append(value).append(" ").append(sort.name()).append(",");
+            sqlOrderBysBuilder.append("\n ").append(value).append(" ").append(sort.name()).append(",");
         }
     }
 
