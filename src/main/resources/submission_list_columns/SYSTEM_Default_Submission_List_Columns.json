@@ -221,5 +221,14 @@
     "inputType": {
       "name": "INPUT_TEXT"
     }
+  },
+  {
+    "title": "Student Name",
+    "sort": "ASC",
+    "predicate": "last_name, first_name middle_name",
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
   }
 ]
