@@ -2,7 +2,7 @@ vireo.repo("FieldValueRepo", function FieldValueRepo(FieldValue, WsApi) {
 
   var fieldValueRepo = this;
 
-  fieldValueRepo.findValuesByPredicateValue = function(value) {
+  fieldValueRepo.findValuesByPredicateValue = function(value, sort) {
       var fieldValues = [];
 
       // FieldValue exists on the API Mapping but is under the Submission controller, which is not correct and so manually define the entire mapping inline here.
@@ -19,6 +19,10 @@ vireo.repo("FieldValueRepo", function FieldValueRepo(FieldValue, WsApi) {
                 var values = resObj.payload['ArrayList<String>'];
                 for (var i in values) {
                     fieldValues.push(values[i]);
+                }
+
+                if (sort) {
+                    fieldValues = fieldValues.sort(sort);
                 }
             }
           }

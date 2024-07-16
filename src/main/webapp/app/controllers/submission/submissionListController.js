@@ -221,7 +221,15 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var packagers = PackagerRepo.getAll();
         var controlledVocabularies = ControlledVocabularyRepo.getAll();
         var submissionTypeList = FieldValueRepo.findValuesByPredicateValue('submission_type');
-        var graduationSemesters = FieldValueRepo.findValuesByPredicateValue('dc.date.issued');
+        var graduationSemesters = FieldValueRepo.findValuesByPredicateValue('dc.date.issued', function (a, b) {
+            const [monthA, yearA] = a.split(' ');
+            const [monthB, yearB] = b.split(' ');
+
+            const dateA = new Date(`${monthA} 1, ${yearA}`);
+            const dateB = new Date(`${monthB} 1, ${yearB}`);
+
+            return dateB - dateA;
+        });
 
         var addBatchCommentEmail = function (message) {
             batchCommentEmail.adding = true;
