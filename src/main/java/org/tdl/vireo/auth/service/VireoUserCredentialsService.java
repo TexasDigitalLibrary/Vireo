@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.Role;
@@ -20,9 +21,14 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
     @Autowired
     private ConfigurationRepo configurationRepo;
 
+    @Value("${app.useNetIdAsIdentifier:false}")
+    private boolean useNetIdAsIdentifier;
+
     @Override
     public synchronized User updateUserByCredentials(Credentials credentials) {
-        User user = userRepo.findByEmail(credentials.getEmail());
+        User user = useNetIdAsIdentifier
+            ? userRepo.findByNetid(credentials.getNetid())
+            : userRepo.findByEmail(credentials.getEmail());
 
         Map<String, String> shibSettings = new HashMap<String, String>();
         Map<String, String> shibValues = new HashMap<String, String>();
@@ -63,7 +69,8 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
 
             user = userRepo.create(credentials.getEmail(), credentials.getFirstName(), credentials.getLastName(), role);
 
-            user.setNetid(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID)));
+            user.setNetid(credentials.getNetid());
+
             if (credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR)) != null) {
                 user.setBirthYear(Integer.parseInt(credentials.getAllCredentials().get(shibValues.get(ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR))));
             }
@@ -90,6 +97,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
         }
 
         credentials.setRole(user.getRole().toString());
+        // TODO: is this correct? check for use of credentials uin
         credentials.setUin(user.getUsername());
 
         return user;
