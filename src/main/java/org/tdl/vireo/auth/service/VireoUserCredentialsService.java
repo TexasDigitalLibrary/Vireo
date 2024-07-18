@@ -57,12 +57,6 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
             shibValues.put(k, configurationRepo.getValueByNameAndType(k, SHIBBOLETH) != null ? configurationRepo.getValueByNameAndType(k, SHIBBOLETH) : v)
         );
 
-        System.out.println("\n\nshib settings map: " + shibSettings + "\n\n");
-
-        System.out.println("\n\nshib values map: " + shibValues + "\n\n");
-
-        System.out.println("\n\nall credentials: " + credentials.getAllCredentials() + "\n\n");
-
         String shibNetid = credentials.getAllCredentials().get(shibValues.get(NETID));
         String shibEmail = credentials.getAllCredentials().get(shibValues.get(EMAIL));
         String shibFirstName = credentials.getAllCredentials().get(shibValues.get(FIRST_NAME));
