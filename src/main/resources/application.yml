@@ -178,7 +178,7 @@ app:
     initialize: true
 
   # org.tdl.vireo.auth.service.VireoUserCredentialsService
-  useNetIdAsIdentifier: false
+  useNetidAsIdentifier: false
 
 # edu.tamu.weaver.token.service.TokenService
 auth:
