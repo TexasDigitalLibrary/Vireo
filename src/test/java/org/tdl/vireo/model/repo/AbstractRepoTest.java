@@ -133,6 +133,8 @@ public abstract class AbstractRepoTest {
     // WorkFlow test
     protected static final String TEST_WORKFLOW_NAME = "Test Workflow";
     protected static final String TEST_GLOSS = "Test Gloss";
+    protected static final String TEST_GLOSS_2 = "Test Gloss 2";
+    protected static final String TEST_GLOSS_3 = "Test Gloss 3";
     protected static final String TEST_SEVERABLE_GLOSS = "Test Severable Gloss";
 
     // Organization Category test
