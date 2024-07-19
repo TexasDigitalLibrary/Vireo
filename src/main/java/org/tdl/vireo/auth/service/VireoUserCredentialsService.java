@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.config.constant.ConfigurationName;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ConfigurationRepo;
@@ -18,12 +19,15 @@ import edu.tamu.weaver.auth.service.UserCredentialsService;
 @Service
 public class VireoUserCredentialsService extends UserCredentialsService<User, UserRepo> {
 
-    private static final String NETID = "APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID";
-    private static final String EMAIL = "APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL";
-    private static final String BIRTH_YEAR = "APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR";
-    private static final String MIDDLE_NAME = "APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME";
-    private static final String ORCID = "APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID";
-    private static final String INSTITUTIONAL_IDENTIFIER = "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER";
+    private static final String NETID = ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID;
+    private static final String EMAIL = ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL;
+    private static final String BIRTH_YEAR = ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR;
+    private static final String FIRST_NAME = ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME;
+    private static final String MIDDLE_NAME = ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME;
+    private static final String LAST_NAME = ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME;
+    private static final String ORCID = ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID;
+    private static final String INSTITUTIONAL_IDENTIFIER = ConfigurationName.APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER;
+
     private static final String SHIBBOLETH = "shibboleth";
 
     private static final Map<String, String> shibSettings = new HashMap<>();
@@ -32,7 +36,9 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
         shibSettings.put(NETID, "netid");
         shibSettings.put(EMAIL, "email");
         shibSettings.put(BIRTH_YEAR, "birthYear");
+        shibSettings.put(FIRST_NAME, "firstName");
         shibSettings.put(MIDDLE_NAME, "middleName");
+        shibSettings.put(LAST_NAME, "lastName");
         shibSettings.put(ORCID, "orcid");
         shibSettings.put(INSTITUTIONAL_IDENTIFIER, "uin");
     }
@@ -53,7 +59,9 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
 
         String shibNetid = credentials.getAllCredentials().get(shibValues.get(NETID));
         String shibEmail = credentials.getAllCredentials().get(shibValues.get(EMAIL));
+        String shibFirstName = credentials.getAllCredentials().get(shibValues.get(FIRST_NAME));
         String shibMiddleName = credentials.getAllCredentials().get(shibValues.get(MIDDLE_NAME));
+        String shibLastName = credentials.getAllCredentials().get(shibValues.get(LAST_NAME));
         String shibOrcid = credentials.getAllCredentials().get(shibValues.get(ORCID));
 
         User user = useNetidAsIdentifier
@@ -69,7 +77,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
                 }
             }
 
-            user = userRepo.create(shibEmail, credentials.getFirstName(), credentials.getLastName(), role);
+            user = userRepo.create(shibEmail, shibFirstName, shibLastName, role);
 
             user.setNetid(shibNetid);
             user.setMiddleName(shibMiddleName);
@@ -103,8 +111,18 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
                 }
             }
 
+            if (StringUtils.isNotEmpty(shibFirstName) && !user.getFirstName().equals(shibFirstName)) {
+                user.setFirstName(shibFirstName);
+                isUserUpdated = true;
+            }
+
             if (StringUtils.isNotEmpty(shibMiddleName) && !user.getMiddleName().equals(shibMiddleName)) {
                 user.setMiddleName(shibMiddleName);
+                isUserUpdated = true;
+            }
+
+            if (StringUtils.isNotEmpty(shibLastName) && !user.getLastName().equals(shibLastName)) {
+                user.setLastName(shibLastName);
                 isUserUpdated = true;
             }
 
@@ -126,6 +144,8 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
         credentials.setRole(user.getRole().toString());
 
         credentials.setNetid(user.getNetid());
+        credentials.setFirstName(user.getFirstName());
+        credentials.setLastName(user.getLastName());
 
         return user;
     }
