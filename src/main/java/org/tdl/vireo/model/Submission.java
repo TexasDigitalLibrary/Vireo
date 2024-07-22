@@ -3,15 +3,6 @@ package org.tdl.vireo.model;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
-
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,20 +15,28 @@ import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.tdl.vireo.model.response.Views;
-import org.tdl.vireo.model.validation.SubmissionValidator;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.model.response.Views;
+import org.tdl.vireo.model.validation.SubmissionValidator;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
@@ -54,6 +53,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
         name = "graph.Submission.List",
         attributeNodes = {
             @NamedAttributeNode(value = "assignee", subgraph = "subgraph.user"),
+            @NamedAttributeNode(value = "lastAction", subgraph = "subgraph.lastAction"),
             @NamedAttributeNode(value = "submissionStatus", subgraph = "subgraph.submissionStatus"),
             @NamedAttributeNode(value = "organization", subgraph = "subgraph.organization"),
             // @NamedAttributeNode(value = "fieldValues", subgraph = "subgraph.fieldValues"),
@@ -63,6 +63,13 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
             @NamedSubgraph(
                 name = "subgraph.user",
                 attributeNodes = {}
+            ),
+            @NamedSubgraph(
+                name = "subgraph.lastAction",
+                attributeNodes = {
+                    @NamedAttributeNode(value = "entry"),
+                    @NamedAttributeNode(value = "actionDate"),
+                }
             ),
             @NamedSubgraph(
                 name = "subgraph.submissionStatus",
@@ -157,6 +164,10 @@ public class Submission extends ValidatingBaseEntity {
     @JsonView(Views.SubmissionList.class)
     @ManyToOne(fetch = LAZY, optional = true)
     private User assignee;
+
+    @JsonView(Views.SubmissionList.class)
+    @OneToOne(fetch = LAZY, optional = true)
+    private ActionLog lastAction;
 
     @JsonView(Views.SubmissionList.class)
     @ManyToOne(fetch = LAZY, optional = false)
@@ -293,6 +304,20 @@ public class Submission extends ValidatingBaseEntity {
      */
     public void setAssignee(User assignee) {
         this.assignee = assignee;
+    }
+
+    /**
+     * @return the lastAction
+     */
+    public ActionLog getLastAction() {
+        return lastAction;
+    }
+
+    /**
+     * @param lastAction the last action to set
+     */
+    public void setLastAction(ActionLog lastAction) {
+        this.lastAction = lastAction;
     }
 
     /**
@@ -530,23 +555,6 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
-     *
-     */
-    @JsonView(Views.Partial.class)
-    public String getLastEvent() {
-        Optional<ActionLog> actionLog = getActionLogs()
-            .stream()
-            .max(Comparator.comparing(al -> al.getActionDate()));
-        String lastEvent = null;
-
-        if (actionLog.isPresent()) {
-            lastEvent = actionLog.get().getEntry();
-        }
-
-        return lastEvent;
-    }
-
-    /**
      * @return The reviewer notes.
      */
     public String getReviewerNotes() {
@@ -704,7 +712,7 @@ public class Submission extends ValidatingBaseEntity {
             }
         });
         return fieldValues;
-    }   
+    }
 
 
     @JsonIgnore

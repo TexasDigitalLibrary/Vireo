@@ -654,8 +654,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         if (submissionListColumn.getExactMatch()) {
                             sqlBuilder.append("o").append(".name = '").append(filterString).append("'");
                         } else {
-                            // TODO: determine if organization name will ever be
-                            // search using a like
+                            // TODO: determine if organization name will ever be search using a like
                             sqlBuilder.append("LOWER(o").append(".name) LIKE '%").append(escapeString(filterString)).append("%'");
                         }
 
@@ -745,6 +744,77 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
                     break;
 
+                case "lastAction.entry":
+                    sqlBuilder = new StringBuilder();
+                    if (!sqlJoinsBuilder.toString().contains("LEFT JOIN action_log al ON al.id=s.last_action_id")) {
+                        sqlBuilder.append("\nLEFT JOIN action_log al ON al.id=s.last_action_id");
+                    }
+
+                    sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
+
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "al.entry");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        sqlBuilder = new StringBuilder();
+
+                        if (filterString == null) {
+                            sqlBuilder.append("al").append(".entry IS NULL");
+                        } else if (submissionListColumn.getExactMatch()) {
+                            sqlBuilder.append("al").append(".entry = '").append(filterString).append("'");
+                        } else {
+                            sqlBuilder.append("LOWER(al").append(".entry) LIKE '%").append(escapeString(filterString)).append("%'");
+                        }
+
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "lastAction.entry").add(sqlBuilder);
+                    }
+
+                    // all column search filter
+                    for (String filterString : allColumnSearchFilters) {
+                        sqlBuilder = new StringBuilder();
+                        sqlBuilder.append("LOWER(al").append(".entry) LIKE '%").append(escapeString(filterString)).append("%'");
+                        sqlAllColumnsWhereBuilderList.add(sqlBuilder);
+                    }
+
+                    break;
+
+                case "lastAction.actionDate":
+                    sqlBuilder = new StringBuilder();
+                    if (!sqlJoinsBuilder.toString().contains("LEFT JOIN action_log al ON al.id=s.last_action_id")) {
+                        sqlBuilder.append("\nLEFT JOIN action_log al ON al.id=s.last_action_id");
+                    }
+
+                    sqlJoinsBuilder.append(sqlBuilder);
+                    sqlCountSelectBuilder.append(sqlBuilder);
+
+                    if (submissionListColumn.getSortOrder() > 0) {
+                        setColumnOrdering(submissionListColumn.getSort(), sqlAliasBuilders, sqlOrderBysBuilder, "al.action_date");
+                    }
+
+                    for (String filterString : submissionListColumn.getFilters()) {
+                        if (filterString.contains("|")) {
+                            String[] dates = filterString.split(Pattern.quote("|"));
+                            sqlBuilder = new StringBuilder()
+                                .append("al.").append("action_date")
+                                .append(" BETWEEN CAST('").append(dates[0])
+                                .append("' AS DATE) AND CAST('").append(dates[1])
+                                .append("' AS DATE)");
+                        } else {
+                            sqlBuilder = new StringBuilder()
+                                .append("al.").append("action_date")
+                                .append(" = CAST('").append(filterString)
+                                .append("' AS DATE)");
+                        }
+
+                        sqlWhereBuilderList.add(sqlBuilder);
+                        getFromBuildersMap(sqlCountWhereFilterBuilders, "lastAction.actionDate").add(sqlBuilder);
+                    }
+
+                    break;
+
                 case "embargoTypes.name":
                     // This is not a select column but is instead only a custom filter.
                     if (submissionListColumn.getFilters().size() > 0) {
@@ -806,23 +876,6 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                         sqlWhereBuilderList.add(sqlBuilder);
                         getFromBuildersMap(sqlCountWhereFilterBuilders, "submissionTypes.name").add(sqlBuilder);
                     }
-
-                    break;
-
-                case "lastEvent":
-                    sqlBuilder = new StringBuilder()
-                        .append("\nLEFT JOIN")
-                        .append("\n   (SELECT al.id, al.action_date, al.entry, al.action_logs_id")
-                        .append("\n   FROM action_log al")
-                        .append("\n   WHERE (al.action_logs_id = id)")
-                        .append("\n   ORDER BY al.action_date DESC")
-                        .append("\n   LIMIT 1) als")
-                        .append("\n   ON action_logs_id = s.submission_status_id");
-
-                    sqlJoinsBuilder.append(sqlBuilder);
-                    sqlCountSelectBuilder.append(sqlBuilder);
-
-                    // TODO: finish sqlWheresBuilder.
 
                     break;
 
@@ -1154,8 +1207,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     private StringBuilder buildSubmissionDateFieldString(String column, String filter) {
         if (filter.contains("|")) {
             String[] dates = filter.split(Pattern.quote("|"));
-        return new StringBuilder()
-            .append("s.").append(column)
+            return new StringBuilder()
+                .append("s.").append(column)
                 .append(" BETWEEN CAST('").append(dates[0])
                 .append("' AS DATE) AND CAST('").append(dates[1])
                 .append("' AS DATE)");
