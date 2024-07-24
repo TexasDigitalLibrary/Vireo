@@ -1114,7 +1114,7 @@ public class SubmissionController {
             actionLogRepo.createAdvisorPublicLog(submission, "Advisor comments : " + message);
         }
 
-        submissionEmailService.sendWorkflowEmails(user, submission.getId());
+        submissionEmailService.sendWorkflowEmails(submission.getAssignee(), submission.getId());
 
         return new ApiResponse(SUCCESS, submission);
 
