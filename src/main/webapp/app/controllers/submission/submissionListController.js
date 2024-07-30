@@ -348,11 +348,13 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             });
         };
 
+        var hasSinglePredicate = (c) => c.predicate === undefined || c.predicate === null || c.predicate.trim().indexOf(' ') === -1;
+
         var setFilterColumns = function(userFilterColumns, inactiveFilterColumns) {
             // exclude columns which have multiple predicates
             angular.extend(filterColumns, {
-                userFilterColumns: userFilterColumns.filter(c => (c.predicate === undefined || c.predicate == null) || c.predicate.trim().indexOf(' ') === -1),
-                inactiveFilterColumns: inactiveFilterColumns.filter(c => (c.predicate === undefined || c.predicate == null) || c.predicate.trim().indexOf(' ') === -1)
+                userFilterColumns: userFilterColumns.filter(hasSinglePredicate),
+                inactiveFilterColumns: inactiveFilterColumns.filter(hasSinglePredicate)
             });
         }
 
