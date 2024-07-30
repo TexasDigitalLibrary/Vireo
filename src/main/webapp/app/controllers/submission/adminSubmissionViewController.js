@@ -591,7 +591,9 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         var getLastActionLog = function() {
-            return $filter('orderBy')($scope.submission.actionLogs, 'actionDate', true)[0];
+            if ($scope.submission.actionLogs.length > 0) {
+                return $filter('orderBy')($scope.submission.actionLogs, 'actionDate', true)[0];
+            }
         }
 
         var getLastActionDate = function() {
