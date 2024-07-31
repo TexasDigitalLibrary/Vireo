@@ -233,7 +233,8 @@ public class SubmissionListController {
         if (namedSearchFilter == null) {
             SubmissionListColumn column = submissionListColumnRepo.findByTitle(criterionName);
             for (NamedSearchFilter existingFilter : activeFilter.getNamedSearchFilters()) {
-                if (existingFilter.getSubmissionListColumn().getPredicate().equals(column.getPredicate()) &&
+                if (existingFilter.getSubmissionListColumn() != null &&
+                    existingFilter.getSubmissionListColumn().getPredicate().equals(column.getPredicate()) &&
                     existingFilter.getSubmissionListColumn().getValuePath().equals(column.getValuePath())) {
                     namedSearchFilter = existingFilter;
                     break;
