@@ -19,16 +19,13 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -408,27 +405,29 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     Collectors.mapping(FieldValue::getValue, Collectors.toList())
                 ));
 
-            submissionListColumns.stream().filter(slc -> StringUtils.isNotEmpty(slc.getPredicate())).forEach(slc -> {
-                StringBuilder value = new StringBuilder();
+            for (SubmissionListColumn slc : submissionListColumns) {
+                if (StringUtils.isNotEmpty(slc.getPredicate())) {
+                    StringBuilder value = new StringBuilder();
 
-                String predicate = slc.getPredicate().trim();
+                    String predicate = slc.getPredicate().trim();
 
-                if (groupedByPredicate.containsKey(predicate)) {
-                    value.append(String.join(", ", groupedByPredicate.get(predicate)));
-                } else {
-                    // if the predicate is not found, see if it is space delimited set of predicates
-                    if (predicate.contains(" ")) {
-                        for (String p : predicate.split(" ")) {
-                            String tp = p.replace(",", " ").trim();
-                            if (groupedByPredicate.containsKey(tp)) {
-                                value.append(String.join(", ", groupedByPredicate.get(tp)) + (p.endsWith(",") ? ", " : " "));
+                    if (groupedByPredicate.containsKey(predicate)) {
+                        value.append(String.join(", ", groupedByPredicate.get(predicate)));
+                    } else {
+                        // if the predicate is not found, see if it is space delimited set of predicates
+                        if (predicate.contains(" ")) {
+                            for (String p : predicate.split(" ")) {
+                                String tp = p.replace(",", " ").trim();
+                                if (groupedByPredicate.containsKey(tp)) {
+                                    value.append(String.join(", ", groupedByPredicate.get(tp)) + (p.endsWith(",") ? ", " : " "));
+                                }
                             }
                         }
                     }
-                }
 
-                columnValues.put(slc.getId(), value.toString());
-            });
+                    columnValues.put(slc.getId(), value.toString());
+                }
+            }
 
             submission.setColumnValues(columnValues);
         }
