@@ -132,6 +132,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
             }
 
             if (StringUtils.isNotEmpty(shibEmail) && !user.getUsername().equals(shibEmail)) {
+                user.setEmail(shibEmail);
                 user.setUsername(shibEmail);
                 isUserUpdated = true;
             }
