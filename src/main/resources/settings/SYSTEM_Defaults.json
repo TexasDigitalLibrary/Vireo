@@ -183,70 +183,70 @@
   ],
   "shibboleth": [
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_NETID": "netid"
+      "auth.shib.attribute.netid": "netid"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL": "email"
+      "auth.shib.attribute.email": "email"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_FIRST_NAME": "firstName"
+      "auth.shib.attribute.firstName": "firstName"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_LAST_NAME": "lastName"
+      "auth.shib.attribute.lastName": "lastName"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTION_IDENTIFIER": "institutionid"
+      "auth.shib.attribute.institutionIdentifier": "institutionid"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER": "uin"
+      "auth.shib.attribute.institutionalIdentifier": "uin"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_MIDDLE_NAME": "middleName"
+      "auth.shib.attribute.middleName": "middleName"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_BIRTH_YEAR": "birthYear"
+      "auth.shib.attribute.birthYear": "birthYear"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_AFFILIATIONS": "affiliations"
+      "auth.shib.attribute.affiliations": "affiliations"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_PHONE_NUMBER": "currentPhoneNumber"
+      "auth.shib.attribute.currentPhoneNumber": "currentPhoneNumber"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_POSTAL_ADDRESS": "currentPostalAddress"
+      "auth.shib.attribute.currentPostalAddress": "currentPostalAddress"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_EMAIL_ADDRESS": "currentEmailAddress"
+      "auth.shib.attribute.currentEmailAddress": "currentEmailAddress"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_PHONE_NUMBER": "permanentPhoneNumber"
+      "auth.shib.attribute.permanentPhoneNumber": "permanentPhoneNumber"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_POSTAL_ADDRESS": "permanentPostalAddress"
+      "auth.shib.attribute.permanentPostalAddress": "permanentPostalAddress"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_PERMANENT_EMAIL_ADDRESS": "permanentEmailAddress"
+      "auth.shib.attribute.permanentEmailAddress": "permanentEmailAddress"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEGREE": "currentDegree"
+      "auth.shib.attribute.currentDegree": "currentDegree"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_DEPARTMENT": "currentDepartment"
+      "auth.shib.attribute.currentDepartment": "currentDepartment"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_COLLEGE": "currentCollege"
+      "auth.shib.attribute.currentCollege": "currentCollege"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_MAJOR": "currentMajor"
+      "auth.shib.attribute.currentMajor": "currentMajor"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_YEAR": "currentGraduationYear"
+      "auth.shib.attribute.currentGraduationYear": "currentGraduationYear"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_CURRENT_GRADUATION_MONTH": "currentGraduationMonth"
+      "auth.shib.attribute.currentGraduationMonth": "currentGraduationMonth"
     },
     {
-      "APPLICATION_AUTH_SHIB_ATTRIBUTE_ORCID": "orcid"
+      "auth.shib.attribute.orcid": "orcid"
     }
   ]
 }
