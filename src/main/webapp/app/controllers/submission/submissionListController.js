@@ -702,8 +702,14 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.getSubmissionProperty = function (row, col) {
-            var value = row.columnValues[col.id];
-            // use value path to get values
+            var value;
+            if (row.columnValues !== undefined) {
+                value = row.columnValues[col.id];
+            } else {
+                console.error('row.columnValues is undefined')
+            }
+
+            // check value path to get values
             if (value === undefined) {
                 for (var i in col.valuePath) {
                     if (typeof col.valuePath[i] !== 'function') {
