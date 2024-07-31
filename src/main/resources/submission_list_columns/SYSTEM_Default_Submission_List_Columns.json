@@ -162,7 +162,8 @@
     "title": "Last Event",
     "sort": "NONE",
     "valuePath": [
-      "lastEvent"
+      "lastAction",
+      "entry"
     ],
     "status": null,
     "inputType": {
@@ -172,10 +173,13 @@
   {
     "title": "Event Time",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": [
+      "lastAction",
+      "actionDate"
+    ],
     "status": null,
     "inputType": {
-      "name": "INPUT_TEXT"
+      "name": "INPUT_DATE"
     }
   },
   {

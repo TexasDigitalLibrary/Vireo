@@ -2,7 +2,11 @@ package org.tdl.vireo.model.repo.impl;
 
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -31,6 +35,7 @@ public class ActionLogRepoImpl extends AbstractWeaverRepoImpl<ActionLog, ActionL
     public ActionLog create(Submission submission, User user, Calendar actionDate, String entry, boolean privateFlag) {
         ActionLog log = actionLogRepo.save(new ActionLog(submission.getSubmissionStatus(), user, actionDate, entry, privateFlag));
         submission.addActionLog(log);
+        submission.setLastAction(log);
         submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, log));
         return log;
@@ -40,6 +45,7 @@ public class ActionLogRepoImpl extends AbstractWeaverRepoImpl<ActionLog, ActionL
     public ActionLog create(Submission submission, Calendar actionDate, String entry, boolean privateFlag) {
         ActionLog log = actionLogRepo.save(new ActionLog(submission.getSubmissionStatus(), actionDate, entry, privateFlag));
         submission.addActionLog(log);
+        submission.setLastAction(log);
         submissionRepo.save(submission);
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/action-logs", new ApiResponse(SUCCESS, log));
         return log;
@@ -62,10 +68,20 @@ public class ActionLogRepoImpl extends AbstractWeaverRepoImpl<ActionLog, ActionL
 
     @Override
     public void delete(ActionLog actionLog) {
-        for (Submission submission : submissionRepo.findByActionLogsId(actionLog.getId())) {
-            submission.removeActionLog(actionLog);
-            submissionRepo.save(submission);
+        Submission submission = submissionRepo.findByActionLogsId(actionLog.getId());
+        submission.removeActionLog(actionLog);
+
+        List<ActionLog> actionLogs = new ArrayList<>(submission.getActionLogs());
+
+        if (!actionLogs.isEmpty() && Objects.nonNull(submission.getLastAction())
+                && submission.getLastAction().getId().equals(actionLog.getId())) {
+            actionLogs.sort(Comparator.comparing(ActionLog::getActionDate));
+            submission.setLastAction(actionLogs.get(actionLogs.size() - 1));
+        } else {
+            submission.setLastAction(null);
         }
+
+        submissionRepo.save(submission);
     }
 
     @Override
