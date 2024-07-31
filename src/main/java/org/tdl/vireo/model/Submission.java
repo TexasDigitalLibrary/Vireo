@@ -8,6 +8,7 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -28,6 +29,7 @@ import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.Fetch;
@@ -166,7 +168,7 @@ public class Submission extends ValidatingBaseEntity {
     @ManyToOne(fetch = LAZY, optional = false)
     private Organization organization;
 
-    @JsonView(Views.SubmissionList.class)
+    @JsonView(Views.SubmissionIndividual.class)
     @OneToMany(cascade = ALL, fetch = LAZY, orphanRemoval = true)
     private Set<FieldValue> fieldValues;
 
@@ -235,6 +237,10 @@ public class Submission extends ValidatingBaseEntity {
     @JsonView(Views.SubmissionList.class)
     @Column(nullable = true)
     private String depositURL;
+
+    @Transient
+    @JsonView(Views.SubmissionList.class)
+    private Map<Long, String> columnValues;
 
     public Submission() {
         setModelValidator(new SubmissionValidator());
@@ -631,6 +637,20 @@ public class Submission extends ValidatingBaseEntity {
     }
 
     /**
+     * @return the list column values mapped from field values
+     */
+    public Map<Long, String> getColumnValues() {
+        return columnValues;
+    }
+
+    /**
+     * @param columnValues the list column values mapped from field values
+     */
+    public void setColumnValues(Map<Long, String> columnValues) {
+        this.columnValues = columnValues;
+    }
+
+    /**
      * @param customActionValue
      */
     public void addCustomActionValue(CustomActionValue customActionValue) {
@@ -704,7 +724,7 @@ public class Submission extends ValidatingBaseEntity {
             }
         });
         return fieldValues;
-    }   
+    }
 
 
     @JsonIgnore

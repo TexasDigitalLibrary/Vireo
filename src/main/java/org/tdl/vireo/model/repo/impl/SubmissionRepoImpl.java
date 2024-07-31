@@ -19,11 +19,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -337,8 +343,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     }
 
     @Override
-    public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums) {
-        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColums, null);
+    public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColumns) {
+        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColumns, null);
         List<Long> ids = new ArrayList<Long>();
         jdbcTemplate.queryForList(queryBuilder.getQuery()).forEach(row -> {
             ids.add((Long) row.get("ID"));
@@ -348,14 +354,14 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     }
 
     @Override
-    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) throws ExecutionException {
+    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColumns, Pageable pageable) throws ExecutionException {
         long startTime = System.nanoTime();
 
-        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColums, pageable);
+        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, new ArrayList<>(submissionListColumns), pageable);
 
         Long total = jdbcTemplate.queryForObject(queryBuilder.getCountQuery(), Long.class);
 
-        logger.debug("Count query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        logger.info("Count query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
         startTime = System.nanoTime();
 
         List<Long> ids = jdbcTemplate.query(queryBuilder.getQuery(), new RowMapper<>() {
@@ -364,32 +370,71 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             }
         });
 
-        logger.debug("ID query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        logger.info("ID query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
         startTime = System.nanoTime();
 
-        List<Submission> submissions = new ArrayList<>();
+        List<Submission> submissions = submissionRepo.findAllById(ids);
 
-        List<Submission> unordered = submissionRepo.findAllById(ids);
-
-        logger.debug("Find all query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        logger.info("Find all query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
 
         // order them
-        for (Long id : ids) {
-            for (Submission sub : unordered) {
-                if (sub.getId().equals(id)) {
-                    submissions.add(sub);
-                    unordered.remove(sub);
-                    break;
-                }
-            }
+        Map<Long, Integer> idToIndexMap = new HashMap<>();
+        for (int i = 0; i < ids.size(); i++) {
+            idToIndexMap.put(ids.get(i), i);
         }
+
+        submissions.sort((s1, s2) -> {
+            mapColumnValues(s1, submissionListColumns);
+            mapColumnValues(s2, submissionListColumns);
+            int index1 = idToIndexMap.get(s1.getId());
+            int index2 = idToIndexMap.get(s2.getId());
+            return Integer.compare(index1, index2);
+        });
+
+        logger.info("Sorting and mapping results took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
 
         int offset = pageable.getPageSize() * pageable.getPageNumber();
         int limit = pageable.getPageSize();
         return new PageImpl<Submission>(submissions, PageRequest.of((int) Math.floor(offset / limit), limit), total);
     }
 
-    private QueryStrings craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
+    private void mapColumnValues(Submission submission, List<SubmissionListColumn> submissionListColumns) {
+        if (Objects.isNull(submission.getColumnValues())) {
+            Map<Long, String> columnValues = new HashMap<>();
+
+            Map<String, List<String>> groupedByPredicate = submission.getFieldValues().stream()
+                .collect(Collectors.groupingBy(
+                    fv -> fv.getFieldPredicate().getValue(),
+                    Collectors.mapping(FieldValue::getValue, Collectors.toList())
+                ));
+
+            submissionListColumns.stream().filter(slc -> StringUtils.isNotEmpty(slc.getPredicate())).forEach(slc -> {
+                StringBuilder value = new StringBuilder();
+
+                String predicate = slc.getPredicate().trim();
+
+                if (groupedByPredicate.containsKey(predicate)) {
+                    value.append(String.join(", ", groupedByPredicate.get(predicate)));
+                } else {
+                    // if the predicate is not found, see if it is space delimited set of predicates
+                    if (predicate.contains(" ")) {
+                        for (String p : predicate.split(" ")) {
+                            String tp = p.replace(",", " ").trim();
+                            if (groupedByPredicate.containsKey(tp)) {
+                                value.append(String.join(", ", groupedByPredicate.get(tp)) + (p.endsWith(",") ? ", " : " "));
+                            }
+                        }
+                    }
+                }
+
+                columnValues.put(slc.getId(), value.toString());
+            });
+
+            submission.setColumnValues(columnValues);
+        }
+    }
+
+    private QueryStrings craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColumns, Pageable pageable) {
 
         // set up storage for user's preferred columns
         Set<String> allColumnSearchFilters = new HashSet<>();
@@ -399,7 +444,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         // set sort and sort order on all submission list columns that are set
         // on the requesting user's submission list columns
-        submissionListColums.forEach(submissionListColumn -> {
+        submissionListColumns.forEach(submissionListColumn -> {
             for (SubmissionListColumn slc : allSubmissionListColumns) {
                 if (submissionListColumn.equals(slc)) {
                     slc.setVisible(true);

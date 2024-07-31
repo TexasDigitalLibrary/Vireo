@@ -546,36 +546,15 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var getValueFromArray = function (array, col) {
             var value = "";
-            var predicates = col.predicate.split(' ');
-            var pv;
-            for (var v of predicates) {
-                var predicate = v.replace(',', '').trim();
-
-                var delimeter = ', ';
-                for (var j in array) {
-                    var member = array[j];
-                    if (member.fieldPredicate !== undefined) {
-                        if (member.fieldPredicate.value === predicate) {
-
-                            // if set of predicates, determine delimeter by precense of trailing comma
-                            if (predicates.length > 1) {
-                                delimeter = (!!pv && pv.endsWith(',')) ? ', ' : ' ';
-                            }
-
-                            value += value.length > 0 ? delimeter + member.value : member.value;
-                        }
-                    } else {
-                        var path = col.valuePath;
-                        var curr = member;
-                        for (var p = 1; p < path.length; p++) {
-                            curr = curr[path[p]];
-                        }
-                        value += value.length > 0 ? ', ' + curr : curr;
-                    }
+            for (var j in array) {
+                var member = array[j];
+                var path = col.valuePath;
+                var curr = member;
+                for (var p = 1; p < path.length; p++) {
+                    curr = curr[path[p]];
                 }
-                pv = v;
+                value += value.length > 0 ? ", " + curr : curr;
             }
-
             return value;
         };
 
@@ -687,26 +666,30 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         $scope.getSubmissionProperty = function (row, col) {
-            var value;
-            for (var i in col.valuePath) {
-                if(typeof col.valuePath[i] !== 'function') {
-                    if (value === undefined) {
-                        value = row[col.valuePath[i]];
-                    } else {
-                        if (value instanceof Array) {
-                            return getValueFromArray(value, col);
+            var value = row.columnValues[col.id];
+            // use value path to get values
+            if (value === undefined) {
+                for (var i in col.valuePath) {
+                    if (typeof col.valuePath[i] !== 'function') {
+                        if (value === undefined) {
+                            value = row[col.valuePath[i]];
                         } else {
-                            if (value !== null) {
-                                if (col.valuePath[0] === "assignee") {
-                                    value = getAssigneeDisplayName(row);
-                                } else {
-                                    value = value[col.valuePath[i]];
+                            if (value instanceof Array) {
+                                return getValueFromArray(value, col);
+                            } else {
+                                if (value !== null) {
+                                    if (col.valuePath[0] === "assignee") {
+                                        value = getAssigneeDisplayName(row);
+                                    } else {
+                                        value = value[col.valuePath[i]];
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+
             return value;
         };
 
