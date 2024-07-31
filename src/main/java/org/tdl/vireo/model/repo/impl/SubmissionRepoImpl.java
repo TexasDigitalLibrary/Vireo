@@ -5,9 +5,8 @@ import static edu.tamu.weaver.response.ApiAction.DELETE;
 import static edu.tamu.weaver.response.ApiAction.UPDATE;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
-import edu.tamu.weaver.auth.model.Credentials;
-import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
-import edu.tamu.weaver.response.ApiResponse;
+import javax.sql.DataSource;
+
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,11 +19,17 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.regex.Pattern;
-import javax.sql.DataSource;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +69,10 @@ import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.SubmissionWorkflowStepRepo;
 import org.tdl.vireo.model.repo.custom.SubmissionRepoCustom;
 import org.tdl.vireo.service.AssetService;
+
+import edu.tamu.weaver.auth.model.Credentials;
+import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
+import edu.tamu.weaver.response.ApiResponse;
 
 public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, SubmissionRepo> implements SubmissionRepoCustom {
 
@@ -334,8 +343,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     }
 
     @Override
-    public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums) {
-        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColums, null);
+    public List<Submission> batchDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColumns) {
+        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColumns, null);
         List<Long> ids = new ArrayList<Long>();
         jdbcTemplate.queryForList(queryBuilder.getQuery()).forEach(row -> {
             ids.add((Long) row.get("ID"));
@@ -345,14 +354,14 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     }
 
     @Override
-    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) throws ExecutionException {
+    public Page<Submission> pageableDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColumns, Pageable pageable) throws ExecutionException {
         long startTime = System.nanoTime();
 
-        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, submissionListColums, pageable);
+        QueryStrings queryBuilder = craftDynamicSubmissionQuery(activeFilter, new ArrayList<>(submissionListColumns), pageable);
 
         Long total = jdbcTemplate.queryForObject(queryBuilder.getCountQuery(), Long.class);
 
-        logger.debug("Count query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        logger.info("Count query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
         startTime = System.nanoTime();
 
         List<Long> ids = jdbcTemplate.query(queryBuilder.getQuery(), new RowMapper<>() {
@@ -361,32 +370,71 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             }
         });
 
-        logger.debug("ID query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        logger.info("ID query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
         startTime = System.nanoTime();
 
-        List<Submission> submissions = new ArrayList<>();
+        List<Submission> submissions = submissionRepo.findAllById(ids);
 
-        List<Submission> unordered = submissionRepo.findAllById(ids);
-
-        logger.debug("Find all query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        logger.info("Find all query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
 
         // order them
-        for (Long id : ids) {
-            for (Submission sub : unordered) {
-                if (sub.getId().equals(id)) {
-                    submissions.add(sub);
-                    unordered.remove(sub);
-                    break;
-                }
-            }
+        Map<Long, Integer> idToIndexMap = new HashMap<>();
+        for (int i = 0; i < ids.size(); i++) {
+            idToIndexMap.put(ids.get(i), i);
         }
+
+        submissions.sort((s1, s2) -> {
+            mapColumnValues(s1, submissionListColumns);
+            mapColumnValues(s2, submissionListColumns);
+            int index1 = idToIndexMap.get(s1.getId());
+            int index2 = idToIndexMap.get(s2.getId());
+            return Integer.compare(index1, index2);
+        });
+
+        logger.info("Sorting and mapping results took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
 
         int offset = pageable.getPageSize() * pageable.getPageNumber();
         int limit = pageable.getPageSize();
         return new PageImpl<Submission>(submissions, PageRequest.of((int) Math.floor(offset / limit), limit), total);
     }
 
-    private QueryStrings craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColums, Pageable pageable) {
+    private void mapColumnValues(Submission submission, List<SubmissionListColumn> submissionListColumns) {
+        if (Objects.isNull(submission.getColumnValues())) {
+            Map<Long, String> columnValues = new HashMap<>();
+
+            Map<String, List<String>> groupedByPredicate = submission.getFieldValues().stream()
+                .collect(Collectors.groupingBy(
+                    fv -> fv.getFieldPredicate().getValue(),
+                    Collectors.mapping(FieldValue::getValue, Collectors.toList())
+                ));
+
+            submissionListColumns.stream().filter(slc -> StringUtils.isNotEmpty(slc.getPredicate())).forEach(slc -> {
+                StringBuilder value = new StringBuilder();
+
+                String predicate = slc.getPredicate().trim();
+
+                if (groupedByPredicate.containsKey(predicate)) {
+                    value.append(String.join(", ", groupedByPredicate.get(predicate)));
+                } else {
+                    // if the predicate is not found, see if it is space delimited set of predicates
+                    if (predicate.contains(" ")) {
+                        for (String p : predicate.split(" ")) {
+                            String tp = p.replace(",", " ").trim();
+                            if (groupedByPredicate.containsKey(tp)) {
+                                value.append(String.join(", ", groupedByPredicate.get(tp)) + (p.endsWith(",") ? ", " : " "));
+                            }
+                        }
+                    }
+                }
+
+                columnValues.put(slc.getId(), value.toString());
+            });
+
+            submission.setColumnValues(columnValues);
+        }
+    }
+
+    private QueryStrings craftDynamicSubmissionQuery(NamedSearchFilterGroup activeFilter, List<SubmissionListColumn> submissionListColumns, Pageable pageable) {
 
         // set up storage for user's preferred columns
         Set<String> allColumnSearchFilters = new HashSet<>();
@@ -396,7 +444,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         // set sort and sort order on all submission list columns that are set
         // on the requesting user's submission list columns
-        submissionListColums.forEach(submissionListColumn -> {
+        submissionListColumns.forEach(submissionListColumn -> {
             for (SubmissionListColumn slc : allSubmissionListColumns) {
                 if (submissionListColumn.equals(slc)) {
                     slc.setVisible(true);
@@ -455,7 +503,8 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         int n = 0;
         int totalFieldValueConditions = 0;
 
-        for (SubmissionListColumn submissionListColumn : allSubmissionListColumns) {
+        for (int i = 0; i < allSubmissionListColumns.size(); i++) {
+            SubmissionListColumn submissionListColumn = allSubmissionListColumns.get(i);
 
             if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0 || allColumnSearchFilters.size() > 0 || submissionListColumn.getVisible()) {
                 if (sqlColumnsBuilders.containsKey(submissionListColumn.getId())) {
@@ -467,7 +516,31 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                 switch (String.join(".", submissionListColumn.getValuePath())) {
                 case "fieldValues.value":
 
-                    Long predicateId = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate()).getId();
+                    FieldPredicate fieldPredicate = fieldPredicateRepo.findByValue(submissionListColumn.getPredicate());
+
+                    // if the predicate is not found, see if it is space delimited set of predicates
+                    // for each predicate, add a submission list column clone with predicate and sort order updated
+                    if (fieldPredicate == null) {
+                        String[] predicates = submissionListColumn.getPredicate().split(" ");
+                        int sortOrder = submissionListColumn.getSortOrder();
+                        for(int j = 0; j < predicates.length; ++j) {
+
+                            SubmissionListColumn column = new SubmissionListColumn(
+                                submissionListColumn.getTitle(),
+                                submissionListColumn.getSort(),
+                                predicates[j].replace(",", "").trim(),
+                                submissionListColumn.getInputType()
+                            );
+
+                            column.setSortOrder(sortOrder++);
+
+                            allSubmissionListColumns.add(i + j + 1, column);
+                        }
+
+                        continue;
+                    }
+
+                    Long predicateId = fieldPredicate.getId();
 
                     // @formatter:off
                     if (submissionListColumn.getSortOrder() > 0 || submissionListColumn.getFilters().size() > 0) {
@@ -1093,8 +1166,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             if (!sqlAliasBuilders.contains(value)) {
                 sqlAliasBuilders.add(value);
             }
-
-            sqlOrderBysBuilder.append(" ").append(value).append(" ").append(sort.name()).append(",");
+            sqlOrderBysBuilder.append("\n ").append(value).append(" ").append(sort.name()).append(",");
         }
     }
 
