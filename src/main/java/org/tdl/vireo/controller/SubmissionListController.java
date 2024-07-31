@@ -4,12 +4,11 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import edu.tamu.weaver.auth.annotation.WeaverUser;
-import edu.tamu.weaver.response.ApiResponse;
-import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +34,10 @@ import org.tdl.vireo.model.repo.NamedSearchFilterRepo;
 import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.DefaultSubmissionListColumnService;
+
+import edu.tamu.weaver.auth.annotation.WeaverUser;
+import edu.tamu.weaver.response.ApiResponse;
+import edu.tamu.weaver.validation.aspect.annotation.WeaverValidatedModel;
 
 @RestController
 @RequestMapping("/submission-list")
@@ -228,7 +231,18 @@ public class SubmissionListController {
         }
 
         if (namedSearchFilter == null) {
-            namedSearchFilter = namedSearchFilterRepo.create(submissionListColumnRepo.findByTitle(criterionName));
+            SubmissionListColumn column = submissionListColumnRepo.findByTitle(criterionName);
+            for (NamedSearchFilter existingFilter : activeFilter.getNamedSearchFilters()) {
+                if (existingFilter.getSubmissionListColumn().getPredicate().equals(column.getPredicate()) &&
+                    existingFilter.getSubmissionListColumn().getValuePath().equals(column.getValuePath())) {
+                    namedSearchFilter = existingFilter;
+                    break;
+                }
+            }
+
+            if (namedSearchFilter == null) {
+                namedSearchFilter = namedSearchFilterRepo.create(column);
+            }
         }
 
         namedSearchFilter.addFilter(filterCriterionRepo.create(filterValue, filterGloss));

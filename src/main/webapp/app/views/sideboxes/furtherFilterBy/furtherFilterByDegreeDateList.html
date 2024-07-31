@@ -1,0 +1,10 @@
+<form ng-init="box.graduationSemestersLimit=box.defaultLimit;" name="{{'box.'+(column.title.replace('(', ' ').replace(')', ' ').split(' ').join(''))+'Form'}}">
+  <ul class="sidebox-list">
+      <li
+        class="filter"
+        ng-repeat="semester in semesters = box.graduationSemesters | filter:box.withoutActiveFilter | limitTo:box.graduationSemestersLimit"
+        ng-click="box[column.title.replace('(', ' ').replace(')', ' ').split(' ').join('')]=semester;box.addExactMatchFilter(column, semester);">{{semester}}</li>
+      <li class="more-less" ng-click="box.graduationSemestersLimit=semesters.length" ng-if="box.graduationSemestersLimit<=box.defaultLimit && semesters.length>box.defaultLimit">more...</li>
+      <li class="more-less" ng-click="box.graduationSemestersLimit=box.defaultLimit" ng-if="box.graduationSemestersLimit>box.defaultLimit">less...</li>
+  </ul>
+</form>

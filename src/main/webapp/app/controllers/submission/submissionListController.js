@@ -164,7 +164,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             if (!!allSubmissionListFilters) {
                 submissionListColumns = allSubmissionListFilters.filter(function excludeCustomFilters(slc) {
-                    return slc.title !== 'Search Box' && slc.title !== "Submission Type (List)" && slc.title !== "Embargo Type";
+                    return slc.title !== 'Search Box' && slc.title !== "Submission Type (List)" && slc.title !== "Graduation Semester (List)" && slc.title !== "Embargo Type";
                 });
 
                 submissionListColumnsForManage = allSubmissionListFilters.filter(function excludeSearchBox(slc) {
@@ -203,6 +203,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         update(true);
 
+        const withoutActiveFilter = function(value) {
+            return $scope.activeFilters.namedSearchFilters.filter((nsf) => nsf.filterValues.indexOf(value) >= 0).length == 0;
+        };
+
         var assignableUsers = UserRepo.getAssignableUsers(0, 0);
         var savedFilters = SavedFilterRepo.getAll();
         var emailTemplates = EmailTemplateRepo.getAll();
@@ -217,6 +221,34 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var packagers = PackagerRepo.getAll();
         var controlledVocabularies = ControlledVocabularyRepo.getAll();
         var submissionTypeList = FieldValueRepo.findValuesByPredicateValue('submission_type');
+        var graduationSemesters = FieldValueRepo.findValuesByPredicateValue('dc.date.issued', function (a, b) {
+            try {
+                if (typeof a !== 'string' || typeof b !== 'string') {
+                    throw new Error('Invalid input type. Both inputs must be strings.');
+                }
+
+                const regex = /^[A-Za-z]+\s\d{4}$/;
+
+                if (!regex.test(a) || !regex.test(b)) {
+                    throw new Error('Invalid input format. Inputs must be in the format "Month Year".');
+                }
+
+                const [monthA, yearA] = a.split(' ');
+                const [monthB, yearB] = b.split(' ');
+
+                const dateA = new Date(`${monthA} 1, ${yearA}`);
+                const dateB = new Date(`${monthB} 1, ${yearB}`);
+
+                if (isNaN(dateA) || isNaN(dateB)) {
+                    throw new Error('Invalid date. Inputs must be valid dates.');
+                }
+
+                return dateB - dateA;
+            } catch (error) {
+                console.error(error.message);
+                return 0;
+            }
+        });
 
         var addBatchCommentEmail = function (message) {
             batchCommentEmail.adding = true;
@@ -625,6 +657,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "embargos": embargos,
             "submissionTypeList": submissionTypeList,
             "assignableUsers": assignableUsers,
+            "graduationSemesters": graduationSemesters,
+            "withoutActiveFilter": withoutActiveFilter,
             "defaultLimit": 3,
             "getTypeAheadByPredicateName": getTypeAheadByPredicateName,
             "datepickerOptions": datepickerOptions
@@ -646,6 +680,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "submissionStatuses": submissionStatuses,
             "newStatus": submissionStatuses[0],
             "assignableUsers": assignableUsers,
+            "graduationSemesters": graduationSemesters,
+            "withoutActiveFilter": withoutActiveFilter,
             "batchAssignTo": batchAssignTo,
             "batchPublish": batchPublish,
             "resetBatchCommentEmailModal": resetBatchCommentEmailModal,

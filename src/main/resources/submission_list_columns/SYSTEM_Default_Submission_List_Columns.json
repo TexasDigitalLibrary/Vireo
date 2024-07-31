@@ -221,5 +221,15 @@
     "inputType": {
       "name": "INPUT_TEXT"
     }
+  },
+  {
+    "title": "Graduation Semester (List)",
+    "sort": "NONE",
+    "predicate": "dc.date.issued",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_DEGREEDATE"
+    }
   }
 ]
