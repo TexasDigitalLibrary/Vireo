@@ -352,8 +352,8 @@ describe("controller: SubmissionListController", function () {
             expect(scope.columns.length).toBe(1);
         });
         it("displaySubmissionProperty should return a value", function () {
-            var row = {};
-            var column = { inputType: mockInputType(q) };
+            var row = { columnValues: [] };
+            var column = { inputType: mockInputType(q), id: 1 };
 
             scope.displaySubmissionProperty(row, column);
 
@@ -399,8 +399,8 @@ describe("controller: SubmissionListController", function () {
         });
         it("getSubmissionProperty should return a property", function () {
             var response;
-            var row = { assignee: mockUser(q) };
-            var column = { valuePath: [ "assignee" ] };
+            var row = { assignee: mockUser(q), columnValues: [] };
+            var column = { valuePath: [ "assignee" ], id: 1 };
 
             response = scope.getSubmissionProperty(row, column);
             expect(response).toEqual(row.assignee);

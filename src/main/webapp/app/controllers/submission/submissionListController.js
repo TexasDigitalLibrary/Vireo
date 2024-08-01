@@ -164,7 +164,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             if (!!allSubmissionListFilters) {
                 submissionListColumns = allSubmissionListFilters.filter(function excludeCustomFilters(slc) {
-                    return slc.title !== 'Search Box' && slc.title !== "Submission Type (List)" && slc.title !== "Embargo Type";
+                    return slc.title !== 'Search Box' && slc.title !== "Submission Type (List)" && slc.title !== "Graduation Semester (List)" && slc.title !== "Embargo Type";
                 });
 
                 submissionListColumnsForManage = allSubmissionListFilters.filter(function excludeSearchBox(slc) {
@@ -189,10 +189,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
             $scope.columns = angular.fromJson(angular.toJson($filter('orderBy')($filter('exclude')(submissionListColumns, $scope.excludedColumns, 'title'), 'title')));
 
-            angular.extend(filterColumns, {
-                userFilterColumns: managerFilterColumns,
-                inactiveFilterColumns:  $filter('orderBy')($filter('exclude')(submissionListColumnsForManage, managerFilterColumns, 'title'), 'title')
-            });
+            setFilterColumns(managerFilterColumns, $filter('orderBy')($filter('exclude')(submissionListColumnsForManage, managerFilterColumns, 'title'), 'title'));
 
             if (reloadList === true) {
                 query();
@@ -202,6 +199,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         };
 
         update(true);
+
+        const withoutActiveFilter = function(value) {
+            return $scope.activeFilters.namedSearchFilters.filter((nsf) => nsf.filterValues.indexOf(value) >= 0).length == 0;
+        };
 
         var assignableUsers = UserRepo.getAssignableUsers(0, 0);
         var savedFilters = SavedFilterRepo.getAll();
@@ -217,6 +218,34 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var packagers = PackagerRepo.getAll();
         var controlledVocabularies = ControlledVocabularyRepo.getAll();
         var submissionTypeList = FieldValueRepo.findValuesByPredicateValue('submission_type');
+        var graduationSemesters = FieldValueRepo.findValuesByPredicateValue('dc.date.issued', function (a, b) {
+            try {
+                if (typeof a !== 'string' || typeof b !== 'string') {
+                    throw new Error('Invalid input type. Both inputs must be strings.');
+                }
+
+                const regex = /^[A-Za-z]+\s\d{4}$/;
+
+                if (!regex.test(a) || !regex.test(b)) {
+                    throw new Error('Invalid input format. Inputs must be in the format "Month Year".');
+                }
+
+                const [monthA, yearA] = a.split(' ');
+                const [monthB, yearB] = b.split(' ');
+
+                const dateA = new Date(`${monthA} 1, ${yearA}`);
+                const dateB = new Date(`${monthB} 1, ${yearB}`);
+
+                if (isNaN(dateA) || isNaN(dateB)) {
+                    throw new Error('Invalid date. Inputs must be valid dates.');
+                }
+
+                return dateB - dateA;
+            } catch (error) {
+                console.error(error.message);
+                return 0;
+            }
+        });
 
         var addBatchCommentEmail = function (message) {
             batchCommentEmail.adding = true;
@@ -350,6 +379,16 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 query();
             });
         };
+
+        var hasSinglePredicate = (c) => c.predicate === undefined || c.predicate === null || c.predicate.trim().indexOf(' ') === -1;
+
+        var setFilterColumns = function(userFilterColumns, inactiveFilterColumns) {
+            // exclude columns which have multiple predicates
+            angular.extend(filterColumns, {
+                userFilterColumns: userFilterColumns.filter(hasSinglePredicate),
+                inactiveFilterColumns: inactiveFilterColumns.filter(hasSinglePredicate)
+            });
+        }
 
         $scope.addRowFilter = function ($index, row) {
             // When removing the last row for a page, and the page number is the last
@@ -541,18 +580,12 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             var value = "";
             for (var j in array) {
                 var member = array[j];
-                if (member.fieldPredicate !== undefined) {
-                    if (member.fieldPredicate.value === col.predicate) {
-                        value += value.length > 0 ? ", " + member.value : member.value;
-                    }
-                } else {
-                    var path = col.valuePath;
-                    var curr = member;
-                    for (var p = 1; p < path.length; p++) {
-                        curr = curr[path[p]];
-                    }
-                    value += value.length > 0 ? ", " + curr : curr;
+                var path = col.valuePath;
+                var curr = member;
+                for (var p = 1; p < path.length; p++) {
+                    curr = curr[path[p]];
                 }
+                value += value.length > 0 ? ", " + curr : curr;
             }
             return value;
         };
@@ -625,6 +658,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "embargos": embargos,
             "submissionTypeList": submissionTypeList,
             "assignableUsers": assignableUsers,
+            "graduationSemesters": graduationSemesters,
+            "withoutActiveFilter": withoutActiveFilter,
             "defaultLimit": 3,
             "getTypeAheadByPredicateName": getTypeAheadByPredicateName,
             "datepickerOptions": datepickerOptions
@@ -646,6 +681,8 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             "submissionStatuses": submissionStatuses,
             "newStatus": submissionStatuses[0],
             "assignableUsers": assignableUsers,
+            "graduationSemesters": graduationSemesters,
+            "withoutActiveFilter": withoutActiveFilter,
             "batchAssignTo": batchAssignTo,
             "batchPublish": batchPublish,
             "resetBatchCommentEmailModal": resetBatchCommentEmailModal,
@@ -666,25 +703,35 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         $scope.getSubmissionProperty = function (row, col) {
             var value;
-            for (var i in col.valuePath) {
-                if(typeof col.valuePath[i] !== 'function') {
-                    if (value === undefined) {
-                        value = row[col.valuePath[i]];
-                    } else {
-                        if (value instanceof Array) {
-                            return getValueFromArray(value, col);
+            if (row.columnValues !== undefined) {
+                value = row.columnValues[col.id];
+            } else {
+                console.error('row.columnValues is undefined')
+            }
+
+            // check value path to get values
+            if (value === undefined) {
+                for (var i in col.valuePath) {
+                    if (typeof col.valuePath[i] !== 'function') {
+                        if (value === undefined) {
+                            value = row[col.valuePath[i]];
                         } else {
-                            if (value !== null) {
-                                if (col.valuePath[0] === "assignee") {
-                                    value = getAssigneeDisplayName(row);
-                                } else {
-                                    value = value[col.valuePath[i]];
+                            if (value instanceof Array) {
+                                return getValueFromArray(value, col);
+                            } else {
+                                if (value !== null) {
+                                    if (col.valuePath[0] === "assignee") {
+                                        value = getAssigneeDisplayName(row);
+                                    } else {
+                                        value = value[col.valuePath[i]];
+                                    }
                                 }
                             }
                         }
                     }
                 }
             }
+
             return value;
         };
 
@@ -780,10 +827,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             var userFilterColumns = filtersPreviouslyDisplayed.concat(filterColumns.userFilterColumns);
             var inactiveFilterColumns = filtersPreviouslyDisabled.concat(filterColumns.inactiveFilterColumns);
 
-            angular.extend(filterColumns, {
-                userFilterColumns: userFilterColumns,
-                inactiveFilterColumns: inactiveFilterColumns
-            });
+            setFilterColumns(userFilterColumns, inactiveFilterColumns);
 
             updateChange(false);
         };

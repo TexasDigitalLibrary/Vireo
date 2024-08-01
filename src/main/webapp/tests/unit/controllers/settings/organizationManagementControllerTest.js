@@ -244,6 +244,7 @@ describe("controller: OrganizationManagementController", function () {
             spyOn(AccordionService, "closeAll");
             spyOn(OrganizationRepo, "reorderWorkflowSteps");
 
+            scope.selectedOrganization = mockOrganization(q);
             scope.reorderWorkflowStepDown(1);
 
             expect(AccordionService.closeAll).toHaveBeenCalled();
@@ -253,6 +254,7 @@ describe("controller: OrganizationManagementController", function () {
             spyOn(AccordionService, "closeAll");
             spyOn(OrganizationRepo, "reorderWorkflowSteps");
 
+            scope.selectedOrganization = mockOrganization(q);
             scope.reorderWorkflowStepUp(1);
 
             expect(AccordionService.closeAll).toHaveBeenCalled();

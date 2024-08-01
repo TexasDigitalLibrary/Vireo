@@ -43,6 +43,10 @@
             <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDegreeDate.html'"></div>
         </div>
 
+        <div ng-switch-when="Graduation Semester (List)">
+          <div ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDegreeDateList.html'"></div>
+        </div>
+
         <div ng-switch-default>
             <div ng-if="column.inputType.name=='INPUT_DATE'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDate.html'"></div>
             <div ng-if="column.inputType.name!='INPUT_DATE'" ng-include="'views/sideboxes/furtherFilterBy/furtherFilterByDefault.html'"></div>
