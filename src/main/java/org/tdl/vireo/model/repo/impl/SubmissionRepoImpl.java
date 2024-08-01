@@ -358,7 +358,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
 
         Long total = jdbcTemplate.queryForObject(queryBuilder.getCountQuery(), Long.class);
 
-        logger.info("Count query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        logger.debug("Count query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
         startTime = System.nanoTime();
 
         List<Long> ids = jdbcTemplate.query(queryBuilder.getQuery(), new RowMapper<>() {
@@ -367,12 +367,12 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             }
         });
 
-        logger.info("ID query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        logger.debug("ID query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
         startTime = System.nanoTime();
 
         List<Submission> submissions = submissionRepo.findAllById(ids);
 
-        logger.info("Find all query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        logger.debug("Find all query for dynamic query took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
 
         // order them
         Map<Long, Integer> idToIndexMap = new HashMap<>();
@@ -388,7 +388,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             return Integer.compare(index1, index2);
         });
 
-        logger.info("Sorting and mapping results took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
+        logger.debug("Sorting and mapping results took " + ((System.nanoTime() - startTime) / 1000000000.0) + " seconds");
 
         int offset = pageable.getPageSize() * pageable.getPageNumber();
         int limit = pageable.getPageSize();
