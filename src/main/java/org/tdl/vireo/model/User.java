@@ -55,7 +55,7 @@ public class User extends AbstractWeaverUserDetails {
     private static final long serialVersionUID = -614285536644750464L;
 
     @JsonView(Views.Partial.class)
-    @Column(nullable = true)
+    @Column(nullable = true, unique = true)
     private String netid;
 
     @JsonView(Views.SubmissionList.class)

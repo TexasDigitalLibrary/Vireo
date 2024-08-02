@@ -10,11 +10,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.tdl.vireo.model.validation.ContactInfoValidator;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class ContactInfo extends ValidatingBaseEntity {
 
     @OneToOne(cascade = { DETACH, MERGE, REFRESH, REMOVE }, fetch = EAGER, optional = true, orphanRemoval = true)

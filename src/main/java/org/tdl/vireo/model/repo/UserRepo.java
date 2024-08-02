@@ -17,6 +17,8 @@ public interface UserRepo extends AbstractWeaverUserRepo<User>, UserRepoCustom {
 
     public User findByEmail(String email);
 
+    public User findByNetid(String netid);
+
     public List<User> findAllByRoleIn(List<IRole> role, Sort sort);
 
     public List<User> findAllByRoleIn(List<IRole> role, Pageable pageable);

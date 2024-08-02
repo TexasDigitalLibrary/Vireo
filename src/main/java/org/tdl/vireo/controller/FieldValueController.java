@@ -34,7 +34,7 @@ public class FieldValueController {
     @GetMapping("/predicate/{value}")
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse getFieldValuesByPredicateValue(@PathVariable String value) {
-        return new ApiResponse(SUCCESS, fieldValueRepo.getAllValuesByFieldPredicateValue("submission_type"));
+        return new ApiResponse(SUCCESS, fieldValueRepo.getAllValuesByFieldPredicateValue(value));
     }
 
 }

@@ -2,36 +2,31 @@ package org.tdl.vireo.model;
 
 import static javax.persistence.FetchType.EAGER;
 
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
+import javax.persistence.Transient;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OrderColumn;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-
-import org.tdl.vireo.model.validation.SubmissionListColumnValidator;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.tdl.vireo.model.validation.SubmissionListColumnValidator;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "title", "predicate", "input_type_id" }))
 public class SubmissionListColumn extends ValidatingBaseEntity {
 
     @ManyToOne(fetch = EAGER, optional = false)
     private InputType inputType;
 
-    // NOTE: should this be unique? Are there any front end requirements for it to be unique.
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String title;
 
     @Column(nullable = true)

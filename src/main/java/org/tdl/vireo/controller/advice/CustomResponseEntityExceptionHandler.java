@@ -5,6 +5,8 @@ import static java.lang.String.format;
 
 import javax.persistence.EntityNotFoundException;
 
+import java.nio.file.NoSuchFileException;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +69,15 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
     @ResponseBody
     public ApiResponse handleEntityNotFoundException(EntityNotFoundException exception) {
+        logger.error(exception.getMessage());
+        logger.debug(exception.getMessage(), exception);
+        return new ApiResponse(ERROR, exception.getMessage());
+    }
+
+    @ExceptionHandler(NoSuchFileException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ApiResponse handleNoSuchFileExceptionn(NoSuchFileException exception) {
         logger.error(exception.getMessage());
         logger.debug(exception.getMessage(), exception);
         return new ApiResponse(ERROR, exception.getMessage());

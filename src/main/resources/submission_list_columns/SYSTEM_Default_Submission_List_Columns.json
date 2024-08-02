@@ -162,7 +162,8 @@
     "title": "Last Event",
     "sort": "NONE",
     "valuePath": [
-      "lastEvent"
+      "lastAction",
+      "entry"
     ],
     "status": null,
     "inputType": {
@@ -172,10 +173,13 @@
   {
     "title": "Event Time",
     "sort": "NONE",
-    "valuePath": [],
+    "valuePath": [
+      "lastAction",
+      "actionDate"
+    ],
     "status": null,
     "inputType": {
-      "name": "INPUT_TEXT"
+      "name": "INPUT_DATE"
     }
   },
   {
@@ -217,6 +221,25 @@
       "submissionTypes",
       "name"
     ],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_TEXT"
+    }
+  },
+  {
+    "title": "Graduation Semester (List)",
+    "sort": "NONE",
+    "predicate": "dc.date.issued",
+    "valuePath": [],
+    "status": null,
+    "inputType": {
+      "name": "INPUT_DEGREEDATE"
+    }
+  },
+  {
+    "title": "Student Name",
+    "sort": "ASC",
+    "predicate": "last_name, first_name middle_name",
     "status": null,
     "inputType": {
       "name": "INPUT_TEXT"

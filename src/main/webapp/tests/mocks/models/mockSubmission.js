@@ -13,6 +13,7 @@ var dataSubmission1 = {
     customActionValues: [],
     depositURL: "",
     fieldValues: [],
+    columnValues: [],
     organization: {
         id: 1,
         acceptsSubmissions: true,
@@ -73,6 +74,7 @@ var dataSubmission2 = {
     customActionValues: [],
     depositURL: "",
     fieldValues: [],
+    columnValues: [],
     organization: {
         id: 2,
         acceptsSubmissions: false,
@@ -124,6 +126,7 @@ var dataSubmission3 = {
     customActionValues: [],
     depositURL: "",
     fieldValues: [],
+    columnValues: [],
     organization: {
         id: 1,
         acceptsSubmissions: true,
@@ -184,6 +187,7 @@ var dataSubmission4 = {
     customActionValues: [],
     depositURL: "",
     fieldValues: [],
+    columnValues: [],
     organization: {
         id: 1,
         acceptsSubmissions: true,
@@ -225,6 +229,7 @@ var dataSubmission5 = {
     customActionValues: [],
     depositURL: "",
     fieldValues: [],
+    columnValues: [],
     organization: {
         id: 1,
         acceptsSubmissions: true,
@@ -266,6 +271,7 @@ var dataSubmission6 = {
     customActionValues: [],
     depositURL: "",
     fieldValues: [],
+    columnValues: [],
     organization: {
         id: 2,
         acceptsSubmissions: false,
