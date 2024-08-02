@@ -68,15 +68,15 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
             ? userRepo.findByNetid(shibNetid)
             : userRepo.findByEmail(shibEmail);
 
-        Role role = Role.ROLE_STUDENT;
-
-        for (String email : admins) {
-            if (email.equals(shibEmail)) {
-                role = Role.ROLE_ADMIN;
-            }
-        }
-
         if (user == null) {
+            Role role = Role.ROLE_STUDENT;
+
+            for (String email : admins) {
+                if (email.equals(shibEmail)) {
+                    role = Role.ROLE_ADMIN;
+                }
+            }
+
             user = userRepo.create(shibEmail, shibFirstName, shibLastName, role);
 
             user.setNetid(shibNetid);
@@ -134,11 +134,6 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
             if (StringUtils.isNotEmpty(shibEmail) && !user.getUsername().equals(shibEmail)) {
                 user.setEmail(shibEmail);
                 user.setUsername(shibEmail);
-                isUserUpdated = true;
-            }
-
-            if (!user.getRole().equals(role)) {
-                user.setRole(role);
                 isUserUpdated = true;
             }
 
