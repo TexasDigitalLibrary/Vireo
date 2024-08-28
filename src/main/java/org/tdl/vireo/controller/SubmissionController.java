@@ -287,7 +287,7 @@ public class SubmissionController {
                 String subject = (String) data.get("subject");
                 String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
                 actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
-            }   
+            }
         } else {
             String subject = (String) data.get("subject");
             String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
@@ -1023,29 +1023,34 @@ public class SubmissionController {
         Submission submission = submissionRepo.read(submissionId);
         ApiResponse apiResponse = new ApiResponse(SUCCESS);
         int hash = user.getEmail().hashCode();
-        FieldValue fileFieldValue = fieldValueRepo.findById(fieldValueId).get();
-        String documentType = fileFieldValue.getFieldPredicate().getValue();
-        String uri = fileFieldValue.getValue();
-        if (user.getRole().equals(Role.ROLE_STUDENT) && documentType.equals("_doctype_license")) {
-            apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
-        } else {
-            if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
-                String fileName = "";
-                String fileSize = "file not found";
-                if (assetService.assetFileExists(uri)) {
-                    JsonNode fileInfo = assetService.getAssetFileInfo(uri, submission);
-                    fileName = fileInfo.get("name").asText();
-                    fileSize = fileInfo.get("readableSize").asText();
-                } else {
-                    fileName = assetService.getAssetFileName(uri);
-                }
-
-                assetService.delete(uri);
-                actionLogRepo.createPublicLog(submission, user, documentType.substring(9).toUpperCase() + " file " + fileName + " (" + fileSize + ") removed");
+        Optional<FieldValue> fileFieldValue = fieldValueRepo.findById(fieldValueId);
+        if (fileFieldValue.isPresent()) {
+            String documentType = fileFieldValue.get().getFieldPredicate().getValue();
+            String uri = fileFieldValue.get().getValue();
+            if (user.getRole().equals(Role.ROLE_STUDENT) && documentType.equals("_doctype_license")) {
+                apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
             } else {
-                apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
+                if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
+                    String fileName = "";
+                    String fileSize = "file not found";
+                    if (assetService.assetFileExists(uri)) {
+                        JsonNode fileInfo = assetService.getAssetFileInfo(uri, submission);
+                        fileName = fileInfo.get("name").asText();
+                        fileSize = fileInfo.get("readableSize").asText();
+                    } else {
+                        fileName = assetService.getAssetFileName(uri);
+                    }
+
+                    assetService.delete(uri);
+                    actionLogRepo.createPublicLog(submission, user, documentType.substring(9).toUpperCase() + " file " + fileName + " (" + fileSize + ") removed");
+                } else {
+                    apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
+                }
             }
+        } else {
+            apiResponse = new ApiResponse(ERROR, "There is no field value with id " + fieldValueId);
         }
+
         return apiResponse;
     }
 
