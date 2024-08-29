@@ -1,4 +1,4 @@
-vireo.controller("SubmissionViewController", function ($controller, $q, $scope, $routeParams, CustomActionDefinitionRepo, EmbargoRepo, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, SubmissionStates) {
+vireo.controller("SubmissionViewController", function ($controller, $q, $routeParams, $scope, $timeout, CustomActionDefinitionRepo, EmbargoRepo, FieldPredicateRepo, FileUploadService, StudentSubmissionRepo, SubmissionStates) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -11,6 +11,9 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
     $scope.embargoes = EmbargoRepo.getAll();
 
     $scope.actionLogDelay = 2000;
+
+    $scope.fieldProfile = undefined;
+    $scope.fieldPredicate = undefined;
 
     FieldPredicateRepo.ready().then(function() {
 
@@ -31,6 +34,11 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
             StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
                 if (refreshScope) {
                     $scope.submission = submission;
+
+                    $scope.fieldProfile = undefined;
+                    $timeout(function () {
+                        $scope.onSelectDocumentType($scope.fieldPredicate);
+                    });
                 } else {
                     angular.extend($scope.submission, submission);
                 }
@@ -48,6 +56,13 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
         $scope.removingUploads = false;
 
         $scope.archivingManuscript = false;
+
+        $scope.onSelectDocumentType = function (fieldPredicate) {
+            if (!!fieldPredicate && !!fieldPredicate.id) {
+                $scope.fieldPredicate = fieldPredicate;
+                $scope.fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldPredicate);
+            }
+        };
 
         $scope.addMessage = function () {
             $scope.messaging = true;
@@ -99,7 +114,7 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
             }
             $q.all(removePromises).then(function (removeFiles) {
                 if (removeFiles.every(Boolean)) {
-                    fetchSubmission();
+                    fetchSubmission(true);
                 } else {
                     console.error('Failed to remove additional files. Please refresh the page.');
                 }
