@@ -27,11 +27,19 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
             return deleteFilePromise;
         };
 
-        StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
-            $scope.submission = submission;
-            $scope.submission.enableListeners();
-            $scope.submission.fetchDocumentTypeFileInfo();
-        });
+        var fetchSubmission = function (refreshScope) {
+            StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
+                if (refreshScope) {
+                    $scope.submission = submission;
+                } else {
+                    angular.extend($scope.submission, submission);
+                }
+                $scope.submission.enableListeners();
+                $scope.submission.fetchDocumentTypeFileInfo();
+            });
+        }
+
+        fetchSubmission(true);
 
         $scope.message = '';
 
@@ -90,16 +98,13 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
                 removePromises.push(deleteFile(fieldValue));
             }
             $q.all(removePromises).then(function (removeFiles) {
-                $scope.removingUploads = false;
                 if (removeFiles.every(Boolean)) {
-                    StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
-                        angular.extend($scope.submission, submission);
-                        $scope.submission.enableListeners();
-                        $scope.submission.fetchDocumentTypeFileInfo();
-                    });
+                    fetchSubmission();
                 } else {
                     console.error('Failed to remove additional files. Please refresh the page.');
                 }
+                $scope.removeQueue = [];
+                $scope.removingUploads = false;
             });
         };
 
@@ -114,11 +119,7 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
             FileUploadService.archiveFile($scope.submission, $scope.submission.primaryDocumentFieldValue, true).then(function (removeFieldValue) {
                 $scope.archivingManuscript = false;
                 if (removeFieldValue) {
-                    StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
-                        $scope.submission = submission;
-                        $scope.submission.enableListeners();
-                        $scope.submission.fetchDocumentTypeFileInfo();
-                    });
+                    fetchSubmission(true);
                 } else {
                     console.error('Failed to remove field value. Please refresh the page.');
                 }
@@ -192,11 +193,7 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $scope, 
 
         CustomActionDefinitionRepo.listen(function(apiRes) {
             if(apiRes.meta.status === 'SUCCESS') {
-                StudentSubmissionRepo.fetchSubmissionById($routeParams.submissionId).then(function (submission) {
-                    angular.extend($scope.submission, submission);
-                    $scope.submission.enableListeners();
-                    $scope.submission.fetchDocumentTypeFileInfo();
-                });
+                fetchSubmission();
             }
         });
 
