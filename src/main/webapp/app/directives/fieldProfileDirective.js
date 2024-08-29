@@ -126,7 +126,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, Controlle
             }
 
             $scope.hasFile = function (fieldValue) {
-                return fieldValue !== undefined && fieldValue.fieldPredicate.documentTypePredicate && fieldValue.value && fieldValue.value.length > 0;
+                return fieldValue !== undefined && fieldValue.id && fieldValue.fieldPredicate.documentTypePredicate && fieldValue.value && fieldValue.value.length > 0;
             };
 
             $scope.addFieldValue = function () {
@@ -285,12 +285,11 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, Controlle
 
             $scope.cancel = function (fieldValue) {
                 $scope.submission.removeUnsavedFieldValue(fieldValue);
-                refreshFieldValues();
                 if ($scope.fieldValues.length === 0) {
                     $scope.addFieldValue();
-                    refreshFieldValues();
-                    $scope.previewing = false;
                 }
+                refreshFieldValues();
+                $scope.previewing = false;
             };
 
             $scope.getPreview = function (fieldValue) {
@@ -339,13 +338,17 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, Controlle
                 FileUploadService.removeFile($scope.submission, fieldValue).then(function (removed) {
                     $scope.deleting = false;
                     $scope.previewing = false;
-                    if(removed) {
+                    if (removed) {
+                        delete fieldValue.id;
                         delete fieldValue.file;
                         delete fieldValue.value;
                         if (!$scope.profile.repeatable) {
                             $scope.addFieldValue();
                         }
                     }
+
+                    $scope.submission.removeUnsavedFieldValue(fieldValue);
+
                     refreshFieldValues();
                     $scope.closeModal();
                 });
@@ -408,6 +411,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, Controlle
                 $scope.fieldValues = $filter('fieldValuePerProfile')($scope.submission.fieldValues, $scope.profile.fieldPredicate);
                 $scope.fieldValue = $scope.fieldValues[0];
 
+                $scope.hasFiles = false;
                 for (var i in $scope.fieldValues) {
                     if ($scope.hasFile($scope.fieldValues[i])) {
                         $scope.hasFiles = true;
