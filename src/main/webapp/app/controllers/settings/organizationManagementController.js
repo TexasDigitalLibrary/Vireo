@@ -98,13 +98,17 @@ vireo.controller("OrganizationManagementController", function ($controller, $loc
     };
 
     $scope.reorderWorkflowStepUp = function (workflowStepID) {
-        $scope.getSelectedOrganization().$dirty = true;
+        if (!!$scope.getSelectedOrganizationId()) {
+            $scope.getSelectedOrganization().$dirty = true;
+        }
         AccordionService.closeAll();
         return OrganizationRepo.reorderWorkflowSteps("up", workflowStepID);
     };
 
     $scope.reorderWorkflowStepDown = function (workflowStepID) {
-        $scope.getSelectedOrganization().$dirty = true;
+        if (!!$scope.getSelectedOrganizationId()) {
+            $scope.getSelectedOrganization().$dirty = true;
+        }
         AccordionService.closeAll();
         return OrganizationRepo.reorderWorkflowSteps("down", workflowStepID);
     };
