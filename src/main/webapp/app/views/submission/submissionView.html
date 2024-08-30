@@ -13,15 +13,15 @@
       </ul>
 
       <h1 class="center">Submission View</h1>
-      <div class="student-submission-loader" ng-class="{'ready': loaded}">
+      <div class="student-submission-loader" ng-class="{'ready': !!submission}">
         <span>
           <span class="glyphicon glyphicon-refresh spinning"></span>
           Loading Submission ...</span>
       </div>
 
       <submissiondialog submission="submission" type="actions"></submissiondialog>
-      <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="loaded" show-vocabulary-word="showVocabularyWord" is-embargo="isEmbargo" sort-embargos="sortEmbargos"></reviewsubmissionsfields>
-      <div id="upload-files" class="row" ng-if="loaded && submission.submissionStatus.submissionState === SubmissionStates.NEEDS_CORRECTIONS">
+      <reviewsubmissionsfields submission="submission" hide-links="true" ng-if="!!submission" show-vocabulary-word="showVocabularyWord" is-embargo="isEmbargo" sort-embargos="sortEmbargos"></reviewsubmissionsfields>
+      <div id="upload-files" class="row" ng-if="!!submission && submission.submissionStatus.submissionState === SubmissionStates.NEEDS_CORRECTIONS">
         <span class="text-danger">
           <h3>Upload/Remove Files</h3>
           <hr class="submission-view-upload-files-hr"/>
@@ -77,7 +77,7 @@
                 <select
                   class="form-control"
                   ng-model="fieldPredicate"
-                  ng-selected="fieldProfile = fieldPredicate.id ? submission.getFieldProfileByPredicate(fieldPredicate) : undefined"
+                  ng-change="onSelectDocumentType(fieldPredicate)"
                   ng-options="documentFieldPredicate as getFileType(documentFieldPredicate) for documentFieldPredicate in filteredFieldPredicates = (fieldPredicates | filter:uploadableFieldPredicates) track by documentFieldPredicate.value">
                   <option value="">-- select document type --</option>
                 </select>
@@ -106,7 +106,7 @@
         </div>
       </div>
 
-      <div class="row" ng-show="loaded">
+      <div class="row" ng-show="!!submission">
         <div class="col-md-12">
           <h3>Application Activity</h3>
         </div>
@@ -116,7 +116,7 @@
         </div>
       </div>
 
-      <div class="row" ng-show="loaded">
+      <div class="row" ng-show="!!submission">
         <div class="col-md-12">
           <h3>Leave a Message</h3>
         </div>
