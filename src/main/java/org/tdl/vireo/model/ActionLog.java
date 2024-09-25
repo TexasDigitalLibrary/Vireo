@@ -30,12 +30,12 @@ public class ActionLog extends ValidatingBaseEntity {
     @ManyToOne(optional = true)
     private User user;
 
-    @JsonView(Views.SubmissionIndividual.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar actionDate;
 
-    @JsonView(Views.SubmissionIndividual.class)
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = false, columnDefinition = "text")
     private String entry;
 

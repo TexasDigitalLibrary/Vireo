@@ -17,7 +17,7 @@ public interface SubmissionRepo extends WeaverRepo<Submission>, SubmissionRepoCu
 
     public List<Submission> findByOrganization(Organization organization);
 
-    public List<Submission> findByActionLogsId(Long id);
+    public Submission findByActionLogsId(Long id);
 
     @EntityGraph(value = "graph.Submission.Individual")
     public List<Submission> findAllBySubmitterId(Long submitterId);

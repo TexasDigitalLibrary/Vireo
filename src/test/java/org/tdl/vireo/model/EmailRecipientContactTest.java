@@ -3,6 +3,7 @@ package org.tdl.vireo.model;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -44,11 +45,12 @@ public class EmailRecipientContactTest extends AbstractModelTest<EmailRecipientC
         fieldValues.add(fieldValue);
         fieldValues.add(otherFieldValue);
         fieldPredicate.setId(1L);
-        fieldPredicate.setValue("notnull");
+
+        fieldPredicate.setValue("fp_value");
 
         ReflectionTestUtils.setField(emailRecipientContact, "fieldPredicate", fieldPredicate);
 
-        when(submission.getFieldValuesByPredicateValue(any(String.class))).thenReturn(fieldValues);
+        when(submission.getFieldValuesByPredicateValue(anyString())).thenReturn(fieldValues);
 
         List<String> got = emailRecipientContact.getEmails(submission);
 

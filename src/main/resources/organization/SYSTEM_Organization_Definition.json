@@ -113,7 +113,7 @@
           },
           "mappedShibAttribute": {
             "isSystemRequired": true,
-            "name": "APPLICATION_AUTH_SHIB_ATTRIBUTE_EMAIL",
+            "name": "auth.shib.attribute.email",
             "type": "shibboleth",
             "value": "email"
           },
@@ -160,7 +160,7 @@
           },
           "mappedShibAttribute": {
             "isSystemRequired": true,
-            "name": "APPLICATION_AUTH_SHIB_ATTRIBUTE_INSTITUTIONAL_IDENTIFIER",
+            "name": "auth.shib.attribute.institutionalIdentifier",
             "type": "shibboleth",
             "value": "uin"
           },
