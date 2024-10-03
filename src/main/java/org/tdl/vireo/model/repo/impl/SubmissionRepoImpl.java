@@ -380,9 +380,9 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
             idToIndexMap.put(ids.get(i), i);
         }
 
+        submissions.forEach(submission -> mapColumnValues(submission, submissionListColumns));
+
         submissions.sort((s1, s2) -> {
-            mapColumnValues(s1, submissionListColumns);
-            mapColumnValues(s2, submissionListColumns);
             int index1 = idToIndexMap.get(s1.getId());
             int index2 = idToIndexMap.get(s2.getId());
             return Integer.compare(index1, index2);
