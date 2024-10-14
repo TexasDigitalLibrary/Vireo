@@ -946,6 +946,7 @@ public class SubmissionController {
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse addMessage(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody String message) {
         Submission submission = submissionRepo.read(submissionId);
+        submissionEmailService.sendWorkflowEmails(user, submission.getId());
         return new ApiResponse(SUCCESS, actionLogRepo.createPublicLog(submission, user, message));
     }
 
@@ -1117,6 +1118,8 @@ public class SubmissionController {
         if (message != null) {
             actionLogRepo.createAdvisorPublicLog(submission, "Advisor comments : " + message);
         }
+
+        submissionEmailService.sendWorkflowEmails(submission.getAssignee(), submission.getId());
 
         return new ApiResponse(SUCCESS, submission);
 
