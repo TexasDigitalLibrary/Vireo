@@ -2,6 +2,8 @@ package org.tdl.vireo.config;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.AbstractHttp11Protocol;
 import org.slf4j.Logger;
@@ -13,12 +15,15 @@ import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.resource.ResourceResolver;
+import org.springframework.web.servlet.resource.ResourceResolverChain;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
@@ -65,6 +70,27 @@ public class AppWebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/**").addResourceLocations("classpath:/");
 
         registry.addResourceHandler("/public/**").addResourceLocations("file:" + Application.getAssetsPath() + publicFolder + "/");
+        registry.addResourceHandler("/application.yml")
+                .setCachePeriod(0)
+                .addResourceLocations("classpath:/")
+                .resourceChain(true)
+                .addResolver(new ResourceResolver() {
+
+                    @Override
+                    public Resource resolveResource(HttpServletRequest request, String requestPath,
+                            List<? extends Resource> locations, ResourceResolverChain chain) {
+                        return null;
+                    }
+
+                    @Override
+                    public String resolveUrlPath(String resourcePath, List<? extends Resource> locations,
+                            ResourceResolverChain chain) {
+                                return null;
+                    }
+
+                })
+                .addTransformer((resource, requestPath, transformerChain) -> null);
+
         registry.setOrder(Integer.MAX_VALUE - 2);
 
         logger.info("/public/** -> file:" + Application.getAssetsPath() + publicFolder + "/");
