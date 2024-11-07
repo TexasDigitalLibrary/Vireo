@@ -35,7 +35,7 @@
     <production>false</production>
     <!-- must be valid uri with scheme file or classpath -->
     <!-- e.g. file:/var/vireo, classpath:/assets -->
-    <assets.uri>classpath:/</assets.uri>
+    <assets.uri>file:/var/vireo</assets.uri>
     <!-- must be valid uri with scheme file or classpath -->
     <!-- e.g. file:/var/vireo/config, classpath:/config -->
     <config.uri>classpath:/config/</config.uri>

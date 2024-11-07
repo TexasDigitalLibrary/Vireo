@@ -8,13 +8,13 @@
     values for your particular repository's configuration. The "thesis" schema
     handles metadata relating the the nature of being a thesis or dissertation
     such as major, department, degree level, etc. The "local" schema is used
-    exclusively for handling embargo related controls. If the submission is
-    under a non-indefinite embargo then the embargo terms and lift fields will
+    exclusively for handling embargo related controlls. If the submission is
+    under a non-indefinate embargo then the embargo terms and lift fields will
     be supplied appropriately so that DSpace will know to release the ETD
     automatically when the embargo has expired.
 
     https://wiki.duraspace.org/display/DSPACE/DSpaceMETSSIPProfile
-
+    
     It is recommended that if you are modifying this format for your local
     institution that instead of changing this file directly instead create a
     copy of it and modify the copy. Then in the application-context.xml add a
@@ -62,23 +62,11 @@
                         th:text="${GRADUATION_YEAR_MONTH}">
                     </dim:field>
 
-                    <!-- thesis.degree.grantor = College -->
+                    <!-- thesis.degree.grantor = Global configuration setting (settings tab - application settings) -->
                     <dim:field
-                      th:if="${ DEGREE_COLLEGE != null }"
+                      th:if="${ GRANTOR != null }"
                       mdschema="thesis" element="degree" qualifier="grantor"
-                      th:text="${DEGREE_COLLEGE}">
-                    </dim:field>
-                    <!-- dc.publisher = Global configuration setting for grantor -->
-                    <dim:field
-                      th:if="${ GRANTOR != null }"
-                      mdschema="dc" element="publisher"
                       th:text="${GRANTOR}">
-                    </dim:field>
-                    <!-- dc.publisher.country = USA -->
-                    <dim:field
-                      th:if="${ GRANTOR != null }"
-                      mdschema="dc" element="publisher" qualifier="country"
-                      th:text="USA">
                     </dim:field>
 
                     <dim:field
@@ -93,7 +81,7 @@
                     </dim:field>
 
                     <!-- dc.identifier.uri == Deposit ID, this would only be available when re-depositing -->
-                    <dim:field mdschema="dc" element="identifier" qualifier="uri" th:text="${DEPOSIT_URL}"></dim:field>
+                    <dim:field mdschema="dc" element="identifier" qualifier="uri" th:text="${DEPOSIT_URL}"></dim:field> 
 
                     <!-- dc.type.material = "text" // constant -->
                     <dim:field mdschema="dc" element="type" qualifier="material">text</dim:field>
@@ -193,7 +181,7 @@
         <fileGrp ID="vireo-mets-fgrp-1" USE="CONTENT">
 
             <!-- Primary Document -->
-            <file
+            <file 
               th:if="${ PRIMARY_DOCUMENT_FIELD_VALUE != null }"
               SEQ="1"
               th:attr="GROUPID=${ 'piper-mets-file-group-' + PRIMARY_DOCUMENT_FIELD_VALUE.fieldPredicate.id },
@@ -205,7 +193,7 @@
             </file>
 
             <!-- Supplemental And Source Documents -->
-            <file
+            <file 
               th:each="fv,iter : ${ SUPPLEMENTAL_AND_SOURCE_DOCUMENT_FIELD_VALUES }"
               th:attr="GROUPID=${ 'piper-mets-file-group-' + fv.fieldPredicate.id },
                        ID=${ 'piper-mets-file-' + fv.id },
@@ -220,7 +208,7 @@
         <fileGrp ID="vireo-mets-fgrp-2" USE="LICENSE">
 
             <!-- Licence Documents -->
-            <file
+            <file 
               th:each="fv,iter : ${ LICENSE_DOCUMENT_FIELD_VALUES }"
               th:attr="GROUPID=${ 'piper-mets-file-group-' + fv.fieldPredicate.id },
                        ID=${ 'piper-mets-file-' + fv.id },
@@ -248,7 +236,7 @@
             </div>
 
             <!-- Bitstream divs for each supplemental and source document -->
-            <div
+            <div 
                 th:each="fv : ${ SUPPLEMENTAL_AND_SOURCE_DOCUMENT_FIELD_VALUES }"
                 th:attr="ID=${ 'piper-mets-div-' + fv.id }"
                 TYPE="DSpace Content Bitstream">
@@ -256,7 +244,7 @@
             </div>
 
             <!-- Bitstream divs for each license document -->
-            <div
+            <div 
                 th:each="fv : ${ LICENSE_DOCUMENT_FIELD_VALUES }"
                 th:attr="ID=${ 'piper-mets-div-' + fv.id }"
                 TYPE="DSpace Content Bitstream">

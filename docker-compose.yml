@@ -1,18 +1,15 @@
-version: '3.8'
-
 networks:
   net:
 
 volumes:
   pgdata:
-  assets:
 
 services:
 
   db:
-    image: postgres
+    image: postgres:16
     environment:
-       - POSTGRES_DB=vireo
+       - POSTGRES_DB=vireo4
        - POSTGRES_USER=vireo
        - POSTGRES_PASSWORD=vireo
     volumes:
@@ -41,7 +38,7 @@ services:
     env_file:
        - .env
     volumes:
-      - assets:${APP_PATH}
+      - /opt/vireo:${APP_PATH}
     ports:
       - 9000:9000
     depends_on:

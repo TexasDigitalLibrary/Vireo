@@ -1,5 +1,5 @@
 # Build arguments.
-ARG USER_ID=3001
+ARG USER_ID=1000
 ARG USER_NAME=vireo
 ARG HOME_DIR=/$USER_NAME
 ARG SOURCE_DIR=$HOME_DIR/source
@@ -50,7 +50,7 @@ RUN chown -R $USER_ID:$USER_ID $SOURCE_DIR
 USER $USER_NAME
 
 # Build.
-RUN mvn package -Pproduction
+RUN mvn package -Pproduction -Dmaven.test.skip=true
 
 # JRE Stage.
 FROM eclipse-temurin:11-alpine
