@@ -114,7 +114,7 @@ info:
 
 
 app:
-  url: http://vireo-dev.library.jhu.edu
+  url: https://vireo-dev.library.jhu.edu
 
   # value generated from property assets.uri
   # either defined in pom.xml or via package argument
