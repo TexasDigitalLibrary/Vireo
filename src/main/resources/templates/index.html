@@ -38,8 +38,11 @@
 
   <!-- Content placed here will appear on every page -->
   <main>
-    <nav class="navbar navbar-default">
-      <div class="container-fluid" ng-controller="ApplicationAuthenticationController">
+    <nav class="navbar navbar-default" ng-controller="HeaderController">
+      <div class="container-fluid navbar-flex" ng-controller="ApplicationAuthenticationController">
+          <a class="pull-left" th:href="${#strings.isEmpty(base) ? '/' : base}">
+            <img style="width: 250px; padding: 4px;" ng-src="{{logoImage()}}" alt="Thesis Submission Portal Home" />
+          </a>
 
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -113,9 +116,6 @@
     <header class="container-fluid site-title" ng-controller="HeaderController">
       <div class="container">
         <div class="row">
-          <a class="pull-left" th:href="${#strings.isEmpty(base) ? '/' : base}">
-            <img style="max-height: 57px;" ng-src="{{logoImage()}}" alt="Thesis Submission Portal Home" />
-          </a>
           <ul ng-if="activeAdminSection()" class="tab-nav nav navbar-nav navbar-right hidden-xs">
             <li ng-class="{'active': activeTab('/admin/list')}">
               <a href="admin/list">List</a>

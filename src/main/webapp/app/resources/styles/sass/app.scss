@@ -11,7 +11,7 @@ html {
 }
 
 body {
-  font-family: "Trebuchet MS", Verdana, Geneva, Arial, Helvetica, Sans-Serif;
+  font-family: 'Proxima Nova', sans-serif;
   color: $text_main_color;
   margin-right: 0 !important;
   padding-right: 0 !important;
@@ -29,6 +29,29 @@ main footer {
   display: block;
   margin-bottom: 65px;
 }
+
+header {
+  background: #ECECEC !important;
+}
+
+.navbar-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navbar-flex .navbar-nav > li > a,
+.navbar-flex .navbar-nav > li > span {
+  display: flex;
+  align-items: start;
+  height: 100%;
+}
+
+.sso-login {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+ }
 
 .ml-1 {
   margin-left: 10px;

@@ -12,7 +12,13 @@
         <validationmessage results="user.getValidationResults()"></validationmessage>
 
         <div class="modal-body loginModal">
-            
+
+	    <div class="sso-login">
+	      <h4>Authenticate with JHU Single Sign-On</h4>
+	      Log in to use Interlibrary Loan and Document Delivery services
+              <button type="button" class="btn btn-primary pull-left" ng-click="login()">SSO Login</button>        
+	      <h4 style="margin-top: 4px;">Or, with email and password
+	    </div>
             <validatedinput
                 model="account"
                 property="email"
@@ -40,7 +46,6 @@
 
     <div class="modal-footer">
         <button type="button" class="btn btn-default" ng-click="reset()">Cancel</button>
-        <button type="button" class="btn btn-primary pull-left" ng-click="login()">Shibboleth Login</button>        
     </div>
 
 </form>
