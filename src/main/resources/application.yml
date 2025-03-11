@@ -47,6 +47,7 @@ spring:
     #driverClassName: org.h2.Driver
 
     # PostgreSQL
+    ## Switch to RDS here
     url: jdbc:postgresql://localhost:5432/vireo4
     driverClassName: org.postgresql.Driver
 
