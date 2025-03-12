@@ -34,6 +34,99 @@ header {
   background: #ECECEC !important;
 }
 
+h1 {
+  font-family: 'proxima-nova', sans-serif;
+  font-style: normal;
+  font-size: 32px;
+  line-height: 1.104;
+  margin-bottom: 10px !important;
+}
+
+@media (max-width: 782px) {
+  h1 {
+    font-size: 28px;
+  }
+}
+
+h2 {
+  font-family: 'proxima-nova', sans-serif;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1.133;
+  text-transform: uppercase;
+  color: #002d72;
+  margin-bottom: 15px;
+  margin-top: 30px;
+  letter-spacing: 0.03em;
+  font-weight: 700; }
+  @media (max-width: 782px) {
+    h2 {
+      font-size: 20px;
+  }
+}
+
+h3 {
+  font-family: 'proxima-nova', sans-serif;
+  font-style: normal;
+  font-size: 23px;
+  line-height: 1.36;
+  letter-spacing: 0.01em;
+  color: #002D72;
+  margin-bottom: 10px;
+}
+
+h4 {
+  font-family: 'proxima-nova', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 1.36;
+  letter-spacing: 0.01em;
+  color: #002d72;
+  margin-bottom: 10px;
+}
+
+h5 {
+  font-family: 'proxima-nova', sans-serif;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1.375;
+  letter-spacing: 0.034em;
+  text-transform: uppercase;
+  color: #002D72;
+  margin: 5px 0;
+}
+
+h6 {
+  font-size: 24px;
+  line-height: 1.16;
+  color: #002d72;
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 250px;
+    padding: 4px;
+  }
+
+  .site-name {
+    padding: 0 10px 0 24px;
+    border-left: 3px solid #ffffff;
+    float: left;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 18px;
+    margin: 0 !important;
+    @media (max-width: 782px) {
+      display: none;
+    }
+  }
+}
+
 .navbar-flex {
   display: flex;
   align-items: center;
@@ -47,10 +140,16 @@ header {
   height: 100%;
 }
 
+a.dropdown-toggle.clickable {
+  display: flex !important;
+  align-items: center !important;
+}
+
 .sso-login {
   display: flex;
   flex-direction: column;
   align-items: start;
+  justify-content: space-between;
  }
 
 .ml-1 {

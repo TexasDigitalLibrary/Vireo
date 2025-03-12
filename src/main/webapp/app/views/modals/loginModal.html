@@ -2,23 +2,21 @@
     <button type="button" class="close" ng-click="reset()" aria-label="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title">Login</h3>
+    <h3 class="modal-title">Login to use Vireo Thesis & Dissertation System</h3>
 </div>
 
 <form name="forms.login" novalidate>
 
-    <span ng-controller="LoginController">
-
-        <validationmessage results="user.getValidationResults()"></validationmessage>
-
         <div class="modal-body loginModal">
 
 	    <div class="sso-login">
-	      <h4>Authenticate with JHU Single Sign-On</h4>
-	      Log in to use Interlibrary Loan and Document Delivery services
-              <button type="button" class="btn btn-primary pull-left" ng-click="login()">SSO Login</button>        
-	      <h4 style="margin-top: 4px;">Or, with email and password
+	      <button type="button" class="btn btn-primary pull-left" ng-click="login()">SSO Login</button>        
 	    </div>
+			
+	    <span ng-controller="LoginController">
+
+	    <validationmessage results="user.getValidationResults()"></validationmessage>
+
             <validatedinput
                 model="account"
                 property="email"
