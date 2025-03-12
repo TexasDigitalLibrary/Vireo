@@ -15,6 +15,7 @@ on:
         description: 'stage or prod'
         required: true
         type: environment
+        default: 'stage'
 
 
 jobs:
