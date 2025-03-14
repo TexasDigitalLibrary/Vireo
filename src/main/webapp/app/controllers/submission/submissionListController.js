@@ -440,9 +440,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         var batchDownloadExport = function (packager, filterId) {
             $scope.advancedfeaturesBox.exporting = true;
             SubmissionRepo.batchExport(packager, filterId).then(function (data) {
-                saveAs(new Blob([data], {
-                    type: packager.mimeType
-                }), packager.name + '.' + packager.fileExtension);
+                if (!data.meta || !data.meta.status || data.meta.status !== "ERROR") {
+                    saveAs(new Blob([data], {
+                        type: packager.mimeType
+                    }), packager.name + '.' + packager.fileExtension);
+                }
                 resetBatchProcess();
             });
         };
