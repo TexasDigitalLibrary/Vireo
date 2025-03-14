@@ -661,15 +661,17 @@ public class SubmissionHelperUtility {
             Optional<FieldValue> defaultEmbargo = getFirstFieldValueByPredicateValue("default_embargos");
 
             Optional<FieldValue> embargo = Optional.empty();
+
+            Boolean proquestEmbargoCheck = proquestEmbargo.isPresent() && proquestEmbargo.get().getIdentifier() != null && Integer.valueOf(proquestEmbargo.get().getIdentifier()) > 0;
+            Boolean defaultEmbargoCheck = defaultEmbargo.isPresent() && defaultEmbargo.get().getIdentifier() != null && Integer.valueOf(defaultEmbargo.get().getIdentifier()) > 0;
             
-            if (proquestEmbargo.isPresent() && Integer.valueOf(proquestEmbargo.get().getIdentifier()) > 0 &&
-                defaultEmbargo.isPresent() && Integer.valueOf(defaultEmbargo.get().getIdentifier()) > 0) {
+            if (proquestEmbargoCheck && defaultEmbargoCheck) {
                 embargo = Integer.valueOf(proquestEmbargo.get().getIdentifier()) >= Integer.valueOf(defaultEmbargo.get().getIdentifier())
                     ? proquestEmbargo
                     : defaultEmbargo;
-            } else if (proquestEmbargo.isPresent() && Integer.valueOf(proquestEmbargo.get().getIdentifier()) > 0) {
+            } else if (proquestEmbargoCheck) {
                 embargo = proquestEmbargo;
-            } else if (defaultEmbargo.isPresent() && Integer.valueOf(defaultEmbargo.get().getIdentifier()) > 0) {
+            } else if (defaultEmbargoCheck) {
                 embargo = defaultEmbargo;
             }
 
