@@ -244,7 +244,6 @@
     <DISS_restriction th:if="${EMBARGO_CODE == 4}">    
         <DISS_sales_restriction th:attr="code=${PROQUEST_SALE_RESTRICTION_CODE},remove=${PROQUEST_SALE_RESTRICTION_REMOVE}"/>
         <DISS_format_restriction  th:attr="code=${PROQUEST_FORMAT_RESTRICTION_CODE},remove=${PROQUEST_FORMAT_RESTRICTION_REMOVE}"/>
-        <DISS_note/>
     </DISS_restriction>
 
 </DISS_submission>

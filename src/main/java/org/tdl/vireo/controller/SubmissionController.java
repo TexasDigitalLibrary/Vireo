@@ -41,6 +41,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -531,6 +532,16 @@ public class SubmissionController {
         processBatchExport(response, user, packagerName, activeFilter);
     }
 
+    private void handleBatchExportError(Exception e, HttpServletResponse response) throws IOException {
+        LOG.info("Error With Export", e);
+        String responseMessage = "Something went wrong with the export!";
+        ApiResponse apiResponse = new ApiResponse(ERROR, responseMessage);
+        response.reset();
+        response.setContentType("application/json");
+        response.getOutputStream().print(objectMapper.writeValueAsString(apiResponse));
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
+
     @SuppressWarnings("unchecked")
     private void processBatchExport(HttpServletResponse response, User user, String packagerName, NamedSearchFilterGroup filter) throws IOException {
         AbstractPackager<?> packager = packagerUtility.getPackager(packagerName);
@@ -576,7 +587,7 @@ public class SubmissionController {
             break;
         case "MarcXML21":
         case "Marc21":
-            ServletOutputStream sos = response.getOutputStream();
+            ByteArrayOutputStream sos = new ByteArrayOutputStream();
 
             try {
                 ZipOutputStream zos = new ZipOutputStream(sos, StandardCharsets.UTF_8);
@@ -599,24 +610,19 @@ public class SubmissionController {
                     }
                 }
                 zos.close();
-
+                response.getOutputStream().write(sos.toByteArray());
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
-                LOG.info("Error With Export",e);
-                response.setContentType("application/json");
-                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-                sos.print(objectMapper.writeValueAsString(apiResponse));
-                sos.close();
+                handleBatchExportError(e, response);
             }
             break;
 
         case "ProQuest":
-            ServletOutputStream sos_pq = response.getOutputStream();
+            ByteArrayOutputStream sos_pq = new ByteArrayOutputStream();
 
             try {
                 ZipOutputStream zos = new ZipOutputStream(sos_pq, StandardCharsets.UTF_8);
-
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     List<FieldValue> fieldValues = submission.getFieldValuesByPredicateValue("first_name");
                     Optional<String> firstNameOpt = fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
@@ -664,9 +670,6 @@ public class SubmissionController {
                         b.putNextEntry(new ZipEntry(personName+fType));
                         b.write(fileBytes);
                         b.closeEntry();
-
-                    }catch(IOException ioe){
-                        ioe.printStackTrace();
                     }
                     zos.putNextEntry(new ZipEntry("upload_"+personName+".zip"));
                     baos.close();
@@ -674,19 +677,15 @@ public class SubmissionController {
                     zos.closeEntry();
                 }
                 zos.close();
-
                 response.setContentType(packager.getMimeType());
+                response.getOutputStream().write(sos_pq.toByteArray());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
-                LOG.info("Error With Export",e);
-                response.setContentType("application/json");
-                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-                sos_pq.print(objectMapper.writeValueAsString(apiResponse));
-                sos_pq.close();
+                handleBatchExportError(e, response);
             }
             break;
         case "DSpaceMETS":
-            ServletOutputStream sos_mets = response.getOutputStream();
+            ByteArrayOutputStream sos_mets = new ByteArrayOutputStream();
 
             try {
                 ZipOutputStream zos = new ZipOutputStream(sos_mets);
@@ -700,19 +699,15 @@ public class SubmissionController {
                     zos.closeEntry();
                 }
                 zos.close();
-
+                response.getOutputStream().write(sos_mets.toByteArray());
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
-                LOG.info("Error With Export",e);
-                response.setContentType("application/json");
-                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-                sos_mets.print(objectMapper.writeValueAsString(apiResponse));
-                sos_mets.close();
+                handleBatchExportError(e, response);
             }
             break;
         case "DSpaceSimple":
-            ServletOutputStream sosDss = response.getOutputStream();
+            ByteArrayOutputStream sosDss = new ByteArrayOutputStream();
             try {
                 ZipOutputStream zos = new ZipOutputStream(sosDss);
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
@@ -772,25 +767,16 @@ public class SubmissionController {
 
                 }
                 zos.close();
-
+                response.getOutputStream().write(sosDss.toByteArray());
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
-                LOG.info("Error With Export",e);
-                response.setContentType("application/json");
-                ApiResponse apiResponse = new ApiResponse(ERROR, "Something went wrong with the export!");
-                sosDss.print(objectMapper.writeValueAsString(apiResponse));
-                sosDss.close();
+                handleBatchExportError(e, response);
             }
             break;
 
         default:
-            response.setContentType("application/json");
-
-            ApiResponse apiResponse = new ApiResponse(ERROR, "No packager " + packagerName + " found!");
-            PrintWriter out = response.getWriter();
-            out.print(objectMapper.writeValueAsString(apiResponse));
-            out.close();
+            handleBatchExportError(new Exception("No packager " + packagerName + " found!"), response);
         }
 
         response.getOutputStream().close();
