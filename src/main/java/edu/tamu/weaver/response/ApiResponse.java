@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-// Overriding Wevaer-Webservice-Core ApiResponse for additional meta stacktrace property
+// Overriding Weaver-Webservice-Core ApiResponse for additional meta stacktrace property
 
 /**
  * Abstract class for an API response.
