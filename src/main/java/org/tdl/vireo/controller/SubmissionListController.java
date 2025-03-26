@@ -366,10 +366,9 @@ public class SubmissionListController {
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    @ResponseBody
     public ApiResponse handleExceptions(Exception exception) {
         LOG.error(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        return ApiResponse.fromException(ERROR, null, exception);
     }
 
 }

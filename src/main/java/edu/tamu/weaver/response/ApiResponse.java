@@ -1,9 +1,12 @@
 package edu.tamu.weaver.response;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import org.springframework.lang.NonNull;
 
 // Overriding Weaver-Webservice-Core ApiResponse for additional meta stacktrace property
 
@@ -191,11 +194,21 @@ public class ApiResponse {
     }
 
     // Vireo customization
-    public static ApiResponse fromError(ApiStatus status, String message, String stacktrace) {
+    public static ApiResponse fromException(ApiStatus status, String message, Exception exception) {
         ApiResponse response = new ApiResponse(status, message);
-        response.getMeta().setStacktrace(stacktrace);
+        response.getMeta().setStacktrace(serializeStacktrace(exception));
 
         return response;
+    }
+
+    // Vireo customization
+    private static String serializeStacktrace(@NonNull Exception exception) {
+        // Convert stack trace to string
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        exception.printStackTrace(printWriter);
+
+        return stringWriter.toString();
     }
 
 }
