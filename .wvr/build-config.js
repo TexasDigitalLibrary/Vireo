@@ -96,6 +96,7 @@ const config = {
       './node_modules/@wvr/core/app/services/authService.js',
       './node_modules/@wvr/core/app/services/storageService.js',
       './node_modules/@wvr/core/app/services/utilityService.js',
+      './node_modules/@wvr/core/app/services/alertService.js',
       './node_modules/@wvr/core/app/services/validationStore.js',
       './node_modules/@wvr/core/app/services/userService.js',
       './node_modules/@wvr/core/app/services/modalService.js',
