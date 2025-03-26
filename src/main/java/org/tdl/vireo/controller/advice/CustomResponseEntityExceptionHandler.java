@@ -41,7 +41,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     private static final Logger logger = LoggerFactory.getLogger(CustomResponseEntityExceptionHandler.class);
 
-    // Error Message Templates
     private static final String PAYLOAD_TOO_LARGE_TEMPLATE = "File exceeds max size %s";
     private static final String CONSTRAINT_VIOLATION_TEMPLATE = "Data constraint violation: %s";
     private static final String DATA_INTEGRITY_TEMPLATE = "Data integrity error: %s";
