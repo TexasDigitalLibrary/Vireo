@@ -535,7 +535,7 @@ public class SubmissionController {
     private void handleBatchExportError(Exception e, HttpServletResponse response) throws IOException {
         LOG.info("Error With Export", e);
         String responseMessage = "Something went wrong with the export!";
-        ApiResponse apiResponse = new ApiResponse(ERROR, responseMessage);
+        ApiResponse apiResponse = ApiResponse.fromException(ERROR, responseMessage, e);
         response.reset();
         response.setContentType("application/json");
         response.getOutputStream().print(objectMapper.writeValueAsString(apiResponse));
