@@ -1,6 +1,7 @@
 package org.tdl.vireo.model;
 
 import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -59,6 +60,25 @@ public class ActionLog extends ValidatingBaseEntity {
         this(submissionStatus, actionDate, entry, privateFlag);
         setUser(user);
     }
+
+    public static String getCSVHeader(){
+        //Field[] df = ActionLog.getDeclaredFields();
+        //return String.join(",",df.toString());
+        StringBuilder csv_header = new StringBuilder();
+        csv_header.append("Action Date").append(",");
+        csv_header.append("Action Entry").append(",");
+        csv_header.append("Submission State");
+        return csv_header.toString();
+    }
+        
+    public String getCSV(){
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
+        StringBuilder actionlog_entry = new StringBuilder();
+        actionlog_entry.append(format.format(getActionDate().getTime())).append(",");
+        actionlog_entry.append('"'+getEntry().toString()+'"').append(",");
+        actionlog_entry.append(getSubmissionStatus().getName().toString());
+        return actionlog_entry.toString();
+
 
     /**
      * @return the submissionStatus
