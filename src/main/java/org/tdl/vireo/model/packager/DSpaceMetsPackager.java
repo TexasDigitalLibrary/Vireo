@@ -17,6 +17,7 @@ import javax.persistence.Entity;
 
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.FieldValue;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.export.ZipExportPackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
