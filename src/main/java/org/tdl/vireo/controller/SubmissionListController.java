@@ -4,7 +4,6 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -12,15 +11,11 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.tdl.vireo.model.FilterAction;
 import org.tdl.vireo.model.FilterCriterion;
@@ -362,13 +357,6 @@ public class SubmissionListController {
         }
 
         return new ApiResponse(SUCCESS);
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiResponse handleExceptions(Exception exception) {
-        LOG.error(exception.getMessage(), exception);
-        return ApiResponse.fromException(ERROR, null, exception);
     }
 
 }

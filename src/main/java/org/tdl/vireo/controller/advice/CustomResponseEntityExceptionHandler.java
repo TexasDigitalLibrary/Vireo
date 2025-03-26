@@ -215,4 +215,14 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         return ApiResponse.fromException(ERROR, message, exception);
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiResponse handleExceptions(Exception exception) {
+        String message = exception.getMessage();
+        logger.error(message);
+        logger.debug(message, exception);
+        // leaving message null to use front-end default for alert
+        return ApiResponse.fromException(ERROR, null, exception);
+    }
+
 }
