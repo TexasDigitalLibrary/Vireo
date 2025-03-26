@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -71,7 +72,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(CONSTRAINT_VIOLATION_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -80,7 +81,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(DATA_INTEGRITY_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -89,7 +90,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(ENTITY_NOT_FOUND_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(NoSuchFileException.class)
@@ -98,7 +99,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(FILE_NOT_FOUND_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(MultipartException.class)
@@ -107,7 +108,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(PAYLOAD_TOO_LARGE_TEMPLATE, maxFileSize);
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositBadGatewayException.class)
@@ -116,7 +117,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_BAD_GATEWAY_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositBadRequestException.class)
@@ -125,7 +126,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_BAD_REQUEST_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositConflictException.class)
@@ -134,7 +135,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_CONFLICT_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositForbiddenException.class)
@@ -143,7 +144,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_FORBIDDEN_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositGatewayTimeoutException.class)
@@ -152,7 +153,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_GATEWAY_TIMEOUT_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositInternalServerErrorException.class)
@@ -161,7 +162,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_INTERNAL_ERROR_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositNotFoundException.class)
@@ -170,7 +171,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_NOT_FOUND_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositNotImplementedException.class)
@@ -179,7 +180,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_NOT_IMPLEMENTED_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositRequestTimeoutException.class)
@@ -188,7 +189,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_REQUEST_TIMEOUT_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositServiceUnavailableException.class)
@@ -197,7 +198,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_SERVICE_UNAVAILABLE_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositUnauthorizedException.class)
@@ -206,7 +207,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_UNAUTHORIZED_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
     @ExceptionHandler(SwordDepositUnprocessableEntityException.class)
@@ -215,55 +216,16 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         String message = format(SWORD_UNPROCESSABLE_TEMPLATE, exception.getMessage());
         logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message, convertExceptionToApiError(exception));
+        return new ApiResponse(ERROR, message, serializeStacktrace(exception));
     }
 
-    private static ApiException convertExceptionToApiError(Exception exception) {
-        if (exception == null) {
-            return new ApiException("Unknown error", null);
-        }
-
-        // Get the exception message, using a default if null
-        String message = exception.getMessage() != null
-            ? exception.getMessage()
-            : "An unexpected error occurred";
-
+    private static String serializeStacktrace(@NonNull Exception exception) {
         // Convert stack trace to string
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         exception.printStackTrace(printWriter);
-        String stackTraceString = stringWriter.toString();
 
-        return new ApiException(message, stackTraceString);
-    }
-
-    public static class ApiException {
-
-        private String message;
-
-        private String stacktrace;
-
-        private ApiException(String message, String stacktrace) {
-            this.message = message;
-            this.stacktrace = stacktrace;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-
-        public String getStacktrace() {
-            return stacktrace;
-        }
-
-        public void setStacktrace(String stacktrace) {
-            this.stacktrace = stacktrace;
-        }
-
+        return stringWriter.toString();
     }
 
 }
