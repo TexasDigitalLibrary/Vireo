@@ -17,7 +17,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartException;
@@ -68,7 +67,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    @ResponseBody
     public ApiResponse handleConstraintViolationException(ConstraintViolationException exception) {
         String message = format(CONSTRAINT_VIOLATION_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -78,7 +76,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    @ResponseBody
     public ApiResponse handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
         String message = format(DATA_INTEGRITY_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -88,7 +85,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ResponseBody
     public ApiResponse handleEntityNotFoundException(EntityNotFoundException exception) {
         String message = format(ENTITY_NOT_FOUND_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -98,7 +94,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(NoSuchFileException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ResponseBody
     public ApiResponse handleNoSuchFileException(NoSuchFileException exception) {
         String message = format(FILE_NOT_FOUND_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -108,7 +103,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(MultipartException.class)
     @ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE)
-    @ResponseBody
     public ApiResponse handleMultipartException(MultipartException exception) {
         String message = format(PAYLOAD_TOO_LARGE_TEMPLATE, maxFileSize);
         logger.error(message);
@@ -118,7 +112,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositBadGatewayException.class)
     @ResponseStatus(value = HttpStatus.BAD_GATEWAY)
-    @ResponseBody
     public ApiResponse handleSwordDepositBadGatewayException(SwordDepositException exception) {
         String message = format(SWORD_BAD_GATEWAY_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -128,7 +121,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositBadRequestException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ResponseBody
     public ApiResponse handleSwordDepositBadRequestException(SwordDepositException exception) {
         String message = format(SWORD_BAD_REQUEST_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -138,7 +130,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositConflictException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    @ResponseBody
     public ApiResponse handleSwordDepositConflictException(SwordDepositException exception) {
         String message = format(SWORD_CONFLICT_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -148,7 +139,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositForbiddenException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    @ResponseBody
     public ApiResponse handleSwordDepositForbiddenException(SwordDepositException exception) {
         String message = format(SWORD_FORBIDDEN_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -158,7 +148,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositGatewayTimeoutException.class)
     @ResponseStatus(value = HttpStatus.GATEWAY_TIMEOUT)
-    @ResponseBody
     public ApiResponse handleSwordDepositGatewayTimeoutException(SwordDepositException exception) {
         String message = format(SWORD_GATEWAY_TIMEOUT_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -168,7 +157,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositInternalServerErrorException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    @ResponseBody
     public ApiResponse handleSwordDepositInternalServerErrorException(SwordDepositException exception) {
         String message = format(SWORD_INTERNAL_ERROR_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -178,7 +166,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ResponseBody
     public ApiResponse handleSwordDepositNotFoundException(SwordDepositException exception) {
         String message = format(SWORD_NOT_FOUND_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -188,7 +175,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositNotImplementedException.class)
     @ResponseStatus(value = HttpStatus.NOT_IMPLEMENTED)
-    @ResponseBody
     public ApiResponse handleSwordDepositNotImplementedException(SwordDepositException exception) {
         String message = format(SWORD_NOT_IMPLEMENTED_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -198,7 +184,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositRequestTimeoutException.class)
     @ResponseStatus(value = HttpStatus.REQUEST_TIMEOUT)
-    @ResponseBody
     public ApiResponse handleSwordDepositRequestTimeoutException(SwordDepositException exception) {
         String message = format(SWORD_REQUEST_TIMEOUT_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -208,7 +193,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositServiceUnavailableException.class)
     @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
-    @ResponseBody
     public ApiResponse handleSwordDepositServiceUnavailableException(SwordDepositException exception) {
         String message = format(SWORD_SERVICE_UNAVAILABLE_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -218,7 +202,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositUnauthorizedException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    @ResponseBody
     public ApiResponse handleSwordDepositUnauthorizedException(SwordDepositException exception) {
         String message = format(SWORD_UNAUTHORIZED_TEMPLATE, exception.getMessage());
         logger.error(message);
@@ -228,7 +211,6 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(SwordDepositUnprocessableEntityException.class)
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-    @ResponseBody
     public ApiResponse handleSwordDepositUnprocessableEntityException(SwordDepositException exception) {
         String message = format(SWORD_UNPROCESSABLE_TEMPLATE, exception.getMessage());
         logger.error(message);
