@@ -78,7 +78,7 @@ public class ActionLog extends ValidatingBaseEntity {
         actionlog_entry.append('"'+getEntry().toString()+'"').append(",");
         actionlog_entry.append(getSubmissionStatus().getName().toString());
         return actionlog_entry.toString();
-
+    }
 
     /**
      * @return the submissionStatus
