@@ -689,16 +689,26 @@ public class SubmissionController {
 
             try {
                 ZipOutputStream zos = new ZipOutputStream(sos_mets);
-
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-                    File exportFile = (File) exportPackage.getPayload();
-                    byte[] fileBytes =  FileUtils.readFileToByteArray(exportFile);
-                    zos.putNextEntry(new ZipEntry(exportFile.getName()));
-                    zos.write(fileBytes);
+                    if(exportPackage.isMap()){
+                        for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
+                            LOG.info("FSS ENTRY "+ fileEntry.getKey());
+                            File exportFile = (File) fileEntry.getValue();
+                            byte[] fileBytes =  FileUtils.readFileToByteArray(exportFile);
+                            zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
+                            zos.write(fileBytes);
+                        }
+                    }else{
+                        File exportFile = (File) exportPackage.getPayload();
+                        byte[] fileBytes =  FileUtils.readFileToByteArray(exportFile);
+                        zos.putNextEntry(new ZipEntry(exportFile.getName()));
+                        zos.write(fileBytes);
+                    }
                     zos.closeEntry();
                 }
                 zos.close();
+
                 response.getOutputStream().write(sos_mets.toByteArray());
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
