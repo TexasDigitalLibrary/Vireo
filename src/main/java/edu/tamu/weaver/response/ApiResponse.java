@@ -196,7 +196,10 @@ public class ApiResponse {
     // Vireo customization
     public static ApiResponse fromException(ApiStatus status, String message, Exception exception) {
         ApiResponse response = new ApiResponse(status, message);
-        response.getMeta().setStacktrace(serializeStacktrace(exception));
+        if (exception != null) {
+            response.getMeta()
+                .setStacktrace(serializeStacktrace(exception));
+        }
 
         return response;
     }
