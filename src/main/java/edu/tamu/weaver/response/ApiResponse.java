@@ -51,13 +51,6 @@ public class ApiResponse {
         }
     }
 
-    // Vireo customization
-    public ApiResponse(ApiStatus status, String message, String stacktrace) {
-        this(status);
-        this.meta.setMessage(message);
-        this.meta.setStacktrace(stacktrace);
-    }
-
     public ApiResponse(ApiStatus status, String message, Object... payload) {
         this(status, payload);
         this.meta.setMessage(message);
@@ -195,6 +188,14 @@ public class ApiResponse {
             this.id = id;
         }
 
+    }
+
+    // Vireo customization
+    public static ApiResponse fromError(ApiStatus status, String message, String stacktrace) {
+        ApiResponse response = new ApiResponse(status, message);
+        response.getMeta().setStacktrace(stacktrace);
+
+        return response;
     }
 
 }
