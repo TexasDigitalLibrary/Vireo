@@ -7,7 +7,6 @@ import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +23,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
@@ -534,12 +532,12 @@ public class SubmissionController {
 
     private void handleBatchExportError(Exception e, HttpServletResponse response) throws IOException {
         LOG.info("Error With Export", e);
-        String responseMessage = "Something went wrong with the export!";
+        String responseMessage = "The export failed. Check all required metadata and files, then try to export again.";
         ApiResponse apiResponse = new ApiResponse(ERROR, responseMessage);
         response.reset();
         response.setContentType("application/json");
-        response.getOutputStream().print(objectMapper.writeValueAsString(apiResponse));
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        response.getOutputStream().print(objectMapper.writeValueAsString(apiResponse));
     }
 
     @SuppressWarnings("unchecked")
