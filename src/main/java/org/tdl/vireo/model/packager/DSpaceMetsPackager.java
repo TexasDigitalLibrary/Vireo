@@ -99,7 +99,7 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
             throw new RuntimeException("Unable to generate package", ioe);
         }
 
-        return new ZipExportPackage(submission, "http://purl.org/net/sword-types/METSDSpaceSIP", pkg);
+        return new ZipExportPackage(submission, "http://purl.org/net/sword-types/METSDSpaceSIP", pkgs);
     }
 
     @Override
