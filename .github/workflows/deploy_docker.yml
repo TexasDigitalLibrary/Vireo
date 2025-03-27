@@ -1,0 +1,35 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      images:
+        description: 'image to push'
+        required: true
+        type: choice
+        options:
+          - vireo
+          - vireo-dev
+        default: 'vireo-dev'
+      environment:
+        description: 'stage or prod'
+        required: true
+        type: environment
+        default: 'stage'
+
+jobs:
+  deploy:
+    runs-on: [self-hosted]
+
+    steps:
+      # - uses: actions/checkout@v4
+
+      - name: executing remote ssh commands as jhu-devops using secret
+        uses: appleboy/ssh-action@v1
+        with:
+          host: msel-vireo03.mse.jhu.edu
+          username: jhu-devops
+          key: ${{ secrets.JHU_DEVOPS_KEY }}
+          script: | 
+            docker pull ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:4.2.10
+            docker run -d -p 9000:9000 ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:4.2.10 
