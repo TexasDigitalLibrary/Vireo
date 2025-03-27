@@ -604,9 +604,18 @@ public class SubmissionHelperUtility {
         int embargoCode = 0;
         Optional<FieldValue> proquestEmbargo = getFirstFieldValueByPredicateValue("proquest_embargos");
         if (proquestEmbargo.isPresent()) {
-          embargoCode = 4;
-        } else {
-          embargoCode = 3;
+          String fv_identifier = proquestEmbargo.get().getIdentifier();
+          if(fv_identifier.equals("0")){
+            embargoCode = 0;
+          }else if(fv_identifier.equals("6")){
+            embargoCode = 1;
+          }else if(fv_identifier.equals("12")){
+            embargoCode = 2;
+          }else if(fv_identifier.equals("24")){
+            embargoCode = 3;
+          }else{
+            embargoCode = 4;
+          }
         }
         return embargoCode;
     }
