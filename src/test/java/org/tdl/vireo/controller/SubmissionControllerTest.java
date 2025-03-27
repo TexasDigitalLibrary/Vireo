@@ -1,11 +1,15 @@
 package org.tdl.vireo.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import edu.tamu.weaver.response.ApiResponse;
 import edu.tamu.weaver.response.ApiStatus;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -19,13 +23,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.SubmissionState;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
+import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.repo.ActionLogRepo;
+import org.tdl.vireo.utility.PackagerUtility;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 
 @ActiveProfiles(value = { "test", "isolated-test" })
 public class SubmissionControllerTest extends AbstractControllerTest {
@@ -58,6 +69,18 @@ public class SubmissionControllerTest extends AbstractControllerTest {
     @Mock
     private ActionLogRepo actionLogRepo;
 
+    @Mock
+    private NamedSearchFilterGroup activeFilter;
+
+    @Mock
+    private PackagerUtility packagerUtility;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    private ServletOutputStream outputStream;
+
     @InjectMocks
     private SubmissionController submissionController;
 
@@ -88,4 +111,14 @@ public class SubmissionControllerTest extends AbstractControllerTest {
         assertEquals(pageable.getPageSize(), response.getPayload().size());
     }
 
+    @Test
+    public void testBatchExportErrorMessage() throws IOException {
+        TEST_USER_1.setActiveFilter(activeFilter);
+        when(packagerUtility.getPackager(anyString())).thenReturn(null);
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        submissionController.batchExport(response, TEST_USER_1, "INVALID-PACKAGER-NAME");
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatus());
+        assertNotNull(response.getContentAsString(), "Response body should not be null");
+    }
 }
