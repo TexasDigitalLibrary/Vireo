@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.ArrayList;
 
 import javax.persistence.Entity;
 
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.export.DSpaceSimplePackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
 
@@ -42,6 +45,26 @@ public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> 
                 FileUtils.writeStringToFile(ff, docContents, StandardCharsets.UTF_8);
                 pkgs.put(docName, ff);
             }
+        } catch (IOException ioe) {
+            throw new RuntimeException("Unable to generate package", ioe);
+        }
+
+        //Add action_log file to zip
+        try {
+            String actionLogName = "action_log.csv";
+            Set <ActionLog> actionLogSet = submission.getActionLogs();
+            ArrayList<ActionLog> actionLogArray = new ArrayList<ActionLog>();
+            actionLogArray.addAll(actionLogSet);
+            actionLogArray.sort((a1,a2) -> a1.getActionDate().compareTo(a2.getActionDate()));
+
+            StringBuilder actionLogStr = new StringBuilder();
+            actionLogStr.append(ActionLog.getCSVHeader()).append("\n");
+            for(ActionLog al : actionLogArray){
+                actionLogStr.append(al.getCSV()).append("\n");
+            }
+            File actionLogFile = File.createTempFile(actionLogName, null);
+            FileUtils.writeStringToFile(actionLogFile, actionLogStr.toString(), StandardCharsets.UTF_8);
+            pkgs.put(actionLogName,actionLogFile);
         } catch (IOException ioe) {
             throw new RuntimeException("Unable to generate package", ioe);
         }
