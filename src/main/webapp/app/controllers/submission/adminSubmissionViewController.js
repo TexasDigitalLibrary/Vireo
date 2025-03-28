@@ -75,6 +75,51 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
     $scope.dropZoneText = "Drop a file or click arrow";
 
+    $scope.getTitle = function (submission) {
+        // Base title with last name, first name
+        let title = `${submission.submitter.lastName}, ${submission.submitter.firstName}`;
+
+        // Try to find degree and major field values
+        const degreePredicate = submission.getFieldProfileByPredicateName('thesis.degree.name');
+        const majorPredicates = [
+            submission.getFieldProfileByPredicateName('thesis.degree.major'),
+            submission.getFieldProfileByPredicateName('thesis.degree.discipline')
+        ];
+
+        let degree = '';
+        let major = '';
+
+        // Find degree field values if predicate exists
+        if (degreePredicate) {
+            const degreeFieldValues = submission.getFieldValuesByFieldPredicate(degreePredicate.fieldPredicate);
+            if (degreeFieldValues.length > 0 && degreeFieldValues[0].value) {
+                degree = degreeFieldValues[0].value;
+            }
+        }
+
+        // Find major field values, giving precedence to thesis.degree.major
+        for (let majorPredicate of majorPredicates) {
+            if (majorPredicate) {
+                const majorFieldValues = submission.getFieldValuesByFieldPredicate(majorPredicate.fieldPredicate);
+                if (majorFieldValues.length > 0 && majorFieldValues[0].value) {
+                    major = majorFieldValues[0].value;
+                    break; // Stop after finding the first non-empty major
+                }
+            }
+        }
+
+        // Determine parenthetical based on available information
+        if (degree && major) {
+            title += ` (${degree} - ${major})`;
+        } else if (degree) {
+            title += ` (${degree})`;
+        } else if (submission.organization.name) {
+            title += ` (${submission.organization.name})`;
+        }
+
+        return title;
+    };
+
     SubmissionRepo.fetchSubmissionById($routeParams.id).then(function(submission) {
 
         $scope.submission = submission;
@@ -86,8 +131,6 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             var apiRes = angular.fromJson(res.body);
             surgicalFieldValueUpdate(apiRes.payload.Submission);
         });
-
-        $scope.title = $scope.submission.submitter.lastName + ', ' + $scope.submission.submitter.firstName + ' (' + $scope.submission.organization.name + ')';
 
         $scope.submission.fetchDocumentTypeFileInfo();
 
