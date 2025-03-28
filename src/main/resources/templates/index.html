@@ -116,6 +116,9 @@
           <a class="pull-left" th:href="${#strings.isEmpty(base) ? '/' : base}">
             <img style="max-height: 65px;" ng-src="{{logoImage()}}" alt="Thesis Submission Portal Home" />
           </a>
+          <div class="pull-right">
+            <img style="max-height: 65px;" ng-src="{{rightLogoImage()}}" alt="Right Logo" />
+          </div>
           <ul ng-if="activeAdminSection()" class="tab-nav nav navbar-nav navbar-right hidden-xs">
             <li ng-class="{'active': activeTab('/admin/list')}">
               <a href="admin/list">List</a>
