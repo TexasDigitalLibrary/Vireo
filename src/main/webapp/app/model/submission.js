@@ -145,7 +145,6 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
             });
 
             submission.fieldValuesRemovedListenPromise.then(null, null, function (res) {
-                console.log('remove field value promise', res);
                 var removedFieldValue = angular.fromJson(res.body).payload.FieldValue;
 
                 removeFieldValue(removedFieldValue);
