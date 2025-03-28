@@ -37,10 +37,24 @@ public class FileHelperUtility {
         return cleanPath(Application.getAssetsPath() + relativePath);
     }
 
+    /**
+     * Cleans a file path to ensure compatibility across different file systems.
+     *
+     * @param path The path to clean
+     * @return The cleaned path
+     */
     private static String cleanPath(String path) {
-        if (path.contains(":") && path.charAt(0) == '/') {
-            path = path.substring(1, path.length());
+        // Check if this is a Windows path with drive letter that has an extra leading slash
+        // Example: "/C:/folder" should become "C:/folder"
+        if (path.length() >= 3 &&
+                path.charAt(0) == '/' &&
+                Character.isLetter(path.charAt(1)) &&
+                path.charAt(2) == ':') {
+
+            return path.substring(1);
         }
+
+        // For all other paths (including Linux paths with colons), return as is
         return path;
     }
 
