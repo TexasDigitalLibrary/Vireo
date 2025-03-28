@@ -81,7 +81,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
         // Try to find degree and major field values
         const degreePredicate = submission.getFieldProfileByPredicateName('thesis.degree.name');
-        const majorPredicate = submission.getFieldProfileByPredicateName('thesis.degree.discipline');
+        const majorPredicates = [
+            submission.getFieldProfileByPredicateName('thesis.degree.major'),
+            submission.getFieldProfileByPredicateName('thesis.degree.discipline')
+        ];
 
         let degree = '';
         let major = '';
@@ -94,11 +97,14 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
             }
         }
 
-        // Find major field values if predicate exists
-        if (majorPredicate) {
-            const majorFieldValues = submission.getFieldValuesByFieldPredicate(majorPredicate.fieldPredicate);
-            if (majorFieldValues.length > 0 && majorFieldValues[0].value) {
-                major = majorFieldValues[0].value;
+        // Find major field values, giving precedence to thesis.degree.major
+        for (let majorPredicate of majorPredicates) {
+            if (majorPredicate) {
+                const majorFieldValues = submission.getFieldValuesByFieldPredicate(majorPredicate.fieldPredicate);
+                if (majorFieldValues.length > 0 && majorFieldValues[0].value) {
+                    major = majorFieldValues[0].value;
+                    break; // Stop after finding the first non-empty major
+                }
             }
         }
 
