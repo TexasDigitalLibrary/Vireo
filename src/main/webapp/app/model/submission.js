@@ -19,7 +19,22 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
                     if (submission.primaryDocumentFieldValue !== undefined && submission.primaryDocumentFieldValue !== null && fieldValue.id === submission.primaryDocumentFieldValue.id) {
                         delete submission.primaryDocumentFieldValue;
                     }
-                    submission.addFieldValue(fieldValue.fieldPredicate);
+
+                    // Check if the field is repeatable
+                    var fieldProfile = submission.getFieldProfileByPredicate(fieldValue.fieldPredicate);
+
+                    // Count remaining field values for this predicate
+                    var remainingFieldValues = submission.getFieldValuesByFieldPredicate(fieldValue.fieldPredicate);
+
+                    // If repeatable and no remaining field values, add a new one
+                    if (fieldProfile.repeatable && remainingFieldValues.length === 0) {
+                        submission.addFieldValue(fieldValue.fieldPredicate);
+                    }
+                    // If not repeatable, add a new field value
+                    else if (!fieldProfile.repeatable) {
+                        submission.addFieldValue(fieldValue.fieldPredicate);
+                    }
+
                     break;
                 }
             }
