@@ -32,7 +32,6 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 			
 			return "resources/images/default-right-logo.png";
 		};
-	
 
 		$scope.activeTab = function(path) {
 			return $location.url().indexOf(path) >= 0;
