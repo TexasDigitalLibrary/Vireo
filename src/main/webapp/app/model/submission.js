@@ -490,7 +490,21 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
                 method: submission.id + "/remove-field-value",
                 data: fieldValue
             });
+
             var promise = WsApi.fetch(this.getMapping().removeFieldValue);
+
+            promise.then(function (response) {
+                var apiRes = angular.fromJson(response.body);
+                if (apiRes.meta.status === 'SUCCESS') {
+                    var index = submission.fieldValues.indexOf(fieldValue);
+                    if (index !== -1) {
+                        submission.fieldValues.splice(index, 1);
+                    }
+
+                    submission.addFieldValue(fieldValue.fieldPredicate);
+                }
+            });
+
             return promise;
         };
 
