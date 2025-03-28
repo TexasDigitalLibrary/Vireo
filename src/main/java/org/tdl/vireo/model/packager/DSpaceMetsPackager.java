@@ -44,6 +44,7 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
 
         String packageName = "submission-" + submission.getId() + "-";
         String manifestName = "mets.xml";
+        String actionLogName = "action_log.csv";
 
         File pkg = null;
         try {
