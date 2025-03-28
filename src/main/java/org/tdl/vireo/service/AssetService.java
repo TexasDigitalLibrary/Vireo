@@ -157,9 +157,8 @@ public class AssetService {
 
         Calendar creationDate = Calendar.getInstance();
 
-        //creationDate.setTimeInMillis(attr.creationTime().toMillis());
-        //current hack to find action_logs based on migrated file dates 
-        creationDate.setTimeInMillis(0);
+        //current hack to find action_logs based on migrated file dates
+        creationDate.setTimeInMillis(attr.creationTime().toMillis());
 
         Page<ActionLog> actionLogs = actionLogRepo.findBySubmissionIdAndEntryLikeAndBeforeActionDate(submission.getId(), name, creationDate, PageRequest.of(0, 1));
 
