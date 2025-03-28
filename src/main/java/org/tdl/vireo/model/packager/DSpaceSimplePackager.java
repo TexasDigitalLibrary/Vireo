@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
-import java.util.SimpleDateFormat;
+import java.text.SimpleDateFormat;
 
 import javax.persistence.Entity;
 
