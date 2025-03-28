@@ -10,6 +10,21 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
 
         submission.enableMergeCombinationOperation();
 
+        var removeFieldValue = function (removedFieldValue) {
+            for (var i in submission.fieldValues) {
+                var fieldValue = submission.fieldValues[i];
+
+                if (fieldValue.id === removedFieldValue.id) {
+                    submission.fieldValues.splice(i, 1);
+                    if (submission.primaryDocumentFieldValue !== undefined && submission.primaryDocumentFieldValue !== null && fieldValue.id === submission.primaryDocumentFieldValue.id) {
+                        delete submission.primaryDocumentFieldValue;
+                    }
+                    submission.addFieldValue(fieldValue.fieldPredicate);
+                    break;
+                }
+            }
+        };
+
         //populate fieldValues with models for existing values
         var instantiateFieldValues = function () {
             var fieldValues = angular.copy(submission.fieldValues);
@@ -130,20 +145,10 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
             });
 
             submission.fieldValuesRemovedListenPromise.then(null, null, function (res) {
+                console.log('remove field value promise', res);
                 var removedFieldValue = angular.fromJson(res.body).payload.FieldValue;
 
-                for (var i in submission.fieldValues) {
-                    var fieldValue = submission.fieldValues[i];
-
-                    if (fieldValue.id === removedFieldValue.id) {
-                        submission.fieldValues.splice(i, 1);
-                        if (submission.primaryDocumentFieldValue !== undefined && submission.primaryDocumentFieldValue !== null && fieldValue.id === submission.primaryDocumentFieldValue.id) {
-                            delete submission.primaryDocumentFieldValue;
-                        }
-                        submission.addFieldValue(fieldValue.fieldPredicate);
-                        break;
-                    }
-                }
+                removeFieldValue(removedFieldValue);
             });
 
             if (simple !== true) {
@@ -496,12 +501,7 @@ var submissionModel = function ($filter, $q, ActionLog, FieldValue, FileService,
             promise.then(function (response) {
                 var apiRes = angular.fromJson(response.body);
                 if (apiRes.meta.status === 'SUCCESS') {
-                    var index = submission.fieldValues.indexOf(fieldValue);
-                    if (index !== -1) {
-                        submission.fieldValues.splice(index, 1);
-                    }
-
-                    submission.addFieldValue(fieldValue.fieldPredicate);
+                    removeFieldValue(fieldValue);
                 }
             });
 
