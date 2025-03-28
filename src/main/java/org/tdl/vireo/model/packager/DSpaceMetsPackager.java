@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import java.util.SimpleDateFormat;
 
 import javax.persistence.Entity;
 
@@ -43,8 +44,6 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
 
         String packageName = "submission-" + submission.getId() + "-";
         String manifestName = "mets.xml";
-        String actionLogName = "action_log.csv";
-        Map<String, File> pkgs = new HashMap<String, File>();
 
         File pkg = null;
         try {
@@ -64,22 +63,6 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
             zos.closeEntry();
 
             manifestFile.delete();
-            pkgs.put(manifestName,pkg);
-
-            //Add action_log file to zip
-            Set <ActionLog> actionLogSet = submission.getActionLogs();
-            ArrayList<ActionLog> actionLogArray = new ArrayList<ActionLog>();
-            actionLogArray.addAll(actionLogSet);
-            actionLogArray.sort((a1,a2) -> a1.getActionDate().compareTo(a2.getActionDate()));
-
-            StringBuilder actionLogStr = new StringBuilder();
-            actionLogStr.append(ActionLog.getCSVHeader()).append("\n");
-            for(ActionLog al : actionLogArray){
-                actionLogStr.append(al.getCSV()).append("\n");
-            }
-            File actionLogFile = File.createTempFile(actionLogName, null);
-            FileUtils.writeStringToFile(actionLogFile, actionLogStr.toString(), StandardCharsets.UTF_8);
-            pkgs.put(actionLogName,actionLogFile);
 
             List<FieldValue> documentFieldValues = submission.getAllDocumentFieldValues();
             for (FieldValue documentFieldValue : documentFieldValues) {
@@ -99,7 +82,7 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
             throw new RuntimeException("Unable to generate package", ioe);
         }
 
-        return new ZipExportPackage(submission, "http://purl.org/net/sword-types/METSDSpaceSIP", pkgs);
+        return new ZipExportPackage(submission, "http://purl.org/net/sword-types/METSDSpaceSIP", pkg);
     }
 
     @Override

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.SimpleDateFormat;
 
 import javax.persistence.Entity;
 
@@ -58,10 +59,15 @@ public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> 
             actionLogArray.sort((a1,a2) -> a1.getActionDate().compareTo(a2.getActionDate()));
 
             StringBuilder actionLogStr = new StringBuilder();
-            actionLogStr.append(ActionLog.getCSVHeader()).append("\n");
+            actionLogStr.append("Action Date, Action Entry, SubmissionState\n");
+
+            SimpleDateFormat sd_format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
             for(ActionLog al : actionLogArray){
-                actionLogStr.append(al.getCSV()).append("\n");
+                actionLogStr.append(sd_format.format(al.getActionDate().getTime())).append(",");
+                actionLogStr.append('"'+al.getEntry().toString()+'"').append(",");
+                actionLogStr.append(al.getSubmissionStatus().getName().toString()).append("\n");
             }
+
             File actionLogFile = File.createTempFile(actionLogName, null);
             FileUtils.writeStringToFile(actionLogFile, actionLogStr.toString(), StandardCharsets.UTF_8);
             pkgs.put(actionLogName,actionLogFile);
