@@ -693,7 +693,6 @@ public class SubmissionController {
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                     if(exportPackage.isMap()){
                         for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
-                            LOG.info("FSS ENTRY "+ fileEntry.getKey());
                             File exportFile = (File) fileEntry.getValue();
                             byte[] fileBytes =  FileUtils.readFileToByteArray(exportFile);
                             zos.putNextEntry(new ZipEntry(fileEntry.getKey()));

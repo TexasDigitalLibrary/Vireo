@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+import java.text.SimpleDateFormat;
 
 import javax.persistence.Entity;
 
@@ -62,6 +63,36 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
             zos.closeEntry();
 
             manifestFile.delete();
+
+            // Copy the Action Log
+            Set <ActionLog> actionLogSet = submission.getActionLogs();
+            // Convert Set into sortable ArrayList to present action logs in order
+            ArrayList<ActionLog> actionLogArray = new ArrayList<ActionLog>();
+            actionLogArray.addAll(actionLogSet);
+            actionLogArray.sort((a1,a2) -> a1.getActionDate().compareTo(a2.getActionDate()));
+
+            StringBuilder actionLogStr = new StringBuilder();
+            actionLogStr.append("Action Date, User Name, Action Entry, SubmissionState\n");
+
+            SimpleDateFormat sd_format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
+            for(ActionLog al : actionLogArray){
+                actionLogStr.append(sd_format.format(al.getActionDate().getTime())).append(",");
+                actionLogStr.append('"'+al.getUser().getName()+'"').append(",");
+                actionLogStr.append('"'+al.getEntry()+'"').append(",");
+                actionLogStr.append(al.getSubmissionStatus().getName()).append("\n");
+            }
+
+            File actionLogFile = File.createTempFile(actionLogName, null);
+            FileUtils.writeStringToFile(actionLogFile, actionLogStr.toString(), StandardCharsets.UTF_8);
+
+            // Add action_log file to zip
+            zos.putNextEntry(new ZipEntry(actionLogName));
+            zos.write(Files.readAllBytes(actionLogFile.toPath()));
+            zos.closeEntry();
+
+            actionLogFile.delete();
+
+
 
             List<FieldValue> documentFieldValues = submission.getAllDocumentFieldValues();
             for (FieldValue documentFieldValue : documentFieldValues) {

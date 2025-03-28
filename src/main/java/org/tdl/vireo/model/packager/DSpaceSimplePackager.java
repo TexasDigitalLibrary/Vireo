@@ -59,13 +59,14 @@ public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> 
             actionLogArray.sort((a1,a2) -> a1.getActionDate().compareTo(a2.getActionDate()));
 
             StringBuilder actionLogStr = new StringBuilder();
-            actionLogStr.append("Action Date, Action Entry, SubmissionState\n");
+            actionLogStr.append("Action Date, User Name, Action Entry, SubmissionState\n");
 
             SimpleDateFormat sd_format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
             for(ActionLog al : actionLogArray){
                 actionLogStr.append(sd_format.format(al.getActionDate().getTime())).append(",");
-                actionLogStr.append('"'+al.getEntry().toString()+'"').append(",");
-                actionLogStr.append(al.getSubmissionStatus().getName().toString()).append("\n");
+                actionLogStr.append('"'+al.getUser().getName()+'"').append(",");
+                actionLogStr.append('"'+al.getEntry()+'"').append(",");
+                actionLogStr.append(al.getSubmissionStatus().getName()).append("\n");
             }
 
             File actionLogFile = File.createTempFile(actionLogName, null);
