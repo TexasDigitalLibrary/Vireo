@@ -1,4 +1,4 @@
-vireo.controller('NewSubmissionController', function ($controller, $location, $q, $scope, Organization, OrganizationRepo, StudentSubmissionRepo, ManagedConfigurationRepo, Submission, SubmissionStates) {
+vireo.controller('NewSubmissionController', function ($controller, $location, $q, $scope, $timeout, Organization, OrganizationRepo, StudentSubmissionRepo, ManagedConfigurationRepo, Submission, SubmissionStates) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -13,7 +13,74 @@ vireo.controller('NewSubmissionController', function ($controller, $location, $q
     $scope.selectedOrganization = new Organization({});
 
     $scope.ready = false;
+
     $scope.loadingOrganization = false;
+
+    $scope.handleKeyup = function (event, attr, cb, options) {
+
+        // allow for use in nested elements
+        event.stopPropagation();
+
+        const callback = () => {
+            if (!attr.managed && $scope.getSelectedOrganizationAcceptsSubmissions()) {
+                cb($scope.selectedOrganization);
+            }
+        };
+
+        let next;
+
+        switch (event.which) {
+            // enter
+            case 13:
+            // space
+            case 32:
+                if (event.which === 13) console.log('enter');
+                if (event.which === 32) console.log('space');
+                callback();
+                break;
+            // up
+            case 38:
+                for (let i = options.length - 1; i >= 0; i--) {
+                    if ($scope.selectedOrganization.id === options[i].id) {
+                        next = i - 1 >= 0 ? options[i - 1].id : options[options.length - 1].id;
+                        break;
+                    }
+                }
+                break;
+            // down
+            case 40:
+                for (let i = 0; i < options.length; i++) {
+                    if ($scope.selectedOrganization.id === options[i].id) {
+                        next = i + 1 < options.length ? options[i + 1].id : options[0].id;
+                        break;
+                    }
+                }
+                break;
+            // left
+            case 37:
+                if ($scope.selectedOrganization.parentOrganization) {
+                    next = $scope.selectedOrganization.parentOrganization;
+                }
+                break;
+            // right
+            case 39:
+                if ($scope.selectedOrganization.childrenOrganizations?.length > 0) {
+                    next = $scope.selectedOrganization.childrenOrganizations[0].id;
+                }
+                break;
+            default:
+                break;
+        }
+
+        if (next) {
+            const nextElement = document.getElementById(`organization-${next}`);
+
+            if (nextElement) {
+                nextElement.focus();
+            }
+        }
+
+    };
 
     $scope.getSelectedOrganizationId = function () {
         if (!!$scope.selectedOrganization && !!$scope.selectedOrganization.id) {
@@ -94,7 +161,7 @@ vireo.controller('NewSubmissionController', function ($controller, $location, $q
                 angular.extend($scope.organizations, orgs);
 
                 resolve();
-            }).catch(function(reason) {
+            }).catch(function (reason) {
                 reject(reason);
             });
         });
