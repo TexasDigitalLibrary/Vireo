@@ -85,7 +85,6 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
                 }else{
                     actionLogStr.append(",");
                 }
-                actionLogStr.append('"'+al.getUser().getName()+'"').append(",");
                 actionLogStr.append('"'+al.getEntry()+'"').append(",");
                 actionLogStr.append(al.getSubmissionStatus().getName()).append("\n");
             }
