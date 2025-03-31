@@ -13,7 +13,6 @@ vireo.controller('NewSubmissionController', function ($controller, $location, $q
     $scope.selectedOrganization = new Organization({});
 
     $scope.ready = false;
-
     $scope.loadingOrganization = false;
 
     $scope.getSelectedOrganizationId = function () {
@@ -95,7 +94,7 @@ vireo.controller('NewSubmissionController', function ($controller, $location, $q
                 angular.extend($scope.organizations, orgs);
 
                 resolve();
-            }).catch(function (reason) {
+            }).catch(function(reason) {
                 reject(reason);
             });
         });
