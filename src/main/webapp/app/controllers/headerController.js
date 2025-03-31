@@ -9,7 +9,6 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 	ManagedConfigurationRepo.ready().then(function() {
 		if ($scope.configurable.lookAndFeel) {
 			$scope.logoPath = $scope.configurable.lookAndFeel.left_logo.value;
-			$scope.rightLogo = $scope.configurable.lookAndFeel.right_logo.value;
 		}
 
 		$scope.logoImage = function() {
@@ -23,12 +22,6 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 			}
 
 			return $scope.logoPath;
-		};
-
-		$scope.rightLogoImage = function() {
-			return $scope.configurable.lookAndFeel && $scope.configurable.lookAndFeel.right_logo
-				? $scope.configurable.lookAndFeel.right_logo.value
-				: "resources/images/default-right-logo.gif";
 		};
 
 		$scope.activeTab = function(path) {
