@@ -7,12 +7,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.text.SimpleDateFormat;
 
 import javax.persistence.Entity;
 
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.Submission;
+import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.export.DSpaceSimplePackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
@@ -64,7 +66,12 @@ public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> 
             SimpleDateFormat sd_format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
             for(ActionLog al : actionLogArray){
                 actionLogStr.append(sd_format.format(al.getActionDate().getTime())).append(",");
-                actionLogStr.append('"'+al.getUser().getName()+'"').append(",");
+                Optional<User> alUser = al.getUser();
+                if(alUser.isPresent()){
+                    actionLogStr.append('"'+alUser.getName()+'"').append(",");
+                }else{
+                    actionLogStr.append(",");
+                }
                 actionLogStr.append('"'+al.getEntry()+'"').append(",");
                 actionLogStr.append(al.getSubmissionStatus().getName()).append("\n");
             }
