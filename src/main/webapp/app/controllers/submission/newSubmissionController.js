@@ -34,8 +34,6 @@ vireo.controller('NewSubmissionController', function ($controller, $location, $q
             case 13:
             // space
             case 32:
-                if (event.which === 13) console.log('enter');
-                if (event.which === 32) console.log('space');
                 callback();
                 break;
             // up
