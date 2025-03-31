@@ -689,6 +689,7 @@ public class SubmissionController {
 
             try {
                 ZipOutputStream zos = new ZipOutputStream(sos_mets);
+
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                     File exportFile = (File) exportPackage.getPayload();
@@ -698,7 +699,6 @@ public class SubmissionController {
                     zos.closeEntry();
                 }
                 zos.close();
-
                 response.getOutputStream().write(sos_mets.toByteArray());
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
