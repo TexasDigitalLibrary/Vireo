@@ -26,11 +26,9 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 		};
 
 		$scope.rightLogoImage = function() {
-			if ($scope.configurable.lookAndFeel && $scope.configurable.lookAndFeel.right_logo) {
-				return $scope.configurable.lookAndFeel.right_logo.value;
-			}
-			
-			return "resources/images/default-right-logo.png";
+			return $scope.configurable.lookAndFeel && $scope.configurable.lookAndFeel.right_logo
+				? $scope.configurable.lookAndFeel.right_logo.value
+				: "resources/images/default-right-logo.gif";
 		};
 
 		$scope.activeTab = function(path) {
