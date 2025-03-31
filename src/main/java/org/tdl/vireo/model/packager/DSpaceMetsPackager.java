@@ -12,7 +12,6 @@ import java.util.Set;
 import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import java.util.Optional;
 import java.text.SimpleDateFormat;
 
 import javax.persistence.Entity;
@@ -80,8 +79,8 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
             SimpleDateFormat sd_format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
             for(ActionLog al : actionLogArray){
                 actionLogStr.append(sd_format.format(al.getActionDate().getTime())).append(",");
-                Optional<User> alUser = al.getUser();
-                if(alUser.isPresent()){
+                User alUser = al.getUser();
+                if(alUser!=null){
                     actionLogStr.append('"'+alUser.getName()+'"').append(",");
                 }else{
                     actionLogStr.append(",");
