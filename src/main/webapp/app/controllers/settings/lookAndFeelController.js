@@ -14,8 +14,6 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, Fil
 
     $scope.modalData.logoLeft = $scope.settings.configurable.lookAndFeel.left_logo.value;
 
-    $scope.modalData.logoRight = $scope.settings.configurable.lookAndFeel.right_logo.value;
-
     $scope.previewLogo = function (files) {
         if (files.length > 0) {
             previewLogo(files[0]).then(function (result) {
