@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.packager;
 
+import javax.persistence.Entity;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,21 +10,15 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.ArrayList;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
-import java.text.SimpleDateFormat;
-
-import javax.persistence.Entity;
 
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.FieldValue;
-import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Submission;
-import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.export.ZipExportPackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
+import org.tdl.vireo.utility.CsvUtility;
 
 @Entity
 public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
@@ -66,31 +62,7 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
 
             manifestFile.delete();
 
-            // Copy the Action Log
-            Set <ActionLog> actionLogSet = submission.getActionLogs();
-            // Convert Set into sortable ArrayList to present action logs in order
-            ArrayList<ActionLog> actionLogArray = new ArrayList<ActionLog>();
-            actionLogArray.addAll(actionLogSet);
-            actionLogArray.sort((a1,a2) -> a1.getActionDate().compareTo(a2.getActionDate()));
-
-            StringBuilder actionLogStr = new StringBuilder();
-            actionLogStr.append("Action Date, User Name, Action Entry, SubmissionState\n");
-
-            SimpleDateFormat sd_format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssz");
-            for(ActionLog al : actionLogArray){
-                actionLogStr.append(sd_format.format(al.getActionDate().getTime())).append(",");
-                User alUser = al.getUser();
-                if(alUser!=null){
-                    actionLogStr.append('"'+alUser.getName()+'"').append(",");
-                }else{
-                    actionLogStr.append(",");
-                }
-                actionLogStr.append('"'+al.getEntry()+'"').append(",");
-                actionLogStr.append(al.getSubmissionStatus().getName()).append("\n");
-            }
-
-            File actionLogFile = File.createTempFile(actionLogName, null);
-            FileUtils.writeStringToFile(actionLogFile, actionLogStr.toString(), StandardCharsets.UTF_8);
+            File actionLogFile = CsvUtility.fromActionLog(submission.getActionLogs(), actionLogName);
 
             // Add action_log file to zip
             zos.putNextEntry(new ZipEntry(actionLogName));
