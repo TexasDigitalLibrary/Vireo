@@ -186,7 +186,7 @@ vireo.directive("triptych", function () {
                     }
                 };
 
-                let next;
+                let nextElement;
 
                 switch (event.which) {
                     // enter
@@ -197,46 +197,49 @@ vireo.directive("triptych", function () {
                         break;
                     // up
                     case 38:
-                        for (let i = options.length - 1; i >= 0; i--) {
-                            if (selectedOrganization.id === options[i].id) {
-                                next = i - 1 >= 0 ? options[i - 1].id : options[options.length - 1].id;
-                                break;
+                        // Get the previous sibling element
+                        nextElement = event.target.previousElementSibling;
+                        // If no previous sibling, get the last sibling (wrap around)
+                        if (!nextElement) {
+                            const parent = event.target.parentElement;
+                            if (parent) {
+                                nextElement = parent.lastElementChild;
                             }
                         }
                         break;
                     // down
                     case 40:
-                        for (let i = 0; i < options.length; i++) {
-                            if (selectedOrganization.id === options[i].id) {
-                                next = i + 1 < options.length ? options[i + 1].id : options[0].id;
-                                break;
+                        // Get the next sibling element
+                        nextElement = event.target.nextElementSibling;
+                        // If no next sibling, get the first sibling (wrap around)
+                        if (!nextElement) {
+                            const parent = event.target.parentElement;
+                            if (parent) {
+                                nextElement = parent.firstElementChild;
                             }
                         }
                         break;
                     // left
                     case 37:
                         if (selectedOrganization.parentOrganization) {
-                            next = selectedOrganization.parentOrganization;
+                            const parentId = selectedOrganization.parentOrganization;
+                            nextElement = document.getElementById(`organization-${parentId}`);
                         }
                         break;
                     // right
                     case 39:
                         if (selectedOrganization.childrenOrganizations?.length > 0) {
-                            next = selectedOrganization.childrenOrganizations[0].id;
+                            const childId = selectedOrganization.childrenOrganizations[0].id;
+                            nextElement = document.getElementById(`organization-${childId}`);
                         }
                         break;
                     default:
                         break;
                 }
 
-                if (next) {
-                    const nextElement = document.getElementById(`organization-${next}`);
-
-                    if (nextElement) {
-                        nextElement.focus();
-                    }
+                if (nextElement) {
+                    nextElement.focus();
                 }
-
             };
 
             $scope.findOrganizationById = function (organizationId) {
