@@ -38,7 +38,9 @@
                             <li class="list-group-item triptych-panel-entry"
                                 ng-repeat="organization in panel.organization.childrenOrganizations | filter:{category: {name: panel.filter}} | orderBy:['category.name','name']"
                                 ng-focus="selectOrganization(organization)"
-                                ng-class="{'selected': panel.selected.organization.id == organization.id}"
+                                ng-class="{'selected': panel.selected.organization.id === organization.id}"
+                                ng-keyup="handleKeyup($event, attr, createSubmission, panel.organization.childrenOrganizations)"
+                                id="organization-{{organization.id}}"
                                 tabindex="0">
                                 <ul class="inline-list pull-right" ng-if="attr.managed">
                                     <li ng-click="activateManagementPane('edit')">
@@ -52,7 +54,7 @@
                                     </li>
                                 </ul>
                                 <ul class="inline-list pull-right" ng-if="!attr.managed">
-                                    <li ng-if="hasSubmission(organization)" ng-click="gotoSubmission(organization)">
+                                    <li ng-if="hasSubmission(organization)" ng-click="gotoSubmission(organization)" ng-keyup="handleKeyup($event, attr, gotoSubmission, panel.organization.childrenOrganizations)">
                                         <span class="context-icons glyphicon glyphicon-list-alt pull-right" tooltip="Continue submission"></span>
                                     </li>
                                 </ul>
