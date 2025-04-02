@@ -1,5 +1,7 @@
 package org.tdl.vireo.model.packager;
 
+import javax.persistence.Entity;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,13 +13,12 @@ import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.persistence.Entity;
-
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.export.ZipExportPackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
+import org.tdl.vireo.utility.CsvUtility;
 
 @Entity
 public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
@@ -40,6 +41,7 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
 
         String packageName = "submission-" + submission.getId() + "-";
         String manifestName = "mets.xml";
+        String actionLogName = "action_log.csv";
 
         File pkg = null;
         try {
@@ -59,6 +61,17 @@ public class DSpaceMetsPackager extends AbstractPackager<ZipExportPackage> {
             zos.closeEntry();
 
             manifestFile.delete();
+
+            File actionLogFile = CsvUtility.fromActionLog(submission.getActionLogs(), actionLogName);
+
+            // Add action_log file to zip
+            zos.putNextEntry(new ZipEntry(actionLogName));
+            zos.write(Files.readAllBytes(actionLogFile.toPath()));
+            zos.closeEntry();
+
+            actionLogFile.delete();
+
+
 
             List<FieldValue> documentFieldValues = submission.getAllDocumentFieldValues();
             for (FieldValue documentFieldValue : documentFieldValues) {

@@ -1,17 +1,18 @@
 package org.tdl.vireo.model.packager;
 
+import javax.persistence.Entity;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.Entity;
-
 import org.apache.commons.io.FileUtils;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.export.DSpaceSimplePackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
+import org.tdl.vireo.utility.CsvUtility;
 
 @Entity
 public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> {
@@ -42,6 +43,17 @@ public class DSpaceSimplePackager extends AbstractPackager<DSpaceSimplePackage> 
                 FileUtils.writeStringToFile(ff, docContents, StandardCharsets.UTF_8);
                 pkgs.put(docName, ff);
             }
+        } catch (IOException ioe) {
+            throw new RuntimeException("Unable to generate package", ioe);
+        }
+
+        //Add action_log file to zip
+        try {
+            String actionLogName = "action_log.csv";
+
+            File actionLogFile = CsvUtility.fromActionLog(submission.getActionLogs(), actionLogName);
+
+            pkgs.put(actionLogName, actionLogFile);
         } catch (IOException ioe) {
             throw new RuntimeException("Unable to generate package", ioe);
         }
