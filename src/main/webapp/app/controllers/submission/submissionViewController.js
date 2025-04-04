@@ -213,7 +213,9 @@ vireo.controller("SubmissionViewController", function ($controller, $q, $routePa
         });
 
         $scope.getPaginatedActionLog = function (orderBy, page, count) {
-            return StudentSubmissionRepo.findPaginatedActionLogsById($routeParams.submissionId, orderBy, page, count);
+            return angular.isDefined($routeParams.submissionId)
+                ? StudentSubmissionRepo.findPaginatedActionLogsById($routeParams.submissionId, orderBy, page, count)
+                : $q(function(resolve) { resolve([]); });
         }
 
     });

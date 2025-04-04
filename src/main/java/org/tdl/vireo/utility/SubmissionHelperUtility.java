@@ -512,13 +512,13 @@ public class SubmissionHelperUtility {
     }
 
     public String getDegreeCodeStr() {
-        Optional<String> degreeCode = getFieldValueIdentifierByPredicateValue("thesis.degree.name");
+        Optional<String> degreeCode = getFieldValueDefinitionByPredicateValue("thesis.degree.name");
         return degreeCode.isPresent() ? degreeCode.get() : "";
     }
 
     public String getDegreeCodeProc() {
-        Optional<String> degreeCode = getFieldValueDefinitionByPredicateValue("thesis.degree.name");
-        return degreeCode.isPresent() ? degreeCode.get().toUpperCase().substring(0,1) : "";
+        Optional<String> degreeCodeProc = getFieldValueIdentifierByPredicateValue("thesis.degree.name");
+        return degreeCodeProc.isPresent() ? degreeCodeProc.get().toUpperCase().substring(0,1) : "";
     }
 
     public String getDegreeCollege() {
@@ -604,9 +604,18 @@ public class SubmissionHelperUtility {
         int embargoCode = 0;
         Optional<FieldValue> proquestEmbargo = getFirstFieldValueByPredicateValue("proquest_embargos");
         if (proquestEmbargo.isPresent()) {
-          embargoCode = 4;
-        } else {
-          embargoCode = 3;
+          String fv_identifier = proquestEmbargo.get().getIdentifier();
+          if(fv_identifier.equals("0")){
+            embargoCode = 0;
+          }else if(fv_identifier.equals("6")){
+            embargoCode = 1;
+          }else if(fv_identifier.equals("12")){
+            embargoCode = 2;
+          }else if(fv_identifier.equals("24")){
+            embargoCode = 3;
+          }else{
+            embargoCode = 4;
+          }
         }
         return embargoCode;
     }

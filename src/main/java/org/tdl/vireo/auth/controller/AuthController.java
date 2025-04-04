@@ -87,16 +87,16 @@ public class AuthController extends WeaverAuthController {
 
             try {
                 content = templateUtility.templateParameters(emailTemplate.getMessage(), new String[][] { { "REGISTRATION_URL", url + "/register?token=" + cryptoService.generateGenericToken(email, EMAIL_VERIFICATION_TYPE) } });
-            } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException e1) {
+            } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | BadPaddingException e) {
                 logger.debug("Unable to generate token! " + email);
-                return new ApiResponse(ERROR, "Unable to generate token! " + email);
+                return ApiResponse.fromException(ERROR, "Unable to generate token! " + email, e);
             }
 
             try {
                 emailSender.sendEmail(email, emailTemplate.getSubject(), content);
             } catch (MessagingException e) {
                 logger.debug("Unable to send email " + email + ", because: " + e.getMessage());
-                return new ApiResponse(ERROR, "Unable to send email! " + email);
+                return ApiResponse.fromException(ERROR, "Unable to send email! " + email, e);
             }
 
             return new ApiResponse(SUCCESS, "An email has been sent to " + email + ". Please confirm email to continue registration.", parameters);
@@ -133,7 +133,7 @@ public class AuthController extends WeaverAuthController {
             content = cryptoService.validateGenericToken(token, EMAIL_VERIFICATION_TYPE);
         } catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
             logger.debug("Unable to validate token!");
-            return new ApiResponse(ERROR, "Unable to validate token!");
+            return ApiResponse.fromException(ERROR, "Unable to validate token!", e);
         }
 
         String tokenCreateTime = content[0];
@@ -184,7 +184,7 @@ public class AuthController extends WeaverAuthController {
             return new ApiResponse(SUCCESS, "Login successful", tokenService.createToken(subject, claims));
         } catch (Exception e) {
             logger.error("Unable to generate token!", e);
-            return new ApiResponse(ERROR, "Unable to generate token!");
+            return ApiResponse.fromException(ERROR, "Unable to generate token!", e);
         }
     }
 

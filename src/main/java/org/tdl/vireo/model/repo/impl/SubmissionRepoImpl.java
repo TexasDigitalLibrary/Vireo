@@ -1323,7 +1323,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
     /**
      * Add SQL escape protection for string.
      *
-     * This handles escaping: "\", "_", and "%".
+     * This handles escaping: "\", "_", "%", and "'".
      * This is expected to be used for LIKE statements.
      *
      * @param original The original string to escape.
@@ -1336,6 +1336,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         String escaped = original.replace("\\", "\\\\");
 
         if (!quoted) {
+            escaped = escaped.replace("'", "''");
             escaped = escaped.replace("_", "\\_");
             escaped = escaped.replace("%", "\\%");
         }

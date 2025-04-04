@@ -15,7 +15,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartException;
@@ -43,161 +42,187 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
     private static final Logger logger = LoggerFactory.getLogger(CustomResponseEntityExceptionHandler.class);
 
     private static final String PAYLOAD_TOO_LARGE_TEMPLATE = "File exceeds max size %s";
+    private static final String CONSTRAINT_VIOLATION_TEMPLATE = "Data constraint violation: %s";
+    private static final String DATA_INTEGRITY_TEMPLATE = "Data integrity error: %s";
+    private static final String ENTITY_NOT_FOUND_TEMPLATE = "Entity not found: %s";
+    private static final String FILE_NOT_FOUND_TEMPLATE = "File not found: %s";
+    private static final String SWORD_BAD_GATEWAY_TEMPLATE = "SWORD deposit failed: Bad Gateway";
+    private static final String SWORD_BAD_REQUEST_TEMPLATE = "SWORD deposit failed: Bad Request";
+    private static final String SWORD_CONFLICT_TEMPLATE = "SWORD deposit failed: Conflict";
+    private static final String SWORD_FORBIDDEN_TEMPLATE = "SWORD deposit failed: Forbidden";
+    private static final String SWORD_GATEWAY_TIMEOUT_TEMPLATE = "SWORD deposit failed: Gateway Timeout";
+    private static final String SWORD_INTERNAL_ERROR_TEMPLATE = "SWORD deposit failed: Internal Server Error";
+    private static final String SWORD_NOT_FOUND_TEMPLATE = "SWORD deposit failed: Not Found";
+    private static final String SWORD_NOT_IMPLEMENTED_TEMPLATE = "SWORD deposit failed: Not Implemented";
+    private static final String SWORD_REQUEST_TIMEOUT_TEMPLATE = "SWORD deposit failed: Request Timeout";
+    private static final String SWORD_SERVICE_UNAVAILABLE_TEMPLATE = "SWORD deposit failed: Service Unavailable";
+    private static final String SWORD_UNAUTHORIZED_TEMPLATE = "SWORD deposit failed: Unauthorized";
+    private static final String SWORD_UNPROCESSABLE_TEMPLATE = "SWORD deposit failed: Unprocessable Entity";
 
     @Value("${spring.servlet.multipart.max-file-size:20MB}")
     private String maxFileSize;
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    @ResponseBody
     public ApiResponse handleConstraintViolationException(ConstraintViolationException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(CONSTRAINT_VIOLATION_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    @ResponseBody
     public ApiResponse handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(DATA_INTEGRITY_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ResponseBody
     public ApiResponse handleEntityNotFoundException(EntityNotFoundException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(ENTITY_NOT_FOUND_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(NoSuchFileException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ResponseBody
-    public ApiResponse handleNoSuchFileExceptionn(NoSuchFileException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+    public ApiResponse handleNoSuchFileException(NoSuchFileException exception) {
+        String message = format(FILE_NOT_FOUND_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(MultipartException.class)
     @ResponseStatus(value = HttpStatus.PAYLOAD_TOO_LARGE)
-    @ResponseBody
     public ApiResponse handleMultipartException(MultipartException exception) {
         String message = format(PAYLOAD_TOO_LARGE_TEMPLATE, maxFileSize);
-        logger.error(exception.getMessage());
+        logger.error(message);
         logger.debug(message, exception);
-        return new ApiResponse(ERROR, message);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositBadGatewayException.class)
     @ResponseStatus(value = HttpStatus.BAD_GATEWAY)
-    @ResponseBody
     public ApiResponse handleSwordDepositBadGatewayException(SwordDepositException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_BAD_GATEWAY_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositBadRequestException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ResponseBody
     public ApiResponse handleSwordDepositBadRequestException(SwordDepositException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_BAD_REQUEST_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositConflictException.class)
     @ResponseStatus(value = HttpStatus.CONFLICT)
-    @ResponseBody
     public ApiResponse handleSwordDepositConflictException(SwordDepositException exception) {
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_CONFLICT_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositForbiddenException.class)
     @ResponseStatus(value = HttpStatus.FORBIDDEN)
-    @ResponseBody
     public ApiResponse handleSwordDepositForbiddenException(SwordDepositException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_FORBIDDEN_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositGatewayTimeoutException.class)
     @ResponseStatus(value = HttpStatus.GATEWAY_TIMEOUT)
-    @ResponseBody
     public ApiResponse handleSwordDepositGatewayTimeoutException(SwordDepositException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_GATEWAY_TIMEOUT_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositInternalServerErrorException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    @ResponseBody
     public ApiResponse handleSwordDepositInternalServerErrorException(SwordDepositException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_INTERNAL_ERROR_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ResponseBody
     public ApiResponse handleSwordDepositNotFoundException(SwordDepositException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_NOT_FOUND_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositNotImplementedException.class)
     @ResponseStatus(value = HttpStatus.NOT_IMPLEMENTED)
-    @ResponseBody
     public ApiResponse handleSwordDepositNotImplementedException(SwordDepositException exception) {
-        logger.debug(exception.getMessage(), exception);
-        logger.error(exception.getMessage());
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_NOT_IMPLEMENTED_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositRequestTimeoutException.class)
     @ResponseStatus(value = HttpStatus.REQUEST_TIMEOUT)
-    @ResponseBody
     public ApiResponse handleSwordDepositRequestTimeoutException(SwordDepositException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_REQUEST_TIMEOUT_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositServiceUnavailableException.class)
     @ResponseStatus(value = HttpStatus.SERVICE_UNAVAILABLE)
-    @ResponseBody
     public ApiResponse handleSwordDepositServiceUnavailableException(SwordDepositException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_SERVICE_UNAVAILABLE_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositUnauthorizedException.class)
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
-    @ResponseBody
     public ApiResponse handleSwordDepositUnauthorizedException(SwordDepositException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_UNAUTHORIZED_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
     }
 
     @ExceptionHandler(SwordDepositUnprocessableEntityException.class)
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-    @ResponseBody
     public ApiResponse handleSwordDepositUnprocessableEntityException(SwordDepositException exception) {
-        logger.error(exception.getMessage());
-        logger.debug(exception.getMessage(), exception);
-        return new ApiResponse(ERROR, exception.getMessage());
+        String message = format(SWORD_UNPROCESSABLE_TEMPLATE, exception.getMessage());
+        logger.error(message);
+        logger.debug(message, exception);
+        return ApiResponse.fromException(ERROR, message, exception);
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiResponse handleExceptions(Exception exception) {
+        String message = exception.getMessage();
+        logger.error(message);
+        logger.debug(message, exception);
+        // leaving message null to use front-end default for alert
+        return ApiResponse.fromException(ERROR, null, exception);
     }
 
 }

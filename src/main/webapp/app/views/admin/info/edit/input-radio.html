@@ -1,4 +1,4 @@
-<div class="input-radio-container" ng-repeat="word in fieldProfile.controlledVocabulary.dictionary" ng-click="toggleFieldValue(field, word.name)">
+<div class="input-radio-container" ng-repeat="word in fieldProfile.controlledVocabulary.dictionary | filter:displayVocabularyWord | orderBy:orderVocabularyWords" ng-click="toggleFieldValue(field, word.name)">
   <div class="col-xs-8">
     <span class="radio-label">{{word.name}}:</span>
   </div>

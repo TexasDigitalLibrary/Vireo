@@ -173,6 +173,75 @@ vireo.directive("triptych", function () {
                 $scope.setSelectedOrganization(organization);
             };
 
+            $scope.handleKeyup = function (event, attr, cb, options) {
+
+                var selectedOrganization = $scope.getSelectedOrganization();
+
+                // allow for use in nested elements
+                event.stopPropagation();
+
+                const callback = () => {
+                    if (!attr.managed && selectedOrganization.acceptsSubmissions) {
+                        cb(selectedOrganization);
+                    }
+                };
+
+                let nextElement;
+
+                switch (event.which) {
+                    // enter
+                    case 13:
+                    // space
+                    case 32:
+                        callback();
+                        break;
+                    // up
+                    case 38:
+                        // Get the previous sibling element
+                        nextElement = event.target.previousElementSibling;
+                        // If no previous sibling, get the last sibling (wrap around)
+                        if (!nextElement) {
+                            const parent = event.target.parentElement;
+                            if (parent) {
+                                nextElement = parent.lastElementChild;
+                            }
+                        }
+                        break;
+                    // down
+                    case 40:
+                        // Get the next sibling element
+                        nextElement = event.target.nextElementSibling;
+                        // If no next sibling, get the first sibling (wrap around)
+                        if (!nextElement) {
+                            const parent = event.target.parentElement;
+                            if (parent) {
+                                nextElement = parent.firstElementChild;
+                            }
+                        }
+                        break;
+                    // left
+                    case 37:
+                        if (selectedOrganization.parentOrganization) {
+                            const parentId = selectedOrganization.parentOrganization;
+                            nextElement = document.getElementById(`organization-${parentId}`);
+                        }
+                        break;
+                    // right
+                    case 39:
+                        if (selectedOrganization.childrenOrganizations?.length > 0) {
+                            const childId = selectedOrganization.childrenOrganizations[0].id;
+                            nextElement = document.getElementById(`organization-${childId}`);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                if (nextElement) {
+                    nextElement.focus();
+                }
+            };
+
             $scope.findOrganizationById = function (organizationId) {
                 var found;
 

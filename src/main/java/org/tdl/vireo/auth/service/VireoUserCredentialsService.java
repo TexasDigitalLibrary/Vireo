@@ -94,7 +94,7 @@ public class VireoUserCredentialsService extends UserCredentialsService<User, Us
         } else {
             boolean isUserUpdated = false;
 
-            if (StringUtils.isNotEmpty(shibNetid) && !user.getNetid().equals(shibNetid)) {
+            if (StringUtils.isNotEmpty(shibNetid) && (user.getNetid() == null || !user.getNetid().equals(shibNetid))) {
                 user.setNetid(shibNetid);
                 isUserUpdated = true;
             }

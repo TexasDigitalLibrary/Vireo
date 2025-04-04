@@ -1,4 +1,4 @@
-vireo.controller('OrganizationSettingsController', function ($controller, $scope, $q, AccordionService, Organization, OrganizationRepo, SidebarService) {
+vireo.controller('OrganizationSettingsController', function ($controller, $scope, $timeout, $q, AccordionService, Organization, OrganizationRepo, SidebarService) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -81,6 +81,16 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
             return;
         }
 
+        const focusSelected = () => {
+            $timeout(function () {
+                const selectedElement = document.getElementById(`organization-${$scope.selectedOrganization.id}`);
+
+                if (selectedElement && selectedElement !== document.activeElement) {
+                    selectedElement.focus();
+                }
+            });
+        };
+
         $scope.loadingOrganization = true;
 
         var existingSelected = $scope.selectedOrganization;
@@ -133,6 +143,8 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
                         if (!existingSelected || existingSelected.id !== organization.id) {
                             AccordionService.closeAll();
                         }
+
+                        focusSelected();
                     }
 
                     $scope.setDeleteDisabled();
@@ -151,6 +163,8 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
                 if (!existingSelected || existingSelected.id !== organization.id) {
                     AccordionService.closeAll();
                 }
+
+                focusSelected();
             }
         } else {
             $scope.selectedOrganization = undefined;

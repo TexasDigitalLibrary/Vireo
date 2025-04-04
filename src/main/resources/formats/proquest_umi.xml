@@ -238,13 +238,14 @@
             <DISS_file_category th:text="${SUBMISSION_HELPER.categorize(FILE_HELPER.getMimeTypeOfAsset(fv.getValue()))}"></DISS_file_category>
             <DISS_file_descr>Supplemental File</DISS_file_descr>
         </DISS_attachment>
-
     </DISS_content>
-    
-    <DISS_restriction th:if="${EMBARGO_CODE == 4}">    
-        <DISS_sales_restriction th:attr="code=${PROQUEST_SALE_RESTRICTION_CODE},remove=${PROQUEST_SALE_RESTRICTION_REMOVE}"/>
-        <DISS_format_restriction  th:attr="code=${PROQUEST_FORMAT_RESTRICTION_CODE},remove=${PROQUEST_FORMAT_RESTRICTION_REMOVE}"/>
-    </DISS_restriction>
 
+    <DISS_restriction th:if="${EMBARGO_CODE == 4}">    
+      <DISS_sales_restriction th:attr="code=1,remove=${PROQUEST_SALE_RESTRICTION_REMOVE}"/>
+    </DISS_restriction>
+    <DISS_restriction th:if="${EMBARGO_CODE != 4}">    
+      <DISS_sales_restriction th:attr="code=0,remove=${PROQUEST_SALE_RESTRICTION_REMOVE}"/>
+    </DISS_restriction>
+ 
 </DISS_submission>
 
