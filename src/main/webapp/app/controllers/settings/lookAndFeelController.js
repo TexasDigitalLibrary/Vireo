@@ -4,6 +4,8 @@ vireo.controller("LookAndFeelController", function ($scope, $controller, $q, Fil
         $scope: $scope
     }));
 
+    console.log('LookAndFeelController');
+
     $scope.modalData = {
         newLogo: {}
     };

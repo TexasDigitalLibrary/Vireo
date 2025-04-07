@@ -4,6 +4,8 @@ vireo.controller('NewSubmissionController', function ($controller, $location, $q
         $scope: $scope
     }));
 
+    console.log('NewSubmissionController');
+
     $scope.organizations = [];
 
     $scope.configuration = ManagedConfigurationRepo.getAll();

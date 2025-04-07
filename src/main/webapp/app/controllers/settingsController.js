@@ -4,6 +4,8 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
         $scope: $scope
     }));
 
+    console.log('SettingsController');
+
     $scope.settings = {};
 
     $scope.settings.configurable = ManagedConfigurationRepo.getAll();

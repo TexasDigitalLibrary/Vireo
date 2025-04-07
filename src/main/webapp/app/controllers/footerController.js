@@ -2,6 +2,8 @@ vireo.controller("FooterController", function ($scope, $controller, ManagedConfi
 
     angular.extend($scope, $controller("AbstractController", { $scope: $scope }));
 
+    console.log('FooterController');
+
     $scope.configurable = ManagedConfigurationRepo.getAll();
 
     $scope.webmaster = "#";

@@ -2,6 +2,8 @@ vireo.controller("HeaderController", function ($scope, $controller, $location, $
 
 	angular.extend($scope, $controller("AbstractController", {$scope: $scope}));
 
+    console.log('HeaderController');
+
 	$scope.configurable = ManagedConfigurationRepo.getAll();
 
 	$scope.logoPath = "";

@@ -4,6 +4,8 @@ vireo.controller("StudentSubmissionController", function ($controller, $scope, $
         $scope: $scope
     }));
 
+    console.log('StudentSubmissionController');
+
     $scope.studentSubmissionRepoReady = false;
 
     $scope.configuration = ManagedConfigurationRepo.getAll();

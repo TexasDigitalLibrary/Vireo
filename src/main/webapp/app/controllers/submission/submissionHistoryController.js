@@ -4,6 +4,8 @@ vireo.controller('SubmissionHistoryController', function ($controller, $location
         $scope: $scope
     }));
 
+    console.log('SubmissionHistoryController');
+
     $scope.SubmissionStatuses = SubmissionStatuses;
 
     $scope.submissionToDelete = {};
