@@ -19,7 +19,7 @@ public class DocumentTypeRepoImpl extends AbstractWeaverOrderedRepoImpl<Document
 
     @Override
     public DocumentType create(String name) {
-        return create(name, fieldPredicateRepo.save(new FieldPredicate("_doctype_" + name.toLowerCase().replace(' ', '_'), Boolean.valueOf(false))));
+        return create(name, fieldPredicateRepo.save(new FieldPredicate("_doctype_" + name.toLowerCase().replace(' ', '_'), Boolean.valueOf(true))));
     }
 
     @Override
