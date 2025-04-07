@@ -2,8 +2,6 @@ vireo.controller("CompleteSubmissionController", function($controller, $scope, M
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
-    console.log('CompleteSubmissionController');
-
     $scope.configuration = ManagedConfigurationRepo.getAll();
 
 });

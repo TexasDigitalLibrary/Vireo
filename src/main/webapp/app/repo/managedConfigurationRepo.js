@@ -46,7 +46,6 @@ vireo.repo("ManagedConfigurationRepo", function ManagedConfigurationRepo($q, Man
     };
 
     configurationRepo.getAll = function () {
-        console.log('get all', !fetching);
         if (this.mapping.lazy && !fetching) {
             fetch(this.mapping);
         }
