@@ -12,7 +12,7 @@
 
       <div class="glyphicon glyphicon-info-sign opaque glyiphicon-span-adjust" tooltip="Select to add a new file type."></div>
 
-      <p ng-if="graduationMonths.length == 0">Add new File Type</p>
+      <p ng-if="documentTypes.length == 0">Add new File Type</p>
 
       <draganddroplist dragging="dragging" scope-value="documentTypes" properties='["name"]' item-view='views/directives/dragAndDropDocumentType.html' listeners='dragControlListeners' edit='launchEditModal(index)' sort-column='name' , sort-action='sortAction' sort-method='sortDocumentTypes(column)' sort-label='File Types'></draganddroplist>
     </div>
