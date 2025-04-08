@@ -466,15 +466,14 @@ describe('model: Submission', function () {
             model.removeAllUnsavedFieldValuesByPredicate(model.fieldValues[0].fieldPredicate);
         });*/
         it('removeFieldValue should call WsApi', function () {
-            var mfv = new mockFieldValue(q)
-            const mockResponse = {
+            var mfv = new mockFieldValue(q);
+
+            spyOn(WsApi, "fetch").and.returnValue(Promise.resolve({
                 body: JSON.stringify({
                     meta: { status: 'SUCCESS' },
                     payload: mfv
                 })
-            };
-
-            spyOn(WsApi, "fetch").and.returnValue(Promise.resolve(mockResponse));
+            }));
 
             model.removeFieldValue(mfv);
             scope.$apply();
