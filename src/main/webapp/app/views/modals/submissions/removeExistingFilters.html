@@ -6,6 +6,7 @@
 </div>
 <form ng-submit="box.removeFilters()" name="forms.removeFilters" novalidate>
     <div class="modal-body">
+        <alerts channels="submission-list/remove-saved-filter" types="ERROR" exclusive></alerts>
         <table class="table table-bordered table-striped etd-table">
         <thead class="header">
             <tr>
