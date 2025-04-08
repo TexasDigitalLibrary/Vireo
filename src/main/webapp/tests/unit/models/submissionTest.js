@@ -466,9 +466,17 @@ describe('model: Submission', function () {
             model.removeAllUnsavedFieldValuesByPredicate(model.fieldValues[0].fieldPredicate);
         });*/
         it('removeFieldValue should call WsApi', function () {
-            spyOn(WsApi, "fetch");
+            var mfv = new mockFieldValue(q)
+            const mockResponse = {
+                body: JSON.stringify({
+                    meta: { status: 'SUCCESS' },
+                    payload: mfv
+                })
+            };
 
-            model.removeFieldValue(new mockFieldValue(q));
+            spyOn(WsApi, "fetch").and.returnValue(Promise.resolve(mockResponse));
+
+            model.removeFieldValue(mfv);
             scope.$apply();
 
             expect(WsApi.fetch).toHaveBeenCalled();
