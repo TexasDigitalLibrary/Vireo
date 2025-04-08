@@ -32,7 +32,12 @@ vireo.controller('WhoHasAccessController', function ($controller, $location, $sc
             user.role = role;
         }
         user.dirty(true);
-        user.save();
+        user.save().then(response => {
+            if (angular.fromJson(response?.body)?.meta?.status === 'SUCCESS') {
+                $scope.unassignableUsersTable.reload();
+                $scope.assignableUsersTable.reload();
+            }
+        });
     };
 
     $scope.setRole = function(user) {

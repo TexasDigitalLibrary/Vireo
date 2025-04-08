@@ -284,7 +284,6 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testUpdate() {
         when(userRepo.findById(any(Long.class))).thenReturn(Optional.of(user1));
         when(userRepo.update(any(User.class))).thenReturn(user1);
-        doNothing().when(userRepo).broadcast(anyList());
 
         ApiResponse response = userController.update(user2);
 
