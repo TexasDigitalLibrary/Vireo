@@ -654,10 +654,12 @@ describe("controller: AdminSubmissionViewController", function () {
             scope.submission.mockWorkflowSteps.aggregateFieldProfiles[0].mock(dataFieldProfile2);
             scope.submission.mockWorkflowSteps.aggregateFieldProfiles[0].fieldPredicate = scope.fieldPredicates[1];
 
-            response = scope.getPattern("text/plain");
+            spyOn(FileUploadService, "getPattern").and.returnValue(".pdf");
+            response = scope.getPattern("_doctype_primary");
             expect(response).toBeDefined();
             expect(response).not.toEqual("*");
 
+            FileUploadService.getPattern.and.returnValue(".pdf");
             response = scope.getPattern("does not exist");
             expect(response).toEqual("*");
         });

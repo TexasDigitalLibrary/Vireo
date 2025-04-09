@@ -1,6 +1,10 @@
 angular.module("mock.fileUploadService", []).service("FileUploadService", function($q) {
     var service = mockService($q);
 
+    service.getPattern = function (fieldProfile) {
+        return '*';
+    }
+
     service.archiveFile = function (submission, fieldValue, removeFieldValue) {
         var payload = {};
         return payloadPromise($q.defer(), payload);

@@ -2,6 +2,25 @@ vireo.service("FileUploadService", function ($q, FieldValue, FileService) {
 
     var FileUploadService = this;
 
+    FileUploadService.getPattern = function (fieldProfile) {
+        var pattern = '*';
+
+        if (fieldProfile?.fieldPredicate?.value === '_doctype_primary') {
+            return '.pdf'
+        }
+
+        if (angular.isDefined(fieldProfile?.controlledVocabulary)) {
+            var cv = fieldProfile?.controlledVocabulary;
+            pattern = '';
+            for (var i in cv.dictionary) {
+                var word = cv.dictionary[i];
+                pattern += pattern.length > 0 ? (",." + word.name) : ("." + word.name);
+            }
+        }
+
+        return pattern;
+    };
+
     FileUploadService.uploadFile = function (submission, fieldValue) {
         return FileService.upload({
             'endpoint': '',
