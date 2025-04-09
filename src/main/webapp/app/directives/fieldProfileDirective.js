@@ -153,16 +153,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, Controlle
             };
 
             $scope.getPattern = function () {
-                var pattern = "*";
-                if(angular.isDefined($scope.profile.controlledVocabulary)) {
-                    var cv = $scope.profile.controlledVocabulary;
-                    pattern = "";
-                    for (var i in cv.dictionary) {
-                        var word = cv.dictionary[i];
-                        pattern += pattern.length > 0 ? (",." + word.name) : ("." + word.name);
-                    }
-                }
-                return pattern;
+                return FileUploadService.getPattern($scope.profile);
             };
 
             $scope.queueUpload = function (files) {
