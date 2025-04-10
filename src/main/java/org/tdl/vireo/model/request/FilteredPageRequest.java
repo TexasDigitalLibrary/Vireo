@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.specification.UserSpecification;
@@ -39,12 +40,14 @@ public class FilteredPageRequest {
         sort.forEach(sort -> {
             orders.add(new Sort.Order(sort.getDirection(), sort.getProperty()));
         });
+        orders.add(new Sort.Order(Sort.Direction.ASC, "id"));
         PageRequest pageRequest;
         if (orders.isEmpty()) {
             pageRequest = PageRequest.of(pageNumber > 0 ? pageNumber - 1 : 0, pageSize > 0 ? pageSize : 10);
         } else {
             pageRequest = PageRequest.of(pageNumber > 0 ? pageNumber - 1 : 0, pageSize > 0 ? pageSize : 10, Sort.by(orders));
         }
+
         return pageRequest;
     }
 

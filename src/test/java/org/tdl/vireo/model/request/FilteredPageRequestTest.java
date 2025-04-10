@@ -45,7 +45,7 @@ public class FilteredPageRequestTest extends AbstractModelTest<FilteredPageReque
 
         PageRequest pageRequest = filteredPageRequest.getPageRequest();
 
-        assertEquals(Sort.unsorted(), pageRequest.getSort(), "Page Request is sorted.");
+        assertEquals(Sort.by(Sort.Direction.ASC, "id"), pageRequest.getSort(), "Default sort order is not ASC by id.");
     }
 
     @Override
