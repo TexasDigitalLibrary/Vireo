@@ -808,6 +808,7 @@ public class SubmissionController {
                             String depositURL = depositor.deposit(depositLocation, exportPackage);
                             submission.setDepositURL(depositURL);
                             submission = submissionRepo.updateStatus(submission, submissionStatus, user);
+                            submissionEmailService.sendWorkflowEmails(user, submission.getId());
                         } catch (Exception e) {
                             throw new DepositException("Failed package export on submission " + submission.getId());
                         }
