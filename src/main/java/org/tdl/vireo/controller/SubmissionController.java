@@ -497,6 +497,7 @@ public class SubmissionController {
                         String depositURL = depositor.deposit(depositLocation, exportPackage);
                         submission.setDepositURL(depositURL);
                         submission = submissionRepo.updateStatus(submission, submissionStatus, user);
+                        submissionEmailService.sendWorkflowEmails(user, submission.getId());
                         response = new ApiResponse(SUCCESS, submission);
                     } else {
                         response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
@@ -507,8 +508,6 @@ public class SubmissionController {
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission status name Published");
             }
-
-            submissionEmailService.sendWorkflowEmails(user, submission.getId());
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
