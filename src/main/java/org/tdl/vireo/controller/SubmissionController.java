@@ -246,6 +246,7 @@ public class SubmissionController {
             credentials,
             customActionDefinitionRepo.findAll()
         );
+        submissionEmailService.sendWorkflowEmails(user, submission.getId());
         actionLogRepo.createPublicLog(submission, user, "Submission created.");
 
         return new ApiResponse(SUCCESS, submission.getId());
