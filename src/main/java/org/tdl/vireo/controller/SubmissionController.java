@@ -907,6 +907,7 @@ public class SubmissionController {
         String oldSubmissionStatusName = submission.getSubmissionStatus().getName();
         submission.setSubmissionStatus(needsCorrectionStatus);
         submission = submissionRepo.update(submission);
+        submissionEmailService.sendWorkflowEmails(user, submission.getId());
         actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + NEEDS_CORRECTION_SUBMISSION_STATUS_NAME);
         return new ApiResponse(SUCCESS, submission);
     }
