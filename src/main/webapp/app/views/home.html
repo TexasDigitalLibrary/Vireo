@@ -3,7 +3,7 @@
         <div class="row">
             <div ng-bind-html="settings.configurable.lookAndFeel.front_page_instructions_before.value"></div>
         </div>
-        <div class="form-actions row center" style="text-align: center;">
+        <div class="form-actions row center" aria-live="assertive" aria-atomic="true" style="text-align: center;">
             <p class="alert alert-danger" ng-if="!submissionsOpen()">The system is currently closed for new submissions; please contact your thesis office for more information.<br/><br/>If you need to make corrections, please <span ng-if="isAnonymous()"><span login-button class="btn btn-primary">Login</span></span><span ng-if="!isAnonymous()">click on <a href="submission/history">Submission History</a>.</span></p>
             <span login-button class="btn btn-primary btn-lg start-your-submission" ng-if="submissionsOpen() && isAnonymous()">Login</span>
             <a href="submission/history" class="btn btn-primary btn-lg start-your-submission" ng-if="submissionsOpen() && !isAnonymous() && multipleSubmissions() && (hasSubmissions() || submissionInProgress() || submissionNeedsCorrections()) && hasSubmissions()">Manage/View your submission(s)</a>
