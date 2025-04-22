@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import javax.persistence.Entity;
 
+import org.tdl.vireo.ApplicationConstants;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.export.enums.ProQuestUMIKey;
@@ -130,10 +131,10 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
                 break;
             case PROQUEST_PERSON_FILENAME:
                 String lastName = submissionHelperUtility.getSubmitterLastName().trim().isEmpty()
-                    ? "Unkown" : submissionHelperUtility.getSubmitterLastName().trim();
+                    ? ApplicationConstants.UNKNOWN : submissionHelperUtility.getSubmitterLastName().trim();
                 lastName = lastName.substring(0,1).toUpperCase()+lastName.substring(1);
                 String firstName = submissionHelperUtility.getSubmitterFirstName().trim().isEmpty()
-                    ? "Unkown" : submissionHelperUtility.getSubmitterFirstName().trim();
+                    ? ApplicationConstants.UNKNOWN : submissionHelperUtility.getSubmitterFirstName().trim();
                 firstName = firstName.substring(0,1).toUpperCase()+firstName.substring(1);
                 String ufnSuffix = ".pdf"; // default
                 if(submission.getPrimaryDocumentFieldValue()!=null){

@@ -52,6 +52,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.tdl.vireo.ApplicationConstants;
 import org.tdl.vireo.exception.DepositException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.model.CustomActionValue;
@@ -1127,7 +1128,7 @@ public class SubmissionController {
 
         // use Unknown if no field values with predicate or value is empty
         String name = fieldValues.isEmpty() || fieldValues.get(0).getValue().trim().isEmpty()
-            ? "Unknown"
+            ? ApplicationConstants.UNKNOWN
             : fieldValues.get(0).getValue().trim();
 
         return name.substring(0, 1).toUpperCase() + name.substring(1);
