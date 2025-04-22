@@ -673,7 +673,7 @@ public class SubmissionController {
                         }
                         // PRIMARY_DOC
                         FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
-                        if (StringUtils.isNotEmpty(primaryDoc.getValue().trim())) {
+                        if (StringUtils.isNotEmpty(primaryDoc.getValue())) {
                             Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
                             byte[] fileBytes = Files.readAllBytes(path);
                             String fName = primaryDoc.getFileName();
