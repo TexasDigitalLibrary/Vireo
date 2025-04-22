@@ -586,10 +586,8 @@ public class SubmissionController {
             break;
         case "MarcXML21":
         case "Marc21":
-            ByteArrayOutputStream sos = new ByteArrayOutputStream();
-
             try {
-                ZipOutputStream zos = new ZipOutputStream(sos, StandardCharsets.UTF_8);
+                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream(), StandardCharsets.UTF_8);
 
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
 
@@ -609,7 +607,6 @@ public class SubmissionController {
                     }
                 }
                 zos.close();
-                response.getOutputStream().write(sos.toByteArray());
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
@@ -618,10 +615,8 @@ public class SubmissionController {
             break;
 
         case "ProQuest":
-            ByteArrayOutputStream sos_pq = new ByteArrayOutputStream();
-
             try {
-                ZipOutputStream zos = new ZipOutputStream(sos_pq, StandardCharsets.UTF_8);
+                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream(), StandardCharsets.UTF_8);
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     String firstName = getName(submission, "first_name");
 
@@ -673,17 +668,14 @@ public class SubmissionController {
                 }
                 zos.close();
                 response.setContentType(packager.getMimeType());
-                response.getOutputStream().write(sos_pq.toByteArray());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
                 handleBatchExportError(e, response);
             }
             break;
         case "DSpaceMETS":
-            ByteArrayOutputStream sos_mets = new ByteArrayOutputStream();
-
             try {
-                ZipOutputStream zos = new ZipOutputStream(sos_mets);
+                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
 
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
@@ -694,7 +686,6 @@ public class SubmissionController {
                     zos.closeEntry();
                 }
                 zos.close();
-                response.getOutputStream().write(sos_mets.toByteArray());
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
@@ -702,9 +693,8 @@ public class SubmissionController {
             }
             break;
         case "DSpaceSimple":
-            ByteArrayOutputStream sosDss = new ByteArrayOutputStream();
             try {
-                ZipOutputStream zos = new ZipOutputStream(sosDss);
+                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     String submissionName = "submission_" + submission.getId() + "/";
                     zos.putNextEntry(new ZipEntry(submissionName));
@@ -762,7 +752,6 @@ public class SubmissionController {
 
                 }
                 zos.close();
-                response.getOutputStream().write(sosDss.toByteArray());
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
