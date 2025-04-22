@@ -15,10 +15,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -627,28 +630,44 @@ public class SubmissionController {
 
                     String lastName = getName(submission, "last_name");
 
-                    String personName = lastName + "_" + firstName;
+                    String personEntry = lastName + "_" + firstName + "_" + submission.getId();
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     try (ZipOutputStream b = new ZipOutputStream(baos)){
                         ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                         if (exportPackage.isMap()) {
                             for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
-                                b.putNextEntry(new ZipEntry(personName+"_DATA.xml"));
-                                b.write(Files.readAllBytes(fileEntry.getValue().toPath()));
+                                b.putNextEntry(new ZipEntry(personEntry+"_DATA.xml"));
+                                Path path = fileEntry.getValue().toPath();
+                                byte[] fileBytes = Files.readAllBytes(path);
+                                b.write(fileBytes);
                                 b.closeEntry();
                             }
                         }
                         // LICENSES
+                        Set<String> licenseFileNames = new HashSet<>();
                         for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
                             Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
                             byte[] fileBytes = Files.readAllBytes(path);
-                            int sfxIndx;
-                            String licFileName = ldfv.getFileName();
-                            if((sfxIndx = licFileName.indexOf("."))>0){
-                                licFileName = licFileName.substring(0,sfxIndx).toUpperCase()+licFileName.substring(sfxIndx);
+
+                            int sfxIndx = ldfv.getFileName().indexOf(".");
+
+                            String fileName = sfxIndx > 0
+                                ? ldfv.getFileName().substring(0, sfxIndx)
+                                : ldfv.getFileName();
+
+                            String fileExt = sfxIndx > 0
+                                ? ldfv.getFileName().substring(sfxIndx)
+                                : StringUtils.EMPTY;
+
+                            String fullFileName = fileName.toUpperCase() + fileExt;
+
+                            int i = 0;
+                            while (licenseFileNames.contains(fullFileName)) {
+                                fullFileName = String.format("%s_%s%s", fileName.toUpperCase(), ++i, fileExt);
                             }
-                            b.putNextEntry(new ZipEntry(personName+"_permission/"+licFileName));
+                            licenseFileNames.add(fullFileName);
+                            b.putNextEntry(new ZipEntry(personEntry+"_permission/"+fullFileName));
                             b.write(fileBytes);
                             b.closeEntry();
                         }
@@ -662,11 +681,11 @@ public class SubmissionController {
                         if(fNameIndx>0){
                             fType = fName.substring(fNameIndx);
                         }
-                        b.putNextEntry(new ZipEntry(personName+fType));
+                        b.putNextEntry(new ZipEntry(personEntry+fType));
                         b.write(fileBytes);
                         b.closeEntry();
                     }
-                    zos.putNextEntry(new ZipEntry("upload_"+personName+".zip"));
+                    zos.putNextEntry(new ZipEntry("upload_"+personEntry+".zip"));
                     baos.close();
                     zos.write(baos.toByteArray());
                     zos.closeEntry();
