@@ -4,6 +4,8 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static edu.tamu.weaver.response.ApiStatus.INVALID;
 import static edu.tamu.weaver.response.ApiStatus.SUCCESS;
 
+import javax.servlet.http.HttpServletResponse;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -23,13 +25,16 @@ import java.util.concurrent.ExecutionException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,11 +98,6 @@ import org.tdl.vireo.utility.OrcidUtility;
 import org.tdl.vireo.utility.PackagerUtility;
 import org.tdl.vireo.utility.TemplateUtility;
 import org.tdl.vireo.view.FieldValueSubmissionView;
-
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.weaver.auth.annotation.WeaverCredentials;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
@@ -548,41 +548,60 @@ public class SubmissionController {
         List<SubmissionListColumn> columns = filter.getColumnsFlag() ? filter.getSavedColumns() : user.getSubmissionViewColumns();
         switch (packagerName.trim()) {
         case "Excel":
-            List<Submission> submissions = submissionRepo.batchDynamicSubmissionQuery(filter, columns);
+            try {
+                List<Submission> submissions = submissionRepo.batchDynamicSubmissionQuery(filter, columns);
 
-            HSSFWorkbook workbook = new HSSFWorkbook();
+                // Create a streaming workbook with a window size of 100 rows
+                // (only this many rows will be kept in memory at once)
+                SXSSFWorkbook workbook = new SXSSFWorkbook(100);
 
-            HSSFSheet worksheet = workbook.createSheet();
+                // Enable compression for temporary files
+                workbook.setCompressTempFiles(true);
 
-            int rowCount = 0;
+                Sheet worksheet = workbook.createSheet();
 
-            HSSFRow header = worksheet.createRow(rowCount++);
+                int rowCount = 0;
 
-            for (int i = 0; i < columns.size(); i++) {
-                SubmissionListColumn column = columns.get(i);
-                header.createCell(i).setCellValue(column.getTitle());
-            }
+                // Create header row
+                Row header = worksheet.createRow(rowCount++);
+                for (int i = 0; i < columns.size(); i++) {
+                    SubmissionListColumn column = columns.get(i);
+                    header.createCell(i).setCellValue(column.getTitle());
+                }
 
-            for (Submission submission : submissions) {
-                ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns);
-                if (exportPackage.isMap()) {
-                    Map<String, String> rowData = (Map<String, String>) exportPackage.getPayload();
-                    HSSFRow row = worksheet.createRow(rowCount++);
-                    for (int i = 0; i < columns.size(); i++) {
-                        SubmissionListColumn column = columns.get(i);
-                        row.createCell(i).setCellValue(rowData.get(column.getTitle()));
+                // Stream data rows
+                for (Submission submission : submissions) {
+                    ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns);
+                    if (exportPackage.isMap()) {
+                        Map<String, String> rowData = (Map<String, String>) exportPackage.getPayload();
+                        Row row = worksheet.createRow(rowCount++);
+                        for (int i = 0; i < columns.size(); i++) {
+                            SubmissionListColumn column = columns.get(i);
+                            Cell cell = row.createCell(i);
+                            cell.setCellValue(rowData.get(column.getTitle()));
+                        }
                     }
                 }
+
+                // Auto-sizing is expensive with SXSSF as it can't look back at rows
+                // that have been flushed to disk. If needed, track column widths manually.
+                // If you must use auto-sizing, you'll need to track max width as you go
+
+                // Set response headers
+                response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + ".xlsx");
+
+                // Write directly to output stream
+                workbook.write(response.getOutputStream());
+
+                // Dispose of temporary files
+                workbook.dispose();
+
+                // Close the workbook
+                workbook.close();
+            } catch (Exception e) {
+                handleBatchExportError(e, response);
             }
-
-            for (int i = 0; i < columns.size(); i++) {
-                worksheet.autoSizeColumn(i);
-            }
-
-            response.setContentType(packager.getMimeType());
-            response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
-            workbook.write(response.getOutputStream());
-
             break;
         case "MarcXML21":
         case "Marc21":
@@ -613,7 +632,6 @@ public class SubmissionController {
                 handleBatchExportError(e, response);
             }
             break;
-
         case "ProQuest":
             try {
                 ZipOutputStream zos = new ZipOutputStream(response.getOutputStream(), StandardCharsets.UTF_8);
@@ -758,7 +776,6 @@ public class SubmissionController {
                 handleBatchExportError(e, response);
             }
             break;
-
         default:
             handleBatchExportError(new Exception("No packager " + packagerName + " found!"), response);
         }
