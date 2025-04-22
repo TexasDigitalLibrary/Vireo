@@ -673,17 +673,19 @@ public class SubmissionController {
                         }
                         // PRIMARY_DOC
                         FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
-                        Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
-                        byte[] fileBytes = Files.readAllBytes(path);
-                        String fName = primaryDoc.getFileName();
-                        int fNameIndx = fName.indexOf(".");
-                        String fType = "";//default
-                        if(fNameIndx>0){
-                            fType = fName.substring(fNameIndx);
+                        if (StringUtils.isNotEmpty(primaryDoc.getValue().trim())) {
+                            Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
+                            byte[] fileBytes = Files.readAllBytes(path);
+                            String fName = primaryDoc.getFileName();
+                            int fNameIndx = fName.indexOf(".");
+                            String fType = ""; // default
+                            if (fNameIndx>0){
+                                fType = fName.substring(fNameIndx);
+                            }
+                            b.putNextEntry(new ZipEntry(personEntry+fType));
+                            b.write(fileBytes);
+                            b.closeEntry();
                         }
-                        b.putNextEntry(new ZipEntry(personEntry+fType));
-                        b.write(fileBytes);
-                        b.closeEntry();
                     }
                     zos.putNextEntry(new ZipEntry("upload_"+personEntry+".zip"));
                     baos.close();
