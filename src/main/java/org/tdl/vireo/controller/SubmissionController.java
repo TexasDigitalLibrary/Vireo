@@ -673,13 +673,13 @@ public class SubmissionController {
                         }
                         // PRIMARY_DOC
                         FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
-                        if (StringUtils.isNotEmpty(primaryDoc.getValue())) {
+                        if (primaryDoc != null && StringUtils.isNotEmpty(primaryDoc.getValue())) {
                             Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
                             byte[] fileBytes = Files.readAllBytes(path);
                             String fName = primaryDoc.getFileName();
                             int fNameIndx = fName.indexOf(".");
                             String fType = ""; // default
-                            if (fNameIndx>0){
+                            if (fNameIndx>0) {
                                 fType = fName.substring(fNameIndx);
                             }
                             b.putNextEntry(new ZipEntry(personEntry+fType));
