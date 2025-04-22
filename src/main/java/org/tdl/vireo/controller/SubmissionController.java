@@ -622,15 +622,11 @@ public class SubmissionController {
             try {
                 ZipOutputStream zos = new ZipOutputStream(sos_pq, StandardCharsets.UTF_8);
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
-                    List<FieldValue> fieldValues = submission.getFieldValuesByPredicateValue("first_name");
-                    Optional<String> firstNameOpt = fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
-                    String firstName = firstNameOpt.isPresent() ? firstNameOpt.get() : "";
-                    firstName = firstName.substring(0,1).toUpperCase()+firstName.substring(1);
-                    fieldValues = submission.getFieldValuesByPredicateValue("last_name");
-                    Optional<String> lastNameOpt = fieldValues.size() > 0 ? Optional.of(fieldValues.get(0).getValue()) : Optional.empty();
-                    String lastName = lastNameOpt.isPresent() ? lastNameOpt.get() : "";
-                    lastName = lastName.substring(0,1).toUpperCase()+lastName.substring(1);
-                    String personName = lastName+"_"+firstName;
+                    String firstName = getName(submission, "first_name");
+
+                    String lastName = getName(submission, "last_name");
+
+                    String personName = lastName + "_" + firstName;
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     try (ZipOutputStream b = new ZipOutputStream(baos)){
@@ -1124,6 +1120,17 @@ public class SubmissionController {
             clearAdvisorMessage += " Rejection.";
         }
         actionLogRepo.createAdvisorPublicLog(submission, clearAdvisorMessage);
+    }
+
+    private String getName(Submission submission, String predicate) {
+        List<FieldValue> fieldValues = submission.getFieldValuesByPredicateValue(predicate);
+
+        // use Unknown if no field values with predicate or value is empty
+        String name = fieldValues.isEmpty() || fieldValues.get(0).getValue().trim().isEmpty()
+            ? "Unknown"
+            : fieldValues.get(0).getValue().trim();
+
+        return name.substring(0, 1).toUpperCase() + name.substring(1);
     }
 
 }

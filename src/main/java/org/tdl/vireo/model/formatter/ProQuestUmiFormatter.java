@@ -129,11 +129,13 @@ public class ProQuestUmiFormatter extends AbstractFormatter {
                 context.setVariable(key.name(), submission.getSupplementalDocumentFieldValues());
                 break;
             case PROQUEST_PERSON_FILENAME:
-                String lastName = submissionHelperUtility.getSubmitterLastName();
+                String lastName = submissionHelperUtility.getSubmitterLastName().trim().isEmpty()
+                    ? "Unkown" : submissionHelperUtility.getSubmitterLastName().trim();
                 lastName = lastName.substring(0,1).toUpperCase()+lastName.substring(1);
-                String firstName = submissionHelperUtility.getSubmitterFirstName();
+                String firstName = submissionHelperUtility.getSubmitterFirstName().trim().isEmpty()
+                    ? "Unkown" : submissionHelperUtility.getSubmitterFirstName().trim();
                 firstName = firstName.substring(0,1).toUpperCase()+firstName.substring(1);
-                String ufnSuffix = ".pdf"; //default
+                String ufnSuffix = ".pdf"; // default
                 if(submission.getPrimaryDocumentFieldValue()!=null){
                     String uploadedFileName = submission.getPrimaryDocumentFieldValue().getFileName();
                     int ufnIndx;
