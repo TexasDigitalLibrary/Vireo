@@ -5,8 +5,6 @@
     <input
       type="text"
       class="form-control"
-      id="field-{{profile.fieldPredicate.value}}"
-      name="{{profile.fieldPredicate.value}}"
       uib-datepicker-popup="{{datepickerFormat}}"
       datepicker-options="datepickerOptions"
       ng-model="fieldValue.valuePopup"
@@ -24,4 +22,3 @@
         <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
     </span>
 </div>
-

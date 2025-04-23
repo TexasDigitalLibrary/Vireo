@@ -5,18 +5,16 @@
     <input
       type="text"
       class="form-control"
-      id="field-{{profile.fieldPredicate.value}}"
-      name="{{profile.fieldPredicate.value}}"
-      uib-datepicker-popup="{{datepickerFormat}}"
+      uib-datepicker-popup="MMMM yyyy"
       datepicker-options="datepickerOptions"
       ng-model="fieldValue.valuePopup"
       ng-click="date=true"
       ng-keypress="$event.which===13?date=true:date=false"
       ng-blur="save(fieldValue)"
       is-open="date"
+      show-button-bar="false"
       ng-disabled="fieldValue.updating"
       ng-required="!profile.optional"
-      close-text="Close"
       readonly
       stringtodate/>
     <span class="input-group-addon">
@@ -24,4 +22,3 @@
         <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
     </span>
 </div>
-

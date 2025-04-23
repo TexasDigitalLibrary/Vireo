@@ -1,7 +1,8 @@
 <div class="input-group">
   <input type="text"
     class="form-control"
-    name="profile.fieldPredicate.value"
+    id="field-{{::profile.fieldPredicate.value}}"
+    name="{{::profile.fieldPredicate.value}}"
     ng-required="!profile.optional"
     ng-model="fieldValue.value"
     ng-blur="save(fieldValue)"

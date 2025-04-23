@@ -1,7 +1,7 @@
 <div class="input-group">
   <input type="text"
     class="form-control"
-    id="field-{{profile.fieldPredicate.value}}"
+    id="{{profile.fieldPredicate.value}}"
     name="{{profile.fieldPredicate.value}}"
     ng-required="!profile.optional"
     ng-model="fieldValue.value"
@@ -10,9 +10,10 @@
     uib-typeahead="word.name as word.name for word in profile.controlledVocabulary.dictionary | filter: { name: $viewValue }"
     typeahead-wait-ms="400"
     typeahead-on-select="saveWithCV(fieldValue, $item)"
+    aria-describedby="{{profile.fieldPredicate.value}}-help"
   />
   <span class="input-group-addon">
-    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}" htmltooltip="{{profile.htmlTooltip}}"> </span>
+    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"> </span>
     <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
   </span>
 </div>
