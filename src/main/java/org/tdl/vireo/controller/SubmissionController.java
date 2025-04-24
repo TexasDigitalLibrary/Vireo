@@ -539,7 +539,12 @@ public class SubmissionController {
         LOG.info("Error With Export", e);
         String responseMessage = "The export failed. Check all required metadata and files, then try to export again.";
         ApiResponse apiResponse = new ApiResponse(ERROR, responseMessage);
-        response.reset();
+        if (!response.isCommitted()) {
+            response.reset();
+        } else {
+            // The response has already been committed and the below headers will not be modified on the client response
+            LOG.warn("Cannot reset response as it's already committed");
+        }
         response.setContentType("application/json");
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.getOutputStream().print(objectMapper.writeValueAsString(apiResponse));
@@ -638,13 +643,20 @@ public class SubmissionController {
             break;
         case "ProQuest":
             try {
+                int letSlide = 0;
+                int howManyToLetSlide = 100;
                 ZipOutputStream zos = new ZipOutputStream(response.getOutputStream(), StandardCharsets.UTF_8);
+
+
+
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     String firstName = getName(submission, "first_name");
 
                     String lastName = getName(submission, "last_name");
 
                     String personEntry = lastName + "_" + firstName + "_" + submission.getId();
+
+                    boolean stillLetSlide = letSlide < howManyToLetSlide;
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
                     try (ZipOutputStream b = new ZipOutputStream(baos)){
@@ -653,7 +665,7 @@ public class SubmissionController {
                             for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
                                 b.putNextEntry(new ZipEntry(personEntry+"_DATA.xml"));
                                 Path path = fileEntry.getValue().toPath();
-                                byte[] fileBytes = Files.readAllBytes(path);
+                                byte[] fileBytes = stillLetSlide ? new byte[0] : Files.readAllBytes(path);
                                 b.write(fileBytes);
                                 b.closeEntry();
                             }
@@ -662,7 +674,7 @@ public class SubmissionController {
                         Set<String> licenseFileNames = new HashSet<>();
                         for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
                             Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
-                            byte[] fileBytes = Files.readAllBytes(path);
+                            byte[] fileBytes = stillLetSlide ? new byte[0] : Files.readAllBytes(path);
 
                             int sfxIndx = ldfv.getFileName().indexOf(".");
 
@@ -687,9 +699,9 @@ public class SubmissionController {
                         }
                         // PRIMARY_DOC
                         FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
-                        if (StringUtils.isNotEmpty(primaryDoc.getValue())) {
+                        if (primaryDoc != null && StringUtils.isNotEmpty(primaryDoc.getValue())) {
                             Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
-                            byte[] fileBytes = Files.readAllBytes(path);
+                            byte[] fileBytes = stillLetSlide ? new byte[0] : Files.readAllBytes(path);
                             String fName = primaryDoc.getFileName();
                             int fNameIndx = fName.indexOf(".");
                             String fType = ""; // default
@@ -701,10 +713,14 @@ public class SubmissionController {
                             b.closeEntry();
                         }
                     }
+                    letSlide++;
                     zos.putNextEntry(new ZipEntry("upload_"+personEntry+".zip"));
                     baos.close();
                     zos.write(baos.toByteArray());
                     zos.closeEntry();
+
+
+                    System.out.println("\n\n\nPROCESSED A SUBMISSION\n\n\n");
                 }
                 zos.close();
                 response.setContentType(packager.getMimeType());
