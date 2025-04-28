@@ -702,7 +702,7 @@ public class SubmissionController {
                             String fName = primaryDoc.getFileName();
                             int fNameIndx = fName.indexOf(".");
                             String fType = ""; // default
-                            if (fNameIndx>0) {
+                            if (fNameIndx > 0) {
                                 fType = fName.substring(fNameIndx);
                             }
                             b.putNextEntry(new ZipEntry(personEntry + fType));
