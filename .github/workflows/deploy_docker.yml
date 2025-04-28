@@ -12,7 +12,7 @@ on:
           - vireo-dev
         default: 'vireo-dev'
       environment:
-        description: 'stage or prod'
+        description: 'stage(03) or prod(05)'
         required: true
         type: environment
         default: 'stage'
@@ -20,16 +20,34 @@ on:
 jobs:
   deploy:
     runs-on: [self-hosted]
+    environment: ${{ inputs.environment }}
 
     steps:
-      # - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - name: executing rsync as jhu-devops using secret
+        uses: burnett01/rsync-deployments@7.0.2
+        with:
+          switches: -avzr --delete
+          path: /
+          remote_path: /home/jhu-devops/vireo
+          remote_host: ${{ secrets.VIREO_HOSTNAME }}
+          remote_user: jhu-devops
+          remote_key: ${{ secrets.JHU_DEVOPS_KEY }}
 
       - name: executing remote ssh commands as jhu-devops using secret
         uses: appleboy/ssh-action@v1
         with:
-          host: msel-vireo03.mse.jhu.edu
+          host: ${{ secrets.VIREO_HOSTNAME }}
           username: jhu-devops
           key: ${{ secrets.JHU_DEVOPS_KEY }}
-          script: | 
+          script: |
+            cd ./vireo
+            docker compose down
             docker pull ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:4.2.10
-            docker run -d -p 9000:9000 ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:4.2.10 
+            cp ./example.env .env
+            docker compose up --detach
+            # docker run -d -p 9000:9000 ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:4.2.10 
+            # wget https://truststore.pki.rds.amazonaws.com/us-east-1/us-east-1-bundle.pem
+            # sudo mv ./us-east-1-bundle.pem /etc/pki/ca-trust/source/
+            # sudo update-ca-trust

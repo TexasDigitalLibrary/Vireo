@@ -12,7 +12,7 @@ on:
           - vireo-dev
         default: 'vireo-dev'
       environment:
-        description: 'stage or prod'
+        description: 'stage(03) or prod(05)'
         required: true
         type: environment
         default: 'stage'
@@ -21,6 +21,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
 
     steps:
       - uses: actions/checkout@v4

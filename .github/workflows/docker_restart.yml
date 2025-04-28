@@ -1,0 +1,28 @@
+name: Restart Docker
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'stage(03) or prod(05)'
+        required: true
+        type: environment
+        default: 'stage'
+
+jobs:
+  restart:
+    runs-on: [self-hosted]
+    environment: ${{ inputs.environment }}
+
+    steps:
+
+      - name: executing remote ssh commands as jhu-devops using secret
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ vars.VIREO_HOSTNAME }}
+          username: jhu-devops
+          key: ${{ secrets.JHU_DEVOPS_KEY }}
+          script: | 
+            cd ./vireo
+            docker compose restart
+            
