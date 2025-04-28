@@ -572,9 +572,6 @@ public class SubmissionController {
                 // Enable compression for temporary files
                 workbook.setCompressTempFiles(true);
 
-                // Write directly to output stream
-                workbook.write(response.getOutputStream());
-
                 Sheet worksheet = workbook.createSheet();
 
                 int rowCount = 0;
@@ -603,6 +600,9 @@ public class SubmissionController {
                 // Auto-sizing is expensive with SXSSF as it can't look back at rows
                 // that have been flushed to disk. If needed, track column widths manually.
                 // If you must use auto-sizing, you'll need to track max width as you go
+
+                // Write directly to output stream
+                workbook.write(response.getOutputStream());
 
             } catch (Exception e) {
                 handleBatchExportError(e, response);
