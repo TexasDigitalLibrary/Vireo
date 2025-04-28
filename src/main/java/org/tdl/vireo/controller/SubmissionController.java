@@ -557,12 +557,17 @@ public class SubmissionController {
         List<SubmissionListColumn> columns = filter.getColumnsFlag() ? filter.getSavedColumns() : user.getSubmissionViewColumns();
         switch (packagerName.trim()) {
         case "Excel":
+
+            // Set response headers
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "inline; filename=" + packagerName + ".xlsx");
+
+            // Create a streaming workbook with a window size of 100 rows
+            // (only this many rows will be kept in memory at once)
+            SXSSFWorkbook workbook = new SXSSFWorkbook(100);
+
             try {
                 List<Submission> submissions = submissionRepo.batchDynamicSubmissionQuery(filter, columns);
-
-                // Create a streaming workbook with a window size of 100 rows
-                // (only this many rows will be kept in memory at once)
-                SXSSFWorkbook workbook = new SXSSFWorkbook(100);
 
                 // Enable compression for temporary files
                 workbook.setCompressTempFiles(true);
@@ -596,27 +601,25 @@ public class SubmissionController {
                 // that have been flushed to disk. If needed, track column widths manually.
                 // If you must use auto-sizing, you'll need to track max width as you go
 
-                // Set response headers
-                response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + ".xlsx");
-
                 // Write directly to output stream
                 workbook.write(response.getOutputStream());
 
+            } catch (Exception e) {
+                handleBatchExportError(e, response);
+            } finally {
                 // Dispose of temporary files
                 workbook.dispose();
 
                 // Close the workbook
                 workbook.close();
-            } catch (Exception e) {
-                handleBatchExportError(e, response);
             }
             break;
         case "MarcXML21":
         case "Marc21":
-            try {
-                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream(), StandardCharsets.UTF_8);
+            response.setContentType(packager.getMimeType());
+            response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
 
+            try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream(), StandardCharsets.UTF_8)) {
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
 
                     StringBuilder contentsText = new StringBuilder();
@@ -634,20 +637,15 @@ public class SubmissionController {
                         }
                     }
                 }
-                zos.close();
-                response.setContentType(packager.getMimeType());
-                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
                 handleBatchExportError(e, response);
             }
             break;
         case "ProQuest":
-            try {
-                int letSlide = 0;
-                int howManyToLetSlide = 100;
-                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream(), StandardCharsets.UTF_8);
+            response.setContentType(packager.getMimeType());
+            response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
 
-
+            try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream(), StandardCharsets.UTF_8)) {
 
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     String firstName = getName(submission, "first_name");
@@ -656,16 +654,15 @@ public class SubmissionController {
 
                     String personEntry = lastName + "_" + firstName + "_" + submission.getId();
 
-                    boolean stillLetSlide = letSlide < howManyToLetSlide;
-
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    try (ZipOutputStream b = new ZipOutputStream(baos)){
+
+                    try (ZipOutputStream b = new ZipOutputStream(baos)) {
                         ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                         if (exportPackage.isMap()) {
                             for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
-                                b.putNextEntry(new ZipEntry(personEntry+"_DATA.xml"));
+                                b.putNextEntry(new ZipEntry(personEntry + "_DATA.xml"));
                                 Path path = fileEntry.getValue().toPath();
-                                byte[] fileBytes = stillLetSlide ? new byte[0] : Files.readAllBytes(path);
+                                byte[] fileBytes = Files.readAllBytes(path);
                                 b.write(fileBytes);
                                 b.closeEntry();
                             }
@@ -674,7 +671,7 @@ public class SubmissionController {
                         Set<String> licenseFileNames = new HashSet<>();
                         for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
                             Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
-                            byte[] fileBytes = stillLetSlide ? new byte[0] : Files.readAllBytes(path);
+                            byte[] fileBytes = Files.readAllBytes(path);
 
                             int sfxIndx = ldfv.getFileName().indexOf(".");
 
@@ -693,7 +690,7 @@ public class SubmissionController {
                                 fullFileName = String.format("%s_%s%s", fileName.toUpperCase(), ++i, fileExt);
                             }
                             licenseFileNames.add(fullFileName);
-                            b.putNextEntry(new ZipEntry(personEntry+"_permission/"+fullFileName));
+                            b.putNextEntry(new ZipEntry(personEntry + "_permission/" + fullFileName));
                             b.write(fileBytes);
                             b.closeEntry();
                         }
@@ -701,38 +698,35 @@ public class SubmissionController {
                         FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
                         if (primaryDoc != null && StringUtils.isNotEmpty(primaryDoc.getValue())) {
                             Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
-                            byte[] fileBytes = stillLetSlide ? new byte[0] : Files.readAllBytes(path);
+                            byte[] fileBytes = Files.readAllBytes(path);
                             String fName = primaryDoc.getFileName();
                             int fNameIndx = fName.indexOf(".");
                             String fType = ""; // default
-                            if (fNameIndx>0){
+                            if (fNameIndx > 0) {
                                 fType = fName.substring(fNameIndx);
                             }
-                            b.putNextEntry(new ZipEntry(personEntry+fType));
+                            b.putNextEntry(new ZipEntry(personEntry + fType));
                             b.write(fileBytes);
                             b.closeEntry();
                         }
+                    } finally {
+                        zos.putNextEntry(new ZipEntry("upload_" + personEntry + ".zip"));
+                        zos.write(baos.toByteArray());
+                        zos.closeEntry();
+
+                        baos.close();
                     }
-                    letSlide++;
-                    zos.putNextEntry(new ZipEntry("upload_"+personEntry+".zip"));
-                    baos.close();
-                    zos.write(baos.toByteArray());
-                    zos.closeEntry();
-
-
-                    System.out.println("\n\n\nPROCESSED A SUBMISSION\n\n\n");
                 }
-                zos.close();
-                response.setContentType(packager.getMimeType());
-                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+
             } catch (Exception e) {
                 handleBatchExportError(e, response);
             }
             break;
         case "DSpaceMETS":
-            try {
-                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+            response.setContentType(packager.getMimeType());
+            response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
 
+            try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream())) {
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                     File exportFile = (File) exportPackage.getPayload();
@@ -741,18 +735,18 @@ public class SubmissionController {
                     zos.write(fileBytes);
                     zos.closeEntry();
                 }
-                zos.close();
-                response.setContentType(packager.getMimeType());
-                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
             } catch (Exception e) {
                 handleBatchExportError(e, response);
             }
             break;
         case "DSpaceSimple":
-            try {
-                ZipOutputStream zos = new ZipOutputStream(response.getOutputStream());
+            response.setContentType(packager.getMimeType());
+            response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+
+            try (ZipOutputStream zos = new ZipOutputStream(response.getOutputStream())) {
                 for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                     String submissionName = "submission_" + submission.getId() + "/";
+
                     zos.putNextEntry(new ZipEntry(submissionName));
 
                     StringBuilder contentsText = new StringBuilder();
@@ -763,7 +757,7 @@ public class SubmissionController {
                     if (exportPackage.isMap()) {
                         for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
                             zos.putNextEntry(new ZipEntry(submissionName + fileEntry.getKey()));
-                            contentsText.append(fileEntry.getKey()+"\n");
+                            contentsText.append(fileEntry.getKey() + "\n");
                             zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
                             zos.closeEntry();
                         }
@@ -774,7 +768,7 @@ public class SubmissionController {
                         Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
                         byte[] fileBytes = Files.readAllBytes(path);
                         zos.putNextEntry(new ZipEntry(submissionName + ldfv.getFileName()));
-                        contentsText.append(ldfv.getFileName()+"\tBUNDLE:LICENSE\n");
+                        contentsText.append(ldfv.getFileName() + "\tBUNDLE:LICENSE\n");
                         zos.write(fileBytes);
                         zos.closeEntry();
                     }
@@ -783,8 +777,8 @@ public class SubmissionController {
                     FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
                     Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
                     byte[] fileBytes = Files.readAllBytes(path);
-                    zos.putNextEntry(new ZipEntry(submissionName+primaryDoc.getFileName()));
-                    contentsText.append(primaryDoc.getFileName()+"\tBUNDLE:CONTENT\tprimary:true\n");
+                    zos.putNextEntry(new ZipEntry(submissionName + primaryDoc.getFileName()));
+                    contentsText.append(primaryDoc.getFileName() + "\tBUNDLE:CONTENT\tprimary:true\n");
                     zos.write(fileBytes);
                     zos.closeEntry();
 
@@ -794,7 +788,7 @@ public class SubmissionController {
                         Path supplPath = assetService.getAssetsAbsolutePath(supplDoc.getValue());
                         byte[] supplFileBytes = Files.readAllBytes(supplPath);
                         zos.putNextEntry(new ZipEntry(submissionName+supplDoc.getFileName()));
-                        contentsText.append(supplDoc.getFileName()+"\tBUNDLE:CONTENT\n");
+                        contentsText.append(supplDoc.getFileName() + "\tBUNDLE:CONTENT\n");
                         zos.write(supplFileBytes);
                         zos.closeEntry();
                     }
@@ -804,12 +798,10 @@ public class SubmissionController {
                     zos.write(contentsText.toString().getBytes());
                     zos.closeEntry();
 
+                    // close submission zip entry
                     zos.closeEntry();
-
                 }
-                zos.close();
-                response.setContentType(packager.getMimeType());
-                response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+
             } catch (Exception e) {
                 handleBatchExportError(e, response);
             }
