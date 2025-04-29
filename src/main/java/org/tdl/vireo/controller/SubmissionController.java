@@ -572,7 +572,7 @@ public class SubmissionController {
 
         try (
             FileOutputStream tempFileOS = new FileOutputStream(export.toFile());
-            CountingOutputStream tempFileCoutingOS = new CountingOutputStream(tempFileOS);
+            CountingOutputStream tempFileCountingOS = new CountingOutputStream(tempFileOS);
             FileInputStream tempFileIS = new FileInputStream(export.toFile());
             OutputStream responseOS = response.getOutputStream()
         ) {
@@ -623,7 +623,7 @@ public class SubmissionController {
                     // If you must use auto-sizing, you'll need to track max width as you go
 
                     // Write directly to output stream
-                    workbook.write(tempFileCoutingOS);
+                    workbook.write(tempFileCountingOS);
 
                 } catch (Exception e) {
                     handleBatchExportError(e, response);
@@ -640,7 +640,7 @@ public class SubmissionController {
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
 
-                try (ZipOutputStream zos = new ZipOutputStream(tempFileCoutingOS, StandardCharsets.UTF_8)) {
+                try (ZipOutputStream zos = new ZipOutputStream(tempFileCountingOS, StandardCharsets.UTF_8)) {
                     for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
 
                         StringBuilder contentsText = new StringBuilder();
@@ -666,7 +666,7 @@ public class SubmissionController {
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
 
-                try (ZipOutputStream zos = new ZipOutputStream(tempFileCoutingOS, StandardCharsets.UTF_8)) {
+                try (ZipOutputStream zos = new ZipOutputStream(tempFileCountingOS, StandardCharsets.UTF_8)) {
 
                     for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                         String firstName = getName(submission, "first_name");
@@ -747,7 +747,7 @@ public class SubmissionController {
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
 
-                try (ZipOutputStream zos = new ZipOutputStream(tempFileCoutingOS)) {
+                try (ZipOutputStream zos = new ZipOutputStream(tempFileCountingOS)) {
                     for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                         ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                         File exportFile = (File) exportPackage.getPayload();
@@ -764,7 +764,7 @@ public class SubmissionController {
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
 
-                try (ZipOutputStream zos = new ZipOutputStream(tempFileCoutingOS)) {
+                try (ZipOutputStream zos = new ZipOutputStream(tempFileCountingOS)) {
                     for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                         String submissionName = "submission_" + submission.getId() + "/";
 
@@ -831,7 +831,7 @@ public class SubmissionController {
                 handleBatchExportError(new Exception("No packager " + packagerName + " found!"), response);
             }
 
-            response.setHeader("Content-Length", Long.toString(tempFileCoutingOS.getByteCount()));
+            response.setHeader("Content-Length", Long.toString(tempFileCountingOS.getByteCount()));
 
             IOUtils.copyLarge(tempFileIS, responseOS);
 
