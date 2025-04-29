@@ -837,6 +837,8 @@ public class SubmissionController {
 
         } catch (IOException e) {
             handleBatchExportError(e, response);
+        } finally {
+            Files.deleteIfExists(export);
         }
 
     }
