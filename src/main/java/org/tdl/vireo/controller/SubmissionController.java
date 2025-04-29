@@ -543,7 +543,6 @@ public class SubmissionController {
         LOG.info("Error With Export", e);
         String responseMessage = "The export failed. Check all required metadata and files, then try to export again.";
         ApiResponse apiResponse = new ApiResponse(ERROR, responseMessage);
-        response.reset();
         response.setContentType("application/json");
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         response.getOutputStream().print(objectMapper.writeValueAsString(apiResponse));
@@ -570,11 +569,14 @@ public class SubmissionController {
 
         final Path export = Files.createTempFile(packagerName, packager.getFileExtension());
 
+        boolean hasCaughtException = false;
+
+        OutputStream responseOS = response.getOutputStream();
+
         try (
             FileOutputStream tempFileOS = new FileOutputStream(export.toFile());
             CountingOutputStream tempFileCountingOS = new CountingOutputStream(tempFileOS);
             FileInputStream tempFileIS = new FileInputStream(export.toFile());
-            OutputStream responseOS = response.getOutputStream()
         ) {
             switch (packagerName.trim()) {
             case "Excel":
@@ -626,6 +628,7 @@ public class SubmissionController {
                     workbook.write(tempFileCountingOS);
 
                 } catch (Exception e) {
+                    hasCaughtException = true;
                     handleBatchExportError(e, response);
                 } finally {
                     // Dispose of temporary files
@@ -659,12 +662,16 @@ public class SubmissionController {
                         }
                     }
                 } catch (Exception e) {
+                    hasCaughtException = true;
                     handleBatchExportError(e, response);
                 }
                 break;
             case "ProQuest":
                 response.setContentType(packager.getMimeType());
                 response.setHeader("Content-Disposition", "inline; filename=" + packagerName + "." + packager.getFileExtension());
+
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                ZipOutputStream b = new ZipOutputStream(baos);
 
                 try (ZipOutputStream zos = new ZipOutputStream(tempFileCountingOS, StandardCharsets.UTF_8)) {
 
@@ -675,72 +682,72 @@ public class SubmissionController {
 
                         String personEntry = lastName + "_" + firstName + "_" + submission.getId();
 
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        baos = new ByteArrayOutputStream();
 
-                        try (ZipOutputStream b = new ZipOutputStream(baos)) {
-                            ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
-                            if (exportPackage.isMap()) {
-                                for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
-                                    b.putNextEntry(new ZipEntry(personEntry + "_DATA.xml"));
-                                    Path path = fileEntry.getValue().toPath();
-                                    byte[] fileBytes = Files.readAllBytes(path);
-                                    b.write(fileBytes);
-                                    b.closeEntry();
-                                }
-                            }
-                            // LICENSES
-                            Set<String> licenseFileNames = new HashSet<>();
-                            for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
-                                Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+                        b = new ZipOutputStream(baos);
+
+                        ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
+                        if (exportPackage.isMap()) {
+                            for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
+                                b.putNextEntry(new ZipEntry(personEntry + "_DATA.xml"));
+                                Path path = fileEntry.getValue().toPath();
                                 byte[] fileBytes = Files.readAllBytes(path);
-
-                                int sfxIndx = ldfv.getFileName().indexOf(".");
-
-                                String fileName = sfxIndx > 0
-                                    ? ldfv.getFileName().substring(0, sfxIndx)
-                                    : ldfv.getFileName();
-
-                                String fileExt = sfxIndx > 0
-                                    ? ldfv.getFileName().substring(sfxIndx)
-                                    : StringUtils.EMPTY;
-
-                                String fullFileName = fileName.toUpperCase() + fileExt;
-
-                                int i = 0;
-                                while (licenseFileNames.contains(fullFileName)) {
-                                    fullFileName = String.format("%s_%s%s", fileName.toUpperCase(), ++i, fileExt);
-                                }
-                                licenseFileNames.add(fullFileName);
-                                b.putNextEntry(new ZipEntry(personEntry + "_permission/" + fullFileName));
                                 b.write(fileBytes);
                                 b.closeEntry();
                             }
-                            // PRIMARY_DOC
-                            FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
-                            if (primaryDoc != null && StringUtils.isNotEmpty(primaryDoc.getValue())) {
-                                Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
-                                byte[] fileBytes = Files.readAllBytes(path);
-                                String fName = primaryDoc.getFileName();
-                                int fNameIndx = fName.indexOf(".");
-                                String fType = ""; // default
-                                if (fNameIndx > 0) {
-                                    fType = fName.substring(fNameIndx);
-                                }
-                                b.putNextEntry(new ZipEntry(personEntry + fType));
-                                b.write(fileBytes);
-                                b.closeEntry();
-                            }
-                        } finally {
-                            zos.putNextEntry(new ZipEntry("upload_" + personEntry + ".zip"));
-                            zos.write(baos.toByteArray());
-                            zos.closeEntry();
-
-                            baos.close();
                         }
-                    }
+                        // LICENSES
+                        Set<String> licenseFileNames = new HashSet<>();
+                        for (FieldValue ldfv : submission.getLicenseDocumentFieldValues()) {
+                            Path path = assetService.getAssetsAbsolutePath(ldfv.getValue());
+                            byte[] fileBytes = Files.readAllBytes(path);
 
+                            int sfxIndx = ldfv.getFileName().indexOf(".");
+
+                            String fileName = sfxIndx > 0
+                                ? ldfv.getFileName().substring(0, sfxIndx)
+                                : ldfv.getFileName();
+
+                            String fileExt = sfxIndx > 0
+                                ? ldfv.getFileName().substring(sfxIndx)
+                                : StringUtils.EMPTY;
+
+                            String fullFileName = fileName.toUpperCase() + fileExt;
+
+                            int i = 0;
+                            while (licenseFileNames.contains(fullFileName)) {
+                                fullFileName = String.format("%s_%s%s", fileName.toUpperCase(), ++i, fileExt);
+                            }
+                            licenseFileNames.add(fullFileName);
+                            b.putNextEntry(new ZipEntry(personEntry + "_permission/" + fullFileName));
+                            b.write(fileBytes);
+                            b.closeEntry();
+                        }
+                        // PRIMARY_DOC
+                        FieldValue primaryDoc = submission.getPrimaryDocumentFieldValue();
+                        if (primaryDoc != null && StringUtils.isNotEmpty(primaryDoc.getValue())) {
+                            Path path = assetService.getAssetsAbsolutePath(primaryDoc.getValue());
+                            byte[] fileBytes = Files.readAllBytes(path);
+                            String fName = primaryDoc.getFileName();
+                            int fNameIndx = fName.indexOf(".");
+                            String fType = ""; // default
+                            if (fNameIndx > 0) {
+                                fType = fName.substring(fNameIndx);
+                            }
+                            b.putNextEntry(new ZipEntry(personEntry + fType));
+                            b.write(fileBytes);
+                            b.closeEntry();
+                        }
+                        zos.putNextEntry(new ZipEntry("upload_" + personEntry + ".zip"));
+                        zos.write(baos.toByteArray());
+                        zos.closeEntry();
+                    }
                 } catch (Exception e) {
+                    hasCaughtException = true;
                     handleBatchExportError(e, response);
+                } finally {
+                    baos.close();
+                    b.close();
                 }
                 break;
             case "DSpaceMETS":
@@ -757,6 +764,7 @@ public class SubmissionController {
                         zos.closeEntry();
                     }
                 } catch (Exception e) {
+                    hasCaughtException = true;
                     handleBatchExportError(e, response);
                 }
                 break;
@@ -824,23 +832,26 @@ public class SubmissionController {
                     }
 
                 } catch (Exception e) {
+                    hasCaughtException = true;
                     handleBatchExportError(e, response);
                 }
                 break;
             default:
+                hasCaughtException = true;
                 handleBatchExportError(new Exception("No packager " + packagerName + " found!"), response);
             }
 
-            response.setHeader("Content-Length", Long.toString(tempFileCountingOS.getByteCount()));
-
-            IOUtils.copyLarge(tempFileIS, responseOS);
+            if (!hasCaughtException) {
+                response.setHeader("Content-Length", Long.toString(tempFileCountingOS.getByteCount()));
+                IOUtils.copyLarge(tempFileIS, responseOS);
+            }
 
         } catch (IOException e) {
             handleBatchExportError(e, response);
         } finally {
             Files.deleteIfExists(export);
+            responseOS.close();
         }
-
     }
 
     @RequestMapping(value = "/batch-assign-to", method = RequestMethod.POST)
