@@ -569,7 +569,7 @@ public class SubmissionController {
 
         final Path export = Files.createTempFile(packagerName, packager.getFileExtension());
 
-        boolean hasCaughtException = false;
+        boolean exceptionThrown = false;
 
         OutputStream responseOS = response.getOutputStream();
 
@@ -628,7 +628,7 @@ public class SubmissionController {
                     workbook.write(tempFileCountingOS);
 
                 } catch (Exception e) {
-                    hasCaughtException = true;
+                    exceptionThrown = true;
                     handleBatchExportError(e, response);
                 } finally {
                     // Dispose of temporary files
@@ -662,7 +662,7 @@ public class SubmissionController {
                         }
                     }
                 } catch (Exception e) {
-                    hasCaughtException = true;
+                    exceptionThrown = true;
                     handleBatchExportError(e, response);
                 }
                 break;
@@ -743,7 +743,7 @@ public class SubmissionController {
                         zos.closeEntry();
                     }
                 } catch (Exception e) {
-                    hasCaughtException = true;
+                    exceptionThrown = true;
                     handleBatchExportError(e, response);
                 } finally {
                     baos.close();
@@ -764,7 +764,7 @@ public class SubmissionController {
                         zos.closeEntry();
                     }
                 } catch (Exception e) {
-                    hasCaughtException = true;
+                    exceptionThrown = true;
                     handleBatchExportError(e, response);
                 }
                 break;
@@ -832,16 +832,16 @@ public class SubmissionController {
                     }
 
                 } catch (Exception e) {
-                    hasCaughtException = true;
+                    exceptionThrown = true;
                     handleBatchExportError(e, response);
                 }
                 break;
             default:
-                hasCaughtException = true;
+                exceptionThrown = true;
                 handleBatchExportError(new Exception("No packager " + packagerName + " found!"), response);
             }
 
-            if (!hasCaughtException) {
+            if (!exceptionThrown) {
                 response.setHeader("Content-Length", Long.toString(tempFileCountingOS.getByteCount()));
                 IOUtils.copyLarge(tempFileIS, responseOS);
             }
