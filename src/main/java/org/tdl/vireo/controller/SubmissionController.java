@@ -835,6 +835,9 @@ public class SubmissionController {
 
         } catch (IOException e) {
             elevateBatchExportException(e);
+        } catch (Exception e) {
+            // catch and elevate runtime exceptions to avoid going to the incorrect global exception handler
+            elevateBatchExportException(e);
         } finally {
             try {
                 if (export != null) {
