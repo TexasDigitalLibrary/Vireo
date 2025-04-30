@@ -221,12 +221,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
     @ExceptionHandler(BatchExportException.class)
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiResponse handleBatchExportException(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        Object handler,
-        BatchExportException exception
-    ) {
+    public ApiResponse handleBatchExportException(BatchExportException exception) {
         String message = exception.getMessage();
         logger.error(message);
         logger.debug(message, exception);
