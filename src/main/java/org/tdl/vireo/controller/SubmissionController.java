@@ -637,7 +637,8 @@ public class SubmissionController {
                                         zos.putNextEntry(new ZipEntry(fileEntry.getKey()));
                                     }
                                     contentsText.append("MD " + fileEntry.getKey() + "\n");
-                                    zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
+                                    byte[] fileBytes = Files.readAllBytes(fileEntry.getValue().toPath());
+                                    zos.write(fileBytes);
                                     zos.closeEntry();
                                 }
                             }
