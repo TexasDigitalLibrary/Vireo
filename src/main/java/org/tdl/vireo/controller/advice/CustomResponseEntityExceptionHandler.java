@@ -4,12 +4,9 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static java.lang.String.format;
 
 import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import java.nio.file.NoSuchFileException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
