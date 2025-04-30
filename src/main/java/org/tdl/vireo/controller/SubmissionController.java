@@ -827,6 +827,8 @@ public class SubmissionController {
                     response.setHeader("Content-Length", Long.toString(contentLength));
                     IOUtils.copyLarge(tempFileIS, response.getOutputStream());
                 }
+            } else {
+                throw new RuntimeException("No content to write to response output stream.");
             }
 
         } catch (IOException e) {
@@ -840,12 +842,6 @@ public class SubmissionController {
                 elevateBatchExportException(e);
             }
         }
-    }
-
-    private void elevateBatchExportException(Exception e) {
-        String message = "Error With Export";
-        LOG.warn(message, e);
-        throw new BatchExportException(message, e);
     }
 
     @RequestMapping(value = "/batch-assign-to", method = RequestMethod.POST)
@@ -1203,6 +1199,10 @@ public class SubmissionController {
             : fieldValues.get(0).getValue().trim();
 
         return name.substring(0, 1).toUpperCase() + name.substring(1);
+    }
+
+    private void elevateBatchExportException(Exception e) throws BatchExportException {
+        throw new BatchExportException("Error With Export", e);
     }
 
 }
