@@ -4,9 +4,12 @@ import static edu.tamu.weaver.response.ApiStatus.ERROR;
 import static java.lang.String.format;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import java.nio.file.NoSuchFileException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.tdl.vireo.exception.BatchExportException;
 import org.tdl.vireo.exception.SwordDepositBadGatewayException;
 import org.tdl.vireo.exception.SwordDepositBadRequestException;
 import org.tdl.vireo.exception.SwordDepositConflictException;
@@ -213,6 +217,23 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         logger.error(message);
         logger.debug(message, exception);
         return ApiResponse.fromException(ERROR, message, exception);
+    }
+
+    @ExceptionHandler(BatchExportException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiResponse handleBatchExportException(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        Object handler,
+        BatchExportException exception
+    ) {
+        String message = exception.getMessage();
+        logger.error(message);
+        logger.debug(message, exception);
+
+        String responseMessage = "The export failed. Check all required metadata and files, then try to export again.";
+
+        return new ApiResponse(ERROR, responseMessage);
     }
 
     @ExceptionHandler(Exception.class)
