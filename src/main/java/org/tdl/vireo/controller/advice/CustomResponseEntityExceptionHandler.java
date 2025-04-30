@@ -225,7 +225,7 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
 
         String responseMessage = "The export failed. Check all required metadata and files, then try to export again.";
 
-        return new ApiResponse(ERROR, responseMessage);
+        return ApiResponse.fromException(ERROR, responseMessage, exception);
     }
 
     @ExceptionHandler(Exception.class)
