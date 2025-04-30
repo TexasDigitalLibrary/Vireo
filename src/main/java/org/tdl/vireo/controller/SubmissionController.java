@@ -609,7 +609,7 @@ public class SubmissionController {
                         // that have been flushed to disk. If needed, track column widths manually.
                         // If you must use auto-sizing, you'll need to track max width as you go
 
-                        // Write directly to output stream
+                        // Write to temp file via counting output stream
                         workbook.write(tempFileCountingOS);
 
                         // Dispose of temporary files
