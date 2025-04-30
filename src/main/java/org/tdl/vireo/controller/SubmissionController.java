@@ -734,7 +734,7 @@ public class SubmissionController {
                         for (Submission submission : submissionRepo.batchDynamicSubmissionQuery(filter, columns)) {
                             ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
                             File exportFile = (File) exportPackage.getPayload();
-                            byte[] fileBytes =  FileUtils.readFileToByteArray(exportFile);
+                            byte[] fileBytes = FileUtils.readFileToByteArray(exportFile);
                             zos.putNextEntry(new ZipEntry(exportFile.getName()));
                             zos.write(fileBytes);
                             zos.closeEntry();
@@ -758,12 +758,13 @@ public class SubmissionController {
 
                             ExportPackage exportPackage = packagerUtility.packageExport(packager, submission);
 
-                            //METADATA
+                            // METADATA
                             if (exportPackage.isMap()) {
                                 for (Map.Entry<String, File> fileEntry : ((Map<String, File>) exportPackage.getPayload()).entrySet()) {
                                     zos.putNextEntry(new ZipEntry(submissionName + fileEntry.getKey()));
                                     contentsText.append(fileEntry.getKey() + "\n");
-                                    zos.write(Files.readAllBytes(fileEntry.getValue().toPath()));
+                                    byte[] fileBytes = Files.readAllBytes(fileEntry.getValue().toPath());
+                                    zos.write(fileBytes);
                                     zos.closeEntry();
                                 }
                             }
