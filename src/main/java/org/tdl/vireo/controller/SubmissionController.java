@@ -561,6 +561,8 @@ public class SubmissionController {
 
         Path export = null;
 
+        LOG.info("Beginning Export with packager {}", packagerName.trim());
+
         try {
             export = Files.createTempFile(packagerName, packager.getFileExtension());
 
@@ -823,12 +825,16 @@ public class SubmissionController {
 
             }
 
+            LOG.info("Packaging complete for {}", packagerName);
+
             // if no exception occurs and bytes written to temp file
             if (contentLength > 0) {
+                LOG.info("Streaming response for {}", packagerName);
                 try (FileInputStream tempFileIS = new FileInputStream(export.toFile())) {
                     response.setHeader("Content-Length", Long.toString(contentLength));
                     IOUtils.copyLarge(tempFileIS, response.getOutputStream());
                 }
+                LOG.info("Done streaming response for {}", packagerName);
             } else {
                 throw new RuntimeException("No content to write to response output stream.");
             }
@@ -841,6 +847,7 @@ public class SubmissionController {
         } finally {
             try {
                 if (export != null) {
+                    LOG.info("Cleaning up temp files for {}", packagerName);
                     Files.deleteIfExists(export);
                 }
             } catch (Exception e) {
