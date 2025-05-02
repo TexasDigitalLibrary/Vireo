@@ -1,8 +1,29 @@
-vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, $q, SubmissionStatusRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType) {
+vireo.controller("EmailWorkflowRulesController", function ($controller, $location, $scope, $q, SubmissionStatusRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
     }));
+
+    $scope.active = 'email-by-status';
+
+    $scope.isByStatus = function () {
+        return $scope.active === 'email-by-status';
+    };
+
+    $scope.isByAction = function () {
+        return $scope.active === 'email-by-action';
+    };
+
+    $scope.submissionActions = [
+        {
+            enum: 'ADD_MESSAGE',
+            name: 'Add Message'
+        },
+        {
+            enum: 'UPDATE_ADVISOR_APPROVAL',
+            name: 'Update Advisor Approval'
+        }
+    ];
 
     $scope.submissionStatuses = SubmissionStatusRepo.getAll();
     $scope.emailTemplates = EmailTemplateRepo.getAll();
