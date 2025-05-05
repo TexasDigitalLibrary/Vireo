@@ -718,6 +718,10 @@ public class SubmissionController {
                                     izos.write(fileBytes);
                                     izos.closeEntry();
                                 }
+
+                                izos.finish();  // Finish writing to the inner zip
+                                izos.flush();   // Flush any buffered data
+
                                 zos.putNextEntry(new ZipEntry("upload_" + personEntry + ".zip"));
                                 zos.write(baos.toByteArray());
                                 zos.closeEntry();
