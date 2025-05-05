@@ -5,12 +5,6 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -23,12 +17,11 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tdl.vireo.model.response.Views;
-import org.tdl.vireo.model.validation.OrganizationValidator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIdentityReference;
@@ -37,6 +30,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.tdl.vireo.model.response.Views;
+import org.tdl.vireo.model.validation.OrganizationValidator;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
@@ -88,7 +87,10 @@ public class Organization extends ValidatingBaseEntity {
     private List<String> emails;
 
     @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, fetch = EAGER)
-    private List<EmailWorkflowRule> emailWorkflowRules;
+    private List<EmailWorkflowRuleByStatus> emailWorkflowRules;
+
+    @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, fetch = EAGER)
+    private List<EmailWorkflowRuleByAction> actionEmailWorkflowRules;
 
     /**
      * Initializer.
@@ -100,7 +102,8 @@ public class Organization extends ValidatingBaseEntity {
         setParentOrganization(null);
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new ArrayList<String>());
-        setEmailWorkflowRules(new ArrayList<EmailWorkflowRule>());
+        setEmailWorkflowRules(new ArrayList<EmailWorkflowRuleByStatus>());
+        setActionEmailWorkflowRules(new ArrayList<EmailWorkflowRuleByAction>());
     }
 
     /**
@@ -357,7 +360,7 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
-     * 
+     *
      * @param childrenOrganizations
      */
     public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
@@ -417,7 +420,7 @@ public class Organization extends ValidatingBaseEntity {
     /**
      * @return the emailWorkflowRules
      */
-    public List<EmailWorkflowRule> getEmailWorkflowRules() {
+    public List<EmailWorkflowRuleByStatus> getEmailWorkflowRules() {
         return emailWorkflowRules;
     }
 
@@ -425,7 +428,7 @@ public class Organization extends ValidatingBaseEntity {
      * @param emailWorkflowRules
      *            the emailWorkflowRules to set
      */
-    public void setEmailWorkflowRules(List<EmailWorkflowRule> emailWorkflowRules) {
+    public void setEmailWorkflowRules(List<EmailWorkflowRuleByStatus> emailWorkflowRules) {
         this.emailWorkflowRules = emailWorkflowRules;
     }
 
@@ -433,7 +436,7 @@ public class Organization extends ValidatingBaseEntity {
      *
      * @param emailWorkflowRule
      */
-    public void addEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
+    public void addEmailWorkflowRule(EmailWorkflowRuleByStatus emailWorkflowRule) {
         getEmailWorkflowRules().add(emailWorkflowRule);
     }
 
@@ -442,24 +445,56 @@ public class Organization extends ValidatingBaseEntity {
      *
      * @param emailWorkflowRule The workflow rule to remove.
      */
-    public void removeEmailWorkflowRule(EmailWorkflowRule emailWorkflowRule) {
+    public void removeEmailWorkflowRule(EmailWorkflowRuleByStatus emailWorkflowRule) {
         getEmailWorkflowRules().remove(emailWorkflowRule);
     }
 
-    @JsonIgnore
-    public List<EmailWorkflowRule> getAggregateEmailWorkflowRules() {
+    /**
+     * @return the actionEmailWorkflowRules
+     */
+    public List<EmailWorkflowRuleByAction> getActionEmailWorkflowRules() {
+        return actionEmailWorkflowRules;
+    }
 
-        List<EmailWorkflowRule> aggregateEmailWorkflowRules = new ArrayList<EmailWorkflowRule>();
-        List<EmailWorkflowRule> newRules = new ArrayList<EmailWorkflowRule>();
+    /**
+     * @param actionEmailWorkflowRules
+     *            the actionEmailWorkflowRules to set
+     */
+    public void setActionEmailWorkflowRules(List<EmailWorkflowRuleByAction> actionEmailWorkflowRules) {
+        this.actionEmailWorkflowRules = actionEmailWorkflowRules;
+    }
+
+    /**
+     *
+     * @param actionEmailWorkflowRule
+     */
+    public void addActionEmailWorkflowRule(EmailWorkflowRuleByAction actionEmailWorkflowRules) {
+        getActionEmailWorkflowRules().add(actionEmailWorkflowRules);
+    }
+
+    /**
+     * Remove the workflow rule.
+     *
+     * @param actionEmailWorkflowRules The workflow rule to remove.
+     */
+    public void removeActionEmailWorkflowRule(EmailWorkflowRuleByAction actionEmailWorkflowRules) {
+        getActionEmailWorkflowRules().remove(actionEmailWorkflowRules);
+    }
+
+    @JsonIgnore
+    public List<EmailWorkflowRuleByStatus> getAggregateEmailWorkflowRules() {
+
+        List<EmailWorkflowRuleByStatus> aggregateEmailWorkflowRules = new ArrayList<EmailWorkflowRuleByStatus>();
+        List<EmailWorkflowRuleByStatus> newRules = new ArrayList<EmailWorkflowRuleByStatus>();
 
         aggregateEmailWorkflowRules.addAll(getEmailWorkflowRules());
 
         if (getParentOrganization() != null) {
-            for (EmailWorkflowRule potentialEmailWorkflowRule : getParentOrganization().getAggregateEmailWorkflowRules()) {
+            for (EmailWorkflowRuleByStatus potentialEmailWorkflowRule : getParentOrganization().getAggregateEmailWorkflowRules()) {
                 System.out.println("At the ancestor organization " + getParentOrganization().getName() + " considering addition of the rule " + potentialEmailWorkflowRule + " to pass back to caller (org's child or submission controller)");
 
                 boolean rejectDuplicateRule = false;
-                for (EmailWorkflowRule currentEmailWorkflowRule : aggregateEmailWorkflowRules) {
+                for (EmailWorkflowRuleByStatus currentEmailWorkflowRule : aggregateEmailWorkflowRules) {
                     String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
                     String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
 

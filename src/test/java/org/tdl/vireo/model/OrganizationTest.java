@@ -80,11 +80,11 @@ public class OrganizationTest extends AbstractModelCustomMethodTest<Organization
 
     @Test
     public void testGetAggregateEmailWorkflowRules() {
-        List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<>();
-        List<EmailWorkflowRule> parentEmailWorkflowRules = new ArrayList<>();
-        EmailWorkflowRule emailWorkflowRule1 = new EmailWorkflowRule();
-        EmailWorkflowRule emailWorkflowRule2 = new EmailWorkflowRule();
-        EmailWorkflowRule emailWorkflowRule3 = new EmailWorkflowRule();
+        List<EmailWorkflowRuleByStatus> emailWorkflowRules = new ArrayList<>();
+        List<EmailWorkflowRuleByStatus> parentEmailWorkflowRules = new ArrayList<>();
+        EmailWorkflowRuleByStatus emailWorkflowRule1 = new EmailWorkflowRuleByStatus();
+        EmailWorkflowRuleByStatus emailWorkflowRule2 = new EmailWorkflowRuleByStatus();
+        EmailWorkflowRuleByStatus emailWorkflowRule3 = new EmailWorkflowRuleByStatus();
         EmailRecipient emailRecipient1 = new EmailRecipientPlainAddress("email@Recipient1.nowhere");
         EmailRecipient emailRecipient2 = new EmailRecipientPlainAddress("email@Recipient2.nowhere");
         EmailRecipient emailRecipient3 = new EmailRecipientPlainAddress("email@Recipient3.nowhere");
@@ -119,7 +119,7 @@ public class OrganizationTest extends AbstractModelCustomMethodTest<Organization
         ReflectionTestUtils.setField(organization, "emailWorkflowRules", emailWorkflowRules);
         ReflectionTestUtils.setField(organization, "parentOrganization", parentOrganization);
 
-        List<EmailWorkflowRule> got = organization.getAggregateEmailWorkflowRules();
+        List<EmailWorkflowRuleByStatus> got = organization.getAggregateEmailWorkflowRules();
 
         assertTrue(got.contains(emailWorkflowRule1), "E-mail Workflow Rule 1 is not found in Aggregate E-mail Workflow Rules array.");
         assertTrue(got.contains(emailWorkflowRule2), "E-mail Workflow Rule 2 is not found in Aggregate E-mail Workflow Rules array.");
@@ -128,9 +128,9 @@ public class OrganizationTest extends AbstractModelCustomMethodTest<Organization
 
     @Test
     public void testGetAggregateEmailWorkflowRulesWithoutParentOrganization() {
-        List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<>();
-        EmailWorkflowRule emailWorkflowRule1 = new EmailWorkflowRule();
-        EmailWorkflowRule emailWorkflowRule2 = new EmailWorkflowRule();
+        List<EmailWorkflowRuleByStatus> emailWorkflowRules = new ArrayList<>();
+        EmailWorkflowRuleByStatus emailWorkflowRule1 = new EmailWorkflowRuleByStatus();
+        EmailWorkflowRuleByStatus emailWorkflowRule2 = new EmailWorkflowRuleByStatus();
 
         emailWorkflowRule1.setId(1L);
         emailWorkflowRule2.setId(2L);
@@ -140,7 +140,7 @@ public class OrganizationTest extends AbstractModelCustomMethodTest<Organization
         ReflectionTestUtils.setField(organization, "id", 2L);
         ReflectionTestUtils.setField(organization, "emailWorkflowRules", emailWorkflowRules);
 
-        List<EmailWorkflowRule> got = organization.getAggregateEmailWorkflowRules();
+        List<EmailWorkflowRuleByStatus> got = organization.getAggregateEmailWorkflowRules();
 
         assertTrue(got.contains(emailWorkflowRule1), "E-mail Workflow Rule 1 is not found in Aggregate E-mail Workflow Rules array.");
         assertTrue(got.contains(emailWorkflowRule2), "E-mail Workflow Rule 2 is not found in Aggregate E-mail Workflow Rules array.");
@@ -201,7 +201,7 @@ public class OrganizationTest extends AbstractModelCustomMethodTest<Organization
         List<SubmissionWorkflowStep> originalWorkflowSteps = new ArrayList<>();
         List<SubmissionWorkflowStep> aggregateWorkflowSteps = new ArrayList<>();
         List<String> emails = new ArrayList<>();
-        List<EmailWorkflowRule> emailWorkflowRules = new ArrayList<>();
+        List<EmailWorkflowRuleByStatus> emailWorkflowRules = new ArrayList<>();
         Set<Organization> childrenOrganizations = new HashSet<>();
 
         return Stream.of(

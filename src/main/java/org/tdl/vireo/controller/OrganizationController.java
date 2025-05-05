@@ -25,7 +25,7 @@ import org.tdl.vireo.exception.SystemEmailRuleNotDeleteableException;
 import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.Submission;
@@ -254,7 +254,7 @@ public class OrganizationController {
         if (emailRecipient == null) {
             response = new ApiResponse(ERROR, "Could not create recipient.");
         } else {
-            EmailWorkflowRule newEmailWorkflowRule = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
+            EmailWorkflowRuleByStatus newEmailWorkflowRule = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
             org.addEmailWorkflowRule(newEmailWorkflowRule);
             organizationRepo.update(org);
 
@@ -275,7 +275,7 @@ public class OrganizationController {
         JsonNode recipientNode = objectMapper.convertValue(data, JsonNode.class).get("recipient");
         EmailTemplate emailTemplate = emailTemplateRepo.findById(Long.valueOf((Integer) data.get("templateId"))).get();
 
-        EmailWorkflowRule emailWorkflowRuleToUpdate = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
+        EmailWorkflowRuleByStatus emailWorkflowRuleToUpdate = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
 
         EmailRecipient emailRecipient = buildRecipient(recipientNode);
 
@@ -301,7 +301,7 @@ public class OrganizationController {
     public ApiResponse removeEmailWorkflowRule(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) throws SystemEmailRuleNotDeleteableException {
 
         Organization org = organizationRepo.read(requestingOrgId);
-        EmailWorkflowRule rule = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
+        EmailWorkflowRuleByStatus rule = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
 
         if (rule.isSystem()) {
             throw new SystemEmailRuleNotDeleteableException();
@@ -320,7 +320,7 @@ public class OrganizationController {
     @PreAuthorize("hasRole('MANAGER')")
     public ApiResponse changeEmailWorkflowRuleActivation(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) {
 
-        EmailWorkflowRule rule = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
+        EmailWorkflowRuleByStatus rule = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
 
         rule.isDisabled(!rule.isDisabled());
 

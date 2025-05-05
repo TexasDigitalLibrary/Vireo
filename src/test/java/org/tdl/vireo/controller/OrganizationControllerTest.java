@@ -37,7 +37,7 @@ import org.tdl.vireo.model.EmailRecipientContact;
 import org.tdl.vireo.model.EmailRecipientOrganization;
 import org.tdl.vireo.model.EmailRecipientSubmitter;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
@@ -85,7 +85,7 @@ public class OrganizationControllerTest extends AbstractControllerTest {
     private EmailTemplate emailTemplate1;
     private EmailTemplate emailTemplate2;
 
-    private EmailWorkflowRule emailWorkflowRule1;
+    private EmailWorkflowRuleByStatus emailWorkflowRule1;
 
     private Organization organization1;
     private Organization organization2;
@@ -101,13 +101,13 @@ public class OrganizationControllerTest extends AbstractControllerTest {
 
     private List<Organization> organizations;
     private List<WorkflowStep> workflowSteps;
-    private List<EmailWorkflowRule> emailWorkflowRules;
+    private List<EmailWorkflowRuleByStatus> emailWorkflowRules;
 
     @BeforeEach
     public void setup() {
         emailTemplate1 = new EmailTemplate("name1", "subject1", "message1");
         emailTemplate2 = new EmailTemplate("name2", "subject2", "message2");
-        emailWorkflowRule1 = new EmailWorkflowRule();
+        emailWorkflowRule1 = new EmailWorkflowRuleByStatus();
         organizationCategory1 = new OrganizationCategory("1");
         organizationCategory2 = new OrganizationCategory("2");
         organization1 = new Organization("Organization 1", organizationCategory1);
@@ -404,7 +404,7 @@ public class OrganizationControllerTest extends AbstractControllerTest {
         when(emailWorkflowRuleRepo.findById(any(Long.class))).thenReturn(Optional.of(emailWorkflowRule1));
 
         if (emailRecipient != null) {
-            when(emailWorkflowRuleRepo.save(any(EmailWorkflowRule.class))).thenReturn(emailWorkflowRule1);
+            when(emailWorkflowRuleRepo.save(any(EmailWorkflowRuleByStatus.class))).thenReturn(emailWorkflowRule1);
             doNothing().when(organizationRepo).broadcast(any(Long.class));
         }
 
@@ -424,7 +424,7 @@ public class OrganizationControllerTest extends AbstractControllerTest {
 
         when(organizationRepo.read(any(Long.class))).thenReturn(organization1);
         when(emailWorkflowRuleRepo.findById(any(Long.class))).thenReturn(Optional.of(emailWorkflowRule1));
-        doNothing().when(emailWorkflowRuleRepo).delete(any(EmailWorkflowRule.class));
+        doNothing().when(emailWorkflowRuleRepo).delete(any(EmailWorkflowRuleByStatus.class));
         when(organizationRepo.update(any(Organization.class))).thenReturn(organization1);
 
         ApiResponse response = organizationController.removeEmailWorkflowRule(organization1.getId(), emailWorkflowRule1.getId());
@@ -452,7 +452,7 @@ public class OrganizationControllerTest extends AbstractControllerTest {
         organization1.setEmailWorkflowRules(emailWorkflowRules);
 
         when(emailWorkflowRuleRepo.findById(any(Long.class))).thenReturn(Optional.of(emailWorkflowRule1));
-        when(emailWorkflowRuleRepo.save(any(EmailWorkflowRule.class))).thenReturn(emailWorkflowRule1);
+        when(emailWorkflowRuleRepo.save(any(EmailWorkflowRuleByStatus.class))).thenReturn(emailWorkflowRule1);
         doNothing().when(organizationRepo).broadcast(any(Long.class));
 
         ApiResponse response = organizationController.changeEmailWorkflowRuleActivation(organization1.getId(), emailWorkflowRule1.getId());
@@ -469,7 +469,7 @@ public class OrganizationControllerTest extends AbstractControllerTest {
         organization1.setEmailWorkflowRules(emailWorkflowRules);
 
         when(emailWorkflowRuleRepo.findById(any(Long.class))).thenReturn(Optional.of(emailWorkflowRule1));
-        when(emailWorkflowRuleRepo.save(any(EmailWorkflowRule.class))).thenReturn(emailWorkflowRule1);
+        when(emailWorkflowRuleRepo.save(any(EmailWorkflowRuleByStatus.class))).thenReturn(emailWorkflowRule1);
         doNothing().when(organizationRepo).broadcast(any(Long.class));
 
         ApiResponse response = organizationController.changeEmailWorkflowRuleActivation(organization1.getId(), emailWorkflowRule1.getId());

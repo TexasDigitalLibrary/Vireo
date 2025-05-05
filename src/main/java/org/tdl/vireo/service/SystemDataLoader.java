@@ -24,7 +24,7 @@ import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
@@ -655,10 +655,15 @@ public class SystemDataLoader {
         }
     }
 
+    /**
+     * TODO: update with action email workflow rules after abstraction of entity
+     * @param organization
+     * @param systemOrganization
+     */
     private void processEmailWorflowRules(Organization organization, Organization systemOrganization) {
-        List<EmailWorkflowRule> emailWorkflowRules = organization.getEmailWorkflowRules();
+        List<EmailWorkflowRuleByStatus> emailWorkflowRules = organization.getEmailWorkflowRules();
 
-        for (EmailWorkflowRule emailWorkflowRule : systemOrganization.getEmailWorkflowRules()) {
+        for (EmailWorkflowRuleByStatus emailWorkflowRule : systemOrganization.getEmailWorkflowRules()) {
 
             // check to see if the SubmissionStatus exists
             SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(emailWorkflowRule.getSubmissionStatus().getName());
@@ -698,7 +703,7 @@ public class SystemDataLoader {
             }
 
             // check to see if the EmailWorkflowRule exists
-            EmailWorkflowRule existingEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStatusAndEmailRecipientAndEmailTemplate(newSubmissionStatus, emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
+            EmailWorkflowRuleByStatus existingEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStatusAndEmailRecipientAndEmailTemplate(newSubmissionStatus, emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
 
             if (existingEmailWorkflowRule == null) {
                 emailWorkflowRules.add(emailWorkflowRuleRepo.create(newSubmissionStatus, emailWorkflowRule.getEmailRecipient(), newEmailTemplate, emailWorkflowRule.isSystem()));

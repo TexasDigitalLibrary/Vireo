@@ -23,7 +23,7 @@ import org.tdl.vireo.model.EmailRecipientPlainAddress;
 import org.tdl.vireo.model.EmailRecipientSubmitter;
 import org.tdl.vireo.model.EmailRecipientType;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
@@ -80,17 +80,17 @@ public class SubmissionEmailService {
         Submission submission = submissionRepo.findById(submissionId).get();
 
         EmailRecipient advisorRecipient = abstractEmailRecipientRepoImpl.createAdvisorRecipient();
-        List<EmailWorkflowRule> emailWorkflowRules = emailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(advisorRecipient, false);
+        List<EmailWorkflowRuleByStatus> emailWorkflowRules = emailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(advisorRecipient, false);
 
         if (emailWorkflowRules.size() == 0) {
             actionLogRepo.createPublicLog(submission, user, "No Advisor email workflow rules are defined and enabled.");
         }
         else {
             boolean emailed = false;
-            Iterator<EmailWorkflowRule> emailWorkflowRuleIterator = emailWorkflowRules.iterator();
+            Iterator<EmailWorkflowRuleByStatus> emailWorkflowRuleIterator = emailWorkflowRules.iterator();
 
             while (emailWorkflowRuleIterator.hasNext()) {
-                EmailWorkflowRule emailWorkflowRule = emailWorkflowRuleIterator.next();
+                EmailWorkflowRuleByStatus emailWorkflowRule = emailWorkflowRuleIterator.next();
                 EmailTemplate template = emailWorkflowRule.getEmailTemplate();
                 String subject = templateUtility.compileString(template.getSubject(), submission);
                 String content = templateUtility.compileTemplate(template, submission);
@@ -187,10 +187,10 @@ public class SubmissionEmailService {
     public void sendWorkflowEmails(User user, Long submissionId) {
         Submission submission = submissionRepo.findById(submissionId).get();
 
-        List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
+        List<EmailWorkflowRuleByStatus> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
         Map<Long, List<String>> recipientLists = new HashMap<>();
 
-        for (EmailWorkflowRule rule : rules) {
+        for (EmailWorkflowRuleByStatus rule : rules) {
             LOG.debug("Email Workflow Rule " + rule.getId() + " firing for submission " + submission.getId());
 
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
@@ -285,7 +285,7 @@ public class SubmissionEmailService {
         }
         case CONTACT: {
           String label = (String) emailRecipientMap.get("name");
-          
+
           Optional<FieldPredicate> fp = fieldPredicateRepo.findById(Long.valueOf((int) emailRecipientMap.get("data")));
           if (label != null & fp.isPresent()) {
             recipient = new EmailRecipientContact(label, fp.get());

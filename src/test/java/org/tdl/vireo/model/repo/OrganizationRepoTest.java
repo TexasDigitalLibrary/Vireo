@@ -10,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.FieldProfile;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.OrganizationCategory;
@@ -154,7 +154,7 @@ public class OrganizationRepoTest extends AbstractRepoTest {
         childOrganizationToDisinherit = organizationRepo.findById(childOrganizationToDisinherit.getId()).get();
 
         assertEquals(1, emailWorkflowRuleRepo.count(), "The emailWorkflowRule does not exist!");
-        assertEquals(emailWorkflowRule.getId(), ((EmailWorkflowRule) parentOrganization.getEmailWorkflowRules().toArray()[0]).getId(), "The emailWorkflowRule does not exist on parent organization!");
+        assertEquals(emailWorkflowRule.getId(), ((EmailWorkflowRuleByStatus) parentOrganization.getEmailWorkflowRules().toArray()[0]).getId(), "The emailWorkflowRule does not exist on parent organization!");
 
         // check workflow step
         assertEquals(true, parentOrganization.getOriginalWorkflowSteps().contains(severableParentWorkflowStep), "The parent organization did not add the workflow step!");
@@ -293,7 +293,7 @@ public class OrganizationRepoTest extends AbstractRepoTest {
         parentOrganization = organizationRepo.save(parentOrganization);
 
         assertEquals(1, emailWorkflowRuleRepo.count(), "The emailWorkflowRule does not exist!");
-        assertEquals(emailWorkflowRule.getId(), ((EmailWorkflowRule) parentOrganization.getEmailWorkflowRules().toArray()[0]).getId(), "The emailWorkflowRule does not exist on parent organization!");
+        assertEquals(emailWorkflowRule.getId(), ((EmailWorkflowRuleByStatus) parentOrganization.getEmailWorkflowRules().toArray()[0]).getId(), "The emailWorkflowRule does not exist on parent organization!");
 
         // test delete parent organization
         assertNotEquals(null, organizationRepo.findById(parentOrganization.getId()), "The organization does not exist!");

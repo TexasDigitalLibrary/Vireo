@@ -39,7 +39,7 @@ import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailRecipientContact;
 import org.tdl.vireo.model.EmailRecipientPlainAddress;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.InputType;
@@ -141,7 +141,7 @@ public class SubmissionEmailServiceTest extends MockData {
 
     private static final ActionLog TEST_ACTION_LOG1 = new ActionLog(TEST_SUBMISSION_STATUS1, TEST_CALENDAR1, "Test Action Log 1", false);
 
-    private static final EmailWorkflowRule TEST_EMAIL_WORKFLOW_RULE_ADVISOR = new EmailWorkflowRule();
+    private static final EmailWorkflowRuleByStatus TEST_EMAIL_WORKFLOW_RULE_ADVISOR = new EmailWorkflowRuleByStatus();
     static {
         TEST_EMAIL_WORKFLOW_RULE_ADVISOR.setId(1L);
         TEST_EMAIL_WORKFLOW_RULE_ADVISOR.setEmailRecipient(TEST_EMAIL_RECIPIENT_ADVISOR);
@@ -150,7 +150,7 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_EMAIL_WORKFLOW_RULE_ADVISOR.isDisabled(false);
     }
 
-    private static final EmailWorkflowRule TEST_EMAIL_WORKFLOW_RULE_PLAIN = new EmailWorkflowRule();
+    private static final EmailWorkflowRuleByStatus TEST_EMAIL_WORKFLOW_RULE_PLAIN = new EmailWorkflowRuleByStatus();
     static {
         TEST_EMAIL_WORKFLOW_RULE_PLAIN.setId(2L);
         TEST_EMAIL_WORKFLOW_RULE_PLAIN.setEmailRecipient(TEST_EMAIL_RECIPIENT_PLAIN);
@@ -258,7 +258,7 @@ public class SubmissionEmailServiceTest extends MockData {
 
     private List<FieldValue> mockFieldValues;
 
-    private List<EmailWorkflowRule> mockEmailWorkflowRules;
+    private List<EmailWorkflowRuleByStatus> mockEmailWorkflowRules;
 
     @MockBean
     protected AbstractEmailRecipientRepoImpl mockAbstractEmailRecipientRepoImpl;
@@ -338,7 +338,7 @@ public class SubmissionEmailServiceTest extends MockData {
 
         lenient().when(mockAbstractEmailRecipientRepoImpl.createAdvisorRecipient()).thenReturn(TEST_EMAIL_RECIPIENT_ADVISOR);
 
-        List<EmailWorkflowRule> emailWorkflowRuleAdvisors = new ArrayList<EmailWorkflowRule>();
+        List<EmailWorkflowRuleByStatus> emailWorkflowRuleAdvisors = new ArrayList<EmailWorkflowRuleByStatus>();
         emailWorkflowRuleAdvisors.add(TEST_EMAIL_WORKFLOW_RULE_ADVISOR);
         lenient().when(mockEmailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(TEST_EMAIL_RECIPIENT_ADVISOR, false)).thenReturn(emailWorkflowRuleAdvisors);
 
