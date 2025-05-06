@@ -1,7 +1,8 @@
 <div class="input-group">
   <input type="tel"
     class="form-control"
-    name="profile.fieldPredicate.value"
+    id="field-{{profile.fieldPredicate.value}}"
+    name="{{profile.fieldPredicate.value}}"
     ng-required="!profile.optional"
     ng-blur="save(fieldValue)"
     ng-disabled="fieldValue.updating"

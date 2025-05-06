@@ -55,7 +55,7 @@
 
 					<div class="row form-group" ng-class="{'has-error': hasError(userSettingsForm.displayName.$error)}">
 						<div class="col-sm-6">
-							<label class="pull-right-lg control-label">Display Name:</label>
+							<label class="pull-right-lg control-label" for="displayName">Display Name:</label>
 						</div>
 						<div class="col-sm-6">
 							<span ng-if="(isAdmin() || isManager())" ng-hide="editdisplayName">
@@ -118,7 +118,7 @@
 
 					<div class="row form-group" ng-if="(isAdmin() || isManager())" ng-class="{'has-error': hasError(userSettingsForm.preferedEmail.$error)}">
 						<div class="col-sm-6">
-							<label class="pull-right-lg control-label">Preferred Email:</label>
+							<label class="pull-right-lg control-label" for="preferedEmail">Preferred Email:</label>
 						</div>
 						<div class="col-sm-6">
 							<span ng-if="(isAdmin() || isManager())" ng-hide="editpreferedEmail">
@@ -135,7 +135,7 @@
 							<label class="pull-right-lg control-label">Permanent Address:</label>
 						</div>
 						<div class="col-sm-6">
-							<label class="profile-value control-label">{{user.permanentAddress}}</label>
+							<span class="profile-value control-label">{{user.permanentAddress}}</span>
 						</div>
 					</div>
 

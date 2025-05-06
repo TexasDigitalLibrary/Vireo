@@ -1,7 +1,8 @@
 <div class="input-group">
-  <textarea class="form-control" 
-    name="profile.fieldPredicate.value" 
-    ng-required="!profile.optional" 
+  <textarea class="form-control"
+    id="field-{{profile.fieldPredicate.value}}"
+    name="{{profile.fieldPredicate.value}}"
+    ng-required="!profile.optional"
     ng-model="fieldValue.value"
     ng-blur="save(fieldValue)"
     ng-disabled="fieldValue.updating">
