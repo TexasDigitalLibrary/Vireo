@@ -66,5 +66,10 @@ public enum Action {
     ADVISOR_APPROVE_SUBMISSION,
     ADVISOR_CLEAR_APPROVE_SUBMISSION,
     ADVISOR_APPROVE_EMBARGO,
-    ADVISOR_CLEAR_APPROVE_EMBARGO
+    ADVISOR_CLEAR_APPROVE_EMBARGO,
+    // default value for backfilling existing action logs
+    // should only be used until a comprehensive enumeration of
+    // actions is known in the application which should
+    // be conditioned against email workflow rules by action
+    UNDETERMINED
 }

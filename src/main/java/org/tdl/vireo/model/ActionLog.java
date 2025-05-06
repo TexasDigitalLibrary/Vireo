@@ -1,18 +1,19 @@
 package org.tdl.vireo.model;
 
-import java.util.Calendar;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.tdl.vireo.model.response.Views;
-import org.tdl.vireo.model.validation.ActionLogValidator;
+import java.util.Calendar;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
+import org.tdl.vireo.model.response.Views;
+import org.tdl.vireo.model.validation.ActionLogValidator;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
@@ -36,6 +37,11 @@ public class ActionLog extends ValidatingBaseEntity {
     private Calendar actionDate;
 
     @JsonView(Views.SubmissionList.class)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Action action;
+
+    @JsonView(Views.SubmissionList.class)
     @Column(nullable = false, columnDefinition = "text")
     private String entry;
 
@@ -45,6 +51,7 @@ public class ActionLog extends ValidatingBaseEntity {
 
     public ActionLog() {
         setModelValidator(new ActionLogValidator());
+        setAction(Action.UNDETERMINED);
     }
 
     public ActionLog(SubmissionStatus submissionStatus, Calendar actionDate, String entry, boolean privateFlag) {
@@ -58,6 +65,16 @@ public class ActionLog extends ValidatingBaseEntity {
     public ActionLog(SubmissionStatus submissionStatus, User user, Calendar actionDate, String entry, boolean privateFlag) {
         this(submissionStatus, actionDate, entry, privateFlag);
         setUser(user);
+    }
+
+    public ActionLog(SubmissionStatus submissionStatus, Calendar actionDate, String entry, Action action, boolean privateFlag) {
+        this(submissionStatus, actionDate, entry, privateFlag);
+        setAction(action);
+    }
+
+    public ActionLog(SubmissionStatus submissionStatus, User user, Calendar actionDate, String entry, Action action, boolean privateFlag) {
+        this(submissionStatus, user, actionDate, entry, privateFlag);
+        setAction(action);
     }
 
     /**
@@ -103,6 +120,21 @@ public class ActionLog extends ValidatingBaseEntity {
      */
     public void setActionDate(Calendar actionDate) {
         this.actionDate = actionDate;
+    }
+
+    /**
+     * @return the action
+     */
+    public Action getAction() {
+        return action;
+    }
+
+    /**
+     * @param action
+     *            the action to set
+     */
+    public void setAction(Action action) {
+        this.action = action;
     }
 
     /**
