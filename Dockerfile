@@ -52,6 +52,7 @@ USER $USER_NAME
 # Build.
 RUN mvn package -Pproduction -Dmaven.test.skip=true
 
+
 # JRE Stage.
 FROM eclipse-temurin:11-alpine
 ARG USER_ID

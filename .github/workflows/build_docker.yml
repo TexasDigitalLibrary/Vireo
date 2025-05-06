@@ -1,0 +1,65 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      images:
+        description: 'image to push'
+        required: true
+        type: choice
+        options:
+          - vireo
+          - vireo-dev
+        default: 'vireo-dev'
+      environment:
+        description: 'stage(03) or prod(05)'
+        required: true
+        type: environment
+        default: 'stage'
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: "Node Cache"
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-cache-node-${{ hashFiles('**/package.json') }}
+
+      - name: "Node Modules Cache"
+        uses: actions/cache@v3
+        with:
+          path: $GITHUB_WORKSPACE/repo/node_modules
+          key: ${{ runner.os }}-cache-node_modules-${{ hashFiles('**/package.json') }}
+
+      - name: "Get project version from POM"
+        id: project_version
+        run: echo "VERSION=`mvn help:evaluate -Dexpression=project.version -q -DforceStdout`" >> $GITHUB_OUTPUT
+
+      - name: "Docker Build"
+        run: docker image build -t ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:${{ steps.project_version.outputs.version }} -t ${{ inputs.images }}:${{ steps.project_version.outputs.version }} .
+  
+      - name: "Login to GHCR"
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+  
+      - name: "Push Docker images to GHCR"
+        run:  docker push ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:${{ steps.project_version.outputs.version }}
+  
