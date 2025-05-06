@@ -286,7 +286,7 @@ public class SubmissionHelperUtility {
         if (graduationDate.isPresent()) {
             try {
                 date = dateFormat.format(monthYearFormat.parse(graduationDate.get()));
-            } catch (ParseException e) {
+            } catch (NumberFormatException | ParseException e) {
                 logException(e, format("Failed to format graduation date %s for submission with id %s", graduationDate.get(), submission.getId()));
             }
         }
@@ -302,7 +302,7 @@ public class SubmissionHelperUtility {
         if (graduationYear.isPresent()) {
             try {
                 year = yearFormat.format(monthYearFormat.parse(graduationYear.get()));
-            } catch (ParseException e) {
+            } catch (NumberFormatException | ParseException e) {
                 logException(e, format("Failed to format graduation year %s for submission with id %s", graduationYear.get(), submission.getId()));
             }
         }
@@ -316,7 +316,7 @@ public class SubmissionHelperUtility {
         if (graduationYearMonth.isPresent()) {
             try {
                 yearMonth = yearMonthFormat.format(monthYearFormat.parse(graduationYearMonth.get()));
-            } catch (ParseException e) {
+            } catch (NumberFormatException | ParseException e) {
                 logException(e, format("Failed to format graduation year month %s for submission with id %s", graduationYearMonth.get(), submission.getId()));
             }
         }
