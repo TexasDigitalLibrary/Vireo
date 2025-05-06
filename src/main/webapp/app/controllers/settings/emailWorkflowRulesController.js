@@ -80,7 +80,11 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
                 recipient.data = recipient.data.id;
             }
 
-            OrganizationRepo.addEmailWorkflowRule(organization, newTemplate.id, recipient, statusOrAction).then(function () {
+            const emailWorkflowRuleAdded = statusOrAction?.id
+                ? OrganizationRepo.addEmailWorkflowRule(organization, newTemplate.id, recipient, statusOrAction)
+                : OrganizationRepo.addEmailWorkflowRuleByAction(organization, newTemplate.id, recipient, statusOrAction)
+
+            emailWorkflowRuleAdded.then(function () {
                 $scope.resetEmailWorkflowRule();
             });
         };
@@ -115,7 +119,11 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
                 $scope.emailWorkflowRuleToEdit.emailRecipient.data = $scope.emailWorkflowRuleToEdit.emailRecipient.data.id;
             }
 
-            OrganizationRepo.editEmailWorkflowRule(organization, $scope.emailWorkflowRuleToEdit).then(function () {
+            const emailWorkflowRuleEdited = $scope.emailWorkflowRuleToEdit?.submissionStatus?.id
+                ? OrganizationRepo.editEmailWorkflowRule(organization, $scope.emailWorkflowRuleToEdit)
+                : OrganizationRepo.editEmailWorkflowRuleByAction(organization, $scope.emailWorkflowRuleToEdit);
+
+            emailWorkflowRuleEdited.then(function () {
                 $scope.resetEditEmailWorkflowRule();
             });
         };
@@ -134,7 +142,12 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
             organization.$dirty = true;
 
             $scope.emailWorkflowRuleDeleteWorking = true;
-            OrganizationRepo.removeEmailWorkflowRule(organization, $scope.emailWorkflowRuleToDelete).then(function () {
+
+            const emailWorkflowRuleDeleted = $scope.emailWorkflowRuleToDelete?.submissionStatus?.id
+                ? OrganizationRepo.removeEmailWorkflowRule(organization, $scope.emailWorkflowRuleToDelete)
+                : OrganizationRepo.removeEmailWorkflowRuleByAction(organization, $scope.emailWorkflowRuleToDelete);
+
+                emailWorkflowRuleDeleted.emailWorkflowRuleDeletedthen(function () {
                 $scope.emailWorkflowRuleDeleteWorking = false;
                 $scope.resetEditEmailWorkflowRule();
             });

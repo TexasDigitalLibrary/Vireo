@@ -29,7 +29,6 @@ import org.tdl.vireo.exception.WorkflowStepNonOverrideableException;
 import org.tdl.vireo.model.Action;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
 import org.tdl.vireo.model.EmailWorkflowRuleByAction;
 import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.FieldPredicate;
@@ -247,9 +246,11 @@ public class OrganizationController {
     @PreAuthorize("hasRole('MANAGER')")
     @RequestMapping(value = "/{requestingOrgId}/add-email-workflow-rule", method = POST)
     public ApiResponse addEmailWorkflowRule(@PathVariable Long requestingOrgId, @RequestBody Map<String, Object> data) {
-        ApiResponse response = new ApiResponse(SUCCESS);
-        Organization org = organizationRepo.read(requestingOrgId);
 
+        ApiResponse response = new ApiResponse(SUCCESS);
+
+        Organization org = organizationRepo.read(requestingOrgId);
+        SubmissionStatus submissionStatus = submissionStatusRepo.findById(Long.valueOf((Integer) data.get("submissionStatusId"))).get();
         JsonNode recipientNode = objectMapper.convertValue(data, JsonNode.class).get("recipient");
         EmailTemplate emailTemplate = emailTemplateRepo.findById(Long.valueOf((Integer) data.get("templateId"))).get();
 
@@ -258,26 +259,11 @@ public class OrganizationController {
         if (emailRecipient == null) {
             response = new ApiResponse(ERROR, "Could not create recipient.");
         } else {
+            EmailWorkflowRuleByStatus newEmailWorkflowRule = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
+            org.addEmailWorkflowRule(newEmailWorkflowRule);
+            organizationRepo.update(org);
 
-            Map<String, Object> statusOrAction = (Map<String, Object>) data.get("statusOrAction");
-
-            EmailWorkflowRule newEmailWorkflowRule;
-
-            if (statusOrAction.containsKey("id")) {
-                SubmissionStatus submissionStatus = submissionStatusRepo.findById(Long.valueOf((Integer) statusOrAction.get("id"))).get();
-
-                newEmailWorkflowRule = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
-                org.addEmailWorkflowRule((EmailWorkflowRuleByStatus) newEmailWorkflowRule);
-                organizationRepo.update(org);
-            } else {
-                Action action = Action.valueOf((String) statusOrAction.get("enum"));
-
-                newEmailWorkflowRule = emailWorkflowRuleByActionRepo.create(action, emailRecipient, emailTemplate);
-                org.addEmailWorkflowRuleByAction((EmailWorkflowRuleByAction) newEmailWorkflowRule);
-                organizationRepo.update(org);
-            }
-
-            HashMap<String, Object> payload = new HashMap<>();
+            HashMap<String, Object> payload = new HashMap<String, Object>();
             payload.put("id", newEmailWorkflowRule.getId());
             response.setPayload(payload);
         }
@@ -292,6 +278,9 @@ public class OrganizationController {
         ApiResponse response = new ApiResponse(SUCCESS);
 
         JsonNode recipientNode = objectMapper.convertValue(data, JsonNode.class).get("recipient");
+        EmailTemplate emailTemplate = emailTemplateRepo.findById(Long.valueOf((Integer) data.get("templateId"))).get();
+
+        EmailWorkflowRuleByStatus emailWorkflowRuleToUpdate = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
 
         EmailRecipient emailRecipient = buildRecipient(recipientNode);
 
@@ -299,42 +288,14 @@ public class OrganizationController {
             response = new ApiResponse(ERROR, "Could not create recipient.");
         } else {
 
-            EmailTemplate emailTemplate = emailTemplateRepo.findById(Long.valueOf((Integer) data.get("templateId"))).get();
+            emailWorkflowRuleToUpdate.setEmailTemplate(emailTemplate);
+            emailWorkflowRuleToUpdate.setEmailRecipient(emailRecipient);
 
-            Optional<EmailWorkflowRuleByStatus> emailByStatusOption = emailWorkflowRuleRepo.findById(emailWorkflowRuleId);
+            // TODO emailWorkflowRuleRepo.update(emailWorkflowRuleToUpdate);
+            emailWorkflowRuleRepo.save(emailWorkflowRuleToUpdate);
 
-            // one step forward, two steps backward
-
-            if (!emailByStatusOption.isEmpty()) {
-
-                EmailWorkflowRuleByStatus emailWorkflowRuleToUpdate = emailByStatusOption.get();
-
-                emailWorkflowRuleToUpdate.setEmailTemplate(emailTemplate);
-                emailWorkflowRuleToUpdate.setEmailRecipient(emailRecipient);
-
-                // TODO emailWorkflowRuleRepo.update(emailWorkflowRuleToUpdate);
-                emailWorkflowRuleRepo.save(emailWorkflowRuleToUpdate);
-
-                // TODO: Is this needed?
-                organizationRepo.broadcast(requestingOrgId);
-
-            } else {
-                Optional<EmailWorkflowRuleByAction> emailByActionOption = emailWorkflowRuleByActionRepo.findById(emailWorkflowRuleId);
-
-                if (!emailByActionOption.isEmpty()) {
-
-                    EmailWorkflowRuleByAction emailWorkflowRuleToUpdate = emailByActionOption.get();
-
-                    emailWorkflowRuleToUpdate.setEmailTemplate(emailTemplate);
-                    emailWorkflowRuleToUpdate.setEmailRecipient(emailRecipient);
-
-                    // TODO emailWorkflowRuleRepo.update(emailWorkflowRuleToUpdate);
-                    emailWorkflowRuleByActionRepo.save(emailWorkflowRuleToUpdate);
-
-                    // TODO: Is this needed?
-                    organizationRepo.broadcast(requestingOrgId);
-                }
-            }
+            // TODO: Is this needed?
+            organizationRepo.broadcast(requestingOrgId);
         }
 
         return response;
@@ -345,56 +306,19 @@ public class OrganizationController {
     public ApiResponse removeEmailWorkflowRule(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) throws SystemEmailRuleNotDeleteableException {
 
         Organization org = organizationRepo.read(requestingOrgId);
+        EmailWorkflowRuleByStatus rule = emailWorkflowRuleRepo.findById(emailWorkflowRuleId).get();
 
-        if (org == null) {
-            return new ApiResponse(ERROR, String.format("Organization with id %s not found", requestingOrgId));
-        }
-
-        Optional<EmailWorkflowRuleByStatus> emailByStatusOption = emailWorkflowRuleRepo.findById(emailWorkflowRuleId);
-
-        // one step forward, two steps backward
-
-        if (!emailByStatusOption.isEmpty()) {
-
-            EmailWorkflowRuleByStatus rule = emailByStatusOption.get();
-
-            if (rule.isSystem()) {
-                throw new SystemEmailRuleNotDeleteableException();
-            } else {
-
-                org.removeEmailWorkflowRule(rule);
-                emailWorkflowRuleRepo.delete(rule);
-
-                organizationRepo.update(org);
-
-                return new ApiResponse(SUCCESS);
-            }
-
+        if (rule.isSystem()) {
+            throw new SystemEmailRuleNotDeleteableException();
         } else {
 
-            Optional<EmailWorkflowRuleByAction> emailByActionOption = emailWorkflowRuleByActionRepo.findById(emailWorkflowRuleId);
+            org.removeEmailWorkflowRule(rule);
+            emailWorkflowRuleRepo.delete(rule);
 
-            if (!emailByActionOption.isEmpty()) {
+            organizationRepo.update(org);
 
-                EmailWorkflowRuleByAction rule = emailByActionOption.get();
-
-                if (rule.isSystem()) {
-                    throw new SystemEmailRuleNotDeleteableException();
-                } else {
-
-                    org.removeEmailWorkflowRuleByAction(rule);
-                    emailWorkflowRuleByActionRepo.delete(rule);
-
-                    organizationRepo.update(org);
-
-                    return new ApiResponse(SUCCESS);
-                }
-
-            }
-
+            return new ApiResponse(SUCCESS);
         }
-
-        return new ApiResponse(ERROR, String.format("Email workflow rule with id %s not found", emailWorkflowRuleId));
     }
 
     @RequestMapping("/{requestingOrgId}/change-email-workflow-rule-activation/{emailWorkflowRuleId}")
@@ -406,6 +330,99 @@ public class OrganizationController {
         rule.isDisabled(!rule.isDisabled());
 
         emailWorkflowRuleRepo.save(rule);
+
+        organizationRepo.broadcast(requestingOrgId);
+
+        return new ApiResponse(SUCCESS);
+    }
+
+    @PreAuthorize("hasRole('MANAGER')")
+    @RequestMapping(value = "/{requestingOrgId}/add-email-workflow-rule-by-action", method = POST)
+    public ApiResponse addEmailWorkflowRuleByAction(@PathVariable Long requestingOrgId, @RequestBody Map<String, Object> data) {
+
+        ApiResponse response = new ApiResponse(SUCCESS);
+
+        Organization org = organizationRepo.read(requestingOrgId);
+        Action action = Action.valueOf((String) data.get("action"));
+        JsonNode recipientNode = objectMapper.convertValue(data, JsonNode.class).get("recipient");
+        EmailTemplate emailTemplate = emailTemplateRepo.findById(Long.valueOf((Integer) data.get("templateId"))).get();
+
+        EmailRecipient emailRecipient = buildRecipient(recipientNode);
+
+        if (emailRecipient == null) {
+            response = new ApiResponse(ERROR, "Could not create recipient.");
+        } else {
+            EmailWorkflowRuleByAction newEmailWorkflowRule = emailWorkflowRuleByActionRepo.create(action, emailRecipient, emailTemplate);
+            org.addEmailWorkflowRuleByAction(newEmailWorkflowRule);
+            organizationRepo.update(org);
+
+            HashMap<String, Object> payload = new HashMap<String, Object>();
+            payload.put("id", newEmailWorkflowRule.getId());
+            response.setPayload(payload);
+        }
+
+        return response;
+    }
+
+    @RequestMapping("/{requestingOrgId}/edit-email-workflow-rule-by-action/{emailWorkflowRuleId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse editEmailWorkflowRuleByAction(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId, @RequestBody Map<String, Object> data) {
+
+        ApiResponse response = new ApiResponse(SUCCESS);
+
+        JsonNode recipientNode = objectMapper.convertValue(data, JsonNode.class).get("recipient");
+        EmailTemplate emailTemplate = emailTemplateRepo.findById(Long.valueOf((Integer) data.get("templateId"))).get();
+
+        EmailWorkflowRuleByAction emailWorkflowRuleToUpdate = emailWorkflowRuleByActionRepo.findById(emailWorkflowRuleId).get();
+
+        EmailRecipient emailRecipient = buildRecipient(recipientNode);
+
+        if (emailRecipient == null) {
+            response = new ApiResponse(ERROR, "Could not create recipient.");
+        } else {
+
+            emailWorkflowRuleToUpdate.setEmailTemplate(emailTemplate);
+            emailWorkflowRuleToUpdate.setEmailRecipient(emailRecipient);
+
+            // TODO emailWorkflowRuleRepo.update(emailWorkflowRuleToUpdate);
+            emailWorkflowRuleByActionRepo.save(emailWorkflowRuleToUpdate);
+
+            // TODO: Is this needed?
+            organizationRepo.broadcast(requestingOrgId);
+        }
+
+        return response;
+    }
+
+    @RequestMapping("/{requestingOrgId}/remove-email-workflow-rule-by-action/{emailWorkflowRuleId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse removeEmailWorkflowRuleByAction(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) throws SystemEmailRuleNotDeleteableException {
+
+        Organization org = organizationRepo.read(requestingOrgId);
+        EmailWorkflowRuleByAction rule = emailWorkflowRuleByActionRepo.findById(emailWorkflowRuleId).get();
+
+        if (rule.isSystem()) {
+            throw new SystemEmailRuleNotDeleteableException();
+        } else {
+
+            org.removeEmailWorkflowRuleByAction(rule);
+            emailWorkflowRuleByActionRepo.delete(rule);
+
+            organizationRepo.update(org);
+
+            return new ApiResponse(SUCCESS);
+        }
+    }
+
+    @RequestMapping("/{requestingOrgId}/change-email-workflow-rule-by-action-activation/{emailWorkflowRuleId}")
+    @PreAuthorize("hasRole('MANAGER')")
+    public ApiResponse changeEmailWorkflowRuleByActionActivation(@PathVariable Long requestingOrgId, @PathVariable Long emailWorkflowRuleId) {
+
+        EmailWorkflowRuleByAction rule = emailWorkflowRuleByActionRepo.findById(emailWorkflowRuleId).get();
+
+        rule.isDisabled(!rule.isDisabled());
+
+        emailWorkflowRuleByActionRepo.save(rule);
 
         organizationRepo.broadcast(requestingOrgId);
 

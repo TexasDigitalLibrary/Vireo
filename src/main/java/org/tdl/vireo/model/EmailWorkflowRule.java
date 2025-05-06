@@ -18,12 +18,6 @@ import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
 @MappedSuperclass
-@AttributeOverride(name = "id", column = @Column(name = "id"))
-@SequenceGenerator(
-    name = "default", // Default generator name used by GenerationType.SEQUENCE
-    sequenceName = "email_workflow_rule_shared_id_sequence",
-    allocationSize = 1
-)
 public abstract class EmailWorkflowRule extends ValidatingBaseEntity {
 
     @Column
