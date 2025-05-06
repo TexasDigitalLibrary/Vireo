@@ -147,7 +147,7 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
                 ? OrganizationRepo.removeEmailWorkflowRule(organization, $scope.emailWorkflowRuleToDelete)
                 : OrganizationRepo.removeEmailWorkflowRuleByAction(organization, $scope.emailWorkflowRuleToDelete);
 
-                emailWorkflowRuleDeleted.then(function () {
+            emailWorkflowRuleDeleted.then(function () {
                 $scope.emailWorkflowRuleDeleteWorking = false;
                 $scope.resetEditEmailWorkflowRule();
             });
