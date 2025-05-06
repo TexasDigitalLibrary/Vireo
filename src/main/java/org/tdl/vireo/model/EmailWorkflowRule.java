@@ -5,12 +5,10 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.SequenceGenerator;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;

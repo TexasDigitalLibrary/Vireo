@@ -81,8 +81,8 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
             }
 
             const emailWorkflowRuleAdded = statusOrAction?.id
-                ? OrganizationRepo.addEmailWorkflowRule(organization, newTemplate.id, recipient, statusOrAction)
-                : OrganizationRepo.addEmailWorkflowRuleByAction(organization, newTemplate.id, recipient, statusOrAction)
+                ? OrganizationRepo.addEmailWorkflowRule(organization, newTemplate.id, recipient, statusOrAction?.id)
+                : OrganizationRepo.addEmailWorkflowRuleByAction(organization, newTemplate.id, recipient, statusOrAction?.enum)
 
             emailWorkflowRuleAdded.then(function () {
                 $scope.resetEmailWorkflowRule();
