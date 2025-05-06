@@ -157,7 +157,11 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
             var organization = $scope.getSelectedOrganization();
             organization.$dirty = true;
 
-            OrganizationRepo.changeEmailWorkflowRuleActivation(organization, rule).then(function () {
+            const ruleActivationChanged = rule?.submissionStatus?.id
+                ? OrganizationRepo.changeEmailWorkflowRuleActivation(organization, rule)
+                : OrganizationRepo.changeEmailWorkflowRuleByActionActivation(organization, rule);
+
+                ruleActivationChanged.then(function () {
                 changeEmailWorkflowRuleActivation = false;
             });
         };
