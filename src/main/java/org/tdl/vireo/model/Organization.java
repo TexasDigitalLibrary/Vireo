@@ -90,7 +90,7 @@ public class Organization extends ValidatingBaseEntity {
     private List<EmailWorkflowRuleByStatus> emailWorkflowRules;
 
     @OneToMany(cascade = { REFRESH, MERGE, REMOVE }, fetch = EAGER)
-    private List<EmailWorkflowRuleByAction> actionEmailWorkflowRules;
+    private List<EmailWorkflowRuleByAction> emailWorkflowRulesByAction;
 
     /**
      * Initializer.
@@ -103,7 +103,7 @@ public class Organization extends ValidatingBaseEntity {
         setChildrenOrganizations(new TreeSet<Organization>());
         setEmails(new ArrayList<String>());
         setEmailWorkflowRules(new ArrayList<EmailWorkflowRuleByStatus>());
-        setActionEmailWorkflowRules(new ArrayList<EmailWorkflowRuleByAction>());
+        setEmailWorkflowRulesByAction(new ArrayList<EmailWorkflowRuleByAction>());
     }
 
     /**
@@ -450,35 +450,35 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
-     * @return the actionEmailWorkflowRules
+     * @return the emailWorkflowRulesByAction
      */
-    public List<EmailWorkflowRuleByAction> getActionEmailWorkflowRules() {
-        return actionEmailWorkflowRules;
+    public List<EmailWorkflowRuleByAction> getEmailWorkflowRulesByAction() {
+        return emailWorkflowRulesByAction;
     }
 
     /**
-     * @param actionEmailWorkflowRules
-     *            the actionEmailWorkflowRules to set
+     * @param emailWorkflowRulesByAction
+     *            the emailWorkflowRulesByAction to set
      */
-    public void setActionEmailWorkflowRules(List<EmailWorkflowRuleByAction> actionEmailWorkflowRules) {
-        this.actionEmailWorkflowRules = actionEmailWorkflowRules;
+    public void setEmailWorkflowRulesByAction(List<EmailWorkflowRuleByAction> emailWorkflowRulesByAction) {
+        this.emailWorkflowRulesByAction = emailWorkflowRulesByAction;
     }
 
     /**
      *
-     * @param actionEmailWorkflowRule
+     * @param emailWorkflowRuleByAction
      */
-    public void addActionEmailWorkflowRule(EmailWorkflowRuleByAction actionEmailWorkflowRules) {
-        getActionEmailWorkflowRules().add(actionEmailWorkflowRules);
+    public void addEmailWorkflowRuleByAction(EmailWorkflowRuleByAction emailWorkflowRuleByAction) {
+        getEmailWorkflowRulesByAction().add(emailWorkflowRuleByAction);
     }
 
     /**
      * Remove the workflow rule.
      *
-     * @param actionEmailWorkflowRules The workflow rule to remove.
+     * @param emailWorkflowRuleByAction The workflow rule to remove.
      */
-    public void removeActionEmailWorkflowRule(EmailWorkflowRuleByAction actionEmailWorkflowRules) {
-        getActionEmailWorkflowRules().remove(actionEmailWorkflowRules);
+    public void removeEmailWorkflowRuleByAction(EmailWorkflowRuleByAction emailWorkflowRuleByAction) {
+        getEmailWorkflowRulesByAction().remove(emailWorkflowRuleByAction);
     }
 
     @JsonIgnore

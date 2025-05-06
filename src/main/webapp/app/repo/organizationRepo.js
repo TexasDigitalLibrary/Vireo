@@ -256,13 +256,13 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         return defer;
     };
 
-    this.addEmailWorkflowRule = function (organization, templateId, recipient, submissionStatusId) {
+    this.addEmailWorkflowRule = function (organization, templateId, recipient, statusOrAction) {
         angular.extend(apiMapping.Organization.addEmailWorkflowRule, {
             'method': organization.id + "/add-email-workflow-rule",
             'data': {
-                templateId: templateId,
-                recipient: recipient,
-                submissionStatusId: submissionStatusId
+                templateId,
+                recipient,
+                statusOrAction
             }
         });
 

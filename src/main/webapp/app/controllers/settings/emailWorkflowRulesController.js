@@ -1,4 +1,4 @@
-vireo.controller("EmailWorkflowRulesController", function ($controller, $location, $scope, $q, SubmissionStatusRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType) {
+vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, $q, SubmissionStatusRepo, EmailTemplateRepo, OrganizationRepo, EmailRecipientType) {
 
     angular.extend(this, $controller("AbstractController", {
         $scope: $scope
@@ -14,14 +14,33 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $locatio
         return $scope.active === 'email-by-action';
     };
 
+    /**
+     * The enum property must match one of the Action in src/main/java/org/tdl/vireo/model/Action.java
+     */
     $scope.submissionActions = [
         {
-            enum: 'ADD_MESSAGE',
-            name: 'Add Message'
+            enum: 'STUDENT_MESSAGE',
+            name: 'Student Adds Message'
         },
         {
-            enum: 'UPDATE_ADVISOR_APPROVAL',
-            name: 'Update Advisor Approval'
+            enum: 'ADVISOR_MESSAGE',
+            name: 'Advisor Adds Message'
+        },
+        {
+            enum: 'ADVISOR_APPROVE_SUBMISSION',
+            name: 'Advisor Approves Submission'
+        },
+        {
+            enum: 'ADVISOR_CLEAR_APPROVE_SUBMISSION',
+            name: 'Advisor Clears Submission Approval'
+        },
+        {
+            enum: 'ADVISOR_APPROVE_EMBARGO',
+            name: 'Advisor Approved Embargo'
+        },
+        {
+            enum: 'ADVISOR_CLEAR_APPROVE_EMBARGO',
+            name: 'Advisor Clears Submission Embargo'
         }
     ];
 
@@ -52,7 +71,7 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $locatio
             $scope.closeModal();
         };
 
-        $scope.addEmailWorkflowRule = function (newTemplate, newRecipient, submissionStatus) {
+        $scope.addEmailWorkflowRule = function (newTemplate, newRecipient, statusOrAction) {
             var recipient = angular.copy(newRecipient);
             var organization = $scope.getSelectedOrganization();
             organization.$dirty = true;
@@ -61,10 +80,9 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $locatio
                 recipient.data = recipient.data.id;
             }
 
-            OrganizationRepo.addEmailWorkflowRule(organization, newTemplate.id, recipient, submissionStatus.id).then(function () {
+            OrganizationRepo.addEmailWorkflowRule(organization, newTemplate.id, recipient, statusOrAction).then(function () {
                 $scope.resetEmailWorkflowRule();
             });
-
         };
 
         $scope.openEditEmailWorkflowRule = function (rule) {
@@ -118,6 +136,7 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $locatio
             $scope.emailWorkflowRuleDeleteWorking = true;
             OrganizationRepo.removeEmailWorkflowRule(organization, $scope.emailWorkflowRuleToDelete).then(function () {
                 $scope.emailWorkflowRuleDeleteWorking = false;
+                $scope.resetEditEmailWorkflowRule();
             });
         };
 
@@ -132,7 +151,7 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $locatio
 
         $scope.cancelDeleteEmailWorkflowRule = function () {
             $scope.emailWorkflowRuleDeleteWorking = false;
-            $scope.closeModal();
+            $scope.resetEditEmailWorkflowRule();
         };
     });
 

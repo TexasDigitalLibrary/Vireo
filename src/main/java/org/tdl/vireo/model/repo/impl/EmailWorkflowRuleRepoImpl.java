@@ -10,7 +10,7 @@ import org.tdl.vireo.model.repo.custom.EmailWorkflowRuleRepoCustom;
 
 import edu.tamu.weaver.data.model.repo.impl.AbstractWeaverRepoImpl;
 
-public class EmailWorkflowRuleRepoImpl extends AbstractWeaverRepoImpl<EmailWorkflowRuleByStatus, EmailWorkflowRuleRepo> implements EmailWorkflowRuleRepoCustom {
+public class EmailWorkflowRuleRepoImpl extends AbstractWeaverRepoImpl<EmailWorkflowRuleByStatus, EmailWorkflowRuleRepo> implements EmailWorkflowRuleRepoCustom<EmailWorkflowRuleByStatus, SubmissionStatus> {
 
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;

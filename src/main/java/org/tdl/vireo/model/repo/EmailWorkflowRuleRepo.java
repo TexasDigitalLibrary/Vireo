@@ -10,7 +10,7 @@ import org.tdl.vireo.model.repo.custom.EmailWorkflowRuleRepoCustom;
 
 import edu.tamu.weaver.data.model.repo.WeaverRepo;
 
-public interface EmailWorkflowRuleRepo extends WeaverRepo<EmailWorkflowRuleByStatus>, EmailWorkflowRuleRepoCustom {
+public interface EmailWorkflowRuleRepo extends WeaverRepo<EmailWorkflowRuleByStatus>, EmailWorkflowRuleRepoCustom<EmailWorkflowRuleByStatus, SubmissionStatus> {
 
     public List<EmailWorkflowRuleByStatus> findByEmailRecipientAndIsDisabled(EmailRecipient emailRecipient, Boolean isDisabled);
 

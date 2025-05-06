@@ -55,9 +55,9 @@ package org.tdl.vireo.model;
  *
  * createPrivateLog
  *   SubmissionController
- *     /{submissionId}/add-comment {commentVisibility: !'public'}
- *     /batch-comment {commentVisibility: !'public'}
- *     /{submissionId}/update-reviewer-notes
+ *     /{submissionId}/add-comment {commentVisibility: !'public'}...
+ *     /batch-comment {commentVisibility: !'public'}................
+ *     /{submissionId}/update-reviewer-notes........................
  *
  */
 public enum Action {

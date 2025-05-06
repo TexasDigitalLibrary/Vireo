@@ -1,46 +1,46 @@
 package org.tdl.vireo.model;
 
-import static javax.persistence.FetchType.EAGER;
-
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 @Entity
 public class EmailWorkflowRuleByAction extends EmailWorkflowRule {
 
-    @ManyToOne(fetch = EAGER, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionStatus.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private ActionLog actionLog;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Action action;
 
     public EmailWorkflowRuleByAction() {
         super();
     }
 
-    public EmailWorkflowRuleByAction(ActionLog actionLog, EmailRecipient emailRecipient, EmailTemplate emailTemplate) {
+    public EmailWorkflowRuleByAction(Action action, EmailRecipient emailRecipient, EmailTemplate emailTemplate) {
         this();
-        setActionLog(actionLog);
+        setAction(action);
         setEmailRecipient(emailRecipient);
         setEmailTemplate(emailTemplate);
     }
 
-    /**
-     * @return the actionLog
-     */
-    public ActionLog getActionLog() {
-        return actionLog;
+    public EmailWorkflowRuleByAction(Action action, EmailRecipient emailRecipient, EmailTemplate emailTemplate, boolean isSystem) {
+        this(action, emailRecipient, emailTemplate);
+        isSystem(isSystem);
     }
 
     /**
-     * @param actionLog
-     *            the actionLog to set
+     * @return the action
      */
-    public void setActionLog(ActionLog actionLog) {
-        this.actionLog = actionLog;
+    public Action getAction() {
+        return action;
+    }
+
+    /**
+     * @param action
+     *            the action to set
+     */
+    public void setAction(Action action) {
+        this.action = action;
     }
 
 }
