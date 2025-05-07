@@ -161,7 +161,7 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
                 ? OrganizationRepo.changeEmailWorkflowRuleActivation(organization, rule)
                 : OrganizationRepo.changeEmailWorkflowRuleByActionActivation(organization, rule);
 
-                ruleActivationChanged.then(function () {
+            ruleActivationChanged.then(function () {
                 changeEmailWorkflowRuleActivation = false;
             });
         };

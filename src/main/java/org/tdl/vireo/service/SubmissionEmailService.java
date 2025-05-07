@@ -278,7 +278,7 @@ public class SubmissionEmailService {
         case ADVISOR: {
             String label = (String) emailRecipientMap.get("name");
             FieldPredicate fp = fieldPredicateRepo.findByValue("dc.contributor.advisor");
-            if (label != null & fp != null) {
+            if (label != null && fp != null) {
               recipient = new EmailRecipientContact(label, fp);
             }
           break;
@@ -287,7 +287,7 @@ public class SubmissionEmailService {
           String label = (String) emailRecipientMap.get("name");
 
           Optional<FieldPredicate> fp = fieldPredicateRepo.findById(Long.valueOf((int) emailRecipientMap.get("data")));
-          if (label != null & fp.isPresent()) {
+          if (label != null && fp.isPresent()) {
             recipient = new EmailRecipientContact(label, fp.get());
           }
           break;
