@@ -34,6 +34,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.Application;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.mock.MockData;
+import org.tdl.vireo.model.Action;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailRecipientContact;
@@ -139,7 +140,7 @@ public class SubmissionEmailServiceTest extends MockData {
 
     private static final Calendar TEST_CALENDAR1 = new Calendar.Builder().build();
 
-    private static final ActionLog TEST_ACTION_LOG1 = new ActionLog(TEST_SUBMISSION_STATUS1, TEST_CALENDAR1, "Test Action Log 1", false);
+    private static final ActionLog TEST_ACTION_LOG1 = new ActionLog(Action.UNDETERMINED, TEST_SUBMISSION_STATUS1, TEST_CALENDAR1, "Test Action Log 1", false);
 
     private static final EmailWorkflowRuleByStatus TEST_EMAIL_WORKFLOW_RULE_ADVISOR = new EmailWorkflowRuleByStatus();
     static {
@@ -326,7 +327,7 @@ public class SubmissionEmailServiceTest extends MockData {
         lenient().when(mockEmailTemplateRepo.findByName(any(String.class))).thenReturn(TEST_EMAIL_TEMPLATES1);
         lenient().when(mockEmailTemplateRepo.findByNameAndSystemRequired(any(String.class), any(Boolean.class))).thenReturn(TEST_EMAIL_TEMPLATE1);
 
-        lenient().when(mockActionLogRepo.createPublicLog(any(Submission.class), any(User.class), any(String.class))).thenReturn(TEST_ACTION_LOG1);
+        lenient().when(mockActionLogRepo.createPublicLog(any(Action.class), any(Submission.class), any(User.class), any(String.class))).thenReturn(TEST_ACTION_LOG1);
 
         lenient().when(mockFieldPredicateRepo.getById(TEST_FIELD_PREDICATE_ADVISOR_ID)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);
         lenient().when(mockFieldPredicateRepo.findByValue(TEST_FIELD_PREDICATE_ADVISOR_VALUE)).thenReturn(TEST_FIELD_PREDICATE_ADVISOR);

@@ -54,6 +54,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.exception.DepositException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
+import org.tdl.vireo.model.Action;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Embargo;
@@ -246,7 +247,7 @@ public class SubmissionController {
             credentials,
             customActionDefinitionRepo.findAll()
         );
-        actionLogRepo.createPublicLog(submission, user, "Submission created.");
+        actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "Submission created.");
 
         return new ApiResponse(SUCCESS, submission.getId());
     }
@@ -285,12 +286,12 @@ public class SubmissionController {
             } else{
                 String subject = (String) data.get("subject");
                 String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-                actionLogRepo.createPublicLog(submission, user, subject + ": " + templatedMessage);
+                actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, subject + ": " + templatedMessage);
             }
         } else {
             String subject = (String) data.get("subject");
             String templatedMessage = templateUtility.compileString((String) data.get("message"), submission);
-            actionLogRepo.createPrivateLog(submission, user, subject + ": " + templatedMessage);
+            actionLogRepo.createPrivateLog(Action.UNDETERMINED, submission, user, subject + ": " + templatedMessage);
         }
 
         return new ApiResponse(SUCCESS);
@@ -325,12 +326,12 @@ public class SubmissionController {
                 } else {
                     String subject = (String) data.get("subject");
                     String templatedMessage = templateUtility.compileString((String) data.get("message"), sub);
-                    actionLogRepo.createPublicLog(sub, user, subject + ": " + templatedMessage);
+                    actionLogRepo.createPublicLog(Action.UNDETERMINED, sub, user, subject + ": " + templatedMessage);
                 }
             } else {
                 String subject = (String) data.get("subject");
                 String templatedMessage = templateUtility.compileString((String) data.get("message"), sub);
-                actionLogRepo.createPrivateLog(sub, user, subject + ": " + templatedMessage);
+                actionLogRepo.createPrivateLog(Action.UNDETERMINED, sub, user, subject + ": " + templatedMessage);
             }
         });
 
@@ -370,7 +371,7 @@ public class SubmissionController {
                     submission = submissionRepo.save(submission);
 
                     if (submissionFieldProfile.getLogged()) {
-                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getGloss() + " was set to " + fieldValue.getValue());
+                        actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, submissionFieldProfile.getGloss() + " was set to " + fieldValue.getValue());
                     }
 
                 } else {
@@ -380,7 +381,7 @@ public class SubmissionController {
                     fieldValue = fieldValueRepo.save(fieldValue);
 
                     if (submissionFieldProfile.getLogged()) {
-                        actionLogRepo.createPublicLog(submission, user, submissionFieldProfile.getGloss() + " was changed from " + convertBoolean(oldValue) + " to " + convertBoolean(fieldValue.getValue()));
+                        actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, submissionFieldProfile.getGloss() + " was changed from " + convertBoolean(oldValue) + " to " + convertBoolean(fieldValue.getValue()));
                     }
 
                 }
@@ -438,7 +439,7 @@ public class SubmissionController {
     public ApiResponse updateCustomActionValue(@WeaverUser User user, @PathVariable("submissionId") Long submissionId, @RequestBody CustomActionValue customActionValue) {
         Submission submission = submissionRepo.findById(submissionId).get();
         ApiResponse response = new ApiResponse(SUCCESS, customActionValueRepo.update(customActionValue));
-        actionLogRepo.createPublicLog(submission, user, "Custom action " + customActionValue.getDefinition().getLabel() + " " + (customActionValue.getValue() ? "set" : "unset"));
+        actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "Custom action " + customActionValue.getDefinition().getLabel() + " " + (customActionValue.getValue() ? "set" : "unset"));
         simpMessagingTemplate.convertAndSend("/channel/submission/" + submission.getId() + "/custom-action-values", response);
         return response;
     }
@@ -785,7 +786,7 @@ public class SubmissionController {
     public ApiResponse batchAssignTo(@WeaverUser User user, @RequestBody User assignee) {
         submissionRepo.batchDynamicSubmissionQuery(user.getActiveFilter(), user.getSubmissionViewColumns()).forEach(sub -> {
             sub.setAssignee(assignee);
-            actionLogRepo.createPublicLog(sub, user, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
+            actionLogRepo.createPublicLog(Action.UNDETERMINED, sub, user, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
             submissionRepo.update(sub);
         });
         return new ApiResponse(SUCCESS);
@@ -841,7 +842,7 @@ public class SubmissionController {
             submission = submissionRepo.update(submission);
 
             SimpleDateFormat logdf = new SimpleDateFormat("MM/dd/yyyy");
-            actionLogRepo.createPublicLog(submission, user, "Submission date set to: " + logdf.format(cal.getTime()));
+            actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "Submission date set to: " + logdf.format(cal.getTime()));
 
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
@@ -866,9 +867,9 @@ public class SubmissionController {
             submission = submissionRepo.update(submission);
 
             if (assignee == null) {
-                actionLogRepo.createPublicLog(submission, user, "Submission was unassigned");
+                actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "Submission was unassigned");
             } else {
-                actionLogRepo.createPublicLog(submission, user, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
+                actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "Submission was assigned to " + assignee.getFirstName() + " " + assignee.getLastName() + "(" + assignee.getEmail() + ")");
             }
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
@@ -894,7 +895,7 @@ public class SubmissionController {
         String reviewerNotes = requestData.get("reviewerNotes");
         submission.setReviewerNotes(reviewerNotes);
         submission = submissionRepo.update(submission);
-        actionLogRepo.createPrivateLog(submission, user, "Submission notes changed to \"" + reviewerNotes + "\"");
+        actionLogRepo.createPrivateLog(Action.UNDETERMINED, submission, user, "Submission notes changed to \"" + reviewerNotes + "\"");
         return new ApiResponse(SUCCESS, submission);
     }
 
@@ -906,7 +907,7 @@ public class SubmissionController {
         String oldSubmissionStatusName = submission.getSubmissionStatus().getName();
         submission.setSubmissionStatus(needsCorrectionStatus);
         submission = submissionRepo.update(submission);
-        actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + NEEDS_CORRECTION_SUBMISSION_STATUS_NAME);
+        actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + NEEDS_CORRECTION_SUBMISSION_STATUS_NAME);
         return new ApiResponse(SUCCESS, submission);
     }
 
@@ -921,7 +922,7 @@ public class SubmissionController {
         SubmissionStatus correctionsReceivedStatus = submissionStatusRepo.findByName(CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
         submission.setSubmissionStatus(correctionsReceivedStatus);
         submission = submissionRepo.update(submission);
-        actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
+        actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + CORRECTIONS_RECEIVED_SUBMISSION_STATUS_NAME);
         submissionEmailService.sendWorkflowEmails(user, submission.getId());
         return new ApiResponse(SUCCESS, submission);
     }
@@ -930,7 +931,7 @@ public class SubmissionController {
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse addMessage(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody String message) {
         Submission submission = submissionRepo.read(submissionId);
-        return new ApiResponse(SUCCESS, actionLogRepo.createPublicLog(submission, user, message));
+        return new ApiResponse(SUCCESS, actionLogRepo.createPublicLog(Action.STUDENT_MESSAGE, submission, user, message));
     }
 
     @Transactional(readOnly = true)
@@ -983,7 +984,7 @@ public class SubmissionController {
         String uri = documentFolder + File.separator + hash + File.separator + System.currentTimeMillis() + "-" + fileName;
         assetService.write(file.getBytes(), uri);
         JsonNode fileInfo = assetService.getAssetFileInfo(uri, submission);
-        actionLogRepo.createPublicLog(submission, user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") uploaded");
+        actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") uploaded");
         return new ApiResponse(SUCCESS, uri);
     }
 
@@ -997,7 +998,7 @@ public class SubmissionController {
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf(File.separator) + 1, oldUri.length()), System.currentTimeMillis() + "-" + newName);
         assetService.rename(oldUri, newUri);
         JsonNode fileInfo = assetService.getAssetFileInfo(newUri, submission);
-        actionLogRepo.createPublicLog(submission, user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") renamed");
+        actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") renamed");
         return new ApiResponse(SUCCESS, newUri);
     }
 
@@ -1026,7 +1027,7 @@ public class SubmissionController {
                     }
 
                     assetService.delete(uri);
-                    actionLogRepo.createPublicLog(submission, user, documentType.substring(9).toUpperCase() + " file " + fileName + " (" + fileSize + ") removed");
+                    actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, documentType.substring(9).toUpperCase() + " file " + fileName + " (" + fileSize + ") removed");
                 } else {
                     apiResponse = new ApiResponse(ERROR, "This is not your file to delete!");
                 }
@@ -1047,7 +1048,7 @@ public class SubmissionController {
         String newUri = oldUri.replace(oldUri.substring(oldUri.lastIndexOf(File.separator) + 1, oldUri.length()), System.currentTimeMillis() + "-archived-" + name);
         assetService.rename(oldUri, newUri);
         JsonNode fileInfo = assetService.getAssetFileInfo(newUri, submission);
-        actionLogRepo.createPublicLog(submission, user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") archived");
+        actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "ARCHIVE - " + documentType + " file " + fileInfo.get("name").asText() + " (" + fileInfo.get("readableSize").asText() + ") archived");
         return new ApiResponse(SUCCESS, newUri);
     }
 
@@ -1099,7 +1100,7 @@ public class SubmissionController {
         }
 
         if (message != null) {
-            actionLogRepo.createAdvisorPublicLog(submission, "Advisor comments : " + message);
+            actionLogRepo.createAdvisorPublicLog(Action.ADVISOR_MESSAGE, submission, "Advisor comments : " + message);
         }
 
         return new ApiResponse(SUCCESS, submission);
@@ -1108,22 +1109,26 @@ public class SubmissionController {
 
     private void processAdvisorAction(String type, Boolean approveStatus, Submission submission) {
         String approveAdvisorMessage;
+        Action action;
         if (approveStatus == true) {
             approveAdvisorMessage = "The committee approved the " + type + ".";
+            action = type.equals("Application") ? Action.ADVISOR_APPROVE_SUBMISSION : Action.ADVISOR_APPROVE_EMBARGO;
         } else {
             approveAdvisorMessage = "The committee rejected the " + type + ".";
+            action = type.equals("Application") ? Action.ADVISOR_CLEAR_APPROVE_SUBMISSION : Action.ADVISOR_CLEAR_APPROVE_EMBARGO;
         }
-        actionLogRepo.createAdvisorPublicLog(submission, approveAdvisorMessage);
+        actionLogRepo.createAdvisorPublicLog(action, submission, approveAdvisorMessage);
     }
 
     private void processAdvisorStatusClear(String type, Boolean approvalState, Submission submission) {
         String clearAdvisorMessage = "The committee has withdrawn its " + type;
+        Action action = type.equals("Application") ? Action.ADVISOR_CLEAR_APPROVE_SUBMISSION : Action.ADVISOR_CLEAR_APPROVE_EMBARGO;
         if (approvalState == true) {
             clearAdvisorMessage += " Approval.";
         } else {
             clearAdvisorMessage += " Rejection.";
         }
-        actionLogRepo.createAdvisorPublicLog(submission, clearAdvisorMessage);
+        actionLogRepo.createAdvisorPublicLog(action, submission, clearAdvisorMessage);
     }
 
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
+import org.tdl.vireo.model.Action;
 import org.tdl.vireo.model.ActionLog;
 
 @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -37,7 +38,7 @@ public class ActionLogRepoTest extends AbstractRepoTest {
     @Override
     @Test
     public void testCreate() {
-        ActionLog testActionLog = actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
+        ActionLog testActionLog = actionLogRepo.create(Action.UNDETERMINED, testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
         assertEquals(1, actionLogRepo.count(), "The actionLog repository is not empty!");
         assertEquals(1, actionLogRepo.count(), "The test Action log was not saved");
         assertEquals(TEST_USER_EMAIL, testActionLog.getUser().getEmail(), "Saved action log does not have the correct submitter email");
@@ -59,8 +60,8 @@ public class ActionLogRepoTest extends AbstractRepoTest {
     @Override
     @Test
     public void testDuplication() {
-        actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
-        actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
+        actionLogRepo.create(Action.UNDETERMINED, testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
+        actionLogRepo.create(Action.UNDETERMINED, testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
         assertEquals(2, actionLogRepo.count(), "The action log entry was not duplicated");
     }
 
@@ -68,7 +69,7 @@ public class ActionLogRepoTest extends AbstractRepoTest {
     @Override
     @Test
     public void testDelete() {
-        ActionLog testActionLog = actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
+        ActionLog testActionLog = actionLogRepo.create(Action.UNDETERMINED, testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
         actionLogRepo.delete(testActionLog);
         assertEquals(0, actionLogRepo.count(), "The test action log was not deleted!");
     }
@@ -77,7 +78,7 @@ public class ActionLogRepoTest extends AbstractRepoTest {
     @Override
     @Test
     public void testCascade() {
-        ActionLog testActionLog = actionLogRepo.create(testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
+        ActionLog testActionLog = actionLogRepo.create(Action.UNDETERMINED, testSubmission, testUser, TEST_ACTION_LOG_ACTION_DATE, TEST_ACTION_LOG_ENTRY, TEST_ACTION_LOG_FLAG);
         actionLogRepo.delete(testActionLog);
         assertEquals(0, actionLogRepo.count(), "The test action log was not deleted!");
         assertEquals(1, submissionRepo.count(), "Submission is not deleted");

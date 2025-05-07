@@ -6,6 +6,7 @@ import static javax.persistence.FetchType.LAZY;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -37,6 +38,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.tdl.vireo.model.listener.SubmissionActionLogListener;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.SubmissionValidator;
 
@@ -157,6 +159,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
         }
     )
 })
+@EntityListeners(SubmissionActionLogListener.class)
 public class Submission extends ValidatingBaseEntity {
 
     @JsonView(Views.Partial.class)

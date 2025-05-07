@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
+import org.tdl.vireo.model.Action;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.Embargo;
@@ -393,7 +394,7 @@ public class CliService {
     }
 
     private void generateActionLogs(Submission sub, User submitter, boolean expansive, int maxActionLogs) {
-        actionLogRepo.create(sub, submitter, Calendar.getInstance(), new String("Submission created."), false);
+        actionLogRepo.create(Action.UNDETERMINED, sub, submitter, Calendar.getInstance(), new String("Submission created."), false);
 
         // Only provide large data set when expansive parameter is provided.
         if (!expansive) {
@@ -432,6 +433,7 @@ public class CliService {
 
             if (bySubmitter) {
                 actionLogRepo.create(
+                    Action.UNDETERMINED,
                     sub,
                     submitter,
                     Calendar.getInstance(),
@@ -440,6 +442,7 @@ public class CliService {
                 );
             } else {
                 actionLogRepo.create(
+                    Action.UNDETERMINED,
                     sub,
                     Calendar.getInstance(),
                     new String(percent + (random + 1) + " of " + total + (isPrivate ? " [private]" : "") + " [no submitter]."),

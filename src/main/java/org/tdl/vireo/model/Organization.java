@@ -491,10 +491,55 @@ public class Organization extends ValidatingBaseEntity {
 
         if (getParentOrganization() != null) {
             for (EmailWorkflowRuleByStatus potentialEmailWorkflowRule : getParentOrganization().getAggregateEmailWorkflowRules()) {
-                System.out.println("At the ancestor organization " + getParentOrganization().getName() + " considering addition of the rule " + potentialEmailWorkflowRule + " to pass back to caller (org's child or submission controller)");
+                LOG.debug("At the ancestor organization " + getParentOrganization().getName() + " considering addition of the rule " + potentialEmailWorkflowRule + " to pass back to caller (org's child or submission controller)");
 
                 boolean rejectDuplicateRule = false;
                 for (EmailWorkflowRuleByStatus currentEmailWorkflowRule : aggregateEmailWorkflowRules) {
+                    String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
+                    String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
+
+                    String currentEmailTemplateName = currentEmailWorkflowRule.getEmailTemplate().getName();
+                    String potentialEmailTemplateName = potentialEmailWorkflowRule.getEmailTemplate().getName();
+
+                    LOG.debug("Current email recepient name: " + currentEmailRecipientName);
+                    LOG.debug("Potential email recepient name: " + potentialEmailRecipientName);
+
+                    LOG.debug("Current email template name: " + currentEmailTemplateName);
+                    LOG.debug("Potential email template name: " + potentialEmailTemplateName);
+
+                    if ((currentEmailRecipientName.equals(potentialEmailRecipientName) & currentEmailTemplateName.equals(potentialEmailTemplateName))) {
+                        LOG.debug("Potential matches a current one for both recipient and template - must reject");
+                        rejectDuplicateRule = true;
+                    }
+                }
+                if (!rejectDuplicateRule) {
+                    LOG.debug("\tThe rule was not a duplicate - adding rule " + potentialEmailWorkflowRule);
+                    newRules.add(potentialEmailWorkflowRule);
+                } else {
+                    LOG.debug("\tThe rule was a duplicate - ignoring rule " + potentialEmailWorkflowRule);
+                }
+
+            }
+            aggregateEmailWorkflowRules.addAll(newRules);
+        }
+
+        return aggregateEmailWorkflowRules;
+    }
+
+    @JsonIgnore
+    public List<EmailWorkflowRuleByAction> getAggregateEmailWorkflowRulesByAction() {
+
+        List<EmailWorkflowRuleByAction> aggregateEmailWorkflowRules = new ArrayList<EmailWorkflowRuleByAction>();
+        List<EmailWorkflowRuleByAction> newRules = new ArrayList<EmailWorkflowRuleByAction>();
+
+        aggregateEmailWorkflowRules.addAll(getEmailWorkflowRulesByAction());
+
+        if (getParentOrganization() != null) {
+            for (EmailWorkflowRuleByAction potentialEmailWorkflowRule : getParentOrganization().getAggregateEmailWorkflowRulesByAction()) {
+                LOG.debug("At the ancestor organization " + getParentOrganization().getName() + " considering addition of the rule " + potentialEmailWorkflowRule + " to pass back to caller (org's child or submission controller)");
+
+                boolean rejectDuplicateRule = false;
+                for (EmailWorkflowRuleByAction currentEmailWorkflowRule : aggregateEmailWorkflowRules) {
                     String currentEmailRecipientName = ((AbstractEmailRecipient) currentEmailWorkflowRule.getEmailRecipient()).getName();
                     String potentialEmailRecipientName = ((AbstractEmailRecipient) potentialEmailWorkflowRule.getEmailRecipient()).getName();
 

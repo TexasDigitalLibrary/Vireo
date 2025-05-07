@@ -10,6 +10,7 @@ import javax.persistence.TemporalType;
 
 import java.util.Calendar;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import org.tdl.vireo.model.response.Views;
@@ -49,32 +50,31 @@ public class ActionLog extends ValidatingBaseEntity {
     @Column(nullable = false)
     private boolean privateFlag;
 
+    @JsonIgnore
+    @Column(nullable = false)
+    private boolean processed;
+
     public ActionLog() {
         setModelValidator(new ActionLogValidator());
-        setAction(Action.UNDETERMINED);
+        setProcessed(false);
     }
 
-    public ActionLog(SubmissionStatus submissionStatus, Calendar actionDate, String entry, boolean privateFlag) {
+    public ActionLog(Action action) {
         this();
+        setAction(action);
+    }
+
+    public ActionLog(Action action, SubmissionStatus submissionStatus, Calendar actionDate, String entry, boolean privateFlag) {
+        this(action);
         setSubmissionStatus(submissionStatus);
         setActionDate(actionDate);
         setEntry(entry);
         setPrivateFlag(privateFlag);
     }
 
-    public ActionLog(SubmissionStatus submissionStatus, User user, Calendar actionDate, String entry, boolean privateFlag) {
-        this(submissionStatus, actionDate, entry, privateFlag);
+    public ActionLog(Action action, SubmissionStatus submissionStatus, User user, Calendar actionDate, String entry, boolean privateFlag) {
+        this(action, submissionStatus, actionDate, entry, privateFlag);
         setUser(user);
-    }
-
-    public ActionLog(SubmissionStatus submissionStatus, Calendar actionDate, String entry, Action action, boolean privateFlag) {
-        this(submissionStatus, actionDate, entry, privateFlag);
-        setAction(action);
-    }
-
-    public ActionLog(SubmissionStatus submissionStatus, User user, Calendar actionDate, String entry, Action action, boolean privateFlag) {
-        this(submissionStatus, user, actionDate, entry, privateFlag);
-        setAction(action);
     }
 
     /**
@@ -165,6 +165,21 @@ public class ActionLog extends ValidatingBaseEntity {
      */
     public void setPrivateFlag(boolean privateFlag) {
         this.privateFlag = privateFlag;
+    }
+
+    /**
+     * @return the processed
+     */
+    public boolean getProcessed() {
+        return processed;
+    }
+
+    /**
+     * @param processed
+     *            the processed to set
+     */
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
     }
 
 }

@@ -10,6 +10,7 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.tdl.vireo.model.Action;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.User;
@@ -32,8 +33,8 @@ public class ActionLogRepoImpl extends AbstractWeaverRepoImpl<ActionLog, ActionL
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @Override
-    public ActionLog create(Submission submission, User user, Calendar actionDate, String entry, boolean privateFlag) {
-        ActionLog log = actionLogRepo.save(new ActionLog(submission.getSubmissionStatus(), user, actionDate, entry, privateFlag));
+    public ActionLog create(Action action, Submission submission, User user, Calendar actionDate, String entry, boolean privateFlag) {
+        ActionLog log = actionLogRepo.save(new ActionLog(action, submission.getSubmissionStatus(), user, actionDate, entry, privateFlag));
         submission.addActionLog(log);
         submission.setLastAction(log);
         submissionRepo.save(submission);
@@ -42,8 +43,8 @@ public class ActionLogRepoImpl extends AbstractWeaverRepoImpl<ActionLog, ActionL
     }
 
     @Override
-    public ActionLog create(Submission submission, Calendar actionDate, String entry, boolean privateFlag) {
-        ActionLog log = actionLogRepo.save(new ActionLog(submission.getSubmissionStatus(), actionDate, entry, privateFlag));
+    public ActionLog create(Action action, Submission submission, Calendar actionDate, String entry, boolean privateFlag) {
+        ActionLog log = actionLogRepo.save(new ActionLog(action, submission.getSubmissionStatus(), actionDate, entry, privateFlag));
         submission.addActionLog(log);
         submission.setLastAction(log);
         submissionRepo.save(submission);
@@ -52,18 +53,18 @@ public class ActionLogRepoImpl extends AbstractWeaverRepoImpl<ActionLog, ActionL
     }
 
     @Override
-    public ActionLog createPublicLog(Submission submission, User user, String entry) {
-        return create(submission, user, Calendar.getInstance(), entry, false);
+    public ActionLog createPublicLog(Action action, Submission submission, User user, String entry) {
+        return create(action, submission, user, Calendar.getInstance(), entry, false);
     }
 
     @Override
-    public ActionLog createAdvisorPublicLog(Submission submission, String entry) {
-        return create(submission, Calendar.getInstance(), entry, false);
+    public ActionLog createAdvisorPublicLog(Action action, Submission submission, String entry) {
+        return create(action, submission, Calendar.getInstance(), entry, false);
     }
 
     @Override
-    public ActionLog createPrivateLog(Submission submission, User user, String entry) {
-        return create(submission, user, Calendar.getInstance(), entry, true);
+    public ActionLog createPrivateLog(Action action, Submission submission, User user, String entry) {
+        return create(action, submission, user, Calendar.getInstance(), entry, true);
     }
 
     @Override
