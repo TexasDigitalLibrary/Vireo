@@ -30,23 +30,33 @@ jobs:
         with:
           switches: -avzr --delete
           path: /
-          remote_path: /home/jhu-devops/vireo
+          remote_path: /opt/vireo/Vireo
           remote_host: ${{ secrets.VIREO_HOSTNAME }}
           remote_user: jhu-devops
           remote_key: ${{ secrets.JHU_DEVOPS_KEY }}
 
       - name: executing remote ssh commands as jhu-devops using secret
         uses: appleboy/ssh-action@v1
+        env:
+          PGPASSWORD: ${{ secrets.DB_PASSWORD}}
+          # PGPASSWORD: vireo
+          SPRING_DATASOURCE_URL: jdbc:postgresql://${{ secrets.DB_HOSTNAME }}:5432/vireo4
+          SPRING_DATASOURCE_PASSWORD: ${{ secrets.DB_PASSWORD}}
+
         with:
           host: ${{ secrets.VIREO_HOSTNAME }}
           username: jhu-devops
           key: ${{ secrets.JHU_DEVOPS_KEY }}
+          envs: PGPASSWORD, SPRING_DATASOURCE_URL, SPRING_DATASOURCE_PASSWORD
           script: |
-            cd ./vireo
+            # /usr/bin/psql --host=vireo-dev-1.chohpaicaoek.us-east-1.rds.amazonaws.com --port=5432 --dbname=vireo4 --username=postgres < /opt/vireo/vireo4.dump
+            cd /opt/vireo/Vireo
             docker compose down
-            docker pull ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:4.2.10
+            # sudo ./init-letsencrypt.sh
             cp ./example.env .env
+            docker pull ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:4.2.10
             docker compose up --detach
+            # docker exec -i vireo-db-1 psql -U vireo -d vireo4 < /opt/vireo/vireo4.dump
             # docker run -d -p 9000:9000 ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:4.2.10 
             # wget https://truststore.pki.rds.amazonaws.com/us-east-1/us-east-1-bundle.pem
             # sudo mv ./us-east-1-bundle.pem /etc/pki/ca-trust/source/

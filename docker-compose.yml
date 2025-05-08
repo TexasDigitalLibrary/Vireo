@@ -1,32 +1,10 @@
 networks:
   net:
 
-volumes:
-  pgdata:
+#volumes:
+#  pgdata:
 
 services:
-
-  db:
-    image: postgres:16
-    environment:
-       - POSTGRES_DB=vireo4
-       - POSTGRES_USER=vireo
-       - POSTGRES_PASSWORD=vireo
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    networks:
-      - net
-
-  adminer:
-    image: adminer
-    ports:
-      - 8080:8080
-    depends_on:
-      - db
-    networks:
-      - net
 
   vireo:
     container_name: vireo
@@ -42,6 +20,29 @@ services:
     ports:
       - 9000:9000
     depends_on:
-      - db
+      - httpd
     networks:
       - net
+
+  httpd:
+    image: httpd:2.4-alpine
+    # command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /opt/vireo/httpd:/etc/httpd/conf.d
+      - /opt/vireo/certbot/conf:/etc/letsencrypt
+      - /opt/vireo/www:/var/www/certbot
+    networks:
+      - net
+
+  #certbot:
+  #  image: certbot/certbot
+  #  entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+  #  volumes:
+  #    - /opt/vireo/certbot/conf:/etc/letsencrypt
+  #    - /opt/vireo/certbot/www:/var/www/certbot
+  #  networks:
+  #    - net
+    

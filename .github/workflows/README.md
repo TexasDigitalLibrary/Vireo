@@ -1,65 +1,86 @@
-# GitHub Actions Workflows README
+# Vireo GitHub Actions Workflows
 
-This directory contains GitHub Actions workflows that automate various tasks for the Vireo project.
+This directory contains GitHub Actions workflows for automating various operational tasks for the Vireo application. These workflows provide a consistent "command grammar" for managing the application deployment, data, and testing processes.
 
-## Available Workflows
+All workflows requiring interaction with the application environment run on `self-hosted` runners.
 
-### `deploy_docker.yml`
+## Secrets
 
-This workflow is responsible for deploying Docker images to a self-hosted server.
+These workflows utilize the following repository or organization secrets:
 
-#### Purpose
+*   `VIREO_HOSTNAME`: The hostname (or IP address) of the target server for deployment and operations (used in stage/prod environments).
+*   `JHU_DEVOPS_KEY`: The SSH private key for the `jhu-devops` user to access the target server.
+*   `DB_PASSWORD`: The password for the database user (potentially used in data operations, though may be handled differently per workflow).
 
-The `deploy_docker.yml` workflow automates the process of pulling and running a specified Docker image on the `msel-vireo03.mse.jhu.edu` server. This is primarily used for deploying new versions of the Vireo application to either the staging or production environment.
+## Workflows
 
-#### Trigger
+### 1. `build_docker.yml`
 
-This workflow is triggered manually using `workflow_dispatch`. This allows for controlled deployments.
+*   **Purpose**: Builds the `vireo` and `vireo-dev` Docker images.
+*   **Trigger**: Likely manual (`workflow_dispatch`) or potentially on pushes to specific branches.
+*   **Inputs**: May require inputs to specify which image tag to build or push.
+*   **Runner**: Github Cloud
+*   **Description**: This workflow handles the Docker image creation process, tagging, and potentially pushing them to a container registry (like GHCR).
 
-#### Inputs
+### 2. `deploy_docker.yml`
 
-When manually triggering the workflow, you must provide the following inputs:
+*   **Purpose**: Deploys a specified Docker image to a target environment (stage or prod).
+*   **Trigger**: Manual (`workflow_dispatch`).
+*   **Inputs**:
+    *   `images` (choice: `vireo`, `vireo-dev`, default: `vireo-dev`): The Docker image to deploy.
+    *   `environment` (environment: `stage`, `prod`, default: `stage`): The target deployment environment, controlling secrets and potentially target host.
+*   **Secrets**: `VIREO_HOSTNAME`, `JHU_DEVOPS_KEY`.
+*   **Runner**: `self-hosted`.
+*   **Description**:
+    1.  Checks out the repository code.
+    2.  Uses `rsync` to synchronize the repository contents (like `docker-compose.yml`, `.env` examples) to the target host (`/opt/vireo/Vireo`).
+    3.  Uses SSH to execute commands remotely on the target host:
+        *   Navigates to the application directory.
+        *   Stops existing services (`docker compose down`).
+        *   Copies the example environment file (`cp ./example.env .env`).
+        *   Pulls the specified Docker image from GHCR.
+        *   Starts the services (`docker compose up --detach`).
+        *   Loads a database dump into the running database container.
 
-*   **`images`**:
-    *   **Description**: Specifies which Docker image to deploy.
-    *   **Type**: `choice`
-    *   **Options**:
-        *   `vireo`: The main Vireo application image.
-        *   `vireo-dev`: The development version of the Vireo application image.
-    *   **Default**: `vireo-dev`
-    *   **Required**: `true`
-*   **`environment`**:
-    *   **Description**: Specifies the target environment for the deployment (e.g., stage or prod).
-    *   **Type**: `environment`
-    *   **Default**: `stage`
-    *   **Required**: `true`
+### 3. `docker_restart.yml`
 
-#### Steps
+*   **Purpose**: Restarts the Docker containers for the application in a specific environment.
+*   **Trigger**: Likely manual (`workflow_dispatch`).
+*   **Inputs**: May require an `environment` input (`stage`/`prod`).
+*   **Secrets**: `VIREO_HOSTNAME`, `JHU_DEVOPS_KEY`.
+*   **Runner**: `self-hosted`.
+*   **Description**: Executes remote SSH commands (e.g., `docker compose restart` or `down`/`up`) on the target host.
 
-1.  **`executing remote ssh commands as jhu-devops using secret`**:
-    *   This step connects to the `msel-vireo03.mse.jhu.edu` server via SSH as the `jhu-devops` user.
-    *   It uses the `JHU_DEVOPS_KEY` secret for authentication.
-    *   It executes the following commands on the remote server:
-        *   `docker pull ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:4.2.10`: Pulls the specified Docker image (e.g., `vireo` or `vireo-dev`) with the tag `4.2.10` from the GitHub Container Registry.
-        *   `docker run -d -p 9000:9000 ghcr.io/jhu-sheridan-libraries/${{ inputs.images }}:4.2.10`: Runs the pulled Docker image in detached mode (`-d`) and maps port 9000 on the host to port 9000 in the container.
+### 4. `docker_stop.yml`
 
-#### Server
+*   **Purpose**: Stops the Docker containers for the application in a specific environment.
+*   **Trigger**: Likely manual (`workflow_dispatch`).
+*   **Inputs**: May require an `environment` input (`stage`/`prod`).
+*   **Secrets**: `VIREO_HOSTNAME`, `JHU_DEVOPS_KEY`.
+*   **Runner**: `self-hosted`.
+*   **Description**: Executes remote SSH commands (e.g., `docker compose down`) on the target host.
 
-*   **Host**: `msel-vireo03.mse.jhu.edu`
-*   **User**: `jhu-devops`
+### 5. `dump_postgres.yml`
 
-#### Secrets
+*   **Purpose**: Creates a database dump from the PostgreSQL instance associated with an environment.
+*   **Trigger**: Likely manual (`workflow_dispatch`) or potentially scheduled.
+*   **Inputs**: May require an `environment` input (`stage`/`prod`).
+*   **Secrets**: `VIREO_HOSTNAME`, `JHU_DEVOPS_KEY`, potentially `DB_PASSWORD` or relies on container access.
+*   **Runner**: `self-hosted`.
+*   **Description**: Executes remote SSH commands to run `pg_dump` against the appropriate database (likely within the running container or directly if accessible) and stores the dump file (e.g., `/opt/vireo/vireo4.dump`).
 
-*   **`JHU_DEVOPS_KEY`**: This secret contains the SSH private key for the `jhu-devops` user on the deployment server.
+### 6. `load_rds.yml`
 
-#### Self-Hosted Runner
+*   **Purpose**: Loads data (likely a database dump) into an RDS instance. This might be separate from the main application deployment database load step in `deploy_docker.yml`.
+*   **Trigger**: Likely manual (`workflow_dispatch`).
+*   **Inputs**: May require `environment` or specific RDS connection details/dump file location.
+*   **Secrets**: Database credentials (`DB_PASSWORD`?), potentially AWS credentials if interacting via AWS CLI/SDK.
+*   **Runner**: `self-hosted` or `ubuntu-latest` depending on how RDS is accessed.
+*   **Description**: Connects to the target RDS instance and uses `psql` or another tool to import data from a specified dump file.
 
-This workflow runs on a self-hosted runner, indicated by `runs-on: [self-hosted]`.
+### 7. `test.yml`
 
-## How to Use
-
-1.  Go to the "Actions" tab in your GitHub repository.
-2.  Select the "Deploy" workflow.
-3.  Click the "Run workflow" button.
-4.  Choose the desired `images` and `environment` from the dropdown menus.
-5.  Click "Run workflow" to start the deployment.
+*   **Purpose**: Runs automated tests for the Vireo application.
+*   **Trigger**: Likely on `push` to branches (e.g., `main`, `develop`) and `pull_request`.
+*   **Runner**: Github Cloud
+*   **Description**: Checks out the code, sets up the required environment (e.g., specific Java/Maven versions), and executes the test suite (e.g., `mvn test`).

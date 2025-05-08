@@ -1,0 +1,29 @@
+name: Load Database
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'stage(03) or prod(05)'
+        required: true
+        type: environment
+        default: 'stage'
+
+jobs:
+  deploy:
+    runs-on: [self-hosted]
+    environment: ${{ inputs.environment }}
+
+    steps:
+      - name: executing remote ssh command psql as jhu-devops using secrets
+        uses: appleboy/ssh-action@v1
+        env:
+          PGPASSWORD: vireo
+        with:
+          host: ${{ secrets.VIREO_HOSTNAME }}
+          username: jhu-devops
+          key: ${{ secrets.JHU_DEVOPS_KEY }}
+          envs: PGPASSWORD
+          script: |
+            docker exec -i vireo-db-1 psql -U vireo -d vireo4 > /opt/vireo/vireo4-transfer.dump
+            # /usr/bin/psql --host=vireo-dev-1.chohpaicaoek.us-east-1.rds.amazonaws.com --port=5432 --dbname=vireo4 --username=postgres < /opt/vireo/vireo4-transfer.dump

@@ -23,6 +23,6 @@ jobs:
           username: jhu-devops
           key: ${{ secrets.JHU_DEVOPS_KEY }}
           script: | 
-            cd ./vireo
+            cd /opt/vireo/Vireo
             docker compose stop
             
