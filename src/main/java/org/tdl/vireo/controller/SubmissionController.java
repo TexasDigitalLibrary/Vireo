@@ -246,6 +246,7 @@ public class SubmissionController {
             credentials,
             customActionDefinitionRepo.findAll()
         );
+        submissionEmailService.sendWorkflowEmails(user, submission.getId());
         actionLogRepo.createPublicLog(submission, user, "Submission created.");
 
         return new ApiResponse(SUCCESS, submission.getId());
@@ -497,6 +498,7 @@ public class SubmissionController {
                         String depositURL = depositor.deposit(depositLocation, exportPackage);
                         submission.setDepositURL(depositURL);
                         submission = submissionRepo.updateStatus(submission, submissionStatus, user);
+                        submissionEmailService.sendWorkflowEmails(user, submission.getId());
                         response = new ApiResponse(SUCCESS, submission);
                     } else {
                         response = new ApiResponse(ERROR, "Could not find a depositor name " + depositLocation.getDepositorName());
@@ -507,8 +509,6 @@ public class SubmissionController {
             } else {
                 response = new ApiResponse(ERROR, "Could not find a submission status name Published");
             }
-
-            submissionEmailService.sendWorkflowEmails(user, submission.getId());
         } else {
             response = new ApiResponse(ERROR, "Could not find a submission with ID " + submissionId);
         }
@@ -808,6 +808,7 @@ public class SubmissionController {
                             String depositURL = depositor.deposit(depositLocation, exportPackage);
                             submission.setDepositURL(depositURL);
                             submission = submissionRepo.updateStatus(submission, submissionStatus, user);
+                            submissionEmailService.sendWorkflowEmails(user, submission.getId());
                         } catch (Exception e) {
                             throw new DepositException("Failed package export on submission " + submission.getId());
                         }
@@ -906,6 +907,7 @@ public class SubmissionController {
         String oldSubmissionStatusName = submission.getSubmissionStatus().getName();
         submission.setSubmissionStatus(needsCorrectionStatus);
         submission = submissionRepo.update(submission);
+        submissionEmailService.sendWorkflowEmails(user, submission.getId());
         actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + NEEDS_CORRECTION_SUBMISSION_STATUS_NAME);
         return new ApiResponse(SUCCESS, submission);
     }
