@@ -158,8 +158,7 @@ public class UserController {
 
         LOG.info("Updating user with email " + persistedUser.getEmail());
         persistedUser = userRepo.update(persistedUser);
-
-        userRepo.broadcast(userRepo.findAll());
+        LOG.info("Successfully updated user with email " + persistedUser.getEmail());
 
         return new ApiResponse(SUCCESS, persistedUser);
     }
