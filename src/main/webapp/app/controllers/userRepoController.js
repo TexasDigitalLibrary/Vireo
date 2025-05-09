@@ -48,15 +48,6 @@ vireo.controller('UserRepoController', function ($controller, $location, $scope,
         }]
     };
 
-    $scope.table = TableFactory.buildTable({
-        pageNumber: sessionStorage.getItem('users-page') ? sessionStorage.getItem('users-page') : 1,
-        pageSize: sessionStorage.getItem('users-size') ? sessionStorage.getItem('users-size') : 10,
-        filters: {},
-        counts: [5, 10, 25, 50, 100],
-        name: 'users',
-        repo: $scope.userRepo
-    });
-
     $scope.roles = {};
 
     $scope.updateRole = function(user, role) {

@@ -25,7 +25,7 @@ public class CustomActionValue extends ValidatingBaseEntity {
     private CustomActionDefinition definition;
 
     @JsonView(Views.SubmissionList.class)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "\"value\"")
     private Boolean value;
 
     public CustomActionValue() {

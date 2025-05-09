@@ -85,7 +85,7 @@ public class User extends AbstractWeaverUserDetails {
     @JsonView(Views.SubmissionIndividual.class)
     @ElementCollection(fetch = EAGER)
     @MapKeyColumn(name = "setting")
-    @Column(name = "value")
+    @Column(name = "\"value\"")
     private Map<String, String> settings;
 
     @JsonView(Views.Partial.class)

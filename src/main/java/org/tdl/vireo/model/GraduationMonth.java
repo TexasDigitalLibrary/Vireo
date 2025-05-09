@@ -17,7 +17,7 @@ import edu.tamu.weaver.validation.model.ValidatingOrderedBaseEntity;
 @Entity
 public class GraduationMonth extends ValidatingOrderedBaseEntity implements EntityControlledVocabulary {
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "\"month\"")
     private int month;
 
     public GraduationMonth() {
