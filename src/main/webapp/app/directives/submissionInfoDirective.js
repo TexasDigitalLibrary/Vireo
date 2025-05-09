@@ -60,7 +60,7 @@ vireo.directive("submissionInfo", function (ControlledVocabularyRepo) {
                     }
                     if(infoForm.hasClass("form-control")) {
                         if(infoForm.length > 1) {
-                            infoForm[Number($event.currentTarget.id) * 2].focus();
+                            infoForm[Number($event.currentTarget.id)].focus();
                         } else {
                             infoForm.focus();
                         }
