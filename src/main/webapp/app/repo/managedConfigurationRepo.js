@@ -6,12 +6,16 @@ vireo.repo("ManagedConfigurationRepo", function ManagedConfigurationRepo($q, Man
 
     var defer = $q.defer();
 
+    var fetching = false;
+
     // additional repo methods and variables
 
     var fetch = function (mapping) {
         if (mapping.all !== undefined) {
+            fetching = true;
             return WsApi.fetch(mapping.all).then(function (res) {
                 build(unwrap(res)).then(function () {
+                    fetching = false;
                     defer.resolve(configurations);
                 });
             });
@@ -42,7 +46,7 @@ vireo.repo("ManagedConfigurationRepo", function ManagedConfigurationRepo($q, Man
     };
 
     configurationRepo.getAll = function () {
-        if (this.mapping.lazy) {
+        if (this.mapping.lazy && !fetching) {
             fetch(this.mapping);
         }
         return configurationRepo.getContents();

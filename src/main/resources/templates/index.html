@@ -140,7 +140,7 @@
     <alerts seconds="45" channels="auth/register" types="SUCCESS"></alerts>
     <alerts seconds="45" channels="organization/delete" types="SUCCESS"></alerts>
 
-    <div class="container-fluid main">
+    <div class="container-fluid main" aria-live="assertive" aria-atomic="true">
       <div ng-view class="view"></div>
     </div>
 
@@ -165,6 +165,9 @@
           <a href="{{accessibility}}" ng-attr-aria-label="{{accessibility_label}}" ng-attr-aria-hidden="{{accessibility_hidden}}">Accessibility</a>
         </li>
       </ul>
+      <a class="pull-left" th:href="${#strings.isEmpty(base) ? '/' : base}">
+        <img style="max-height: 65px;" ng-src="{{logoImage()}}" alt="Thesis Submission Portal" />
+      </a>
     </div>
   </footer>
 

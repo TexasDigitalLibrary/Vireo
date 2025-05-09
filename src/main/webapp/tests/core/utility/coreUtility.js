@@ -110,8 +110,10 @@ var mockWindow = function() {
     return {
         location: {
             href: "",
+            absUrl: "",
             replace: function() {}
-        }
+        },
+        open: () => {}
     };
 };
 

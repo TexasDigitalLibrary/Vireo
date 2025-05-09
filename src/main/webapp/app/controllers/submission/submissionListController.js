@@ -1,4 +1,4 @@
-vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValueRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilter, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, WsApi) {
+vireo.controller("SubmissionListController", function (NgTableParams, $controller, $filter, $location, $q, $scope, ControlledVocabularyRepo, CustomActionDefinitionRepo, DepositLocationRepo, DocumentTypeRepo, EmailRecipient, EmailRecipientType, EmailTemplateRepo, EmbargoRepo, FieldPredicateRepo, FieldValueRepo, ManagerFilterColumnRepo, ManagerSubmissionListColumnRepo, NamedSearchFilterGroup, OrganizationRepo, OrganizationCategoryRepo, PackagerRepo, SavedFilter, SavedFilterRepo, SidebarService, SubmissionListColumnRepo, SubmissionRepo, SubmissionStatusRepo, UserRepo, UserSettings, $window, WsApi) {
 
     angular.extend(this, $controller('AbstractController', {
         $scope: $scope
@@ -1002,8 +1002,14 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
         var disabledFilterColumnOptions = createDisabledColumnOptions();
 
-        $scope.viewSubmission = function (submission) {
-            $location.path("/admin/view/" + submission.id);
+        $scope.viewSubmission = function (event, submission) {
+            const url = $location.absUrl();
+            if (event.ctrlKey || event.metaKey) {
+                $window.open(url.replace('/list', '/view/' + submission.id));
+                event.stopPropagation();
+            } else {
+                $location.path('/admin/view/' + submission.id);
+            };
         };
 
         SidebarService.addBoxes([{

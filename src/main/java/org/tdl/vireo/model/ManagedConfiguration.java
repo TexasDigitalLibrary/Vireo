@@ -23,7 +23,7 @@ public class ManagedConfiguration extends ValidatingBaseEntity implements Config
     @Column(nullable = false, length = 255)
     private String name;
 
-    @Column(nullable = false, columnDefinition = "text")
+    @Column(nullable = false, columnDefinition = "text", name = "\"value\"")
     private String value;
 
     @Column(nullable = false, length = 255)

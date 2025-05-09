@@ -382,12 +382,10 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
         };
 
         $scope.getPattern = function (doctype) {
-            var pattern = "*";
             var fieldPredicate;
-            var i;
 
-            for(i in $scope.fieldPredicates) {
-                if($scope.fieldPredicates[i].value === doctype) {
+            for (var i in $scope.fieldPredicates) {
+                if ($scope.fieldPredicates[i].value === doctype) {
                     fieldPredicate = $scope.fieldPredicates[i];
                     break;
                 }
@@ -395,17 +393,11 @@ vireo.controller("AdminSubmissionViewController", function ($anchorScroll, $cont
 
             if (fieldPredicate !== undefined) {
                 var fieldProfile = $scope.submission.getFieldProfileByPredicate(fieldPredicate);
-                if (angular.isDefined(fieldProfile.controlledVocabulary)) {
-                    var cv = fieldProfile.controlledVocabulary;
-                    pattern = "";
-                    for (i in cv.dictionary) {
-                        var word = cv.dictionary[i];
-                        pattern += pattern.length > 0 ? (",." + word.name) : ("." + word.name);
-                    }
-                }
+
+                return FileUploadService.getPattern(fieldProfile);
             }
 
-            return pattern;
+            return '*';
         };
 
         $scope.queueUpload = function (files) {

@@ -11,7 +11,7 @@ import edu.tamu.weaver.data.model.BaseEntity;
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "value", "gloss" }) })
 public class FilterCriterion extends BaseEntity {
 
-    @Column
+    @Column(name = "\"value\"")
     private String value;
 
     @Column
