@@ -5,8 +5,10 @@ import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.ActionLogValidator;
@@ -21,6 +23,16 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
  */
 @Entity
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
+@Table(uniqueConstraints = @UniqueConstraint(
+    name = "uk_action_log_unique_columns",
+    columnNames = {
+        "actionDate",
+        "entry",
+        "privateFlag",
+        "submission_status_id",
+        "user_id",
+        "action_logs_id"
+}))
 public class ActionLog extends ValidatingBaseEntity {
 
     @ManyToOne(optional = false)
