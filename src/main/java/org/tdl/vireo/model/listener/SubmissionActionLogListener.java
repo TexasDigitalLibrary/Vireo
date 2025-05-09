@@ -57,9 +57,7 @@ public class SubmissionActionLogListener {
 
     private void processSubmissionActionLog(Submission submission, ActionLog actionLog) {
         Action action = actionLog.getAction();
-        // this should be applied by cascade ALL of submission one to many
-        actionLog.setProcessed(true);
-
+        
         switch (action) {
         case STUDENT_MESSAGE:
         case ADVISOR_MESSAGE:
@@ -74,6 +72,8 @@ public class SubmissionActionLogListener {
         default:
             break;
         }
+        // set processed after processing action email workflow rules
+        actionLog.setProcessed(true);
     }
 
 }
