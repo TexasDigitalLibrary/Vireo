@@ -1,11 +1,12 @@
 describe("controller: SubmissionListController", function () {
 
-    var controller, filter, location, q, scope, ManagerFilterColumnRepo, SavedFilterRepo, SubmissionRepo, WsApi;
+    var controller, filter, location, window, q, scope, ManagerFilterColumnRepo, SavedFilterRepo, SubmissionRepo, WsApi;
 
     var initializeVariables = function(settings) {
         inject(function ($filter, $location, $q, _ManagerFilterColumnRepo_, _SavedFilterRepo_, _SubmissionRepo_, _WsApi_) {
             filter = $filter;
             location = $location;
+            window = mockWindow();
             q = $q;
 
             ManagerFilterColumnRepo = _ManagerFilterColumnRepo_;
@@ -16,7 +17,7 @@ describe("controller: SubmissionListController", function () {
     };
 
     var initializeController = function(settings) {
-        inject(function ($controller, $filter, $rootScope, _ControlledVocabularyRepo_, _CustomActionDefinitionRepo_, _CustomActionValueRepo_, _DepositLocationRepo_, _DocumentTypeRepo_, _EmailRecipient_, _EmailTemplateRepo_, _EmbargoRepo_, _ManagerSubmissionListColumnRepo_, _ModalService_, _OrganizationCategory_, _OrganizationCategoryRepo_, _Organization_, _OrganizationRepo_, _Packager_, _PackagerRepo_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionListColumnRepo_, _SubmissionStatusRepo_, _UserRepo_) {
+        inject(function ($controller, $rootScope, _ControlledVocabularyRepo_, _CustomActionDefinitionRepo_, _CustomActionValueRepo_, _DepositLocationRepo_, _DocumentTypeRepo_, _EmailRecipient_, _EmailTemplateRepo_, _EmbargoRepo_, _ManagerSubmissionListColumnRepo_, _ModalService_, _OrganizationCategory_, _OrganizationCategoryRepo_, _Organization_, _OrganizationRepo_, _Packager_, _PackagerRepo_, _RestApi_, _SidebarService_, _StorageService_, _SubmissionListColumnRepo_, _SubmissionStatusRepo_, _UserRepo_) {
             scope = $rootScope.$new();
 
             sessionStorage.role = settings && settings.role ? settings.role : "ROLE_ADMIN";
@@ -27,7 +28,7 @@ describe("controller: SubmissionListController", function () {
                 $location: location,
                 $q: q,
                 $scope: scope,
-                $window: mockWindow(),
+                $window: window,
                 ControlledVocabularyRepo: _ControlledVocabularyRepo_,
                 CustomActionDefinitionRepo: _CustomActionDefinitionRepo_,
                 CustomActionValueRepo: _CustomActionValueRepo_,
@@ -564,9 +565,35 @@ describe("controller: SubmissionListController", function () {
 
             spyOn(location, "path");
 
-            scope.viewSubmission(submission);
+            scope.viewSubmission({}, submission);
 
             expect(location.path).toHaveBeenCalled();
+        });
+        it("viewSubmission with ctrlKey click should change the url path", function () {
+            var submission = new mockSubmission(q);
+            submission.submissionWorkflowSteps = [ new mockWorkflowStep(q) ];
+
+            spyOn(window, "open");
+
+            scope.viewSubmission({
+                ctrlKey: true,
+                stopPropagation: () => {}
+            }, submission);
+
+            expect(window.open).toHaveBeenCalled();
+        });
+        it("viewSubmission with ctrlKey click should change the url path", function () {
+            var submission = new mockSubmission(q);
+            submission.submissionWorkflowSteps = [ new mockWorkflowStep(q) ];
+
+            spyOn(window, "open");
+
+            scope.viewSubmission({
+                metaKey: true,
+                stopPropagation: () => {}
+            }, submission);
+
+            expect(window.open).toHaveBeenCalled();
         });
         it(" should simplifyTitle fix the string", function () {
             var result = scope.simplifyTitle("a(b)c d");

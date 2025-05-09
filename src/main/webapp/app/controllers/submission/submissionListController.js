@@ -1008,7 +1008,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 $window.open(url.replace('/list', '/view/' + submission.id));
                 event.stopPropagation();
             } else {
-              $location.path('/admin/view/' + submission.id);
+                $location.path('/admin/view/' + submission.id);
             };
         };
 
