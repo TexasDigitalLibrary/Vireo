@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
-@Table(name = "email_workflow_rules")
+@Table(name = "email_workflow_rule")
 public class EmailWorkflowRuleByStatus extends EmailWorkflowRule {
 
     @ManyToOne(fetch = EAGER, optional = false)
