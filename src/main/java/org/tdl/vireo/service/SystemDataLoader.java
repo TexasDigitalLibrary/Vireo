@@ -742,7 +742,7 @@ public class SystemDataLoader {
             }
 
             // check to see if the EmailTemplate exists
-            // see ../model/EmailTemplate { }"name", "systemRequired" }
+            // see ../model/EmailTemplate.java => { "name", "systemRequired" }
             EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndSystemRequired(emailWorkflowRuleByAction.getEmailTemplate().getName(), emailWorkflowRuleByAction.getEmailTemplate().getSystemRequired());
 
             // create new EmailTemplate if not already exists
