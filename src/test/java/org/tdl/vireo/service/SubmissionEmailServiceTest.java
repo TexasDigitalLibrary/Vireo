@@ -1,15 +1,18 @@
 package org.tdl.vireo.service;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,6 +27,8 @@ import javax.mail.internet.MimeMessage;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -40,6 +45,7 @@ import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailRecipientContact;
 import org.tdl.vireo.model.EmailRecipientPlainAddress;
 import org.tdl.vireo.model.EmailTemplate;
+import org.tdl.vireo.model.EmailWorkflowRuleByAction;
 import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
@@ -52,6 +58,7 @@ import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
+import org.tdl.vireo.model.repo.EmailWorkflowRuleByActionRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.InputTypeRepo;
@@ -160,6 +167,15 @@ public class SubmissionEmailServiceTest extends MockData {
         TEST_EMAIL_WORKFLOW_RULE_PLAIN.isDisabled(false);
     }
 
+    private static final EmailWorkflowRuleByAction TEST_EMAIL_WORKFLOW_RULE_BY_ACTION = new EmailWorkflowRuleByAction();
+    static {
+        TEST_EMAIL_WORKFLOW_RULE_BY_ACTION.setId(3L);
+        TEST_EMAIL_WORKFLOW_RULE_BY_ACTION.setEmailRecipient(TEST_EMAIL_RECIPIENT_PLAIN);
+        TEST_EMAIL_WORKFLOW_RULE_BY_ACTION.setAction(Action.STUDENT_MESSAGE);
+        TEST_EMAIL_WORKFLOW_RULE_BY_ACTION.setEmailTemplate(TEST_EMAIL_TEMPLATE1);
+        TEST_EMAIL_WORKFLOW_RULE_BY_ACTION.isDisabled(false);
+    }
+
     private static final Map<String, Object> TEST_EMAIL_RECIPIENT_MAP1 = new HashMap<String, Object>();
     static {
         TEST_EMAIL_RECIPIENT_MAP1.put("type", "PLAIN_ADDRESS");
@@ -266,6 +282,9 @@ public class SubmissionEmailServiceTest extends MockData {
 
     @MockBean
     protected EmailWorkflowRuleRepo mockEmailWorkflowRuleRepo;
+
+    @MockBean
+    protected EmailWorkflowRuleByActionRepo mockEmailWorkflowRuleByActionRepo;
 
     @MockBean
     protected ActionLogRepo mockActionLogRepo;
@@ -486,6 +505,100 @@ public class SubmissionEmailServiceTest extends MockData {
 
         submissionEmailService.sendWorkflowEmails(TEST_USER, mockSubmission.getId());
         verify(mockEmailSender, times(1)).sendEmail(any(String.class), isNull(), isNull());
+        reset(mockEmailSender);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Action.class, names = {
+        "STUDENT_MESSAGE",
+        "ADVISOR_MESSAGE",
+        "ADVISOR_APPROVE_SUBMISSION",
+        "ADVISOR_CLEAR_APPROVE_SUBMISSION",
+        "ADVISOR_APPROVE_EMBARGO",
+        "ADVISOR_CLEAR_APPROVE_EMBARGO"
+    })
+    public void testSendActionEmailsProcessedActions(Action action) throws MessagingException {
+        // Setup
+        Submission mockSubmission = mock(Submission.class);
+        when(mockSubmission.getOrganization()).thenReturn(mockOrganization); // Ensure organization is associated
+        List<EmailWorkflowRuleByAction> mockActionRules = new ArrayList<>();
+        EmailWorkflowRuleByAction mockWorkflowRule = new EmailWorkflowRuleByAction();
+        mockWorkflowRule.setId(1L);
+        mockWorkflowRule.setEmailTemplate(TEST_EMAIL_TEMPLATE1);
+        mockWorkflowRule.setAction(action);
+        mockWorkflowRule.setEmailRecipient(TEST_EMAIL_RECIPIENT_PLAIN);
+        mockWorkflowRule.isDisabled(false);
+        mockActionRules.add(mockWorkflowRule);
+
+        // Setup ActionLog with the provided action
+        ActionLog mockActionLog = new ActionLog();
+        mockActionLog.setAction(action);
+
+        // Mock the organization to return our workflow rules by action
+        when(mockOrganization.getAggregateEmailWorkflowRulesByAction()).thenReturn(mockActionRules);
+
+        // Mock the template utility
+        when(mockTemplateUtility.compileString(any(), eq(mockSubmission))).thenReturn("Mock Subject");
+        when(mockTemplateUtility.compileTemplate(any(), eq(mockSubmission))).thenReturn("Mock Content");
+
+        // Call the service method
+        submissionEmailService.sendActionEmails(mockSubmission, mockActionLog);
+
+        // Verify the email was sent (indicating processSubmissionActionLog was called)
+        verify(mockEmailSender, times(1)).sendEmail(eq(TEST_USER_EMAIL), eq("Mock Subject"), eq("Mock Content"));
+        reset(mockEmailSender);
+    }
+
+    @ParameterizedTest
+    @EnumSource(value = Action.class, names = { "UNDETERMINED" })
+    public void testSendActionEmailsUnprocessedActions(Action action) throws MessagingException {
+        // Setup
+        Submission mockSubmission = mock(Submission.class);
+        // Setup ActionLog with the provided action
+        ActionLog mockActionLog = new ActionLog();
+        mockActionLog.setAction(action);
+
+        // Call the service method
+        submissionEmailService.sendActionEmails(mockSubmission, mockActionLog);
+
+        // Verify the email was NOT sent (indicating processSubmissionActionLog was NOT called)
+        verify(mockEmailSender, never()).sendEmail(any(String.class), any(String.class), any(String.class));
+        reset(mockEmailSender);
+    }
+
+    @Test
+    public void testSendActionEmailsThrowMessagingException() throws MessagingException {
+        // Setup
+        Submission mockSubmission = mock(Submission.class);
+        when(mockSubmission.getOrganization()).thenReturn(mockOrganization); // Ensure organization is associated
+        doThrow(MessagingException.class).when(mockEmailSender).sendEmail(any(String.class), any(String.class), any(String.class));
+
+        // Setup action rules
+        List<EmailWorkflowRuleByAction> mockActionRules = new ArrayList<>();
+        EmailWorkflowRuleByAction mockWorkflowRule = new EmailWorkflowRuleByAction();
+        mockWorkflowRule.setId(1L);
+        mockWorkflowRule.setEmailTemplate(TEST_EMAIL_TEMPLATE1);
+        mockWorkflowRule.setAction(Action.STUDENT_MESSAGE);
+        mockWorkflowRule.setEmailRecipient(TEST_EMAIL_RECIPIENT_PLAIN);
+        mockWorkflowRule.isDisabled(false);
+        mockActionRules.add(mockWorkflowRule);
+
+        // Setup ActionLog
+        ActionLog mockActionLog = new ActionLog();
+        mockActionLog.setAction(Action.STUDENT_MESSAGE);
+
+        // Mock the organization to return our workflow rules by action
+        when(mockOrganization.getAggregateEmailWorkflowRulesByAction()).thenReturn(mockActionRules);
+
+        // Mock the template utility
+        when(mockTemplateUtility.compileString(any(), eq(mockSubmission))).thenReturn("Mock Subject");
+        when(mockTemplateUtility.compileTemplate(any(), eq(mockSubmission))).thenReturn("Mock Content");
+
+        // Call the service method - should handle the exception internally
+        submissionEmailService.sendActionEmails(mockSubmission, mockActionLog);
+
+        // Verify email sender was called but exception was handled
+        verify(mockEmailSender, times(1)).sendEmail(eq(TEST_USER_EMAIL), eq("Mock Subject"), eq("Mock Content"));
         reset(mockEmailSender);
     }
 
