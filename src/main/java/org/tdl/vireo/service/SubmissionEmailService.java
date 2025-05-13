@@ -245,7 +245,26 @@ public class SubmissionEmailService {
      * @param actionLog ActionLog.
      */
     public void sendActionEmails(Submission submission, ActionLog actionLog) {
+        Action action = actionLog.getAction();
+        
+        switch (action) {
+        case STUDENT_MESSAGE:
+        case ADVISOR_MESSAGE:
+        case ADVISOR_APPROVE_SUBMISSION:
+        case ADVISOR_CLEAR_APPROVE_SUBMISSION:
+        case ADVISOR_APPROVE_EMBARGO:
+        case ADVISOR_CLEAR_APPROVE_EMBARGO:
+            processSubmissionActionLog(submission, actionLog);
+            LOG.info("Submission {}: {} action logged processed", submission.getId(), action);
+            break;
+        case UNDETERMINED:
+        default:
+            break;
+        }
+        
+    }
 
+    private void processSubmissionActionLog(Submission submission, ActionLog actionLog) {
         List<EmailWorkflowRuleByAction> rules = submission.getOrganization().getAggregateEmailWorkflowRulesByAction();
         Map<Long, List<String>> recipientLists = new HashMap<>();
 

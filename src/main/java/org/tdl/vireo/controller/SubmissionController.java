@@ -55,6 +55,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.tdl.vireo.exception.DepositException;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
 import org.tdl.vireo.model.Action;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DepositLocation;
 import org.tdl.vireo.model.Embargo;
@@ -934,7 +935,9 @@ public class SubmissionController {
     @PreAuthorize("hasRole('STUDENT')")
     public ApiResponse addMessage(@WeaverUser User user, @PathVariable Long submissionId, @RequestBody String message) {
         Submission submission = submissionRepo.read(submissionId);
-        return new ApiResponse(SUCCESS, actionLogRepo.createPublicLog(Action.STUDENT_MESSAGE, submission, user, message));
+        ActionLog actionLog = actionLogRepo.createPublicLog(Action.STUDENT_MESSAGE, submission, user, message);
+        submissionEmailService.sendActionEmails(submission, actionLog);
+        return new ApiResponse(SUCCESS, actionLog);
     }
 
     @Transactional(readOnly = true)
@@ -1103,7 +1106,8 @@ public class SubmissionController {
         }
 
         if (message != null) {
-            actionLogRepo.createAdvisorPublicLog(Action.ADVISOR_MESSAGE, submission, "Advisor comments : " + message);
+            ActionLog actionLog = actionLogRepo.createAdvisorPublicLog(Action.ADVISOR_MESSAGE, submission, "Advisor comments : " + message);
+            submissionEmailService.sendActionEmails(submission, actionLog);
         }
 
         return new ApiResponse(SUCCESS, submission);
@@ -1120,7 +1124,8 @@ public class SubmissionController {
             approveAdvisorMessage = "The committee rejected the " + type + ".";
             action = type.equals("Application") ? Action.ADVISOR_CLEAR_APPROVE_SUBMISSION : Action.ADVISOR_CLEAR_APPROVE_EMBARGO;
         }
-        actionLogRepo.createAdvisorPublicLog(action, submission, approveAdvisorMessage);
+        ActionLog actionLog = actionLogRepo.createAdvisorPublicLog(action, submission, approveAdvisorMessage);
+        submissionEmailService.sendActionEmails(submission, actionLog);
     }
 
     private void processAdvisorStatusClear(String type, Boolean approvalState, Submission submission) {
@@ -1131,7 +1136,8 @@ public class SubmissionController {
         } else {
             clearAdvisorMessage += " Rejection.";
         }
-        actionLogRepo.createAdvisorPublicLog(action, submission, clearAdvisorMessage);
+        ActionLog actionLog = actionLogRepo.createAdvisorPublicLog(action, submission, clearAdvisorMessage);
+        submissionEmailService.sendActionEmails(submission, actionLog);
     }
 
 }

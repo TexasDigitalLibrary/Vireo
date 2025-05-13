@@ -29,6 +29,7 @@ import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
     name = "uk_action_log_unique_columns",
     columnNames = {
         "actionDate",
+        "action",
         "entry",
         "privateFlag",
         "submission_status_id",
@@ -62,13 +63,8 @@ public class ActionLog extends ValidatingBaseEntity {
     @Column(nullable = false)
     private boolean privateFlag;
 
-    @JsonIgnore
-    @Column(nullable = false)
-    private boolean processed;
-
     public ActionLog() {
         setModelValidator(new ActionLogValidator());
-        setProcessed(false);
     }
 
     public ActionLog(Action action) {
@@ -177,21 +173,6 @@ public class ActionLog extends ValidatingBaseEntity {
      */
     public void setPrivateFlag(boolean privateFlag) {
         this.privateFlag = privateFlag;
-    }
-
-    /**
-     * @return the processed
-     */
-    public boolean getProcessed() {
-        return processed;
-    }
-
-    /**
-     * @param processed
-     *            the processed to set
-     */
-    public void setProcessed(boolean processed) {
-        this.processed = processed;
     }
 
 }
