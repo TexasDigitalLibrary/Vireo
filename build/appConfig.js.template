@@ -40,7 +40,7 @@ var appConfig = {
       When set to the boolean false, a modal is not used and Shibboleth login is automatically attempted and no registration link is shown.
       When set to the string 'alternate' to hide the local login (and registration) as if localAuthentication is false and provide an alterate (hidden) login page for local authentication.
      */
-    'localAuthentication': true,
+    'localAuthentication': ${LOCAL_AUTHENTICATION},
 
     /*
        Designate predicates that require date/times value filtering on save.
