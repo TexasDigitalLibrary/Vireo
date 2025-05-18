@@ -18,14 +18,14 @@
       "originalNotes": [
         {
           "name": "name",
-          "text": "Your name should appear as it does on your title page. You can use Unicode characters, if your computer supports them.",
+          "text": "Your name should match the name associated with your JHED ID.",
           "originatingWorkflowStep": {
             "name": "Verify Personal Information"
           }
         },
         {
           "name": "degreeAndMajor",
-          "text": "Select the degree and major that are listed on your title page.",
+          "text": "Select your degree and major/concentration from the list. If your major is not listed, choose \"Not Listed\" and contact us at etd-support@jhu.edu",
           "originatingWorkflowStep": {
             "name": "Verify Personal Information"
           }
