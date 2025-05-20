@@ -506,14 +506,28 @@
       "originalNotes": [
         {
           "name": "degreeDate",
-          "text": "For the graduation semester, enter the semester in which your degree will be conferred.",
+          "text": "For the degree date, enter the month and year in which your degree will be conferred (typically your graduation semester).",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
+          }
+        },
+        {
+          "name": "documentType",
+          "text": "For all doctoral degrees except the Doctor of International Affairs (DIA), select Dissertation under Document Type. For the DIA, select Doctoral Thesis.",
           "originatingWorkflowStep": {
             "name": "Verify Personal Information"
           }
         },
         {
           "name": "multipleKeywords",
-          "text": "Enter one keyword or key phrase per entry field.",
+          "text": "You can enter multiple keywords. Use semicolons ( ; ) to separate the entries. No commas between keywords.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
+          }
+        },
+        {
+          "name": "subjectFields",
+          "text": "For subject fields, please choose the option that best describes your thesis or dissertation.",
           "originatingWorkflowStep": {
             "name": "Verify Personal Information"
           }
@@ -527,7 +541,7 @@
         },
         {
           "name": "embargoCheckAdvisor",
-          "text": "If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication.",
+          "text": "If you don't know if you need an embargo, then you should check with your advisor. This option is typically only used for situations like patent holds or a request by a publisher if content from the document is pending publication. Select the option that meets your expected needs.",
           "originatingWorkflowStep": {
             "name": "Verify Personal Information"
           }
@@ -846,7 +860,7 @@
       "originalNotes": [
         {
           "name": "onePdfFile",
-          "text": "Your thesis or dissertation can only be one file, and the only allowable file format is PDF. Please contact your school for help or information related to creating a PDF file.",
+          "text": "Your thesis or dissertation can only be one file, and the only allowable file format is PDF/A. Please see https://www.library.jhu.edu/library-services/electronic-theses-dissertations/ for information related to creating a PDF/A file.",
           "originatingWorkflowStep": {
             "name": "Verify Personal Information"
           }
@@ -854,6 +868,13 @@
         {
           "name": "noLimit",
           "text": "There is no limit on the number or formats of supplementary files you may upload.",
+          "originatingWorkflowStep": {
+            "name": "Verify Personal Information"
+          }
+        },
+        {
+          "name": "sizeLimit",
+          "text": "SIZE LIMIT: no individual file may exceed 512 MB, and the total of all files must not exceed 4 GB.",
           "originatingWorkflowStep": {
             "name": "Verify Personal Information"
           }
