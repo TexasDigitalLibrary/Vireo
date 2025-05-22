@@ -115,7 +115,7 @@ info:
 
 
 app:
-  url: https://msel-vireo03.mse.jhu.edu
+  url: https://vireo-dev.library.jhu.edu
 
 
 
@@ -145,7 +145,7 @@ app:
     # edu.tamu.weaver.auth.service.CryptoService
     secret: 9QRMirNPjAXA9p1Ljn9EKYzUQldajESZ
     # edu.tamu.weaver.filter.CorsFilter
-    allow-access: https://msel-vireo03.mse.jhu.edu
+    allow-access: https://vireo-dev.library.jhu.edu
 
   # edu.tamu.weaver.email.config.WeaverEmailConfig
   email:
