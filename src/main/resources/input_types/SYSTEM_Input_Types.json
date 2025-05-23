@@ -16,11 +16,13 @@
     "validation": {
       "name": {
         "pattern": null,
-        "message": null
+        "message": null,
+        "text": "Name"
       },
       "email": {
         "pattern": "^([_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})|)$",
-        "message": "Field must be a valid email address"
+        "message": "Field must be a valid email address",
+        "text": "Email"
       }
     }
   },
