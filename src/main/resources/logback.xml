@@ -16,13 +16,22 @@
   <appender name="File-Appender" class="ch.qos.logback.core.FileAppender">
     <file>${LOG_PATH}/logfile.log</file>
     <encoder>
-      <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
+      <outputPatternAsHeader>false</outputPatternAsHeader>
+    </encoder>
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <file>${LOG_PATH}/logfile.log</file>
+    <encoder>
+      <pattern>%d{yyyy-MM-dd HH:mm:ss} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
       <outputPatternAsHeader>false</outputPatternAsHeader>
     </encoder>
   </appender>
 
   <root level="debug">
     <appender-ref ref="STDOUT" />
+    <appender-ref ref="File-Appender"/>"
   </root>
 
 </configuration>
