@@ -17,7 +17,7 @@
             <td title="'Status'">{{row.submissionStatus.name}}</td>
             <td title="'Document Title'">{{getDocumentTitle(row) || "No Title"}}</td>
             <td title="'Manuscript File Name'">{{getManuscriptFileName(row, "No Primary Document")}}</td>
-            <td title="'Date Submitted'">{{row.submissionDate || "Not Submitted" | date: M/d/yyyy}}</td>
+            <td title="'Date Submitted'">{{row.submissionDate || "Not Submitted" | date: M/d/yyyy : 'UTC'}}</td>
             <td title="'Assigned To'">{{row.assignee.settings.displayName || "Not Assigned"}}</td>
             <td title="'Actions'">
                 <button ng-if="row.submissionStatus.name === SubmissionStatuses.IN_PROGRESS" class="btn btn-danger" ng-click="confirmDelete(row)">Delete</button>
