@@ -8,5 +8,5 @@
   <logger name="org.tdl.vireo" level="ERROR"/>
   <logger name="edu.tamu" level="ERROR"/>
   <logger name="ro.isdc.wro" level="ERROR"/>
-  <property name="root.level.console" value="OFF" />
+  <property name="root.level.console" value="ON" />
 </configuration>
