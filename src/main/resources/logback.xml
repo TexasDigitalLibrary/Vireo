@@ -3,7 +3,6 @@
   <include resource="org/springframework/boot/logging/logback/base.xml" />
 
   <property name="LOG_PATH" value="logs" />
-  <property name="LOG_ARCHIVE" value="${LOG_PATH}/archive" />
 
   <logger name="com.zaxxer" level="ERROR"/>
   <logger name="org.apache" level="ERROR"/>
@@ -22,7 +21,7 @@
   </appender>
 
   <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <file>${LOG_PATH}/logfile.log</file>
+    <file>${LOG_PATH}/vireo.log</file>
     <encoder>
       <pattern>%d{yyyy-MM-dd HH:mm:ss} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
       <outputPatternAsHeader>false</outputPatternAsHeader>
