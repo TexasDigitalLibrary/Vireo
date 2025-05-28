@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <include resource="org/springframework/boot/logging/logback/base.xml" />
+
+  <property name="LOG_PATH" value="logs" />
+  <property name="LOG_ARCHIVE" value="${LOG_PATH}/archive" />
+
+  <logger name="com.zaxxer" level="ERROR"/>
+  <logger name="org.apache" level="ERROR"/>
+  <logger name="org.hibernate" level="OFF"/>
+  <logger name="org.springframework" level="ERROR"/>
+  <logger name="org.tdl.vireo" level="ERROR"/>
+  <logger name="edu.tamu" level="ERROR"/>
+  <logger name="ro.isdc.wro" level="ERROR"/>
+  <property name="root.level.console" value="OFF" />
+
+  <appender name="File-Appender" class="ch.qos.logback.core.FileAppender">
+    <file>${LOG_PATH}/logfile.log</file>
+    <encoder>
+      <pattern>%d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
+      <outputPatternAsHeader>false</outputPatternAsHeader>
+    </encoder>
+  </appender>
+
+  <logger name="test" level="DEBUG" />
+</configuration>
