@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-  <appender name="File-Appender" class="ch.qos.logback.core.FileAppender">
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
     <file>${LOG_PATH}/logfile.log</file>
     <encoder>
       <pattern>%d{yyyy-MM-dd HH:mm:ss} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
-      <outputPatternAsHeader>false</outputPatternAsHeader>
     </encoder>
   </appender>
 
@@ -13,13 +12,12 @@
     <file>logs/vireo.log</file>
     <encoder>
       <pattern>%d{yyyy-MM-dd HH:mm:ss} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n</pattern>
-      <outputPatternAsHeader>false</outputPatternAsHeader>
     </encoder>
   </appender>
 
   <root level="error">
     <appender-ref ref="STDOUT" />
-    <appender-ref ref="File-Appender"/>"
+    <appender-ref ref="FILE"/>"
   </root>
 
 </configuration>
