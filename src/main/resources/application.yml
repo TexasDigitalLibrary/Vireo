@@ -199,7 +199,7 @@ shib:
   keys: netid,uin,lastName,firstName,email
   subject: email
   netid: eppn
-  uin: johnshopkinseduhopkinsid
+  uin: hopkinsid
   lastName: jhepreferredlastname
   firstName: jhegivennamepreferred
   email: mail

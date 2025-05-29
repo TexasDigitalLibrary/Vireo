@@ -1,4 +1,4 @@
-<div ng-show="submission" class="dialog actions">
+<div ng-show="submission" ng-if="isManager() || isAdmin()" class="dialog actions">
   <span class="dialog-close clickable" ng-click="show.reverse()">[{{show[0]}}]</span>
   <h4 class="dialog-header">Requirements Checklist:</h4>
   <div class="dialog-content" ng-class="{'dialog-open': show[0] === '-', 'dialog-closed': show[0] === '+'}">
