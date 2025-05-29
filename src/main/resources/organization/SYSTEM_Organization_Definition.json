@@ -737,21 +737,17 @@
             "name": "Document Information"
           },
           "inputType": {
-            "name": "INPUT_CONTACT_SELECT"
+            "name": "INPUT_TEXT"
           },
-          "repeatable": false,
+          "repeatable": true,
           "overrideable": true,
           "enabled": true,
           "optional": false,
           "flagged": false,
           "logged": false,
           "usage": "",
-          "help": "Select the name and email address for your committee chair.",
-          "gloss": "Committee Chair",
-          "controlledVocabulary": {
-            "name": "Committee Members",
-            "isEntityProperty": false
-          }
+          "help": "Enter the name(s) for your committee chair or co-chairs. You may enter multiple committee members by selecting the + sign.",
+          "gloss": "Committee Chair(s)"
         },
         {
           "fieldPredicate": {
@@ -762,21 +758,17 @@
             "name": "Document Information"
           },
           "inputType": {
-            "name": "INPUT_CONTACT"
+            "name": "INPUT_TEXT"
           },
           "repeatable": true,
           "overrideable": true,
           "enabled": true,
-          "optional": false,
+          "optional": true,
           "flagged": false,
           "logged": false,
           "usage": "",
-          "help": "Enter the names and email addresses of your non-chairing committee members. You may enter multiple committee members by selecting the + sign.",
-          "gloss": "Non-Chairing Committee Members",
-          "controlledVocabulary": {
-            "name": "Committee Members",
-            "isEntityProperty": false
-          }
+          "help": "Enter the names your non-chairing committee members. You may enter multiple committee members by selecting the + sign.",
+          "gloss": "Non-Chairing Committee Members"
         },
         {
           "fieldPredicate": {
@@ -815,7 +807,7 @@
           "flagged": false,
           "logged": false,
           "usage": "",
-          "help": "Select the default emborgo for the publication of your work. If you are unsure, you should discuss the options with your advisor.",
+          "help": "Select the default embargo for the publication of your work. If you are unsure, you should discuss the options with your advisor.",
           "gloss": "Default Embargos",
           "controlledVocabulary": {
             "name": "Default Embargos",
@@ -838,7 +830,7 @@
           "enabled": true,
           "optional": true,
           "usage": "",
-          "help": "Select the ProQuest emborgo for the publication of your work. If you are unsure, you should discuss the options with your advisor.",
+          "help": "Select the ProQuest embargo for the publication of your work. If you are unsure, you should discuss the options with your advisor.",
           "gloss": "ProQuest Embargos",
           "controlledVocabulary": {
             "name": "Proquest Embargos",
