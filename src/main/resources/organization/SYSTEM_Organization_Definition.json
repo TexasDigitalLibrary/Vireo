@@ -520,21 +520,21 @@
         },
         {
           "name": "multipleKeywords",
-          "text": "You can enter multiple keywords. Use semicolons ( ; ) to separate the entries. No commas between keywords.",
+          "text": "You may enter multiple keywords by selecting the + sign.",
           "originatingWorkflowStep": {
             "name": "Verify Personal Information"
           }
         },
         {
           "name": "subjectFields",
-          "text": "For subject fields, please choose the option that best describes your thesis or dissertation.",
+          "text": "For subject fields, please choose the option which best describes your thesis or dissertation. You may enter multiple keywords by selecting the + sign.",
           "originatingWorkflowStep": {
             "name": "Verify Personal Information"
           }
         },
         {
           "name": "committeeMembers",
-          "text": "Please supply the names of your committee members, and a single email address to reach the chair or either co-chair.",
+          "text": "Please supply the names of your committee members.",
           "originatingWorkflowStep": {
             "name": "Verify Personal Information"
           }
