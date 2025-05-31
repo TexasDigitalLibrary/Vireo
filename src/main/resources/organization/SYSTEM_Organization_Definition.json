@@ -1040,7 +1040,7 @@
   ],
   "parentOrganization": null,
   "childrenOrganizations": null,
-  "emails": "etd-support@jhu.edu",
+  "emails": null,
   "emailWorkflowRules": [
     {
       "isSystem": true,
