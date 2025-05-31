@@ -36,7 +36,7 @@
     "description": "The work will be published after approval.",
     "duration": 0,
     "isActive": true,
-    "systemRequired": true,
+    "systemRequired": false,
     "guarantor": 1
   },
   {
