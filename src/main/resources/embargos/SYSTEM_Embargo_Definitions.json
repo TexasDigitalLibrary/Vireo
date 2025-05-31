@@ -1,7 +1,7 @@
 [
   {
     "name": "None",
-    "description": "The work will be published after approval.",
+    "description": "The work will be published after the initial list of graduates is released.",
     "duration": 0,
     "isActive": true,
     "systemRequired": true,

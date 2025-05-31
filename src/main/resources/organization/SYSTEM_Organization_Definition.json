@@ -1,5 +1,6 @@
+[
 {
-  "name": "Institution",
+  "name": "Johns Hopkins University",
   "acceptsSubmissions": false,
   "category": {
     "name": "System"
@@ -1040,7 +1041,7 @@
   ],
   "parentOrganization": null,
   "childrenOrganizations": null,
-  "emails": null,
+  "emails": "etd-support@jhu.edu",
   "emailWorkflowRules": [
     {
       "isSystem": true,
@@ -1067,5 +1068,96 @@
       }
     }
   ]
-}
+},
+  {
+    "name": "Advanced Academic Programs",
+    "acceptsSubmissions":true,
+    "category": {
+      "name": "College"
+    },
+    "parentOrganization": "Johns Hopkins University",
+    "childrenOrganizations": null,
+    "emails": "aapacademiicaffairs@jh.edu"
+  },
+  {
+    "name": "Bloomberg School of Public Health",
+    "acceptsSubmissions":true,
+    "category": {
+      "name": "College"
+    },
+    "parentOrganization": "Johns Hopkins University",
+    "childrenOrganizations": null,
+    "emails": "BSPHExams@jhu.edu"
+  },
+  {
+    "name": "Krieger School of Arts and Sciences",
+    "acceptsSubmissions":true,
+    "category": {
+      "name": "College"
+    },
+    "parentOrganization": "Johns Hopkins University",
+    "childrenOrganizations": null,
+    "emails": null
+  },
+  {
+    "name": "Peabody Institute",
+    "acceptsSubmissions":true,
+    "category": {
+      "name": "College"
+    },
+    "parentOrganization": "Johns Hopkins University",
+    "childrenOrganizations": null,
+    "emails": "kdelaurenti@jhu.edu"
+  },
+  {
+    "name": "School of Advanced International Studies",
+    "acceptsSubmissions":true,
+    "category": {
+      "name": "College"
+    },
+    "parentOrganization": "Johns Hopkins University",
+    "childrenOrganizations": null,
+    "emails": "jyoungs1@jhu.edu"
+  },
+  {
+    "name": "School of Education",
+    "acceptsSubmissions":true,
+    "category": {
+      "name": "College"
+    },
+    "parentOrganization": "Johns Hopkins University",
+    "childrenOrganizations": null,
+    "emails": "soe.edd@jhu.edu, ravenm@jhu.edu"
+  },
+  {
+    "name": "School of Medicine",
+    "acceptsSubmissions":true,
+    "category": {
+      "name": "College"
+    },
+    "parentOrganization": "Johns Hopkins University",
+    "childrenOrganizations": null,
+    "emails": "GradStdDsk@jhmi.edu"
+  },
+  {
+    "name": "Whiting School of Engineering",
+    "acceptsSubmissions":true,
+    "category": {
+      "name": "College"
+    },
+    "parentOrganization": "Johns Hopkins University",
+    "childrenOrganizations": null,
+    "emails": null
+  },
+  {
+    "name": "School of Nursing",
+    "acceptsSubmissions":true,
+    "category": {
+      "name": "College"
+    },
+    "parentOrganization": "Johns Hopkins University",
+    "childrenOrganizations": null,
+    "emails": "SON-PhdProgram@jhu.edu"
+  }
+]
 
