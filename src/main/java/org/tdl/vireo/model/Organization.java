@@ -8,6 +8,7 @@ import static javax.persistence.FetchType.EAGER;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -357,7 +358,7 @@ public class Organization extends ValidatingBaseEntity {
     }
 
     /**
-     * 
+     *
      * @param childrenOrganizations
      */
     public void setChildrenOrganizations(Set<Organization> childrenOrganizations) {
@@ -518,6 +519,25 @@ public class Organization extends ValidatingBaseEntity {
         aggregets.forEach(awfs -> {
             removeAggregateWorkflowStep(awfs);
         });
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Organization)) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        Organization that = (Organization) o;
+        return Objects.equals(getName(), that.getName()) && Objects.equals(
+            getCategory(),
+            that.getCategory());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getName(), getCategory());
     }
 
     public void clearAggregatedWorkflowStepsFromHiarchy() {

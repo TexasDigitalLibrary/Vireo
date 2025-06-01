@@ -551,6 +551,7 @@ public class SystemDataLoader {
         if (organization == null) {
             organization = organizationRepo.create(systemOrganization.getName(), category);
             organization.setAcceptsSubmissions(systemOrganization.getAcceptsSubmissions());
+            organization.setEmails(systemOrganization.getEmails());
         }
 
         processWorkflowSteps(organization, systemOrganization);
@@ -558,6 +559,27 @@ public class SystemDataLoader {
         processEmailWorflowRules(organization, systemOrganization);
 
         organizationRepo.save(organization);
+
+        processChildrenOrganizations(organization, systemOrganization);
+
+    }
+
+    private void processChildrenOrganizations(Organization organization, Organization systemOrganization){
+
+        for (Organization childOrganization : systemOrganization.getChildrenOrganizations()) {
+            OrganizationCategory childCategory = organizationCategoryRepo.findByName(childOrganization.getCategory().getName());
+
+            if (childCategory != null) { // don't add category if not present, just skip
+                Organization dbOrganization = organizationRepo.findByNameAndCategory(childOrganization.getName(),childCategory);
+
+                if( dbOrganization == null) {
+                    dbOrganization = organizationRepo.create(childOrganization.getName(), organization, childCategory);
+                    dbOrganization.setAcceptsSubmissions(childOrganization.getAcceptsSubmissions());
+                    dbOrganization.setEmails(childOrganization.getEmails());
+                    organizationRepo.save(dbOrganization);
+                }
+            }
+        }
     }
 
     private void processWorkflowSteps(Organization organization, Organization systemOrganization) {

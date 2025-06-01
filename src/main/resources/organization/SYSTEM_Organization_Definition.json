@@ -1039,8 +1039,85 @@
     }
   ],
   "parentOrganization": null,
-  "childrenOrganizations": null,
-  "emails": null,
+  "childrenOrganizations": [
+      {
+        "name": "Advanced Academic Programs",
+        "category": {
+          "name": "College"
+        },
+        "acceptsSubmissions": true,
+        "emails": [
+          "aapacademicaffairs@jh.edu"
+        ]
+      },
+      {
+        "name": "Bloomberg School of Public Health",
+        "category": {
+          "name": "College"
+        },
+        "acceptsSubmissions": true,
+        "emails": ["BSPHExams@jhu.edu"]
+      },
+      {
+        "name": "Krieger School of Arts and Sciences",
+        "category": {
+          "name": "College"
+        },
+        "acceptsSubmissions": true,
+        "emails": null
+      },
+      {
+        "name": "Peabody Institute",
+        "category": {
+          "name": "College"
+        },
+        "acceptsSubmissions": true,
+        "emails": ["kdelaurenti@jhu.edu"]
+      },
+      {
+        "name": "School of Advanced International Studies",
+        "category": {
+          "name": "College"
+        },
+        "acceptsSubmissions": true,
+        "emails": ["jyoungs1@jhu.edu"]
+      },
+      {
+        "name": "School of Education",
+        "category": {
+          "name": "College"
+        },
+        "acceptsSubmissions": true,
+        "emails": ["soe.edd@jhu.edu, ravenm@jhu.edu"]
+      },
+      {
+        "name": "School of Medicine",
+        "category": {
+          "name": "College"
+        },
+        "acceptsSubmissions": true,
+        "emails": [
+          "GradStdDsk@jhmi.edu"
+        ]
+      },
+      {
+        "name": "School of Nursing",
+        "category": {
+          "name": "College"
+        },
+        "acceptsSubmissions": true,
+        "emails": ["SON-PhdProgram@jhu.edu"]
+      },
+      {
+        "name": "Whiting School of Engineering",
+        "category": {
+          "name": "College"
+        },
+        "acceptsSubmissions": true,
+        "emails": null
+      }
+  ],
+  "emails": "[etd-support@jhu.edu]",
   "emailWorkflowRules": [
     {
       "isSystem": true,
