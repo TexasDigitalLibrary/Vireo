@@ -1117,7 +1117,7 @@
         "emails": null
       }
   ],
-  "emails": "[etd-support@jhu.edu]",
+  "emails": ["etd-support@jhu.edu"],
   "emailWorkflowRules": [
     {
       "isSystem": true,
