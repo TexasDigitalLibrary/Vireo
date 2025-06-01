@@ -1,3 +1,4 @@
+<div ng-controller="ApplicationAuthenticationController">
 <div class="modal-header {{attr.modalHeaderClass}}">
   <button type="button" class="close" ng-click="reset()" aria-label="Close">
       <span class="modal-close" aria-hidden="true">&times;</span>
@@ -5,19 +6,26 @@
   <h3 class="modal-title">Login to use Vireo Thesis & Dissertation System</h3>
 </div>
 
-
-<!-- Vireo Account Login Form -->
-  <form name="forms.login" novalidate>
-    <div class="modal-body loginModal" ng-controller="LoginController">
+    <!-- Authentication Method Selection -->
+    <div class="modal-body loginModal">
       <p>Please select one of the available authentication methods:</p>
-      <div class="row" style="margin-bottom: 1em;">
-        <div class="col-xs-12" style="margin-bottom: 10px;">
-          <button type="button" class="btn btn-primary btn-block" ng-click="login()">Log in via Enterprise Authentication</button>
+        <div class="mb-3">
+          <button type="button" class="btn btn-primary btn-block" ng-click="login()">Login via JHU Enterprise Authentication</button>
           <div class="help-block small">Users who are currently active with the university may login using their JHED ID.</div>
         </div>
-      </div>
-          <div class="help-block small">Or, users who are not able to use Enterprise Authentication should use their username and password to login into their Vireo account.</div>
 
+          <button type="button" class="btn btn-default btn-block" ng-click="showVireoLogin = !showVireoLogin">
+		  <div ng-if="!showVireoLogin">Show Vireo Account Authentication</div>
+		  <div ng-if="showVireoLogin">Hide Vireo Account Authentication</div>
+	  </button>
+          <div class="help-block small">Users who are not able to use other options should select this option to login with Vireo account.</div>
+      </div>
+
+
+<!-- Vireo Account Login Form -->
+<div ng-if="showVireoLogin">
+  <form name="forms.login" novalidate>
+    <div class="modal-body loginModal">
       <validationmessage results="user.getValidationResults()"></validationmessage>
 
       <validatedinput
@@ -39,11 +47,14 @@
           results="user.getValidationResults()">
       </validatedinput>
 
-      <button class="btn btn-primary" type="submit" ng-click="login()" ng-disabled="forms.login.$invalid">Login</button>
+      <button class="btn btn-primary" type="submit" ng-click="loginVireoAccount()" ng-disabled="forms.login.$invalid">Login via Vireo Account</button>
     </div>
   </form>
+</div>
 
 <!-- Modal footer - always visible -->
 <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="reset()">Cancel</button>
 </div>
+</div>
+
