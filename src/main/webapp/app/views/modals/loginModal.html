@@ -1,49 +1,60 @@
+<div ng-controller="ApplicationAuthenticationController">
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="reset()" aria-label="Close">
-        <span class="modal-close" aria-hidden="true">&times;</span>
-    </button>
-    <h3 class="modal-title">Login to use Vireo Thesis & Dissertation System</h3>
+  <button type="button" class="close" ng-click="reset()" aria-label="Close">
+      <span class="modal-close" aria-hidden="true">&times;</span>
+  </button>
+  <h3 class="modal-title">Login to use Vireo Thesis & Dissertation System</h3>
 </div>
 
-<form name="forms.login" novalidate>
-
-        <div class="modal-body loginModal">
-
-	    <div class="sso-login">
-	      <button type="button" class="btn btn-primary pull-left" ng-click="login()">SSO Login</button>        
-	    </div>
-			
-	    <span ng-controller="LoginController">
-
-	    <validationmessage results="user.getValidationResults()"></validationmessage>
-
-            <validatedinput
-                model="account"
-                property="email"
-                label="Email"
-                form="forms.login"
-                validations="user.getValidations()"
-                results="user.getValidationResults()">
-            </validatedinput>
-
-            <validatedinput
-                type="password"
-                model="account"
-                property="userPassword"
-                label="Password"
-                form="forms.login"
-                validations="user.getValidations()"
-                results="user.getValidationResults()">
-            </validatedinput>
-
-            <button class="btn btn-primary" type="submit" ng-click="login()" ng-disabled="forms.login.$invalid">Login</button>
-
+    <!-- Authentication Method Selection -->
+    <div class="modal-body loginModal">
+      <p>Please select one of the available authentication methods:</p>
+        <div class="mb-3">
+          <button type="button" class="btn btn-primary btn-block" ng-click="login()">Login via JHU Enterprise Authentication</button>
+          <div class="help-block small">Users who are currently active with the university may login using their JHED ID.</div>
         </div>
 
-    </span>
+          <button type="button" class="btn btn-default btn-block" ng-click="showVireoLogin = !showVireoLogin">
+		  <div ng-if="!showVireoLogin">Show Vireo Account Authentication</div>
+		  <div ng-if="showVireoLogin">Hide Vireo Account Authentication</div>
+	  </button>
+          <div class="help-block small">Users who are not able to use Enterprise authentication should select this option to login with their Vireo account.</div>
+      </div>
 
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" ng-click="reset()">Cancel</button>
+
+<!-- Vireo Account Login Form -->
+<div ng-if="showVireoLogin">
+  <form name="forms.login" novalidate>
+    <div class="modal-body loginModal">
+      <validationmessage results="user.getValidationResults()"></validationmessage>
+
+      <validatedinput
+          model="account"
+          property="email"
+          label="Email"
+          form="forms.login"
+          validations="user.getValidations()"
+          results="user.getValidationResults()">
+      </validatedinput>
+
+      <validatedinput
+          type="password"
+          model="account"
+          property="userPassword"
+          label="Password"
+          form="forms.login"
+          validations="user.getValidations()"
+          results="user.getValidationResults()">
+      </validatedinput>
+
+      <button class="btn btn-primary" type="submit" ng-click="loginVireoAccount()" ng-disabled="forms.login.$invalid">Login via Vireo Account</button>
     </div>
+  </form>
+</div>
 
-</form>
+<!-- Modal footer - always visible -->
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-click="reset()">Cancel</button>
+</div>
+</div>
+
