@@ -79,7 +79,7 @@ public class Organization extends ValidatingBaseEntity {
     @JsonIdentityReference(alwaysAsId = true)
     private Organization parentOrganization;
 
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(access = JsonProperty.Access.READ_WRITE)
     @JsonView(Views.Partial.class)
     @OneToMany(cascade = { REFRESH, MERGE }, fetch = EAGER)
     @Fetch(FetchMode.SELECT)
