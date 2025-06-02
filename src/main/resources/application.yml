@@ -36,20 +36,20 @@ spring:
 
   sql:
     init:
-      #platform: h2
-      platform: postgresql
+      platform: h2
+      #platform: postgresql
       #platform: mysql
 
   datasource:
     # H2
-    #url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:AZ;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     #url: jdbc:h2:file:./vireoh2.db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    #driverClassName: org.h2.Driver
+    driverClassName: org.h2.Driver
 
     # PostgreSQL
     ## Switch to RDS here
-    url: jdbc:postgresql://localhost:5432/vireo4
-    driverClassName: org.postgresql.Driver
+    #url: jdbc:postgresql://localhost:5432/vireo4
+    #driverClassName: org.postgresql.Driver
 
     # MySQL
     #url: jdbc:mysql://localhost/vireo
@@ -61,9 +61,9 @@ spring:
 
   jpa:
     # H2
-    #database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
     # PostgreSQL
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    #database-platform: org.hibernate.dialect.PostgreSQLDialect
     # MySQL
     #database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
 
@@ -115,7 +115,7 @@ info:
 
 
 app:
-  url: https://vireo-dev.library.jhu.edu
+  url: http://localhost:${server.port}
 
 
 
@@ -135,23 +135,23 @@ app:
   # VUG ETD-Centric config
   # Comma delimited names of the document types that are to be renamed on upload as LASTNAME-DOCUMENTTYPE-YEAR.pdf as per VUG recommendations.
   # Leave blank to not rename any.
-  documentType.rename:
+  documentType.rename: PRIMARY
 
   # edu.tamu.weaver.auth.service.UserCredentialsService
-  authority.admins: jrm@jhu.edu, donrichards@jhu.edu
+  authority.admins: admin@tdl.org,aggieJack@tamu.edu
 
 
   security:
     # edu.tamu.weaver.auth.service.CryptoService
-    secret: 9QRMirNPjAXA9p1Ljn9EKYzUQldajESZ
+    secret: verysecretsecret
     # edu.tamu.weaver.filter.CorsFilter
-    allow-access: https://vireo-dev.library.jhu.edu
+    allow-access: http://localhost:${server.port}
 
   # edu.tamu.weaver.email.config.WeaverEmailConfig
   email:
-    host: smtp.johnshopkins.edu
-    from: noreply@vireo.library.jhu.edu
-    replyTo: etd-support@jhu.edu
+    host: relay.tamu.edu
+    from: noreply@library.tamu.edu
+    replyTo: helpdesk@library.tamu.edu
     # additional email configurations
     #username:
     #password:
@@ -161,7 +161,7 @@ app:
     #encoding: UTF8
 
   # edu.tamu.weaver.reporting.controller.ReportingController
-  reporting.address: etd-support@jhu.edu
+  reporting.address: reporting@tdl.org
 
   # edu.tamu.weaver.validation.controller.ValidationsController
   model.packages: org.tdl.vireo.model
@@ -178,7 +178,7 @@ app:
 
   # org.tdl.vireo.service.SystemDataLoader
   dataLoader:
-    initialize: false
+    initialize: true
 
   # org.tdl.vireo.auth.service.VireoUserCredentialsService
   useNetidAsIdentifier: false
@@ -186,7 +186,7 @@ app:
 # edu.tamu.weaver.token.service.TokenService
 auth:
   security.jwt:
-    secret: 9QRMirNPjAXA9p1Ljn9EKYzUQldajESZ
+    secret: verysecretsecret
     issuer: localhost
     duration: 5
 
@@ -198,11 +198,11 @@ auth:
 shib:
   keys: netid,uin,lastName,firstName,email
   subject: email
-  netid: eppn
-  uin: hopkinsid
-  lastName: jhepreferredlastname
-  firstName: jhegivennamepreferred
-  email: mail
+  netid: edupersonprincipalnameunscoped
+  uin: tamuuin
+  lastName: tdl-sn
+  firstName: tdl-givenname
+  email: tdl-mail
 
 
 # WRO Configuration
