@@ -1,10 +1,10 @@
-name: Load Database
+name: Load RDS Database
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'stage(03) or prod(05)'
+        description: 'stage(02) or prod(05)'
         required: true
         type: environment
         default: 'stage'
