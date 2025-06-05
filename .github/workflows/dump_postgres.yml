@@ -1,10 +1,10 @@
-name: Load Database
+name: Dump Local Database
 
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'stage(03) or prod(05)'
+        description: 'stage(02) or prod(05)'
         required: true
         type: environment
         default: 'stage'
@@ -25,5 +25,6 @@ jobs:
           key: ${{ secrets.JHU_DEVOPS_KEY }}
           envs: PGPASSWORD
           script: |
-            docker exec -i vireo-db-1 psql -U vireo -d vireo4 > /opt/vireo/vireo4-transfer.dump
+            psql -U vireo -d vireo4 > /opt/vireo/vireo4.dump
+            # docker exec -i vireo-db-1 psql -U vireo -d vireo4 > /opt/vireo/vireo4.dump
             # /usr/bin/psql --host=vireo-dev-1.chohpaicaoek.us-east-1.rds.amazonaws.com --port=5432 --dbname=vireo4 --username=postgres < /opt/vireo/vireo4-transfer.dump
