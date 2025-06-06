@@ -135,7 +135,7 @@ app:
   # VUG ETD-Centric config
   # Comma delimited names of the document types that are to be renamed on upload as LASTNAME-DOCUMENTTYPE-YEAR.pdf as per VUG recommendations.
   # Leave blank to not rename any.
-  documentType.rename: Manuscript in PDF
+  documentType.rename: PRIMARY
 
   # edu.tamu.weaver.auth.service.UserCredentialsService
   authority.admins: jrm@jhu.edu, donrichards@jhu.edu
