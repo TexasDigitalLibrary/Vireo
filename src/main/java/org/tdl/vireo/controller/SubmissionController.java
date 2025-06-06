@@ -990,10 +990,15 @@ public class SubmissionController {
 
         String fileExtension = FilenameUtils.getExtension(fileName).equals("pdf") ? FilenameUtils.getExtension(fileName) : "pdf";
 
-        if (documentTypesToRename.contains(documentType) && submission.getFieldValuesByPredicateValue("submission_type").get(0) != null) {
+        if (documentTypesToRename.contains(documentType)) {
             String lastName = submission.getSubmitter().getLastName().toUpperCase();
+            String newType = "DOCUMENT"; // default
+            if (submission.getFieldValuesByPredicateValue("submission_type").size()>0 ) { //sohould be exactly 1
+                newType = submission.getFieldValuesByPredicateValue("submission_type").getFirst().getValue().toUpperCase();
+            }
+
             int year = Calendar.getInstance().get(Calendar.YEAR);
-            fileName = lastName + "-" + submission.getFieldValuesByPredicateValue("submission_type").get(0).getValue().toUpperCase() +"-" + String.valueOf(year) + "." + fileExtension;
+            fileName = lastName + "-" + newType + "-" + String.valueOf(year) + "." + fileExtension;
         }
 
         String uri = documentFolder + File.separator + hash + File.separator + System.currentTimeMillis() + "-" + fileName;
