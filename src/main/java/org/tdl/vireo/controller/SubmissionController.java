@@ -993,7 +993,7 @@ public class SubmissionController {
         if (documentTypesToRename.contains(documentType)) {
             String lastName = submission.getSubmitter().getLastName().toUpperCase();
             int year = Calendar.getInstance().get(Calendar.YEAR);
-            fileName = lastName + "-" + documentType + "-" + String.valueOf(year) + "." + fileExtension;
+            fileName = lastName + "-" + submission.getFieldValuesByPredicateValue("submission_type").get(0) +"-" + String.valueOf(year) + "." + fileExtension;
         }
 
         String uri = documentFolder + File.separator + hash + File.separator + System.currentTimeMillis() + "-" + fileName;
