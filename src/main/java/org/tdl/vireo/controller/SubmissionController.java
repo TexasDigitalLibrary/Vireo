@@ -993,10 +993,9 @@ public class SubmissionController {
         if (documentTypesToRename.contains(documentType)) {
             String lastName = submission.getSubmitter().getLastName().toUpperCase();
             String newType = "DOCUMENT"; // default
-            if (submission.getFieldValuesByPredicateValue("submission_type").size()>0 ) { //sohould be exactly 1
+            if (submission.getFieldValuesByPredicateValue("submission_type").size()>0 ) { //should be exactly 1
                 newType = submission.getFieldValuesByPredicateValue("submission_type").get(0).getValue().toUpperCase().replaceAll("\\s", "");
             }
-
             int year = Calendar.getInstance().get(Calendar.YEAR);
             fileName = lastName + "-" + newType + "-" + String.valueOf(year) + "." + fileExtension;
         }
