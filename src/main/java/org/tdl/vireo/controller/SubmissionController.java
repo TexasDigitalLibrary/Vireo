@@ -1058,12 +1058,17 @@ public class SubmissionController {
 
         if (documentTypesToRename.contains(documentType)) {
             String lastName = submission.getSubmitter().getLastName().toUpperCase();
-            String newType = "DOCUMENT"; // default
-            if (submission.getFieldValuesByPredicateValue("submission_type").size()>0 ) { //should be exactly 1
-                newType = submission.getFieldValuesByPredicateValue("submission_type").get(0).getValue().toUpperCase().replaceAll("\\s", "");
+            String newType = "";
+            if (documentType.equals("PRIMARY")) {
+                List<FieldValue> submissionTypes = submission.getFieldValuesByPredicateValue("submission_type");
+                if (submissionTypes.size() == 1) {
+                    newType = submissionTypes.get(0).getValue().toUpperCase()
+                                        .replaceAll("\\s", "");
+                }
             }
+            String fileType = newType.length( )> 0 ? newType : documentType;
             int year = Calendar.getInstance().get(Calendar.YEAR);
-            fileName = lastName + "-" + newType + "-" + String.valueOf(year) + "." + fileExtension;
+            fileName = lastName + "-" + fileType + "-" + String.valueOf(year) + "." + fileExtension;
         }
 
         String uri = documentFolder + File.separator + hash + File.separator + System.currentTimeMillis() + "-" + fileName;
