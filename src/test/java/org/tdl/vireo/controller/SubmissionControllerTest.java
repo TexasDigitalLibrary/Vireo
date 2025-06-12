@@ -26,6 +26,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.exception.BatchExportException;
+import org.tdl.vireo.model.Action;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.NamedSearchFilterGroup;
 import org.tdl.vireo.model.Role;
@@ -57,9 +58,9 @@ public class SubmissionControllerTest extends AbstractControllerTest {
     private static final SubmissionStatus TEST_SUBMISSION_STATUS_2 = new SubmissionStatus("Needs Corrections", false, false, false, true, true, true, SubmissionState.NEEDS_CORRECTIONS);
     private static final SubmissionStatus TEST_SUBMISSION_STATUS_3 = new SubmissionStatus("Approved", false, false, false, true, true, true, SubmissionState.APPROVED);
 
-    private static final ActionLog TEST_ACTION_LOG_1 = new ActionLog(TEST_SUBMISSION_STATUS_1, TEST_CALENDAR_1, "Action log entrty 1", false);
-    private static final ActionLog TEST_ACTION_LOG_2 = new ActionLog(TEST_SUBMISSION_STATUS_2, TEST_CALENDAR_2, "Action log entrty 2", true);
-    private static final ActionLog TEST_ACTION_LOG_3 = new ActionLog(TEST_SUBMISSION_STATUS_3, TEST_CALENDAR_3, "Action log entrty 3", false);
+    private static final ActionLog TEST_ACTION_LOG_1 = new ActionLog(Action.UNDETERMINED, TEST_SUBMISSION_STATUS_1, TEST_CALENDAR_1, "Action log entrty 1", false);
+    private static final ActionLog TEST_ACTION_LOG_2 = new ActionLog(Action.UNDETERMINED, TEST_SUBMISSION_STATUS_2, TEST_CALENDAR_2, "Action log entrty 2", true);
+    private static final ActionLog TEST_ACTION_LOG_3 = new ActionLog(Action.UNDETERMINED, TEST_SUBMISSION_STATUS_3, TEST_CALENDAR_3, "Action log entrty 3", false);
 
     private static final List<ActionLog> TEST_ACTION_LOG_LIST = new ArrayList<>(Arrays.asList(TEST_ACTION_LOG_1, TEST_ACTION_LOG_2, TEST_ACTION_LOG_3));
     private static final List<ActionLog> TEST_ACTION_LOG_LIST_PAGE_ASSIGNED = new ArrayList<>(Arrays.asList(TEST_ACTION_LOG_1));

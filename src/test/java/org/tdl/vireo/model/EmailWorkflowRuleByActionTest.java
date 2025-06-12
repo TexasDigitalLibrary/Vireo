@@ -4,13 +4,13 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.provider.Arguments;
 import org.mockito.InjectMocks;
 
-public class EmailWorkflowRuleTest extends AbstractModelCustomMethodTest<EmailWorkflowRuleByStatus> {
+public class EmailWorkflowRuleByActionTest extends AbstractModelCustomMethodTest<EmailWorkflowRuleByAction> {
 
     @InjectMocks
-    private EmailWorkflowRuleByStatus emailWorkflowRule;
+    private EmailWorkflowRuleByAction emailWorkflowRule;
 
     @Override
-    protected EmailWorkflowRuleByStatus getInstance() {
+    protected EmailWorkflowRuleByAction getInstance() {
         return emailWorkflowRule;
     }
 

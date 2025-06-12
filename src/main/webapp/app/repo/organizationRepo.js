@@ -297,6 +297,47 @@ vireo.repo("OrganizationRepo", function OrganizationRepo($q, Organization, RestA
         return WsApi.fetch(apiMapping.Organization.changeEmailWorkflowRuleActivation);
     };
 
+    this.addEmailWorkflowRuleByAction = function (organization, templateId, recipient, action) {
+        angular.extend(apiMapping.Organization.addEmailWorkflowRule, {
+            'method': organization.id + "/add-email-workflow-rule-by-action",
+            'data': {
+                templateId: templateId,
+                recipient: recipient,
+                action: action
+            }
+        });
+
+        return WsApi.fetch(apiMapping.Organization.addEmailWorkflowRule);
+    };
+
+    this.removeEmailWorkflowRuleByAction = function (organization, rule) {
+        angular.extend(apiMapping.Organization.removeEmailWorkflowRule, {
+            'method': organization.id + "/remove-email-workflow-rule-by-action/" + rule.id,
+        });
+
+        return WsApi.fetch(apiMapping.Organization.removeEmailWorkflowRule);
+    };
+
+    this.editEmailWorkflowRuleByAction = function (organization, rule) {
+        angular.extend(apiMapping.Organization.editEmailWorkflowRule, {
+            'method': organization.id + "/edit-email-workflow-rule-by-action/" + rule.id,
+            'data': {
+                templateId: rule.emailTemplate.id,
+                recipient: rule.emailRecipient
+            }
+        });
+
+        return WsApi.fetch(apiMapping.Organization.editEmailWorkflowRule);
+    };
+
+    this.changeEmailWorkflowRuleByActionActivation = function (organization, rule) {
+        angular.extend(apiMapping.Organization.changeEmailWorkflowRuleActivation, {
+            'method': organization.id + "/change-email-workflow-rule-by-action-activation/" + rule.id,
+        });
+
+        return WsApi.fetch(apiMapping.Organization.changeEmailWorkflowRuleActivation);
+    };
+
     return this;
 
 });

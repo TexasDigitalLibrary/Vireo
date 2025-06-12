@@ -40,7 +40,8 @@ vireo.controller('OrganizationSettingsController', function ($controller, $scope
 
     $scope.getSelectedOrganizationEmailWorkflowRules = function () {
         if ($scope.getSelectedOrganizationId()) {
-            return $scope.selectedOrganization.emailWorkflowRules;
+            return ($scope.selectedOrganization?.emailWorkflowRules || [])
+                .concat($scope.selectedOrganization?.emailWorkflowRulesByAction || []);
         }
     };
 

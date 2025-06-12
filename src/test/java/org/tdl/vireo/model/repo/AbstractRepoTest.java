@@ -18,7 +18,7 @@ import org.tdl.vireo.model.CustomActionValue;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.EmbargoGuarantor;
 import org.tdl.vireo.model.FieldPredicate;
@@ -428,7 +428,7 @@ public abstract class AbstractRepoTest {
     protected CustomActionValue customActionValue;
 
     protected EmailTemplate emailTemplate;
-    protected EmailWorkflowRule emailWorkflowRule;
+    protected EmailWorkflowRuleByStatus emailWorkflowRule;
     protected EmailRecipient emailRecipient;
     protected Embargo embargoType;
     protected FieldValue fieldValue;

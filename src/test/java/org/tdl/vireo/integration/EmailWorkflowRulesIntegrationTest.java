@@ -18,7 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.Organization;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
@@ -92,16 +92,16 @@ public class EmailWorkflowRulesIntegrationTest extends AbstractIntegrationTest {
         // reload system data
         systemDataLoader.loadSystemData();
 
-        EmailWorkflowRule newWorkflowRule = emailWorkflowRuleRepo.getById(newlyCreatedEmailWorkflowRuleId);
+        EmailWorkflowRuleByStatus newWorkflowRule = emailWorkflowRuleRepo.getById(newlyCreatedEmailWorkflowRuleId);
         assertNotNull(newWorkflowRule);
         Organization newOrgRef = organizationRepo.getById(existingOrgWithNewWorkflowRuleId);
         assertNotNull(newOrgRef);
 
-        List<EmailWorkflowRule> emailWorkflowRulesForOrg = newOrgRef.getEmailWorkflowRules();
+        List<EmailWorkflowRuleByStatus> emailWorkflowRulesForOrg = newOrgRef.getEmailWorkflowRules();
 
         assertEquals(3, emailWorkflowRulesForOrg.size());
 
-        EmailWorkflowRule newEmailWorkflowRuleRef = emailWorkflowRulesForOrg.get(emailWorkflowRulesForOrg.size() - 1);
+        EmailWorkflowRuleByStatus newEmailWorkflowRuleRef = emailWorkflowRulesForOrg.get(emailWorkflowRulesForOrg.size() - 1);
 
         assertEquals(newlyCreatedEmailWorkflowRuleId, newEmailWorkflowRuleRef.getId());
     }
