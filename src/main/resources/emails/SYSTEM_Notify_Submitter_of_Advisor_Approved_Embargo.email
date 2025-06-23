@@ -1,0 +1,12 @@
+# Email sent notifying Submitter of embargo approval by Advisor.
+#
+# Parameters:
+#   {DOCUMENT_TITLE}: The title of  the thesis or dissertation as supplied by the student.
+#
+Subject: Notify Submitter of Advisor Approved Embargo
+
+Your advisor has approved the embargo for the following submission:
+
+Title: {DOCUMENT_TITLE}
+
+The Vireo Team

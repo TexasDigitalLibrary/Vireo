@@ -6,6 +6,8 @@
       type="text"
       class="form-control"
       uib-datepicker-popup="MMMM yyyy"
+      id="field-{{profile.fieldPredicate.value}}"
+      name="{{profile.fieldPredicate.value}}"
       datepicker-options="datepickerOptions"
       ng-model="fieldValue.valuePopup"
       ng-click="date=true"

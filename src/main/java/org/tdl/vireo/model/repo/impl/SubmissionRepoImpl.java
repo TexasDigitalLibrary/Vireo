@@ -41,6 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.tdl.vireo.config.AppFilterConfig;
 import org.tdl.vireo.config.VireoDatabaseConfig;
 import org.tdl.vireo.exception.OrganizationDoesNotAcceptSubmissionsException;
+import org.tdl.vireo.model.Action;
 import org.tdl.vireo.model.Configuration;
 import org.tdl.vireo.model.CustomActionDefinition;
 import org.tdl.vireo.model.FieldPredicate;
@@ -271,7 +272,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
         submission = update(submission);
         simpMessagingTemplate.convertAndSendToUser(user.getUsername(), "/queue/submissions", new ApiResponse(SUCCESS, UPDATE, submission));
 
-        actionLogRepo.createPublicLog(submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
+        actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "Submission status was changed from " + oldSubmissionStatusName + " to " + submissionStatus.getName());
         return submission;
     }
 

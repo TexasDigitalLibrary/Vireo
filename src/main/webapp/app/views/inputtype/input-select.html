@@ -1,23 +1,26 @@
 <div class="btn-group btn-group-justified submission-input-select" uib-dropdown keyboard-nav role="group">
-  <button type="button" class="btn dropdown-toggle dropdown-toggle-button" uib-dropdown-toggle>
+  <button type="button" class="btn dropdown-toggle dropdown-toggle-button" uib-dropdown-toggle aria-label="Toggle dropdown menu">
     <span class="caret"></span>
   </button>
-  <button ng-class="{selected: fieldValue.value}" type="button" class="btn btn-default dropdown-text" disabled>
+  <button ng-class="{selected: fieldValue.value}" type="button" class="btn btn-default dropdown-text" disabled aria-label="{{fieldValue.value || 'No selection'}}">
     <span class="text-left dropdown-text-label">{{fieldValue.value}}</span>
   </button>
-  <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+  <ul class="dropdown-menu" uib-dropdown-menu role="listbox" aria-labelledby="{{getSanitizedId(profile.fieldPredicate.value)}}">
     <li class="select-option"
-      role="menuitem"
+      role="option"
       ng-click="fieldValue.value = word.name; fieldProfileForm.$dirty = true; saveWithCV(fieldValue, word);"
-      ng-repeat="word in profile.controlledVocabulary.dictionary | filter:displayVocabularyWord | orderBy:'name'">
-      <a href="#">{{word.name}}</a>
+      ng-repeat="word in profile.controlledVocabulary.dictionary | filter:displayVocabularyWord | orderBy:'name'"
+      aria-selected="{{fieldValue.value === word.name}}">
+      <a href="#" ng-click="$event.preventDefault()">{{word.name}}</a>
     </li>
   </ul>
-  <button class="btn btn-default opaque" ng-if="fieldValue.value">
-    <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)"></span>
+  <button class="btn btn-default opaque" ng-if="fieldValue.value" aria-label="Remove {{fieldValue.value}}">
+    <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)" aria-hidden="true"></span>
   </button>
-  <button type="button" class="btn dropdown-help" disabled>
-    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"> </span>
-    <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+  <button type="button" class="btn dropdown-help" disabled aria-label="Help information">
+    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}" aria-hidden="true"></span>
+    <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></span>
   </button>
 </div>
+
+

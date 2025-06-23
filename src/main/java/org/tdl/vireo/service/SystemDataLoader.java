@@ -9,6 +9,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +22,15 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.tdl.vireo.model.Action;
 import org.tdl.vireo.model.ControlledVocabulary;
 import org.tdl.vireo.model.Degree;
 import org.tdl.vireo.model.DegreeLevel;
 import org.tdl.vireo.model.DocumentType;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByAction;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.Embargo;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldProfile;
@@ -55,6 +61,7 @@ import org.tdl.vireo.model.repo.DegreeLevelRepo;
 import org.tdl.vireo.model.repo.DegreeRepo;
 import org.tdl.vireo.model.repo.DocumentTypeRepo;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
+import org.tdl.vireo.model.repo.EmailWorkflowRuleByActionRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.EmbargoRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
@@ -69,11 +76,6 @@ import org.tdl.vireo.model.repo.SubmissionListColumnRepo;
 import org.tdl.vireo.model.repo.SubmissionStatusRepo;
 import org.tdl.vireo.model.repo.VocabularyWordRepo;
 import org.tdl.vireo.model.repo.WorkflowStepRepo;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 
 /**
  * This class is to load and persist system data from resources.
@@ -150,6 +152,9 @@ public class SystemDataLoader {
 
     @Autowired
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
+
+    @Autowired
+    private EmailWorkflowRuleByActionRepo emailWorkflowRuleByActionRepo;
 
     @Autowired
     private SubmissionStatusRepo submissionStatusRepo;
@@ -655,10 +660,19 @@ public class SystemDataLoader {
         }
     }
 
+    /**
+     * @param organization
+     * @param systemOrganization
+     */
     private void processEmailWorflowRules(Organization organization, Organization systemOrganization) {
-        List<EmailWorkflowRule> emailWorkflowRules = organization.getEmailWorkflowRules();
+        processEmailWorkflowRulesByStatus(organization, systemOrganization);
+        processEmailWorkflowRulesByAction(organization, systemOrganization);
+    }
 
-        for (EmailWorkflowRule emailWorkflowRule : systemOrganization.getEmailWorkflowRules()) {
+    private void processEmailWorkflowRulesByStatus(Organization organization, Organization systemOrganization) {
+        List<EmailWorkflowRuleByStatus> emailWorkflowRules = organization.getEmailWorkflowRules();
+
+        for (EmailWorkflowRuleByStatus emailWorkflowRule : systemOrganization.getEmailWorkflowRules()) {
 
             // check to see if the SubmissionStatus exists
             SubmissionStatus newSubmissionStatus = submissionStatusRepo.findByName(emailWorkflowRule.getSubmissionStatus().getName());
@@ -678,6 +692,8 @@ public class SystemDataLoader {
 
             if (emailWorkflowRule.getEmailRecipient() == null) {
 
+                // NOTE: this is a mapping directly to the SYSTEM_Organization_Definition.json for `emailWorkflowRules` property.
+
                 if (newEmailTemplate.getName().equals("SYSTEM Advisor Review Request")) {
                     organization.getAggregateWorkflowSteps().forEach(awfs -> {
                         awfs.getAggregateFieldProfiles().forEach(afp -> {
@@ -687,7 +703,6 @@ public class SystemDataLoader {
                             }
                         });
                     });
-
                 }
 
                 if (newEmailTemplate.getName().equals("SYSTEM Initial Submission")) {
@@ -698,7 +713,7 @@ public class SystemDataLoader {
             }
 
             // check to see if the EmailWorkflowRule exists
-            EmailWorkflowRule existingEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStatusAndEmailRecipientAndEmailTemplate(newSubmissionStatus, emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
+            EmailWorkflowRuleByStatus existingEmailWorkflowRule = emailWorkflowRuleRepo.findBySubmissionStatusAndEmailRecipientAndEmailTemplate(newSubmissionStatus, emailWorkflowRule.getEmailRecipient(), newEmailTemplate);
 
             if (existingEmailWorkflowRule == null) {
                 emailWorkflowRules.add(emailWorkflowRuleRepo.create(newSubmissionStatus, emailWorkflowRule.getEmailRecipient(), newEmailTemplate, emailWorkflowRule.isSystem()));
@@ -707,6 +722,79 @@ public class SystemDataLoader {
         }
 
         organization.setEmailWorkflowRules(emailWorkflowRules);
+    }
+
+    // TODO: fix duplicate method with different typing for repo and entity
+    // NOTE: applies same dependent persistent email recipient creation in both
+    private void processEmailWorkflowRulesByAction(Organization organization, Organization systemOrganization) {
+        List<EmailWorkflowRuleByAction> emailWorkflowRulesByAction = organization.getEmailWorkflowRulesByAction();
+
+        EmailRecipient submitterRecipient = abstractEmailRecipientRepo.createSubmitterRecipient();
+
+        for (EmailWorkflowRuleByAction emailWorkflowRuleByAction : systemOrganization.getEmailWorkflowRulesByAction()) {
+
+            // check to see if the action is defined
+            Action action = emailWorkflowRuleByAction.getAction();
+            try {
+                logger.info("Checking if action is defined: {}", action.name());
+            } catch (Exception e) {
+                throw new RuntimeException(String.format("Action is required on EmailWorfklowRuleByAction %s", emailWorkflowRuleByAction), e);
+            }
+
+            // check to see if the EmailTemplate exists
+            // see ../model/EmailTemplate.java => { "name", "systemRequired" }
+            EmailTemplate newEmailTemplate = emailTemplateRepo.findByNameAndSystemRequired(emailWorkflowRuleByAction.getEmailTemplate().getName(), emailWorkflowRuleByAction.getEmailTemplate().getSystemRequired());
+
+            // create new EmailTemplate if not already exists
+            if (newEmailTemplate == null) {
+                newEmailTemplate = emailTemplateRepo.create(emailWorkflowRuleByAction.getEmailTemplate().getName(), emailWorkflowRuleByAction.getEmailTemplate().getSubject(), emailWorkflowRuleByAction.getEmailTemplate().getMessage());
+            }
+
+            if (emailWorkflowRuleByAction.getEmailRecipient() == null) {
+
+                // NOTE: this is a mapping directly to the SYSTEM_Organization_Definition.json for `emailWorkflowRulesByAction` property.
+
+                switch (newEmailTemplate.getName()) {
+                    case "SYSTEM Notify Assignee of Student Comment":
+                    case "SYSTEM Notify Assignee of Advisor Comment":
+                    case "SYSTEM Notify Assignee of Advisor Approved Submission":
+                    case "SYSTEM Notify Assignee of Advisor Cleared Submission Approval":
+                    case "SYSTEM Notify Assignee of Advisor Approved Embargo":
+                    case "SYSTEM Notify Assignee of Advisor Cleared Embargo Approval": {
+                        EmailRecipient recipient = abstractEmailRecipientRepo.createOrganizationRecipient(organization);
+                        emailWorkflowRuleByAction.setEmailRecipient(recipient);
+                    } break;
+                    case "SYSTEM Notify Advisor of Student Comment": {
+                        organization.getAggregateWorkflowSteps().forEach(awfs -> {
+                            awfs.getAggregateFieldProfiles().forEach(afp -> {
+                                if (afp.getFieldPredicate().getValue().equals("dc.contributor.advisor")) {
+                                    EmailRecipient recipient = abstractEmailRecipientRepo.createContactRecipient(afp.getGloss(), afp.getFieldPredicate());
+                                    emailWorkflowRuleByAction.setEmailRecipient(recipient);
+                                }
+                            });
+                        });
+                    } break;
+                    case "SYSTEM Notify Submitter of Advisor Comment":
+                    case "SYSTEM Notify Submitter of Advisor Approved Submission":
+                    case "SYSTEM Notify Submitter of Advisor Cleared Submission Approval":
+                    case "SYSTEM Notify Submitter of Advisor Approved Embargo":
+                    case "SYSTEM Notify Submitter of Advisor Cleared Embargo Approval":
+                    default:
+                        emailWorkflowRuleByAction.setEmailRecipient(submitterRecipient);
+                        break;
+                }
+            }
+
+            // check to see if the EmailWorkflowRule exists
+            EmailWorkflowRuleByAction existingEmailWorkflowRule = emailWorkflowRuleByActionRepo.findByActionAndEmailRecipientAndEmailTemplate(action, emailWorkflowRuleByAction.getEmailRecipient(), newEmailTemplate);
+
+            if (existingEmailWorkflowRule == null) {
+                emailWorkflowRulesByAction.add(emailWorkflowRuleByActionRepo.create(action, emailWorkflowRuleByAction.getEmailRecipient(), newEmailTemplate, emailWorkflowRuleByAction.isSystem()));
+            }
+
+        }
+
+        organization.setEmailWorkflowRulesByAction(emailWorkflowRulesByAction);
     }
 
     private void loadControlledVocabularies() throws IOException {

@@ -1,0 +1,14 @@
+# Email sent notifying Submitter of submission approval withdrawn by Advisor.
+#
+# Parameters:
+#   {DOCUMENT_TITLE}: The title of  the thesis or dissertation as supplied by the student.
+#
+Subject: Notify Submitter of Advisor Submission Approval Withdrawn
+
+Your advisor has withdrawn approval of the following submission:
+
+Title: {DOCUMENT_TITLE}
+
+Please login to your account for more information.
+
+The Vireo Team

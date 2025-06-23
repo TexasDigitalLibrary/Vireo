@@ -1,0 +1,18 @@
+# Email sent notifying Advisor of message left by Student.
+#
+# Parameters:
+#   {FULL_NAME}: The student's full, official name
+#   {DOCUMENT_TITLE}: The title of  the thesis or dissertation as supplied by the student.
+#   {ADVISOR_URL}: A URL where the advisor may review the submission.
+#
+Subject: Notify Advisor of Student Comment
+
+A message has been sent by {FULL_NAME} concerning the following submission:
+
+Title: {DOCUMENT_TITLE}
+
+Please see the action log for more information.
+
+    {ADVISOR_URL}
+
+The Vireo Team

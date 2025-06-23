@@ -4,9 +4,35 @@
         Manage {{getSelectedOrganizationName()}} Email Workflow Rules</h3>
     </div>
     <div class="panel-body">
-        <vireo-accordion single-expand="false">
-            <vireo-pane ng-repeat="status in submissionStatuses" query="email-workflowstep-rules-{{status.name}}" html="views/admin/settings/organization/emailWorkflowRule.html">{{status.name}}</vireo-pane>
-        </vireo-accordion>
+
+        <ul class="nav nav-tabs mb-1">
+            <li role="presentation" ng-class="{ active: isByStatus() }">
+                <a href ng-click="active = 'email-by-status'">By Status</a>
+            </li>
+            <li role="presentation" ng-class="{ active: isByAction() }">
+                <a href ng-click="active = 'email-by-action'">By Action</a>
+            </li>
+        </ul>
+
+        <div class="panel-wrap" ng-class="{ active: isByStatus() }">
+            <div class="row">
+                <div class="col-xs-12">
+                    <vireo-accordion single-expand="false">
+                        <vireo-pane ng-repeat="status in submissionStatuses" query="email-workflowstep-rules-{{ status.name }}" html="views/admin/settings/organization/emailWorkflowRule.html">{{ status.name }}</vireo-pane>
+                    </vireo-accordion>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-wrap" ng-class="{ active: isByAction() }">
+            <div class="row">
+                <div class="col-xs-12">
+                    <vireo-accordion single-expand="false">
+                      <vireo-pane ng-repeat="action in submissionActions" query="email-workflowstep-rules-{{ action.name }}" html="views/admin/settings/organization/emailWorkflowRule.html">{{ action.name }}</vireo-pane>
+                    </vireo-accordion>
+                </div>
+            </div>
+        </div>
 
         <modal
             modal-id="editEmailWorkflowRule"

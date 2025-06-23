@@ -22,6 +22,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
+import org.tdl.vireo.model.Action;
 import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.SubmissionStatus;
 import org.tdl.vireo.model.User;
@@ -207,7 +208,7 @@ class CsvUtilityTest {
             SubmissionStatus status = Mockito.mock(SubmissionStatus.class);
             Mockito.when(status.getName()).thenReturn("Status" + i);
 
-            ActionLog log = new ActionLog();
+            ActionLog log = new ActionLog(Action.UNDETERMINED);
             log.setActionDate(cal);
             log.setEntry("Test entry " + i);
             log.setSubmissionStatus(status);
@@ -238,7 +239,7 @@ class CsvUtilityTest {
             SubmissionStatus status = Mockito.mock(SubmissionStatus.class);
             Mockito.when(status.getName()).thenReturn("Status" + i);
 
-            ActionLog log = new ActionLog();
+            ActionLog log = new ActionLog(Action.UNDETERMINED);
             log.setActionDate(cal);
             log.setEntry("Test entry " + i);
             log.setSubmissionStatus(status);
@@ -269,7 +270,7 @@ class CsvUtilityTest {
         User user = Mockito.mock(User.class);
         Mockito.when(user.getName()).thenReturn("User with \"quotes\"");
 
-        ActionLog log = new ActionLog();
+        ActionLog log = new ActionLog(Action.UNDETERMINED);
         log.setActionDate(cal);
         log.setEntry("Entry with, commas and \"quotes\"");
         log.setSubmissionStatus(status);

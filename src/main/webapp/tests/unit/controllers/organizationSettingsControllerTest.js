@@ -220,7 +220,8 @@ describe("controller: OrganizationSettingsController", function () {
         it("getSelectedOrganizationEmailWorkflowRules should return emailWorkflowRules", function () {
             var response;
             var organization = new mockOrganization(q);
-            organization.emailWorkflowRules = { rule: [] };
+            organization.emailWorkflowRules = [];
+            organization.emailWorkflowRulesByAction = [];
 
             scope.selectedOrganization = undefined;
 

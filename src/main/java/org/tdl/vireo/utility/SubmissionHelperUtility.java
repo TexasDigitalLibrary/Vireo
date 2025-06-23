@@ -1,5 +1,7 @@
 package org.tdl.vireo.utility;
 
+import static java.lang.String.format;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,8 +28,12 @@ import com.tupilabs.human_name_parser.HumanNameParserParser;
 import edu.tamu.weaver.context.SpringContext;
 
 import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SubmissionHelperUtility {
+
+    private static final Logger logger = LoggerFactory.getLogger(SubmissionHelperUtility.class);
 
     private final static SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -124,13 +130,13 @@ public class SubmissionHelperUtility {
 
     /**
      * Scott Phillips's address parsing algorithm.
-     * 
+     *
      * This algorithm works by searching backwards. Starting at the end of the address identify the zip code. Once you have that assume anything following the zip code is the country, and then the two tokens preceding the zip code are the city and state. We do this by performing a series of regular expressions on a reverse address string. The difference between the regular expressions is how linent they are for extracting the city and state. The first one in the list demands that city and state
      * are either separated by a new line or a comma. Each of the next versions back off of this by allowing spaces between these tokens. This sometimes breaks multi-word cities or state, but sometimes people just don't supply a city.
-     * 
+     *
      * This algorithm works on most international and American addresses. However it will sometimes miss identify components like getting the city or state wrong. It will often not identify the country if it is specified before the zip code.
-     * 
-     * 
+     *
+     *
      * @param fullAddress
      *            The full address
      * @return An address object if the parse was successful, otherwise return null.
@@ -280,12 +286,14 @@ public class SubmissionHelperUtility {
         if (graduationDate.isPresent()) {
             try {
                 date = dateFormat.format(monthYearFormat.parse(graduationDate.get()));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } catch (NumberFormatException | ParseException e) {
+                logException(e, format("Failed to format graduation date %s for submission with id %s", graduationDate.get(), submission.getId()));
             }
         }
         return date;
     }
+
+
 
     // NOTE: uses hard coded predicate values
     public String getGraduationYearString() {
@@ -294,8 +302,8 @@ public class SubmissionHelperUtility {
         if (graduationYear.isPresent()) {
             try {
                 year = yearFormat.format(monthYearFormat.parse(graduationYear.get()));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } catch (NumberFormatException | ParseException e) {
+                logException(e, format("Failed to format graduation year %s for submission with id %s", graduationYear.get(), submission.getId()));
             }
         }
         return year;
@@ -308,8 +316,8 @@ public class SubmissionHelperUtility {
         if (graduationYearMonth.isPresent()) {
             try {
                 yearMonth = yearMonthFormat.format(monthYearFormat.parse(graduationYearMonth.get()));
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } catch (NumberFormatException | ParseException e) {
+                logException(e, format("Failed to format graduation year month %s for submission with id %s", graduationYearMonth.get(), submission.getId()));
             }
         }
         return yearMonth;
@@ -400,7 +408,7 @@ public class SubmissionHelperUtility {
             phoneNumber = phoneUtil.parse(number, "US");
             code = String.valueOf(phoneNumber.getCountryCode());
         } catch (NumberParseException e) {
-            e.printStackTrace();
+            logException(e, format("Failed to parse country code from phone number %s for submission with id %s", number, submission.getId()));
         }
         return code;
     }
@@ -415,7 +423,7 @@ public class SubmissionHelperUtility {
                 areaCode = Optional.of(nationalSignificantNumber.substring(0, areaCodeLength));
             }
         } catch (NumberParseException e) {
-            e.printStackTrace();
+            logException(e, format("Failed to parse area code from phone number %s for submission with id %s", number, submission.getId()));
         }
         return areaCode.isPresent() ? areaCode.get() : "";
     }
@@ -429,7 +437,7 @@ public class SubmissionHelperUtility {
                 fullNumber = fullNumber.substring(3, fullNumber.length());
             }
         } catch (NumberParseException e) {
-            e.printStackTrace();
+            logException(e, format("Failed to parse phone number %s for submission with id %s", number, submission.getId()));
         }
 
         return fullNumber;
@@ -441,7 +449,7 @@ public class SubmissionHelperUtility {
             PhoneNumber phoneNumber = phoneUtil.parse(number, "US");
             ext = phoneNumber.getExtension();
         } catch (NumberParseException e) {
-            e.printStackTrace();
+            logException(e, format("Failed to parse extension for phone number %s for submission with id %s", number, submission.getId()));
         }
         return ext;
     }
@@ -623,7 +631,7 @@ public class SubmissionHelperUtility {
     // NOTE: these come from the settings service
 
 
-    public String getGrantor() {        
+    public String getGrantor() {
       return getSettingByNameAndType("grantor","application").getValue();
     }
 
@@ -673,7 +681,7 @@ public class SubmissionHelperUtility {
 
             Boolean proquestEmbargoCheck = proquestEmbargo.isPresent() && proquestEmbargo.get().getIdentifier() != null && Integer.valueOf(proquestEmbargo.get().getIdentifier()) > 0;
             Boolean defaultEmbargoCheck = defaultEmbargo.isPresent() && defaultEmbargo.get().getIdentifier() != null && Integer.valueOf(defaultEmbargo.get().getIdentifier()) > 0;
-            
+
             if (proquestEmbargoCheck && defaultEmbargoCheck) {
                 embargo = Integer.valueOf(proquestEmbargo.get().getIdentifier()) >= Integer.valueOf(defaultEmbargo.get().getIdentifier())
                     ? proquestEmbargo
@@ -692,13 +700,13 @@ public class SubmissionHelperUtility {
                         java.util.Date embargoLiftDate = DateUtils.addMonths(monthYearFormat.parse(dateIssuedStr), duration);
                         embargoLiftDateStr = iso8601Format.format(embargoLiftDate);
                     } catch (ParseException e) {
-                        e.printStackTrace();
+                        logException(e, format("Failed to format embargo lift date from duration %s for submission with id %s", duration, submission.getId()));
                     }
                 }
             }
         }
         return embargoLiftDateStr;
-    }  
+    }
 
     public String getProQuestFormatRestrictionRemove() {
         String proquestLiftDateStr = "";
@@ -714,7 +722,7 @@ public class SubmissionHelperUtility {
                   java.util.Date proquestLiftDate = DateUtils.addMonths(monthYearFormat.parse(dateIssuedStr),d);
                   proquestLiftDateStr = dateFormat.format(proquestLiftDate);
                 } catch (ParseException e) {
-                    e.printStackTrace();
+                    logException(e, format("Failed to format proquest lift date from duration %s for submission with id %s", d, submission.getId()));
                 }
             }
           }
@@ -746,6 +754,14 @@ public class SubmissionHelperUtility {
             }
         }
         return code;
+    }
+
+    private void logException(Exception e, String message) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(message, e);
+        } else {
+            logger.info(message);
+        }
     }
 
 }

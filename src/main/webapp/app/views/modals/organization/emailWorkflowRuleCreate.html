@@ -2,10 +2,10 @@
     <button type="button" class="close" ng-click="resetEmailWorkflowRule()" data-dismiss="modal" aria-label="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title">Add Email Workflow Rule to {{status.name}}</h3>
+    <h3 class="modal-title">Add Email Workflow Rule to {{ (status || action).name }}</h3>
 </div>
 
-<form ng-submit="addEmailWorkflowRule(newTemplate, newRecipient, status)" name="forms.add" novalidate>
+<form ng-submit="addEmailWorkflowRule(newTemplate, newRecipient, status || action)" name="forms.add" novalidate>
 
     <div class="addRecipientModal modal-body">
         <div class="row">

@@ -1,0 +1,14 @@
+# Email sent notifying Assignee of submission approval by Advisor.
+#
+# Parameters:
+#   {DOCUMENT_TITLE}: The title of  the thesis or dissertation as supplied by the student.
+#
+Subject: Notify Assignee of Advisor Approved Submission
+
+The advisor has approved the embargo for the following submission:
+
+Title: {DOCUMENT_TITLE}
+
+Please see the action log for more information.
+
+The Vireo Team

@@ -6,21 +6,17 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
 
-import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.tdl.vireo.model.validation.EmailWorkflowRuleValidator;
 
 import edu.tamu.weaver.validation.model.ValidatingBaseEntity;
 
-@Entity
-public class EmailWorkflowRule extends ValidatingBaseEntity {
+@MappedSuperclass
+public abstract class EmailWorkflowRule extends ValidatingBaseEntity {
 
     @Column
     @JsonProperty("isSystem")
@@ -33,11 +29,6 @@ public class EmailWorkflowRule extends ValidatingBaseEntity {
     @ManyToOne(targetEntity = AbstractEmailRecipient.class)
     private EmailRecipient emailRecipient;
 
-    @ManyToOne(fetch = EAGER, optional = false)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, scope = SubmissionStatus.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    private SubmissionStatus submissionStatus;
-
     @ManyToOne(cascade = { DETACH, REFRESH, MERGE }, fetch = EAGER, optional = false)
     @JoinColumn(name = "emailTemplateId")
     private EmailTemplate emailTemplate;
@@ -46,18 +37,6 @@ public class EmailWorkflowRule extends ValidatingBaseEntity {
         setModelValidator(new EmailWorkflowRuleValidator());
         isSystem(false);
         isDisabled(true);
-    }
-
-    public EmailWorkflowRule(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate) {
-        this();
-        setSubmissionStatus(submissionStatus);
-        setEmailRecipient(emailRecipient);
-        setEmailTemplate(emailTemplate);
-    }
-
-    public EmailWorkflowRule(SubmissionStatus submissionStatus, EmailRecipient emailRecipient, EmailTemplate emailTemplate, Boolean isSystem) {
-        this(submissionStatus, emailRecipient, emailTemplate);
-        isSystem(isSystem);
     }
 
     /**
@@ -69,7 +48,7 @@ public class EmailWorkflowRule extends ValidatingBaseEntity {
 
     /**
      * @param isSystem
-     *            the isSystem to set
+     *                 the isSystem to set
      */
     public void isSystem(Boolean isSystem) {
         this.isSystem = isSystem;
@@ -84,25 +63,10 @@ public class EmailWorkflowRule extends ValidatingBaseEntity {
 
     /**
      * @param isDisabled
-     *            the isDisabled to set
+     *                   the isDisabled to set
      */
     public void isDisabled(Boolean isDisabled) {
         this.isDisabled = isDisabled;
-    }
-
-    /**
-     * @return the submissionStatus
-     */
-    public SubmissionStatus getSubmissionStatus() {
-        return submissionStatus;
-    }
-
-    /**
-     * @param submissionStatus
-     *            the submissionStatus to set
-     */
-    public void setSubmissionStatus(SubmissionStatus submissionStatus) {
-        this.submissionStatus = submissionStatus;
     }
 
     /**
@@ -114,7 +78,7 @@ public class EmailWorkflowRule extends ValidatingBaseEntity {
 
     /**
      * @param emailRecipient
-     *            the emailRecipient to set
+     *                       the emailRecipient to set
      */
     public void setEmailRecipient(EmailRecipient emailRecipient) {
         this.emailRecipient = emailRecipient;
@@ -129,7 +93,7 @@ public class EmailWorkflowRule extends ValidatingBaseEntity {
 
     /**
      * @param emailTemplate
-     *            the emailTemplate to set
+     *                      the emailTemplate to set
      */
     public void setEmailTemplate(EmailTemplate emailTemplate) {
         this.emailTemplate = emailTemplate;

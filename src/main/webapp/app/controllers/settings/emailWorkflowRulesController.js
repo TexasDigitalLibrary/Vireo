@@ -4,6 +4,46 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
         $scope: $scope
     }));
 
+    $scope.active = 'email-by-status';
+
+    $scope.isByStatus = function () {
+        return $scope.active === 'email-by-status';
+    };
+
+    $scope.isByAction = function () {
+        return $scope.active === 'email-by-action';
+    };
+
+    /**
+     * The enum property must match one of the Action in src/main/java/org/tdl/vireo/model/Action.java
+     */
+    $scope.submissionActions = [
+        {
+            enum: 'STUDENT_MESSAGE',
+            name: 'Student Adds Message'
+        },
+        {
+            enum: 'ADVISOR_MESSAGE',
+            name: 'Advisor Adds Message'
+        },
+        {
+            enum: 'ADVISOR_APPROVE_SUBMISSION',
+            name: 'Advisor Approves Submission'
+        },
+        {
+            enum: 'ADVISOR_CLEAR_APPROVE_SUBMISSION',
+            name: 'Advisor Clears Submission Approval'
+        },
+        {
+            enum: 'ADVISOR_APPROVE_EMBARGO',
+            name: 'Advisor Approved Embargo'
+        },
+        {
+            enum: 'ADVISOR_CLEAR_APPROVE_EMBARGO',
+            name: 'Advisor Clears Submission Embargo'
+        }
+    ];
+
     $scope.submissionStatuses = SubmissionStatusRepo.getAll();
     $scope.emailTemplates = EmailTemplateRepo.getAll();
     $scope.emailRecipientType = EmailRecipientType;
@@ -31,7 +71,7 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
             $scope.closeModal();
         };
 
-        $scope.addEmailWorkflowRule = function (newTemplate, newRecipient, submissionStatus) {
+        $scope.addEmailWorkflowRule = function (newTemplate, newRecipient, statusOrAction) {
             var recipient = angular.copy(newRecipient);
             var organization = $scope.getSelectedOrganization();
             organization.$dirty = true;
@@ -40,10 +80,13 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
                 recipient.data = recipient.data.id;
             }
 
-            OrganizationRepo.addEmailWorkflowRule(organization, newTemplate.id, recipient, submissionStatus.id).then(function () {
+            const emailWorkflowRuleAdded = statusOrAction?.id
+                ? OrganizationRepo.addEmailWorkflowRule(organization, newTemplate.id, recipient, statusOrAction?.id)
+                : OrganizationRepo.addEmailWorkflowRuleByAction(organization, newTemplate.id, recipient, statusOrAction?.enum)
+
+            emailWorkflowRuleAdded.then(function () {
                 $scope.resetEmailWorkflowRule();
             });
-
         };
 
         $scope.openEditEmailWorkflowRule = function (rule) {
@@ -76,7 +119,11 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
                 $scope.emailWorkflowRuleToEdit.emailRecipient.data = $scope.emailWorkflowRuleToEdit.emailRecipient.data.id;
             }
 
-            OrganizationRepo.editEmailWorkflowRule(organization, $scope.emailWorkflowRuleToEdit).then(function () {
+            const emailWorkflowRuleEdited = $scope.emailWorkflowRuleToEdit?.submissionStatus?.id
+                ? OrganizationRepo.editEmailWorkflowRule(organization, $scope.emailWorkflowRuleToEdit)
+                : OrganizationRepo.editEmailWorkflowRuleByAction(organization, $scope.emailWorkflowRuleToEdit);
+
+            emailWorkflowRuleEdited.then(function () {
                 $scope.resetEditEmailWorkflowRule();
             });
         };
@@ -95,8 +142,14 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
             organization.$dirty = true;
 
             $scope.emailWorkflowRuleDeleteWorking = true;
-            OrganizationRepo.removeEmailWorkflowRule(organization, $scope.emailWorkflowRuleToDelete).then(function () {
+
+            const emailWorkflowRuleDeleted = $scope.emailWorkflowRuleToDelete?.submissionStatus?.id
+                ? OrganizationRepo.removeEmailWorkflowRule(organization, $scope.emailWorkflowRuleToDelete)
+                : OrganizationRepo.removeEmailWorkflowRuleByAction(organization, $scope.emailWorkflowRuleToDelete);
+
+            emailWorkflowRuleDeleted.then(function () {
                 $scope.emailWorkflowRuleDeleteWorking = false;
+                $scope.resetEditEmailWorkflowRule();
             });
         };
 
@@ -104,14 +157,18 @@ vireo.controller("EmailWorkflowRulesController", function ($controller, $scope, 
             var organization = $scope.getSelectedOrganization();
             organization.$dirty = true;
 
-            OrganizationRepo.changeEmailWorkflowRuleActivation(organization, rule).then(function () {
+            const ruleActivationChanged = rule?.submissionStatus
+                ? OrganizationRepo.changeEmailWorkflowRuleActivation(organization, rule)
+                : OrganizationRepo.changeEmailWorkflowRuleByActionActivation(organization, rule);
+
+            ruleActivationChanged.then(function () {
                 changeEmailWorkflowRuleActivation = false;
             });
         };
 
         $scope.cancelDeleteEmailWorkflowRule = function () {
             $scope.emailWorkflowRuleDeleteWorking = false;
-            $scope.closeModal();
+            $scope.resetEditEmailWorkflowRule();
         };
     });
 
