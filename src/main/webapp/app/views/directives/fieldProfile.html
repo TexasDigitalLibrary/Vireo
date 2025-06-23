@@ -1,7 +1,7 @@
 <form id="{{profile.fieldPredicate.value}}" class="field-profile input-text row" name="fieldProfileForm" novalidate autocomplete="off">
   <div class="form-group">
     <div class="col-xs-12 col-sm-2">
-      <label>
+      <label for="field-{{profile.fieldPredicate.value}}">
         <strong ng-if="!profile.optional">
           <span>*<span>{{profile.gloss}}:</span></span>
         </strong>
@@ -12,15 +12,15 @@
       <div class="field-value-input row" ng-repeat="fieldValue in submission.fieldValues | fieldValuePerProfile:profile.fieldPredicate">
         <div ng-class="(profile.inputType.name === 'INPUT_LICENSE' || profile.inputType.name === 'INPUT_PROQUEST' || profile.inputType.name === 'INPUT_RADIO' || profile.inputType.name === 'CONDITIONAL_TEXT_AREA') ? 'col-xs-12' : 'col-xs-10'">
           <div ng-class="{'invalid': !fieldValue.isValid()}" ng-include="includeTemplateUrl"></div>
-          <div ng-if="!fieldValue.isValid()" class="alert alert-danger">
+          <div ng-if="!fieldValue.isValid()" class="alert alert-danger" role="alert">
             <ul ng-class="{'list-unstyled': fieldValue.getValidationMessages().length === 1}">
               <li ng-repeat="message in fieldValue.getValidationMessages()">{{message}}</li>
             </ul>
           </div>
         </div>
         <div class="col-xs-2">
-          <button type="button" ng-if="showRemove($first)" class="btn btn-danger field-value-add-remove pull-left" ng-click="removeFieldValue(fieldValue)">-</button>
-          <button type="button" ng-if="showAdd($first)" class="btn btn-primary field-value-add-remove pull-left" ng-click="addFieldValue()">+</button>
+          <button type="button" ng-if="showRemove($first)" class="btn btn-danger field-value-add-remove pull-left" ng-click="removeFieldValue(fieldValue)" aria-label="Remove {{profile.gloss}}">-</button>
+          <button type="button" ng-if="showAdd($first)" class="btn btn-primary field-value-add-remove pull-left" ng-click="addFieldValue()" aria-label="Add another {{profile.gloss}}">+</button>
         </div>
       </div>
     </div>

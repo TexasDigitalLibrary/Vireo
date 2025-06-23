@@ -1,17 +1,17 @@
 <div class="container submission-history">
-    <ul class="breadcrumb">
-        <li><a href=".">Home</a></li>
-        <li class="active">Submissions</li>
-    </ul>
+  <ul class="breadcrumb">
+      <li><a href=".">Home</a></li>
+      <li class="active">Submissions</li>
+  </ul>
 
-    <div class="row page-head">
-        <h3 class="span11">Submission History</h3>
-    </div>
+  <div class="row page-head">
+      <h3 class="span11">Submission History</h3>
+  </div>
 
-    <div class="currently-accepting-submissions">Currently accepting submissions for the {{configuration.application.current_semester.value}} semester.</div>
+  <div class="currently-accepting-submissions">Currently accepting submissions for the {{configuration.application.current_semester.value}} semester.</div>
 
     <div class="col-xs-12 history-table">
-        <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped etd-table">
+        <table ng-table="tableParams" show-filter="false" class="table table-bordered table-striped etd-table" ng-table-accessibility>
           <tr ng-repeat="row in $data track by row.id" ng-init="row.fetchDocumentTypeFileInfo()">
             <td title="'Organization'">{{row.organization.name}}</td>
             <td title="'Status'">{{row.submissionStatus.name}}</td>
@@ -28,23 +28,24 @@
           </tr>
         </table>
 
-        <div ng-controller="SettingsController">
-            <button class="btn btn-primary" ng-if="multipleSubmissions() && studentsSubmissions.length > 0 && submissionsOpen()" ng-click="openModal('#confirmNewSubmission')">New Submission</button>
-            <button class="btn btn-primary" ng-if="multipleSubmissions() && studentsSubmissions.length === 0 && submissionsOpen()" ng-click="startNewSubmission('/submission/new')">New Submission</button>
-            <button class="btn btn-primary" ng-if="!multipleSubmissions() && studentsSubmissions.length === 0 && submissionsOpen()" ng-click="startNewSubmission('/submission/new')">New Submission</button>
-            <modal
-                modal-id="confirmNewSubmission"
-                modal-view="views/modals/submissions/confirmNewSubmission.html"
-                modal-header-class="modal-header-danger"
-                wvr-modal-backdrop="static">
-            </modal>
+      <div ng-controller="SettingsController">
+          <button class="btn btn-primary" ng-if="multipleSubmissions() && studentsSubmissions.length > 0 && submissionsOpen()" ng-click="openModal('#confirmNewSubmission')">New Submission</button>
+          <button class="btn btn-primary" ng-if="multipleSubmissions() && studentsSubmissions.length === 0 && submissionsOpen()" ng-click="startNewSubmission('/submission/new')">New Submission</button>
+          <button class="btn btn-primary" ng-if="!multipleSubmissions() && studentsSubmissions.length === 0 && submissionsOpen()" ng-click="startNewSubmission('/submission/new')">New Submission</button>
+          <modal
+              modal-id="confirmNewSubmission"
+              modal-view="views/modals/submissions/confirmNewSubmission.html"
+              modal-header-class="modal-header-danger"
+              wvr-modal-backdrop="static">
+          </modal>
 
-            <modal
-                modal-id="confirmDeleteSubmission"
-                modal-view="views/modals/submissions/confirmDeleteSubmission.html"
-                modal-header-class="modal-header-danger"
-                wvr-modal-backdrop="static">
-            </modal>
-        </div>
-    </div>
+          <modal
+              modal-id="confirmDeleteSubmission"
+              modal-view="views/modals/submissions/confirmDeleteSubmission.html"
+              modal-header-class="modal-header-danger"
+              wvr-modal-backdrop="static">
+          </modal>
+      </div>
+  </div>
 </div>
+
