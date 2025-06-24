@@ -83,7 +83,7 @@ public class ApplicationInitializationTest {
         assertSettingsType(2, "orcid", isReload);
         assertSettingsType(9, "proquest_umi_degree_code", isReload);
         assertSettingsType(1, "export", isReload);
-        assertSettingsType(22, "lookAndFeel", isReload);
+        assertSettingsType(21, "lookAndFeel", isReload);
         assertSettingsType(1, "submission", isReload);
         assertSettingsType(22, "shibboleth", isReload);
 

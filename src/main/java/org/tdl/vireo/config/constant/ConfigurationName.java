@@ -99,9 +99,6 @@ public class ConfigurationName {
     public final static String LEFT_LOGO = "left_logo";
 
     /** Custom CSS */
-    public final static String RIGTH_LOGO = "right_logo";
-
-    /** Custom CSS */
     public final static String CUSTOM_CSS = "custom_css";
 
     /** Instructions to show on the front page of Vireo. */
