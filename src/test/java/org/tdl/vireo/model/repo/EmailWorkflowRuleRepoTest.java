@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 
 public class EmailWorkflowRuleRepoTest extends AbstractRepoTest {
 
@@ -21,7 +21,7 @@ public class EmailWorkflowRuleRepoTest extends AbstractRepoTest {
     @Override
     @Test
     public void testCreate() {
-        EmailWorkflowRule notifyEverybodyOfImportantDoings = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
+        EmailWorkflowRuleByStatus notifyEverybodyOfImportantDoings = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
         assertTrue(emailWorkflowRuleRepo.count() == 1, "We didn't have enough email workflow rules in the repo!");
         assertTrue(notifyEverybodyOfImportantDoings.getSubmissionStatus().equals(submissionStatus), "We didn't have the right submissionStatus on our rule!");
         assertTrue(notifyEverybodyOfImportantDoings.getEmailRecipient().equals(emailRecipient), "We didn't have the right recipient type on our rule!");
@@ -40,7 +40,7 @@ public class EmailWorkflowRuleRepoTest extends AbstractRepoTest {
     @Override
     @Test
     public void testDelete() {
-        EmailWorkflowRule ruleToDelete = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
+        EmailWorkflowRuleByStatus ruleToDelete = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
         assertEquals(1, emailWorkflowRuleRepo.count(), "Didn't create the rule!");
         emailWorkflowRuleRepo.delete(ruleToDelete);
         assertEquals(0, emailWorkflowRuleRepo.count(), "Didn't delete the rule!");
@@ -49,7 +49,7 @@ public class EmailWorkflowRuleRepoTest extends AbstractRepoTest {
     @Override
     @Test
     public void testCascade() {
-        EmailWorkflowRule ruleToCascade = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
+        EmailWorkflowRuleByStatus ruleToCascade = emailWorkflowRuleRepo.create(submissionStatus, emailRecipient, emailTemplate);
         emailWorkflowRuleRepo.delete(ruleToCascade);
         assertEquals(1, submissionStatusRepo.count(), "Submission State is deleted");
         assertEquals(1, emailTemplateRepo.count(), "Email Template is deleted");

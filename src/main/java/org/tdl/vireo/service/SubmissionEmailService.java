@@ -1,5 +1,7 @@
 package org.tdl.vireo.service;
 
+import javax.mail.MessagingException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,13 +10,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.mail.MessagingException;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.stereotype.Service;
+import org.tdl.vireo.model.Action;
+import org.tdl.vireo.model.ActionLog;
 import org.tdl.vireo.model.EmailRecipient;
 import org.tdl.vireo.model.EmailRecipientAssignee;
 import org.tdl.vireo.model.EmailRecipientContact;
@@ -23,19 +26,19 @@ import org.tdl.vireo.model.EmailRecipientPlainAddress;
 import org.tdl.vireo.model.EmailRecipientSubmitter;
 import org.tdl.vireo.model.EmailRecipientType;
 import org.tdl.vireo.model.EmailTemplate;
-import org.tdl.vireo.model.EmailWorkflowRule;
+import org.tdl.vireo.model.EmailWorkflowRuleByAction;
+import org.tdl.vireo.model.EmailWorkflowRuleByStatus;
 import org.tdl.vireo.model.FieldPredicate;
 import org.tdl.vireo.model.FieldValue;
 import org.tdl.vireo.model.Submission;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.ActionLogRepo;
+import org.tdl.vireo.model.repo.EmailWorkflowRuleByActionRepo;
 import org.tdl.vireo.model.repo.EmailWorkflowRuleRepo;
 import org.tdl.vireo.model.repo.FieldPredicateRepo;
 import org.tdl.vireo.model.repo.SubmissionRepo;
 import org.tdl.vireo.model.repo.impl.AbstractEmailRecipientRepoImpl;
 import org.tdl.vireo.utility.TemplateUtility;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * Provide e-mail sending specific to the Submission process.
@@ -60,6 +63,9 @@ public class SubmissionEmailService {
     private EmailWorkflowRuleRepo emailWorkflowRuleRepo;
 
     @Autowired
+    private EmailWorkflowRuleByActionRepo emailWorkflowRuleByActionRepo;
+
+    @Autowired
     private FieldPredicateRepo fieldPredicateRepo;
 
     @Autowired
@@ -80,17 +86,17 @@ public class SubmissionEmailService {
         Submission submission = submissionRepo.findById(submissionId).get();
 
         EmailRecipient advisorRecipient = abstractEmailRecipientRepoImpl.createAdvisorRecipient();
-        List<EmailWorkflowRule> emailWorkflowRules = emailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(advisorRecipient, false);
+        List<EmailWorkflowRuleByStatus> emailWorkflowRules = emailWorkflowRuleRepo.findByEmailRecipientAndIsDisabled(advisorRecipient, false);
 
         if (emailWorkflowRules.size() == 0) {
-            actionLogRepo.createPublicLog(submission, user, "No Advisor email workflow rules are defined and enabled.");
+            actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "No Advisor email workflow rules are defined and enabled.");
         }
         else {
             boolean emailed = false;
-            Iterator<EmailWorkflowRule> emailWorkflowRuleIterator = emailWorkflowRules.iterator();
+            Iterator<EmailWorkflowRuleByStatus> emailWorkflowRuleIterator = emailWorkflowRules.iterator();
 
             while (emailWorkflowRuleIterator.hasNext()) {
-                EmailWorkflowRule emailWorkflowRule = emailWorkflowRuleIterator.next();
+                EmailWorkflowRuleByStatus emailWorkflowRule = emailWorkflowRuleIterator.next();
                 EmailTemplate template = emailWorkflowRule.getEmailTemplate();
                 String subject = templateUtility.compileString(template.getSubject(), submission);
                 String content = templateUtility.compileTemplate(template, submission);
@@ -119,9 +125,9 @@ public class SubmissionEmailService {
             }
 
             if (emailed) {
-                actionLogRepo.createPublicLog(submission, user, "Advisor review email manually generated.");
+                actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "Advisor review email manually generated.");
             } else {
-                actionLogRepo.createPublicLog(submission, user, "No Advisor review emails to generate.");
+                actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, "No Advisor review emails to generate.");
             }
         }
     }
@@ -171,7 +177,7 @@ public class SubmissionEmailService {
 
                 emailSender.sendEmail(to, cc, bcc, subject, templatedMessage);
 
-                actionLogRepo.createPublicLog(submission, user, recipientEmails.toString() + subject + ": " + templatedMessage);
+                actionLogRepo.createPublicLog(Action.UNDETERMINED, submission, user, recipientEmails.toString() + subject + ": " + templatedMessage);
             } catch (MessagingException me) {
                 LOG.error("Problem sending email: " + me.getMessage());
             }
@@ -187,13 +193,12 @@ public class SubmissionEmailService {
     public void sendWorkflowEmails(User user, Long submissionId) {
         Submission submission = submissionRepo.findById(submissionId).get();
 
-        List<EmailWorkflowRule> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
+        List<EmailWorkflowRuleByStatus> rules = submission.getOrganization().getAggregateEmailWorkflowRules();
         Map<Long, List<String>> recipientLists = new HashMap<>();
 
-        for (EmailWorkflowRule rule : rules) {
-            LOG.debug("Email Workflow Rule " + rule.getId() + " firing for submission " + submission.getId());
-
+        for (EmailWorkflowRuleByStatus rule : rules) {
             if (rule.getSubmissionStatus().equals(submission.getSubmissionStatus()) && !rule.isDisabled()) {
+                LOG.debug("Email Workflow Rule " + rule.getId() + " firing for submission " + submission.getId());
                 Long templateId = rule.getEmailTemplate().getId();
 
                 if (!recipientLists.containsKey(templateId)) {
@@ -220,6 +225,72 @@ public class SubmissionEmailService {
                         } else {
                             emailSender.sendEmail(email, subject, content);
                         }
+                    } catch (MessagingException me) {
+                        LOG.error("Problem sending email: " + me.getMessage());
+                        recipientLists.get(templateId).remove(email);
+                    }
+                }
+            } else {
+                LOG.debug("\tRule disabled or of irrelevant status condition.");
+            }
+        }
+    }
+
+    /**
+     * Send any emails for given submission and action log.
+     *
+     * Check recursively the submission organization for email workflow rules by action.
+     *
+     * @param submission Submission.
+     * @param actionLog ActionLog.
+     */
+    public void sendActionEmails(Submission submission, ActionLog actionLog) {
+        Action action = actionLog.getAction();
+        
+        switch (action) {
+        case STUDENT_MESSAGE:
+        case ADVISOR_MESSAGE:
+        case ADVISOR_APPROVE_SUBMISSION:
+        case ADVISOR_CLEAR_APPROVE_SUBMISSION:
+        case ADVISOR_APPROVE_EMBARGO:
+        case ADVISOR_CLEAR_APPROVE_EMBARGO:
+            processSubmissionActionLog(submission, actionLog);
+            LOG.info("Submission {}: {} action logged processed", submission.getId(), action);
+            break;
+        case UNDETERMINED:
+        default:
+            break;
+        }
+        
+    }
+
+    private void processSubmissionActionLog(Submission submission, ActionLog actionLog) {
+        List<EmailWorkflowRuleByAction> rules = submission.getOrganization().getAggregateEmailWorkflowRulesByAction();
+        Map<Long, List<String>> recipientLists = new HashMap<>();
+
+        for (EmailWorkflowRuleByAction rule : rules) {
+            if (rule.getAction().equals(actionLog.getAction()) && !rule.isDisabled()) {
+                LOG.info("Action Email Workflow Rule " + rule.getId() + " firing for submission " + submission.getId());
+                Long templateId = rule.getEmailTemplate().getId();
+
+                if (!recipientLists.containsKey(templateId)) {
+                    recipientLists.put(templateId, new ArrayList<>());
+                }
+
+                // TODO: Not all variables are currently being replaced.
+                String subject = templateUtility.compileString(rule.getEmailTemplate().getSubject(), submission);
+                String content = templateUtility.compileTemplate(rule.getEmailTemplate(), submission);
+
+                for (String email : rule.getEmailRecipient().getEmails(submission)) {
+                    if (recipientLists.get(templateId).contains(email)) {
+                        LOG.debug("\tSkipping (already sent) email to recipient at address " + email);
+                        continue;
+                    }
+
+                    recipientLists.get(templateId).add(email);
+
+                    try {
+                        emailSender.sendEmail(email, subject, content);
                     } catch (MessagingException me) {
                         LOG.error("Problem sending email: " + me.getMessage());
                         recipientLists.get(templateId).remove(email);
@@ -278,16 +349,16 @@ public class SubmissionEmailService {
         case ADVISOR: {
             String label = (String) emailRecipientMap.get("name");
             FieldPredicate fp = fieldPredicateRepo.findByValue("dc.contributor.advisor");
-            if (label != null & fp != null) {
+            if (label != null && fp != null) {
               recipient = new EmailRecipientContact(label, fp);
             }
           break;
         }
         case CONTACT: {
           String label = (String) emailRecipientMap.get("name");
-          
+
           Optional<FieldPredicate> fp = fieldPredicateRepo.findById(Long.valueOf((int) emailRecipientMap.get("data")));
-          if (label != null & fp.isPresent()) {
+          if (label != null && fp.isPresent()) {
             recipient = new EmailRecipientContact(label, fp.get());
           }
           break;

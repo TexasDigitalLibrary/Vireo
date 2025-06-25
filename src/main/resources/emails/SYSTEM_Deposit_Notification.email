@@ -1,6 +1,9 @@
-# Email sent to Vireo users to verify deposit into the IR
+# Email sent to Vireo users to verify deposit into the IR.
 #
 # Parameters: {DEPOSIT_URI}
+#   {DOCUMENT_TITLE}: The title of  the thesis or dissertation as supplied by the student.
+#   {FULL_NAME}: The student's full, official name
+#   {DEPOSIT_URI}: A URL where the advisor may review the submission.
 #
 Subject: Deposit Notification
 

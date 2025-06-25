@@ -1,0 +1,12 @@
+# Email sent notifying Submitter of submission approval by Advisor.
+#
+# Parameters:
+#   {DOCUMENT_TITLE}: The title of  the thesis or dissertation as supplied by the student.
+#
+Subject: Notify Submitter of Advisor Approved Submission
+
+Your advisor has approved the following submission:
+
+Title: {DOCUMENT_TITLE}
+
+The Vireo Team

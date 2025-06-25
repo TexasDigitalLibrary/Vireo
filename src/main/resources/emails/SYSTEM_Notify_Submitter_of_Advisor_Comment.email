@@ -1,0 +1,14 @@
+# Email sent notifying Submitter of message sent by Advisor.
+#
+# Parameters:
+#   {DOCUMENT_TITLE}: The title of  the thesis or dissertation as supplied by the student.
+#
+Subject: Notify Assignee of Advisor Comment
+
+Your advisor has sent a message concerning the following submission:
+
+Title: {DOCUMENT_TITLE}
+
+Please login to your account for more information.
+
+The Vireo Team

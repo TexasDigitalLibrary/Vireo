@@ -23,7 +23,7 @@ public class FieldPredicate extends ValidatingBaseEntity {
     private static String period = Pattern.quote(".");
 
     @JsonView(ApiView.Partial.class)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "\"value\"")
     private String value;
 
     @JsonView(ApiView.Partial.class)

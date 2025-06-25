@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.tdl.vireo.exception.BatchExportException;
 import org.tdl.vireo.exception.SwordDepositBadGatewayException;
 import org.tdl.vireo.exception.SwordDepositBadRequestException;
 import org.tdl.vireo.exception.SwordDepositConflictException;
@@ -213,6 +214,18 @@ public class CustomResponseEntityExceptionHandler extends ResponseEntityExceptio
         logger.error(message);
         logger.debug(message, exception);
         return ApiResponse.fromException(ERROR, message, exception);
+    }
+
+    @ExceptionHandler(BatchExportException.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiResponse handleBatchExportException(BatchExportException exception) {
+        String message = exception.getMessage();
+        logger.error(message);
+        logger.debug(message, exception);
+
+        String responseMessage = "The export failed. Check all required metadata and files, then try to export again.";
+
+        return ApiResponse.fromException(ERROR, responseMessage, exception);
     }
 
     @ExceptionHandler(Exception.class)

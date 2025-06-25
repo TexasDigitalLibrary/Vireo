@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,7 @@ import org.tdl.vireo.model.repo.WorkflowStepRepo;
 @ActiveProfiles(value = { "test", "isolated-test" })
 @SpringBootTest(classes = { Application.class })
 @Transactional(propagation = Propagation.REQUIRES_NEW)
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class SystemDataLoaderTest {
 
     @Autowired
@@ -187,14 +190,14 @@ public class SystemDataLoaderTest {
     }
 
     private void assertEmailTemplate(boolean isReload) {
-        assertEquals(7, emailTemplateRepo.count(),
+        assertEquals(19, emailTemplateRepo.count(),
             isReload
                 ? "Incorrect number of emailTemplate found after reload"
                 : "Incorrect number of emailTemplate found");
     }
 
     private void assertAbstractEmailRecipient(boolean isReload) {
-        assertEquals(2, abstractEmailRecipientRepo.count(),
+        assertEquals(3, abstractEmailRecipientRepo.count(),
             isReload
                 ? "Incorrect number of abstractEmailRecipient found after reload"
                 : "Incorrect number of abstractEmailRecipient found");

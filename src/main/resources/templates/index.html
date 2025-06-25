@@ -140,7 +140,7 @@
     <alerts seconds="45" channels="auth/register" types="SUCCESS"></alerts>
     <alerts seconds="45" channels="organization/delete" types="SUCCESS"></alerts>
 
-    <div class="container-fluid main">
+    <div class="container-fluid main" aria-live="assertive" aria-atomic="true">
       <div ng-view class="view"></div>
     </div>
 
@@ -164,7 +164,11 @@
         <li>
           <a href="{{accessibility}}" ng-attr-aria-label="{{accessibility_label}}" ng-attr-aria-hidden="{{accessibility_hidden}}">Accessibility</a>
         </li>
-      </ul>
+        <li>
+          <a href="https://github.com/TexasDigitalLibrary/Vireo" title="Vireo GitHub Repository" target="_blank">
+            <img style="max-height: 30px;" src="resources/images/footer-logo.png" alt="Vireo Logo" />
+          </a>
+        </ul>
     </div>
   </footer>
 

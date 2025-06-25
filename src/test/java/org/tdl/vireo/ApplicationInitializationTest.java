@@ -10,6 +10,8 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +29,7 @@ import org.tdl.vireo.service.SystemDataLoader;
 @ActiveProfiles(value = { "test" })
 @SpringBootTest(classes = { Application.class })
 @Transactional(propagation = Propagation.REQUIRES_NEW)
+@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ApplicationInitializationTest {
 
     @Autowired
@@ -80,7 +83,7 @@ public class ApplicationInitializationTest {
         assertSettingsType(2, "orcid", isReload);
         assertSettingsType(9, "proquest_umi_degree_code", isReload);
         assertSettingsType(1, "export", isReload);
-        assertSettingsType(22, "lookAndFeel", isReload);
+        assertSettingsType(21, "lookAndFeel", isReload);
         assertSettingsType(1, "submission", isReload);
         assertSettingsType(22, "shibboleth", isReload);
 

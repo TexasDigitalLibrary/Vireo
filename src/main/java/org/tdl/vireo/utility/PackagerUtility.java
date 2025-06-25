@@ -3,7 +3,6 @@ package org.tdl.vireo.utility;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tdl.vireo.exception.UnsupportedFormatterException;
 import org.tdl.vireo.model.Submission;
@@ -16,15 +15,21 @@ import org.tdl.vireo.model.repo.AbstractPackagerRepo;
 @Service
 public class PackagerUtility {
 
-    @Autowired
+    private static final String TEMPLATE_KEY = "template";
+
     private AbstractPackagerRepo abstractPackagerRepo;
 
-    @Autowired
     private FormatterUtility formatterUtility;
 
-    private String TEMPLATE_KEY = "template";
+    public PackagerUtility(
+        AbstractPackagerRepo abstractPackagerRepo,
+        FormatterUtility formatterUtility
+    ) {
+        this.abstractPackagerRepo = abstractPackagerRepo;
+        this.formatterUtility = formatterUtility;
+    }
 
-    public ExportPackage packageExport(Packager<?> packager, Submission submission) throws Exception {
+    public ExportPackage packageExport(Packager<?> packager, Submission submission) {
         Map<String, String> formatterMap = formatterUtility.renderManifestMap(packager.getFormatter(), submission);
         if (formatterMap.isEmpty()) {
             throw new UnsupportedFormatterException("Required manifest not found!");

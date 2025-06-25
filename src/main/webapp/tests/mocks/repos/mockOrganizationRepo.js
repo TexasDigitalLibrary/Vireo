@@ -28,12 +28,22 @@ angular.module("mock.organizationRepo", []).service("OrganizationRepo", function
         return payloadPromise($q.defer(), payload);
     };
 
+    repo.addEmailWorkflowRuleByAction = function (organization, template, recipient, submissionStatus) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
     repo.addWorkflowStep = function (workflowStep) {
         var payload = {};
         return payloadPromise($q.defer(), payload);
     };
 
     repo.changeEmailWorkflowRuleActivation = function (organization, emailWorkflowRule) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
+    repo.changeEmailWorkflowRuleByActionActivation = function (organization, emailWorkflowRule) {
         var payload = {};
         return payloadPromise($q.defer(), payload);
     };
@@ -85,6 +95,11 @@ angular.module("mock.organizationRepo", []).service("OrganizationRepo", function
         return payloadPromise($q.defer(), payload);
     };
 
+    repo.editEmailWorkflowRuleByAction = function (organization, emailWorkflowRule) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
     repo.getAllSpecific = function (specific) {
         var payload = {};
         return payloadPromise($q.defer(), payload);
@@ -114,6 +129,11 @@ angular.module("mock.organizationRepo", []).service("OrganizationRepo", function
     };
 
     repo.removeEmailWorkflowRule = function (organization, emailWorkflowRule) {
+        var payload = {};
+        return payloadPromise($q.defer(), payload);
+    };
+
+    repo.removeEmailWorkflowRuleByAction = function (organization, emailWorkflowRule) {
         var payload = {};
         return payloadPromise($q.defer(), payload);
     };

@@ -21,7 +21,7 @@ import org.tdl.vireo.model.response.Views;
 public class FieldValue extends ValidatingBaseEntity {
 
     @JsonView(Views.SubmissionList.class)
-    @Column(columnDefinition = "text", nullable = true)
+    @Column(columnDefinition = "text", nullable = true, name = "\"value\"")
     private String value;
 
     @JsonView(Views.SubmissionIndividual.class)

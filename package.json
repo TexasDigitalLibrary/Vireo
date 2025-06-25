@@ -1,7 +1,7 @@
 {
   "name": "vireo",
   "private": false,
-  "version": "4.2.11",
+  "version": "4.3.0",
   "description": "Vireo 4",
   "homepage": "https://github.com/TexasDigitalLibrary/Vireo",
   "repository": {
@@ -22,7 +22,7 @@
     "build": "wvr build --clean"
   },
   "dependencies": {
-    "@wvr/core": "2.3.0-rc3",
+    "@wvr/core": "2.3.0-rc5",
     "angular-ui-tinymce": "0.0.19",
     "file-saver": "2.0.5",
     "ng-csv": "0.3.6",

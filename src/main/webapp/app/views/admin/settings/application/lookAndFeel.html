@@ -522,11 +522,11 @@
       </div>
     </div>
 
-    <!-- LOGOS -->
+    <!-- LOGO -->
     <div class="row">
 
-      <div>Logos
-          <span class="glyphicon glyphicon-info-sign opaque color-reset" tooltip="Change the logos located on the student side in the top left and top right corners. The recommended size is 50 x 150 pixels."></span>
+      <div>Logo
+          <span class="glyphicon glyphicon-info-sign opaque color-reset" tooltip="Change the logo located on the student side in the top left corner. The recommended size is 50 x 150 pixels."></span>
       </div>
 
       <div class="row">
@@ -534,35 +534,19 @@
         <div class="col-sm-4">
           <div class="logo-wraper">
             <p>
-              Left Logo
+              Header Logo
               <span
                 class="glyphicon glyphicon-refresh color-reset"
                 ng-click="resetLogo('left_logo')">
               </span>
             </p>
 
-            <img ng-src="{{modalData.logoLeft}}" class="logo-preview">
+            <img ng-src="{{modalData.logoLeft}}" ng-style="{background: settings.configurable.lookAndFeel.background_main_color.value}" class="logo-preview">
           </div>
 
         </div>
-
         <div class="col-sm-4">
-          <div class="logo-wraper">
-            <p>
-              Right Logo
-              <span
-                class="glyphicon glyphicon-refresh color-reset"
-                ng-click="resetLogo('right_logo')">
-              </span>
-            </p>
-            <img ng-src="{{modalData.logoRight}}" class="logo-preview">
-          </div>
-
-        </div>
-
-
-        <div class="col-sm-4">
-          <dropzone file-model="modalData.newLogo.file" id="rightLogoDrop" text="uploadDataText" patterns="uploadDataPattern" drop-method="previewLogo(files)"></dropzone>
+          <dropzone file-model="modalData.newLogo.file" id="logoDrop" text="uploadDataText" patterns="uploadDataPattern" drop-method="previewLogo(files)"></dropzone>
         </div>
 
       </div>

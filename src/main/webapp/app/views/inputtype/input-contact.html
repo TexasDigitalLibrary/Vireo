@@ -11,15 +11,16 @@
     typeahead-no-results="noResults"
     typeahead-on-select="saveWithCV(fieldValue, $item)"
     typeahead-loading="(!fieldValue.fieldPredicate.id || !typeAheads[fieldValue.fieldPredicate.id]) ? angular.noop : typeAheads[fieldValue.fieldPredicate.id].loading"
+    aria-label="{{profile.gloss}} name"
   />
   <span class="input-group-btn">
-    <button class="btn btn-default opaque" ng-if="fieldValue.value">
-      <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)"></span>
+    <button class="btn btn-default opaque" ng-if="fieldValue.value" aria-label="Remove {{profile.gloss}} {{fieldValue.value}}">
+      <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)" aria-hidden="true"></span>
     </button>
   </span>
   <span class="input-group-addon">
-    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"> </span>
-    <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}" aria-hidden="true"></span>
+    <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></span>
   </span>
 </div>
 
@@ -36,9 +37,11 @@
     typeahead-no-results="noResults"
     typeahead-on-select="saveWithCV(fieldValue, $item)"
     typeahead-loading="(!fieldValue.fieldPredicate.id || !typeAheads[fieldValue.fieldPredicate.id]) ? angular.noop : typeAheads[fieldValue.fieldPredicate.id].loading"
+    aria-label="{{profile.gloss}} contact info"
   />
   <span class="input-group-addon">
-    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"> </span>
-    <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning"> </span>
+    <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}" aria-hidden="true"></span>
+    <span ng-if="fieldValue.updating" class="glyphicon glyphicon-refresh spinning" aria-hidden="true"></span>
   </span>
 </div>
+
