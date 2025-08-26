@@ -86,6 +86,13 @@
       <artifactId>log4j-api</artifactId>
     </dependency>
 
+    <!-- replaces log4j-1.2.15 for sword-common -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-1.2-api</artifactId>
+      <version>2.17.1</version>
+    </dependency>
+
     <dependency>
       <groupId>org.thymeleaf</groupId>
       <artifactId>thymeleaf</artifactId>
@@ -209,6 +216,10 @@
         <exclusion>
           <groupId>xom</groupId>
           <artifactId>xom</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
