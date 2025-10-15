@@ -210,7 +210,7 @@ public class SubmissionListController {
     public ApiResponse addFilterCriterion(@WeaverUser User user, @RequestBody Map<String, Object> data) {
 
         String criterionName = (String) data.get("criterionName");
-        String filterValue = (String) data.get("filterValue");
+        String filterValue = String.valueOf(data.get("filterValue"));
         Boolean exactMatch = (Boolean) data.get("exactMatch");
         String filterGloss = (String) data.get("filterGloss");
 
