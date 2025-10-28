@@ -216,7 +216,7 @@
                        SEQ=${ iter.index + 2 }">
                 <FLocat
                     LOCTYPE="URL"
-                    th:attr="'xlink:href'=${ fv.getFileName() }"/>
+                    th:attr="'xlink:href'=${ fv.getExportFileName() }"/>
             </file>
 
         </fileGrp>
