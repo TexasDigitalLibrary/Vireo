@@ -515,7 +515,7 @@ public class SubmissionHelperUtility {
     }
 
     public String getDegreeCodeLevelStr() {
-        Optional<String> degreeCode = getFieldValueDefinitionByPredicateValue("thesis.degree.name");
+        Optional<String> degreeCode = getFieldValueIdentifierByPredicateValue("thesis.degree.name");
         return degreeCode.isPresent() ? degreeCode.get().toLowerCase() : "";
     }
 

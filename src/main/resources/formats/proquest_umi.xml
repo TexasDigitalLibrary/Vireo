@@ -240,11 +240,11 @@
         </DISS_attachment>
     </DISS_content>
 
-    <DISS_restriction th:if="${EMBARGO_CODE == 4}">    
-      <DISS_sales_restriction th:attr="code=1,remove=${PROQUEST_SALE_RESTRICTION_REMOVE}"/>
-    </DISS_restriction>
-    <DISS_restriction th:if="${EMBARGO_CODE != 4}">    
+    <DISS_restriction th:if="${EMBARGO_CODE == 0}">    
       <DISS_sales_restriction th:attr="code=0,remove=${PROQUEST_SALE_RESTRICTION_REMOVE}"/>
+    </DISS_restriction>
+    <DISS_restriction th:if="${EMBARGO_CODE > 0}">    
+      <DISS_sales_restriction th:attr="code=1,remove=${PROQUEST_SALE_RESTRICTION_REMOVE}"/>
     </DISS_restriction>
  
 </DISS_submission>
