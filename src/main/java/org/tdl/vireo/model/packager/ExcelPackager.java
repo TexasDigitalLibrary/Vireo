@@ -54,7 +54,7 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
 
     @Override
     public String getFileExtension() {
-        return "xls";
+        return "xlsx";
     }
 
     @Override
