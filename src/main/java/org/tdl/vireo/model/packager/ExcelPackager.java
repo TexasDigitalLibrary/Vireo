@@ -49,7 +49,7 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
 
     @Override
     public String getMimeType() {
-        return "application/vnd.ms-excel";
+        return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     }
 
     @Override
