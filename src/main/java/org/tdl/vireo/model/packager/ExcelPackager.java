@@ -114,12 +114,13 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                             value = user.getName().toString();
                         } else if (valueAsObject instanceof ActionLog){
                             ActionLog actionLog = (ActionLog) valueAsObject;
-                            switch (column.getTitle()){
-                                case "Event Time":
+                            String[] actionLogValuePath = column.getValuePath().toArray(new String[column.getValuePath().size()]);
+                            switch (actionLogValuePath[1]){
+                                case "actionDate":
                                     Calendar actionDate = (Calendar) actionLog.getActionDate();
                                     value = simpleDateFormat.format(actionDate.getTime());
                                     break;
-                                case "Last Event":
+                                case "entry":
                                     value = actionLog.getEntry().toString();
                                     break;
                                 default:
