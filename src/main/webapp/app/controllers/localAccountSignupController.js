@@ -3,7 +3,7 @@ vireo.controller('LocalAccountSignupController', function ($scope, $controller, 
 
     $scope.registerEnabled =
         appConfig.localAuthentication === true ||
-        appConfig.localAuthentication === 'alternate';
+        appConfig.localAuthentication === 'alternateAllowRegister';
 
     $scope.goHome = function () {
         $location.path('/');
