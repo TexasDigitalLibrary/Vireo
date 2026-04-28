@@ -209,7 +209,7 @@
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-core</artifactId>
-      <version>1.28.5</version>
+      <version>3.2.2</version>
       <exclusions>
         <exclusion>
           <groupId>xom</groupId>
