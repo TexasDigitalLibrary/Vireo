@@ -11,6 +11,6 @@ Subject: Deposit Notification
 
 It can be found at the following URI:
 
-  {DEPOSIT_URI}
+  <a href="{DEPOSIT_URI}">Deposit URI</a>
 
 The Vireo Team
