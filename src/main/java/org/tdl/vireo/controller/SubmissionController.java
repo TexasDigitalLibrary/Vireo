@@ -582,7 +582,7 @@ public class SubmissionController {
                     // Create a streaming workbook with a window size of 100 rows
                     // (only this many rows will be kept in memory at once)
                     try (SXSSFWorkbook workbook = new SXSSFWorkbook(100)) {
-                        List<Submission> submissions = submissionRepo.batchDynamicSubmissionQuery(filter, columns, secondaryDelimiter);
+                        List<Submission> submissions = submissionRepo.batchDynamicSubmissionQuery(filter, columns);
 
                         // Enable compression for temporary files
                         workbook.setCompressTempFiles(true);
@@ -600,7 +600,7 @@ public class SubmissionController {
 
                         // Stream data rows
                         for (Submission submission : submissions) {
-                            ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns);
+                            ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns, secondaryDelimiter);
                             if (exportPackage.isMap()) {
                                 Map<String, String> rowData = (Map<String, String>) exportPackage.getPayload();
                                 Row row = worksheet.createRow(rowCount++);
