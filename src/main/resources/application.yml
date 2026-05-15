@@ -137,6 +137,8 @@ app:
   # edu.tamu.weaver.auth.service.UserCredentialsService
   authority.admins: admin@tdl.org,aggieJack@tamu.edu
 
+  # ExcelExport secondary delimiter for keywords within CSV, otherwise multiple keywords appear as separate columns
+  secondaryDelimiter: '|'
 
   security:
     # edu.tamu.weaver.auth.service.CryptoService

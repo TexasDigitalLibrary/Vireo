@@ -193,6 +193,9 @@ public class SubmissionController {
     @Value("${app.documentType.rename:}")
     private String documentTypesToRename;
 
+    @Value("${app.secondaryDelimiter:'|'}")
+    private String secondaryDelimiter;
+
     @RequestMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse getAll() {
@@ -579,7 +582,7 @@ public class SubmissionController {
                     // Create a streaming workbook with a window size of 100 rows
                     // (only this many rows will be kept in memory at once)
                     try (SXSSFWorkbook workbook = new SXSSFWorkbook(100)) {
-                        List<Submission> submissions = submissionRepo.batchDynamicSubmissionQuery(filter, columns);
+                        List<Submission> submissions = submissionRepo.batchDynamicSubmissionQuery(filter, columns, secondaryDelimiter);
 
                         // Enable compression for temporary files
                         workbook.setCompressTempFiles(true);
