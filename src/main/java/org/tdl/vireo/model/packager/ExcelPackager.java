@@ -25,6 +25,7 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.export.ExcelExportPackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.Organization;
 import edu.tamu.weaver.data.utility.EntityUtility;
 
 @Entity
@@ -126,6 +127,9 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                                 default:
                                     break;
                             }
+                        } else if (valueAsObject instanceof Organization) {
+                            Organization organization = (Organization) valueAsObject;
+                            value = organization.getName();
                         } else {
                             value = valueAsObject.toString();
                         }
