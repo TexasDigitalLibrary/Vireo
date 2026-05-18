@@ -25,6 +25,7 @@ import org.tdl.vireo.model.SubmissionListColumn;
 import org.tdl.vireo.model.export.ExcelExportPackage;
 import org.tdl.vireo.model.formatter.AbstractFormatter;
 import org.tdl.vireo.model.ActionLog;
+import org.tdl.vireo.model.Organization;
 import edu.tamu.weaver.data.utility.EntityUtility;
 
 @Entity
@@ -49,12 +50,12 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
 
     @Override
     public String getMimeType() {
-        return "application/vnd.ms-excel";
+        return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
     }
 
     @Override
     public String getFileExtension() {
-        return "xls";
+        return "xlsx";
     }
 
     @Override
@@ -83,6 +84,7 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                         if(column.getValuePath().size() > 1){
                              valuePath = new String[] {valuePath[0]};
                         }
+                        submission.getCommitteeContactEmail();
                         Object valueAsObject = EntityUtility.getValueFromPath(submission, valuePath);
 
                         String value = "";
@@ -113,17 +115,21 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                             value = user.getName().toString();
                         } else if (valueAsObject instanceof ActionLog){
                             ActionLog actionLog = (ActionLog) valueAsObject;
-                            switch (column.getTitle()){
-                                case "Event Time":
+                            String[] actionLogValuePath = column.getValuePath().toArray(new String[column.getValuePath().size()]);
+                            switch (actionLogValuePath[1]){
+                                case "actionDate":
                                     Calendar actionDate = (Calendar) actionLog.getActionDate();
                                     value = simpleDateFormat.format(actionDate.getTime());
                                     break;
-                                case "Last Event":
+                                case "entry":
                                     value = actionLog.getEntry().toString();
                                     break;
                                 default:
                                     break;
                             }
+                        } else if (valueAsObject instanceof Organization) {
+                            Organization organization = (Organization) valueAsObject;
+                            value = organization.getName();
                         } else {
                             value = valueAsObject.toString();
                         }

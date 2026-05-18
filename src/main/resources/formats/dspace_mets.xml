@@ -70,6 +70,12 @@
                     </dim:field>
 
                     <dim:field
+                      th:if="${ DEGREE_LEVEL != null }"
+                      mdschema="thesis" element="degree" qualifier="level"
+                      th:text="${DEGREE_LEVEL}">
+                    </dim:field>
+
+                    <dim:field
                       th:if="${ GRADUATION_YEAR_MONTH != null }"
                       mdschema="dc" element="date" qualifier="created"
                       th:text="${GRADUATION_YEAR_MONTH}">
@@ -216,7 +222,7 @@
                        SEQ=${ iter.index + 2 }">
                 <FLocat
                     LOCTYPE="URL"
-                    th:attr="'xlink:href'=${ fv.getFileName() }"/>
+                    th:attr="'xlink:href'=${ fv.getExportFileName() }"/>
             </file>
 
         </fileGrp>

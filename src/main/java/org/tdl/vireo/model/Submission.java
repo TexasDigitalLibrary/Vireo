@@ -253,6 +253,9 @@ public class Submission extends ValidatingBaseEntity {
     @JsonView(Views.SubmissionList.class)
     private Map<Long, String> columnValues;
 
+    @Transient
+    private String committeeContactEmail;
+
     public Submission() {
         setModelValidator(new SubmissionValidator());
         setFieldValues(new HashSet<FieldValue>());
@@ -603,17 +606,16 @@ public class Submission extends ValidatingBaseEntity {
         Optional<FieldValue> optFv = this.getFieldValuesByPredicateValue("dc.contributor.advisor")
             .stream()
             .findFirst();
-        String email = null;
         if (optFv.isPresent()) {
             Optional<String> optEmail = optFv.get()
                 .getContacts()
                 .stream()
                 .findFirst();
             if (optEmail.isPresent()) {
-                email = optEmail.get();
+                committeeContactEmail = optEmail.get();
             }
         }
-        return email;
+        return committeeContactEmail;
     }
 
     /**

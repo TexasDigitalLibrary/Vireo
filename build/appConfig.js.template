@@ -1,6 +1,6 @@
 var appConfig = {
 
-    'version': '4.3.1',
+    'version': '4.3.2',
 
     'allowAnonymous': true,
     'anonymousRole': 'ROLE_ANONYMOUS',
@@ -35,10 +35,11 @@ var appConfig = {
 
     /*
       Designate whether or not to use the local authentication.
-      Set this to true or false booleans or set it to the the string 'alternate'.
+      Set this to true or false booleans or set it to the literal strings (with quotes) 'alternate' or 'alternateAllowRegister'.
       When set to the boolean true, the login modal and registrations links are available.
       When set to the boolean false, a modal is not used and Shibboleth login is automatically attempted and no registration link is shown.
-      When set to the string 'alternate' to hide the local login (and registration) as if localAuthentication is false and provide an alterate (hidden) login page for local authentication.
+      When set to the string 'alternate' to hide the local login (and registration) as if localAuthentication is false and provide an alternate (hidden) login page for local authentication.
+      When set to the string 'alternateAllowRegister' to hide the local login the same way as 'alternate', but allow for account registration at the /signup route.
      */
     'localAuthentication': ${LOCAL_AUTHENTICATION},
 
