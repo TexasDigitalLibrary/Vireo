@@ -27,6 +27,24 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.activeFilters = new NamedSearchFilterGroup();
 
+    var loadActiveFilters = function () {
+        return WsApi.fetch(apiMapping.NamedSearchFilterGroup.instantiate).then(function (response) {
+            var apiRes = angular.fromJson(response.body);
+
+            if (apiRes.payload) {
+                var keys = Object.keys(apiRes.payload);
+                var regex = /^NamedSearchFilterGroup\b/;
+
+                for (var i = 0; i < keys.length; i++) {
+                    if (keys[i].match(regex)) {
+                        angular.extend($scope.activeFilters, apiRes.payload[keys[i]]);
+                        break;
+                    }
+                }
+            }
+        });
+    };
+
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
     $scope.simplifyTitle = function (str) {
@@ -37,7 +55,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     var rowFilterTitle = "Exclude";
 
-    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready(), userSettings.ready()]);
+    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready(), userSettings.ready(), loadActiveFilters()]);
 
     var updateChange = function(change) {
         $scope.change = change;
