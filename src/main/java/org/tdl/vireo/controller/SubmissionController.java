@@ -193,7 +193,7 @@ public class SubmissionController {
     @Value("${app.documentType.rename:}")
     private String documentTypesToRename;
 
-    @Value("${app.secondaryDelimiter:'|'}")
+    @Value("${app.secondaryDelimiter:|}")
     private String secondaryDelimiter;
 
     @RequestMapping("/all")
