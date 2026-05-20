@@ -193,6 +193,9 @@ public class SubmissionController {
     @Value("${app.documentType.rename:}")
     private String documentTypesToRename;
 
+    @Value("${app.secondaryDelimiter:|}")
+    private String secondaryDelimiter;
+
     @RequestMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse getAll() {
@@ -597,7 +600,7 @@ public class SubmissionController {
 
                         // Stream data rows
                         for (Submission submission : submissions) {
-                            ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns);
+                            ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns, secondaryDelimiter);
                             if (exportPackage.isMap()) {
                                 Map<String, String> rowData = (Map<String, String>) exportPackage.getPayload();
                                 Row row = worksheet.createRow(rowCount++);
