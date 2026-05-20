@@ -64,97 +64,21 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
 
     @Override
     public ExcelExportPackage packageExport(Submission submission, List<SubmissionListColumn> columns) {
-        Map<String, String> row = new HashMap<String, String>();
-        columns.forEach(column -> {
-            Optional<String> predicate = Optional.ofNullable(column.getPredicate());
-            if (predicate.isPresent()) {
-                List<String> fieldValues = new ArrayList<String>();
-                for (FieldValue fieldValue : submission.getFieldValues()) {
-                    if (fieldValue.getFieldPredicate().getValue().equals(predicate.get().trim())) {
-                        fieldValues.add(fieldValue.getValue());
-                        row.put(column.getTitle(), String.join(", ", fieldValues));
-                    } else {
-                        row.put(column.getTitle(), String.join(", ", fieldValues));                    }
-                }
-            } else {
-                if (column.getValuePath().size() > 0) {
-                    String[] valuePath = column.getValuePath().toArray(new String[column.getValuePath().size()]);
-                    try {
-                        if(column.getValuePath().size() > 1){
-                             valuePath = new String[] {valuePath[0]};
-                        }
-                        submission.getCommitteeContactEmail();
-                        Object valueAsObject = EntityUtility.getValueFromPath(submission, valuePath);
-
-                        String value = "";
-
-                        if (valueAsObject instanceof Calendar) {
-                            Calendar calendar = (Calendar) valueAsObject;
-                            value = simpleDateFormat.format(calendar.getTime());
-                        } else if (valueAsObject instanceof Date) {
-                            Date date = (Date) valueAsObject;
-                            value = simpleDateFormat.format(date);
-                        } else if (valueAsObject instanceof Set && ((Set<?>) valueAsObject).stream().allMatch(o -> o instanceof CustomActionValue)) {
-                            StringBuilder sb = new StringBuilder();
-                            ((Set<?>) valueAsObject).forEach(o -> {
-                                CustomActionValue customActionValue = (CustomActionValue) o;
-                                if (customActionValue.getValue()) {
-                                    sb.append("☑ ");
-                                } else {
-                                    sb.append("☐ ");
-                                }
-                                sb.append(customActionValue.getDefinition().getLabel()+"\n");
-                            });
-                            value = sb.toString();
-                        } else if (valueAsObject instanceof SubmissionStatus){
-                            SubmissionStatus submissionStatus = (SubmissionStatus) valueAsObject;
-                            value = submissionStatus.getName().toString();
-                        } else if (valueAsObject instanceof User){
-                            User user = (User) valueAsObject;
-                            value = user.getName().toString();
-                        } else if (valueAsObject instanceof ActionLog){
-                            ActionLog actionLog = (ActionLog) valueAsObject;
-                            switch (column.getTitle()){
-                                case "Event Time":
-                                    Calendar actionDate = (Calendar) actionLog.getActionDate();
-                                    value = simpleDateFormat.format(actionDate.getTime());
-                                    break;
-                                case "Last Event":
-                                    value = actionLog.getEntry().toString();
-                                    break;
-                                default:
-                                    break;
-                            }
-                        } else {
-                            value = valueAsObject.toString();
-                        }
-                        row.put(column.getTitle(), value.toString());
-                    } catch (Exception exception) {
-                        logger.warn("Unable to get value from " + String.join(",", valuePath));
-                    }
-                } else {
-                    logger.warn("Column " + column.getTitle() + " has no predicate or value path!");
-                }
-            }
-        });
-        return new ExcelExportPackage(submission, "Excel", row);
+        return new ExcelExportPackage(submission, "Excel", buildRow(submission, columns, ", "));
     }
 
     @Override
     public ExcelExportPackage packageExport(Submission submission, List<SubmissionListColumn> columns, String delimiter) {
+        return new ExcelExportPackage(submission, "Excel", buildRow(submission, columns, delimiter));
+    }
+
+    private Map<String, String> buildRow(Submission submission, List<SubmissionListColumn> columns, String fieldValueDelimiter) {
         Map<String, String> row = new HashMap<String, String>();
         columns.forEach(column -> {
             Optional<String> predicate = Optional.ofNullable(column.getPredicate());
             if (predicate.isPresent()) {
-                List<String> fieldValues = new ArrayList<String>();
-                for (FieldValue fieldValue : submission.getFieldValues()) {
-                    if (fieldValue.getFieldPredicate().getValue().equals(predicate.get().trim())) {
-                        fieldValues.add(fieldValue.getValue());
-                        row.put(column.getTitle(), String.join(", ", fieldValues));
-                    } else {
-                        row.put(column.getTitle(), String.join(delimiter+" ", fieldValues));
-                    }
-                }
+                List<String> fieldValues = getFieldValues(submission, predicate.get().trim());
+                row.put(column.getTitle(), String.join(fieldValueDelimiter, fieldValues));
             } else {
                 if (column.getValuePath().size() > 0) {
                     String[] valuePath = column.getValuePath().toArray(new String[column.getValuePath().size()]);
@@ -216,7 +140,22 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                 }
             }
         });
-        return new ExcelExportPackage(submission, "Excel", row);
+        return row;
+    }
+
+    private List<String> getFieldValues(Submission submission, String predicate) {
+        List<String> fieldValues = new ArrayList<String>();
+        for (FieldValue fieldValue : submission.getFieldValues()) {
+            if (matchesPredicate(fieldValue, predicate)) {
+                fieldValues.add(fieldValue.getValue());
+            }
+        }
+        return fieldValues;
+    }
+
+    private boolean matchesPredicate(FieldValue fieldValue, String predicate) {
+        String fieldPredicate = fieldValue.getFieldPredicate().getValue();
+        return fieldPredicate.equals(predicate) || fieldPredicate.startsWith(predicate + ".");
     }
 
 }
