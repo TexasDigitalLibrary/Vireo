@@ -218,7 +218,7 @@
              </marc:datafield>
              
      -->
-    <datafield th:each="subject: ${SUBJECT_FIELD_VALUES}" tag="650" ind1="4" ind2=" ">
+    <datafield th:each="subject: ${SUBJECT_FIELD_VALUES}" tag="650" ind1=" " ind2=" ">
         <subfield th:text="${ subject.getValue() }" code="a"></subfield>
     </datafield>
 
