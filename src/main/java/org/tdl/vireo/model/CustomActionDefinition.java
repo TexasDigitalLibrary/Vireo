@@ -35,7 +35,7 @@ public class CustomActionDefinition extends ValidatingOrderedBaseEntity {
     }
 
     /**
-     * @return the label
+     * @return the position
      */
     @Override
     @JsonView(Views.SubmissionList.class)
