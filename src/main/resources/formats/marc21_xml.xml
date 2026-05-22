@@ -211,18 +211,19 @@
 
      <!-- 650, ETD discipline index terms -->
      <!--
-         Source: major
+         Source: subjects
          Example:
-             <marc:datafield tag="650" ind1="4" ind2=" ">
+             <marc:datafield tag="650" ind1=" " ind2=" ">
                  <marc:subfield code="a">Finance</marc:subfield>
              </marc:datafield>
              
      -->
-     <datafield th:if="${ MAJOR != null }" tag="650" ind1=" " ind2="4">
-         <subfield th:text="${ MAJOR }" code="a"></subfield>
-     </datafield>
+    <datafield th:each="subject: ${SUBJECT_FIELD_VALUES}" tag="650" ind1=" " ind2=" ">
+        <subfield th:text="${ subject.getValue() }" code="a"></subfield>
+    </datafield>
 
-    <!-- 653, ETD subject/keywords -->
+
+    <!-- 653, ETD keywords -->
     <!--
         Source: documentKeywords
         Example:
