@@ -67,7 +67,7 @@ public class MarcXML21Formatter extends AbstractFormatter {
                 context.setVariable(key.name(), submissionHelperUtility.getKeywordFieldValues());
                 break;
             case SUBJECT_FIELD_VALUES:
-                context.setVariable(key.name(), submissionHelperUtility.getKeywordFieldValues());
+                context.setVariable(key.name(), submissionHelperUtility.getSubjectFieldValues());
                 break;
             case DEPARTMENT:
                 context.setVariable(key.name(), submissionHelperUtility.getDepartment());
