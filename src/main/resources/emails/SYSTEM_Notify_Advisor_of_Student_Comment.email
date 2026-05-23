@@ -13,6 +13,6 @@ Title: {DOCUMENT_TITLE}
 
 Please see the action log for more information.
 
-    {ADVISOR_URL}
+    <a href="{ADVISOR_URL}">Advisor URL</a>
 
 The Vireo Team

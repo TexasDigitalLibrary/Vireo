@@ -76,7 +76,7 @@ public class VireoEmailSender extends JavaMailSenderImpl implements EmailSender 
         loadConfiguration();
 
         MimeMessage message = createMimeMessage();
-        MimeMessageHelper mm = new MimeMessageHelper(message);
+        MimeMessageHelper mm = new MimeMessageHelper(message, true);
 
         mm.setFrom(vireoEmailConfig.getFrom());
         mm.setReplyTo(vireoEmailConfig.getReplyTo());
@@ -85,7 +85,7 @@ public class VireoEmailSender extends JavaMailSenderImpl implements EmailSender 
         mm.setCc(cc);
         mm.setBcc(bcc);
         mm.setSubject(subject);
-        mm.setText(content, false);
+        mm.setText(content, true);
 
         LOG.debug("\tSending email with subject '" + subject + "' from " + vireoEmailConfig.getFrom() + " to: [ " + String.join("; ", to) + " ], cc: [ " + String.join(";", cc) + " ], bcc: [ " + String.join(";", bcc) + " ]; ");
         send(message);
