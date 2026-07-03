@@ -38,7 +38,7 @@ public abstract class HeritableRepoImpl<M extends HeritableComponent, R extends 
         // if requesting organization originates the workflow step or the workflow step is overrideable,
         if (pendingWorkflowStep.getOriginatingOrganization().getId().equals(requestingOrganization.getId()) || pendingWorkflowStep.getOverrideable()) {
             // ... and if also that workflow step originates the heritableModel or the heritableModel is overrideable,
-            if (heritableModelToRemove.getOriginatingWorkflowStep().getId().equals(heritableModelToRemove.getId()) || heritableModelToRemove.getOverrideable()) {
+            if(heritableModelToRemove.getOriginatingWorkflowStep() != null && heritableModelToRemove.getOriginatingWorkflowStep().getId().equals(pendingWorkflowStep.getId())){
                 // ...then the update is permissible.
 
                 // if requesting organization is not the workflow step's orignating organization,
