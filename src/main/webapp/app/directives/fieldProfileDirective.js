@@ -412,7 +412,7 @@ vireo.directive("field", function ($controller, $filter, $q, $timeout, Controlle
             };
 
             $scope.controlledVocabularyTypeAhead = function (field, search) {
-                if (!field.fieldPredicate.id || !$scope.profile.controlledVocabulary.id) {
+                if (!field.fieldPredicate.id || !angular.isDefined($scope.profile.controlledVocabulary)) {
                     return [];
                 }
 

@@ -18,10 +18,11 @@ public class DSpaceMetsKeyTest extends AbstractEnumTest<DSpaceMETSKey> {
             Arguments.of(DSpaceMETSKey.SUPPLEMENTAL_AND_SOURCE_DOCUMENT_FIELD_VALUES, "SUPPLEMENTAL_AND_SOURCE_DOCUMENT_FIELD_VALUES", 7),
             Arguments.of(DSpaceMETSKey.LICENSE_DOCUMENT_FIELD_VALUES, "LICENSE_DOCUMENT_FIELD_VALUES", 8),
             Arguments.of(DSpaceMETSKey.METS_FIELD_VALUES, "METS_FIELD_VALUES", 9),
-            Arguments.of(DSpaceMETSKey.GRADUATION_MONTH_YEAR, "GRADUATION_MONTH_YEAR", 10),
-            Arguments.of(DSpaceMETSKey.GRADUATION_YEAR_MONTH, "GRADUATION_YEAR_MONTH", 11),
-            Arguments.of(DSpaceMETSKey.GRANTOR, "GRANTOR", 12),
-            Arguments.of(DSpaceMETSKey.EMBARGO_LIFT_DATE, "EMBARGO_LIFT_DATE", 13)
+            Arguments.of(DSpaceMETSKey.DEGREE_LEVEL, "DEGREE_LEVEL", 10),
+            Arguments.of(DSpaceMETSKey.GRADUATION_MONTH_YEAR, "GRADUATION_MONTH_YEAR", 11),
+            Arguments.of(DSpaceMETSKey.GRADUATION_YEAR_MONTH, "GRADUATION_YEAR_MONTH", 12),
+            Arguments.of(DSpaceMETSKey.GRANTOR, "GRANTOR", 13),
+            Arguments.of(DSpaceMETSKey.EMBARGO_LIFT_DATE, "EMBARGO_LIFT_DATE", 14)
         );
     }
 

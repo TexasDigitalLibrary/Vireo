@@ -1104,7 +1104,7 @@ public class SubmissionController {
             if (user.getRole().equals(Role.ROLE_STUDENT) && documentType.equals("_doctype_license")) {
                 apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
             } else {
-                if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
+                if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || user.getRole().equals(Role.ROLE_REVIEWER) || uri.contains(String.valueOf(hash))) {
                     String fileName = "";
                     String fileSize = "file not found";
                     if (assetService.assetFileExists(uri)) {
