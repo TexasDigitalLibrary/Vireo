@@ -42,6 +42,8 @@ jobs:
           jq 'reduce inputs as $i (.; .source_files += $i.source_files)' target/coveralls.json coverage/coveralls.json > coveralls.json
 
       - name: "Send to Coveralls"
+        if: github.event_name != 'pull_request'
+        continue-on-error: true
         uses: MikeEdgar/github-action@raw_coverage_file
         with:
           github-token: ${{ secrets.github_token }}

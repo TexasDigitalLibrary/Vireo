@@ -1,0 +1,22 @@
+<div class="container" ng-controller="LocalAccountSignupController">
+
+    <h1>Local Account Signup</h1>
+
+    <div ng-if="registerEnabled">
+        <p>Please verify your email to continue.</p>
+
+        <button class="btn btn-primary" ng-click="openModal('#verifyEmailModal')">
+            Verify Email
+        </button>
+
+        <button class="btn btn-default" ng-click="goHome()">
+            Return Home
+        </button>
+    </div>
+
+    <div ng-if="!registerEnabled">
+        <p>Local authentication and account signup are disabled.</p>
+    </div>
+
+</div>
+

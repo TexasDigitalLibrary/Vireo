@@ -45,6 +45,10 @@ public class PackagerUtility {
         return packager.packageExport(submission, columns);
     }
 
+    public ExportPackage packageExport(Packager<?> packager, Submission submission, List<SubmissionListColumn> columns, String delimiter) {
+        return packager.packageExport(submission, columns, delimiter);
+    }
+
     public ExportPackage packageExport(Packager<?> packager, Submission submission, Map<String, String> dsDocs) {
         return packager.packageExport(submission, dsDocs);
     }

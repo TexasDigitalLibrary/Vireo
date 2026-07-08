@@ -41,7 +41,7 @@ public class DepositLocationRepoImpl extends AbstractWeaverOrderedRepoImpl<Depos
             onBehalfOf = (String) depositLocationJson.get("onBehalfOf");
         }
 
-        Integer timeout = (Integer) depositLocationJson.getOrDefault("timeout", "240");
+        Integer timeout = Integer.valueOf(depositLocationJson.getOrDefault("timeout", 240).toString());
 
         return create((String) depositLocationJson.get("name"), (String) depositLocationJson.get("repository"), (String) depositLocationJson.get("collection"), (String) depositLocationJson.get("username"), (String) depositLocationJson.get("password"), onBehalfOf, packager, (String) depositLocationJson.get("depositorName"), timeout);
     }
