@@ -796,7 +796,7 @@ public class SubmissionRepoImpl extends AbstractWeaverRepoImpl<Submission, Submi
                     for (String filterString : submissionListColumn.getFilters()) {
                         sqlBuilder = new StringBuilder();
 
-                        if (filterString == null) {
+                        if (filterString == null || "null".equalsIgnoreCase(filterString)) {
                             sqlBuilder.append("a.email IS NULL");
                         } else if (submissionListColumn.getExactMatch()) {
                             sqlBuilder.append("a.email = '").append(filterString).append("'");
