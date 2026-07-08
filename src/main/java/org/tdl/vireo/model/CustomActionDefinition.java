@@ -35,6 +35,15 @@ public class CustomActionDefinition extends ValidatingOrderedBaseEntity {
     }
 
     /**
+     * @return the position
+     */
+    @Override
+    @JsonView(Views.SubmissionList.class)
+    public Long getPosition() {
+        return super.getPosition();
+    }
+
+    /**
      * @return the label
      */
     public String getLabel() {
