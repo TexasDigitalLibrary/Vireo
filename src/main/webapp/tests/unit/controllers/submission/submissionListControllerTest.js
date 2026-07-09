@@ -124,6 +124,15 @@ describe("controller: SubmissionListController", function () {
     });
 
     describe("Are the scope methods defined", function () {
+        it("should safely handle missing active filter collections", function () {
+            scope.activeFilters.namedSearchFilters = undefined;
+
+            expect(function () {
+                scope.furtherFilterBy.withoutActiveFilter("value");
+            }).not.toThrow();
+            expect(scope.furtherFilterBy.withoutActiveFilter("value")).toBe(true);
+        });
+
         it("addRowFilter should be defined", function () {
             expect(scope.addRowFilter).toBeDefined();
             expect(typeof scope.addRowFilter).toEqual("function");

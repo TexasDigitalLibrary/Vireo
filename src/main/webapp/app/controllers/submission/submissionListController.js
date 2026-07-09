@@ -27,6 +27,48 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     $scope.activeFilters = new NamedSearchFilterGroup();
 
+    var getFirstNamedSearchFilterGroupPayload = function (payload) {
+        if (!payload) {
+            return null;
+        }
+
+        var keys = Object.keys(payload);
+        var regex = /^NamedSearchFilterGroup\b/;
+
+        for (var i = 0; i < keys.length; i++) {
+            if (keys[i].match(regex)) {
+                return payload[keys[i]];
+            }
+        }
+
+        return null;
+    };
+
+    var loadActiveFilters = function () {
+        return WsApi.fetch(apiMapping.NamedSearchFilterGroup.instantiate).then(function (response) {
+            var apiRes = angular.fromJson(response.body);
+
+            if (apiRes && apiRes.meta && apiRes.meta.status === 'SUCCESS') {
+                var activeFilterPayload = getFirstNamedSearchFilterGroupPayload(apiRes.payload);
+                if (activeFilterPayload) {
+                    angular.extend($scope.activeFilters, activeFilterPayload);
+                }
+            }
+
+            if (!$scope.activeFilters.namedSearchFilters) {
+                $scope.activeFilters.namedSearchFilters = [];
+            }
+
+            if (!$scope.activeFilters.sortColumnTitle) {
+                $scope.activeFilters.sortColumnTitle = null;
+            }
+
+            if (!$scope.activeFilters.sortDirection) {
+                $scope.activeFilters.sortDirection = null;
+            }
+        });
+    };
+
     $scope.fieldPredicates = FieldPredicateRepo.getAll();
 
     $scope.simplifyTitle = function (str) {
@@ -37,7 +79,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
 
     var rowFilterTitle = "Exclude";
 
-    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready(), userSettings.ready()]);
+    var ready = $q.all([SubmissionListColumnRepo.ready(), ManagerSubmissionListColumnRepo.ready(), EmailTemplateRepo.ready(), FieldPredicateRepo.ready(), userSettings.ready(), loadActiveFilters()]);
 
     var updateChange = function(change) {
         $scope.change = change;
@@ -201,6 +243,10 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
         update(true);
 
         const withoutActiveFilter = function(value) {
+            if (!$scope.activeFilters || !$scope.activeFilters.namedSearchFilters) {
+                return true;
+            }
+
             return $scope.activeFilters.namedSearchFilters.filter((nsf) => nsf.filterValues.indexOf(value) >= 0).length == 0;
         };
 
@@ -1062,18 +1108,14 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 var apiRes = angular.fromJson(res.body);
 
                 if (apiRes.payload && apiRes.payload.FilterAction) {
-                    var keys = Object.keys(apiRes.payload);
-                    var regex = /^NamedSearchFilterGroup\b/;
-                    for (var i = 0; i < keys.length; i++) {
-                        if (keys[i].match(regex)) {
-                            if (apiRes.payload.FilterAction == 'CLEAR' || apiRes.payload.FilterAction == 'SET') {
-                                $scope.resetPagination();
-                            }
-
-                            angular.extend($scope.activeFilters, apiRes.payload[keys[i]]);
-                            query();
-                            break;
+                    var activeFilterPayload = getFirstNamedSearchFilterGroupPayload(apiRes.payload);
+                    if (activeFilterPayload) {
+                        if (apiRes.payload.FilterAction == 'CLEAR' || apiRes.payload.FilterAction == 'SET') {
+                            $scope.resetPagination();
                         }
+
+                        angular.extend($scope.activeFilters, activeFilterPayload);
+                        query();
                     }
                 }
             }
@@ -1107,18 +1149,11 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                     if (apiRes.payload.FilterAction == 'REMOVE') {
                         SavedFilterRepo.reset();
                     } else {
-                        var keys = Object.keys(apiRes.payload);
-                        var regex = /^NamedSearchFilterGroup\b/;
-                        for (var i = 0; i < keys.length; i++) {
-                            if (keys[i].match(regex)) {
-                                if (apiRes.payload.FilterAction == 'SAVE') {
-                                    // If the user is the same, then the filter list should already be up to date.
-                                    if (apiRes.payload[keys[i]].user !== userSettings.id) {
-                                        SavedFilterRepo.reset();
-                                    }
-                                }
-
-                                break;
+                        var activeFilterPayload = getFirstNamedSearchFilterGroupPayload(apiRes.payload);
+                        if (activeFilterPayload && apiRes.payload.FilterAction == 'SAVE') {
+                            // If the user is the same, then the filter list should already be up to date.
+                            if (activeFilterPayload.user !== userSettings.id) {
+                                SavedFilterRepo.reset();
                             }
                         }
                     }
