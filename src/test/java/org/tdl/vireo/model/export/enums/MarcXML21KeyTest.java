@@ -17,11 +17,12 @@ public class MarcXML21KeyTest extends AbstractEnumTest<MarcXML21Key> {
             Arguments.of(MarcXML21Key.MAJOR, "MAJOR", 6),
             Arguments.of(MarcXML21Key.DEPOSIT_URL, "DEPOSIT_URL", 7),
             Arguments.of(MarcXML21Key.ABSTRACT, "ABSTRACT", 8),
-            Arguments.of(MarcXML21Key.KEYWORD_FIELD_VALUES, "KEYWORD_FIELD_VALUES", 9),
-            Arguments.of(MarcXML21Key.DEPARTMENT, "DEPARTMENT", 10),
-            Arguments.of(MarcXML21Key.COMMITTEE_CHAIR_FIELD_VALUES, "COMMITTEE_CHAIR_FIELD_VALUES", 11),
-            Arguments.of(MarcXML21Key.COMMITTEE_MEMBER_FIELD_VALUES, "COMMITTEE_MEMBER_FIELD_VALUES", 12),
-            Arguments.of(MarcXML21Key.PRIMARY_DOCUMENT_MIMETYPE, "PRIMARY_DOCUMENT_MIMETYPE", 13)
+            Arguments.of(MarcXML21Key.SUBJECT_FIELD_VALUES, "SUBJECT_FIELD_VALUES", 9),
+            Arguments.of(MarcXML21Key.KEYWORD_FIELD_VALUES, "KEYWORD_FIELD_VALUES", 10),
+            Arguments.of(MarcXML21Key.DEPARTMENT, "DEPARTMENT", 11),
+            Arguments.of(MarcXML21Key.COMMITTEE_CHAIR_FIELD_VALUES, "COMMITTEE_CHAIR_FIELD_VALUES", 12),
+            Arguments.of(MarcXML21Key.COMMITTEE_MEMBER_FIELD_VALUES, "COMMITTEE_MEMBER_FIELD_VALUES", 13),
+            Arguments.of(MarcXML21Key.PRIMARY_DOCUMENT_MIMETYPE, "PRIMARY_DOCUMENT_MIMETYPE", 14)
         );
     }
 

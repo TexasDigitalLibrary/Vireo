@@ -193,6 +193,9 @@ public class SubmissionController {
     @Value("${app.documentType.rename:}")
     private String documentTypesToRename;
 
+    @Value("${app.secondaryDelimiter:|}")
+    private String secondaryDelimiter;
+
     @RequestMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse getAll() {
@@ -597,7 +600,7 @@ public class SubmissionController {
 
                         // Stream data rows
                         for (Submission submission : submissions) {
-                            ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns);
+                            ExportPackage exportPackage = packagerUtility.packageExport(packager, submission, columns, secondaryDelimiter);
                             if (exportPackage.isMap()) {
                                 Map<String, String> rowData = (Map<String, String>) exportPackage.getPayload();
                                 Row row = worksheet.createRow(rowCount++);
@@ -1101,7 +1104,7 @@ public class SubmissionController {
             if (user.getRole().equals(Role.ROLE_STUDENT) && documentType.equals("_doctype_license")) {
                 apiResponse = new ApiResponse(ERROR, "You are not allowed to delete license files!");
             } else {
-                if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || uri.contains(String.valueOf(hash))) {
+                if (user.getRole().equals(Role.ROLE_ADMIN) || user.getRole().equals(Role.ROLE_MANAGER) || user.getRole().equals(Role.ROLE_REVIEWER) || uri.contains(String.valueOf(hash))) {
                     String fileName = "";
                     String fileSize = "file not found";
                     if (assetService.assetFileExists(uri)) {

@@ -21,4 +21,4 @@
 **Additional Description:**
 <!-- Briefly describe how AI was used -->
 
-[ ] No AI Used
+- [ ] No AI Used

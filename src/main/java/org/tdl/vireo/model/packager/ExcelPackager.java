@@ -65,18 +65,21 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
 
     @Override
     public ExcelExportPackage packageExport(Submission submission, List<SubmissionListColumn> columns) {
+        return new ExcelExportPackage(submission, "Excel", buildRow(submission, columns, ", "));
+    }
+
+    @Override
+    public ExcelExportPackage packageExport(Submission submission, List<SubmissionListColumn> columns, String delimiter) {
+        return new ExcelExportPackage(submission, "Excel", buildRow(submission, columns, delimiter));
+    }
+
+    private Map<String, String> buildRow(Submission submission, List<SubmissionListColumn> columns, String fieldValueDelimiter) {
         Map<String, String> row = new HashMap<String, String>();
         columns.forEach(column -> {
             Optional<String> predicate = Optional.ofNullable(column.getPredicate());
             if (predicate.isPresent()) {
-                List<String> fieldValues = new ArrayList<String>();
-                for (FieldValue fieldValue : submission.getFieldValues()) {
-                    if (fieldValue.getFieldPredicate().getValue().equals(predicate.get().trim())) {
-                        fieldValues.add(fieldValue.getValue());
-                        row.put(column.getTitle(), String.join(", ", fieldValues));
-                    } else {
-                        row.put(column.getTitle(), String.join(", ", fieldValues));                    }
-                }
+                List<String> fieldValues = getFieldValues(submission, predicate.get().trim());
+                row.put(column.getTitle(), String.join(fieldValueDelimiter, fieldValues));
             } else {
                 if (column.getValuePath().size() > 0) {
                     String[] valuePath = column.getValuePath().toArray(new String[column.getValuePath().size()]);
@@ -142,7 +145,22 @@ public class ExcelPackager extends AbstractPackager<ExcelExportPackage> {
                 }
             }
         });
-        return new ExcelExportPackage(submission, "Excel", row);
+        return row;
+    }
+
+    private List<String> getFieldValues(Submission submission, String predicate) {
+        List<String> fieldValues = new ArrayList<String>();
+        for (FieldValue fieldValue : submission.getFieldValues()) {
+            if (matchesPredicate(fieldValue, predicate)) {
+                fieldValues.add(fieldValue.getValue());
+            }
+        }
+        return fieldValues;
+    }
+
+    private boolean matchesPredicate(FieldValue fieldValue, String predicate) {
+        String fieldPredicate = fieldValue.getFieldPredicate().getValue();
+        return fieldPredicate.equals(predicate) || fieldPredicate.startsWith(predicate + ".");
     }
 
 }
