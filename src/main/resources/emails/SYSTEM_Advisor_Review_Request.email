@@ -15,7 +15,7 @@ You are receiving this message because {FULL_NAME} has submitted a thesis or dis
 
 The submission is available for your review at:
 
-    {ADVISOR_URL}
+    <a href="{ADVISOR_URL}">Advisor URL</a>
 
 The following information is included for your convenience:
 
