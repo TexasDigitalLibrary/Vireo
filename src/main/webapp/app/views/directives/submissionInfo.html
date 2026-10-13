@@ -70,7 +70,7 @@
         <span ng-if="type=='view' && !field.isValid()" class="glyphicon glyphicon-refresh text-primary clickable" ng-click="refreshFieldValue(field)"></span>
 
         <!-- conditionally show the edit clicker or the progress spinner -->
-        <span id="{{$index}}" ng-if="type=='view' && !field.updating" class="glyphicon glyphicon-pencil clickable" ng-click="editFieldValue($event, field)"></span>
+        <span id="{{$index}}" ng-if="type=='view' && !field.updating" class="glyphicon glyphicon-pencil clickable" role="button" tabindex="0" aria-label="Edit {{ fieldProfile.gloss }}" ng-click="editFieldValue($event, field)"></span>
         <span ng-if="type=='view' && !field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" ng-click="removeFieldValue(field)"></span>
 
         <span ng-if="type=='view' && field.updating" class="glyphicon glyphicon-refresh spinning"></span>

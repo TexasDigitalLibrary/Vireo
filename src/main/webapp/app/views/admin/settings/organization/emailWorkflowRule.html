@@ -21,7 +21,7 @@
               ng-repeat="rule in getSelectedOrganizationEmailWorkflowRules()"
               class="email-workflow-rule-row">
                 <td ng-click="openEditEmailWorkflowRule(rule)">
-                    <span class="glyphicon glyphicon-pencil"></span>
+                    <span class="glyphicon glyphicon-pencil" role="button" tabindex="0" aria-label="Edit email workflow rule {{ rule.emailTemplate.name }}"></span>
                 </td>
                 <td ng-click="openEditEmailWorkflowRule(rule)">
                     {{rule.emailTemplate.name}}
