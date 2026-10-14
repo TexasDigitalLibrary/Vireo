@@ -1,12 +1,18 @@
 <div class="custom-action">
 	<span>{{ item.position }}.</span>
 	<span class="mouse-hover-pointer"
+		  role="button"
+		  tabindex="0"
+		  keyboard-activate
+		  aria-label="Edit {{ item.label }}"
 		  ng-click="edit({index:item.position})"
 		  ng-mouseenter="isMouseHover=true"
-		  ng-mouseleave="isMouseHover=false">
+		  ng-mouseleave="isMouseHover=false"
+		  ng-focus="isMouseHover=true"
+		  ng-blur="isMouseHover=false">
 		<span ng-show="!item.isStudentVisible" class="glyphicon glyphicon glyphicon-user"></span>
 		<span ng-show="item.isStudentVisible" class="glyphicon glyphicon glyphicon-globe"></span>
 		{{item.label}}
 	</span>
-	<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" role="button" tabindex="0" aria-label="Edit {{ item.label }}"></span>
+	<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" aria-hidden="true"></span>
 </div>

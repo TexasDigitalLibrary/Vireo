@@ -59,7 +59,7 @@
 						</div>
 						<div class="col-sm-6">
 							<span ng-if="(isAdmin() || isManager())" ng-hide="editdisplayName">
-								<span class="edit-handle glyphicon glyphicon-pencil" role="button" tabindex="0" aria-label="Edit display name" ng-click="editMode('displayName')"></span>
+								<span class="edit-handle glyphicon glyphicon-pencil" role="button" tabindex="0" keyboard-activate aria-label="Edit display name" ng-click="editMode('displayName')"></span>
 								<span class="profile-value" ng-Dblclick="editMode('displayName')">{{settings.user.displayName}}</span>
 							</span>
 							<input id="displayName" type="text" name="displayName" class="form-control" ng-show="editdisplayName" ng-if="(isAdmin() || isManager())" ng-model="settings.user.displayName" ng-change="updateUserSetting('displayName', 500)" ng-blur="viewMode('displayName')" ng-keyup="confirmEdit($event, 'displayName')" tamu-force-focus="editdisplayName" required shadow/>
@@ -122,7 +122,7 @@
 						</div>
 						<div class="col-sm-6">
 							<span ng-if="(isAdmin() || isManager())" ng-hide="editpreferedEmail">
-								<span class="edit-handle glyphicon glyphicon-pencil" role="button" tabindex="0" aria-label="Edit preferred email" ng-click="editMode('preferedEmail')"></span>
+								<span class="edit-handle glyphicon glyphicon-pencil" role="button" tabindex="0" keyboard-activate aria-label="Edit preferred email" ng-click="editMode('preferedEmail')"></span>
 								<span class="profile-value" ng-Dblclick="editMode('preferedEmail')">{{settings.user.preferedEmail}}</span>
 							</span>
 							<input id="preferedEmail" type="email" name="preferedEmail" class="form-control" ng-show="editpreferedEmail" ng-if="(isAdmin() || isManager())" ng-model="settings.user.preferedEmail" ng-change="updateUserSetting('preferedEmail', 500)" ng-blur="viewMode('preferedEmail')" ng-keyup="confirmEdit($event, 'preferedEmail')" tamu-force-focus="editpreferedEmail" required shadow/>
