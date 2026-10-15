@@ -78,7 +78,7 @@ public class ApplicationInitializationTest {
                 ? "Incorrect number of default setting types after reload"
                 : "Incorrect number of default setting types");
 
-        assertSettingsType(8, "application", isReload);
+        assertSettingsType(12, "application", isReload);
         assertSettingsType(4, "footer", isReload);
         assertSettingsType(2, "orcid", isReload);
         assertSettingsType(9, "proquest_umi_degree_code", isReload);

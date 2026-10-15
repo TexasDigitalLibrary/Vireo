@@ -23,6 +23,18 @@
     },
     {
       "new_submission_header_text": "Choose Your Organization"
+    },
+    {
+      "auth.pass.enabled": true
+    },
+    {
+      "auth.pass.change.enabled": false
+    },
+    {
+      "auth.pass.reset.enabled": false
+    },
+    {
+      "auth.pass.reset.expiryHours": 24
     }
   ],
   "footer": [

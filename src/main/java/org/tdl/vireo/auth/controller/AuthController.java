@@ -32,6 +32,7 @@ import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.service.VireoEmailSender;
+import org.tdl.vireo.utility.PasswordValidator;
 import org.tdl.vireo.utility.TemplateUtility;
 
 import edu.tamu.weaver.auth.controller.WeaverAuthController;
@@ -113,19 +114,12 @@ public class AuthController extends WeaverAuthController {
             return new ApiResponse(ERROR, "Either a first or last name is required!");
         }
 
-        if (password == null || password.trim().length() == 0) {
-            logger.debug("Registration requires a password!");
-            return new ApiResponse(ERROR, "Registration requires a password!");
-        }
+        PasswordValidator.Result passwordResult = PasswordValidator.validate(password, confirm);
 
-        if (password != null && !password.equals(confirm)) {
-            logger.debug("The passwords do not match!");
-            return new ApiResponse(ERROR, "The passwords do not match!");
-        }
-
-        if (password != null && password.trim().length() < 6) {
-            logger.debug("Password must be greater than 6 characters!");
-            return new ApiResponse(ERROR, "Password must be greater than 6 characters!");
+        if (passwordResult != PasswordValidator.Result.ACCEPTED) {
+            String passwordMessage = PasswordValidator.messageFor(passwordResult);
+            logger.debug(passwordMessage);
+            return new ApiResponse(ERROR, passwordMessage);
         }
 
         String[] content = null;

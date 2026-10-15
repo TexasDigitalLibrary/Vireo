@@ -28,6 +28,7 @@ import javax.persistence.MapKeyColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderColumn;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -37,6 +38,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.tdl.vireo.model.listener.UserListener;
 import org.tdl.vireo.model.response.Views;
 import org.tdl.vireo.model.validation.UserValidator;
+import org.tdl.vireo.utility.PasswordEligibilityRule;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -540,6 +542,21 @@ public class User extends AbstractWeaverUserDetails {
     @JsonIgnore
     public String getUsername() {
         return getEmail();
+    }
+
+    /**
+     * Whether this Account is eligible for Vireo-managed password operations, derived from the
+     * stored password and netid values at evaluation time.
+     *
+     * Carries no {@code @JsonView} annotation deliberately: with default view inclusion disabled,
+     * an un-annotated property serializes only when no view is active, which confines the flag to
+     * the no-view listing endpoints.
+     *
+     * @return true when this Account is eligible
+     */
+    @Transient
+    public boolean isPasswordEligible() {
+        return PasswordEligibilityRule.isEligible(password, netid);
     }
 
 }

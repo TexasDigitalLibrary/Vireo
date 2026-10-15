@@ -1,6 +1,9 @@
 package org.tdl.vireo.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -31,6 +34,11 @@ import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.request.FilteredPageRequest;
+import org.tdl.vireo.model.response.Views;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import edu.tamu.weaver.auth.model.Credentials;
 import edu.tamu.weaver.response.ApiResponse;
@@ -80,13 +88,129 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testCredentials() {
-        ApiResponse response = userController.credentials(credentials1);
+        ApiResponse response = userController.credentials(credentials1, user1);
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
         Credentials got = (Credentials) response.getPayload().get("Credentials");
 
         assertEquals(credentials1, got);
+    }
+
+    @Test
+    public void testCredentialsCarriesPasswordEligibleTrue() {
+        // Requirement 2 criterion 4: an Account with a non-whitespace password and a null netid is eligible.
+        user1.setPassword("encodedpassword");
+        user1.setNetid(null);
+
+        ApiResponse response = userController.credentials(credentials1, user1);
+
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        Credentials got = (Credentials) response.getPayload().get("Credentials");
+
+        // The map is declared Map<String, String>, so the value is the String "true", never a JSON boolean.
+        assertEquals("true", got.getAllCredentials().get("passwordEligible"));
+    }
+
+    @Test
+    public void testCredentialsCarriesPasswordEligibleFalse() {
+        // Requirement 2 criterion 2: a non-null netid makes the Account ineligible.
+        user1.setPassword("encodedpassword");
+        user1.setNetid("netid1");
+
+        ApiResponse response = userController.credentials(credentials1, user1);
+
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        Credentials got = (Credentials) response.getPayload().get("Credentials");
+
+        assertEquals("false", got.getAllCredentials().get("passwordEligible"));
+    }
+
+    @Test
+    public void testCredentialsPasswordEligibleIsAlwaysAStringValue() {
+        // The entry is never a JSON boolean and never absent, whichever way the rule classifies.
+        user1.setPassword("   ");
+        user1.setNetid(null);
+
+        ApiResponse response = userController.credentials(credentials1, user1);
+
+        Credentials got = (Credentials) response.getPayload().get("Credentials");
+        Object value = got.getAllCredentials().get("passwordEligible");
+
+        assertTrue(value instanceof String, "passwordEligible must ride in the map as a String");
+        assertEquals("false", value, "a whitespace-only password is ineligible");
+    }
+
+    @Test
+    public void testCredentialsGuardsNullAllCredentials() {
+        // UserControllerTest constructs new Credentials() directly, whose no-argument constructor
+        // leaves allCredentials null, so the handler has to create and set the map.
+        credentials1.setAllCredentials(null);
+
+        user1.setPassword("encodedpassword");
+        user1.setNetid(null);
+
+        ApiResponse response = userController.credentials(credentials1, user1);
+
+        assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
+
+        Credentials got = (Credentials) response.getPayload().get("Credentials");
+
+        assertNotNull(got.getAllCredentials(), "the handler must set a map when none is present");
+        assertEquals("true", got.getAllCredentials().get("passwordEligible"));
+    }
+
+    @Test
+    public void testPasswordEligibleSerializesWithNoActiveView() throws Exception {
+        // Requirement 2 criterion 4: User.isPasswordEligible() carries no @JsonView, and with
+        // default-view-inclusion disabled an un-annotated property serializes only when no view
+        // is active. That is what confines the flag to the no-view listing endpoints.
+        user1.setPassword("encodedpassword");
+        user1.setNetid(null);
+
+        JsonNode payload = viewAwareMapper().readTree(viewAwareMapper().writeValueAsString(user1));
+
+        assertTrue(payload.has("passwordEligible"), "passwordEligible must serialize with no view active");
+        assertTrue(payload.get("passwordEligible").asBoolean(), "an eligible Account serializes true");
+    }
+
+    @Test
+    public void testPasswordEligibleIsAbsentUnderAnActiveView() throws Exception {
+        user1.setPassword("encodedpassword");
+        user1.setNetid(null);
+
+        ObjectMapper mapper = viewAwareMapper();
+
+        for (Class<?> view : Arrays.asList(Views.SubmissionList.class, Views.Partial.class, Views.SubmissionIndividual.class, Views.SubmissionIndividualActionLogs.class)) {
+            JsonNode payload = mapper.readTree(mapper.writerWithView(view).writeValueAsString(user1));
+
+            assertFalse(payload.has("passwordEligible"), "passwordEligible must be absent under the active view " + view.getSimpleName());
+        }
+    }
+
+    @Test
+    public void testPasswordEligibleSerializesFalseForAnIneligibleAccount() throws Exception {
+        user1.setPassword("encodedpassword");
+        user1.setNetid("netid1");
+
+        ObjectMapper mapper = viewAwareMapper();
+        JsonNode payload = mapper.readTree(mapper.writeValueAsString(user1));
+
+        assertTrue(payload.has("passwordEligible"));
+        assertFalse(payload.get("passwordEligible").asBoolean(), "an Account carrying a netid serializes false");
+    }
+
+    /**
+     * A mapper configured the way src/main/resources/application.yml configures the application
+     * mapper: spring.jackson.mapper.default-view-inclusion is false. The inherited objectMapper
+     * is a shared @Spy wired into controllers, so it is left alone here.
+     */
+    private ObjectMapper viewAwareMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
+        return mapper;
     }
 
     @Test

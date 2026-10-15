@@ -6,6 +6,7 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.request.FilteredPageRequest;
+import org.tdl.vireo.utility.PasswordEligibilityRule;
 
 import edu.tamu.weaver.auth.annotation.WeaverCredentials;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
@@ -50,7 +52,20 @@ public class UserController {
 
     @RequestMapping("/credentials")
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ApiResponse credentials(@WeaverCredentials Credentials credentials) {
+    public ApiResponse credentials(@WeaverCredentials Credentials credentials, @WeaverUser User user) {
+        // Requirement 2 criterion 4: the server computes eligibility, since User.password carries
+        // @JsonIgnore and the client has no way to derive it. The weaver Credentials class is not
+        // modified: the flag rides in its Map<String, String> allCredentials, so the value is the
+        // String "true" or "false" and never a JSON boolean.
+        Map<String, String> allCredentials = credentials.getAllCredentials();
+
+        if (allCredentials == null) {
+            allCredentials = new HashMap<String, String>();
+            credentials.setAllCredentials(allCredentials);
+        }
+
+        allCredentials.put("passwordEligible", String.valueOf(PasswordEligibilityRule.isEligible(user)));
+
         return new ApiResponse(SUCCESS, credentials);
     }
 
