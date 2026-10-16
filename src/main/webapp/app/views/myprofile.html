@@ -240,6 +240,53 @@
 
 			</div>
 
+			<!-- ng-controller wraps the ng-if row: ng-if evaluates in the parent scope, so changePasswordAvailable() must be defined by an enclosing controller. -->
+			<div ng-controller="ChangePasswordController">
+				<div class="row my-profile-section" ng-if="changePasswordAvailable()">
+
+					<h2>Change Password</h2>
+
+					<div class="col-sm-6">
+						<div class="row form-group">
+							<div class="col-sm-6">
+								<label class="pull-right-lg control-label" for="currentPassword">Current Password:</label>
+							</div>
+							<div class="col-sm-6">
+								<input id="currentPassword" type="password" name="currentPassword" class="form-control" autocomplete="current-password" ng-model="passwordChange.currentPassword"/>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-sm-6">
+								<label class="pull-right-lg control-label" for="newPassword">New Password:</label>
+							</div>
+							<div class="col-sm-6">
+								<input id="newPassword" type="password" name="newPassword" class="form-control" autocomplete="new-password" ng-model="passwordChange.newPassword"/>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-sm-6">
+								<label class="pull-right-lg control-label" for="confirmPassword">Confirm New Password:</label>
+							</div>
+							<div class="col-sm-6">
+								<input id="confirmPassword" type="password" name="confirmPassword" class="form-control" autocomplete="new-password" ng-model="passwordChange.confirm"/>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-sm-6"></div>
+							<div class="col-sm-6">
+								<button type="button" class="btn btn-primary" ng-click="submitPasswordChange()">Change Password</button>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-sm-6"></div>
+
+				</div>
+			</div>
+
 		</div>
 
 	</form>

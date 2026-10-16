@@ -82,6 +82,19 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
         "false": "No"
     }];
 
+    // PASSWORD MANAGEMENT
+    $scope.changePasswordToggleOptions = [{
+        "true": "Enabled"
+    }, {
+        "false": "Disabled"
+    }];
+
+    $scope.resetPasswordToggleOptions = [{
+        "true": "Enabled"
+    }, {
+        "false": "Disabled"
+    }];
+
     var userSettingsValidations = {
         "displayName": {
             "minlength": {

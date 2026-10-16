@@ -8,6 +8,18 @@ vireo.repo("UserRepo", function UserRepo(User, WsApi) {
         return WsApi.fetch(endpoint);
     };
 
+    userRepo.changePassword = function (currentPassword, newPassword, confirm) {
+        var endpoint = angular.extend({}, userRepo.mapping.changePassword, {
+            data: {
+                currentPassword: currentPassword,
+                newPassword: newPassword,
+                confirm: confirm
+            }
+        });
+
+        return WsApi.fetch(endpoint);
+    };
+
     userRepo.getAssignableUsers = function(page, size, name) {
         var assignable = [];
 
