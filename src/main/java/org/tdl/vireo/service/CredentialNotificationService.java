@@ -16,19 +16,11 @@ import org.tdl.vireo.model.repo.EmailTemplateRepo;
 import org.tdl.vireo.utility.TemplateUtility;
 
 /**
- * Dispatch the credential-change notifications.
+ * Sends credential-change notifications.
  *
- * Every notification this service sends is advisory: the credential change it reports has already
- * been persisted by the time the notification is attempted. An absent Email_Template or a mail
- * transport failure is therefore recorded in the application log and swallowed, so the completed
- * change stands.
- *
- * Reset-initiation mail is deliberately not sent from this service. That path reports an ERROR
- * {@code ApiResponse} to the initiating Administrator on a mail failure, which is the opposite
- * failure semantics, so it stays in the controller. Only the nullable template lookup is shared.
- *
- * Notifications are dispatched from the request thread that persisted the change. No dispatch state
- * is retained and no retry is performed.
+ * Notifications are advisory: the change has already been persisted, so a missing template or mail
+ * failure is logged and swallowed. Reset-initiation mail is not sent here because it must report
+ * mail failures to the administrator; only the template lookup is shared.
  */
 @Service
 public class CredentialNotificationService {
@@ -59,14 +51,8 @@ public class CredentialNotificationService {
     private Clock clock = Clock.systemUTC();
 
     /**
-     * Notify the holder of an Account that the stored password on that Account has changed.
-     *
-     * Never throws. An absent Email_Template or a {@link MessagingException} is recorded in the
-     * application log, naming the Account and the notification, and swallowed, so the completed
-     * password change stands. Neither the password value nor any token appears in the log or in the
-     * message body.
-     *
-     * @param user The Account whose password changed.
+     * Notifies the holder of an Account that its password changed. Never throws; no password or
+     * token appears in the log or message body.
      */
     public void notifyPasswordChanged(User user) {
         if (user == null) {
@@ -101,18 +87,9 @@ public class CredentialNotificationService {
     }
 
     /**
-     * Resolve an Email_Template by name, preferring a custom row over the system row.
+     * Resolves an email template by name, preferring a custom row over the system row.
      *
-     * The result of {@code findByNameOverride} is tested for null before any {@code getSubject()}
-     * or {@code getMessage()} call, so a deployment where the row was never installed produces a
-     * logged skip rather than a {@link NullPointerException}.
-     *
-     * Shared with the reset-initiation path, which reports ERROR on a null result while the
-     * notifications log and continue.
-     *
-     * @param name The Email_Template name.
-     *
-     * @return The resolved template, or null when neither a custom nor a system row exists.
+     * @return The template, or null (logged) when neither exists.
      */
     public EmailTemplate resolveTemplate(String name) {
         EmailTemplate emailTemplate = emailTemplateRepo.findByNameOverride(name);
@@ -126,14 +103,7 @@ public class CredentialNotificationService {
         return emailTemplate;
     }
 
-    /**
-     * Format the time of the change for the {@code CHANGE_TIME} template parameter.
-     *
-     * The value is rendered at {@link ZoneOffset#UTC} and labelled as such, so the timestamp is
-     * unambiguous for a recipient in any timezone.
-     *
-     * @return The formatted time of the change.
-     */
+    /** Formats the current time in UTC, labelled as such, for the {@code CHANGE_TIME} parameter. */
     private String formatChangeTime() {
         return CHANGE_TIME_FORMAT.format(clock.instant());
     }

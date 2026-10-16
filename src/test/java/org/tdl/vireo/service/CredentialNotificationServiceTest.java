@@ -71,16 +71,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 
 /**
- * Absent-template and mail-failure cases for the password-changed notification.
- *
- * Validates: Requirements 6.6, 6.7, 14.1, 14.2, 14.4, 14.5, 15.10, 16.11
- *
- * Both failure injections assert the same three things the requirements name: no send is attempted
- * where none can succeed, the failure is recorded in the application log naming the Account and the
- * notification, and no exception escapes, so the already-persisted password change stands.
- *
- * The log assertion attaches a Logback {@link ListAppender} to the service's own logger, since the
- * project carries no existing log-capture helper and no new Maven dependency may be introduced.
+ * Tests for the password-changed notification: failure handling, always-on dispatch, template
+ * content and leak containment. Logs are captured with a Logback {@link ListAppender}.
  */
 @ActiveProfiles(value = { "test", "isolated-test" })
 @ExtendWith(MockitoExtension.class)
@@ -109,12 +101,7 @@ public class CredentialNotificationServiceTest {
     @Mock
     private VireoEmailSender emailSender;
 
-    /**
-     * Declared for Property 23 only. The service under test holds no field of either type, so
-     * neither mock is wired into it, and that is precisely the point under assertion: a dispatch
-     * gated on a Password_Management_Setting or on the Password_Login_Setting would have to reach
-     * one of these collaborators, which {@code @InjectMocks} would then supply from here.
-     */
+    // The service has no field of either type below, so they are never injected; gating on them would fail the always-on test.
     @Mock
     private ConfigurationRepo configurationRepo;
 
@@ -147,8 +134,7 @@ public class CredentialNotificationServiceTest {
 
         serviceLogger = (Logger) LoggerFactory.getLogger(CredentialNotificationService.class);
 
-        // The test configuration pins org.tdl.vireo at ERROR, so the WARN records under assertion
-        // here are enabled for this logger only, for the duration of the test, and then restored.
+        // The test configuration pins org.tdl.vireo at ERROR; enable WARN for this logger only.
         originalLevel = serviceLogger.getLevel();
 
         serviceLogger.setLevel(Level.WARN);
@@ -163,13 +149,7 @@ public class CredentialNotificationServiceTest {
         logAppender.stop();
     }
 
-    /**
-     * An absent Email_Template produces a logged skip naming the template, no send, and no
-     * exception.
-     *
-     * The null result is what {@code resolveTemplate} is tested against: the notification must not
-     * reach {@code getSubject()} or {@code getMessage()} on a null row.
-     */
+    /** An absent template is logged by name and skipped, with no send and no exception. */
     @Test
     public void testNotifyPasswordChangedWithAbsentTemplate() {
         when(emailTemplateRepo.findByNameOverride(CredentialNotificationService.PASSWORD_CHANGED_TEMPLATE)).thenReturn(null);
@@ -187,9 +167,7 @@ public class CredentialNotificationServiceTest {
         assertNoSensitiveValueLogged(log);
     }
 
-    /**
-     * {@code resolveTemplate} returns null and logs rather than throwing when no row is installed.
-     */
+    /** {@code resolveTemplate} returns null and logs when no template is installed. */
     @Test
     public void testResolveTemplateWithAbsentTemplate() {
         when(emailTemplateRepo.findByNameOverride(CredentialNotificationService.PASSWORD_CHANGED_TEMPLATE)).thenReturn(null);
@@ -199,10 +177,7 @@ public class CredentialNotificationServiceTest {
         assertTrue(capturedLog().contains(CredentialNotificationService.PASSWORD_CHANGED_TEMPLATE), "The absence of the email template must be logged naming the template.");
     }
 
-    /**
-     * A mail transport failure is logged with the Account identifier and the notification, and no
-     * exception escapes, so the completed password change stands.
-     */
+    /** A mail failure is logged with the account email and does not propagate. */
     @Test
     public void testNotifyPasswordChangedWithMailFailure() throws MessagingException {
         when(emailTemplateRepo.findByNameOverride(CredentialNotificationService.PASSWORD_CHANGED_TEMPLATE)).thenReturn(new EmailTemplate(CredentialNotificationService.PASSWORD_CHANGED_TEMPLATE, TEMPLATE_SUBJECT, TEMPLATE_MESSAGE));
@@ -223,12 +198,7 @@ public class CredentialNotificationServiceTest {
         assertNoSensitiveValueLogged(log);
     }
 
-    /**
-     * Join every captured log message, so a single assertion can read across the whole record the
-     * notification wrote.
-     *
-     * @return The captured log messages.
-     */
+    /** Joins all captured log messages. */
     private String capturedLog() {
         List<String> messages = new ArrayList<String>();
 
@@ -239,21 +209,13 @@ public class CredentialNotificationServiceTest {
         return String.join("\n", messages);
     }
 
-    /**
-     * Neither a password value nor a token value may appear anywhere in the log output.
-     *
-     * @param log The captured log messages.
-     */
+    /** Neither the password nor the token may appear in the log. */
     private void assertNoSensitiveValueLogged(String log) {
         assertFalse(log.contains(TEST_PASSWORD), "No password value may appear in the log output, got: " + log);
         assertFalse(log.contains(TEST_TOKEN), "No token value may appear in the log output, got: " + log);
     }
 
-    /*
-     * Task 6.4 — Property 23: Credential-change notification is always on, password-changed arm.
-     *
-     * The email-change arm is added in task 16, once the detection site on /user/update exists.
-     */
+    // Always-on notification (password-changed arm).
 
     private static final long GENERATOR_SEED = 20250101L;
 
@@ -261,23 +223,12 @@ public class CredentialNotificationServiceTest {
 
     private static final String APPLICATION_TYPE = "application";
 
-    /**
-     * The raw stored setting strings the generator draws from. Both the resolving and the
-     * non-resolving shapes are present, since the property holds across the whole domain and not
-     * merely across the two values an Administrator can select in the Password Management pane.
-     */
+    /** Raw setting strings, both resolving and non-resolving. */
     private static final List<String> RAW_SETTING_VALUES = Arrays.asList(null, "", "  ", "true", "TRUE", " true ", "false", "False", "0", "1", "yes", "no", "junk");
 
     private static final List<String> RAW_EXPIRY_SETTING_VALUES = Arrays.asList(null, "", "0", "-1", "1", "24", "2147483647", "notanumber");
 
-    /**
-     * One Account shape under test.
-     *
-     * The shape carries the two fields the Password_Eligibility_Rule reads, the
-     * Institutional_SSO affiliations it deliberately ignores, and a user settings map, so a single
-     * case can describe an Account the rule classifies ineligible, an Account provisioned through
-     * Institutional_SSO, and an Account carrying user settings that look like a suppression switch.
-     */
+    /** One account shape: eligibility fields, SSO affiliations and user settings. */
     private static final class AccountShape {
 
         private final String label;
@@ -334,13 +285,7 @@ public class CredentialNotificationServiceTest {
         return settings;
     }
 
-    /**
-     * The enumerated Account shapes. Every shape the design's Property 23 input domain names is
-     * present: an eligible Vireo-managed Account, an Account provisioned through Institutional_SSO,
-     * an Account with no stored password, an Account whose stored password is whitespace only, an
-     * Account carrying user settings that read like a suppression switch, and an Account whose
-     * {@code preferedEmail} setting names a different address.
-     */
+    /** The account shapes under test. */
     private static final List<AccountShape> ACCOUNT_SHAPES = Arrays.asList(
         new AccountShape("eligible", "eligible@tamu.edu", null, TEST_PASSWORD, affiliations(), settings()),
         new AccountShape("sso-provisioned", "netid@tamu.edu", "aggieJack", TEST_PASSWORD, affiliations("student", "staff"), settings()),
@@ -350,16 +295,7 @@ public class CredentialNotificationServiceTest {
         new AccountShape("preferred-email-elsewhere", "account@tamu.edu", null, TEST_PASSWORD, affiliations("affiliate"), settings("preferedEmail", "somewhere.else@tamu.edu"))
     );
 
-    /**
-     * Each case is one Account shape crossed with one combination of the four password settings.
-     *
-     * The enumerated cross product is every Account shape against every pairing of resolving and
-     * non-resolving values for {@code auth.pass.enabled}, {@code auth.pass.change.enabled} and
-     * {@code auth.pass.reset.enabled}; the randomized cases then vary all four settings over the
-     * wider raw-value domain, including the shapes that resolve to neither true nor false.
-     *
-     * @return The generated cases, well over one hundred of them.
-     */
+    /** Every account shape crossed with the boolean setting combinations, plus seeded random cases. */
     private static Stream<Arguments> provideAlwaysOnCases() {
         List<Arguments> cases = new ArrayList<Arguments>();
 
@@ -390,26 +326,7 @@ public class CredentialNotificationServiceTest {
         return cases.stream();
     }
 
-    /**
-     * Property 23: Credential-change notification is always on.
-     *
-     * Validates: Requirements 12.5, 13.5, 13.6
-     *
-     * For any Account shape — including an Account provisioned through Institutional_SSO and an
-     * Account the Password_Eligibility_Rule classifies ineligible — and for any combination of the
-     * four password settings, and for any user settings carried on the Account, the password-changed
-     * notification is dispatched exactly once to the Account_Email.
-     *
-     * Requirement 13 criterion 6 is what the two unwired collaborators pin. The dispatch reads no
-     * configuration value and consults no availability conjunction, so a later change that gated the
-     * notification on either would draw this test's stubbed values and fail the send assertion.
-     *
-     * @param shape The Account shape under test.
-     * @param enabledRaw The raw stored {@code auth.pass.enabled} value.
-     * @param changeRaw The raw stored {@code auth.pass.change.enabled} value.
-     * @param resetRaw The raw stored {@code auth.pass.reset.enabled} value.
-     * @param expiryRaw The raw stored {@code auth.pass.reset.expiryHours} value.
-     */
+    /** The notification is sent exactly once to the account email for any account shape and any settings. */
     @ParameterizedTest(name = "[{index}] account={0}, enabled={1}, change={2}, reset={3}, expiryHours={4}")
     @MethodSource("provideAlwaysOnCases")
     public void testPasswordChangedNotificationIsAlwaysOn(AccountShape shape, String enabledRaw, String changeRaw, String resetRaw, String expiryRaw) throws MessagingException {
@@ -428,28 +345,17 @@ public class CredentialNotificationServiceTest {
 
         credentialNotificationService.notifyPasswordChanged(target);
 
-        // Requirements 12.5, 13.5: one dispatch, to the Account_Email, for every Account shape and
-        // every setting combination. The eligibility classification is recomputed here so the case
-        // list is demonstrably not confined to eligible Accounts.
         assertEquals(PasswordEligibilityRule.isEligible(target), PasswordEligibilityRule.isEligible(shape.password, shape.netid), "The shape's eligibility classification is stable across both rule overloads");
 
         verify(emailSender, times(1)).sendEmail(shape.email, TEMPLATE_SUBJECT, RENDERED_MESSAGE);
 
         verifyNoMoreInteractions(emailSender);
 
-        // Requirement 13.6: no configuration setting and no availability conjunction participates
-        // in the dispatch, so none of them can suppress it.
         verifyNoInteractions(configurationRepo);
         verifyNoInteractions(passwordFeatureAvailabilityService);
     }
 
-    /**
-     * Requirement 13.6: the service exposes no suppression switch of any kind.
-     *
-     * No declared field reaches the configuration store or the availability service, and no public
-     * method takes a flag a caller could set to skip the notification, so there is no request
-     * parameter the dispatch could be made to honour.
-     */
+    /** The service holds no settings collaborator and no public method takes a suppression flag. */
     @Test
     public void testNoSuppressionSwitchExists() {
         for (Field field : CredentialNotificationService.class.getDeclaredFields()) {
@@ -483,35 +389,17 @@ public class CredentialNotificationServiceTest {
         assertTrue(found, "notifyPasswordChanged is declared on the notification service");
     }
 
-    /**
-     * The resolution rule the availability service applies, recomputed here so a stubbed
-     * availability answer matches what the real service would have returned for the raw value.
-     *
-     * @param raw The raw stored value.
-     *
-     * @return The resolved value.
-     */
+    /** Mirrors the availability service's resolution rule so stubs match the real service. */
     private static boolean resolves(String raw) {
         return raw != null && raw.trim().equalsIgnoreCase("true");
     }
 
-    /**
-     * Stub a raw stored setting value on the unwired configuration store.
-     *
-     * @param settingName The setting name.
-     * @param rawValue The raw stored value.
-     */
+    /** Stubs a raw setting value on the unwired configuration store. */
     private void stubSetting(String settingName, String rawValue) {
         lenient().when(configurationRepo.getValueByNameAndType(eq(settingName), eq(APPLICATION_TYPE))).thenReturn(rawValue);
     }
 
-    /**
-     * Stub the availability conjunctions on the unwired availability service.
-     *
-     * @param enabled The resolved Password_Login_Setting.
-     * @param change The resolved {@code auth.pass.change.enabled} value.
-     * @param reset The resolved {@code auth.pass.reset.enabled} value.
-     */
+    /** Stubs the availability answers on the unwired availability service. */
     private void stubAvailability(boolean enabled, boolean change, boolean reset) {
         lenient().when(passwordFeatureAvailabilityService.isPasswordLoginEnabled()).thenReturn(enabled);
         lenient().when(passwordFeatureAvailabilityService.isChangeEnabled()).thenReturn(change);
@@ -520,13 +408,7 @@ public class CredentialNotificationServiceTest {
         lenient().when(passwordFeatureAvailabilityService.isResetAvailable()).thenReturn(enabled && reset);
     }
 
-    /*
-     * Task 6.5 — packaged template content assertions for SYSTEM_Password_Changed.email.
-     *
-     * These are example assertions over the packaged classpath resource, read and split the same
-     * way SystemDataLoader.loadSystemEmailTemplate reads and splits it, so what is under assertion
-     * is the subject and the body an installed row would actually carry.
-     */
+    // Packaged SYSTEM_Password_Changed.email assertions, split the way SystemDataLoader splits it.
 
     private static final String PASSWORD_CHANGED_RESOURCE = "/emails/SYSTEM_Password_Changed.email";
 
@@ -538,22 +420,13 @@ public class CredentialNotificationServiceTest {
 
     private static final String RESET_URL_PLACEHOLDER = "{RESET_URL}";
 
-    /**
-     * Every shape a hyperlink could take in a plain-text template body.
-     */
+    /** Shapes a hyperlink could take in a plain-text body. */
     private static final List<String> HYPERLINK_MARKERS = Arrays.asList("http://", "https://", "www.", "mailto:", "href", "<a ", "ftp://", "{RESET_URL}", "{REGISTRATION_URL}", "{URL}");
 
-    /**
-     * The placeholder shape the templates use, matching the {@code REGISTRATION_URL} convention.
-     */
+    /** The template placeholder shape, e.g. {@code {REGISTRATION_URL}}. */
     private static final Pattern PLACEHOLDER_PATTERN = Pattern.compile("\\{[A-Za-z0-9_]+\\}");
 
-    /**
-     * Requirements 6.3, 13.1: the body states the change and its time through the
-     * {@code CHANGE_TIME} parameter, and the comment header names that parameter.
-     *
-     * @throws IOException If the packaged resource cannot be read.
-     */
+    /** The body expands {@code CHANGE_TIME} and the header names it. */
     @Test
     public void testPackagedPasswordChangedTemplateCarriesChangeTime() throws IOException {
         String raw = readPackagedPasswordChangedTemplate();
@@ -562,18 +435,12 @@ public class CredentialNotificationServiceTest {
 
         assertTrue(packagedBody(raw).contains(CHANGE_TIME_PLACEHOLDER), "The template body expands the change time through " + CHANGE_TIME_PLACEHOLDER + ", got: " + packagedBody(raw));
 
-        // The name the loader derives from the file name is the name the service resolves.
         assertEquals(CredentialNotificationService.PASSWORD_CHANGED_TEMPLATE, "SYSTEM_Password_Changed".replaceAll("_", " "), "The packaged resource file name decodes to the template name the notification service resolves.");
 
         assertEquals("Vireo Password Changed", packagedSubject(raw), "The template carries a Subject line the loader can extract.");
     }
 
-    /**
-     * Requirements 6.5, 13.4, 15.7: the body carries the support contact address and the
-     * established sign-off.
-     *
-     * @throws IOException If the packaged resource cannot be read.
-     */
+    /** The body carries the support address and the sign-off. */
     @Test
     public void testPackagedPasswordChangedTemplateCarriesSupportContact() throws IOException {
         String body = packagedBody(readPackagedPasswordChangedTemplate());
@@ -582,15 +449,7 @@ public class CredentialNotificationServiceTest {
         assertTrue(body.contains(SIGN_OFF), "The template body signs off as '" + SIGN_OFF + "', got: " + body);
     }
 
-    /**
-     * Requirements 6.4, 13.2, 13.3: the body carries no hyperlink, no reset-token placeholder, and
-     * no password value, and {@code CHANGE_TIME} is the only parameter the body expands.
-     *
-     * The whole resource is checked for {@code RESET_URL}, not merely the body, so a stray mention
-     * in the comment header is caught as well.
-     *
-     * @throws IOException If the packaged resource cannot be read.
-     */
+    /** No hyperlink, reset token or password; {@code CHANGE_TIME} is the only parameter. */
     @Test
     public void testPackagedPasswordChangedTemplateCarriesNoHyperlinkOrToken() throws IOException {
         String raw = readPackagedPasswordChangedTemplate();
@@ -612,18 +471,11 @@ public class CredentialNotificationServiceTest {
 
         assertEquals(new LinkedHashSet<String>(Arrays.asList(CHANGE_TIME_PLACEHOLDER)), placeholders, "CHANGE_TIME is the only parameter the password-changed template body expands.");
 
-        // Requirement 13.2: the body states that the password changed without carrying a value.
         assertFalse(body.contains(TEST_PASSWORD), "No password value may appear in the template body, got: " + body);
         assertFalse(body.toLowerCase().contains("{password"), "No password parameter may appear in the template body, got: " + body);
     }
 
-    /**
-     * Read the packaged template resource from the classpath.
-     *
-     * @return The raw resource content.
-     *
-     * @throws IOException If the packaged resource cannot be read.
-     */
+    /** Reads the packaged template from the classpath. */
     private String readPackagedPasswordChangedTemplate() throws IOException {
         InputStream stream = CredentialNotificationServiceTest.class.getResourceAsStream(PASSWORD_CHANGED_RESOURCE);
 
@@ -648,24 +500,12 @@ public class CredentialNotificationServiceTest {
         return content.toString();
     }
 
-    /**
-     * Strip the comment lines the way {@code SystemDataLoader} strips them.
-     *
-     * @param raw The raw resource content.
-     *
-     * @return The content the loader parses.
-     */
+    /** Strips comment lines the way {@code SystemDataLoader} does. */
     private String strippedOfComments(String raw) {
         return raw.replaceAll("\\s*#.*[\\n\\r]{1}", "");
     }
 
-    /**
-     * Extract the subject the loader would extract.
-     *
-     * @param raw The raw resource content.
-     *
-     * @return The template subject.
-     */
+    /** Extracts the subject the loader would extract. */
     private String packagedSubject(String raw) {
         Matcher subjectMatcher = Pattern.compile("\\s*Subject:(.*)[\\n\\r]{1}").matcher(strippedOfComments(raw));
 
@@ -674,13 +514,7 @@ public class CredentialNotificationServiceTest {
         return subjectMatcher.group(1).trim();
     }
 
-    /**
-     * Extract the body the loader would extract: everything after the Subject line.
-     *
-     * @param raw The raw resource content.
-     *
-     * @return The template body.
-     */
+    /** Extracts the body the loader would extract: everything after the Subject line. */
     private String packagedBody(String raw) {
         String data = strippedOfComments(raw);
 
@@ -695,22 +529,13 @@ public class CredentialNotificationServiceTest {
         return data.substring(index);
     }
 
-    /*
-     * Task 7.6 — Property 26: Leak containment across every outbound artefact, the
-     * password-changed-notification arm.
-     */
+    // Leak containment across the outbound notification artefacts.
 
     private static final String[] LEAK_SECRET_SHAPES = { "plainsecret", " spaced secret ", "p@ss|word.{x}", "Ünïcödé-sëcret", "0123456789abcdef", "UPPER-lower-123" };
 
     private static final String[] LEAK_SCENARIOS = { "sent", "absent-template", "mail-failure" };
 
-    /**
-     * Each case is a scenario and the secret material the Account carries. The enumerated cases
-     * cross every scenario with every secret shape; the fixed-seed random cases add generated
-     * secrets, 21 enumerated plus 100 random.
-     *
-     * @return The generated cases.
-     */
+    /** Every scenario crossed with every secret shape, plus 100 seeded random secrets. */
     private static Stream<Arguments> provideLeakContainmentCases() {
         List<Arguments> cases = new ArrayList<Arguments>();
 
@@ -729,17 +554,7 @@ public class CredentialNotificationServiceTest {
         return cases.stream();
     }
 
-    /**
-     * Property 26: Leak containment, password-changed-notification arm.
-     *
-     * Validates: Requirements 6.4, 13.2, 13.3, 14.4
-     *
-     * For any password value and token value held by the Account, the dispatched subject and body
-     * and every log record written by the notification contain neither.
-     *
-     * @param scenario The dispatch outcome under test.
-     * @param base The secret material the Account's password and token are derived from.
-     */
+    /** The dispatched subject, body and log records contain neither the password nor the token. */
     @ParameterizedTest(name = "[{index}] scenario={0}, base={1}")
     @MethodSource("provideLeakContainmentCases")
     public void testPasswordChangedNotificationLeakContainment(String scenario, String base) throws Exception {
@@ -749,7 +564,7 @@ public class CredentialNotificationServiceTest {
         user.setPassword(password);
         user.setSettings(new TreeMap<String, String>(settings("resetToken", token)));
 
-        // The real packaged subject and body, so the artefact under assertion is the one shipped.
+        // Use the packaged subject and body so the shipped artefact is what is asserted.
         String raw = readPackagedPasswordChangedTemplate();
 
         if ("absent-template".equals(scenario)) {

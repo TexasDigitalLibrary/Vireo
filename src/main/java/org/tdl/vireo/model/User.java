@@ -545,14 +545,8 @@ public class User extends AbstractWeaverUserDetails {
     }
 
     /**
-     * Whether this Account is eligible for Vireo-managed password operations, derived from the
-     * stored password and netid values at evaluation time.
-     *
-     * Carries no {@code @JsonView} annotation deliberately: with default view inclusion disabled,
-     * an un-annotated property serializes only when no view is active, which confines the flag to
-     * the no-view listing endpoints.
-     *
-     * @return true when this Account is eligible
+     * Whether this Account is eligible for Vireo-managed password operations. Deliberately has no
+     * {@code @JsonView}, so it serializes only on no-view listing endpoints.
      */
     @Transient
     public boolean isPasswordEligible() {

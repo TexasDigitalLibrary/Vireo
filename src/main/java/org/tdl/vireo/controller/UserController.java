@@ -53,10 +53,8 @@ public class UserController {
     @RequestMapping("/credentials")
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ApiResponse credentials(@WeaverCredentials Credentials credentials, @WeaverUser User user) {
-        // Requirement 2 criterion 4: the server computes eligibility, since User.password carries
-        // @JsonIgnore and the client has no way to derive it. The weaver Credentials class is not
-        // modified: the flag rides in its Map<String, String> allCredentials, so the value is the
-        // String "true" or "false" and never a JSON boolean.
+        // User.password is @JsonIgnore'd, so the server computes eligibility. It rides in allCredentials as the String "true" or "false".
+
         Map<String, String> allCredentials = credentials.getAllCredentials();
 
         if (allCredentials == null) {

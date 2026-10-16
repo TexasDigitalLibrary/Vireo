@@ -22,17 +22,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.tdl.vireo.utility.PasswordValidator.Result;
 
 /**
- * Property 8: Shared validator decision.
- *
- * Validates: Requirements 3.1, 3.2, 3.3, 3.8
- *
- * The property is one {@link ParameterizedTest} fed by an {@link MethodSource} generator producing
- * well over one hundred cases, built from the enumerated boundary values — including the trimmed
- * length 5 and trimmed length 6 boundary, explicitly, on both sides — crossed with whitespace
- * padding shapes and padded from a fixed-seed {@link Random}. No property-based testing library is
- * used and no new Maven dependency is introduced.
- *
- * {@link PasswordValidator} is static and needs no Spring context, so this test starts none.
+ * Tests {@link PasswordValidator} with enumerated boundary values, whitespace padding and a
+ * fixed-seed {@link Random}. The validator is static, so no Spring context is started.
  */
 @ActiveProfiles(value = { "test", "isolated-test" })
 public class PasswordValidatorTest {
@@ -41,11 +32,7 @@ public class PasswordValidatorTest {
 
     private static final int RANDOM_CASE_COUNT = 64;
 
-    /**
-     * Whitespace runs used both as padding around a candidate and as whole whitespace-only
-     * candidates. Every one of these trims away to nothing, which is what makes a whitespace-only
-     * candidate a missing-password case under Requirement 3 criterion 2.
-     */
+    // Every run trims to nothing, so a run on its own is a missing-password case.
     private static final List<String> WHITESPACE_RUNS = Arrays.asList(
         "",
         " ",
@@ -58,27 +45,19 @@ public class PasswordValidatorTest {
         "        "
     );
 
-    /**
-     * The enumerated candidate cores, before any whitespace padding is applied.
-     *
-     * The trimmed length 5 and trimmed length 6 boundary is enumerated explicitly across several
-     * character classes, so the rejected side and the accepted side of the boundary are each pinned
-     * for letters, digits, symbols, mixed case, and non-ASCII characters. Varying the character
-     * class while the expected result depends on the trimmed length alone is what pins Requirement
-     * 3 criterion 8: no character-class constraint exists.
-     */
+    // Trimmed lengths 5 and 6 are covered across character classes, since only trimmed length may matter.
     private static final List<String> CANDIDATE_CORES = Arrays.asList(
         // Absent and empty.
         null,
         "",
 
-        // Below the boundary, every length from one to four.
+        // Below the boundary.
         "a",
         "ab",
         "abc",
         "abcd",
 
-        // The rejected side of the boundary: trimmed length 5, across character classes.
+        // Trimmed length 5: rejected.
         "abcde",
         "ABCDE",
         "12345",
@@ -86,7 +65,7 @@ public class PasswordValidatorTest {
         "aB3$x",
         "\u00e9\u00e8\u00ea\u00eb\u00ec",
 
-        // The accepted side of the boundary: trimmed length 6, across character classes.
+        // Trimmed length 6: accepted.
         "abcdef",
         "ABCDEF",
         "123456",
@@ -94,29 +73,19 @@ public class PasswordValidatorTest {
         "aB3$x.",
         "\u00e9\u00e8\u00ea\u00eb\u00ec\u00ed",
 
-        // Comfortably above the boundary.
+        // Above the boundary.
         "abcdefg",
         "1234567890",
         "correct horse battery staple",
         "\u4e2d\u6587\u5bc6\u7801\u5f88\u5f3a\u5927",
 
-        // Interior whitespace, which trimming does not remove, so these clear the boundary on
-        // their trimmed length.
+        // Interior whitespace is not trimmed, so these count at full length.
         "a b c",
         "a b cd",
         "a\tb\tc\td"
     );
 
-    /**
-     * Each case is one candidate password string.
-     *
-     * The enumerated cores are crossed with every whitespace padding shape on each side, which
-     * produces the pairs that separate a trimmed-length rule from an untrimmed-length one: a
-     * five-character core padded to eleven characters must still be rejected, and a six-character
-     * core padded on both sides must still be accepted.
-     *
-     * @return The generated cases.
-     */
+    // Crosses each core with every padding shape so a trimmed-length rule differs from an untrimmed one.
     private static Stream<Arguments> provideCandidates() {
         Set<String> candidates = new LinkedHashSet<String>();
 
@@ -138,7 +107,6 @@ public class PasswordValidatorTest {
             }
         }
 
-        // Whitespace-only candidates, in their own right.
         candidates.addAll(WHITESPACE_RUNS);
 
         Random random = new Random(GENERATOR_SEED);
@@ -160,15 +128,7 @@ public class PasswordValidatorTest {
         return cases.stream();
     }
 
-    /**
-     * Draw a candidate of a random length drawn from zero through ten — so the boundary lengths
-     * five and six are both reachable — built from a random character class and wrapped in random
-     * whitespace padding.
-     *
-     * @param random The fixed-seed source.
-     *
-     * @return The drawn candidate.
-     */
+    // Length 0 to 10 so both boundary lengths are reachable, in a random character class with random padding.
     private static String randomCandidate(Random random) {
         int length = random.nextInt(11);
 
@@ -200,14 +160,7 @@ public class PasswordValidatorTest {
         return leading + core.toString() + trailing;
     }
 
-    /**
-     * The independently computed acceptance rule, written straight from Requirement 3 criteria 1,
-     * 2 and 3: trim, then decide on the trimmed length alone.
-     *
-     * @param candidate The candidate password, which may be null.
-     *
-     * @return The expected decision.
-     */
+    // Independent oracle: trim, then decide on trimmed length alone.
     private static Result expectedResult(String candidate) {
         if (candidate == null) {
             return Result.MISSING;
@@ -226,24 +179,7 @@ public class PasswordValidatorTest {
         return Result.ACCEPTED;
     }
 
-    /**
-     * Property 8: Shared validator decision.
-     *
-     * Validates: Requirements 3.1, 3.2, 3.3, 3.8
-     *
-     * The validator reports {@code ACCEPTED} exactly when the candidate holds at least one
-     * non-whitespace character and the trimmed length is 6 or greater; reports {@code MISSING} when
-     * the candidate is absent or whitespace-only; and reports {@code TOO_SHORT} when the trimmed
-     * length is below 6.
-     *
-     * The decision is read three ways on every case, so no single reading can carry the property on
-     * its own: the single-argument overload, the two-argument overload fed a matching confirmation
-     * — which must agree, since a matching confirmation removes the only cause the two-argument
-     * form adds — and a repeat call, which must agree with the first because no reuse-history state
-     * exists (Requirement 3 criterion 8).
-     *
-     * @param candidate The candidate password under test.
-     */
+    // The decision depends on trimmed length alone, and is the same via both overloads and on a repeat call.
     @ParameterizedTest(name = "[{index}] candidate=''{0}''")
     @MethodSource("provideCandidates")
     public void testSharedValidatorDecision(String candidate) {
@@ -251,50 +187,38 @@ public class PasswordValidatorTest {
 
         String description = "Decision for candidate '" + candidate + "'";
 
-        // Requirements 3.1, 3.2, 3.3: the decision rests on the trimmed length alone.
         assertEquals(expected, PasswordValidator.validate(candidate), description);
 
-        // Requirement 3.8: the minimum is the only constraint, declared as 6, so the expectation
-        // above and the constant cannot drift apart.
+        // Ties the oracle's literal 6 to the declared constant.
         assertEquals(6, PasswordValidator.MINIMUM_TRIMMED_LENGTH, "The declared minimum trimmed length");
 
-        // Requirement 3.7: a matching confirmation removes the only rejection cause the
-        // two-argument overload adds, so the two overloads must agree on every candidate. A null
-        // candidate is MISSING before the comparison is reached either way.
+        // A matching confirmation adds no rejection cause, so both overloads must agree.
         assertEquals(expected, PasswordValidator.validate(candidate, candidate), description + " through the confirming overload");
 
-        // Requirement 3.8: no reuse-history constraint exists, so the same candidate decided twice
-        // decides the same way.
+        // No reuse-history state, so a repeat call decides the same way.
         assertEquals(expected, PasswordValidator.validate(candidate), description + " on a repeat decision");
     }
 
-    /**
-     * The enumerated candidate and confirmation values for Property 9, crossed with themselves.
-     *
-     * The list is chosen so the cross product contains the pairs that separate a raw-string
-     * comparison from any looser one: pairs differing only in letter case, pairs differing only in
-     * leading or trailing whitespace, pairs differing only in the kind of trailing whitespace, and
-     * the absent and whitespace-only values on either side.
-     */
+    // Includes pairs differing only in case, in surrounding whitespace, or in the kind of trailing whitespace.
     private static final List<String> CONFIRMATION_VALUES = Arrays.asList(
-        // Absent and whitespace-only, on either side of the pair.
+        // Absent and whitespace-only.
         null,
         "",
         " ",
         "  ",
         "\t",
 
-        // Below and at the boundary, so a mismatch and a too-short cause can both be in play.
+        // Below and at the boundary.
         "abcde",
         "abcde ",
         "abcdef",
 
-        // Letter-case-only differences from "abcdef".
+        // Case-only differences from "abcdef".
         "ABCDEF",
         "Abcdef",
         "abcdeF",
 
-        // Surrounding-whitespace-only differences from "abcdef".
+        // Whitespace-only differences from "abcdef".
         " abcdef",
         "abcdef ",
         " abcdef ",
@@ -308,17 +232,7 @@ public class PasswordValidatorTest {
         "\u00e9bcdef"
     );
 
-    /**
-     * Each case is one candidate and confirmation pair.
-     *
-     * Every enumerated value is crossed with every enumerated value, which yields the equal pairs
-     * and the differing pairs together — the property is an "exactly when", so both sides have to
-     * be generated. A fixed-seed {@link Random} then adds pairs drawn from the same value pool,
-     * including pairs built by perturbing a drawn value in a single character, which is the
-     * near-miss shape a comparison looser than equality would let through.
-     *
-     * @return The generated cases.
-     */
+    // Full cross product of the values, plus seeded random pairs including single-character near-misses.
     private static Stream<Arguments> provideConfirmationPairs() {
         List<Arguments> cases = new ArrayList<Arguments>();
 
@@ -337,7 +251,7 @@ public class PasswordValidatorTest {
 
             switch (random.nextInt(4)) {
                 case 0:
-                    // The same raw value, so the accepting side of the property is drawn too.
+                    // Same raw value, so the accepting side is drawn too.
                     confirmation = candidate;
                     break;
                 case 1:
@@ -357,15 +271,7 @@ public class PasswordValidatorTest {
         return cases.stream();
     }
 
-    /**
-     * Alter one character of the supplied value, or append one when the value is empty, so the
-     * result differs from the input in exactly one position.
-     *
-     * @param value  The value to perturb.
-     * @param random The fixed-seed source.
-     *
-     * @return The perturbed value, which never equals the input.
-     */
+    // Changes one character, or appends one to an empty value, so the result never equals the input.
     private static String perturb(String value, Random random) {
         if (value.length() == 0) {
             return "x";
@@ -380,15 +286,7 @@ public class PasswordValidatorTest {
         return new String(characters);
     }
 
-    /**
-     * The independently computed decision for a pair, written straight from Requirement 3 criteria
-     * 1 through 4 in the order the design fixes: missing, then mismatch, then too short.
-     *
-     * @param candidate    The candidate password, which may be null.
-     * @param confirmation The confirmation value, which may be null.
-     *
-     * @return The expected decision.
-     */
+    // Independent oracle with the evaluation order: missing, then mismatch, then too short.
     private static Result expectedResult(String candidate, String confirmation) {
         if (candidate == null || candidate.trim().length() == 0) {
             return Result.MISSING;
@@ -405,23 +303,7 @@ public class PasswordValidatorTest {
         return Result.ACCEPTED;
     }
 
-    /**
-     * Property 9: Confirmation mismatch.
-     *
-     * Validates: Requirements 3.4
-     *
-     * The validator reports {@code MISMATCH} exactly when the candidate is present and the two raw
-     * strings differ — including when they differ only in letter case, or only in surrounding
-     * whitespace. The present qualifier is the evaluation order the design fixes: an absent or
-     * whitespace-only candidate is {@code MISSING} before the comparison is reached, so the
-     * mismatch claim is scoped to the candidates that get as far as being compared.
-     *
-     * Comparison is on the raw values, not the trimmed ones, which is why a candidate padded with
-     * whitespace against its unpadded confirmation is a mismatch rather than an acceptance.
-     *
-     * @param candidate    The candidate password under test.
-     * @param confirmation The confirmation value under test.
-     */
+    // Mismatch is reported exactly when a present candidate differs from the confirmation on the raw strings, not the trimmed ones.
     @ParameterizedTest(name = "[{index}] candidate=''{0}'' confirmation=''{1}''")
     @MethodSource("provideConfirmationPairs")
     public void testConfirmationMismatch(String candidate, String confirmation) {
@@ -431,42 +313,30 @@ public class PasswordValidatorTest {
 
         Result actual = PasswordValidator.validate(candidate, confirmation);
 
-        // Requirement 3.4: the mismatch cause, in its place in the evaluation order.
         assertEquals(expected, actual, description);
 
         boolean candidatePresent = candidate != null && candidate.trim().length() > 0;
 
-        // Requirement 3.4, as the "exactly when" it is stated as: among the candidates that reach
-        // the comparison, MISMATCH is reported precisely for the pairs whose raw strings differ.
         assertEquals(
             Boolean.valueOf(candidatePresent && !candidate.equals(confirmation)),
             Boolean.valueOf(Result.MISMATCH.equals(actual)),
             description + " reported as a mismatch");
 
-        // Requirement 3.4: a mismatch is a rejection, and it is reported as the mismatch cause
-        // rather than folded into another one.
         if (Result.MISMATCH.equals(actual)) {
             assertEquals("The passwords do not match!", PasswordValidator.messageFor(actual), description + " message");
         }
     }
 
-    /**
-     * The candidate cores used for Property 10, all of them carrying at least one non-whitespace
-     * character so padding them produces a meaningful untrimmed-against-trimmed distinction.
-     *
-     * Both sides of the boundary are present: cores whose trimmed length is below 6, which must be
-     * rejected however much whitespace surrounds them, and cores whose trimmed length is 6 or
-     * greater, which must be accepted and stored with their padding intact.
-     */
+    // Each core has a non-blank trimmed value, with trimmed lengths on both sides of the boundary.
     private static final List<String> STORAGE_CORES = Arrays.asList(
-        // Below the boundary on the trimmed value.
+        // Below the boundary.
         "a",
         "abc",
         "abcde",
         "12345",
         "!@#$%",
 
-        // At and above the boundary on the trimmed value.
+        // At and above the boundary.
         "abcdef",
         "ABCDEF",
         "123456",
@@ -478,11 +348,7 @@ public class PasswordValidatorTest {
         "\u4e2d\u6587\u5bc6\u7801\u5f88\u5f3a"
     );
 
-    /**
-     * The whitespace runs padded around a core for Property 10. The empty run is deliberately
-     * absent on its own account — it is still reachable, because each core is also emitted
-     * unpadded — so that every generated padded case genuinely differs from its trimmed form.
-     */
+    // No empty run: each core is also emitted unpadded, so every padded case differs from its trimmed form.
     private static final List<String> STORAGE_PADDING = Arrays.asList(
         " ",
         "   ",
@@ -493,16 +359,7 @@ public class PasswordValidatorTest {
         "          "
     );
 
-    /**
-     * Each case is one candidate password, most of them padded so the untrimmed value and the
-     * trimmed value differ.
-     *
-     * Every core is crossed with every padding run on the leading side, the trailing side, and both
-     * sides at once, which is what produces the shapes that separate storing the untrimmed value
-     * from storing the trimmed one. A fixed-seed {@link Random} then adds further padded draws.
-     *
-     * @return The generated cases.
-     */
+    // Each core padded leading, trailing and both sides, plus seeded random padded draws.
     private static Stream<Arguments> provideStorageCandidates() {
         Set<String> candidates = new LinkedHashSet<String>();
 
@@ -536,14 +393,7 @@ public class PasswordValidatorTest {
         return cases.stream();
     }
 
-    /**
-     * A stand-in for the password encoder, recording the exact value it is handed so the stored
-     * value can be compared against the submitted one by identity as well as by equality.
-     *
-     * The encoding itself is irrelevant to this property — the claim is about which string reaches
-     * the encoder — so a recording stand-in is used rather than a real BCrypt encoder, which would
-     * add seconds per case for nothing.
-     */
+    // Records the exact string handed to it; a real BCrypt encoder would only slow each case down.
     private static final class RecordingEncoder {
 
         private String encoded;
@@ -559,17 +409,7 @@ public class PasswordValidatorTest {
 
     }
 
-    /**
-     * The caller shape the design fixes for every accepting path: validate the pair, and on
-     * {@code ACCEPTED} hand the **untrimmed** candidate to the encoder, with nothing stored on a
-     * rejection.
-     *
-     * @param candidate    The candidate password.
-     * @param confirmation The confirmation value.
-     * @param encoder      The recording stand-in.
-     *
-     * @return The validator's decision.
-     */
+    // Validate the pair; on ACCEPTED encode the untrimmed candidate, and store nothing on rejection.
     private static Result validateThenStore(String candidate, String confirmation, RecordingEncoder encoder) {
         Result result = PasswordValidator.validate(candidate, confirmation);
 
@@ -580,30 +420,7 @@ public class PasswordValidatorTest {
         return result;
     }
 
-    /**
-     * Property 10: Untrimmed storage.
-     *
-     * Validates: Requirements 3.5
-     *
-     * For any accepted candidate password carrying leading or trailing whitespace, the value handed
-     * to the password encoder is the untrimmed candidate, while the length check that accepted it
-     * was applied to the trimmed value.
-     *
-     * Three things together make up the claim, and all three are asserted on every case:
-     *
-     * 1. The acceptance decision is governed by the trimmed length. A padded candidate is accepted
-     *    exactly when its trimmed length reaches the minimum, so ten spaces around a five-character
-     *    core is still {@code TOO_SHORT} and a six-character core padded on both sides is still
-     *    {@code ACCEPTED}.
-     * 2. The value that reaches the encoder is the submitted string itself — the same object, not a
-     *    trimmed, stripped, or otherwise normalised copy — so the padding survives into storage.
-     * 3. The validator offers the caller no normalised form to store in its place. Its only
-     *    String-returning member is {@code messageFor}, so the only value a caller holds after an
-     *    accepting decision is the untrimmed candidate it submitted. That is asserted reflectively,
-     *    because it is a claim about the shape of the API rather than about one call.
-     *
-     * @param candidate The candidate password under test.
-     */
+    // Acceptance uses the trimmed length, but the encoder receives the untrimmed candidate itself.
     @ParameterizedTest(name = "[{index}] candidate=''{0}''")
     @MethodSource("provideStorageCandidates")
     public void testUntrimmedStorage(String candidate) {
@@ -615,9 +432,6 @@ public class PasswordValidatorTest {
 
         Result result = validateThenStore(candidate, candidate, encoder);
 
-        // Requirement 3.5, first half: the length check that decides acceptance is applied to the
-        // trimmed value, so the decision for a padded candidate matches the decision for its
-        // trimmed core.
         assertEquals(
             Boolean.valueOf(trimmed.length() >= PasswordValidator.MINIMUM_TRIMMED_LENGTH),
             Boolean.valueOf(Result.ACCEPTED.equals(result)),
@@ -629,28 +443,22 @@ public class PasswordValidatorTest {
             description + " decided as its trimmed form is decided");
 
         if (!Result.ACCEPTED.equals(result)) {
-            // Nothing is stored on a rejection, so there is no value to make a claim about.
             assertEquals(0, encoder.invocations, description + " handed to the encoder despite rejection");
             assertNull(encoder.encoded, description + " recorded despite rejection");
 
             return;
         }
 
-        // Requirement 3.5, second half: the encoder is handed the untrimmed candidate — the very
-        // string that was submitted, padding and all.
         assertEquals(1, encoder.invocations, description + " encoder invocation count");
         assertSame(candidate, encoder.encoded, description + " handed to the encoder as the submitted instance");
         assertEquals(candidate, encoder.encoded, description + " handed to the encoder untrimmed");
         assertEquals(candidate.length(), encoder.encoded.length(), description + " length preserved into storage");
 
-        // The two halves are only distinguishable where the padding is real, so pin the difference
-        // explicitly wherever it exists: the stored value is not the trimmed value.
         if (!candidate.equals(trimmed)) {
             assertTrue(!trimmed.equals(encoder.encoded), description + " stored trimmed rather than untrimmed");
         }
 
-        // Requirement 3.5: the validator hands a caller no normalised candidate to store in place of
-        // the submitted one. messageFor is its only String-returning member.
+        // The validator must offer no normalised form to store; messageFor is its only String-returning member.
         for (Method method : PasswordValidator.class.getDeclaredMethods()) {
             if (!Modifier.isPublic(method.getModifiers()) || method.isSynthetic()) {
                 continue;

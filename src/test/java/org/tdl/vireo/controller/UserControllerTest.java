@@ -99,7 +99,6 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testCredentialsCarriesPasswordEligibleTrue() {
-        // Requirement 2 criterion 4: an Account with a non-whitespace password and a null netid is eligible.
         user1.setPassword("encodedpassword");
         user1.setNetid(null);
 
@@ -109,13 +108,12 @@ public class UserControllerTest extends AbstractControllerTest {
 
         Credentials got = (Credentials) response.getPayload().get("Credentials");
 
-        // The map is declared Map<String, String>, so the value is the String "true", never a JSON boolean.
+        // The map is Map<String, String>, so the value is the String "true", not a JSON boolean.
         assertEquals("true", got.getAllCredentials().get("passwordEligible"));
     }
 
     @Test
     public void testCredentialsCarriesPasswordEligibleFalse() {
-        // Requirement 2 criterion 2: a non-null netid makes the Account ineligible.
         user1.setPassword("encodedpassword");
         user1.setNetid("netid1");
 
@@ -130,7 +128,6 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testCredentialsPasswordEligibleIsAlwaysAStringValue() {
-        // The entry is never a JSON boolean and never absent, whichever way the rule classifies.
         user1.setPassword("   ");
         user1.setNetid(null);
 
@@ -145,8 +142,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testCredentialsGuardsNullAllCredentials() {
-        // UserControllerTest constructs new Credentials() directly, whose no-argument constructor
-        // leaves allCredentials null, so the handler has to create and set the map.
+        // The no-arg Credentials constructor leaves allCredentials null, so the handler must create the map.
         credentials1.setAllCredentials(null);
 
         user1.setPassword("encodedpassword");
@@ -164,9 +160,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testPasswordEligibleSerializesWithNoActiveView() throws Exception {
-        // Requirement 2 criterion 4: User.isPasswordEligible() carries no @JsonView, and with
-        // default-view-inclusion disabled an un-annotated property serializes only when no view
-        // is active. That is what confines the flag to the no-view listing endpoints.
+        // Un-annotated properties serialize only with no active view (default-view-inclusion is off).
         user1.setPassword("encodedpassword");
         user1.setNetid(null);
 
@@ -202,11 +196,7 @@ public class UserControllerTest extends AbstractControllerTest {
         assertFalse(payload.get("passwordEligible").asBoolean(), "an Account carrying a netid serializes false");
     }
 
-    /**
-     * A mapper configured the way src/main/resources/application.yml configures the application
-     * mapper: spring.jackson.mapper.default-view-inclusion is false. The inherited objectMapper
-     * is a shared @Spy wired into controllers, so it is left alone here.
-     */
+    /** Mapper matching application.yml (default-view-inclusion off); the inherited objectMapper is a shared spy. */
     private ObjectMapper viewAwareMapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);

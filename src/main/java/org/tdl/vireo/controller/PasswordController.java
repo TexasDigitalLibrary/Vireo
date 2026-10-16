@@ -27,13 +27,7 @@ import edu.tamu.weaver.validation.results.ValidationResults;
 import edu.tamu.weaver.validation.utility.ValidationUtility;
 
 /**
- * The Vireo-managed password operations.
- *
- * A controller of its own, rather than new methods on {@code AuthController}, so the single
- * behavior-altering change to that class stays isolated and its existing test suite remains the
- * evidence that the change is outcome-preserving.
- *
- * No response from any handler here carries a password value or a reset token.
+ * Vireo-managed password operations. No response carries a password value or reset token.
  */
 @RestController
 @RequestMapping("/password")
@@ -54,19 +48,11 @@ public class PasswordController {
     private CryptoService cryptoService;
 
     /**
-     * Replace the stored password on the authenticated Account.
+     * Replaces the password on the authenticated Account only; nothing in the request body can
+     * target another Account. Checks run in order (availability, eligibility, current password,
+     * new password) and nothing is written if any rejects.
      *
-     * The target Account is taken from {@code @WeaverUser} only, so no identifier in the request
-     * body can redirect the change to another Account.
-     *
-     * The gates are evaluated in order — availability, eligibility, current-password verification,
-     * then candidate validation — and nothing is written when any of them rejects. No rate limiting
-     * is applied to the current-password verification.
-     *
-     * @param user The authenticated Account.
      * @param data {@code currentPassword}, {@code newPassword}, and {@code confirm}.
-     *
-     * @return SUCCESS once the stored password has been replaced, otherwise INVALID with the reason.
      */
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     @RequestMapping(value = "/change", method = POST)
@@ -107,8 +93,7 @@ public class PasswordController {
             return new ApiResponse(INVALID, passwordMessage);
         }
 
-        // The untrimmed value is encoded, so a password holding leading or trailing whitespace is
-        // stored and later verified with that whitespace intact.
+        // Encode the untrimmed value so surrounding whitespace is preserved.
         user.setPassword(cryptoService.encodePassword(newPassword));
 
         user = userRepo.update(user);

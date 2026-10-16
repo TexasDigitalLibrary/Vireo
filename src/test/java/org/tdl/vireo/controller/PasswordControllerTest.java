@@ -57,21 +57,9 @@ import edu.tamu.weaver.validation.results.ValidationResults;
 import edu.tamu.weaver.validation.utility.ValidationUtility;
 
 /**
- * Server-side enforcement, targeting and leak-containment assertions for {@code POST /password/change}.
+ * Tests for {@code POST /password/change}: gating, principal targeting and leak containment.
  *
- * Validates: Requirements 2.5, 2.6, 5.1, 5.2, 5.3, 5.4, 5.5, 5.6, 5.7, 5.8, 6.4, 7.6, 10.6, 13.2, 13.3, 14.4, 16.9
- *
- * One parameterized test carries Properties 12 (change arm), 13, 14 and 26 (change arm), because
- * they share a single setup: a request against an Account under some availability state. Every case
- * pins the same outcomes. The stored password is replaced exactly when the availability conjunction,
- * the eligibility rule, the current-password check and the candidate validator all pass. A rejected
- * case leaves the stored password byte-identical and produces no write, no notification, no encode
- * and no email. Only the authenticated Account is ever written. No password or token value appears
- * in the response or the log.
- *
- * BCrypt is real only where a case succeeds, since that is where the test asserts the persisted
- * value verifies against the new password. Every other case uses a cheap prefix-based stand-in for
- * the stored hash, which discriminates match from mismatch identically.
+ * BCrypt is real only where a case succeeds; other cases use a cheap prefix-based fake hash.
  */
 @ActiveProfiles(value = { "test", "isolated-test" })
 public class PasswordControllerTest extends AbstractControllerTest {
@@ -94,11 +82,7 @@ public class PasswordControllerTest extends AbstractControllerTest {
 
     private static final String FAKE_HASH = FAKE_PREFIX + CURRENT_PASSWORD;
 
-    /**
-     * The raw Password_Login_Setting and {@code auth.pass.change.enabled} pairs: both on, each arm
-     * off on its own, both off, the trimmed and mixed-case accepting spellings, absent values, and
-     * the near-miss strings an administrator might expect to mean true.
-     */
+    /** Raw password-login and {@code auth.pass.change.enabled} setting pairs, including near-miss spellings. */
     private static final String[][] AVAILABILITY_PAIRS = {
         { "true", "true" },
         { " TRUE ", "True" },
@@ -132,10 +116,7 @@ public class PasswordControllerTest extends AbstractControllerTest {
         "CURRENTPASSWORD"
     };
 
-    /**
-     * Candidate and confirmation pairs: accepted, the length 6 and length 5 boundary, mismatched,
-     * absent, whitespace-only, and an accepted value carrying surrounding whitespace.
-     */
+    /** Candidate and confirmation pairs, including the length 5/6 boundary. */
     private static final String[][] CANDIDATE_PAIRS = {
         { NEW_PASSWORD, NEW_PASSWORD },
         { "abcdef", "abcdef" },
@@ -147,10 +128,7 @@ public class PasswordControllerTest extends AbstractControllerTest {
         { "  padded  ", "  padded  " }
     };
 
-    /**
-     * Identifier key names an implementation might read out of the request body to pick a target
-     * Account. None is honored; the authenticated principal is the only source of the target.
-     */
+    /** Body keys that must be ignored; the authenticated principal is the only target. */
     private static final String[] FOREIGN_IDENTIFIER_KEYS = {
         "email", "username", "userId", "id", "user", "netid", "targetEmail", "account", "principal"
     };
@@ -163,11 +141,7 @@ public class PasswordControllerTest extends AbstractControllerTest {
     /** Secret shapes used as the new password in one case and as a wrong current password in another. */
     private static final String[] SECRET_SHAPES = { "plainsecret", " spaced secret ", "p@ss|word.{x}", "Ünïcödé-sëcret", "0123456789abcdef", "UPPER-lower-123" };
 
-    /**
-     * What a client might assert about its own rendering, carried in the request body. None of it
-     * is read: the server re-derives availability from the configuration store and eligibility from
-     * the stored Account fields on every request.
-     */
+    /** Client-asserted body entries; the server must ignore them and re-derive availability and eligibility. */
     private static final List<Map<String, String>> CLIENT_CLAIM_BODIES = Arrays.asList(
         new HashMap<String, String>(),
         claim("passwordEligible", "true"),
@@ -222,7 +196,6 @@ public class PasswordControllerTest extends AbstractControllerTest {
 
     @Test
     public void testChangePasswordRejectsACurrentPasswordMismatch() {
-        // Requirement 5 criterion 5: an authentication-failure result, nothing written.
         stubSettings("true", "true");
         stubFakeCrypto();
 
@@ -239,7 +212,6 @@ public class PasswordControllerTest extends AbstractControllerTest {
 
     @Test
     public void testChangePasswordRejectsACandidateTheValidatorRejects() {
-        // Requirement 5 criterion 6: every rejection cause the shared validator reports.
         List<String[]> rejectedCandidates = Arrays.asList(
             new String[] { null, null },
             new String[] { "   ", "   " },
@@ -263,9 +235,7 @@ public class PasswordControllerTest extends AbstractControllerTest {
 
     @Test
     public void testChangePasswordRequiresTheStudentRole() throws Exception {
-        // Requirement 5 criteria 4, 8: the baseline authenticated role, matching
-        // /user/settings/update. An unauthenticated or under-privileged caller is turned away by
-        // Spring Security before the handler body runs, which is what this annotation expresses.
+        // Spring Security rejects under-privileged callers before the handler runs.
         Method handler = PasswordController.class.getMethod("changePassword", User.class, Map.class);
 
         PreAuthorize preAuthorize = handler.getAnnotation(PreAuthorize.class);
@@ -280,37 +250,14 @@ public class PasswordControllerTest extends AbstractControllerTest {
         assertEquals(RequestMethod.POST, requestMapping.method()[0]);
     }
 
-    // Feature: user-password-reset, Property 12 (change arm): For any ineligible Account shape and
-    // any setting pair that resolves the capability unavailable, a Password_Change_Request is
-    // rejected, the stored password is left unchanged, and no email is sent. The reset and
-    // redemption arms join this property in tasks 12 and 13.
-    //
-    // Feature: user-password-reset, Property 13: For any combination of availability state,
-    // Account eligibility shape, current-password match or mismatch, and candidate password
-    // validity, the stored password is replaced exactly when all four conditions hold; and whenever
-    // it is replaced, the persisted value verifies against the submitted new password and does not
-    // verify against the previous password.
-    //
-    // Feature: user-password-reset, Property 14: For any Password_Change_Request body carrying
-    // arbitrary foreign Account identifiers, only the stored password of the authenticated Account
-    // is written.
-    //
-    // Feature: user-password-reset, Property 26 (change arm): For any password value and any token
-    // value, the /password/change response (status, message, payload) and the log output written
-    // while handling the request do not carry it. The password-changed notification arm is in
-    // CredentialNotificationServiceTest; the reset, redemption and email-change arms are added in
-    // later tasks, each as new scenarios in the case list and new artefacts in the check below.
-    //
-    // Validates: Requirements 2.5, 2.6, 5.1, 5.2, 5.3, 5.5, 5.6, 5.7, 6.4, 7.6, 7.8, 7.9, 9.7, 9.8, 10.6, 13.2, 13.3, 14.4
-    //
-    // Every request carries the token entries and the client-asserted entries alongside the three
-    // honored keys, and the repository lookups by email, netid and id are all stubbed to return a
-    // foreign Account, so a handler that honored any of them would be observable.
+    // The password is replaced only when availability, eligibility, current-password match and
+    // candidate validity all hold. Otherwise nothing is written, only the principal is ever
+    // written, and no password or token leaks into the response or log. Lookups by email, netid
+    // and id return a foreign Account so a handler honoring body identifiers would be caught.
     @ParameterizedTest(name = "[{index}] {8}")
     @MethodSource("provideChangeCases")
     public void changeEnforcesItsGatesTargetsThePrincipalAndLeaksNothing(String passwordLoginRaw, String changeRaw, String storedShape, String netid, String currentSupplied, String newPassword, String confirm, Map<String, String> extraFields, String label) throws Exception {
-        // The four conditions of the conjunction, derived from the requirement text rather than
-        // from the handler, so the expectation is independent of the implementation's order.
+        // Expectation derived independently of the handler's evaluation order.
         boolean hashed = HASHED_STORED_PASSWORD.equals(storedShape);
         boolean available = resolvesTrue(passwordLoginRaw) && resolvesTrue(changeRaw);
         boolean eligible = netid == null && storedShape != null && !storedShape.trim().isEmpty();
@@ -355,7 +302,7 @@ public class PasswordControllerTest extends AbstractControllerTest {
             assertTrue(passwordEncoder.matches(newPassword, user1.getPassword()), "the replaced password must verify against the submitted new password: " + label);
             assertFalse(passwordEncoder.matches(CURRENT_PASSWORD, user1.getPassword()), "the replaced password must not verify against the previous password: " + label);
 
-            // Only the authenticated Account was written or notified, and nothing else was looked up.
+            // Only the principal is written or notified.
             verify(userRepo).update(user1);
             verifyNoMoreInteractions(userRepo);
 
@@ -364,7 +311,7 @@ public class PasswordControllerTest extends AbstractControllerTest {
         } else {
             assertRejected(response);
 
-            // No credential material is produced on a rejected path, and no email leaves by any route.
+            // A rejection encodes nothing and sends no email.
             verify(cryptoService, never()).encodePassword(anyString());
             verifyNoInteractions(mockEmailService);
         }
@@ -375,20 +322,8 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     /**
-     * The cases for the change arm. Every case is a nine-tuple of the raw Password_Login_Setting
-     * value, the raw {@code auth.pass.change.enabled} value, the stored-password shape, the netid,
-     * the supplied current password, the candidate, the confirmation, extra request body entries,
-     * and a label.
-     *
-     * Each block walks one dimension through its boundary values with the others held at a shape
-     * that succeeds on its own, so each is pinned as individually load-bearing. The both-failing
-     * block crosses the two server-side gates, so a handler that returned early on one gate and
-     * skipped the other is still caught. The foreign-identifier block runs accepted requests with
-     * identifier entries that point at another Account. The secret block runs unusual password
-     * values through the accepting path and the current-password-mismatch path. Client-asserted
-     * body entries are rotated across the first blocks.
-     *
-     * @return The generated cases.
+     * Cases as (passwordLoginRaw, changeRaw, storedShape, netid, current, candidate, confirm, extraFields, label).
+     * Each block varies one dimension while the others stay on a succeeding shape.
      */
     private static Stream<Arguments> provideChangeCases() {
         List<Arguments> cases = new ArrayList<>();
@@ -452,10 +387,7 @@ public class PasswordControllerTest extends AbstractControllerTest {
         cases.add(Arguments.of(passwordLoginRaw, changeRaw, storedShape, netid, current, newPassword, confirm, claims, label + " claims=" + claims));
     }
 
-    /**
-     * Neither a password value nor a token value may appear in the serialized response, its
-     * message, its payload, or any log line written while handling the request.
-     */
+    /** No secret may appear in the serialized response, its message, its payload, or the log. */
     private void assertNoSecretLeaked(ApiResponse response, List<String> log, String label, String... secrets) throws Exception {
         List<String> artefacts = new ArrayList<>(log);
 
@@ -475,11 +407,7 @@ public class PasswordControllerTest extends AbstractControllerTest {
         }
     }
 
-    /**
-     * Run the handler with the controller's logger lowered to ALL, since the test configuration
-     * pins org.tdl.vireo at ERROR and the handler logs its rejections at DEBUG, collecting what it
-     * writes into {@code lines}. The level is restored afterwards.
-     */
+    /** Runs the handler with the logger at ALL (test config pins ERROR, rejections log at DEBUG) and collects log lines. */
     private ApiResponse capturingLog(List<String> lines, java.util.function.Supplier<ApiResponse> call) {
         Logger controllerLogger = (Logger) LoggerFactory.getLogger(PasswordController.class);
         Level originalLevel = controllerLogger.getLevel();
@@ -506,18 +434,12 @@ public class PasswordControllerTest extends AbstractControllerTest {
         }
     }
 
-    /**
-     * The server's boolean resolution, restated from Requirement 1 criterion 13 rather than called
-     * through the service, so the property's expectation does not inherit a defect in it.
-     */
+    /** Restated here rather than calling the service, so a service defect is not inherited. */
     private static boolean resolvesTrue(String raw) {
         return raw != null && raw.trim().equalsIgnoreCase("true");
     }
 
-    /**
-     * The three outcomes every rejection case pins: INVALID, an unchanged stored password, and no
-     * notification dispatch. No write reaches the repository either.
-     */
+    /** A rejection is INVALID, leaves the password unchanged, and writes and notifies nothing. */
     private void assertRejected(ApiResponse response) {
         assertEquals(ApiStatus.INVALID, response.getMeta().getStatus());
         assertEquals(storedPassword, user1.getPassword(), "the stored password must be left unchanged");
@@ -536,28 +458,19 @@ public class PasswordControllerTest extends AbstractControllerTest {
         return data;
     }
 
-    /**
-     * Stub the two settings the change conjunction reads. Lenient, because the conjunction
-     * short-circuits on the Password_Login_Setting.
-     */
+    /** Lenient because the conjunction short-circuits on the password-login setting. */
     private void stubSettings(String passwordLoginEnabled, String changeEnabled) {
         lenient().when(configurationRepo.getValueByNameAndType(ConfigurationName.APPLICATION_AUTH_PASS_ENABLED, APPLICATION_TYPE)).thenReturn(passwordLoginEnabled);
         lenient().when(configurationRepo.getValueByNameAndType(ConfigurationName.APPLICATION_AUTH_PASS_CHANGE_ENABLED, APPLICATION_TYPE)).thenReturn(changeEnabled);
     }
 
-    /**
-     * Route the mocked {@code CryptoService} onto the real encoder, so verification and encoding
-     * are the genuine operations. Used only where a case succeeds.
-     */
+    /** Routes the mocked {@code CryptoService} onto the real encoder; used only for succeeding cases. */
     private void stubRealCrypto() {
         lenient().when(cryptoService.validatePassword(any(), any())).thenAnswer(invocation -> invocation.getArgument(0) != null && passwordEncoder.matches(invocation.<String>getArgument(0), invocation.<String>getArgument(1)));
         lenient().when(cryptoService.encodePassword(anyString())).thenAnswer(invocation -> passwordEncoder.encode(invocation.<String>getArgument(0)));
     }
 
-    /**
-     * A cheap stand-in for hashing: a stored value matches exactly when it is the prefix plus the
-     * supplied value, so a match and a mismatch are told apart without paying for BCrypt.
-     */
+    /** Cheap hash stand-in: matches exactly when stored is the prefix plus the supplied value. */
     private void stubFakeCrypto() {
         lenient().when(cryptoService.validatePassword(any(), any())).thenAnswer(invocation -> invocation.getArgument(0) != null && (FAKE_PREFIX + invocation.<String>getArgument(0)).equals(invocation.<String>getArgument(1)));
         lenient().when(cryptoService.encodePassword(anyString())).thenAnswer(invocation -> FAKE_PREFIX + invocation.<String>getArgument(0));

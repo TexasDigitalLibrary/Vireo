@@ -40,14 +40,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * Property 6: Setting resolution and availability conjunction.
- *
- * Validates: Requirements 1.13, 1.14, 1.16, 1.18, 1.19
- *
- * The property is one {@link ParameterizedTest} fed by an {@link MethodSource} generator producing
- * well over one hundred cases, built from the enumerated boundary values crossed with one another
- * and padded from a fixed-seed {@link Random}. No property-based testing library is used and no new
- * Maven dependency is introduced.
+ * Tests for setting resolution, availability and expiry. Cases are boundary values plus
+ * fixed-seed random draws, fed through {@link ParameterizedTest}.
  */
 @ActiveProfiles(value = { "test", "isolated-test" })
 @ExtendWith(MockitoExtension.class)
@@ -59,11 +53,7 @@ public class PasswordFeatureAvailabilityServiceTest {
 
     private static final int RANDOM_CASE_COUNT = 48;
 
-    /**
-     * The enumerated raw setting strings. Every shape the design's Property 6 input domain names is
-     * present: null, {@code "true"}, {@code "TRUE"}, {@code " true "}, {@code "False"}, {@code "1"},
-     * {@code "yes"}, empty and whitespace-only.
-     */
+    /** Boundary raw setting strings. */
     private static final List<String> RAW_VALUES = Arrays.asList(
         null,
         "",
@@ -92,17 +82,7 @@ public class PasswordFeatureAvailabilityServiceTest {
     @InjectMocks
     private PasswordFeatureAvailabilityService passwordFeatureAvailabilityService;
 
-    /**
-     * Each case is a triple of raw stored strings for the Password_Login_Setting,
-     * {@code auth.pass.change.enabled} and {@code auth.pass.reset.enabled}.
-     *
-     * The enumerated cross product pins every pairing of the boundary values for the
-     * Password_Login_Setting against a capability setting; the random cases vary all three
-     * independently, which is what covers the asymmetric pairings where one capability is enabled
-     * and the other is not.
-     *
-     * @return The generated cases.
-     */
+    /** Raw triples (enabled, change, reset); the random cases cover asymmetric change/reset pairings. */
     private static Stream<Arguments> provideRawSettingTriples() {
         List<Arguments> cases = new ArrayList<Arguments>();
 
@@ -121,13 +101,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         return cases.stream();
     }
 
-    /**
-     * Draw either one of the enumerated boundary values or a junk string of random characters.
-     *
-     * @param random The fixed-seed source.
-     *
-     * @return The drawn raw value.
-     */
+    /** Draws a boundary value or a random junk string. */
     private static String randomRawValue(Random random) {
         if (random.nextBoolean()) {
             return RAW_VALUES.get(random.nextInt(RAW_VALUES.size()));
@@ -144,14 +118,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         return junk.toString();
     }
 
-    /**
-     * The independently computed resolution rule: trim, then compare against {@code "true"} with
-     * letter case ignored. An absent value resolves false.
-     *
-     * @param raw The raw stored value.
-     *
-     * @return The expected resolved value.
-     */
+    /** Expected resolution: trimmed, case-insensitive {@code "true"}; null is false. */
     private static boolean expectedResolution(String raw) {
         return raw != null && raw.trim().equalsIgnoreCase("true");
     }
@@ -167,23 +134,16 @@ public class PasswordFeatureAvailabilityServiceTest {
         boolean expectedChange = expectedResolution(changeRaw);
         boolean expectedReset = expectedResolution(resetRaw);
 
-        // Requirements 1.13, 1.14: resolution is trim plus case-insensitive comparison, and an
-        // absent or unrecognised value resolves false.
         assertEquals(expectedEnabled, passwordFeatureAvailabilityService.isPasswordLoginEnabled(), "Resolution of the Password_Login_Setting");
         assertEquals(expectedChange, passwordFeatureAvailabilityService.isChangeEnabled(), "Resolution of auth.pass.change.enabled");
         assertEquals(expectedReset, passwordFeatureAvailabilityService.isResetEnabled(), "Resolution of auth.pass.reset.enabled");
 
-        // Requirement 1.18: change is available exactly under its conjunction.
         assertEquals(expectedEnabled && expectedChange, passwordFeatureAvailabilityService.isChangeAvailable(), "Availability of self-service password change");
 
-        // Requirement 1.19: reset is available exactly under its conjunction.
         assertEquals(expectedEnabled && expectedReset, passwordFeatureAvailabilityService.isResetAvailable(), "Availability of administrator-initiated reset");
     }
 
-    /**
-     * Requirement 1.16: an absent Password_Login_Setting leaves both capabilities unavailable, for
-     * every value of the two capability settings.
-     */
+    /** An absent login setting makes both capabilities unavailable. */
     @Test
     public void testAbsentPasswordLoginSettingLeavesBothCapabilitiesUnavailable() {
         stub(ConfigurationName.APPLICATION_AUTH_PASS_ENABLED, null);
@@ -194,13 +154,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         assertFalse(passwordFeatureAvailabilityService.isResetAvailable(), "Reset is unavailable when the Password_Login_Setting is absent");
     }
 
-    /**
-     * The enumerated raw expiry strings. Every boundary the design's Property 7 input domain names
-     * is present: absent, empty, whitespace-only, the rejected lower neighbours {@code "0"} and
-     * {@code "-1"}, the accepted lower bound {@code "1"}, the seeded default {@code "24"}, the
-     * accepted upper bound {@link Integer#MAX_VALUE}, the rejected upper neighbour
-     * {@code "2147483648"}, non-numeric shapes, and a whitespace-padded valid value.
-     */
+    /** Boundary raw expiry strings. */
     private static final List<String> RAW_EXPIRY_VALUES = Arrays.asList(
         null,
         "",
@@ -226,14 +180,7 @@ public class PasswordFeatureAvailabilityServiceTest {
 
     private static final int RANDOM_EXPIRY_CASE_COUNT = 96;
 
-    /**
-     * Each case is one raw stored string for {@code auth.pass.reset.expiryHours}.
-     *
-     * The enumerated boundary values are crossed with randomized valid and invalid draws from a
-     * fixed-seed {@link Random}, giving well over one hundred cases in total.
-     *
-     * @return The generated cases.
-     */
+    /** Boundary expiry values plus seeded random draws. */
     private static Stream<Arguments> provideRawExpiryValues() {
         List<Arguments> cases = new ArrayList<Arguments>();
 
@@ -250,15 +197,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         return cases.stream();
     }
 
-    /**
-     * Draw either an enumerated boundary value, a randomized valid value in 1 to
-     * {@link Integer#MAX_VALUE}, a randomized rejected integer at or below zero, or a randomized
-     * non-numeric junk string.
-     *
-     * @param random The fixed-seed source.
-     *
-     * @return The drawn raw value.
-     */
+    /** Draws a boundary, a valid, a non-positive or a junk expiry value. */
     private static String randomRawExpiryValue(Random random) {
         switch (random.nextInt(4)) {
             case 0:
@@ -280,14 +219,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         }
     }
 
-    /**
-     * The independently computed resolution rule: trim, parse as an integer, and accept only a
-     * value in 1 to {@link Integer#MAX_VALUE} inclusive. Every other input yields 24.
-     *
-     * @param raw The raw stored value.
-     *
-     * @return The expected resolved expiry in hours.
-     */
+    /** Expected resolution: a trimmed integer of at least 1, otherwise the default of 24. */
     private static int expectedExpiry(String raw) {
         if (raw == null) {
             return PasswordFeatureAvailabilityService.DEFAULT_RESET_EXPIRY_HOURS;
@@ -308,17 +240,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         return parsed;
     }
 
-    /**
-     * Property 7: Expiry value resolution.
-     *
-     * Validates: Requirements 1.8
-     *
-     * A value parsing as an integer in 1 to {@link Integer#MAX_VALUE} inclusive resolves to itself;
-     * every other value resolves to 24. On every input, rejected or accepted, the configuration
-     * store sees the single read and no write whatsoever, so the stored value is left unchanged.
-     *
-     * @param raw The raw stored value under test.
-     */
+    /** Expiry resolves per the rule, with a single read and no write-back to the store. */
     @ParameterizedTest(name = "[{index}] expiryHours={0}")
     @MethodSource("provideRawExpiryValues")
     public void testExpiryValueResolution(String raw) {
@@ -328,8 +250,6 @@ public class PasswordFeatureAvailabilityServiceTest {
 
         assertEquals(expected, passwordFeatureAvailabilityService.getResetExpiryHours(), "Resolution of auth.pass.reset.expiryHours for raw value '" + raw + "'");
 
-        // Requirement 1.8: the stored value is left unchanged. The resolution reads the setting
-        // once and performs no write-back of the fallback value.
         verify(configurationRepo, times(1)).getValueByNameAndType(eq(ConfigurationName.APPLICATION_AUTH_PASS_RESET_EXPIRY_HOURS), eq(APPLICATION_TYPE));
 
         verify(configurationRepo, never()).create(anyString(), anyString(), anyString());
@@ -346,30 +266,18 @@ public class PasswordFeatureAvailabilityServiceTest {
         lenient().when(configurationRepo.getValueByNameAndType(eq(settingName), eq(APPLICATION_TYPE))).thenReturn(rawValue);
     }
 
-    /**
-     * Stub a setting against a mutable holder, so the stored value can be flipped between requests
-     * without re-stubbing.
-     *
-     * @param settingName The setting name.
-     * @param holder The single-element holder carrying the current raw stored value.
-     */
+    /** Stubs a setting against a mutable holder so the value can change between requests. */
     private void stubDynamic(String settingName, String[] holder) {
         lenient().when(configurationRepo.getValueByNameAndType(eq(settingName), eq(APPLICATION_TYPE))).thenAnswer(invocation -> holder[0]);
     }
 
-    /*
-     * Task 1.6 — seeding, constant, and per-request resolution assertions.
-     */
+    // Seeding, constant and per-request resolution assertions.
 
     private static final String SYSTEM_DEFAULTS_RESOURCE = "/settings/SYSTEM_Defaults.json";
 
     private static final String SHIBBOLETH_TYPE = "shibboleth";
 
-    /**
-     * The four seeded settings and the values Requirement 1 criteria 1, 2, 3 and 9 state.
-     *
-     * @return The generated cases.
-     */
+    /** The four seeded settings and their expected default values. */
     private static Stream<Arguments> provideSeededDefaults() {
         return Stream.of(
             Arguments.of(ConfigurationName.APPLICATION_AUTH_PASS_ENABLED, "true"),
@@ -379,20 +287,12 @@ public class PasswordFeatureAvailabilityServiceTest {
         );
     }
 
-    /**
-     * Read the Default_Settings_Seed exactly as {@code DefaultSettingsService} reads it.
-     *
-     * @return The parsed seed.
-     *
-     * @throws IOException If the resource cannot be read.
-     */
+    /** Reads the settings seed the way {@code DefaultSettingsService} does. */
     private static JsonNode readSystemDefaults() throws IOException {
         try (InputStream stream = PasswordFeatureAvailabilityServiceTest.class.getResourceAsStream(SYSTEM_DEFAULTS_RESOURCE)) {
             assertNotNull(stream, "The Default_Settings_Seed resource " + SYSTEM_DEFAULTS_RESOURCE + " is on the classpath");
 
-            // The seed carries a pre-existing multi-line string value, so raw control characters
-            // inside a string are tolerated here exactly as the application's reader tolerates
-            // them. Nothing about the seed file is changed by this test.
+            // The seed has a multi-line string value, so tolerate raw control characters as the application does.
             ObjectMapper objectMapper = new ObjectMapper();
 
             objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_CONTROL_CHARS, true);
@@ -401,16 +301,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         }
     }
 
-    /**
-     * Resolve a seeded value the way {@code DefaultSettingsService.init} flattens the seed: the
-     * entries under a top-level key are single-field objects, read through {@code asText()}.
-     *
-     * @param defaults The parsed seed.
-     * @param type The top-level key, which is the configuration type.
-     * @param name The setting name.
-     *
-     * @return The seeded value, or null when the setting is absent under that type.
-     */
+    /** Returns the seeded value for a setting under a type, or null when absent. */
     private static String seededValue(JsonNode defaults, String type, String name) {
         JsonNode entries = defaults.get(type);
 
@@ -427,18 +318,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         return null;
     }
 
-    /**
-     * Requirements 1.1, 1.2, 1.3, 1.9, 1.10, 1.15: each of the four settings is seeded under the
-     * {@code application} top-level key with the stated value, and under no other type.
-     *
-     * Seeding under the wrong type is invisible to {@code getSettingByNameAndType}, which filters
-     * {@code getSettingsByType(type)}, so the type is asserted and not merely the presence.
-     *
-     * @param settingName The setting name under test.
-     * @param expectedValue The value the requirement states.
-     *
-     * @throws IOException If the seed cannot be read.
-     */
+    /** Each setting is seeded under {@code application} only; a wrong type would be invisible to lookups by type. */
     @ParameterizedTest(name = "[{index}] {0} = {1}")
     @MethodSource("provideSeededDefaults")
     public void testSettingIsSeededUnderTheApplicationKey(String settingName, String expectedValue) throws IOException {
@@ -449,10 +329,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         assertNull(seededValue(defaults, SHIBBOLETH_TYPE, settingName), "'" + settingName + "' is not seeded under the shibboleth key");
     }
 
-    /**
-     * Requirement 1.4: each Password_Management_Setting is named in {@code ConfigurationName}, and
-     * the already-declared constant for the Password_Login_Setting is reused unchanged.
-     */
+    /** The setting names are declared in {@code ConfigurationName}. */
     @Test
     public void testConfigurationNameConstants() {
         assertEquals("auth.pass.enabled", ConfigurationName.APPLICATION_AUTH_PASS_ENABLED, "The Password_Login_Setting constant");
@@ -461,15 +338,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         assertEquals("auth.pass.reset.expiryHours", ConfigurationName.APPLICATION_AUTH_PASS_RESET_EXPIRY_HOURS, "The auth.pass.reset.expiryHours constant");
     }
 
-    /**
-     * Requirement 1.5: every setting is resolved through
-     * {@code configurationRepo.getValueByNameAndType(name, "application")} within the handling of
-     * each request, and no resolved value is retained across requests.
-     *
-     * A value cached at startup or held in a static field would answer the second and later
-     * requests with no read at all, so the read count scaling with the request count is what
-     * separates conformance from a cache.
-     */
+    /** Every setting is read on every request; read counts scaling with requests rules out caching. */
     @Test
     public void testEverySettingIsResolvedOnEveryRequest() {
         stub(ConfigurationName.APPLICATION_AUTH_PASS_ENABLED, "true");
@@ -494,13 +363,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         verifyNoMoreInteractions(configurationRepo);
     }
 
-    /**
-     * Requirements 1.5, 1.6: a stored value that changes between two requests governs the second
-     * request, with no application restart.
-     *
-     * Each of the three booleans is flipped on its own, so a service that happened to carry one
-     * value over while re-reading the others cannot pass.
-     */
+    /** A changed stored value governs the next request; each boolean is flipped independently. */
     @Test
     public void testFlippedStoredValueGovernsTheNextRequest() {
         String[] enabled = { "true" };
@@ -532,10 +395,7 @@ public class PasswordFeatureAvailabilityServiceTest {
         assertFalse(passwordFeatureAvailabilityService.isResetAvailable(), "The flipped Password_Login_Setting governs the next request for reset");
     }
 
-    /**
-     * Requirements 1.5, 1.6: the expiry value is likewise resolved per request, so an Administrator
-     * save of a new expiry governs the next evaluation.
-     */
+    /** A changed expiry value governs the next request. */
     @Test
     public void testFlippedExpiryValueGovernsTheNextRequest() {
         String[] expiry = { "24" };
