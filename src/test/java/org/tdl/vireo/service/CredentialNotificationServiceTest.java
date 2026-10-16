@@ -50,6 +50,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -692,6 +693,111 @@ public class CredentialNotificationServiceTest {
         assertTrue(index > 0, "The template body follows the Subject line.");
 
         return data.substring(index);
+    }
+
+    /*
+     * Task 7.6 — Property 26: Leak containment across every outbound artefact, the
+     * password-changed-notification arm.
+     */
+
+    private static final String[] LEAK_SECRET_SHAPES = { "plainsecret", " spaced secret ", "p@ss|word.{x}", "Ünïcödé-sëcret", "0123456789abcdef", "UPPER-lower-123" };
+
+    private static final String[] LEAK_SCENARIOS = { "sent", "absent-template", "mail-failure" };
+
+    /**
+     * Each case is a scenario and the secret material the Account carries. The enumerated cases
+     * cross every scenario with every secret shape; the fixed-seed random cases add generated
+     * secrets, 21 enumerated plus 100 random.
+     *
+     * @return The generated cases.
+     */
+    private static Stream<Arguments> provideLeakContainmentCases() {
+        List<Arguments> cases = new ArrayList<Arguments>();
+
+        for (String scenario : LEAK_SCENARIOS) {
+            for (String shape : LEAK_SECRET_SHAPES) {
+                cases.add(Arguments.of(scenario, shape));
+            }
+        }
+
+        Random random = new Random(GENERATOR_SEED);
+
+        for (int i = 0; i < 100; i++) {
+            cases.add(Arguments.of(LEAK_SCENARIOS[random.nextInt(LEAK_SCENARIOS.length)], Long.toHexString(random.nextLong()) + Long.toHexString(random.nextLong())));
+        }
+
+        return cases.stream();
+    }
+
+    /**
+     * Property 26: Leak containment, password-changed-notification arm.
+     *
+     * Validates: Requirements 6.4, 13.2, 13.3, 14.4
+     *
+     * For any password value and token value held by the Account, the dispatched subject and body
+     * and every log record written by the notification contain neither.
+     *
+     * @param scenario The dispatch outcome under test.
+     * @param base The secret material the Account's password and token are derived from.
+     */
+    @ParameterizedTest(name = "[{index}] scenario={0}, base={1}")
+    @MethodSource("provideLeakContainmentCases")
+    public void testPasswordChangedNotificationLeakContainment(String scenario, String base) throws Exception {
+        String password = "pw-" + base;
+        String token = "tok." + base;
+
+        user.setPassword(password);
+        user.setSettings(new TreeMap<String, String>(settings("resetToken", token)));
+
+        // The real packaged subject and body, so the artefact under assertion is the one shipped.
+        String raw = readPackagedPasswordChangedTemplate();
+
+        if ("absent-template".equals(scenario)) {
+            when(emailTemplateRepo.findByNameOverride(CredentialNotificationService.PASSWORD_CHANGED_TEMPLATE)).thenReturn(null);
+        } else {
+            when(emailTemplateRepo.findByNameOverride(CredentialNotificationService.PASSWORD_CHANGED_TEMPLATE)).thenReturn(new EmailTemplate(CredentialNotificationService.PASSWORD_CHANGED_TEMPLATE, packagedSubject(raw), packagedBody(raw)));
+
+            lenient().when(templateUtility.templateParameters(anyString(), any(String[][].class))).thenAnswer(invocation -> {
+                String message = invocation.getArgument(0);
+                String[][] parameters = invocation.getArgument(1);
+
+                for (String[] parameter : parameters) {
+                    message = message.replace("{" + parameter[0] + "}", parameter[1]);
+                }
+
+                return message;
+            });
+        }
+
+        if ("mail-failure".equals(scenario)) {
+            doThrow(new MessagingException("transport failure")).when(emailSender).sendEmail(anyString(), anyString(), anyString());
+        }
+
+        credentialNotificationService.notifyPasswordChanged(user);
+
+        List<String> artefacts = new ArrayList<String>();
+
+        artefacts.add(capturedLog());
+
+        if ("absent-template".equals(scenario)) {
+            verifyNoInteractions(emailSender);
+        } else {
+            ArgumentCaptor<String> subject = ArgumentCaptor.forClass(String.class);
+            ArgumentCaptor<String> body = ArgumentCaptor.forClass(String.class);
+
+            verify(emailSender).sendEmail(eq(TEST_EMAIL), subject.capture(), body.capture());
+
+            assertTrue(body.getValue().contains("2024-05-06 07:08:09 UTC"), "The notification states the change time, got: " + body.getValue());
+
+            artefacts.add(subject.getValue());
+            artefacts.add(body.getValue());
+        }
+
+        for (String artefact : artefacts) {
+            for (String secret : Arrays.asList(password, password.trim(), token, token.trim(), base, base.trim())) {
+                assertFalse(artefact.contains(secret), "No password or token value may appear in an outbound artefact, found '" + secret + "' in: " + artefact);
+            }
+        }
     }
 
 }
