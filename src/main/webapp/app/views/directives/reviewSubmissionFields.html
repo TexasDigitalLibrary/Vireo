@@ -1,5 +1,11 @@
 <div class="review-required-fields-directive" ng-repeat="submissionWorkflowStep in submission.submissionWorkflowSteps track by $index">
-  <h3>
+  <h2 ng-if="headingLevel === 2" class="h3">
+    {{submissionWorkflowStep.name}}
+    <span ng-if="!hideLinks" class="link-to-step" ng-click="jumpToStep(submissionWorkflowStep)">
+      <span class="glyphicon glyphicon-link"></span>
+    </span>
+  </h2>
+  <h3 ng-if="headingLevel === 3">
     {{submissionWorkflowStep.name}}
     <span ng-if="!hideLinks" class="link-to-step" ng-click="jumpToStep(submissionWorkflowStep)">
       <span class="glyphicon glyphicon-link"></span>

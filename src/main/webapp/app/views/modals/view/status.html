@@ -2,14 +2,14 @@
   <button type="button" class="close" ng-click="box.resetStatus()" aria-title="Close">
     <span class="modal-close" aria-hidden="true">&times;</span>
   </button>
-  <h3 class="modal-title">Change Submission Status</h3>
+  <h2 class="h3 modal-title">Change Submission Status</h2>
 </div>
 
 <div class="modal-body">
   <div class="row">
     <div class="col-xs-12">
 
-      <h2>Current Transitions</h2>
+      <h3>Current Transitions</h3>
       <ul class="list-inline">
         <li ng-init="state = box.SubmissionStatusRepo.findById(stateId); box.newStatus = state" ng-repeat="stateId in box.submission.submissionStatus.transitionSubmissionStatuses">
           <button ng-if="state.name !== 'Published'" class="btn btn-default" ng-click="box.changeStatus(state)" ng-disabled="state.updating || box.updating">{{state.name}}

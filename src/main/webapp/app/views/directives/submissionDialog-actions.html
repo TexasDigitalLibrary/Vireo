@@ -1,6 +1,6 @@
 <div ng-show="submission" class="dialog actions">
   <span class="dialog-close clickable" ng-click="show.reverse()">[{{show[0]}}]</span>
-  <h4 class="dialog-header">Requirements Checklist:</h4>
+  <h2 class="h4 dialog-header">Requirements Checklist:</h2>
   <div class="dialog-content" ng-class="{'dialog-open': show[0] === '-', 'dialog-closed': show[0] === '+'}">
     <ul class="dialog-actions-list">
       <li ng-repeat="customAction in submission.customActionValues | orderBy:'definition.position'" ng-if="customAction.definition.isStudentVisible" class="cutom-action-label">

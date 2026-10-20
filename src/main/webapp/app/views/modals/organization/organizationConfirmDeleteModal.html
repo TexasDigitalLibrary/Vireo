@@ -2,13 +2,13 @@
   <button type="button" class="close" ng-click="cancelDeleteOrganization()" aria-label="Close">
     <span class="modal-close" aria-hidden="true">&times;</span>
   </button>
-  <h3 class="modal-title">Delete Organization</h3>
+  <h2 class="h3 modal-title">Delete Organization</h2>
 </div>
 
 <form novalidate>
   <validationmessage results="getSelectedOrganizationValidationResults()"></validationmessage>
   <div class="modal-body">
-    <h4>Really delete organization "{{ getSelectedOrganizationName() }}"?</h4>
+    <p class="h4">Really delete organization "{{ getSelectedOrganizationName() }}"?</p>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" ng-click="cancelDeleteOrganization()">Cancel</button>

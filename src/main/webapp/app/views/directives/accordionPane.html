@@ -1,7 +1,7 @@
 <div id="{{::query}}" class="panel panel-default">
 	<div ng-click="toggleExpanded()" class="panel-heading" ng-class="{'expanded': expanded}">
 		<div class="panel-selection"><img ng-if="loading" class="loader" src="resources/images/ajax-loader.gif" /></div>
-		<span ng-transclude></span>
+		<span role="heading" aria-level="{{headingLevel}}" ng-transclude></span>
 		<span class="glyphicon glyphicon-menu-down pull-right" ng-show="!expanded"></span>
 		<span class="glyphicon glyphicon-menu-up  pull-right" ng-show="expanded"></span>
 	</div>

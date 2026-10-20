@@ -80,6 +80,10 @@ vireo.directive("vireoPane", function ($location, $timeout, $routeParams, Accord
 
             $scope.query = attr.query !== undefined ? attr.query : "pane-" + count;
 
+            // A pane bar is the heading for the content it expands. Accordions nest, so
+            // the level is set by the caller to keep the page outline from skipping one.
+            $scope.headingLevel = attr.headingLevel !== undefined ? parseInt(attr.headingLevel, 10) : 2;
+
             $scope.expanded = false;
 
             $scope.toggleExpanded = function () {

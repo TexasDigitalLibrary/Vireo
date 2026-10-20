@@ -112,7 +112,7 @@
     </div>
 
     <div ng-if="!step.overrideable && step.originatingOrganization !== getSelectedOrganizationId()">
-        <h3>Read only. Workflow step is non overrideable.</h3>
+        <h4 class="h3">Read only. Workflow step is non overrideable.</h4>
         <ul class="list-unstyled">
            <li ng-repeat="fieldProfile in step.aggregateFieldProfiles">
                 {{fieldProfile.position}}. <span ng-if="!fieldProfile.optional">*</span>{{fieldProfile.gloss}}
@@ -185,7 +185,7 @@
     </div>
 
     <div ng-if="!step.overrideable && step.originatingOrganization !== getSelectedOrganizationId()">
-        <h3>Read only. Workflow step is non overrideable.</h3>
+        <h4 class="h3">Read only. Workflow step is non overrideable.</h4>
         <ul class="list-unstyled">
             <li ng-repeat="note in step.aggregateNotes">
                 {{note.position}}. {{note.name}}
