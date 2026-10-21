@@ -687,8 +687,9 @@ h4 {
   background: #efefef;
   border: dashed thick #fefefe;
   padding-top: 35px;
+  padding-bottom: 10px;
   width: 250px;
-  height: 150px;
+  min-height: 150px;
   color: #696969;
   border-radius: 5px;
   transition: all 0.35s ease-in;
@@ -740,6 +741,13 @@ h4 {
 
 .upload-drop-zone .glyphicon-upload:hover {
   cursor: pointer;
+}
+
+/* The drop zone is also operable from the keyboard through this button, which opens the
+   file picker, so the focus has to be visible. */
+.upload-drop-zone .invisible-button:focus {
+  outline: 2px solid #337ab7;
+  outline-offset: 2px;
 }
 
 .upload-drop-zone.dragging .glyphicon-upload,
@@ -1480,6 +1488,39 @@ input[type=color]:focus {
 
 .displayed-column:hover .glyphicon {
   display: inline-block;
+}
+
+/* The move buttons are a keyboard alternative to dragging, so unlike the hint arrows
+   they stay visible rather than waiting for a hover. See issue #1674. */
+.displayed-column,
+.disabled-column {
+  display: flex;
+  align-items: center;
+}
+
+.displayed-column > [as-sortable-item-handle],
+.disabled-column > [as-sortable-item-handle] {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.displayed-column > .item-controls,
+.disabled-column > .item-controls {
+  flex: 0 0 auto;
+  margin-left: 8px;
+}
+
+.displayed-column .item-controls .glyphicon,
+.disabled-column .item-controls .glyphicon {
+  display: inline-block;
+}
+
+.displayed-column .item-controls .item-control:focus,
+.disabled-column .item-controls .item-control:focus,
+.displayed-column [as-sortable-item-handle]:focus,
+.disabled-column [as-sortable-item-handle]:focus {
+  outline: 2px solid #337ab7;
+  outline-offset: 2px;
 }
 
 .column-background {

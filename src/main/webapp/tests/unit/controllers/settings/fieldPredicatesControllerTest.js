@@ -167,8 +167,8 @@ describe("controller: FieldPredicatesController", function () {
                 new mockFieldPredicate(q)
             ];
             scope.fieldPredicates[1].mock(dataFieldPredicate2);
-            scope.dragAndDropSelectedFilter = 0;
-            scope.dragAndDropTextFilterValue = [{}];
+            scope.dragAndDropSelectedFilter = "value";
+            scope.dragAndDropTextFilterValue = {};
 
             spyOn(scope, "resetFieldPredicates");
 

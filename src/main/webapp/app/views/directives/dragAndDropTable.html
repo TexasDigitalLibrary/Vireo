@@ -10,7 +10,7 @@
   <table class="table table-striped table-bordered table-condensed">
     <thead>
       <tr>
-        <td data-ng-repeat="header in properties">{{header}}</td>
+        <th scope="col" data-ng-repeat="header in properties">{{header}}</th>
       </tr>
     </thead>
     <tbody data-as-sortable="listeners" data-ng-model="scopeValue">

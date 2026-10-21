@@ -1026,6 +1026,24 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
             column.status = !column.status ? 'previouslyDisabled' : undefined;
         };
 
+        // Keyboard accessible equivalent of dragging a column to a new position. See issue #1674.
+        var moveInList = function(list, index, offset) {
+            var destination = index + offset;
+
+            if (destination < 0 || destination >= list.length) {
+                return;
+            }
+
+            list.splice(destination, 0, list.splice(index, 1)[0]);
+            updateChange(true);
+        };
+
+        $scope.moveColumn = moveInList;
+
+        var moveFilterColumn = function(index, offset) {
+            moveInList(filterColumns.userFilterColumns, index, offset);
+        };
+
         $scope.displayedColumnOptions = createDisplayedColumnOptions();
 
         $scope.disabledColumnOptions = createDisabledColumnOptions();
@@ -1073,6 +1091,7 @@ vireo.controller("SubmissionListController", function (NgTableParams, $controlle
                 "filterColumns": filterColumns,
                 "disableFilter": disableFilter,
                 "enableFilter": enableFilter,
+                "moveFilterColumn": moveFilterColumn,
                 "displayedFilterColumnOptions": displayedFilterColumnOptions,
                 "disabledFilterColumnOptions": disabledFilterColumnOptions,
                 "saveUserFilters": $scope.saveUserFilters,

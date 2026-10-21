@@ -51,6 +51,10 @@ vireo.factory('DragAndDropListenerFactory', function($q, ModalService) {
             });
         };
 
+        var relocate = function(list, from, to) {
+            list.splice(to, 0, list.splice(from, 1)[0]);
+        };
+
         var dragControls = {
             getListener: function () {
                 return listener;
@@ -115,6 +119,53 @@ vireo.factory('DragAndDropListenerFactory', function($q, ModalService) {
                     });
                 }
             },
+
+            // Keyboard accessible equivalents of the drag gestures above. These drive the
+            // per item controls rendered by the draganddroplist directive so that reordering
+            // and removal never require a pointer. See issue #1674.
+
+            canReorder: function() {
+                return angular.isFunction(listener.reorder);
+            },
+
+            canRemove: function() {
+                return angular.isFunction(listener.select) && !!listener.confirm.remove.modal;
+            },
+
+            // Mirrors dropping an item on the trash can: select it, then hand off to the
+            // same confirmation modal the drag gesture opens.
+            removeAt: function(index) {
+                if(!dragControls.canRemove()) {
+                    return;
+                }
+                original = angular.copy(listener.model);
+                listener.select(index);
+                updateRequest();
+                ModalService.openModal(listener.confirm.remove.modal);
+            },
+
+            // Mirrors dragging an item to a new slot. The list passed in is the rendered
+            // list, which is what the sortable mutates and what the reorder end points
+            // expect positions against.
+            moveItem: function(list, from, to) {
+                if(!dragControls.canReorder() || !angular.isArray(list)) {
+                    return $q.when();
+                }
+                if(from === to || to < 0 || to >= list.length) {
+                    return $q.when();
+                }
+                original = angular.copy(listener.model);
+                relocate(list, from, to);
+                updateRequest();
+                return listener.reorder(from + 1, to + 1).then(function(res) {
+                    var message = angular.fromJson(res.body);
+                    if (message.meta.status !== "SUCCESS") {
+                        relocate(list, to, from);
+                        angular.extend(listener.model, original);
+                    }
+                });
+            },
+
             containerPositioning: 'relative',
             containment: drag.container
         };
