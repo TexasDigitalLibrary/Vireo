@@ -247,6 +247,14 @@
 					<h2>Change Password</h2>
 
 					<div class="col-sm-6">
+						<div class="row form-group" ng-if="passwordChangeFeedback">
+							<div class="col-sm-12">
+								<div class="alert" ng-class="'alert-' + passwordChangeFeedback.type" role="alert">
+									{{passwordChangeFeedback.message}}
+								</div>
+							</div>
+						</div>
+
 						<div class="row form-group">
 							<div class="col-sm-6">
 								<label class="pull-right-lg control-label" for="currentPassword">Current Password:</label>
