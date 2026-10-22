@@ -16,22 +16,26 @@ vireo.controller('ChangePasswordController', function ($controller, $scope, User
     var GENERIC_SUCCESS = 'Your password has been changed.';
     var GENERIC_FAILURE = 'Your password could not be changed.';
 
-    // WsApi resolves with the response on success and rejects with it on failure; in either case
-    // the ApiResponse may arrive as a JSON string in response.body or already parsed on
-    // response.payload. Pull the server message defensively, falling back to the generic text.
-    var messageFrom = function (response, fallback) {
-        var apiRes = response;
-
+    // For this REST-backed endpoint WsApi.fetch always resolves (even for an INVALID response) and
+    // only rejects on a transport error. The ApiResponse arrives as a JSON string in response.body;
+    // normalize it so success/failure is driven by meta.status, not by resolve vs reject.
+    var parseResponse = function (response) {
         if (response && typeof response.body === 'string') {
             try {
-                apiRes = angular.fromJson(response.body);
+                return angular.fromJson(response.body);
             } catch (e) {
-                apiRes = response;
+                return response;
             }
-        } else if (response && response.payload) {
-            apiRes = response.payload;
         }
 
+        if (response && response.payload) {
+            return response.payload;
+        }
+
+        return response;
+    };
+
+    var messageFrom = function (apiRes, fallback) {
         var message = apiRes && apiRes.meta ? apiRes.meta.message : undefined;
 
         return typeof message === 'string' && message.length > 0 ? message : fallback;
@@ -69,10 +73,18 @@ vireo.controller('ChangePasswordController', function ($controller, $scope, User
             $scope.passwordChange.newPassword,
             $scope.passwordChange.confirm
         ).then(function (response) {
-            $scope.passwordChangeFeedback = { type: 'success', message: messageFrom(response, GENERIC_SUCCESS) };
+            var apiRes = parseResponse(response);
+            var succeeded = apiRes && apiRes.meta && apiRes.meta.status === 'SUCCESS';
+
+            if (succeeded) {
+                $scope.passwordChangeFeedback = { type: 'success', message: messageFrom(apiRes, GENERIC_SUCCESS) };
+            } else {
+                $scope.passwordChangeFeedback = { type: 'danger', message: messageFrom(apiRes, GENERIC_FAILURE) };
+            }
+
             clear();
         }, function (response) {
-            $scope.passwordChangeFeedback = { type: 'danger', message: messageFrom(response, GENERIC_FAILURE) };
+            $scope.passwordChangeFeedback = { type: 'danger', message: messageFrom(parseResponse(response), GENERIC_FAILURE) };
             clear();
         });
     };
