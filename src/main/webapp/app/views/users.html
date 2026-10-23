@@ -15,6 +15,9 @@
                     <option ng-repeat="role in allowableRoles(user.role)">{{role}}</option>
                   </select>
                 </td>
+                <td title="'Password'">
+                  <button ng-if="user.passwordEligible && passwordResetAvailable()" class="btn btn-primary" ng-click="confirmResetPassword(user)">Reset Password</button>
+                </td>
               </tr>
             </tbody>
           </table>

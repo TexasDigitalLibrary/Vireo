@@ -966,6 +966,11 @@ var apiMapping = {
             'controller': 'password',
             'method': 'change'
         },
+        resetPassword: {
+            'endpoint': '/private/queue',
+            'controller': 'password',
+            'method': 'reset'
+        },
         createListen: {
             'endpoint': '/channel',
             'controller': 'user/create'

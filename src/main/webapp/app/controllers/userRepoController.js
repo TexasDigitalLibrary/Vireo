@@ -1,10 +1,14 @@
-vireo.controller('UserRepoController', function ($controller, $location, $scope, $timeout, TableFactory, User, UserRepo, UserService) {
+vireo.controller('UserRepoController', function ($controller, $location, $scope, $timeout, ManagedConfigurationRepo, TableFactory, User, UserRepo, UserService) {
 
     angular.extend(this, $controller('AbstractController', {$scope: $scope}));
 
     $scope.user = UserService.getCurrentUser();
 
     $scope.userRepo = UserRepo;
+
+    // The /users route names no controller, so no SettingsController sits above this one and
+    // $scope.settings does not exist here; read the application settings directly.
+    $scope.configurable = ManagedConfigurationRepo.getAll();
 
     $scope.table = TableFactory.buildTable({
         pageNumber: sessionStorage.getItem('users-page') ? sessionStorage.getItem('users-page') : 1,
@@ -41,11 +45,35 @@ vireo.controller('UserRepoController', function ($controller, $location, $scope,
             property: 'role',
             filterable: true,
             sortable: true
+        },
+        {
+            gloss: 'Password',
+            property: 'passwordReset',
+            filterable: false,
+            sortable: false
         }],
         activeSort: [{
             property: 'role',
             direction: 'DESC'
         }]
+    };
+
+    // Matches the server's resolution: trim, case-insensitive compare against 'true'.
+    var isEnabled = function (name) {
+        var application = $scope.configurable ? $scope.configurable.application : undefined;
+        var setting = application ? application[name] : undefined;
+        var value = setting ? setting.value : undefined;
+        return typeof value === 'string' && value.trim().toLowerCase() === 'true';
+    };
+
+    $scope.passwordResetAvailable = function () {
+        return isEnabled('auth.pass.enabled') && isEnabled('auth.pass.reset.enabled');
+    };
+
+    $scope.confirmResetPassword = function (user) {
+        if (window.confirm('Send a password reset link to ' + user.email + '?')) {
+            UserRepo.resetPassword(user);
+        }
     };
 
     $scope.roles = {};

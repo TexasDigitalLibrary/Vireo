@@ -58,6 +58,9 @@ vireo.config(function ($locationProvider, $routeProvider) {
         templateUrl: 'views/signup.html',
         controller: 'LocalAccountSignupController'
     }).
+    when('/reset-password', {
+        templateUrl: 'views/resetPassword.html'
+    }).
     when('/login', {
         templateUrl: 'views/login.html',
         controller: 'LocalLoginController'

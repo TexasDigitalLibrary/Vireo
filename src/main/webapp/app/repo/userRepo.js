@@ -20,6 +20,14 @@ vireo.repo("UserRepo", function UserRepo(User, WsApi) {
         return WsApi.fetch(endpoint);
     };
 
+    userRepo.resetPassword = function (user) {
+        var endpoint = angular.extend({}, userRepo.mapping.resetPassword, {
+            data: { email: user.email }
+        });
+
+        return WsApi.fetch(endpoint);
+    };
+
     userRepo.getAssignableUsers = function(page, size, name) {
         var assignable = [];
 
