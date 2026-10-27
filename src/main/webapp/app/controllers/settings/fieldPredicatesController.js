@@ -39,7 +39,9 @@ vireo.controller('FieldPredicatesController', function ($controller, $timeout, $
 
         $scope.selectFieldPredicate = function(index) {
             $scope.resetFieldPredicates();
-            var filtereFieldPredicates = $filter('filter')($scope.fieldPredicates, $scope.dragAndDropTextFilterValue[$scope.dragAndDropSelectedFilter]);
+            // Filter exactly the way draganddroplist renders the list, otherwise the index
+            // handed back by the list does not point at the predicate the user acted on.
+            var filtereFieldPredicates = $filter('filter')($scope.fieldPredicates, $scope.dragAndDropTextFilterValue);
             $scope.modalData = filtereFieldPredicates[index];
         };
 

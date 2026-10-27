@@ -12,7 +12,9 @@
 	<span ng-if="item.duration == null">Indefinite</span>
 	<span ng-if="item.duration != null">{{item.duration}}</span>
 </td>
-<td class="draggable-table-cell" data-as-sortable-item-handle>
-	<button ng-show="isMouseHover" class="btn btn-default" ng-click="edit({index:item.id})">Edit</button>
-	<button ng-show="!isMouseHover" disabled class="btn btn-default">Edit</button>
+<td class="draggable-table-cell">
+	<button type="button" class="btn btn-default" ng-click="edit({index:item.id})" aria-label="Edit {{item.name}}">Edit</button>
 </td>
+<!-- Kept outside the sortable handle so the controls are clickable and focusable
+     rather than starting a drag. -->
+<td class="draggable-table-cell td-center-middle item-controls-cell" ng-include="itemControlsView"></td>

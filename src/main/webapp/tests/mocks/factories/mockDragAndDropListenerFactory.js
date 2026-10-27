@@ -106,6 +106,29 @@ angular.module("mock.dragAndDropListenerFactory", []).factory("DragAndDropListen
                     var dest = event.dest.index + 1;
                     factory.listener.reorder(src, dest);
                 }
+            },
+            canReorder: function() {
+                return angular.isFunction(factory.listener.reorder);
+            },
+            canRemove: function() {
+                return angular.isFunction(factory.listener.select) && !!factory.listener.confirm.remove.modal;
+            },
+            removeAt: function(index) {
+                if (!dragControls.canRemove()) {
+                    return;
+                }
+                factory.listener.select(index);
+                ModalService.openModal(factory.listener.confirm.remove.modal);
+            },
+            moveItem: function(list, from, to) {
+                if (!dragControls.canReorder() || !angular.isArray(list)) {
+                    return $q.when();
+                }
+                if (from === to || to < 0 || to >= list.length) {
+                    return $q.when();
+                }
+                list.splice(to, 0, list.splice(from, 1)[0]);
+                return $q.when(factory.listener.reorder(from + 1, to + 1));
             }
         };
 

@@ -1,0 +1,36 @@
+<!--
+  Keyboard accessible equivalents of the drag gestures, rendered next to every row of a
+  draganddroplist. Expects the ng-repeat scope of the row ($index, $first, $last, item).
+-->
+<div class="item-controls btn-group" role="group" aria-label="Actions for {{ itemLabel(item) }}">
+
+  <button ng-if="canReorder()"
+          type="button"
+          class="btn btn-xs btn-default item-control"
+          ng-disabled="$first"
+          ng-click="moveUp($index)"
+          title="Move up"
+          aria-label="Move {{ itemLabel(item) }} up">
+    <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"></span>
+  </button>
+
+  <button ng-if="canReorder()"
+          type="button"
+          class="btn btn-xs btn-default item-control"
+          ng-disabled="$last"
+          ng-click="moveDown($index)"
+          title="Move down"
+          aria-label="Move {{ itemLabel(item) }} down">
+    <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"></span>
+  </button>
+
+  <button ng-if="canRemove()"
+          type="button"
+          class="btn btn-xs btn-default item-control item-control-remove"
+          ng-click="removeItem($index)"
+          title="Remove"
+          aria-label="Remove {{ itemLabel(item) }}">
+    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+  </button>
+
+</div>

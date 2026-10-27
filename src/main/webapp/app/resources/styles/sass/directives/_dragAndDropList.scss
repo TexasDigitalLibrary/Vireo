@@ -24,3 +24,55 @@
 .as-sortable-placeholder {
   border: 1px solid #dcdcdc;
 }
+
+/********************************************************
+ * Keyboard accessible alternatives to the drag gestures *
+ ********************************************************/
+
+.list-dragdrop > li > .list-dragdrop-item,
+.list-dragdrop > li > .item-controls-wrapper {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.list-dragdrop > li > .item-controls-wrapper {
+  margin-left: 8px;
+}
+
+.item-controls {
+  white-space: nowrap;
+}
+
+.item-controls .item-control {
+  color: #666666;
+}
+
+.item-controls .item-control-remove {
+  color: #a94442;
+}
+
+.item-controls .item-control[disabled] {
+  opacity: 0.35;
+}
+
+/* The edit pencil used to appear only while the row was hovered, which put it out of
+   reach of the keyboard. It is always rendered now and leans on colour for emphasis. */
+.edit-setting-icon {
+  color: #999999;
+  margin-left: 6px;
+}
+
+.list-dragdrop > li:hover .edit-setting-icon,
+.list-dragdrop > li:focus-within .edit-setting-icon,
+.edit-setting-icon:hover,
+.edit-setting-icon:focus {
+  color: #333333;
+}
+
+/* Every control reached by tabbing needs to show where the focus is. */
+.item-controls .item-control:focus,
+.edit-setting-icon:focus,
+[keyboard-clickable]:focus {
+  outline: 2px solid #337ab7;
+  outline-offset: 2px;
+}
