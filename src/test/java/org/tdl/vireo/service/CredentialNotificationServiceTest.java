@@ -412,9 +412,9 @@ public class CredentialNotificationServiceTest {
 
     private static final String PASSWORD_CHANGED_RESOURCE = "/emails/SYSTEM_Password_Changed.email";
 
-    private static final String SUPPORT_ADDRESS = "etd-support@jhu.edu";
+    private static final String SUPPORT_CONTACT_PHRASE = "vireo@myuniversity.edu or call us at xxx-555-xxxx";
 
-    private static final String SIGN_OFF = "The Hopkins ETD Team";
+    private static final String SIGN_OFF = "The Vireo Team";
 
     private static final String CHANGE_TIME_PLACEHOLDER = "{CHANGE_TIME}";
 
@@ -445,7 +445,7 @@ public class CredentialNotificationServiceTest {
     public void testPackagedPasswordChangedTemplateCarriesSupportContact() throws IOException {
         String body = packagedBody(readPackagedPasswordChangedTemplate());
 
-        assertTrue(body.contains(SUPPORT_ADDRESS), "The template body directs the recipient to " + SUPPORT_ADDRESS + ", got: " + body);
+        assertTrue(body.contains(SUPPORT_CONTACT_PHRASE), "The template body directs the recipient to " + SUPPORT_CONTACT_PHRASE + ", got: " + body);
         assertTrue(body.contains(SIGN_OFF), "The template body signs off as '" + SIGN_OFF + "', got: " + body);
     }
 
