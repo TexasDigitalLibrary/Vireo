@@ -1,9 +1,11 @@
 <script type="text/ng-template" id="customTableHeader">
   <tr>
-    <th ng-repeat="column in weaverTable.columns">
+    <th ng-repeat="column in weaverTable.columns" ng-attr-aria-sort="{{ !column.sortable ? undefined : weaverTable.asc(column.property) ? 'ascending' : weaverTable.desc(column.property) ? 'descending' : 'none' }}">
       <span>{{column.gloss}}
           <span
               ng-if="column.sortable"
+              role="button" tabindex="0" keyboard-activate
+              aria-label="Sort by {{column.gloss}}"
               ng-click="weaverTable.toggleSort(column.property)"
               class="sort-control glyphicon"
               ng-class="{'unsorted': weaverTable.unsorted(column.property), 'asc': weaverTable.asc(column.property), 'desc': weaverTable.desc(column.property)}">
@@ -24,12 +26,12 @@
             <form ng-submit="applyFilter(filter)" novalidate>
               <div class="input-group">
                 <div class="input-group-btn">
-                  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">{{filter.gloss}} <span class="caret"></span></button>
+                  <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Filter by {{filter.gloss}}">{{filter.gloss}} <span class="caret" aria-hidden="true"></span></button>
                   <ul class="dropdown-menu">
-                    <li><a ng-repeat="f in filters" ng-value="f.property" ng-click="selectFilter(f)">{{f.gloss}}</a></li>
+                    <li><a href="" ng-repeat="f in filters" ng-value="f.property" ng-click="selectFilter(f)">{{f.gloss}}</a></li>
                   </ul>
                 </div>
-                <input id="userFilter" type="text" class="form-control" ng-model="filter.value" aria-describedby="filters-input">
+                <input id="userFilter" type="text" class="form-control" ng-model="filter.value" aria-label="{{filter.gloss}} filter value">
                 <span class="input-group-btn">
                   <button class="btn btn-default" type="submit" ng-disabled="!filter.value">Filter</button>
                 </span>
@@ -46,7 +48,7 @@
         <span ng-repeat="(prop, value) in activeFilters">
           <span class="label label-default filter-label" ng-repeat="v in value">
               <span>{{lookupGloss(prop)}}: {{v}}</span>
-              <span class="glyphicon glyphicon-remove filter-remove" ng-click="removeFilter(prop, v)"></span>
+              <span class="glyphicon glyphicon-remove filter-remove" role="button" tabindex="0" keyboard-activate aria-label="Remove filter {{lookupGloss(prop)}}: {{v}}" ng-click="removeFilter(prop, v)"></span>
           </span>
         </span>
       </div>

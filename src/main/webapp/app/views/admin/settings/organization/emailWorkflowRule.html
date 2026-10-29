@@ -35,13 +35,13 @@
                 <span>
                     <td ng-click="confirmEmailWorkflowRuleDelete(rule);">
                         <span ng-if="rule.emailWorkflowRuleDeleteWorking && !(rule.isSystem) " class="glyphicon glyphicon-refresh spinning"></span>
-                        <span ng-if="!rule.emailWorkflowRuleDeleteWorking && !(rule.isSystem)" class="glyphicon glyphicon-trash"></span>
+                        <span ng-if="!rule.emailWorkflowRuleDeleteWorking && !(rule.isSystem)" class="glyphicon glyphicon-trash" role="button" tabindex="0" keyboard-activate aria-label="Delete email workflow rule {{ rule.emailTemplate.name }}"></span>
                     </td>
                 </span>
                 <td ng-click="changeEmailWorkflowRuleActivationWorking=true; changeEmailWorkflowRuleActivation(rule, changeEmailWorkflowRuleActivationWorking);">
                     <span ng-if="changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-refresh spinning"></span>
-                    <span ng-if="!rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-pause"></span>
-                    <span ng-if="rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-play"></span>
+                    <span ng-if="!rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-pause" role="button" tabindex="0" keyboard-activate aria-label="Disable email workflow rule {{ rule.emailTemplate.name }}"></span>
+                    <span ng-if="rule.isDisabled && !changeEmailWorkflowRuleActivationWorking" class="glyphicon glyphicon-play" role="button" tabindex="0" keyboard-activate aria-label="Enable email workflow rule {{ rule.emailTemplate.name }}"></span>
                 </td>
             </tr>
         </tbody>

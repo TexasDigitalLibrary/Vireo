@@ -1,6 +1,6 @@
 <form name="addCommentModalForm">
     <div class="modal-header {{attr.modalHeaderClass}}">
-        <button type="button" class="close" ng-click="resetCommentModal(addCommentModal)" aria-title="Close">
+        <button type="button" class="close" ng-click="resetCommentModal(addCommentModal)" aria-label="Close">
             <span class="modal-close" aria-hidden="true">&times;</span>
         </button>
         <h2 class="h3 modal-title">Add Comment</h2>
@@ -13,13 +13,13 @@
                 <div class="form-group email-element email-to" ng-class="{'email-active':addCommentModal.sendEmailToRecipient&&addCommentModal.commentVisibility==='public', 'has-error': isEmailAddresseeInvalid(addCommentModalForm.recipientEmail)}">
                     <label>To:</label>
                     <span ng-if="!addCommentModal.recipientEmails || addCommentModal.recipientEmails.length == 0" class="text-danger">No Emails added. Click the Add Email button to add an email recipient.</span>
-                    <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addCommentModal.recipientEmails)" ng-repeat="email in addCommentModal.recipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
+                    <span class="label-remove-hover" role="button" tabindex="0" keyboard-activate aria-label="Remove recipient {{email.name}}" ng-click="removeEmailAddressee(email,addCommentModal.recipientEmails)" ng-repeat="email in addCommentModal.recipientEmails"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>{{email.name}} </span>
                     <div class="input-group">
-                        <input type="email" class="form-control" ng-model="addCommentModal.recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" typeahead-wait-ms="400" ng-blur="validateEmailAddressee(addCommentModalForm.recipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
-                        <span title="Add Email" ng-class="{disabled: !addCommentModal.recipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addCommentModal.recipientEmails, addCommentModalForm.recipientEmail)"></span>
+                        <input type="email" class="form-control" ng-model="addCommentModal.recipientEmail" ng-pattern="emailValidationPattern" name="recipientEmail" aria-label="To recipient email" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" typeahead-wait-ms="400" ng-blur="validateEmailAddressee(addCommentModalForm.recipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+                        <span title="Add Email" role="button" tabindex="0" keyboard-activate aria-label="Add To recipient" aria-disabled="{{ !addCommentModal.recipientEmail }}" ng-class="{disabled: !addCommentModal.recipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addCommentModal.recipientEmails, addCommentModalForm.recipientEmail)"></span>
                     </div>
                     <span ng-if="!addFileData.recipientEmails || addFileData.recipientEmails.length == 0">Enter a valid email address or an email recipient type (e.g. Submitter).</span>
-                    <div ng-if="isEmailAddresseeInvalid(addCommentModalForm.recipientEmail)" class="alert alert-danger">
+                    <div ng-if="isEmailAddresseeInvalid(addCommentModalForm.recipientEmail)" class="alert alert-danger" role="alert">
                       <small>Value must either be a valid email address or a contact name (e.g. {{submission.getContactEmails()[0].name}}).</small>
                     </div>
                 </div>
@@ -27,13 +27,13 @@
                 <div class="form-group email-element email-cc" ng-class="{'email-active': addCommentModal.sendEmailToCCRecipient&&addCommentModal.commentVisibility==='public', 'has-error': isEmailAddresseeInvalid(addCommentModalForm.ccRecipientEmail)}">
                     <label>CC:</label>
                     <span ng-if="!addCommentModal.ccRecipientEmails || addCommentModal.ccRecipientEmails.length == 0" class="text-danger">No Emails added. Click the Add Email button to add an email recipient.</span>
-                    <span class="label-remove-hover" ng-click="removeEmailAddressee(email,addCommentModal.ccRecipientEmails)" ng-repeat="email in addCommentModal.ccRecipientEmails"><span class="glyphicon glyphicon-remove"></span>{{email.name}} </span>
+                    <span class="label-remove-hover" role="button" tabindex="0" keyboard-activate aria-label="Remove recipient {{email.name}}" ng-click="removeEmailAddressee(email,addCommentModal.ccRecipientEmails)" ng-repeat="email in addCommentModal.ccRecipientEmails"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>{{email.name}} </span>
                     <div class="input-group">
-                        <input type="email" class="form-control" ng-model="addCommentModal.ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" typeahead-wait-ms="400" ng-blur="validateEmailAddressee(addCommentModalForm.ccRecipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
-                        <span title="Add Email" ng-class="{disabled: !addCommentModal.ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addCommentModal.ccRecipientEmails, addCommentModalForm.ccRecipientEmail)"></span>
+                        <input type="email" class="form-control" ng-model="addCommentModal.ccRecipientEmail" ng-pattern="emailValidationPattern" name="ccRecipientEmail" aria-label="CC recipient email" uib-typeahead="entry as entry.name for entry in submission.getContactEmails() | filter:$viewValue" typeahead-wait-ms="400" ng-blur="validateEmailAddressee(addCommentModalForm.ccRecipientEmail)" typeahead-select-on-blur="true" autocomplete="true" />
+                        <span title="Add Email" role="button" tabindex="0" keyboard-activate aria-label="Add CC recipient" aria-disabled="{{ !addCommentModal.ccRecipientEmail }}" ng-class="{disabled: !addCommentModal.ccRecipientEmail}" class="input-group-addon glyphicon glyphicon-plus clickable" ng-click="addEmailAddressee(addCommentModal.ccRecipientEmails, addCommentModalForm.ccRecipientEmail)"></span>
                     </div>
                     <span ng-if="!addFileData.ccRecipientEmails || addFileData.ccRecipientEmails.length == 0">Enter a valid email address or an email recipient type (e.g. Submitter).</span>
-                    <div ng-if="isEmailAddresseeInvalid(addCommentModalForm.ccRecipientEmail)" class="alert alert-danger">
+                    <div ng-if="isEmailAddresseeInvalid(addCommentModalForm.ccRecipientEmail)" class="alert alert-danger" role="alert">
                       <small>Value must either be a valid email address or a contact name (e.g. {{submission.getContactEmails()[0].name}}).</small>
                     </div>
                 </div>

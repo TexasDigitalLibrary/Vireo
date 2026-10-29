@@ -5,16 +5,16 @@
     </div>
     <div class="panel-body">
 
-        <ul class="nav nav-tabs mb-1">
+        <ul class="nav nav-tabs mb-1" role="tablist">
             <li role="presentation" ng-class="{ active: isByStatus() }">
-                <a href ng-click="active = 'email-by-status'">By Status</a>
+                <a href id="email-by-status-tab" role="tab" aria-controls="email-by-status-panel" aria-selected="{{ isByStatus() }}" ng-click="active = 'email-by-status'">By Status</a>
             </li>
             <li role="presentation" ng-class="{ active: isByAction() }">
-                <a href ng-click="active = 'email-by-action'">By Action</a>
+                <a href id="email-by-action-tab" role="tab" aria-controls="email-by-action-panel" aria-selected="{{ isByAction() }}" ng-click="active = 'email-by-action'">By Action</a>
             </li>
         </ul>
 
-        <div class="panel-wrap" ng-class="{ active: isByStatus() }">
+        <div class="panel-wrap" id="email-by-status-panel" role="tabpanel" aria-labelledby="email-by-status-tab" ng-class="{ active: isByStatus() }">
             <div class="row">
                 <div class="col-xs-12">
                     <vireo-accordion single-expand="false">
@@ -24,7 +24,7 @@
             </div>
         </div>
 
-        <div class="panel-wrap" ng-class="{ active: isByAction() }">
+        <div class="panel-wrap" id="email-by-action-panel" role="tabpanel" aria-labelledby="email-by-action-tab" ng-class="{ active: isByAction() }">
             <div class="row">
                 <div class="col-xs-12">
                     <vireo-accordion single-expand="false">

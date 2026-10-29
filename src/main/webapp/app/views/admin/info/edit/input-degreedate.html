@@ -1,6 +1,6 @@
 <div class="input-group">
-  <span class="input-group-addon" ng-click="date=true">
-    <span class="glyphicon glyphicon-calendar"></span>
+  <span class="input-group-addon" role="button" tabindex="0" keyboard-activate aria-label="Open calendar for {{ fieldProfile.gloss }}" ng-click="date=true">
+    <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
   </span>
   <input
     type="text"
@@ -14,6 +14,6 @@
     ng-required="!fieldProfile.optional"
     readonly
     stringtodate />
-  <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="save(field)"></span>
-  <span class="input-group-addon glyphicon glyphicon-remove clickable" ng-click="cancel(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-ok clickable" role="button" tabindex="0" keyboard-activate aria-label="Save {{ fieldProfile.gloss }}" ng-click="save(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-remove clickable" role="button" tabindex="0" keyboard-activate aria-label="Cancel editing {{ fieldProfile.gloss }}" ng-click="cancel(field)"></span>
 </div>

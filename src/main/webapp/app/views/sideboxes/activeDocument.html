@@ -1,7 +1,7 @@
 <div class="active-documents">
 
   <div class="col-sm-4" ng-if="box.hasPrimaryDocument()">
-    <img class="select-toggle" src="resources/images/pdf-logo.gif" ng-click="box.downloadPrimaryDocument()">
+    <img class="select-toggle" src="resources/images/pdf-logo.gif" role="button" tabindex="0" keyboard-activate alt="Download primary document {{ box.getPrimaryDocumentFileName() }}" ng-click="box.downloadPrimaryDocument()">
   </div>
   <div class="col-sm-8 primary-file-title" ng-if="box.hasPrimaryDocument()">
     <div>

@@ -36,9 +36,9 @@
       <span ng-if="savingReviewerNotes" class="glyphicon glyphicon-refresh spinning"></span>
       <span ng-if="!editingReviewerNotes" ng-class="{'info-empty': !submission.reviewerNotes}">{{submission.reviewerNotes || 'none'}}</span>
       <div class="input-group" ng-if="editingReviewerNotes">
-        <textarea class="form-control" ng-model="submission.reviewerNotes" cols="200"></textarea>
-        <span class="glyphicon glyphicon-ok clickable" ng-click="saveReviewerNotes()"></span>
-        <span class="glyphicon glyphicon-remove clickable" ng-click="cancelReviewerNotes()"></span>
+        <textarea class="form-control" ng-model="submission.reviewerNotes" cols="200" aria-label="Reviewer notes"></textarea>
+        <span class="glyphicon glyphicon-ok clickable" role="button" tabindex="0" keyboard-activate aria-label="Save reviewer notes" ng-click="saveReviewerNotes()"></span>
+        <span class="glyphicon glyphicon-remove clickable" role="button" tabindex="0" keyboard-activate aria-label="Cancel editing reviewer notes" ng-click="cancelReviewerNotes()"></span>
       </div>
     </div>
   </div>

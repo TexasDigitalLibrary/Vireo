@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="resetColumns()" aria-title="Close">
+    <button type="button" class="close" ng-click="resetColumns()" aria-label="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
     <h2 class="h3 modal-title">Customize Results Table</h2>
@@ -13,8 +13,8 @@
                 <h3 class="h4">Displayed Columns</h3>
                 <div class="column-background">
                     <ul class="displayed-column-container" as-sortable="displayedColumnOptions" ng-model="userColumns">
-                        <li ng-class="{'displayed-column': !column.status, 'disabled-column': column.status === 'previouslyDisabled'}" ng-repeat="column in userColumns" ng-click="disableColumn(column)" as-sortable-item>
-                            <div as-sortable-item-handle>{{column.title}}<span class="glyphicon glyphicon-arrow-right pull-right"></span></div>
+                        <li ng-class="{'displayed-column': !column.status, 'disabled-column': column.status === 'previouslyDisabled'}" ng-repeat="column in userColumns" role="button" tabindex="0" keyboard-activate aria-label="Hide column {{column.title}}" ng-click="disableColumn(column)" as-sortable-item>
+                            <div as-sortable-item-handle>{{column.title}}<span class="glyphicon glyphicon-arrow-right pull-right" aria-hidden="true"></span></div>
                         </li>
                     </ul>
                 </div>
@@ -23,8 +23,8 @@
                 <h3 class="h4">Disabled Columns</h3>
                 <div class="column-background">
                     <ul class="disabled-column-container" as-sortable="disabledColumnOptions" ng-model="columns">
-                        <li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status === 'previouslyDisplayed'}" ng-repeat="column in columns" ng-click="enableColumn(column)" as-sortable-item>
-                            <div as-sortable-item-handle><span class="glyphicon glyphicon-arrow-left pull-left"></span>&nbsp;{{column.title}}</div>
+                        <li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status === 'previouslyDisplayed'}" ng-repeat="column in columns" role="button" tabindex="0" keyboard-activate aria-label="Show column {{column.title}}" ng-click="enableColumn(column)" as-sortable-item>
+                            <div as-sortable-item-handle><span class="glyphicon glyphicon-arrow-left pull-left" aria-hidden="true"></span>&nbsp;{{column.title}}</div>
                         </li>
                     </ul>
                 </div>

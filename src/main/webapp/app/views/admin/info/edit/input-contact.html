@@ -7,8 +7,8 @@
     typeahead-on-select="saveWithCV(field, $item)"
     typeahead-loading="typeAheads.loading"
   />
-  <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="saveContacts(field)"></span>
-  <span class="input-group-addon glyphicon glyphicon-remove clickable" ng-click="cancel(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-ok clickable" role="button" tabindex="0" keyboard-activate aria-label="Save {{ fieldProfile.gloss }}" ng-click="saveContacts(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-remove clickable" role="button" tabindex="0" keyboard-activate aria-label="Cancel editing {{ fieldProfile.gloss }}" ng-click="cancel(field)"></span>
 </div>
 <div class="input-group input-contact-contacts">
   <input type="text"
@@ -19,6 +19,6 @@
     typeahead-on-select="saveWithCV(field, $item)"
     typeahead-loading="typeAheads.loading"
   />
-  <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="saveContacts(field)"></span>
-  <span class="input-group-addon glyphicon glyphicon-remove clickable" ng-click="cancel(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-ok clickable" role="button" tabindex="0" keyboard-activate aria-label="Save {{ fieldProfile.gloss }}" ng-click="saveContacts(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-remove clickable" role="button" tabindex="0" keyboard-activate aria-label="Cancel editing {{ fieldProfile.gloss }}" ng-click="cancel(field)"></span>
 </div>

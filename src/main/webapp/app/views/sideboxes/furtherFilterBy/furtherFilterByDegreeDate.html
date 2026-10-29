@@ -1,11 +1,12 @@
 <form ng-submit="box.addDateFilter(column)">
   <div class="input-group">
-      <span class="input-group-addon" ng-click="date=true">
-          <span class="glyphicon glyphicon-calendar"></span>
+      <span class="input-group-addon" role="button" tabindex="0" keyboard-activate aria-label="Open calendar for {{ column.title }}" ng-click="date=true">
+          <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
       </span>
       <input
           type="text"
           class="form-control"
+          aria-label="{{ column.title }}"
           uib-datepicker-popup="MMMM yyyy"
           datepicker-options="box.datepickerOptions"
           ng-model="box[column.title.split(' ').join('')].d1"

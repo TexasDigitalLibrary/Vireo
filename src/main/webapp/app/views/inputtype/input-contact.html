@@ -14,8 +14,8 @@
     aria-label="{{profile.gloss}} name"
   />
   <span class="input-group-btn">
-    <button class="btn btn-default opaque" ng-if="fieldValue.value" aria-label="Remove {{profile.gloss}} {{fieldValue.value}}">
-      <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)" aria-hidden="true"></span>
+    <button type="button" class="btn btn-default opaque" ng-if="fieldValue.value" aria-label="Remove {{profile.gloss}} {{fieldValue.value}}" ng-click="removeFieldValue(fieldValue)">
+      <span class="glyphicon glyphicon-remove clickable" aria-hidden="true"></span>
     </button>
   </span>
   <span class="input-group-addon">

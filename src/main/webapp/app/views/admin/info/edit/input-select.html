@@ -1,13 +1,13 @@
 <div class="input-group" uib-dropdown>
-  <span class="input-group-addon select-toggle" uib-dropdown-toggle>
-    <span class="caret"></span>
+  <span class="input-group-addon select-toggle" uib-dropdown-toggle role="button" tabindex="0" aria-label="Choose {{ fieldProfile.gloss }}">
+    <span class="caret" aria-hidden="true"></span>
   </span>
-   <ul class="dropdown-menu" uib-dropdown-menu>
-    <li class="select-option"  ng-click="field.value = word.name;"  ng-repeat="word in fieldProfile.controlledVocabulary.dictionary | filter:displayVocabularyWord">
+   <ul class="dropdown-menu" uib-dropdown-menu role="listbox" aria-label="{{ fieldProfile.gloss }}">
+    <li class="select-option" role="option" tabindex="0" keyboard-activate aria-selected="{{ field.value === word.name }}" ng-click="field.value = word.name;"  ng-repeat="word in fieldProfile.controlledVocabulary.dictionary | filter:displayVocabularyWord">
       <span>{{word.name}}</span>
     </li>
   </ul>
   <span class="form-control select-value" ng-bind="field.value || 'Choose {{fieldProfile.gloss}}'"></span>
-  <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="save(field)"></span>
-  <span class="input-group-addon glyphicon glyphicon-remove clickable" ng-click="cancel(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-ok clickable" role="button" tabindex="0" keyboard-activate aria-label="Save {{ fieldProfile.gloss }}" ng-click="save(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-remove clickable" role="button" tabindex="0" keyboard-activate aria-label="Cancel editing {{ fieldProfile.gloss }}" ng-click="cancel(field)"></span>
 </div>

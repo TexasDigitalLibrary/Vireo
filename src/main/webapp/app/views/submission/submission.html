@@ -17,15 +17,15 @@
       <ul class="nav nav-pills nav-justified">
         <li class="submission-workflow-step-navigation" ng-class="{'active': activeStep.id == workflowStep.id}" ng-repeat="workflowStep in submission.submissionWorkflowSteps">
           <a ng-click="setActiveStep(workflowStep)">
-            <button class="invisible-button wide-button" ng-disabled="submitting">
+            <button class="invisible-button wide-button" ng-disabled="submitting" ng-attr-aria-current="{{ activeStep.id == workflowStep.id ? 'step' : undefined }}">
               <span>{{$index+1}}. {{workflowStep.name}}</span>
-              <span class="glyphicon glyphicon-arrow-right pull-right"></span>
+              <span class="glyphicon glyphicon-arrow-right pull-right" aria-hidden="true"></span>
             </button>
           </a>
         </li>
         <li class="submission-workflow-step-navigation" ng-class="{'active': activeStep.name === 'review'}" ng-if="studentSubmissionRepoReady">
           <a ng-click="reviewSubmission()">
-            <button class="invisible-button" ng-disabled="submitting">Confirm & Submit</button>
+            <button class="invisible-button" ng-disabled="submitting" ng-attr-aria-current="{{ activeStep.name === 'review' ? 'step' : undefined }}">Confirm & Submit</button>
           </a>
         </li>
       </ul>

@@ -43,7 +43,7 @@
 
       <li ng-if="type=='flagged'">{{label}}:</li>
 
-      <span ng-if="type=='view' && fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus clickable" ng-click="addFieldValue()"></span>
+      <span ng-if="type=='view' && fieldProfile.repeatable && $index == 0" class="glyphicon glyphicon-plus clickable" role="button" tabindex="0" keyboard-activate aria-label="Add {{ fieldProfile.gloss }}" ng-click="addFieldValue()"></span>
 
       <span ng-class="type=='view' ? 'info-data form-control' : 'flagged-fields font-weight-bold'">
         <!-- conditionally show the proper form of the field value -->
@@ -66,12 +66,12 @@
         <span ng-if="inputFile()" ng-class="{'info-empty': !field.value}">{{field.fileInfo.name || 'none'}}</span>
 
         <!-- conditionally show the invalidation and refresh -->
-        <span ng-if="type=='view' && !field.isValid()" class="glyphicon glyphicon-warning-sign text-danger" tooltip="{{field.getValidationMessages()}}"></span>
-        <span ng-if="type=='view' && !field.isValid()" class="glyphicon glyphicon-refresh text-primary clickable" ng-click="refreshFieldValue(field)"></span>
+        <span ng-if="type=='view' && !field.isValid()" class="glyphicon glyphicon-warning-sign text-danger" role="img" aria-label="{{ field.getValidationMessages() }}" tooltip="{{field.getValidationMessages()}}"></span>
+        <span ng-if="type=='view' && !field.isValid()" class="glyphicon glyphicon-refresh text-primary clickable" role="button" tabindex="0" keyboard-activate aria-label="Refresh {{ fieldProfile.gloss }}" ng-click="refreshFieldValue(field)"></span>
 
         <!-- conditionally show the edit clicker or the progress spinner -->
         <span id="{{$index}}" ng-if="type=='view' && !field.updating" class="glyphicon glyphicon-pencil clickable" role="button" tabindex="0" keyboard-activate aria-label="Edit {{ fieldProfile.gloss }}" ng-click="editFieldValue($event, field)"></span>
-        <span ng-if="type=='view' && !field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" ng-click="removeFieldValue(field)"></span>
+        <span ng-if="type=='view' && !field.updating && fieldProfile.repeatable && $index > 0" class="glyphicon glyphicon-minus clickable" role="button" tabindex="0" keyboard-activate aria-label="Remove {{ fieldProfile.gloss }} {{ field.value }}" ng-click="removeFieldValue(field)"></span>
 
         <span ng-if="type=='view' && field.updating" class="glyphicon glyphicon-refresh spinning"></span>
       </span>

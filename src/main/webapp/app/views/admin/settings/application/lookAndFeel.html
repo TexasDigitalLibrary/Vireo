@@ -15,6 +15,8 @@
               <span>Main Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset text main color to default"
                   ng-click="resetConfiguration('lookAndFeel','text_main_color')">
                 </span>
               </span>
@@ -53,6 +55,8 @@
               <span>Background Main Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset background main color to default"
                   ng-click="resetConfiguration('lookAndFeel','background_main_color')">
                 </span>
               </span>
@@ -85,6 +89,8 @@
               <span>Background Highlight Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset background highlight color to default"
                   ng-click="resetConfiguration('lookAndFeel','background_highlight_color')">
                 </span>
               </span>
@@ -114,6 +120,8 @@
               <span>Header Text Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset background header text color to default"
                   ng-click="resetConfiguration('lookAndFeel','background_header_text_color')">
                 </span>
               </span>
@@ -143,6 +151,8 @@
               <span>Footer Text Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset background footer text color to default"
                   ng-click="resetConfiguration('lookAndFeel','background_footer_text_color')">
                 </span>
               </span>
@@ -183,6 +193,8 @@
               <span>Background Main Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset button main color on to default"
                   ng-click="resetConfiguration('lookAndFeel','button_main_color_on')">
                 </span>
               </span>
@@ -213,6 +225,8 @@
               <span>Background Highlight Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset button highlight color on to default"
                   ng-click="resetConfiguration('lookAndFeel','button_highlight_color_on')">
                 </span>
               </span>
@@ -245,6 +259,8 @@
               <span>Text Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset button text color on to default"
                   ng-click="resetConfiguration('lookAndFeel','button_text_color_on')">
                 </span>
               </span>
@@ -287,6 +303,8 @@
               <span>Background Main Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset button main color off to default"
                   ng-click="resetConfiguration('lookAndFeel','button_main_color_off')">
                 </span>
               </span>
@@ -322,6 +340,8 @@
               <span>Background Highlight Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset button highlight color off to default"
                   ng-click="resetConfiguration('lookAndFeel','button_highlight_color_off')">
                 </span>
               </span>
@@ -354,6 +374,8 @@
               <span>Text Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset button text color off to default"
                   ng-click="resetConfiguration('lookAndFeel','button_text_color_off')">
                 </span>
               </span>
@@ -393,6 +415,8 @@
               <span>Background Main Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset admin tab main color to default"
                   ng-click="resetConfiguration('lookAndFeel','admin_tab_main_color')">
                 </span>
               </span>
@@ -428,6 +452,8 @@
               <span>Background Selected Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset admin tab selected color to default"
                   ng-click="resetConfiguration('lookAndFeel','admin_tab_selected_color')">
                 </span>
               </span>
@@ -460,6 +486,8 @@
               <span>Main Text Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset admin tab main text color to default"
                   ng-click="resetConfiguration('lookAndFeel','admin_tab_main_text_color')">
                 </span>
               </span>
@@ -489,6 +517,8 @@
               <span>Selected Text Color
                 <span
                   class="glyphicon glyphicon-refresh color-reset"
+                  role="button" tabindex="0" keyboard-activate
+                  aria-label="Reset admin tab selected text color to default"
                   ng-click="resetConfiguration('lookAndFeel','admin_tab_selected_text_color')">
                 </span>
               </span>
@@ -537,11 +567,13 @@
               Header Logo
               <span
                 class="glyphicon glyphicon-refresh color-reset"
+                role="button" tabindex="0" keyboard-activate
+                aria-label="Reset left logo to default"
                 ng-click="resetLogo('left_logo')">
               </span>
             </p>
 
-            <img ng-src="{{modalData.logoLeft}}" ng-style="{background: settings.configurable.lookAndFeel.background_main_color.value}" class="logo-preview">
+            <img ng-src="{{modalData.logoLeft}}" alt="Current header logo" ng-style="{background: settings.configurable.lookAndFeel.background_main_color.value}" class="logo-preview">
           </div>
 
         </div>
