@@ -71,9 +71,14 @@ vireo.controller('UserRepoController', function ($controller, $location, $scope,
     };
 
     $scope.confirmResetPassword = function (user) {
-        if (window.confirm('Send a password reset link to ' + user.email + '?')) {
-            UserRepo.resetPassword(user);
-        }
+        $scope.userToResetPassword = user;
+        $scope.openModal('#confirmResetPassword');
+    };
+
+    $scope.resetPassword = function () {
+        UserRepo.resetPassword($scope.userToResetPassword);
+        $scope.closeModal();
+        $scope.userToResetPassword = null;
     };
 
     $scope.roles = {};

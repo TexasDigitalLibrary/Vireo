@@ -1,4 +1,4 @@
-vireo.controller('ResetPasswordController', function ($controller, $location, $scope, PasswordResetService) {
+vireo.controller('ResetPasswordController', function ($controller, $location, $scope, PasswordResetService, StorageService) {
 
     angular.extend(this, $controller('AbstractController', { $scope: $scope }));
 
@@ -19,6 +19,11 @@ vireo.controller('ResetPasswordController', function ($controller, $location, $s
                 $scope.resetPassword.confirm = '';
 
                 // Leave the user signed out; direct them to sign in with the new password.
+                // LoginController.login() checks post_authorize_url after a successful local
+                // sign-in and navigates there; without it, it just reloads the current page
+                // (/login), which then shows "You are already logged in" with nowhere to go.
+                StorageService.set('post_authorize_url', '/myprofile');
+
                 $location.path('/login');
             }
         });
