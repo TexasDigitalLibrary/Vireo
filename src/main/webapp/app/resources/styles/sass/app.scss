@@ -672,6 +672,20 @@ h4 {
   cursor: pointer;
 }
 
+// Revealed on row hover, but kept in the layout rather than removed, so that it
+// stays focusable for keyboard users. Focus reveals it the same way hover does.
+.edit-setting-icon.edit-setting-icon-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.edit-setting-icon:focus,
+.edit-setting-icon.edit-setting-icon-hidden:focus {
+  opacity: 1;
+  outline: 1px dotted;
+  pointer-events: auto;
+}
+
 .td-center-middle {
   text-align: center;
   vertical-align: middle;
@@ -1649,12 +1663,19 @@ input[type=color]:focus {
   cursor: pointer;
 }
 
+// Hidden with opacity rather than visibility so the icon stays focusable; a
+// visibility: hidden element is dropped from the tab order entirely.
 .email-workflow-rule-row span.glyphicon-pencil {
-  visibility: hidden;
+  opacity: 0;
 }
 
-.email-workflow-rule-row:hover span.glyphicon-pencil {
-  visibility: visible;
+.email-workflow-rule-row:hover span.glyphicon-pencil,
+.email-workflow-rule-row span.glyphicon-pencil:focus {
+  opacity: 1;
+}
+
+.email-workflow-rule-row span.glyphicon-pencil:focus {
+  outline: 1px dotted;
 }
 
 .submission-review-item {

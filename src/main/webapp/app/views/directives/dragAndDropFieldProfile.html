@@ -3,6 +3,6 @@
 	<span ng-repeat="property in properties" class="repeated-span" ng-class="{'text-warning': !isEditable({fieldProfile: item}), 'disable-strike-through': !item.enabled}">
 		<span ng-if="property === 'gloss'">{{ item[property] }}<span ng-if="!item.optional">*</span></span>
 	</span>
-	<span ng-if="isEditable({fieldProfile: item})" ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.position})"></span>
+	<span ng-if="isEditable({fieldProfile: item})" ng-class="{'edit-setting-icon-hidden': !isMouseHover}" class="glyphicon glyphicon-pencil edit-setting-icon" role="button" tabindex="0" keyboard-activate aria-label="Edit {{ item.gloss }}" ng-click="edit({index:item.position})"></span>
 	<span ng-if="!isEditable({fieldProfile: item})" class="glyphicon glyphicon-info-sign text-warning" tooltip="This field profile is not overrideable."></span>
 </div>

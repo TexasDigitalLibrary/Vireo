@@ -1,5 +1,5 @@
 <div class="degree" ng-mouseenter="isMouseHover=true" ng-mouseleave="isMouseHover=false">
 	<span>{{ item.position }}.</span>
 	<span>{{item[properties[0]]}} ({{item[properties[1]].name}})</span>
-	<span ng-show="isMouseHover" class="glyphicon glyphicon-pencil edit-setting-icon" ng-click="edit({index:item.position})"></span>
+	<span ng-class="{'edit-setting-icon-hidden': !isMouseHover}" class="glyphicon glyphicon-pencil edit-setting-icon" role="button" tabindex="0" keyboard-activate aria-label="Edit {{ item[properties[0]] }}" ng-click="edit({index:item.position})"></span>
 </div>

@@ -3,7 +3,7 @@
 		<li><button class="btn btn-info" ng-click="openModal('#submissionStatus')">{{box.submission.submissionStatus.name}}</button></li>
 
 		<li>Assignee:</li>
-		<li ng-click="openModal('#submissionAssign')" class="sidebar-btn font-weight-bold"> <span class="glyphicon glyphicon-pencil"></span> {{box.submission.assignee.settings.displayName || "none"}}</li>
+		<li ng-click="openModal('#submissionAssign')" class="sidebar-btn font-weight-bold"> <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> {{box.submission.assignee.settings.displayName || "none"}}</li>
 
 		<li>Last Action:</li>
 		<li class="font-weight-bold">{{box.getLastActionDate() | date : 'short'}}</li>
@@ -20,7 +20,7 @@
 			is-open="date"
 			close-text="Close"
 			stringtodate>
-			<span ng-if="!box.savingDate" class="glyphicon glyphicon-pencil"></span> <span ng-if="box.savingDate" class="glyphicon glyphicon-refresh spinning"></span> {{box.submission.submissionDate || "not submitted" | date: 'M/d/yyyy' : 'UTC'}}
+			<span ng-if="!box.savingDate" class="glyphicon glyphicon-pencil" aria-hidden="true"></span> <span ng-if="box.savingDate" class="glyphicon glyphicon-refresh spinning"></span> {{box.submission.submissionDate || "not submitted" | date: 'M/d/yyyy' : 'UTC'}}
 		</li>
 
 		<li><button ng-click="openModal('#advisorEmail')" class="btn btn-default">Generate Advisor Email</button></li>
