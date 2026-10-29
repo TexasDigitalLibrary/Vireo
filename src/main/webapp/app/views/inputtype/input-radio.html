@@ -12,7 +12,7 @@
 			aria-labelledby="radio-label-{{profile.fieldPredicate.value}}-{{$index}}"/>
 	</div>
   <div class="col-xs-8 well" id="radio-label-{{profile.fieldPredicate.value}}-{{$index}}">
-		<span><h5><b>{{word.name}}</b></h5>{{word.definition}}</span>
+		<div class="h5"><b>{{word.name}}</b></div>{{word.definition}}
 	</div>
 	<div class="col-xs-2">
         <span ng-if="!fieldValue.updating && $index === 0" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}"> </span>

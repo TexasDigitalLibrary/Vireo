@@ -29,7 +29,7 @@
 
   <div class="row" ng-show="loaded">
     <div class="view-section-header">
-      <h1>REVIEWER NOTES</h1>
+      <h2 class="h1">REVIEWER NOTES</h2>
     </div>
     <div class="form-inline reviewer-notes">
       <span ng-if="!savingReviewerNotes && !editingReviewerNotes" class="glyphicon glyphicon-pencil clickable" role="button" tabindex="0" keyboard-activate aria-label="Edit reviewer notes" ng-click="editReviewerNotes()"></span>
@@ -46,7 +46,7 @@
   <div class="row" ng-show="loaded">
 
     <div class="view-section-header">
-      <h1>ACTION LOG</h1>
+      <h2 class="h1">ACTION LOG</h2>
       <button class="btn btn-default view-action-button" ng-click="openModal('#addCommentModal')">Add Comment</button>
     </div>
 
@@ -59,7 +59,7 @@
   <div class="row" ng-show="loaded">
     <a name="all-files"></a>
     <div class="view-section-header">
-      <h1>ALL FILES</h1>
+      <h2 class="h1">ALL FILES</h2>
       <button class="btn btn-default view-action-button" ng-click="openModal('#addFileModal')">Add File</button>
     </div>
     <table class="table table-bordered table-striped table-hover etd-table">

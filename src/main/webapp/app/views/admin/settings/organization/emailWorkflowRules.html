@@ -1,7 +1,7 @@
 <div class="panel panel-default" ng-controller="EmailWorkflowRulesController">
     <div class="panel-heading">
-        <h3 class="panel-title">
-        Manage {{getSelectedOrganizationName()}} Email Workflow Rules</h3>
+        <h2 class="panel-title">
+        Manage {{getSelectedOrganizationName()}} Email Workflow Rules</h2>
     </div>
     <div class="panel-body">
 
@@ -18,7 +18,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <vireo-accordion single-expand="false">
-                        <vireo-pane ng-repeat="status in submissionStatuses" query="email-workflowstep-rules-{{ status.name }}" html="views/admin/settings/organization/emailWorkflowRule.html">{{ status.name }}</vireo-pane>
+                        <vireo-pane heading-level="3" ng-repeat="status in submissionStatuses" query="email-workflowstep-rules-{{ status.name }}" html="views/admin/settings/organization/emailWorkflowRule.html">{{ status.name }}</vireo-pane>
                     </vireo-accordion>
                 </div>
             </div>
@@ -28,7 +28,7 @@
             <div class="row">
                 <div class="col-xs-12">
                     <vireo-accordion single-expand="false">
-                      <vireo-pane ng-repeat="action in submissionActions" query="email-workflowstep-rules-{{ action.name }}" html="views/admin/settings/organization/emailWorkflowRule.html">{{ action.name }}</vireo-pane>
+                      <vireo-pane heading-level="3" ng-repeat="action in submissionActions" query="email-workflowstep-rules-{{ action.name }}" html="views/admin/settings/organization/emailWorkflowRule.html">{{ action.name }}</vireo-pane>
                     </vireo-accordion>
                 </div>
             </div>

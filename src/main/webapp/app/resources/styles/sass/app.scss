@@ -132,7 +132,8 @@ main footer {
   margin: 25px 0;
 }
 
-.settings-view h2 {
+/* Panel and modal titles size themselves; this is for section headings only. */
+.settings-view h2:not(.panel-title):not(.modal-title) {
   font-weight: bold;
   text-rendering: optimizelegibility;
 }
@@ -646,7 +647,8 @@ togglebutton .glyphicon-info-sign {
   opacity: 0.5;
 }
 
-h4 {
+h4,
+.h4 {
   line-height: 22px;
 }
 
@@ -867,14 +869,17 @@ footer p {
 }
 
 .admin-page h1,
+.admin-page .h1,
 .my-profile h1 {
   font-weight: bold;
   text-rendering: optimizelegibility;
 }
 
 .admin-page h1 + hr,
+.admin-page .h1 + hr,
 .my-profile h1 + hr,
-.review-page h3 + hr {
+.review-page h3 + hr,
+.review-page .h3 + hr {
   border: 0;
   height: 1px;
   background-image: linear-gradient(to right, rgba(112, 112, 111, 0.4), rgba(50, 50, 50, 0));

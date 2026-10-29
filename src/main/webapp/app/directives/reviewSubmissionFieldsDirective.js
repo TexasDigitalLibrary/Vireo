@@ -10,9 +10,16 @@ vireo.directive('reviewsubmissionsfields', function ($location, InputTypes, Fiel
             showVocabularyWord: "&?",
             sortEmbargos: "&?",
             isEmbargo: "&?",
-            validate: "=?"
+            validate: "=?",
+            headingLevel: "=?"
         },
         controller: function ($scope) {
+            // The workflow step names are section headings. Their level depends on how
+            // deeply this directive is embedded in the page that uses it, so callers may
+            // override it to avoid skipping a level. Only 2 and 3 are supported.
+            if ($scope.headingLevel !== 3) {
+                $scope.headingLevel = 2;
+            }
             if ($scope.validate) {
                 $scope.submission.ready().then(function () {
                     $scope.submission.validate();

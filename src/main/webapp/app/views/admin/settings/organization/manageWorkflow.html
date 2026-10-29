@@ -1,6 +1,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Manage {{getSelectedOrganizationName()}} Workflow</h3>
+        <h2 class="panel-title">Manage {{getSelectedOrganizationName()}} Workflow</h2>
     </div>
     <div class="panel-body">
         <div class="col-md-12">
@@ -15,7 +15,7 @@
               wvr-modal-backdrop="static">
             </modal>
             <vireo-accordion single-expand="false">
-              <vireo-pane ng-repeat="step in getSelectedOrganizationAggregateWorkflowSteps() track by $index" bar-view="views/admin/settings/organization/workflowsteps/workflowStep.html" query="{{step.name}}" html="views/admin/settings/organization/workflowsteps/workflowStepContent.html">{{$index+1}}. {{step.name}}</vireo-pane>
+              <vireo-pane heading-level="3" ng-repeat="step in getSelectedOrganizationAggregateWorkflowSteps() track by $index" bar-view="views/admin/settings/organization/workflowsteps/workflowStep.html" query="{{step.name}}" html="views/admin/settings/organization/workflowsteps/workflowStepContent.html">{{$index+1}}. {{step.name}}</vireo-pane>
             </vireo-accordion>
 
             <hr />

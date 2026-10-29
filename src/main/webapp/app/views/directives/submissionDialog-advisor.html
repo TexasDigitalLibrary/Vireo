@@ -1,6 +1,6 @@
 <div ng-show="submission" class="dialog state" ng-class="{'immutable': submission.submissionStatus.name != 'Needs Correction', 'needs-correction': submission.submissionStatus.name == 'Needs Correction'}">
   <span class="dialog-close clickable" ng-click="show.reverse()">[{{show[0]}}]</span>
-  <h4 class="dialog-header">Current Submission State:</h4>
+  <h2 class="h4 dialog-header">Current Submission State:</h2>
   <span class="submission-state">{{submission.submissionStatus.name}}</span>
   <div class="dialog-content" ng-class="{'dialog-open': show[0] === '-', 'dialog-closed': show[0] === '+'}">
     <span ng-if="submission.submissionStatus.name != 'Needs Correction'">

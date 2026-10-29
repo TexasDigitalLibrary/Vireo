@@ -2,7 +2,7 @@
 	<button type="button" class="close" ng-click="resetLanguages()" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
-	<h3 class="modal-title">Are You Sure?</h3>
+	<h2 class="h3 modal-title">Are You Sure?</h2>
 </div>
 
 <form ng-submit="removeLanguage()" novalidate>
@@ -10,8 +10,8 @@
 	<validationmessage results="languageRepo.getValidationResults()"></validationmessage>
 
 	<div class="modal-body">
-		<h4><b>Click confirm to remove the Language:</b></h4>
-		<h4>Name: {{modalData.name}}</h4>
+		<p class="h4"><b>Click confirm to remove the Language:</b></p>
+		<p class="h4">Name: {{modalData.name}}</p>
 	</div>
 
 	<div class="modal-footer">

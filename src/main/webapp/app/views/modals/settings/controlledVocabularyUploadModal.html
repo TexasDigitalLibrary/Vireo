@@ -2,7 +2,7 @@
 	<button type="button" class="close" ng-click="resetControlledVocabulary(true)" aria-label="Close">
 		<span class="modal-close" aria-hidden="true">&times;</span>
 	</button>
-	<h3 class="modal-title">Manage Controlled Vocabularies</h3>
+	<h2 class="h3 modal-title">Manage Controlled Vocabularies</h2>
 </div>
 
 <div class="modal-body modal-scroll">
@@ -47,7 +47,7 @@
 			</div>
 		</div>
 		<div class="form-group" ng-if="uploadWordMap.new.length > 0">
-			<h4>New Vocabulary Words</h4>
+			<h3 class="h4">New Vocabulary Words</h3>
 			<div class="table-responsive">
 				<table class="table">
 					<thead>
@@ -67,7 +67,7 @@
 			</div>
 		</div>
 		<div class="form-group" ng-if="uploadWordMap.updating.length > 0">
-			<h4>Updating Vocabulary Words</h4>
+			<h3 class="h4">Updating Vocabulary Words</h3>
 			<div class="table-responsive">
 				<table class="table">
 					<thead>
@@ -87,7 +87,7 @@
 			</div>
 		</div>
 		<div class="form-group" ng-if="uploadWordMap.repeats.length > 0">
-			<h4>Duplicate Vocabulary Words</h4>
+			<h3 class="h4">Duplicate Vocabulary Words</h3>
 			<div class="table-responsive">
 				<table class="table">
 					<thead>
@@ -107,7 +107,7 @@
 			</div>
 		</div>
 		<div class="form-group" ng-if="uploadWordMap.removed.length > 0">
-			<h4>Removed Vocabulary Words</h4>
+			<h3 class="h4">Removed Vocabulary Words</h3>
 			<div class="table-responsive">
 				<table class="table">
 					<thead>
@@ -127,7 +127,7 @@
 			</div>
 		</div>
 		<div class="form-group" ng-if="uploadWordMap.new.length == 0 && uploadWordMap.updating.length == 0 && uploadWordMap.repeats.length == 0 && uploadWordMap.removed.length == 0">
-			<h4>No changes.</h4>
+			<p class="h4">No changes.</p>
 		</div>
 	</form>
 </div>

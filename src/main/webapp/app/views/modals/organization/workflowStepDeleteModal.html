@@ -2,7 +2,7 @@
     <button type="button" class="close" ng-click="closeModal()" aria-label="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
-    <h3 class="modal-title">Delete Workflow Step</h3>
+    <h2 class="h3 modal-title">Delete Workflow Step</h2>
 </div>
 
 <form ng-submit="deleteWorkflowStep(step)" novalidate>
@@ -10,7 +10,7 @@
 	<validationmessage results="step.ValidationResults"></validationmessage>
 
 	<div class="modal-body">
-		<h4>Really delete workflow step "{{step.name}}"?</h4>
+		<p class="h4">Really delete workflow step "{{step.name}}"?</p>
 	</div>
 
 	<div class="modal-footer">

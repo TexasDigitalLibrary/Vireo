@@ -10,7 +10,7 @@
         <div id="organizationManagement" class="col-xs-12" ng-controller="OrganizationManagementController">
             <div class="row" ng-show="showOrganizationManagement()">
                 <div class="panel-heading">
-                    <h3 class="panel-title">
+                    <div class="panel-title h3">
                         <ul class="inline-list">
                             <li ng-click="activateManagementPane('edit')">
                                 <span   class="management-pane-selector"
@@ -34,7 +34,7 @@
                                 </span>
                             </li>
                         </ul>
-                    </h3>
+                    </div>
                 </div>
                 <div class="col-xs-12 panel-wrap" ng-class="{active: managementPaneIsActive('edit')}">
                     <span ng-include="'views/admin/settings/organization/manageOrganization.html'">
