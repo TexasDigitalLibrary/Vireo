@@ -95,6 +95,28 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
         "false": "Disabled"
     }];
 
+    // The generic ManagedConfiguration validator only enforces "at least 1 character" on every
+    // setting's value, so it accepts "0" here with no error even though the server-side
+    // PasswordFeatureAvailabilityService.getResetExpiryHours() treats anything outside 1..Integer.MAX_VALUE
+    // as invalid and silently falls back to 24. This client-only override gives the admin
+    // real-time feedback instead of a value that saves successfully but quietly has no effect.
+    $scope.expiryHoursValidations = {
+        "value": {
+            "required": {
+                "type": "required",
+                "message": "Password Reset Link Expiry is required",
+                "property": "value",
+                "value": true
+            },
+            "pattern": {
+                "type": "pattern",
+                "message": "Password Reset Link Expiry must be a whole number of 1 or more",
+                "property": "value",
+                "value": "^[1-9][0-9]*$"
+            }
+        }
+    };
+
     var userSettingsValidations = {
         "displayName": {
             "minlength": {
