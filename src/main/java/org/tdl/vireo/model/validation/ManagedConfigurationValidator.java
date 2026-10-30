@@ -14,7 +14,7 @@ public class ManagedConfigurationValidator extends BaseModelValidator {
 
         String valueProperty = "value";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Managed Configuration requires a value", valueProperty, true));
-        this.addInputValidator(new InputValidator(InputValidationType.minlength, "Managed Configuration value must be at least 2 characters", valueProperty, 2));
+        this.addInputValidator(new InputValidator(InputValidationType.minlength, "Managed Configuration value must be at least 1 character", valueProperty, 1));
 
         String typeProperty = "type";
         this.addInputValidator(new InputValidator(InputValidationType.required, "Managed Configuration requires a type", typeProperty, true));
