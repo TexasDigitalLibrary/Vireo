@@ -169,7 +169,7 @@ public class PasswordController {
         try {
             emailSender.sendEmail(user.getEmail(), emailTemplate.getSubject(), content);
         } catch (MessagingException e) {
-            LOG.debug("Unable to send a password reset email, because: " + e.getMessage());
+            LOG.warn("Unable to send a password reset email.", e);
 
             return ApiResponse.fromException(ERROR, "Unable to send the password reset email.", e);
         }

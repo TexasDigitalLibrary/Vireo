@@ -653,7 +653,7 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testInitiateResetReportsAnErrorWhenTheSendFails() throws MessagingException {
+    public void testInitiateResetReportsAnErrorWhenTheSendFails() throws Exception {
         // Availability, eligibility and template resolution all hold, but the send raises a
         // MessagingException. The handler converts it to ERROR and leaves the stored password
         // untouched: the reset path never writes the password.
@@ -667,12 +667,39 @@ public class PasswordControllerTest extends AbstractControllerTest {
         when(resetTokenService.construct(user1)).thenReturn(RESET_TOKEN);
         lenient().when(templateUtility.templateParameters(any(String.class), any(String[][].class))).thenReturn(RESET_MESSAGE);
 
-        doThrow(MessagingException.class).when(emailSender).sendEmail(anyString(), anyString(), anyString());
+        MessagingException mailFailure = new MessagingException("transport failure");
+        doThrow(mailFailure).when(emailSender).sendEmail(anyString(), anyString(), anyString());
 
-        ApiResponse response = passwordController.initiateReset(resetRequest(RESET_EMAIL));
+        Logger controllerLogger = (Logger) LoggerFactory.getLogger(PasswordController.class);
+        Level originalLevel = controllerLogger.getLevel();
+        boolean originalAdditive = controllerLogger.isAdditive();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        ApiResponse response;
+
+        appender.start();
+        controllerLogger.setLevel(Level.ALL);
+        controllerLogger.setAdditive(false);
+        controllerLogger.addAppender(appender);
+
+        try {
+            response = passwordController.initiateReset(resetRequest(RESET_EMAIL));
+        } finally {
+            controllerLogger.detachAppender(appender);
+            controllerLogger.setAdditive(originalAdditive);
+            controllerLogger.setLevel(originalLevel);
+            appender.stop();
+        }
 
         assertEquals(ApiStatus.ERROR, response.getMeta().getStatus());
         assertEquals(unchanged, user1.getPassword(), "the stored password must be left unchanged when the send fails");
+
+        assertEquals(1, appender.list.size(), "the mail failure must produce one controller log event");
+        ILoggingEvent event = appender.list.get(0);
+        assertEquals(Level.WARN, event.getLevel(), "the mail failure must be visible at the production log level");
+        assertEquals("Unable to send a password reset email.", event.getFormattedMessage());
+
+        List<String> logLines = Arrays.asList(event.getFormattedMessage());
+        assertNoSecretLeaked(response, logLines, "reset mail failure", RESET_EMAIL, user1.getEmail(), CURRENT_PASSWORD, unchanged, RESET_TOKEN);
     }
 
     @Test
