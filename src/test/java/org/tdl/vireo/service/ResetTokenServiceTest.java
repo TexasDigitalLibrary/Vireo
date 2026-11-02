@@ -73,7 +73,7 @@ public class ResetTokenServiceTest {
     }
 
     // ---------------------------------------------------------------------
-    // Property 1: Reset token round trip. Validates Requirements 8.1, 8.10, 16.4.
+    // Round trip: a constructed token verifies back to its email and issued-at instant.
     // ---------------------------------------------------------------------
 
     static Stream<Arguments> roundTripCases() {
@@ -145,8 +145,7 @@ public class ResetTokenServiceTest {
     }
 
     // ---------------------------------------------------------------------
-    // Property 2: A stored-password change invalidates every earlier token.
-    // Validates Requirements 8.8, 16.5.
+    // A stored-password change invalidates every earlier token.
     // ---------------------------------------------------------------------
 
     static Stream<Arguments> passwordChangeCases() {
@@ -204,8 +203,7 @@ public class ResetTokenServiceTest {
     }
 
     // ---------------------------------------------------------------------
-    // Property 3: Expiry boundary. Validates Requirements 8.5, 8.7, 16.6.
-    // VALID in [0, expiryHours), EXPIRED at or beyond expiryHours, INVALID for negative offsets.
+    // Expiry boundary: VALID in [0, expiryHours), EXPIRED at or beyond, INVALID for negative offsets.
     // ---------------------------------------------------------------------
 
     static Stream<Arguments> expiryCases() {
@@ -269,9 +267,8 @@ public class ResetTokenServiceTest {
     }
 
     // ---------------------------------------------------------------------
-    // Property 4: Single use and sibling invalidation. Validates Requirements 8.9, 9.6, 16.7.
-    // The clock stays inside the expiry window throughout, so an expiry result cannot be mistaken
-    // for the single-use result.
+    // Single use and sibling invalidation. The clock stays inside the expiry window throughout, so
+    // an expiry result cannot be mistaken for the single-use result.
     // ---------------------------------------------------------------------
 
     static Stream<Arguments> singleUseCases() {
@@ -341,11 +338,8 @@ public class ResetTokenServiceTest {
     }
 
     // ---------------------------------------------------------------------
-    // Property 15: Token tamper rejection. Validates Requirements 8.2.
-    // Any mutation to the encoded payload segment or the signature segment of a well-formed,
-    // otherwise-valid token must verify as INVALID (NOT EXPIRED, NOT VALID). The clock is kept
-    // inside the expiry window so an untampered baseline verifies VALID; this proves the INVALID
-    // result comes from tampering, not from expiry.
+    // Tamper rejection: any mutation to either segment of an otherwise-valid token verifies as
+    // INVALID. The clock stays inside the expiry window so the untampered baseline verifies VALID.
     // ---------------------------------------------------------------------
 
     /** The base64url alphabet, used to substitute a character for a different-but-valid one. */
@@ -480,15 +474,9 @@ public class ResetTokenServiceTest {
     }
 
     // ---------------------------------------------------------------------
-    // Property 19: No side effects on initiation or verification (verification arm).
-    // Validates Requirements 7.5, 8.3.
-    //
-    // ResetTokenService.verify reads no persisted token state and writes no Account. Across a full
-    // construct-and-verify cycle the only repository interaction is the read-only findByEmail
-    // lookup: verify must never invoke userRepo.update or userRepo.save, and the Account's stored
-    // password hash must be byte-identical before and after the verify call. The whole partition of
-    // verification outcomes is exercised (VALID, EXPIRED, INVALID) so no outcome is left able to
-    // hide a write.
+    // verify has no side effects: across a construct-and-verify cycle the only repository
+    // interaction is the read-only findByEmail, and the stored hash is byte-identical afterwards.
+    // All three outcomes (VALID, EXPIRED, INVALID) are exercised so none can hide a write.
     // ---------------------------------------------------------------------
 
     /** Which verification outcome a case is engineered to produce, so the whole partition is covered. */

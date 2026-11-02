@@ -53,7 +53,7 @@ public class UserController {
     @RequestMapping("/credentials")
     @PreAuthorize("hasRole('ROLE_STUDENT')")
     public ApiResponse credentials(@WeaverCredentials Credentials credentials, @WeaverUser User user) {
-        // User.password is @JsonIgnore'd, so the server computes eligibility. It rides in allCredentials as the String "true" or "false".
+        // User.password is @JsonIgnore'd, so eligibility is computed here; the map is Map<String, String>.
 
         Map<String, String> allCredentials = credentials.getAllCredentials();
 

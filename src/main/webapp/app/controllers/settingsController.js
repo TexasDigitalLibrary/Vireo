@@ -95,11 +95,8 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
         "false": "Disabled"
     }];
 
-    // The generic ManagedConfiguration validator only enforces "at least 1 character" on every
-    // setting's value, so it accepts "0" here with no error even though the server-side
-    // PasswordFeatureAvailabilityService.getResetExpiryHours() treats anything outside 1..Integer.MAX_VALUE
-    // as invalid and silently falls back to 24. This client-only override gives the admin
-    // real-time feedback instead of a value that saves successfully but quietly has no effect.
+    // The generic ManagedConfiguration validations accept "0" here; the server would then silently
+    // fall back to 24 hours, so enforce a positive whole number client-side for immediate feedback.
     $scope.expiryHoursValidations = {
         "value": {
             "required": {

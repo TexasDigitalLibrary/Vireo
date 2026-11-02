@@ -324,7 +324,7 @@ public class AuthControllerTest extends AbstractControllerTest {
         data.put("confirm", data.get("userPassword"));
     }
 
-    // Property 11: registration retrofit preserves outcomes. Additive; existing tests above are unchanged.
+    // The PasswordValidator retrofit preserves every registration outcome. Additive; existing tests above are unchanged.
 
     private static final long RETROFIT_GENERATOR_SEED = 20250101L;
 

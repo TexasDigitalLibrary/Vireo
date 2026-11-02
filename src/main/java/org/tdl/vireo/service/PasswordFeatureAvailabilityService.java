@@ -50,9 +50,6 @@ public class PasswordFeatureAvailabilityService {
         return isPasswordLoginEnabled() && isResetEnabled();
     }
 
-    // TODO: isChangeAvailableFor(User) and isResetAvailableFor(User) are added alongside
-    // PasswordEligibilityRule.
-
     /**
      * Resolves {@code auth.pass.reset.expiryHours}. A value that is absent, not an integer, or below
      * 1 yields {@link #DEFAULT_RESET_EXPIRY_HOURS}; the stored value is left unchanged.

@@ -69,7 +69,7 @@ import edu.tamu.weaver.validation.results.ValidationResults;
 import edu.tamu.weaver.validation.utility.ValidationUtility;
 
 /**
- * Tests for {@code POST /password/change}: gating, principal targeting and leak containment.
+ * Tests for {@code /password/change}, {@code /password/reset} and {@code /password/reset/redeem}.
  *
  * BCrypt is real only where a case succeeds; other cases use a cheap prefix-based fake hash.
  */
@@ -495,10 +495,8 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 12.3 - server-side enforcement and authorization for POST /password/reset.
-    //
-    // Each rejection cause pins INVALID, that no reset token is constructed, that no email is
-    // sent, and that the target Account's stored password is left unchanged.
+    // POST /password/reset: enforcement and authorization. Each rejection pins INVALID, no token
+    // constructed, no email sent, and an unchanged stored password.
     // -----------------------------------------------------------------------------------------
 
     private static final String RESET_EMAIL = "email1";
@@ -619,11 +617,8 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 12.4 - missing-template, mail-failure, and success-response for POST /password/reset.
-    //
-    // These exercise the path beyond the gates of task 12.3: template resolution returning null
-    // (ERROR naming the template, no send, unchanged password), a MessagingException from the
-    // send (ERROR, unchanged password), and a successful send (SUCCESS naming the recipient).
+    // POST /password/reset beyond the gates: missing template (ERROR naming it), mail failure
+    // (ERROR), and a successful send (SUCCESS). The stored password is never written.
     // -----------------------------------------------------------------------------------------
 
     private static final String RESET_SUBJECT = "Reset your Vireo password";
@@ -702,15 +697,8 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 12.5 - Property 19: No side effects on initiation or verification (initiation arm).
-    //
-    // Validates Requirements 7.5, 8.3.
-    //
-    // Driving POST /password/reset for an eligible Account constructs a token and sends mail, but
-    // never writes the stored password: no userRepo.update and no userRepo.save occurs on the
-    // initiation path, and the Account's stored password hash is byte-identical before and after.
-    // Cases are enumerated email/hash shapes crossed with a fixed-seed Random, fed through a
-    // @ParameterizedTest producing at least 100 cases. No property-based testing library is used.
+    // Initiation has no side effects: it constructs a token and sends mail but never writes the
+    // stored password. Cases are enumerated email/hash shapes plus a fixed-seed Random.
     // -----------------------------------------------------------------------------------------
 
     static Stream<Arguments> provideResetNoSideEffectCases() {
@@ -782,14 +770,8 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 12.6 - Property 12: Server-side enforcement across every entry point (reset arm).
-    //
-    // Validates Requirements 7.8, 7.9.
-    //
-    // Initiation is gated by the conjunction of auth.pass.enabled, auth.pass.reset.enabled and
-    // the Password_Eligibility_Rule, enforced server-side regardless of which gate fails or how
-    // many fail at once. Every failing combination constructs no token, sends no email, and
-    // leaves the stored password unchanged; the combination where every gate holds succeeds.
+    // Initiation is gated on auth.pass.enabled, auth.pass.reset.enabled and eligibility together;
+    // every failing combination constructs no token, sends no email and writes nothing.
     // -----------------------------------------------------------------------------------------
 
     @ParameterizedTest(name = "[{index}] {3}")
@@ -865,12 +847,9 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 13.2 - server-side enforcement for POST /password/reset/redeem.
-    //
-    // Each rejection cause pins INVALID, leaves the target Account's stored password unchanged,
-    // and dispatches no notification: auth.pass.enabled false, auth.pass.reset.enabled false, each
-    // token failure class (EXPIRED and INVALID), and an ineligible Account named by an otherwise
-    // valid token.
+    // POST /password/reset/redeem: enforcement. Each rejection cause - either setting off, each
+    // token failure class, an ineligible Account - pins INVALID, an unchanged password, and no
+    // notification.
     // -----------------------------------------------------------------------------------------
 
     private static final String REDEEM_NEW_PASSWORD = "brandnewpassword";
@@ -982,14 +961,9 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 13.3 - Property 20: Redemption succeeds exactly under its conjunction.
-    //
-    // Validates Requirement 9.3.
-    //
-    // Redemption replaces the stored password of the Account named by the token only when
-    // availability, token verification, eligibility and candidate validity all hold together;
-    // under any other combination the stored password is left unchanged and nothing is written.
-    // Each dimension is varied independently against an otherwise-succeeding baseline.
+    // Redemption replaces the stored password only when availability, token verification,
+    // eligibility and candidate validity all hold. Each dimension is varied against an
+    // otherwise-succeeding baseline.
     // -----------------------------------------------------------------------------------------
 
     @ParameterizedTest(name = "[{index}] {6}")
@@ -1079,15 +1053,9 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 13.4 - Property 21: A rejected candidate leaves the token usable.
-    //
-    // Validates Requirement 9.9.
-    //
-    // A submission whose new password the PasswordValidator rejects must not consume or otherwise
-    // invalidate the Reset_Token. The real ResetTokenService is wired in for this test, in place of
-    // the mock used elsewhere in this class, so the token's continued usability is genuinely
-    // exercised rather than merely assumed from a mock that cannot invalidate anything on its own.
-    // After the rejection, the very same token is redeemed successfully.
+    // A rejected candidate leaves the token usable. The real ResetTokenService is wired in here
+    // so the token's continued validity is genuinely exercised; after the rejection the same
+    // token redeems successfully.
     // -----------------------------------------------------------------------------------------
 
     @ParameterizedTest(name = "[{index}] rejected candidate ''{0}''/''{1}'' leaves the token usable")
@@ -1136,16 +1104,8 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 13.8 - Successful-redemption response assertions.
-    //
-    // Validates Requirements 9.4, 9.5.
-    //
-    // A completed redemption carries no payload at all, so neither a token nor a credential of any
-    // kind rides along: unlike AuthController.login, whose success payload is a JWT from
-    // tokenService.createToken, this handler has no token-issuing dependency to call, and unlike
-    // AuthController.registration, whose success payload is the created User, it returns no object
-    // payload whatsoever. The caller is left to sign in rather than being authenticated
-    // automatically.
+    // A successful redemption carries no payload, so no token or credential rides along and the
+    // caller is left to sign in (unlike AuthController.login, whose payload is a JWT).
     // -----------------------------------------------------------------------------------------
 
     @Test
@@ -1171,15 +1131,8 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 13.6 - Property 12: Server-side enforcement across every entry point (redemption arm).
-    //
-    // Validates Requirements 9.7, 9.8.
-    //
-    // Redemption is gated by the conjunction of auth.pass.enabled, auth.pass.reset.enabled and the
-    // Password_Eligibility_Rule, enforced server-side regardless of which gate fails or how many
-    // fail at once. Every failing combination leaves the stored password unchanged and dispatches
-    // no notification; the combination where every gate holds succeeds. The token itself verifies
-    // throughout, so only the availability and eligibility gates are under test here.
+    // Redemption is gated on auth.pass.enabled, auth.pass.reset.enabled and eligibility together;
+    // the token verifies throughout, so only those gates are under test here.
     // -----------------------------------------------------------------------------------------
 
     @ParameterizedTest(name = "[{index}] {3}")
@@ -1253,17 +1206,10 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 13.5 - Property 22: Failure message partition.
-    //
-    // Validates Requirements 10.1, 10.2, 10.3, 10.4.
-    //
-    // Every verification failure other than a genuine expiry reports the identical generic
-    // message, regardless of which of several cryptographically indistinguishable causes produced
-    // it: a malformed token, a tampered signature, an unknown account, a token invalidated by an
-    // unrelated password change, and a backward clock step. A genuine expiry reports a different,
-    // expiry-specific message, even though the overall response status is INVALID for every cause
-    // here - only the message content distinguishes expiry from the rest. The real
-    // ResetTokenService is wired in so each cause is genuinely produced rather than merely stubbed.
+    // Failure message partition: every non-expiry failure (malformed, tampered, unknown account,
+    // stale after a password change, backward clock) reports the identical generic message, and
+    // a genuine expiry reports a different one. Overall status is INVALID for all of them, so only
+    // the message distinguishes. The real ResetTokenService produces each cause.
     // -----------------------------------------------------------------------------------------
 
     private static final String GENERIC_INVALID_MESSAGE = "This password reset link is no longer valid.";
@@ -1347,15 +1293,8 @@ public class PasswordControllerTest extends AbstractControllerTest {
     }
 
     // -----------------------------------------------------------------------------------------
-    // Task 13.7 - Property 26: Leak containment across every outbound artefact (redemption arm).
-    //
-    // Validates Requirement 10.6.
-    //
-    // No response or log line produced by POST /password/reset/redeem may contain the Account's
-    // email, the Reset_Token, or the stored password hash (before or after any replacement) -
-    // regardless of which gate failed, which token status was returned, or whether the redemption
-    // succeeded. Reuses the conjunction case matrix from task 13.3 so every combination already
-    // exercised for correctness is also checked for leak containment.
+    // Leak containment: no response or log line from redemption may contain the email, the token,
+    // or the stored hash (before or after), whatever the outcome. Reuses the conjunction cases.
     // -----------------------------------------------------------------------------------------
 
     @ParameterizedTest(name = "[{index}] leak containment {6}")
