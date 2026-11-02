@@ -29,8 +29,6 @@ public class CredentialNotificationService {
 
     public static final String PASSWORD_CHANGED_TEMPLATE = "SYSTEM Password Changed";
 
-    public static final String EMAIL_CHANGED_TEMPLATE = "SYSTEM Email Address Changed";
-
     private static final String PASSWORD_CHANGED_NOTIFICATION = "password-changed notification";
 
     private static final String CHANGE_TIME_PARAMETER = "CHANGE_TIME";

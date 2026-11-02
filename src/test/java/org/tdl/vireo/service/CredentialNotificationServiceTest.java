@@ -215,7 +215,7 @@ public class CredentialNotificationServiceTest {
         assertFalse(log.contains(TEST_TOKEN), "No token value may appear in the log output, got: " + log);
     }
 
-    // Always-on notification (password-changed arm).
+    // Always-on notification.
 
     private static final long GENERATOR_SEED = 20250101L;
 
