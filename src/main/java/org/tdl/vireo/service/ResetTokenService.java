@@ -5,6 +5,7 @@ import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Clock;
+import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Base64;
@@ -83,8 +84,8 @@ public class ResetTokenService {
     }
 
     /**
-     * Verifies a reset token. Never throws: every decode and parse failure is caught and converted
-     * to a failure result.
+     * Verifies a reset token. Malformed token encoding or content returns an invalid result rather
+     * than propagating a parsing exception.
      *
      * The expiry check runs last, so {@link ResetTokenVerification.Status#EXPIRED} is reachable only
      * for a genuine unredeemed token whose signature verified and binding still matches.
@@ -138,10 +139,11 @@ public class ResetTokenService {
         String bindingValue = payload.substring(priorPipe + 1, lastPipe);
         String issuedAtText = payload.substring(lastPipe + 1);
 
-        long issuedAtEpochSeconds;
+        Instant issuedAt;
         try {
-            issuedAtEpochSeconds = Long.parseLong(issuedAtText);
-        } catch (NumberFormatException e) {
+            long issuedAtEpochSeconds = Long.parseLong(issuedAtText);
+            issuedAt = Instant.ofEpochSecond(issuedAtEpochSeconds);
+        } catch (NumberFormatException | DateTimeException e) {
             return ResetTokenVerification.invalid();
         }
 
@@ -159,7 +161,7 @@ public class ResetTokenService {
 
         int expiryHours = availabilityService.getResetExpiryHours();
 
-        Duration elapsed = Duration.between(Instant.ofEpochSecond(issuedAtEpochSeconds), clock.instant());
+        Duration elapsed = Duration.between(issuedAt, clock.instant());
         if (elapsed.isNegative()) {
             return ResetTokenVerification.invalid();
         }
@@ -167,7 +169,7 @@ public class ResetTokenService {
             return ResetTokenVerification.expired();
         }
 
-        return ResetTokenVerification.valid(email, Instant.ofEpochSecond(issuedAtEpochSeconds));
+        return ResetTokenVerification.valid(email, issuedAt);
     }
 
     /**
