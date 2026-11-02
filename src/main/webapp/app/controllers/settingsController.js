@@ -95,8 +95,7 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
         "false": "Disabled"
     }];
 
-    // The generic ManagedConfiguration validations accept "0" here; the server would then silently
-    // fall back to 24 hours, so enforce a positive whole number client-side for immediate feedback.
+    // Enforce the server's positive Java integer range before saving the setting.
     $scope.expiryHoursValidations = {
         "value": {
             "required": {
@@ -107,9 +106,9 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
             },
             "pattern": {
                 "type": "pattern",
-                "message": "Password Reset Link Expiry must be a whole number of 1 or more",
+                "message": "Password Reset Link Expiry must be a whole number from 1 through 2147483647",
                 "property": "value",
-                "value": "^[1-9][0-9]*$"
+                "value": "^(?:[1-9][0-9]{0,8}|1[0-9]{9}|20[0-9]{8}|21[0-3][0-9]{7}|214[0-6][0-9]{6}|2147[0-3][0-9]{5}|21474[0-7][0-9]{4}|214748[0-2][0-9]{3}|2147483[0-5][0-9]{2}|21474836[0-3][0-9]|214748364[0-7])$"
             }
         }
     };
