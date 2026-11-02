@@ -150,6 +150,60 @@ public class ResetTokenServiceTest {
         assertEquals(Instant.ofEpochSecond(issuedAt.getEpochSecond()), result.getIssuedAt());
     }
 
+    // Signed epoch values outside Instant's range are malformed and rejected before account lookup.
+
+    static Stream<Arguments> issuedAtBoundaryCases() {
+        return Stream.of(
+            Arguments.of(Long.MAX_VALUE, Instant.EPOCH, ResetTokenVerification.Status.INVALID, false, "Long.MAX_VALUE"),
+            Arguments.of(Long.MIN_VALUE, Instant.EPOCH, ResetTokenVerification.Status.INVALID, false, "Long.MIN_VALUE"),
+            Arguments.of(Instant.MAX.getEpochSecond() + 1, Instant.EPOCH, ResetTokenVerification.Status.INVALID, false, "above Instant.MAX"),
+            Arguments.of(Instant.MIN.getEpochSecond() - 1, Instant.EPOCH, ResetTokenVerification.Status.INVALID, false, "below Instant.MIN"),
+            Arguments.of(Instant.MAX.getEpochSecond(), Instant.MAX, ResetTokenVerification.Status.VALID, true, "Instant.MAX"),
+            Arguments.of(Instant.MIN.getEpochSecond(), Instant.MIN, ResetTokenVerification.Status.VALID, true, "Instant.MIN")
+        );
+    }
+
+    @ParameterizedTest(name = "[{index}] issued-at {4}")
+    @MethodSource("issuedAtBoundaryCases")
+    public void issuedAtMustFitInstantRange(long issuedAtEpochSecond, Instant verificationTime,
+            ResetTokenVerification.Status expectedStatus, boolean expectAccountLookup, String label) throws Exception {
+        inject(Clock.fixed(verificationTime, ZoneOffset.UTC));
+
+        String email = "timestamp@example.edu";
+        String storedHash = "stored-password-hash";
+        User user = userWith(email, storedHash);
+
+        if (expectAccountLookup) {
+            when(userRepo.findByEmail(email)).thenReturn(user);
+            when(availabilityService.getResetExpiryHours()).thenReturn(DEFAULT_EXPIRY_HOURS);
+        }
+
+        String token = signedTokenWithIssuedAt(email, storedHash, issuedAtEpochSecond);
+        ResetTokenVerification result = assertDoesNotThrow(() -> resetTokenService.verify(token));
+
+        assertEquals(expectedStatus, result.getStatus(), label);
+
+        if (expectAccountLookup) {
+            verify(userRepo).findByEmail(email);
+            verify(availabilityService).getResetExpiryHours();
+        } else {
+            verify(userRepo, never()).findByEmail(anyString());
+            verify(availabilityService, never()).getResetExpiryHours();
+        }
+    }
+
+    private String signedTokenWithIssuedAt(String email, String storedHash, long issuedAtEpochSecond) throws Exception {
+        String bindingValue = resetTokenService.deriveBindingValue(storedHash);
+        String payload = email + "|" + bindingValue + "|" + issuedAtEpochSecond;
+        String encodedPayload = Base64.getUrlEncoder().withoutPadding().encodeToString(payload.getBytes(StandardCharsets.UTF_8));
+
+        Mac mac = Mac.getInstance("HmacSHA256");
+        mac.init(new SecretKeySpec(SIGNING_SECRET.getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
+        String encodedSignature = Base64.getUrlEncoder().withoutPadding().encodeToString(mac.doFinal(encodedPayload.getBytes(StandardCharsets.US_ASCII)));
+
+        return encodedPayload + "." + encodedSignature;
+    }
+
     // ---------------------------------------------------------------------
     // A stored-password change invalidates every earlier token.
     // ---------------------------------------------------------------------
