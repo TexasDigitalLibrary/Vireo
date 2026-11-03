@@ -149,6 +149,9 @@ public class ConfigurationName {
     public final static String APPLICATION_AUTH_PASS_VISIBLE = "auth.pass.visible";
     public final static String APPLICATION_AUTH_PASS_NAME = "auth.pass.name";
     public final static String APPLICATION_AUTH_PASS_DESCRIPTION = "auth.pass.description";
+    public final static String APPLICATION_AUTH_PASS_CHANGE_ENABLED = "auth.pass.change.enabled";
+    public final static String APPLICATION_AUTH_PASS_RESET_ENABLED = "auth.pass.reset.enabled";
+    public final static String APPLICATION_AUTH_PASS_RESET_EXPIRY_HOURS = "auth.pass.reset.expiryHours";
     public final static String APPLICATION_AUTH_SHIB_ENABLED = "auth.shib.enabled";
     public final static String APPLICATION_AUTH_SHIB_VISIBLE = "auth.shib.visible";
     public final static String APPLICATION_AUTH_SHIB_NAME = "auth.shib.name";

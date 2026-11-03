@@ -82,6 +82,37 @@ vireo.controller("SettingsController", function ($controller, $injector, $scope,
         "false": "No"
     }];
 
+    // PASSWORD MANAGEMENT
+    $scope.changePasswordToggleOptions = [{
+        "true": "Enabled"
+    }, {
+        "false": "Disabled"
+    }];
+
+    $scope.resetPasswordToggleOptions = [{
+        "true": "Enabled"
+    }, {
+        "false": "Disabled"
+    }];
+
+    // Enforce the server's positive Java integer range before saving the setting.
+    $scope.expiryHoursValidations = {
+        "value": {
+            "required": {
+                "type": "required",
+                "message": "Password Reset Link Expiry is required",
+                "property": "value",
+                "value": true
+            },
+            "pattern": {
+                "type": "pattern",
+                "message": "Password Reset Link Expiry must be a whole number from 1 through 2147483647",
+                "property": "value",
+                "value": "^(?:[1-9][0-9]{0,8}|1[0-9]{9}|20[0-9]{8}|21[0-3][0-9]{7}|214[0-6][0-9]{6}|2147[0-3][0-9]{5}|21474[0-7][0-9]{4}|214748[0-2][0-9]{3}|2147483[0-5][0-9]{2}|21474836[0-3][0-9]|214748364[0-7])$"
+            }
+        }
+    };
+
     var userSettingsValidations = {
         "displayName": {
             "minlength": {

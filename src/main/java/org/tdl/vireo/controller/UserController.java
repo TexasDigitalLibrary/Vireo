@@ -6,6 +6,7 @@ import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ import org.tdl.vireo.model.Role;
 import org.tdl.vireo.model.User;
 import org.tdl.vireo.model.repo.UserRepo;
 import org.tdl.vireo.model.request.FilteredPageRequest;
+import org.tdl.vireo.utility.PasswordEligibilityRule;
 
 import edu.tamu.weaver.auth.annotation.WeaverCredentials;
 import edu.tamu.weaver.auth.annotation.WeaverUser;
@@ -50,7 +52,18 @@ public class UserController {
 
     @RequestMapping("/credentials")
     @PreAuthorize("hasRole('ROLE_STUDENT')")
-    public ApiResponse credentials(@WeaverCredentials Credentials credentials) {
+    public ApiResponse credentials(@WeaverCredentials Credentials credentials, @WeaverUser User user) {
+        // User.password is @JsonIgnore'd, so eligibility is computed here; the map is Map<String, String>.
+
+        Map<String, String> allCredentials = credentials.getAllCredentials();
+
+        if (allCredentials == null) {
+            allCredentials = new HashMap<String, String>();
+            credentials.setAllCredentials(allCredentials);
+        }
+
+        allCredentials.put("passwordEligible", String.valueOf(PasswordEligibilityRule.isEligible(user)));
+
         return new ApiResponse(SUCCESS, credentials);
     }
 
