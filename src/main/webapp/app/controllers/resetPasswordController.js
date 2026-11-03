@@ -1,4 +1,4 @@
-vireo.controller('ResetPasswordController', function ($controller, $location, $scope, PasswordResetService, StorageService) {
+vireo.controller('ResetPasswordController', function ($controller, $location, $scope, $window, PasswordResetService, StorageService) {
 
     angular.extend(this, $controller('AbstractController', { $scope: $scope }));
 
@@ -19,8 +19,14 @@ vireo.controller('ResetPasswordController', function ($controller, $location, $s
                 $scope.resetPassword.confirm = '';
 
                 // Set the post-sign-in destination so the user lands on My Profile after signing
-                // in with the new password, rather than back on this public page.
-                StorageService.set('post_authorize_url', '/myprofile');
+                // in with the new password, rather than back on this public page. The value is
+                // consumed as a full browser path (context prefix included), so derive the prefix
+                // by stripping the Angular route ($location.path()) off the end of the full path
+                // ($window.location.pathname); this keeps the redirect correct under a context path.
+                var currentPath = $window.location.pathname;
+                var contextPath = currentPath.slice(0, currentPath.length - $location.path().length);
+
+                StorageService.set('post_authorize_url', contextPath + '/myprofile');
 
                 $location.path('/login');
             }
