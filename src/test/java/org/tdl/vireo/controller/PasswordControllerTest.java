@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -719,7 +720,10 @@ public class PasswordControllerTest extends AbstractControllerTest {
 
         assertEquals(ApiStatus.SUCCESS, response.getMeta().getStatus());
 
-        // The send targets the recipient's own email address and carries the resolved subject.
+        // The response message is generic and names no recipient, keeping the recipient address out of the payload.
+        assertEquals("A password reset link has been sent.", response.getMeta().getMessage());
+
+        // The send itself targets the recipient's own email address and carries the resolved subject.
         verify(emailSender).sendEmail(eq(user1.getEmail()), eq(RESET_SUBJECT), anyString());
     }
 
@@ -1250,7 +1254,10 @@ public class PasswordControllerTest extends AbstractControllerTest {
         ReflectionTestUtils.setField(realResetTokenService, "userRepo", userRepo);
         ReflectionTestUtils.setField(realResetTokenService, "availabilityService", availabilityService);
 
-        Clock baseClock = Clock.systemUTC();
+        // A fixed base clock keeps every offset below deterministic. A system clock let a token
+        // built at an hour offset land on either side of the whole-hour expiry boundary depending
+        // on the wall-clock moment the test ran, which made this test intermittently fail.
+        Clock baseClock = Clock.fixed(Instant.ofEpochSecond(1_700_000_000L), ZoneOffset.UTC);
         ReflectionTestUtils.setField(realResetTokenService, "clock", baseClock);
         ReflectionTestUtils.setField(passwordController, "resetTokenService", realResetTokenService);
 
