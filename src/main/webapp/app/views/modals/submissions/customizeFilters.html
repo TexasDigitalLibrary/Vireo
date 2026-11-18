@@ -1,5 +1,5 @@
 <div class="modal-header {{attr.modalHeaderClass}}">
-    <button type="button" class="close" ng-click="box.resetSaveUserFilters()" aria-title="Close">
+    <button type="button" class="close" ng-click="box.resetSaveUserFilters()" aria-label="Close">
         <span class="modal-close" aria-hidden="true">&times;</span>
     </button>
     <h2 class="h3 modal-title">Customize Filters</h2>
@@ -13,8 +13,8 @@
                 <h3 class="h4">Displayed Filters</h3>
                 <div class="column-background">
                     <ul class="displayed-column-container" as-sortable="box.displayedFilterColumnOptions" ng-model="box.filterColumns.userFilterColumns">
-                        <li ng-class="{'displayed-column': !column.status, 'disabled-column': column.status === 'previouslyDisabled'}" ng-repeat="column in box.filterColumns.userFilterColumns" ng-click="box.disableFilter(column)" as-sortable-item>
-                            <div as-sortable-item-handle>{{column.title}}<span class="glyphicon glyphicon-arrow-right pull-right"></span></div>
+                        <li ng-class="{'displayed-column': !column.status, 'disabled-column': column.status === 'previouslyDisabled'}" ng-repeat="column in box.filterColumns.userFilterColumns" role="button" tabindex="0" keyboard-activate aria-label="Hide filter {{column.title}}" ng-click="box.disableFilter(column)" as-sortable-item>
+                            <div as-sortable-item-handle>{{column.title}}<span class="glyphicon glyphicon-arrow-right pull-right" aria-hidden="true"></span></div>
                         </li>
                     </ul>
                 </div>
@@ -23,8 +23,8 @@
                 <h3 class="h4">Disabled Filters</h3>
                 <div class="column-background">
                     <ul class="disabled-column-container" as-sortable="box.disabledFilterColumnOptions" ng-model="box.filterColumns.inactiveFilterColumns">
-                        <li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status === 'previouslyDisplayed'}" ng-repeat="column in box.filterColumns.inactiveFilterColumns" ng-click="box.enableFilter(column)" as-sortable-item>
-                            <div as-sortable-item-handle><span class="glyphicon glyphicon-arrow-left pull-left"></span>&nbsp;{{column.title}}</div>
+                        <li ng-class="{'disabled-column': !column.status, 'displayed-column': column.status === 'previouslyDisplayed'}" ng-repeat="column in box.filterColumns.inactiveFilterColumns" role="button" tabindex="0" keyboard-activate aria-label="Show filter {{column.title}}" ng-click="box.enableFilter(column)" as-sortable-item>
+                            <div as-sortable-item-handle><span class="glyphicon glyphicon-arrow-left pull-left" aria-hidden="true"></span>&nbsp;{{column.title}}</div>
                         </li>
                     </ul>
                 </div>

@@ -116,12 +116,18 @@ ul.dialog-actions-list {
   color: red;
 }
 
+// Closed content is made invisible too, so its controls leave the tab order and
+// screen readers skip it. Visibility waits for the collapse, but not the expand.
 .dialog-closed {
   opacity: 0;
   max-height: 0;
+  visibility: hidden;
+  transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out, visibility 0s linear 0.45s;
 }
 
 .dialog-open {
   opacity: 1;
   max-height: 5000px;
+  visibility: visible;
+  transition: max-height 0.45s ease-in-out, opacity 0.25s ease-in-out, visibility 0s;
 }

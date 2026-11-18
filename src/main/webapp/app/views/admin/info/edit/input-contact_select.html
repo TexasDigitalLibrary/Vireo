@@ -1,5 +1,5 @@
 <div class="btn-group btn-group-justified submission-input-select" uib-dropdown keyboard-nav role="group">
-  <button type="button" class="btn dropdown-toggle dropdown-toggle-button" uib-dropdown-toggle>
+  <button type="button" class="btn dropdown-toggle dropdown-toggle-button" uib-dropdown-toggle aria-label="Choose {{ fieldProfile.gloss }}">
      <span class="caret"></span>
    </button>
    <button ng-class="{selected: fieldValue.value}" type="button" class="btn btn-default dropdown-text" disabled>
@@ -13,8 +13,8 @@
        <a href="#">{{word.name}}</a>
      </li>
    </ul>
-   <button type="button" class="btn dropdown-help" ng-click="saveContacts(field)">
-     <span class="glyphicon glyphicon-ok clickable"></span>
+   <button type="button" class="btn dropdown-help" ng-click="saveContacts(field)" aria-label="Save {{ fieldProfile.gloss }}">
+     <span class="glyphicon glyphicon-ok clickable" aria-hidden="true"></span>
    </button>
 </div>
 <div class="input-group input-contact-contacts">
@@ -27,5 +27,5 @@
     typeahead-loading="typeAheads.loading"
     disabled
   />
-  <span class="input-group-addon glyphicon glyphicon-ok clickable" ng-click="saveContacts(field)"></span>
+  <span class="input-group-addon glyphicon glyphicon-ok clickable" role="button" tabindex="0" keyboard-activate aria-label="Save {{ fieldProfile.gloss }}" ng-click="saveContacts(field)"></span>
 </div>

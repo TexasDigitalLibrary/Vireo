@@ -14,8 +14,8 @@
       <a href="#" ng-click="$event.preventDefault()">{{word.name}}</a>
     </li>
   </ul>
-  <button class="btn btn-default opaque" ng-if="fieldValue.value" aria-label="Remove contact {{fieldValue.value}}">
-    <span class="glyphicon glyphicon-remove clickable" ng-click="removeFieldValue(fieldValue)" aria-hidden="true"></span>
+  <button type="button" class="btn btn-default opaque" ng-if="fieldValue.value" aria-label="Remove contact {{fieldValue.value}}" ng-click="removeFieldValue(fieldValue)">
+    <span class="glyphicon glyphicon-remove clickable" aria-hidden="true"></span>
   </button>
   <button type="button" class="btn dropdown-help" disabled aria-label="Help information">
     <span ng-if="!fieldValue.updating" class="glyphicon glyphicon-info-sign opaque" aria-label="{{ profile.help }}" tooltip="{{ profile.help }}" aria-hidden="true"></span>

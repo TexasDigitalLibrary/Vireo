@@ -3,7 +3,7 @@
 		<li><button class="btn btn-info" ng-click="openModal('#submissionStatus')">{{box.submission.submissionStatus.name}}</button></li>
 
 		<li>Assignee:</li>
-		<li ng-click="openModal('#submissionAssign')" class="sidebar-btn font-weight-bold"> <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> {{box.submission.assignee.settings.displayName || "none"}}</li>
+		<li role="button" tabindex="0" keyboard-activate aria-label="Change assignee, currently {{box.submission.assignee.settings.displayName || 'none'}}" ng-click="openModal('#submissionAssign')" class="sidebar-btn font-weight-bold"> <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> {{box.submission.assignee.settings.displayName || "none"}}</li>
 
 		<li>Last Action:</li>
 		<li class="font-weight-bold">{{box.getLastActionDate() | date : 'short'}}</li>
@@ -12,6 +12,8 @@
 
 		<li>Submission Date:</li>
 		<li class="sidebar-btn font-weight-bold"
+			role="button" tabindex="0" keyboard-activate
+			aria-label="Change submission date, currently {{ box.submission.submissionDate ? (box.submission.submissionDate | date: 'M/d/yyyy' : 'UTC') : 'not submitted' }}"
 			ng-click="date=true"
 			ng-change="box.setSubmitDate(newSubmitDate)"
 			uib-datepicker-popup="MM/dd/yyyy"

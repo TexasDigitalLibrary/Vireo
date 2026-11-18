@@ -1,14 +1,14 @@
 <div class="review-required-fields-directive" ng-repeat="submissionWorkflowStep in submission.submissionWorkflowSteps track by $index">
   <h2 ng-if="headingLevel === 2" class="h3">
     {{submissionWorkflowStep.name}}
-    <span ng-if="!hideLinks" class="link-to-step" ng-click="jumpToStep(submissionWorkflowStep)">
-      <span class="glyphicon glyphicon-link"></span>
+    <span ng-if="!hideLinks" class="link-to-step" role="button" tabindex="0" keyboard-activate aria-label="Go to {{submissionWorkflowStep.name}} step" ng-click="jumpToStep(submissionWorkflowStep)">
+      <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
     </span>
   </h2>
   <h3 ng-if="headingLevel === 3">
     {{submissionWorkflowStep.name}}
-    <span ng-if="!hideLinks" class="link-to-step" ng-click="jumpToStep(submissionWorkflowStep)">
-      <span class="glyphicon glyphicon-link"></span>
+    <span ng-if="!hideLinks" class="link-to-step" role="button" tabindex="0" keyboard-activate aria-label="Go to {{submissionWorkflowStep.name}} step" ng-click="jumpToStep(submissionWorkflowStep)">
+      <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
     </span>
   </h3>
   <hr/>
@@ -20,14 +20,14 @@
         <div class="col-sm-9 field-values">
           <ul class="list-unstyled">
             <li ng-repeat="fv in submission.fieldValues | filter:predicateMatch(aggregateFieldProfile)">
-              <span ng-if="!fv.isValid()&&!hideLinks" ng-click="jumpToStep(submissionWorkflowStep, aggregateFieldProfile.fieldPredicate.value)" class="link-to-field">[fix]</span>
+              <span ng-if="!fv.isValid()&&!hideLinks" role="button" tabindex="0" keyboard-activate aria-label="Fix {{aggregateFieldProfile.gloss}}" ng-click="jumpToStep(submissionWorkflowStep, aggregateFieldProfile.fieldPredicate.value)" class="link-to-field">[fix]</span>
               <span ng-if="aggregateFieldProfile.inputType.name!==InputTypes.INPUT_FILE">
                 {{fv.value | displayFieldValue:aggregateFieldProfile.inputType}}
                 <span ng-if="fv.value&&aggregateFieldProfile.inputType.name==InputTypes.INPUT_CONTACT">
                   {{fv.contacts[0]}}</span>
               </span>
               <span ng-if="aggregateFieldProfile.inputType.name==InputTypes.INPUT_FILE">
-                <span class="file-link" ng-click="getFile(fv)">{{fv.fileInfo.name}}</span>
+                <span class="file-link" role="button" tabindex="0" keyboard-activate aria-label="Download {{fv.fileInfo.name}}" ng-click="getFile(fv)">{{fv.fileInfo.name}}</span>
               </span>
             </li>
           </ul>

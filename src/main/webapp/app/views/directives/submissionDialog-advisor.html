@@ -1,5 +1,5 @@
 <div ng-show="submission" class="dialog state" ng-class="{'immutable': submission.submissionStatus.name != 'Needs Correction', 'needs-correction': submission.submissionStatus.name == 'Needs Correction'}">
-  <span class="dialog-close clickable" ng-click="show.reverse()">[{{show[0]}}]</span>
+  <span class="dialog-close clickable" role="button" tabindex="0" keyboard-activate aria-label="Show submission state details" aria-expanded="{{ show[0] === '-' }}" ng-click="show.reverse()"><span aria-hidden="true">[{{show[0]}}]</span></span>
   <h2 class="h4 dialog-header">Current Submission State:</h2>
   <span class="submission-state">{{submission.submissionStatus.name}}</span>
   <div class="dialog-content" ng-class="{'dialog-open': show[0] === '-', 'dialog-closed': show[0] === '+'}">
@@ -10,9 +10,9 @@
     </span>
     <div ng-if="submission.submissionStatus.name == 'Needs Correction'"></div>
 
-    <div class="dialog-messages">
+    <div class="dialog-messages" role="status">
       <div class="alert alert-success alert-dismissable" ng-repeat="message in messages track by $index">
-        <a ng-click="messages.pop()" class="close clickable" aria-label="close">&times;</a>
+        <a href="" ng-click="messages.pop()" class="close clickable" aria-label="Dismiss message">&times;</a>
         <strong>Your input has been recorded.</strong>
         {{message}}
       </div>

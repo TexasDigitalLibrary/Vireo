@@ -14,23 +14,29 @@
                         <ul class="inline-list">
                             <li ng-click="activateManagementPane('edit')">
                                 <span   class="management-pane-selector"
+                                        role="button" tabindex="0" keyboard-activate
+                                        aria-pressed="{{ managementPaneIsActive('edit') }}"
                                         ng-class="{active: managementPaneIsActive('edit')}"
                                         ng-click="activateManagementPane('edit')" >
-                                        <span class="context-icons glyphicon glyphicon-cog" ng-class="{'active': managementPaneIsActive('edit')}"></span> Manage Organization
+                                        <span class="context-icons glyphicon glyphicon-cog" aria-hidden="true" ng-class="{'active': managementPaneIsActive('edit')}"></span> Manage Organization
                                 </span>
                             </li>
                             <li ng-click="activateManagementPane('workflow')">
                                 <span   class="management-pane-selector"
+                                        role="button" tabindex="0" keyboard-activate
+                                        aria-pressed="{{ managementPaneIsActive('workflow') }}"
                                         ng-click="activateManagementPane('workflow')"
                                         ng-class="{active: managementPaneIsActive('workflow')}">
-                                        <span class="context-icons glyphicon glyphicon-list-alt" ng-class="{'active': managementPaneIsActive('workflow')}"></span> Manage Workflow
+                                        <span class="context-icons glyphicon glyphicon-list-alt" aria-hidden="true" ng-class="{'active': managementPaneIsActive('workflow')}"></span> Manage Workflow
                                 </span>
                             </li>
                             <li ng-click="activateManagementPane('email')">
                                 <span   class="management-pane-selector"
+                                        role="button" tabindex="0" keyboard-activate
+                                        aria-pressed="{{ managementPaneIsActive('email') }}"
                                         ng-click="activateManagementPane('email')"
                                         ng-class="{active: managementPaneIsActive('email')}">
-                                        <span class="context-icons glyphicon glyphicon-envelope" ng-class="{'active': managementPaneIsActive('email')}"></span> Email Workflow Rules
+                                        <span class="context-icons glyphicon glyphicon-envelope" aria-hidden="true" ng-class="{'active': managementPaneIsActive('email')}"></span> Email Workflow Rules
                                 </span>
                             </li>
                         </ul>

@@ -1,11 +1,13 @@
 <div ng-show="submission" class="dialog actions">
-  <span class="dialog-close clickable" ng-click="show.reverse()">[{{show[0]}}]</span>
+  <span class="dialog-close clickable" role="button" tabindex="0" keyboard-activate aria-label="Show requirements checklist details" aria-expanded="{{ show[0] === '-' }}" ng-click="show.reverse()"><span aria-hidden="true">[{{show[0]}}]</span></span>
   <h2 class="h4 dialog-header">Requirements Checklist:</h2>
   <div class="dialog-content" ng-class="{'dialog-open': show[0] === '-', 'dialog-closed': show[0] === '+'}">
     <ul class="dialog-actions-list">
       <li ng-repeat="customAction in submission.customActionValues | orderBy:'definition.position'" ng-if="customAction.definition.isStudentVisible" class="cutom-action-label">
-        <input type="checkbox" ng-model="customAction.value" disabled/>
-        <span>{{customAction.definition.label}}</span>
+        <label>
+          <input type="checkbox" ng-model="customAction.value" disabled/>
+          <span>{{customAction.definition.label}}</span>
+        </label>
       </li>
     </ul>
   </div>

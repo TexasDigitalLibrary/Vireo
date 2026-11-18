@@ -1,5 +1,5 @@
 <div class="input-group">
   <textarea class="form-control" ng-model="field.value" rows="2" cols="500"></textarea>
-  <span class="glyphicon glyphicon-ok pull-right clickable" ng-click="save(field)"></span>
-  <span class="glyphicon glyphicon-remove pull-right clickable" ng-click="cancel(field)"></span>
+  <span class="glyphicon glyphicon-ok pull-right clickable" role="button" tabindex="0" keyboard-activate aria-label="Save {{ fieldProfile.gloss }}" ng-click="save(field)"></span>
+  <span class="glyphicon glyphicon-remove pull-right clickable" role="button" tabindex="0" keyboard-activate aria-label="Cancel editing {{ fieldProfile.gloss }}" ng-click="cancel(field)"></span>
 </div>	

@@ -1,12 +1,13 @@
 <form ng-submit="box.addDateFilter(column)">
 
 	<div class="input-group">
-		<span class="input-group-addon btn btn-default" ng-click="date1=true">
-			<span class="glyphicon glyphicon-calendar"></span>
+		<span class="input-group-addon btn btn-default" role="button" tabindex="0" keyboard-activate aria-label="Open calendar for {{ column.title }}" ng-click="date1=true">
+			<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
 		</span>
 		<input
 			type="text"
 			name="{{column.title.split(' ').join('')+'Value1'}}"
+			aria-label="{{ column.title }} start date"
 			class="form-control"
 			uib-datepicker-popup="MM/dd/yyyy"
 			ng-model="box[column.title.split(' ').join('')].d1"
@@ -16,20 +17,21 @@
 			close-text="Close"
 			readonly
 			stringtodate />
-		<span class="input-group-addon btn btn-default" ng-click="box[column.title.split(' ').join('')].range=true" ng-disabled="box[column.title.split(' ').join('')].range">
-			<span class="glyphicon glyphicon-plus"></span>
+		<span class="input-group-addon btn btn-default" role="button" tabindex="0" keyboard-activate aria-label="Add end date for a {{ column.title }} range" ng-click="box[column.title.split(' ').join('')].range=true" ng-disabled="box[column.title.split(' ').join('')].range">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 		</span>
 	</div>
 
     <p ng-if="box[column.title.split(' ').join('')].range" class="date-range-divider">&mdash; TO &mdash;</p>
 
 	<div ng-if="box[column.title.split(' ').join('')].range" class="input-group">
-		<span class="input-group-addon" ng-click="date2=true">
-			<span class="glyphicon glyphicon-calendar"></span>
+		<span class="input-group-addon" role="button" tabindex="0" keyboard-activate aria-label="Open calendar for {{ column.title }}" ng-click="date2=true">
+			<span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
 		</span>
 		<input
 			type="text"
 			name="{{column.title.split(' ').join('')+'Value2'}}"
+			aria-label="{{ column.title }} end date"
 			class="form-control"
 			uib-datepicker-popup="MM/dd/yyyy"
 			ng-model="box[column.title.split(' ').join('')].d2"
@@ -39,8 +41,8 @@
 			close-text="Close"
 			readonly
 			stringtodate />
-		<span class="input-group-addon btn btn-default" ng-click="box[column.title.split(' ').join('')].range=false">
-			<span class="glyphicon glyphicon-minus"></span>
+		<span class="input-group-addon btn btn-default" role="button" tabindex="0" keyboard-activate aria-label="Remove end date" ng-click="box[column.title.split(' ').join('')].range=false">
+			<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
 		</span>
 	</div>
 

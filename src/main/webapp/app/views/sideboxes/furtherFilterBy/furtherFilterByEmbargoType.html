@@ -1,16 +1,16 @@
 <form name="{{'box.'+(column.title.split(' ').join(''))+'Form'}}">
   <ul class="sidebox-list">
-    <li class="filter" ng-click="box[column.title.split(' ').join('')]=et.name;box.addExactMatchFilter(column);" ng-repeat="et in box.embargos | uniqueEmbargoType">{{et.name}}</li>
-    <li ng-click="activeExpanded = activeExpanded ? !activeExpanded : true" class="embargotype-category">+ Active</li>
+    <li role="button" tabindex="0" keyboard-activate class="filter" ng-click="box[column.title.split(' ').join('')]=et.name;box.addExactMatchFilter(column);" ng-repeat="et in box.embargos | uniqueEmbargoType">{{et.name}}</li>
+    <li role="button" tabindex="0" keyboard-activate aria-expanded="{{ !!activeExpanded }}" ng-click="activeExpanded = activeExpanded ? !activeExpanded : true" class="embargotype-category">+ Active</li>
     <li>
       <ul class="sidebox-list embargotype-list" ng-class="{'expanded': activeExpanded}">
-        <li class="filter" ng-click="box[column.title.split(' ').join('')]=et.name;box.addExactMatchFilter(column);" ng-repeat="et in box.embargos | uniqueEmbargoType:true"><span ng-if="et.systemRequired" class="glyphicon glyphicon-globe"></span><span ng-if="!et.systemRequired" class="glyphicon glyphicon-user"></span> {{et.name}}</li>
+        <li role="button" tabindex="0" keyboard-activate class="filter" ng-click="box[column.title.split(' ').join('')]=et.name;box.addExactMatchFilter(column);" ng-repeat="et in box.embargos | uniqueEmbargoType:true"><span ng-if="et.systemRequired" class="glyphicon glyphicon-globe" aria-hidden="true"></span><span ng-if="!et.systemRequired" class="glyphicon glyphicon-user" aria-hidden="true"></span> {{et.name}}</li>
       </ul>
     </li>
-    <li ng-click="inactiveExpanded = inactiveExpanded ? !inactiveExpanded : true" class="embargotype-category">+ Inactive</li>
+    <li role="button" tabindex="0" keyboard-activate aria-expanded="{{ !!inactiveExpanded }}" ng-click="inactiveExpanded = inactiveExpanded ? !inactiveExpanded : true" class="embargotype-category">+ Inactive</li>
     <li>
       <ul class="sidebox-list embargotype-list" ng-class="{'expanded': inactiveExpanded}">
-        <li class="filter" ng-click="box[column.title.split(' ').join('')]=et.name;box.addExactMatchFilter(column);" ng-repeat="et in box.embargos | uniqueEmbargoType:false"><span ng-if="et.systemRequired" class="glyphicon glyphicon-globe"></span><span ng-if="!et.systemRequired" class="glyphicon glyphicon-user"></span> {{et.name}}</li>
+        <li role="button" tabindex="0" keyboard-activate class="filter" ng-click="box[column.title.split(' ').join('')]=et.name;box.addExactMatchFilter(column);" ng-repeat="et in box.embargos | uniqueEmbargoType:false"><span ng-if="et.systemRequired" class="glyphicon glyphicon-globe" aria-hidden="true"></span><span ng-if="!et.systemRequired" class="glyphicon glyphicon-user" aria-hidden="true"></span> {{et.name}}</li>
       </ul>
     </li>
   </ul>

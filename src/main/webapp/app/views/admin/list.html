@@ -19,9 +19,9 @@
   <table ng-table-dynamic="tableParams with userColumns" show-filter="false" class="table table-bordered table-striped table-hover" id="etd-table">
     <thead class="header">
       <tr>
-        <th ng-repeat="column in userColumns">
-          <div class="btn" style="white-space: nowrap;" ng-click="sortBy(column)">
-            <span class="select-toggle list-view-column-header">
+        <th ng-repeat="column in userColumns" aria-sort="{{ column.sort === 'ASC' ? 'ascending' : column.sort === 'DESC' ? 'descending' : 'none' }}">
+          <div class="btn" style="white-space: nowrap;" role="button" tabindex="0" keyboard-activate aria-label="Sort by {{column.title}}" ng-click="sortBy(column)">
+            <span class="select-toggle list-view-column-header" aria-hidden="true">
               <i class="glyphicon glyphicon-triangle-top list-view-column-header-icon" ng-class="{'selected' : column.sort === 'ASC'}"></i>
               <i class="glyphicon glyphicon-triangle-bottom list-view-column-header-icon" ng-class="{'selected' : column.sort === 'DESC'}"></i>
             </span>

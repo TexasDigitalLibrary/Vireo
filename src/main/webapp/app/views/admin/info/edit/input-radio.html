@@ -3,7 +3,7 @@
     <span class="radio-label">{{word.name}}:</span>
   </div>
   <div class="col-xs-2">
-    <input type="radio"
+    <input type="radio" aria-label="{{ word.name }}"
       ng-model="field.value"
       ng-change="save(field)"
       ng-click="stopEditing(field)"

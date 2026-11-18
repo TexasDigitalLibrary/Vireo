@@ -479,19 +479,24 @@ sidebox .heading-text {
   cursor: pointer;
 }
 
+// Collapsed content is also made invisible, not just zero height, so that its
+// controls drop out of the tab order. Visibility flips only after the collapse
+// animation finishes, and immediately when expanding.
 .sidebox-body {
   display: block;
   background-color: #ECECEC;
   padding: 8px 0 1px;
   overflow-y: hidden;
   max-height: 0;
-  transition: max-height 0.35s ease-out;
+  visibility: hidden;
+  transition: max-height 0.35s ease-out, visibility 0s linear 0.35s;
 }
 
 .sidebox-body.expanded {
   max-height: 5000px;
   overflow-y: visible;
-  transition: max-height 0.35s ease-out;
+  visibility: visible;
+  transition: max-height 0.35s ease-out, visibility 0s;
 }
 
 .sidebox-sub-heading {
@@ -1349,19 +1354,22 @@ input[type=color]:focus {
   transition: width 0.5s ease-out;
 }
 
+// Hidden as well as collapsed so a closed pane's controls leave the tab order.
 .accordion .panel-body {
   max-height: 0;
   overflow-y: auto;
   /* degree codes need scroll  overflow: hidden;*/
   padding: 0;
-  -webkit-transition: max-height 0.5s ease-out;
-  transition: max-height 0.5s ease-out;
+  visibility: hidden;
+  -webkit-transition: max-height 0.5s ease-out, visibility 0s linear 0.5s;
+  transition: max-height 0.5s ease-out, visibility 0s linear 0.5s;
 }
 
 .accordion .panel-body.expanded {
   max-height: 700px;
-  -webkit-transition: max-height 0.5s ease-out;
-  transition: max-height 0.5s ease-out;
+  visibility: visible;
+  -webkit-transition: max-height 0.5s ease-out, visibility 0s;
+  transition: max-height 0.5s ease-out, visibility 0s;
 }
 
 .accordion .panel-body .remove {
@@ -1604,8 +1612,9 @@ input[type=color]:focus {
 .further-filter-by .status-list {
   max-height: 0;
   overflow: hidden;
-  -webkit-transition: max-height 0.5s ease-out;
-  transition: max-height 0.5s ease-out;
+  visibility: hidden;
+  -webkit-transition: max-height 0.5s ease-out, visibility 0s linear 0.5s;
+  transition: max-height 0.5s ease-out, visibility 0s linear 0.5s;
 }
 
 .further-filter-by .filter:hover {
@@ -1620,8 +1629,9 @@ input[type=color]:focus {
 .further-filter-by .submissiontype-list.expanded,
 .further-filter-by .status-list.expanded {
   max-height: 1000px;
-  -webkit-transition: max-height 0.5s ease-in;
-  transition: max-height 0.5s ease-in;
+  visibility: visible;
+  -webkit-transition: max-height 0.5s ease-in, visibility 0s;
+  transition: max-height 0.5s ease-in, visibility 0s;
 }
 
 .further-filter-by .document-level,

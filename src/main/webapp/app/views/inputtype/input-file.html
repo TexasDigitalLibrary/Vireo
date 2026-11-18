@@ -11,11 +11,11 @@
   <div class="col-md-7 col-sm-12 file-preview-container">
     <modal ng-if="hasFile(fieldValue) || previewing" modal-id="{{'confirmDeleteFileModal' + getUriHash(fieldValue) }}" modal-view="views/modals/submissions/confirmDeleteFile.html" modal-header-class="modal-header-danger"></modal>
     <div class="file-preview">
-      <img ng-if="(hasFile(fieldValue) || previewing) && getPreview(fieldValue)" class="select-toggle" ngf-src="getPreview(fieldValue)" ng-click="getFile(fieldValue)">
-      <span ng-if="(hasFile(fieldValue) || previewing) && !getPreview(fieldValue)" class="glyphicon glyphicon-file select-toggle" ng-click="getFile(fieldValue)"></span>
+      <img ng-if="(hasFile(fieldValue) || previewing) && getPreview(fieldValue)" class="select-toggle" role="button" tabindex="0" keyboard-activate alt="Download {{ fieldValue.fileInfo.name }}" ngf-src="getPreview(fieldValue)" ng-click="getFile(fieldValue)">
+      <span ng-if="(hasFile(fieldValue) || previewing) && !getPreview(fieldValue)" class="glyphicon glyphicon-file select-toggle" role="button" tabindex="0" keyboard-activate aria-label="Download {{ fieldValue.fileInfo.name }}" ng-click="getFile(fieldValue)"></span>
       <div ng-if="hasFile(fieldValue) || previewing">
-        <span class="file-upload-icon glyphicon glyphicon-ok"></span>
-        <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-trash text-danger select-toggle" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(fieldValue))"></span>
+        <span class="file-upload-icon glyphicon glyphicon-ok" role="img" aria-label="Uploaded"></span>
+        <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-trash text-danger select-toggle" role="button" tabindex="0" keyboard-activate aria-label="Delete {{ fieldValue.fileInfo.name }}" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(fieldValue))"></span>
       </div>
     </div>
 
@@ -64,16 +64,16 @@
       <tbody>
         <tr ng-repeat="fieldValue in submission.fieldValues | fieldValuePerProfile:profile.fieldPredicate track by $index" ng-if="fieldValue.fileInfo">
           <td ng-if="!fieldValue.uploading">
-            <p class="select-toggle" ng-click="getFile(fieldValue)">{{fieldValue.fileInfo.name | limitTo: 25}}{{fieldValue.fileInfo.name.length > 25 ? '...' : ''}}</p>
+            <p class="select-toggle" role="button" tabindex="0" keyboard-activate aria-label="Download {{ fieldValue.fileInfo.name }}" ng-click="getFile(fieldValue)">{{fieldValue.fileInfo.name | limitTo: 25}}{{fieldValue.fileInfo.name.length > 25 ? '...' : ''}}</p>
           </td>
           <td ng-if="!fieldValue.uploading"><span class="file-size">{{fieldValue.fileInfo.size | readableFileSize}}</span></td>
           <td ng-if="!fieldValue.uploading">
-            <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-ok text-center"></span>
+            <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-ok text-center" role="img" aria-label="Uploaded"></span>
           </td>
           <td ng-if="!fieldValue.uploading">
             <modal modal-id="{{'confirmDeleteFileModal' + getUriHash(fieldValue) }}" modal-view="views/modals/submissions/confirmDeleteFile.html" modal-header-class="modal-header-danger"></modal>
-            <span ng-if="!hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-remove text-danger select-toggle text-center" ng-click="cancel(fieldValue)"></span>
-            <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-trash text-danger select-toggle text-center" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(fieldValue))"></span>
+            <span ng-if="!hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-remove text-danger select-toggle text-center" role="button" tabindex="0" keyboard-activate aria-label="Cancel upload of {{ fieldValue.fileInfo.name }}" ng-click="cancel(fieldValue)"></span>
+            <span ng-if="hasFile(fieldValue)" class="file-upload-icon glyphicon glyphicon-trash text-danger select-toggle text-center" role="button" tabindex="0" keyboard-activate aria-label="Delete {{ fieldValue.fileInfo.name }}" ng-click="openModal('#confirmDeleteFileModal' + getUriHash(fieldValue))"></span>
           </td>
           <td ng-if="fieldValue.uploading" colspan="5">
             <uib-progressbar class="progress-striped active file-upload-progress" type="success" value="fieldValue.progress" max="100">{{fieldValue.progress + '%'}}</uib-progressbar>
